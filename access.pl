@@ -194,7 +194,7 @@ sub ProcessAccessLog {
 				PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to '.$filenameDir . $filename);
 
 				# Add the file to git
-				system("git add \"$filenameDir$filename\"");
+				#system("git add \"$filenameDir$filename\"");
 			}
 		}
 
