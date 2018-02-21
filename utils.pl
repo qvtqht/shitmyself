@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
+use warnings;
 use utf8;
 use 5.010;
 
@@ -8,10 +9,9 @@ use lib 'inc';
 
 use URI::Encode qw(uri_decode);
 use URI::Escape;
-use HTML::Entities;
 use Storable;
 
-my @dirsThatShouldExist = qw(html txt spam admin key cache);
+my @dirsThatShouldExist = qw(html txt spam admin key cache html/author);
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -22,7 +22,9 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
-sub GetHash {
+####################################################################################
+
+sub GetFileHash {
 	my $fileName = shift;
 
 	my $gitOutput = `git hash-object -w "$fileName"`;
@@ -53,6 +55,11 @@ my %avatarCache;
 
 sub GetAvatar {
 	my $gpg_key = shift;
+
+	if (!$gpg_key) {
+		return;
+	}
+
 	chomp $gpg_key;
 
 	if ($avatarCache{$gpg_key}) {
@@ -128,7 +135,8 @@ sub AppendFile {
 
 #Trims a string
 sub trim {
-	my $s = shift; $s =~ s/^\s+|\s+$//g; return $s
+	my $s = shift;
+	$s =~ s/^\s+|\s+$//g; return $s
 };
 
 
@@ -202,15 +210,15 @@ sub GpgParse {
 
 	my $keyExpired = 0;
 
-	my $gitHash = GetHash($filePath);
+	my $gitHash = GetFileHash($filePath);
 
-	# todo uncomment this caching code
+	# todo put this in a chache dir
 	#
-	#if (-e $filePath . ".cache") {
-	#	my %returnValues = %{retrieve($filePath . ".cache")};
-	#
-	#	return %returnValues;
-	#}
+	if (-e $filePath . ".cache") {
+		my %returnValues = %{retrieve($filePath . ".cache")};
+
+		return %returnValues;
+	}
 
 	# Signed messages begin with this header
 	my $gpg_message_header = "-----BEGIN PGP SIGNED MESSAGE-----";
