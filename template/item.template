@@ -1,0 +1,6 @@
+<p class="$itemClass">
+<a href="$permalinkTxt">$itemName</a><a href="$permalinkTxt">.txt</a> by
+<a href="$authorUrl">$authorAvatar</a>
+<br>
+$itemText
+</p>

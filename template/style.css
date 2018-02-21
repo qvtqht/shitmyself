@@ -1,0 +1,43 @@
+body {
+	font-family: monospace;
+}
+p.txt {
+	padding: 3pt;
+	font-family: monospace;
+	word-wrap: break-word;
+	max-width: 80ex;
+}
+p.txt a.header {
+	font-family: monospace;
+	font-weight: bold;
+	font-size: larger;
+}
+h3 a {
+	padding: 5px;
+	spacing: 5px;
+	display: block;
+}
+a {
+	color: $primaryColor;
+	background-color: $secondaryColor;
+}
+p.txt {
+	border: 1px dotted $primaryColor;
+	border-radius: 1px;
+}
+h1 {
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	padding: 5pt;
+	border: solid 5pt $primaryColor;
+	border-radius: 5pt;
+}
+.avatar {
+	border-style: 2pt solid;
+	border-radius: 4pt;
+	font-weight: bold;
+	padding: 1pt;
+}
+.avatar .username {
+	color: $neutralColor;
+}
