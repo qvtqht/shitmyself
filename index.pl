@@ -59,7 +59,7 @@ sub MakeIndex {
 
 				PutFile("./cache/message/$gitHash.message", $message);
 			} else {
-				DBAddItem ($file, $itemName, '', '');
+				DBAddItem ($file, $itemName, '', $gitHash);
 			}
 		}
 	}
