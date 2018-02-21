@@ -13,7 +13,7 @@ sub SqliteUnlinkDb {
 sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
-	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash)");
+	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
 }
 
 sub SqliteQuery {
@@ -121,12 +121,12 @@ sub DBAddItem {
 
 	if ($authorKey) {
 		SqliteQuery(
-			"INSERT INTO item(file_path, item_name, author_key, file_hash)" .
+			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash)" .
 				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash');"
 		);
 	} else {
 		SqliteQuery(
-			"INSERT INTO item(file_path, item_name, author_key, file_hash)" .
+			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash)" .
 				" VALUES('$filePath', '$itemName', NULL, '$fileHash');"
 		);
 	}
