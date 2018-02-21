@@ -36,7 +36,7 @@ sub GetIndex {
 	my $neutralColor = '#202020';
 	my $styleSheet = GetTemplate("style.css");
 
-	# Get the htmlstart template
+	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
@@ -46,7 +46,7 @@ sub GetIndex {
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 
-	# Print it
+
 	$txtIndex .= $htmlStart;
 
 	# If $title is set, print it as a header
@@ -72,7 +72,12 @@ sub GetIndex {
 		my $isAdmin = 0;
 
 		my $message;
-		$message = GetFile("./cache/$gitHash.message");
+		if ($gpgKey) {
+			$message = GetFile("./cache/message/$gitHash.message");
+		} else {
+			$message = GetFile($file);
+		}
+
 		$message = encode_entities($message, '<>&"');
 		$message =~ s/\n/<br>\n/g;
 
@@ -115,6 +120,9 @@ sub GetIndex {
 		my $permalinkTxt = $file;
 		$permalinkTxt =~ s/^\.//;
 
+		my $permalinkHtml = $permalinkTxt . ".html";
+		$permalinkHtml =~ s/^\/txt\//\//;
+
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
@@ -124,6 +132,7 @@ sub GetIndex {
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
