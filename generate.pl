@@ -127,7 +127,6 @@ sub GetIndex {
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
 
-
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
