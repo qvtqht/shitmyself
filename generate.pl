@@ -14,6 +14,15 @@ sub GetIndex {
 	my $txtIndex = "";
 
 	my $title = shift;
+	my $titleHtml;
+
+	if (defined $title) {
+		$titleHtml = shift;
+
+		if (!defined $titleHtml) {
+			$titleHtml = $title;
+		}
+	}
 
 	# this will hold the title of the page
 	if (!$title) {
@@ -31,6 +40,7 @@ sub GetIndex {
 	# and substitute $title with the title
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$title/$title/;
+	$htmlStart =~ s/\$titleHtml/$titleHtml/;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
@@ -39,8 +49,8 @@ sub GetIndex {
 	$txtIndex .= $htmlStart;
 
 	# If $title is set, print it as a header
-	if ($title) {
-		$txtIndex .= "<h1>$title</h1>";
+	if ($titleHtml) {
+		$txtIndex .= "<h1>$titleHtml</h1>";
 	}
 
 	foreach my $row (@files) {
@@ -130,16 +140,20 @@ my $indexText = GetIndex();
 
 PutFile('./html/index.html', $indexText);
 
-my %authors = DBGetAuthorList();
+my @authors = DBGetAuthorList();
 
-foreach my $key (keys %authors) {
+foreach my $key (@authors) {
 	mkdir("./html/author/$key");
 
 	@files = DBGetItemList("author_key='$key'");
-	my $authorAliasHtml = encode_entities($authors{$key});
-	my $title = "Posts by $authorAliasHtml";
+	#my $authorAliasHtml = encode_entities($authors{$key});
+	my $authorAliasHtml = GetAlias($key);
+	my $authorAvatarHtml = GetAvatar($key);
 
-	my $authorIndex = GetIndex($title);
+	my $title = "Posts by $authorAliasHtml";
+	my $titleHtml = "Posts by $authorAvatarHtml";
+
+	my $authorIndex = GetIndex($title, $titleHtml);
 
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }

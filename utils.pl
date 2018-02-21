@@ -95,7 +95,11 @@ sub GetAlias {
 
 	my $alias = DBGetAuthorAlias($gpgKey);
 
-	return $alias;
+	if ($alias) {
+		return $alias;
+	} else {
+		return $gpgKey;
+	}
 }
 
 # Gets the contents of a file

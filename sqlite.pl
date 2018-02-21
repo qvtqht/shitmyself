@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -12,7 +11,8 @@ sub SqliteUnlinkDb {
 }
 
 sub SqliteMakeTables() {
-	SqliteQuery("CREATE TABLE author(key UNIQUE, alias, is_admin)");
+	SqliteQuery("CREATE TABLE author(key UNIQUE)");
+	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash)");
 }
 
@@ -46,6 +46,15 @@ sub SqliteGetHash {
 	return %hash;
 }
 
+sub SqliteGetColumn {
+	my $query = shift;
+	chomp $query;
+
+	my @results = split("\n", SqliteQuery($query));
+
+	return @results;
+}
+
 sub SqliteGetValue {
 	my $query = shift;
 	chomp $query;
@@ -59,7 +68,11 @@ sub SqliteGetValue {
 sub SqliteEscape {
 	my $text = shift;
 
-	$text =~ s/'/''/g;
+	if (defined $text) {
+		$text =~ s/'/''/g;
+	} else {
+		$text = '';
+	}
 
 	return $text;
 }
@@ -76,6 +89,14 @@ sub SqliteAddKeyValue {
 
 }
 
+sub DBAddAuthor {
+	my $key = shift;
+
+	$key = SqliteEscape($key);
+
+	SqliteQuery("INSERT OR REPLACE INTO author(key) VALUES ('$key');");
+}
+
 sub DBAddKeyAlias {
 	my $key = shift;
 	my $alias = shift;
@@ -85,7 +106,7 @@ sub DBAddKeyAlias {
 	$alias = SqliteEscape($alias);
 	$isAdmin = SqliteEscape($isAdmin);
 
-	SqliteQuery("INSERT OR REPLACE INTO author(key, alias, is_admin) VALUES ('$key', '$alias', '$isAdmin');");
+	SqliteQuery("INSERT OR REPLACE INTO author_alias(key, alias) VALUES ('$key', '$alias');");
 }
 
 sub DBAddItem {
@@ -101,20 +122,18 @@ sub DBAddItem {
 	if ($authorKey) {
 		SqliteQuery(
 			"INSERT INTO item(file_path, item_name, author_key, file_hash)" .
-				"VALUES('$filePath', '$itemName', '$authorKey', '$fileHash');"
+				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash');"
 		);
 	} else {
 		SqliteQuery(
 			"INSERT INTO item(file_path, item_name, author_key, file_hash)" .
-				"VALUES('$filePath', '$itemName', NULL, '$fileHash');"
+				" VALUES('$filePath', '$itemName', NULL, '$fileHash');"
 		);
 	}
 }
 
 sub DBGetItemList {
 	my $whereClause = shift;
-	#	my $query = "SELECT item.file_path, item.item_name, item.file_hash, author.key, author.alias ".
-	#		"FROM item, author WHERE item.author_key = author.key;";
 
 	my $query;
 	if ($whereClause) {
@@ -152,11 +171,11 @@ sub DBGetItemListForAuthor {
 }
 
 sub DBGetAuthorList {
-	my $query = "SELECT key, alias FROM author";
+	my $query = "SELECT key FROM author";
 
-	my %results = SqliteGetHash($query);
+	my @results = SqliteGetColumn($query);
 
-	return %results;
+	return @results;
 }
 
 sub DBGetAuthorAlias {
@@ -164,7 +183,7 @@ sub DBGetAuthorAlias {
 	$key = SqliteEscape($key);
 
 	if ($key) {
-		my $query = "SELECT alias FROM author WHERE key = '$key'";
+		my $query = "SELECT alias FROM author_alias WHERE key = '$key'";
 		return SqliteGetValue($query);
 	} else {
 		return "";

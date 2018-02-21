@@ -13,8 +13,8 @@ p.txt a.header {
 	font-size: larger;
 }
 h3 a {
-	padding: 5px;
-	spacing: 5px;
+	padding: 5pt;
+	spacing: 5pt;
 	display: block;
 }
 a {
@@ -22,8 +22,8 @@ a {
 	background-color: $secondaryColor;
 }
 p.txt {
-	border: 1px dotted $primaryColor;
-	border-radius: 1px;
+	border: 1pt dotted $primaryColor;
+	border-radius: 1pt;
 }
 h1 {
 	background-color: $primaryColor;
@@ -32,12 +32,13 @@ h1 {
 	border: solid 5pt $primaryColor;
 	border-radius: 5pt;
 }
-.avatar {
+.avatar .icon {
+	font-weight: bold;
 	border-style: 2pt solid;
 	border-radius: 4pt;
-	font-weight: bold;
-	padding: 1pt;
+	padding-right: 1pt;
 }
-.avatar .username {
-	color: $neutralColor;
+.avatar {
+	border: 1pt dotted #808080;
+	border-radius: 1pt;
 }

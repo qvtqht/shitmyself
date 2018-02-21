@@ -44,8 +44,12 @@ sub MakeIndex {
 				$isAdmin = 1;
 			}
 
+			if ($isSigned && $gpgKey) {
+				DBAddAuthor($gpgKey);
+			}
+
 			if ($alias) {
-				DBAddKeyAlias ($gpgKey, $alias, $isAdmin);
+				DBAddKeyAlias ($gpgKey, $alias);
 			}
 
 			my $itemName = TrimPath($file);
