@@ -1,8 +1,7 @@
 #!/usr/bin/perl
 
 # This file parses the access logs
-# It posts messages to ./text/
-# It also updates the visit counters
+# It posts messages to ./txt/
 
 use strict;
 use warnings FATAL => 'all';
@@ -10,6 +9,7 @@ use utf8;
 use 5.010;
 
 use HTML::Entities;
+use URI::Encode qw(uri_decode);
 
 ## CONFIG AND SANITY CHECKS ##
 
@@ -105,7 +105,7 @@ sub ProcessAccessLog {
 		$dateMonth = lc($dateMonth);
 		$dateMonth = $mon2num{$dateMonth};
 
-		my $dateIso = "$dateYear-$dateMonth-$dateDay";
+		#my $dateIso = "$dateYear-$dateMonth-$dateDay";
 		my ($timeHour, $timeMinute, $timeSecond) = split(':', $time);
 
 		# todo add comment here

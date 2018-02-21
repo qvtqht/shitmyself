@@ -14,21 +14,22 @@ sub GetIndex {
 	my $txtIndex = "";
 
 	my $title = shift;
-	my $titleHtml;
-
-	if (defined $title) {
-		$titleHtml = shift;
-
-		if (!defined $titleHtml) {
-			$titleHtml = $title;
-		}
-	}
 
 	# this will hold the title of the page
 	if (!$title) {
 		$title = "Message Board";
 	}
 	chomp $title;
+
+	my $titleHtml;
+
+	if (defined $title) {
+		$titleHtml = shift;
+
+		if (!$titleHtml) {
+			$titleHtml = $title;
+		}
+	}
 
 	my $primaryColor = "#008080";
 	my $secondaryColor = '#f0fff0';
@@ -95,23 +96,30 @@ sub GetIndex {
 		my $itemTemplate = GetTemplate("item.template");
 
 		my $itemClass = "txt $signedCss";
+
 		my $authorUrl;
 		my $authorAvatar;
+		my $authorLink;
+
 		if ($gpgKey) {
 			$authorUrl = "/author/$gpgKey/";
 			$authorAvatar = GetAvatar($gpgKey);
+
+			$authorLink = GetTemplate('authorlink.template');
+
+			$authorLink =~ s/\$authorUrl/$authorUrl/g;
+			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
-			$authorUrl = "/author/Anonymous/";
-			$authorAvatar = "Anonymous";
+			$authorLink = "";
 		}
 		my $permalinkTxt = "$file";
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
 
+
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
-		$itemTemplate =~ s/\$authorUrl/$authorUrl/g;
-		$itemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
+		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;

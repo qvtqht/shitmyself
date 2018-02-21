@@ -11,7 +11,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
-my @dirsThatShouldExist = qw(html txt spam admin key cache html/author cache/message);
+my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author cache/message);
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {

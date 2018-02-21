@@ -1,6 +1,6 @@
 <p class="$itemClass">
-<a href="$permalinkTxt">$itemName</a><a href="$permalinkTxt">.txt</a> by
-<a href="$authorUrl">$authorAvatar</a>
+<a href="$permalinkHtml">$itemName</a><a href="$permalinkTxt">.txt</a>
+$authorLink
 <br>
 $itemText
 </p>
