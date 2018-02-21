@@ -11,7 +11,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
-my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author cache/message);
+my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author cache/message cache/gpg);
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -218,10 +218,13 @@ sub GpgParse {
 
 	my $gitHash = GetFileHash($filePath);
 
-	# todo put this in a chache dir
-	#
-	if (-e $filePath . ".cache") {
-		my %returnValues = %{retrieve($filePath . ".cache")};
+	my $cachePath;
+	$cachePath = $filePath;
+	$cachePath =~ s/\^\.\//.\/cache\/gpg\//;
+	$cachePath .= ".cache";
+
+	if (-e $cachePath) {
+		my %returnValues = %{retrieve($cachePath)};
 
 		return %returnValues;
 	}
