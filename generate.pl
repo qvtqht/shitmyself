@@ -112,7 +112,9 @@ sub GetIndex {
 		} else {
 			$authorLink = "";
 		}
-		my $permalinkTxt = "$file";
+		my $permalinkTxt = $file;
+		$permalinkTxt =~ s/^\.//;
+
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
