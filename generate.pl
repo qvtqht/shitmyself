@@ -13,8 +13,13 @@ my @files;
 sub GetIndex {
 	my $txtIndex = "";
 
+	my $title = shift;
+
 	# this will hold the title of the page
-	my $title = "Message Board";
+	if (!$title) {
+		$title = "Message Board";
+	}
+	chomp $title;
 
 	my $primaryColor = "#008080";
 	my $secondaryColor = '#f0fff0';
@@ -121,6 +126,21 @@ sub GetIndex {
 
 @files = DBGetItemList();
 
-my $indexText = GetIndex(@files);
+my $indexText = GetIndex();
 
 PutFile('./html/index.html', $indexText);
+
+my %authors = DBGetAuthorList();
+
+foreach my $key (keys %authors) {
+	mkdir("./html/author/$key");
+
+	@files = DBGetItemList("author_key='$key'");
+	my $authorAliasHtml = encode_entities($authors{$key});
+	my $title = "Posts by $authorAliasHtml";
+
+	my $authorIndex = GetIndex($title);
+
+	PutFile("./html/author/$key/index.html", $authorIndex);
+}
+

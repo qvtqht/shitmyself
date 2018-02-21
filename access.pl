@@ -5,7 +5,11 @@
 # It also updates the visit counters
 
 use strict;
+use warnings FATAL => 'all';
 use utf8;
+use 5.010;
+
+use HTML::Entities;
 
 ## CONFIG AND SANITY CHECKS ##
 
@@ -34,7 +38,7 @@ print "\$LOGFILE=$LOGFILE\n";
 # Prefixes we will look for in access log to find comments
 # and their corresponding drop folders
 # Wherever there is a gracias.html and board.nfo exists
-# todo add check for board.nfo
+
 
 my @submitReceivers = `find ./html/ | grep gracias.html`; #todo this is a hack
 
@@ -94,7 +98,7 @@ sub ProcessAccessLog {
 
 		# Split $date into $time and $date
 		my $time = substr($date, 13);
-		my $date = substr($date, 1, 11);
+		$date = substr($date, 1, 11);
 
 		my ($dateDay, $dateMonth, $dateYear) = split('/', $date);
 		my %mon2num = qw(jan 01 feb 02 mar 03 apr 04 may 05 jun 06 jul 07 aug 08 sep 09 oct 10 nov 11 dec 12);

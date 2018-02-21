@@ -11,7 +11,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
-my @dirsThatShouldExist = qw(html txt spam admin key cache html/author);
+my @dirsThatShouldExist = qw(html txt spam admin key cache html/author cache/message);
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -90,10 +90,12 @@ sub GetAvatar {
 sub GetAlias {
 	#todo actually do a lookup
 
-	my $gpg_key = shift;
-	chomp $gpg_key;
+	my $gpgKey = shift;
+	chomp $gpgKey;
 
-	return $gpg_key;
+	my $alias = DBGetAuthorAlias($gpgKey);
+
+	return $alias;
 }
 
 # Gets the contents of a file

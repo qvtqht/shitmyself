@@ -12,11 +12,8 @@ sub SqliteUnlinkDb {
 }
 
 sub SqliteMakeTables() {
-
-
 	SqliteQuery("CREATE TABLE author(key UNIQUE, alias, is_admin)");
 	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash)");
-
 }
 
 sub SqliteQuery {
@@ -49,6 +46,16 @@ sub SqliteGetHash {
 	return %hash;
 }
 
+sub SqliteGetValue {
+	my $query = shift;
+	chomp $query;
+
+	my $result = SqliteQuery($query);
+	chomp $result;
+
+	return $result;
+}
+
 sub SqliteEscape {
 	my $text = shift;
 
@@ -68,19 +75,6 @@ sub SqliteAddKeyValue {
 	SqliteQuery("INSERT INTO $table(key, alias) VALUES ('$key', '$value');");
 
 }
-
-#sub SqliteGetByKey {
-#	my $table = shift;
-#	my $key = shift;
-#	my $value = shift;
-#
-#	$table = SqliteEscape($table);
-#	$key = SqliteEscape($key);
-#	$value = SqliteEscape($value);
-#
-#	SqliteQuery("INSERT OR REPLACE INTO $table(key, value) VALUES ('$key', '$value');");
-#
-#}
 
 sub DBAddKeyAlias {
 	my $key = shift;
@@ -118,9 +112,16 @@ sub DBAddItem {
 }
 
 sub DBGetItemList {
+	my $whereClause = shift;
 	#	my $query = "SELECT item.file_path, item.item_name, item.file_hash, author.key, author.alias ".
 	#		"FROM item, author WHERE item.author_key = author.key;";
-	my $query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item;";
+
+	my $query;
+	if ($whereClause) {
+		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause;";
+	} else {
+		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item;";
+	}
 
 	my @results = split("\n", SqliteQuery($query));
 
@@ -141,6 +142,34 @@ sub DBGetItemList {
 	}
 
 	return @return;
+}
+
+sub DBGetItemListForAuthor {
+	my $author = shift;
+	$author = SqliteEscape($author);
+
+	return DBGetItemList("author_key = '$author'");
+}
+
+sub DBGetAuthorList {
+	my $query = "SELECT key, alias FROM author";
+
+	my %results = SqliteGetHash($query);
+
+	return %results;
+}
+
+sub DBGetAuthorAlias {
+	my $key = shift;
+	$key = SqliteEscape($key);
+
+	if ($key) {
+		my $query = "SELECT alias FROM author WHERE key = '$key'";
+		return SqliteGetValue($query);
+	} else {
+		return "";
+	}
+
 }
 
 1;
