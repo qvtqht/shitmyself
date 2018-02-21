@@ -57,11 +57,9 @@ sub MakeIndex {
 			if ($isSigned) {
 				DBAddItem ($file, $itemName, $gpgKey, $gitHash);
 
-				PutFile("./cache/$gitHash.message", $message);
+				PutFile("./cache/message/$gitHash.message", $message);
 			} else {
-				DBAddItem ($file, $itemName, '', $gitHash);
-
-				PutFile("./cache/$gitHash.message", $message);
+				DBAddItem ($file, $itemName, '', '');
 			}
 		}
 	}
