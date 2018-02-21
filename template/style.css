@@ -36,7 +36,7 @@ h1 {
 	font-weight: bold;
 	border-style: 2pt solid;
 	border-radius: 4pt;
-	padding-right: 1pt;
+	margin-right: 2pt;
 }
 .avatar {
 	border: 1pt dotted #808080;
