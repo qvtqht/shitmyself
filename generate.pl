@@ -110,8 +110,8 @@ sub GetIndex {
 	$txtIndex .= GetTemplate("forma.template");
 
 	# Make sure the submission form has somewhere to go
-	#PutFile("gracias.html", GetTemplate('gracias.template'));
-	#todo
+	my $graciasTemplate = GetTemplate('gracias.template');
+	PutFile("./html/gracias.html", $graciasTemplate);
 
 	# Close html
 	$txtIndex .= GetTemplate("htmlend.template");
