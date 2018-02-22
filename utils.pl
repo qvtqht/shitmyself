@@ -190,6 +190,26 @@ sub TrimPath {
 	return $string;
 }
 
+sub GetGpgFingerprint {
+	#gets the full gpg fingerprint from a public key in a text file
+
+	my $file = shift;
+	chomp $file;
+
+	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint $file`);
+
+	foreach (@gpgResults) {
+		if (substr($_, 0, 3) eq "fpr") {
+			my $fingerprint = substr($_, 3);
+			$fingerprint =~ s/://g;
+
+			return $fingerprint;
+		}
+	}
+
+	return;
+}
+
 sub GpgParse {
 	# GpgParse
 	# $filePath = path to file containing the text
@@ -200,7 +220,8 @@ sub GpgParse {
 	# $returnValues{'key'} = fingerprint of signer
 	# $returnValues{'alias'} = alias of signer, if they've added one by submitting their public key
 	# $returnValues{'keyExpired'} = whether the key has expired: 0 for not expired, 1 for expired
-	# $returnValues{'gitHash'} =
+	# $returnValues{'gitHash'} = git's hash of the file's contents
+	# $returnValues{'fingerprint'} = full fingerprint of gpg key
 
 	my $filePath = shift;
 
@@ -211,6 +232,8 @@ sub GpgParse {
 	my $isSigned = 0;
 
 	my $gpg_key;
+
+	my $fingerprint = '';
 
 	my $alias;
 
@@ -255,6 +278,8 @@ sub GpgParse {
 				$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"\n";
 
 				$isSigned = 1;
+
+				$fingerprint = GetGpgFingerprint($filePath);
 			}
 		}
 	}
@@ -293,6 +318,8 @@ sub GpgParse {
 			$message = `gpg --decrypt "$filePath"`;
 
 			$isSigned = 1;
+
+			$fingerprint = GetGpgFingerprint($filePath);
 		}
 	}
 
