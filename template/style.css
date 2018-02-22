@@ -34,11 +34,8 @@ h1 {
 }
 .avatar .icon {
 	font-weight: bold;
-	border-style: 2pt solid;
-	border-radius: 4pt;
 	margin-right: 2pt;
 }
 .avatar {
-	border: 1pt dotted #808080;
 	border-radius: 1pt;
 }
