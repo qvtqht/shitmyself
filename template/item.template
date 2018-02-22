@@ -1,5 +1,5 @@
 <p class="$itemClass">
-<a href="$permalinkHtml">$itemName</a><a href="$permalinkTxt">.txt</a>
+<a href="$permalinkTxt">$itemName.txt</a>
 $authorLink
 <br>
 $itemText

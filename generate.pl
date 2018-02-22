@@ -131,7 +131,7 @@ sub GetIndex {
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+		#$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
@@ -169,7 +169,7 @@ foreach my $key (@authors) {
 	my $authorAvatarHtml = GetAvatar($key);
 
 	my $title = "Posts by $authorAliasHtml";
-	my $titleHtml = "Posts by $authorAvatarHtml";
+	my $titleHtml = "$authorAvatarHtml";
 
 	my $authorIndex = GetIndex($title, $titleHtml);
 
