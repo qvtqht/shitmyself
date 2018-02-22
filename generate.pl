@@ -131,7 +131,6 @@ sub GetIndex {
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-		#$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
@@ -141,10 +140,6 @@ sub GetIndex {
 
 	# Add a submission form to the end of the page
 	$txtIndex .= GetTemplate("forma.template");
-
-	# Make sure the submission form has somewhere to go
-	my $graciasTemplate = GetTemplate('gracias.template');
-	PutFile("./html/gracias.html", $graciasTemplate);
 
 	# Close html
 	$txtIndex .= GetTemplate("htmlend.template");
@@ -176,3 +171,7 @@ foreach my $key (@authors) {
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }
 
+
+# Make sure the submission form has somewhere to go
+my $graciasTemplate = GetTemplate('gracias.template');
+PutFile("./html/gracias.html", $graciasTemplate);
