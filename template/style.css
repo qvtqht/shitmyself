@@ -12,9 +12,18 @@ details.txt {
 }
 .voter {
 	margin: 5pt 0pt 0pt 0pt;
+	text-align: right;
 }
 .voter a {
-	font-family: cursive;
+	text-decoration: none;
+	border: 2pt outset $primaryColor;
+	padding: 1pt;
+	border-radius: 3pt;
+	background-color: $primaryColor;
+	color: $secondaryColor;
+}
+.voter a:active {
+	border: 2pt inset $primaryColor;
 }
 details.txt a.header {
 	font-family: monospace;
