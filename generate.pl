@@ -10,6 +10,35 @@ require './sqlite.pl';
 
 my @files;
 
+sub GetVoterTemplate {
+	my $fileHash = shift;
+	my $voteHash = shift;
+
+	chomp $fileHash;
+	chomp $voteHash;
+
+	if ($fileHash && $voteHash) {
+		my $voteValuesList = GetFile('./config/tags');
+		chomp $voteValuesList;
+		my @voteValues = split("\n", $voteValuesList);
+
+		my $voteButtons = '';
+
+		foreach (@voteValues) {
+			my $buttonTemplate = GetTemplate("votebutton.template");
+
+			$buttonTemplate =~ s/\$fileHash/$fileHash/g;
+			$buttonTemplate =~ s/\$voteHash/$voteHash/g;
+			$buttonTemplate =~ s/\$voteValue/$_/g;
+			$buttonTemplate =~ s/\$voteValueCaption/$_/g;
+
+			$voteButtons .= $buttonTemplate;
+		}
+
+		return $voteButtons;
+	}
+}
+
 sub GetIndex {
 	my $txtIndex = "";
 
@@ -127,12 +156,19 @@ sub GetIndex {
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
 
+		my $voteHash = "d8e8fca2dc0f896fd7cb4cb0031ba249";
+
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+		print $fileHash;
+
+		my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
+		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 		# Print it
 		$txtIndex .= $itemTemplate;

@@ -1,13 +1,22 @@
 body {
 	font-family: monospace;
 }
-p.txt {
+details.txt {
 	padding: 3pt;
 	font-family: monospace;
 	word-wrap: break-word;
 	max-width: 80ex;
+	border: 1pt dotted $primaryColor;
+	border-radius: 1pt;
+	margin: 8pt;
 }
-p.txt a.header {
+.voter {
+	margin: 5pt 0pt 0pt 0pt;
+}
+.voter a {
+	font-family: cursive;
+}
+details.txt a.header {
 	font-family: monospace;
 	font-weight: bold;
 	font-size: larger;
@@ -20,10 +29,6 @@ h3 a {
 a {
 	color: $primaryColor;
 	background-color: $secondaryColor;
-}
-p.txt {
-	border: 1pt dotted $primaryColor;
-	border-radius: 1pt;
 }
 h1 {
 	background-color: $primaryColor;
