@@ -8,8 +8,9 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 
-use Digest::MD5 qw(md5_hex);
+use lib qw(lib);
 
+use Digest::MD5 qw(md5_hex);
 use HTML::Entities;
 use URI::Encode qw(uri_decode);
 

@@ -5,7 +5,7 @@ use warnings;
 use utf8;
 use 5.010;
 
-use lib 'inc';
+use lib 'lib';
 
 use URI::Encode qw(uri_decode);
 use URI::Escape;

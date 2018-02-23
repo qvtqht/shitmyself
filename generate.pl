@@ -4,6 +4,7 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 
+use lib qw(lib);
 use HTML::Entities;
 
 require './utils.pl';
