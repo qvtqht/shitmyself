@@ -17,8 +17,8 @@ body {
 .voter a {
 	text-decoration: none;
 	padding: 2pt 2pt 0pt 2pt;
-	font-family: cursive;
-	font-size: default;
+	font-family: sans-serif;
+	font-size: smaller;
 	margin-left: 3pt;
 }
 .voter a:active {
