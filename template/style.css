@@ -16,7 +16,7 @@ details.txt {
 }
 .voter a {
 	text-decoration: none;
-	border: 2pt outset $primaryColor;
+	border: 2pt solid $primaryColor;
 	padding: 2pt 2pt 0pt 2pt;
 	border-radius: 3pt;
 	background-color: $primaryColor;
@@ -25,7 +25,6 @@ details.txt {
 	font-size: default;
 }
 .voter a:active {
-	border: 2pt inset $primaryColor;
 	background-color: $secondaryColor;
 	color: $primaryColor;
 }
