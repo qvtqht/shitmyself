@@ -17,7 +17,7 @@ details.txt {
 .voter a {
 	text-decoration: none;
 	border: 2pt outset $primaryColor;
-	padding: 2pt;
+	padding: 2pt 2pt 0pt 2pt;
 	border-radius: 3pt;
 	background-color: $primaryColor;
 	color: $secondaryColor;

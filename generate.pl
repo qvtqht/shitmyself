@@ -236,6 +236,40 @@ sub GetIndex {
 	return $txtIndex;
 }
 
+sub GetSubmitPage {
+	my $txtIndex = "";
+
+	my $title = "Submit New Entry";
+	my $titleHtml = "Submit New Entry";
+
+	my $primaryColor = "#008080";
+	my $secondaryColor = '#f0fff0';
+	my $neutralColor = '#202020';
+	my $styleSheet = GetTemplate("style.css");
+
+	# Get the HTML page template
+	my $htmlStart = GetTemplate('htmlstart.template');
+	# and substitute $title with the title
+	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
+	$htmlStart =~ s/\$title/$title/;
+	$htmlStart =~ s/\$titleHtml/$titleHtml/;
+	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
+	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+
+	$txtIndex .= $htmlStart;
+
+	if ($titleHtml) {
+		$txtIndex .= "<h1>$titleHtml</h1>";
+	}
+
+	$txtIndex .= GetTemplate('forma.template');
+
+	$txtIndex .= GetTemplate("htmlend.template");
+
+	return $txtIndex;
+}
+
 my $indexText = GetIndex();
 
 PutFile('./html/index.html', $indexText);
@@ -259,6 +293,9 @@ foreach my $file(@files) {
 
 	PutFile("./html/$fileName.html", $fileIndex);
 }
+
+my $submitPage = GetSubmitPage();
+PutFile("./html/submit.html", $submitPage);
 
 # Make sure the submission form has somewhere to go
 my $graciasTemplate = GetTemplate('gracias.template');
