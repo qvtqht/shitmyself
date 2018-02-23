@@ -37,45 +37,8 @@ sub GetVoterTemplate {
 	}
 }
 
-sub GetFileIndex {
+sub GetItemTemplate {
 	my %file = %{shift @_};
-
-	my $txtIndex = "";
-
-	my $filePath = $file{'file_path'};
-
-	my $title = "";
-	my $titleHtml = "";
-
-	if (defined($file{'author_key'}) && $file{'author_key'}) {
-		# todo the .txt extension should not be hard-coded
-		$title = TrimPath($filePath) . ".txt by " . GetAlias($file{'author_key'});
-		$titleHtml = TrimPath($filePath) . ".txt by " . GetAvatar($file{'author_key'});
-	} else {
-		$title = TrimPath($filePath) . ".txt";
-		$titleHtml = $title;
-	}
-
-	my $primaryColor = "#008080";
-	my $secondaryColor = '#f0fff0';
-	my $neutralColor = '#202020';
-	my $styleSheet = GetTemplate("style.css");
-
-	# Get the HTML page template
-	my $htmlStart = GetTemplate('htmlstart.template');
-	# and substitute $title with the title
-	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
-	$htmlStart =~ s/\$title/$title/;
-	$htmlStart =~ s/\$titleHtml/$titleHtml/;
-	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
-	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
-	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
-
-	$txtIndex .= $htmlStart;
-
-	if ($titleHtml) {
-		$txtIndex .= "<h1>$titleHtml</h1>";
-	}
 
 	my $gitHash = $file{'file_hash'};
 
@@ -159,6 +122,51 @@ sub GetFileIndex {
 
 	my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
 	$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+	return $itemTemplate;
+}
+
+sub GetFileIndex {
+	my %file = %{shift @_};
+
+	my $txtIndex = "";
+
+	my $filePath = $file{'file_path'};
+
+	my $title = "";
+	my $titleHtml = "";
+
+	if (defined($file{'author_key'}) && $file{'author_key'}) {
+		# todo the .txt extension should not be hard-coded
+		$title = TrimPath($filePath) . ".txt by " . GetAlias($file{'author_key'});
+		$titleHtml = TrimPath($filePath) . ".txt by " . GetAvatar($file{'author_key'});
+	} else {
+		$title = TrimPath($filePath) . ".txt";
+		$titleHtml = $title;
+	}
+
+	my $primaryColor = "#008080";
+	my $secondaryColor = '#f0fff0';
+	my $neutralColor = '#202020';
+	my $styleSheet = GetTemplate("style.css");
+
+	# Get the HTML page template
+	my $htmlStart = GetTemplate('htmlstart.template');
+	# and substitute $title with the title
+	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
+	$htmlStart =~ s/\$title/$title/;
+	$htmlStart =~ s/\$titleHtml/$titleHtml/;
+	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
+	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+
+	$txtIndex .= $htmlStart;
+
+	if ($titleHtml) {
+		$txtIndex .= "<h1>$titleHtml</h1>";
+	}
+
+	my $itemTemplate = GetItemTemplate(\%file);
 
 	# Print it
 	$txtIndex .= $itemTemplate;
