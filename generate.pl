@@ -2,6 +2,7 @@
 use strict;
 use warnings FATAL => 'all';
 use utf8;
+use 5.010;
 
 use HTML::Entities;
 
@@ -59,23 +60,26 @@ sub GetVoterTemplate {
 	chomp $fileHash;
 	chomp $voteHash;
 
-	if ($fileHash && $voteHash) {
+	state $voteButtons;
+
+	if (!defined($voteButtons)) {
 		my $voteValuesList = GetFile('./config/tags');
 		chomp $voteValuesList;
 		my @voteValues = split("\n", $voteValuesList);
 
-		my $voteButtons = '';
-
 		foreach (@voteValues) {
 			my $buttonTemplate = GetTemplate("votebutton.template");
 
-			$buttonTemplate =~ s/\$fileHash/$fileHash/g;
-			$buttonTemplate =~ s/\$voteHash/$voteHash/g;
 			$buttonTemplate =~ s/\$voteValue/$_/g;
 			$buttonTemplate =~ s/\$voteValueCaption/$_/g;
 
 			$voteButtons .= $buttonTemplate;
 		}
+	}
+
+	if ($fileHash && $voteHash) {
+		$voteButtons =~ s/\$fileHash/$fileHash/g;
+		$voteButtons =~ s/\$voteHash/$voteHash/g;
 
 		return $voteButtons;
 	}
