@@ -10,3 +10,4 @@ $styleSheet
 </head>
 <body>
 <h1>$titleHtml</h1>
+<h2 class="menu">$menuItems</h2>

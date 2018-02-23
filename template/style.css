@@ -33,11 +33,6 @@ details.txt a.header {
 	font-weight: bold;
 	font-size: larger;
 }
-h3 a {
-	padding: 5pt;
-	spacing: 5pt;
-	display: block;
-}
 a {
 	color: $primaryColor;
 	background-color: $secondaryColor;
@@ -45,9 +40,27 @@ a {
 h1 {
 	background-color: $primaryColor;
 	color: $secondaryColor;
-	padding: 5pt;
+	margin-bottom: 0pt;
 	border: solid 5pt $primaryColor;
-	border-radius: 5pt;
+	border-bottom: 0pt;
+	border-radius: 5pt 5pt 0pt 0pt;
+	padding: 3pt;
+}
+h2.menu {
+	margin-top: 0pt;
+	padding-right: 5pt;
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	border: solid 5pt $primaryColor;
+	border-top: 0pt;
+	border-radius: 0pt 0pt 5pt 5pt;
+	text-align: right;
+}
+h2.menu a {
+	text-decoration: none;
+	margin-left: 1em;
+	color: $secondaryColor;
+	background-color: $primaryColor;
 }
 .avatar .icon {
 	font-weight: bold;

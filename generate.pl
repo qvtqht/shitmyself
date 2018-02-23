@@ -29,9 +29,27 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 
+	my $menuTemplate = "";
+	$menuTemplate .= GetMenuItem("/", "home");
+	$menuTemplate .= GetMenuItem("/submit.html", "submit");
+
+	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
+
 	$txtIndex .= $htmlStart;
 
 	return $txtIndex;
+}
+
+sub GetMenuItem {
+	my $address = shift;
+	my $caption = shift;
+
+	my $menuItem = GetTemplate('menuitem.template');
+
+	$menuItem =~ s/\$address/$address/g;
+	$menuItem =~ s/\$caption/$caption/g;
+
+	return $menuItem;
 }
 
 sub GetVoterTemplate {
