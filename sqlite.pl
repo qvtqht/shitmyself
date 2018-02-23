@@ -23,7 +23,7 @@ sub SqliteQuery {
 	my $query = shift;
 	chomp $query;
 
-	print "$query\n";
+	#print "$query\n";
 	
 	my $results = `sqlite3 $SqliteDbName "$query"`;
 	

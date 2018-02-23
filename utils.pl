@@ -205,7 +205,8 @@ sub GetGpgFingerprint {
 	my $file = shift;
 	chomp $file;
 
-	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint $file`);
+	print "gpg --with-colons --with-fingerprint --decrypt \"$file\"\n";
+	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint --decrypt "$file"`);
 
 	foreach (@gpgResults) {
 		if (substr($_, 0, 3) eq "fpr") {
@@ -272,6 +273,7 @@ sub GpgParse {
 
 	# If there is a GPG pubkey header...
 	if (substr($txt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
+		print "gpg --keyid-format LONG \"$filePath\"";
 		my $gpg_result = `gpg --keyid-format LONG "$filePath"`;
 
 		foreach (split ("\n", $gpg_result)) {
@@ -288,7 +290,7 @@ sub GpgParse {
 
 				$isSigned = 1;
 
-				$fingerprint = GetGpgFingerprint($filePath);
+				#$fingerprint = GetGpgFingerprint($filePath);
 			}
 		}
 	}
@@ -297,6 +299,7 @@ sub GpgParse {
 	if (substr($txt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 		# Verify the file by using command-line gpg
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
+		print "gpg --verify --status-fd 1 \"$filePath\"\n";
 		my $gpg_result = `gpg --verify --status-fd 1 "$filePath"`;
 
 		my $key_id_prefix;
@@ -324,6 +327,7 @@ sub GpgParse {
 			$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 			$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
 
+			print "gpg --decrypt \"$filePath\"\n";
 			$message = `gpg --decrypt "$filePath"`;
 
 			$isSigned = 1;
