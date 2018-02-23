@@ -8,6 +8,36 @@ use HTML::Entities;
 require './utils.pl';
 require './sqlite.pl';
 
+sub GetPageHeader {
+	my $title = shift;
+	my $titleHtml = shift;
+
+	my $txtIndex = "";
+
+	my $primaryColor = "#008080";
+	my $secondaryColor = '#f0fff0';
+	my $neutralColor = '#202020';
+	my $styleSheet = GetTemplate("style.css");
+
+	# Get the HTML page template
+	my $htmlStart = GetTemplate('htmlstart.template');
+	# and substitute $title with the title
+	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
+	$htmlStart =~ s/\$title/$title/;
+	$htmlStart =~ s/\$titleHtml/$titleHtml/;
+	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
+	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+
+	$txtIndex .= $htmlStart;
+
+	if ($titleHtml) {
+		$txtIndex .= "<h1>$titleHtml</h1>";
+	}
+
+	return $txtIndex;
+}
+
 sub GetVoterTemplate {
 	my $fileHash = shift;
 	my $voteHash = shift;
@@ -126,7 +156,7 @@ sub GetItemTemplate {
 	return $itemTemplate;
 }
 
-sub GetFileIndex {
+sub GetItemPage {
 	my %file = %{shift @_};
 
 	my $txtIndex = "";
@@ -145,26 +175,12 @@ sub GetFileIndex {
 		$titleHtml = $title;
 	}
 
-	my $primaryColor = "#008080";
-	my $secondaryColor = '#f0fff0';
-	my $neutralColor = '#202020';
-	my $styleSheet = GetTemplate("style.css");
+
 
 	# Get the HTML page template
-	my $htmlStart = GetTemplate('htmlstart.template');
-	# and substitute $title with the title
-	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
-	$htmlStart =~ s/\$title/$title/;
-	$htmlStart =~ s/\$titleHtml/$titleHtml/;
-	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
-	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
-	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+	my $htmlStart = GetPageHeader($title, $titleHtml);
 
 	$txtIndex .= $htmlStart;
-
-	if ($titleHtml) {
-		$txtIndex .= "<h1>$titleHtml</h1>";
-	}
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
@@ -176,7 +192,7 @@ sub GetFileIndex {
 	return $txtIndex;
 }
 
-sub GetIndex {
+sub GetIndexPage {
 	my $title;
 	my $titleHtml;
 
@@ -212,28 +228,9 @@ sub GetIndex {
 	}
 	chomp $title;
 
-	my $primaryColor = "#008080";
-	my $secondaryColor = '#f0fff0';
-	my $neutralColor = '#202020';
-	my $styleSheet = GetTemplate("style.css");
-
-	# Get the HTML page template
-	my $htmlStart = GetTemplate('htmlstart.template');
-	# and substitute $title with the title
-	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
-	$htmlStart =~ s/\$title/$title/;
-	$htmlStart =~ s/\$titleHtml/$titleHtml/;
-	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
-	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
-	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
-
+	my $htmlStart = GetPageHeader($title, $titleHtml);
 
 	$txtIndex .= $htmlStart;
-
-	# If $title is set, print it as a header
-	if ($titleHtml) {
-		$txtIndex .= "<h1>$titleHtml</h1>";
-	}
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -333,29 +330,11 @@ sub GetIndex {
 sub GetSubmitPage {
 	my $txtIndex = "";
 
+
 	my $title = "Submit New Entry";
 	my $titleHtml = "Submit New Entry";
 
-	my $primaryColor = "#008080";
-	my $secondaryColor = '#f0fff0';
-	my $neutralColor = '#202020';
-	my $styleSheet = GetTemplate("style.css");
-
-	# Get the HTML page template
-	my $htmlStart = GetTemplate('htmlstart.template');
-	# and substitute $title with the title
-	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
-	$htmlStart =~ s/\$title/$title/;
-	$htmlStart =~ s/\$titleHtml/$titleHtml/;
-	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
-	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
-	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
-
-	$txtIndex .= $htmlStart;
-
-	if ($titleHtml) {
-		$txtIndex .= "<h1>$titleHtml</h1>";
-	}
+	$txtIndex = GetPageHeader($title, $titleHtml);
 
 	$txtIndex .= GetTemplate('forma.template');
 
@@ -364,7 +343,9 @@ sub GetSubmitPage {
 	return $txtIndex;
 }
 
-my $indexText = GetIndex();
+
+
+my $indexText = GetIndexPage();
 
 PutFile('./html/index.html', $indexText);
 
@@ -373,7 +354,7 @@ my @authors = DBGetAuthorList();
 foreach my $key (@authors) {
 	mkdir("./html/author/$key");
 
-	my $authorIndex = GetIndex('author', $key);
+	my $authorIndex = GetIndexPage('author', $key);
 
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }
@@ -383,7 +364,7 @@ my @files = DBGetItemList();
 foreach my $file(@files) {
 	my $fileName = TrimPath($file->{'file_path'});
 
-	my $fileIndex = GetFileIndex($file);
+	my $fileIndex = GetItemPage($file);
 
 	PutFile("./html/$fileName.html", $fileIndex);
 }
