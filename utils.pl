@@ -34,6 +34,15 @@ sub GetFileHash {
 	return $gitOutput;
 }
 
+sub GetRandomHash {
+	my @chars=('a'..'f','0'..'9');
+	my $randomString;
+	foreach (1..40) {
+		$randomString.=$chars[rand @chars];
+	}
+	return $randomString;
+}
+
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;

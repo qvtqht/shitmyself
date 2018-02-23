@@ -156,7 +156,7 @@ sub GetIndex {
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
 
-		my $voteHash = "d8e8fca2dc0f896fd7cb4cb0031ba249";
+		my $voteHash = GetRandomHash();
 
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
