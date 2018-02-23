@@ -216,11 +216,9 @@ sub ProcessAccessLog {
 
 				my $voteEntry = "$voteFile|$voteHash|$voteValue";
 
-				AppendFile("log/votes", $voteEntry);
+				AppendFile("log/votes.log", $voteEntry);
 			}
 		}
-
-
 	}
 
 	# Close the log file handle

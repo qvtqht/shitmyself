@@ -16,6 +16,16 @@ require './sqlite.pl';
 # This holds all the files we will list in the primary index
 my @filesToInclude = `find ./txt/ -name \*.txt | sort -r`;
 
+sub MakeVoteIndex {
+	my @voteRecord = split("\n", GetFile("log/votes.log"));
+
+	foreach (@voteRecord) {
+		my ($fileHash, $voteHash, $voteValue) = split('\|', $_);
+
+		DBAddVoteRecord($fileHash, $voteHash, $voteValue);
+	}
+}
+
 sub MakeIndex {
 	foreach my $file (@filesToInclude) {
 		chomp($file);
@@ -67,4 +77,7 @@ sub MakeIndex {
 
 SqliteUnlinkDb();
 SqliteMakeTables();
+
+MakeVoteIndex();
+
 MakeIndex(@filesToInclude);

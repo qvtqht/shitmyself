@@ -165,8 +165,6 @@ sub GetIndex {
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
-		print $fileHash;
-
 		my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
 		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 

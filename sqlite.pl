@@ -14,6 +14,9 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
+	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
+
+	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, vote_hash, vote_value);");
 }
 
 sub SqliteQuery {
@@ -132,6 +135,25 @@ sub DBAddItem {
 	}
 }
 
+sub DBAddVoteRecord {
+	my $fileHash = shift;
+	my $voteHash = shift;
+	my $voteValue = shift;
+
+	chomp $fileHash;
+	chomp $voteHash;
+	chomp $voteValue;
+
+	$fileHash = SqliteEscape($fileHash);
+	$voteHash = SqliteEscape($voteHash);
+	$voteValue = SqliteEscape($voteValue);
+
+	SqliteQuery(
+		"INSERT OR REPLACE INTO vote(file_hash, vote_hash, vote_value) " .
+			"VALUES('$fileHash', '$voteHash', '$voteValue');"
+	);
+}
+
 sub DBGetItemList {
 	my $whereClause = shift;
 
@@ -188,7 +210,6 @@ sub DBGetAuthorAlias {
 	} else {
 		return "";
 	}
-
 }
 
 1;
