@@ -1,7 +1,7 @@
 body {
 	font-family: monospace;
 }
-details.txt {
+.txt {
 	padding: 3pt;
 	font-family: monospace;
 	word-wrap: break-word;
@@ -16,22 +16,20 @@ details.txt {
 }
 .voter a {
 	text-decoration: none;
-	border: 2pt solid $primaryColor;
+	border: 1px dotted $primaryColor;
 	padding: 2pt 2pt 0pt 2pt;
-	border-radius: 3pt;
-	background-color: $primaryColor;
-	color: $secondaryColor;
+	border-radius: 2pt;
 	font-family: cursive;
 	font-size: default;
+	margin-left: 3pt;
 }
 .voter a:active {
 	background-color: $secondaryColor;
 	color: $primaryColor;
 }
 .voter a:visited {
-	background-color: $disabledColor;
-	color: $disabledTextColor;
-	border-color: $disabledColor;
+	color: $orangeColor;
+	border: 1px dotted $secondaryColor;
 }
 details.txt a.header {
 	font-family: monospace;

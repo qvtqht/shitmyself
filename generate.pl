@@ -20,6 +20,7 @@ sub GetPageHeader {
 	my $neutralColor = '#202020';
 	my $disabledColor = '#c0c0c0';
 	my $disabledTextColor = '#808080';
+	my $orangeColor = '#f08000';
 	my $styleSheet = GetTemplate("style.css");
 
 	# Get the HTML page template
@@ -32,6 +33,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$disabledColor/$disabledColor/g;
 	$htmlStart =~ s/\$disabledTextColor/$disabledTextColor/g;
+	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 
 	my $menuTemplate = "";
