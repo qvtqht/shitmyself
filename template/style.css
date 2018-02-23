@@ -52,4 +52,6 @@ h1 {
 }
 .avatar {
 	border-radius: 1pt;
+	background-color: $secondaryColor;
+	color: $primaryColor;
 }

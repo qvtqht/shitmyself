@@ -1,6 +1,6 @@
 <details class="$itemClass">
 <summary>
-<a href="$permalinkTxt">$itemName.txt</a>
+<a href="$permalinkHtml">$itemName</a><a href="$permalinkTxt">.txt</a>
 $authorLink
 <br>
 $itemText

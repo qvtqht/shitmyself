@@ -37,6 +37,48 @@ sub GetVoterTemplate {
 	}
 }
 
+sub GetFileIndex {
+	my $fileHash = shift;
+
+	my $whereClause = "file_hash='$fileHash'";
+
+	my @files = DBGetItemList($whereClause);
+
+	my $txtIndex = "";
+
+	foreach my $file (@files) {
+		my $filePath = $file->{'file_path'};
+
+		my $title = TrimPath($filePath);
+		my $titleHtml = $title;
+
+		my $primaryColor = "#008080";
+		my $secondaryColor = '#f0fff0';
+		my $neutralColor = '#202020';
+		my $styleSheet = GetTemplate("style.css");
+
+		# Get the HTML page template
+		my $htmlStart = GetTemplate('htmlstart.template');
+		# and substitute $title with the title
+		$htmlStart =~ s/\$styleSheet/$styleSheet/g;
+		$htmlStart =~ s/\$title/$title/;
+		$htmlStart =~ s/\$titleHtml/$titleHtml/;
+		$htmlStart =~ s/\$primaryColor/$primaryColor/g;
+		$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+		$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+
+		$txtIndex .= $htmlStart;
+
+		if ($titleHtml) {
+			$txtIndex .= "<h1>$titleHtml</h1>";
+		}
+
+		$txtIndex .= GetTemplate("htmlend.template");
+	}
+
+	return $txtIndex;
+}
+
 sub GetIndex {
 	my $title;
 	my $titleHtml;
@@ -45,17 +87,19 @@ sub GetIndex {
 
 	my @files;
 
-	if (defined($pageType) && $pageType eq 'author') {
-		my $authorKey = shift;
-		my $whereClause = "author_key='$authorKey'";
+	if (defined($pageType)) {
+		if ($pageType eq 'author') {
+			my $authorKey = shift;
+			my $whereClause = "author_key='$authorKey'";
 
-		my $authorAliasHtml = GetAlias($authorKey);
-		my $authorAvatarHtml = GetAvatar($authorKey);
+			my $authorAliasHtml = GetAlias($authorKey);
+			my $authorAvatarHtml = GetAvatar($authorKey);
 
-		$title = "Posts by $authorAliasHtml";
-		$titleHtml = "$authorAvatarHtml";
+			$title = "Posts by $authorAliasHtml";
+			$titleHtml = "$authorAvatarHtml";
 
-		@files = DBGetItemList($whereClause);
+			@files = DBGetItemList($whereClause);
+		}
 	} else {
 		$title = 'Message Board';
 		$titleHtml = 'Message Board';
@@ -160,8 +204,7 @@ sub GetIndex {
 		my $permalinkTxt = $file;
 		$permalinkTxt =~ s/^\.//;
 
-		my $permalinkHtml = $permalinkTxt . ".html";
-		$permalinkHtml =~ s/^\/txt\//\//;
+		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file);
@@ -173,6 +216,7 @@ sub GetIndex {
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
@@ -203,6 +247,15 @@ foreach my $key (@authors) {
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }
 
+my @files = DBGetItemList();
+
+foreach my $file(@files) {
+	my $fileName = TrimPath($file->{'file_path'});
+
+	my $fileIndex = GetFileIndex($file->{'file_hash'});
+
+	PutFile("./html/$fileName.html", $fileIndex);
+}
 
 # Make sure the submission form has somewhere to go
 my $graciasTemplate = GetTemplate('gracias.template');
