@@ -1,1 +1,1 @@
-<a href="/action/vote/$fileHash/$voteHash/$voteValue/">$voteValue</a>
+<a href="/action/vote/$fileHash/$voteHash/$voteValue/" target=voterFrame>$voteValue</a>

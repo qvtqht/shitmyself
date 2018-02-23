@@ -18,6 +18,8 @@ sub GetPageHeader {
 	my $primaryColor = "#008080";
 	my $secondaryColor = '#f0fff0';
 	my $neutralColor = '#202020';
+	my $disabledColor = '#c0c0c0';
+	my $disabledTextColor = '#808080';
 	my $styleSheet = GetTemplate("style.css");
 
 	# Get the HTML page template
@@ -28,6 +30,8 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$titleHtml/$titleHtml/;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$disabledColor/$disabledColor/g;
+	$htmlStart =~ s/\$disabledTextColor/$disabledTextColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 
 	my $menuTemplate = "";
@@ -60,9 +64,9 @@ sub GetVoterTemplate {
 	chomp $fileHash;
 	chomp $voteHash;
 
-	state $voteButtons;
+	state $voteButtonsTemplate;
 
-	if (!defined($voteButtons)) {
+	if (!defined($voteButtonsTemplate)) {
 		my $voteValuesList = GetFile('./config/tags');
 		chomp $voteValuesList;
 		my @voteValues = split("\n", $voteValuesList);
@@ -73,11 +77,12 @@ sub GetVoterTemplate {
 			$buttonTemplate =~ s/\$voteValue/$_/g;
 			$buttonTemplate =~ s/\$voteValueCaption/$_/g;
 
-			$voteButtons .= $buttonTemplate;
+			$voteButtonsTemplate .= $buttonTemplate;
 		}
 	}
 
 	if ($fileHash && $voteHash) {
+		my $voteButtons = $voteButtonsTemplate;
 		$voteButtons =~ s/\$fileHash/$fileHash/g;
 		$voteButtons =~ s/\$voteHash/$voteHash/g;
 

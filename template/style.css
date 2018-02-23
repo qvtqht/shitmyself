@@ -28,6 +28,11 @@ details.txt {
 	background-color: $secondaryColor;
 	color: $primaryColor;
 }
+.voter a:visited {
+	background-color: $disabledColor;
+	color: $disabledTextColor;
+	border-color: $disabledColor;
+}
 details.txt a.header {
 	font-family: monospace;
 	font-weight: bold;

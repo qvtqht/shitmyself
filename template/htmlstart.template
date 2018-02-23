@@ -11,3 +11,4 @@ $styleSheet
 <body>
 <h1>$titleHtml</h1>
 <h2 class="menu">$menuItems</h2>
+<iframe style="display:none" width=1 height=1 name=voterFrame id=voterFrame></iframe>
