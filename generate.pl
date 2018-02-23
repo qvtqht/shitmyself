@@ -183,9 +183,6 @@ sub GetIndex {
 		$txtIndex .= $itemTemplate;
 	}
 
-	# Add a submission form to the end of the page
-	$txtIndex .= GetTemplate("forma.template");
-
 	# Close html
 	$txtIndex .= GetTemplate("htmlend.template");
 
