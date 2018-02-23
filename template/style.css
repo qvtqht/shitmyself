@@ -17,13 +17,17 @@ details.txt {
 .voter a {
 	text-decoration: none;
 	border: 2pt outset $primaryColor;
-	padding: 1pt;
+	padding: 2pt;
 	border-radius: 3pt;
 	background-color: $primaryColor;
 	color: $secondaryColor;
+	font-family: cursive;
+	font-size: default;
 }
 .voter a:active {
 	border: 2pt inset $primaryColor;
+	background-color: $secondaryColor;
+	color: $primaryColor;
 }
 details.txt a.header {
 	font-family: monospace;

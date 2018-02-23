@@ -38,43 +38,46 @@ sub GetVoterTemplate {
 }
 
 sub GetFileIndex {
-	my $fileHash = shift;
-
-	my $whereClause = "file_hash='$fileHash'";
-
-	my @files = DBGetItemList($whereClause);
+	my %file = %{shift @_};
 
 	my $txtIndex = "";
 
-	foreach my $file (@files) {
-		my $filePath = $file->{'file_path'};
+	my $filePath = $file{'file_path'};
 
-		my $title = TrimPath($filePath);
-		my $titleHtml = $title;
+	my $title = "";
+	my $titleHtml = "";
 
-		my $primaryColor = "#008080";
-		my $secondaryColor = '#f0fff0';
-		my $neutralColor = '#202020';
-		my $styleSheet = GetTemplate("style.css");
-
-		# Get the HTML page template
-		my $htmlStart = GetTemplate('htmlstart.template');
-		# and substitute $title with the title
-		$htmlStart =~ s/\$styleSheet/$styleSheet/g;
-		$htmlStart =~ s/\$title/$title/;
-		$htmlStart =~ s/\$titleHtml/$titleHtml/;
-		$htmlStart =~ s/\$primaryColor/$primaryColor/g;
-		$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
-		$htmlStart =~ s/\$neutralColor/$neutralColor/g;
-
-		$txtIndex .= $htmlStart;
-
-		if ($titleHtml) {
-			$txtIndex .= "<h1>$titleHtml</h1>";
-		}
-
-		$txtIndex .= GetTemplate("htmlend.template");
+	if (defined($file{'author_key'}) && $file{'author_key'}) {
+		# todo the .txt extension should not be hard-coded
+		$title = TrimPath($filePath) . ".txt by " . GetAlias($file{'author_key'});
+		$titleHtml = TrimPath($filePath) . ".txt by " . GetAvatar($file{'author_key'});
+	} else {
+		$title = TrimPath($filePath) . ".txt";
+		$titleHtml = $title;
 	}
+
+	my $primaryColor = "#008080";
+	my $secondaryColor = '#f0fff0';
+	my $neutralColor = '#202020';
+	my $styleSheet = GetTemplate("style.css");
+
+	# Get the HTML page template
+	my $htmlStart = GetTemplate('htmlstart.template');
+	# and substitute $title with the title
+	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
+	$htmlStart =~ s/\$title/$title/;
+	$htmlStart =~ s/\$titleHtml/$titleHtml/;
+	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
+	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+
+	$txtIndex .= $htmlStart;
+
+	if ($titleHtml) {
+		$txtIndex .= "<h1>$titleHtml</h1>";
+	}
+
+	$txtIndex .= GetTemplate("htmlend.template");
 
 	return $txtIndex;
 }
@@ -252,7 +255,7 @@ my @files = DBGetItemList();
 foreach my $file(@files) {
 	my $fileName = TrimPath($file->{'file_path'});
 
-	my $fileIndex = GetFileIndex($file->{'file_hash'});
+	my $fileIndex = GetFileIndex($file);
 
 	PutFile("./html/$fileName.html", $fileIndex);
 }
