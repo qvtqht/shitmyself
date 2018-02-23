@@ -17,12 +17,16 @@ require './sqlite.pl';
 my @filesToInclude = `find ./txt/ -name \*.txt | sort -r`;
 
 sub MakeVoteIndex {
-	my @voteRecord = split("\n", GetFile("log/votes.log"));
+	my $voteLog = GetFile("log/votes.log");
 
-	foreach (@voteRecord) {
-		my ($fileHash, $voteHash, $voteValue) = split('\|', $_);
+	if (defined($voteLog) && $voteLog) {
+		my @voteRecord = split("\n", GetFile("log/votes.log"));
 
-		DBAddVoteRecord($fileHash, $voteHash, $voteValue);
+		foreach (@voteRecord) {
+			my ($fileHash, $voteHash, $voteValue) = split('\|', $_);
+
+			DBAddVoteRecord($fileHash, $voteHash, $voteValue);
+		}
 	}
 }
 
