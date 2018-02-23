@@ -16,9 +16,7 @@ body {
 }
 .voter a {
 	text-decoration: none;
-	border: 1px dotted $primaryColor;
 	padding: 2pt 2pt 0pt 2pt;
-	border-radius: 2pt;
 	font-family: cursive;
 	font-size: default;
 	margin-left: 3pt;
@@ -29,7 +27,6 @@ body {
 }
 .voter a:visited {
 	color: $orangeColor;
-	border: 1px dotted $secondaryColor;
 }
 details.txt a.header {
 	font-family: monospace;
