@@ -77,6 +77,92 @@ sub GetFileIndex {
 		$txtIndex .= "<h1>$titleHtml</h1>";
 	}
 
+	my $gitHash = $file{'file_hash'};
+
+	my $gpgKey = $file{'author_key'};
+
+	my $isSigned;
+	if ($gpgKey) {
+		$isSigned = 1;
+	} else {
+		$isSigned = 0;
+	}
+
+	my $alias;;
+
+	my $isAdmin = 0;
+
+	my $message;
+	if ($gpgKey) {
+		$message = GetFile("./cache/message/$gitHash.message");
+	} else {
+		$message = GetFile($file{'file_path'});
+	}
+
+	$message = encode_entities($message, '<>&"');
+	$message =~ s/\n/<br>\n/g;
+
+	if ($isSigned && $gpgKey eq GetAdminKey()) {
+		$isAdmin = 1;
+	}
+
+	my $signedCss = "";
+	if ($isSigned) {
+		if ($isAdmin) {
+			$signedCss = "signed admin";
+		} else {
+			$signedCss = "signed";
+		}
+	}
+
+	# todo $alias = GetAlias($gpgKey);
+
+	$alias = encode_entities($alias, '<>&"');
+
+	my $itemTemplate = GetTemplate("item.template");
+
+	my $itemClass = "txt $signedCss";
+
+	my $authorUrl;
+	my $authorAvatar;
+	my $authorLink;
+
+	if ($gpgKey) {
+		$authorUrl = "/author/$gpgKey/";
+		$authorAvatar = GetAvatar($gpgKey);
+
+		$authorLink = GetTemplate('authorlink.template');
+
+		$authorLink =~ s/\$authorUrl/$authorUrl/g;
+		$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+	} else {
+		$authorLink = "";
+	}
+	my $permalinkTxt = $file{'file_path'};
+	$permalinkTxt =~ s/^\.//;
+
+	my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+	my $itemText = $message;
+	my $fileHash = GetFileHash($file{'file_path'});
+	my $itemName = TrimPath($file{'file_path'});
+
+	my $voteHash = GetRandomHash();
+
+	$itemTemplate =~ s/\$itemClass/$itemClass/g;
+	$itemTemplate =~ s/\$authorLink/$authorLink/g;
+	$itemTemplate =~ s/\$itemName/$itemName/g;
+	$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+	$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+	$itemTemplate =~ s/\$itemText/$itemText/g;
+	$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+	my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
+	$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+	# Print it
+	$txtIndex .= $itemTemplate;
+
 	$txtIndex .= GetTemplate("htmlend.template");
 
 	return $txtIndex;
