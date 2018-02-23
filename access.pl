@@ -13,23 +13,16 @@ use URI::Encode qw(uri_decode);
 
 ## CONFIG AND SANITY CHECKS ##
 
-# We'll use pwd for for the install root dir
-my $SCRIPTDIR = `pwd`;
-chomp $SCRIPTDIR;
-
 if (!-e './utils.pl') {
-	die ("Sanity check failed, can't find ./utils.pl in $SCRIPTDIR");
+	die ("Sanity check failed, can't find ./utils.pl");
 }
 require './utils.pl';
-
-# We'll use ./txt as the text repo
-my $TXTDIR = "$SCRIPTDIR/txt/";
 
 # Logfile for default site domain
 # In Apache, use CustomLog, e.g.:
 #         CustomLog /foo/bar/log/access.log combined
 
-my $LOGFILE = "$SCRIPTDIR/log/lighttpd.log";
+my $LOGFILE = "./log/lighttpd.log";
 print "\$LOGFILE=$LOGFILE\n";
 
 
@@ -161,23 +154,20 @@ sub ProcessAccessLog {
 				# If the submission contains an @-sign, hide it into the admin dir
 				# Also, if it contains the string ".onion", to curb spam @todo better solution
 				if (index($message, "@") != -1) {
-					$filenameDir = "$SCRIPTDIR/admin/";
+					$filenameDir = "$./admin/";
 					$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
 
 					print "I'm going to put $filename into $filenameDir because it contains an @";
 				} elsif (index($message, ".onion") != -1) {
-					$filenameDir = "$SCRIPTDIR/spam/";
+					$filenameDir = "$./spam/";
 					$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
 
 					print "I'm going to put $filename into $filenameDir because it contains a .onion";
 				} else {
-					# Prefix for new text posts
-					$filenameDir = $TXTDIR;
-
 					$filename = "$dateYear/$dateMonth/$dateDay";
 
-					if (!-d "$TXTDIR$filename") {
-						system("mkdir -p $TXTDIR$filename");
+					if (!-d "./txt/$filename") {
+						system("mkdir -p ./txt/$filename");
 					}
 					$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
 
