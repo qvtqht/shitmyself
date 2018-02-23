@@ -8,6 +8,8 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 
+use Digest::MD5 qw(md5_hex);
+
 use HTML::Entities;
 use URI::Encode qw(uri_decode);
 
@@ -61,6 +63,17 @@ sub ProcessAccessLog {
 	my $logfile = shift;       # Path to log file
 	my $vhostParse = shift;    # Whether we use the vhost log format
 
+	my %prevLines;
+
+	if (-e "./log/processed.log") {
+		open (LOGFILELOG, "./log/processed.log");
+		foreach my $procLine (<LOGFILELOG>) {
+			chomp $procLine;
+			$prevLines{$procLine} = 1;
+		}
+		close (LOGFILELOG);
+	}
+
 	print "Processing $logfile...\n";
 
 	# The log file should always be there
@@ -69,7 +82,14 @@ sub ProcessAccessLog {
 	# The following section parses the access log
 	# Thank you, StackOverflow
 	foreach my $line (<LOGFILE>) {
-		#print ".";
+		my $lineHash = md5_hex($line);
+
+		if (defined($prevLines{$lineHash})) {
+			$prevLines{$lineHash} ++;
+			next;
+		} else {
+			AppendFile("./log/processed.log", $lineHash);
+		}
 
 		# These are the values we will pull out of access.log
 		my $site;
@@ -223,9 +243,6 @@ sub ProcessAccessLog {
 
 	# Close the log file handle
 	close(LOGFILE);
-
-	# Truncate the log file
-	truncate $logfile, 0;
 }
 
 ProcessAccessLog("log/lighttpd.log", 0);
