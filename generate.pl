@@ -31,10 +31,6 @@ sub GetPageHeader {
 
 	$txtIndex .= $htmlStart;
 
-	if ($titleHtml) {
-		$txtIndex .= "<h1>$titleHtml</h1>";
-	}
-
 	return $txtIndex;
 }
 
