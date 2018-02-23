@@ -8,8 +8,6 @@ use HTML::Entities;
 require './utils.pl';
 require './sqlite.pl';
 
-my @files;
-
 sub GetVoterTemplate {
 	my $fileHash = shift;
 	my $voteHash = shift;
@@ -40,25 +38,38 @@ sub GetVoterTemplate {
 }
 
 sub GetIndex {
-	my $txtIndex = "";
+	my $title;
+	my $titleHtml;
 
-	my $title = shift;
+	my $pageType = shift;
+
+	my @files;
+
+	if (defined($pageType) && $pageType eq 'author') {
+		my $authorKey = shift;
+		my $whereClause = "author_key='$authorKey'";
+
+		my $authorAliasHtml = GetAlias($authorKey);
+		my $authorAvatarHtml = GetAvatar($authorKey);
+
+		$title = "Posts by $authorAliasHtml";
+		$titleHtml = "$authorAvatarHtml";
+
+		@files = DBGetItemList($whereClause);
+	} else {
+		$title = 'Message Board';
+		$titleHtml = 'Message Board';
+
+		@files = DBGetItemList();
+	}
+
+	my $txtIndex = "";
 
 	# this will hold the title of the page
 	if (!$title) {
 		$title = "Message Board";
 	}
 	chomp $title;
-
-	my $titleHtml;
-
-	if (defined $title) {
-		$titleHtml = shift;
-
-		if (!$titleHtml) {
-			$titleHtml = $title;
-		}
-	}
 
 	my $primaryColor = "#008080";
 	my $secondaryColor = '#f0fff0';
@@ -181,8 +192,6 @@ sub GetIndex {
 	return $txtIndex;
 }
 
-@files = DBGetItemList();
-
 my $indexText = GetIndex();
 
 PutFile('./html/index.html', $indexText);
@@ -192,15 +201,7 @@ my @authors = DBGetAuthorList();
 foreach my $key (@authors) {
 	mkdir("./html/author/$key");
 
-	@files = DBGetItemList("author_key='$key'");
-	#my $authorAliasHtml = encode_entities($authors{$key});
-	my $authorAliasHtml = GetAlias($key);
-	my $authorAvatarHtml = GetAvatar($key);
-
-	my $title = "Posts by $authorAliasHtml";
-	my $titleHtml = "$authorAvatarHtml";
-
-	my $authorIndex = GetIndex($title, $titleHtml);
+	my $authorIndex = GetIndex('author', $key);
 
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }
