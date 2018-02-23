@@ -205,25 +205,18 @@ sub ProcessAccessLog {
 		# If the URL begins with "/action/" run it through the processor
 		my $actionPrefix = "/action/";
 		if (substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
-			print "Found an action...";
 
 			# Put the arguments into an array
 			my @actionArgs = split("/", $file);
 
-			if ($actionArgs[2] eq 'test') {
-				print "Test successful\n";
-			}
+			if ($actionArgs[2] eq 'vote') {
+				my $voteFile = $actionArgs[3];
+				my $voteHash = $actionArgs[4];
+				my $voteValue = $actionArgs[5];
 
-			if ($actionArgs[2] eq 'tag') {
-				print "tag";
+				my $voteEntry = "$voteFile|$voteHash|$voteValue";
 
-				my @tagArgs = split('\?', $file);
-
-				print $tagArgs[1];
-			}
-
-			if ($actionArgs[2] eq 'flag') {
-				print $actionArgs[3];
+				AppendFile("log/votes", $voteEntry);
 			}
 		}
 
