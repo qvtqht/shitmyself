@@ -64,7 +64,6 @@ h2.menu {
 	text-align: right;
 }
 h2.menu a {
-	text-decoration: none;
 	margin-left: 1em;
 	color: $secondaryColor;
 	background-color: $primaryColor;
