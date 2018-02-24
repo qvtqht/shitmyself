@@ -1,5 +1,6 @@
 body {
 	font-family: monospace;
+	background-color: $secondaryColor;
 }
 .txt {
 	padding: 3pt;
@@ -7,7 +8,9 @@ body {
 	word-wrap: break-word;
 	max-width: 80em;
 	border: 1pt dotted $primaryColor;
-	border-radius: 1pt;
+	border-top: 1pt solid $primaryColor;
+	border-left: 1pt solid $primaryColor;
+	border-radius: 5pt;
 	margin: 8pt;
 }
 .voter {
