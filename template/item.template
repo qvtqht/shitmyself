@@ -1,5 +1,5 @@
 <div class="$itemClass">
-<a href="$permalinkHtml">$itemName</a><a href="$permalinkTxt">.txt</a>
+<a href="$permalinkHtml">$itemName</a> <a href="$permalinkTxt">.txt</a>
 $authorLink
 <br>
 $itemText
