@@ -1,9 +1,7 @@
-<details class="$itemClass">
-<summary>
+<div class="$itemClass">
 <a href="$permalinkHtml">$itemName</a><a href="$permalinkTxt">.txt</a>
 $authorLink
 <br>
 $itemText
 <p class=voter>$voterButtons</p>
-</summary>
-</details>
+</div>
