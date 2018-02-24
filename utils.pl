@@ -202,27 +202,29 @@ sub TrimPath {
 
 	return $string;
 }
-
-sub GetGpgFingerprint {
-	#gets the full gpg fingerprint from a public key in a text file
-
-	my $file = shift;
-	chomp $file;
-
-	print "gpg --with-colons --with-fingerprint --decrypt \"$file\"\n";
-	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint --decrypt "$file"`);
-
-	foreach (@gpgResults) {
-		if (substr($_, 0, 3) eq "fpr") {
-			my $fingerprint = substr($_, 3);
-			$fingerprint =~ s/://g;
-
-			return $fingerprint;
-		}
-	}
-
-	return;
-}
+#
+#sub GetGpgFingerprint {
+#	#gets the full gpg fingerprint from a public key in a text file
+#
+#	my $file = shift;
+#	chomp $file;
+#
+#	print "gpg --with-colons --with-fingerprint --decrypt \"$file\"\n";
+#	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint --decrypt "$file"`);
+#
+#	foreach my $line (@gpgResults) {
+#		if (substr($line, 0, 3) eq "fpr") {
+#			my $fingerprint = substr($line, 3);
+#			$fingerprint =~ s/://g;
+#
+#			print $fingerprint;
+#
+#			return $fingerprint;
+#		}
+#	}
+#
+#	return;
+#}
 
 sub GpgParse {
 	# GpgParse
@@ -339,7 +341,7 @@ sub GpgParse {
 
 			$isSigned = 1;
 
-			$fingerprint = GetGpgFingerprint($filePath);
+			#$fingerprint = GetGpgFingerprint($filePath);
 		}
 	}
 
@@ -356,6 +358,7 @@ sub GpgParse {
 	$returnValues{'alias'} = $alias;
 	$returnValues{'keyExpired'} = $keyExpired;
 	$returnValues{'gitHash'} = $gitHash;
+	$returnValues{'fingerprint'} = $fingerprint;
 
 	store \%returnValues, $cachePath;
 
