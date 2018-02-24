@@ -31,7 +31,7 @@ body {
 	border: 1pt inset $primaryColor;
 }
 .voter a:visited {
-	color: $orangeColor;
+	color: $disabledTextColor;
 	background-color: $disabledColor;
 	border: 1pt solid $disabledColor;
 }
