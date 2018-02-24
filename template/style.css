@@ -93,4 +93,5 @@ form.submit .btn {
 	border: 3pt solid $secondaryColor;
 	border-radius: 13pt;
 	margin-right: 5pt;
+	vertical-align: middle;
 }
