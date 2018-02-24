@@ -11,10 +11,14 @@ sub SqliteUnlinkDb {
 }
 
 sub SqliteMakeTables() {
-	SqliteQuery("CREATE TABLE author(key UNIQUE)");
-	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
-	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
-	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
+	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
+	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin)");
+	SqliteQuery("CREATE TABLE item(id INTEGER PRIMARY KEY AUTOINCREMENT, file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
+	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, vote_hash, vote_value)");
+#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
+#	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
+#	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
+#	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
 	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, vote_hash, vote_value);");
 }
