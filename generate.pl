@@ -194,7 +194,7 @@ sub GetItemPage {
 
 	if (defined($file{'author_key'}) && $file{'author_key'}) {
 		# todo the .txt extension should not be hard-coded
-		$alias = GetAlias($file{'author_key'});
+		my $alias = GetAlias($file{'author_key'});
 		$alias = encode_entities($alias, '<>&"');
 
 		$title = TrimPath($filePath) . ".txt by $alias";
