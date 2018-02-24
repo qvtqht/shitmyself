@@ -5,7 +5,7 @@ body {
 	padding: 3pt;
 	font-family: monospace;
 	word-wrap: break-word;
-	max-width: 80ex;
+	max-width: 80em;
 	border: 1pt dotted $primaryColor;
 	border-radius: 1pt;
 	margin: 8pt;
