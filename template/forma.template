@@ -1,5 +1,5 @@
 <form action="./gracias.html" class=submit>
-    <textarea name=comment maxlength=8192 autofocus></textarea><br>
+    <textarea class=txtarea name=comment maxlength=8192 autofocus></textarea><br>
     <input class=btn type=submit value="Go">
 
     <ul class=instructions>
