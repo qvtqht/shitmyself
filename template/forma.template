@@ -1,11 +1,12 @@
-<div align="center">
 <form action="./gracias.html">
 <textarea cols=80 rows=12 name=comment maxlength=8192></textarea><br>
 <input style="font-size: large;" type=submit value="Go">
-<!--
-<p>Post a message up to 8,192 characters long.</p>
-<p>To send the message to the admin include an @ symbol.</p>
-<p>Sign your message with GPG... or don't.</p>
--->
+
+<ul>
+<li>Enter a message up to 8,192 characters long</li>
+<li>You can sign your message with GPG, but you don't have to</li>
+<li>Post your public key if you want your name to appear</li>
+<li>If a message contains an @ sign, it will be saved for the admin.</li>
+</ul>
+
 </form>
-</div>
