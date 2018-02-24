@@ -363,12 +363,10 @@ sub GetVotePage {
 	my $title;
 	my $titleHtml;
 
-	my $pageType = shift;
-
 	my @files;
 
-	$title = 'Voter Ballot';
-	$titleHtml = 'Voter Ballot';
+	$title = 'Voting Booth';
+	$titleHtml = 'Voting Booth';
 
 	#todo fix this hack where order is in the where clause
 	@files = DBGetItemList("id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 10) ORDER BY RANDOM();");
