@@ -90,8 +90,10 @@ form.submit .btn {
 }
 #logo {
 	text-decoration: none;
-	border: 3pt solid $secondaryColor;
-	border-radius: 13pt;
+	border: 3pt inset $primaryColor;
+	border-radius: 17pt;
 	margin-right: 5pt;
 	vertical-align: middle;
+	font-size: 24pt;
+	padding: 3pt;
 }
