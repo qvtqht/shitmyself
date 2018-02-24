@@ -6,6 +6,7 @@
 <li>You are invited to submit a message up to 8,192 bytes long.</li>
 <li>You can sign your message with GPG, but you don't have to.</li>
 <li>Messages containing an @ character are savd for the admin.</li>
+<li>Duplicate messages will be dropped silently; Our apologies.</li>
 </ul>
 
 </form>
