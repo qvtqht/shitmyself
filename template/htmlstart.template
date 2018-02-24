@@ -10,9 +10,6 @@ $styleSheet
 </style>
 </head>
 <body>
-<script><!--
-document.write('<div style="background-color: #800000; color: white; padding: 4pt; border-radius: 4pt;"><strong>Warning!</strong> JavaScript is enabled in your browser! JavaScript exposes you to additional security and privacy risks, while providing no extra functionality on this site, except for this warning.</div>');
-// --></script>
 <h1><a id=logo href=/>ॐ</a>$titleHtml</h1>
 <h2 class="menu">$menuItems</h2>
 <iframe style="display:none" width=1 height=1 name=voterFrame id=voterFrame></iframe>
