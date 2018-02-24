@@ -71,3 +71,26 @@ h2.menu a {
 	background-color: $secondaryColor;
 	color: $primaryColor;
 }
+form.submit {
+	background-color: $primaryColor;
+	border: 1pt solid $primaryColor;
+	color: $secondaryColor;
+	border-radius: 5pt;
+	padding: 10pt;
+}
+form.submit .btn {
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	font-family: monospace;
+	font-size: large;
+}
+.instructions {
+	font-family: monospace;
+	font-size: large;
+}
+#logo {
+	text-decoration: none;
+	border: 3pt solid $secondaryColor;
+	border-radius: 13pt;
+	margin-right: 5pt;
+}
