@@ -194,7 +194,10 @@ sub GetItemPage {
 
 	if (defined($file{'author_key'}) && $file{'author_key'}) {
 		# todo the .txt extension should not be hard-coded
-		$title = TrimPath($filePath) . ".txt by " . GetAlias($file{'author_key'});
+		$alias = GetAlias($file{'author_key'});
+		$alias = encode_entities($alias, '<>&"');
+
+		$title = TrimPath($filePath) . ".txt by $alias";
 		$titleHtml = TrimPath($filePath) . ".txt by " . GetAvatar($file{'author_key'});
 	} else {
 		$title = TrimPath($filePath) . ".txt";

@@ -82,6 +82,7 @@ sub GetAvatar {
 		my $color2 = substr($gpg_key, 3, 6);
 		my $color3 = substr($gpg_key, 7, 6);
 		my $alias = GetAlias($gpg_key);
+		$alias = encode_entities($alias, '<>&"');
 
 		$avatar =~ s/\$color1/$color1/g;
 		$avatar =~ s/\$color2/$color2/g;
@@ -105,6 +106,9 @@ sub GetAlias {
 	my $alias = DBGetAuthorAlias($gpgKey);
 
 	if ($alias) {
+		$alias =~ s|<.+?>||g;
+		trim($alias);
+
 		return $alias;
 	} else {
 		return $gpgKey;
@@ -252,9 +256,8 @@ sub GpgParse {
 	my $gitHash = GetFileHash($filePath);
 
 	my $cachePath;
-	$cachePath = $filePath;
-	$cachePath =~ s/\^\.\//.\/cache\/gpg\//;
-	$cachePath .= ".cache";
+	$cachePath = "./cache/gpg/$gitHash.cache";
+
 
 	if (-e $cachePath) {
 		my %returnValues = %{retrieve($cachePath)};
@@ -285,6 +288,10 @@ sub GpgParse {
 
 				@split = split("/", $gpg_key);
 				$gpg_key = $split[1];
+
+				$alias =~ s|<.+?>||g;
+				$alias =~ s/^\s+//;
+				$alias =~ s/\s+$//;
 
 				$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"\n";
 
@@ -350,7 +357,7 @@ sub GpgParse {
 	$returnValues{'keyExpired'} = $keyExpired;
 	$returnValues{'gitHash'} = $gitHash;
 
-	store \%returnValues, $filePath . ".cache";
+	store \%returnValues, $cachePath;
 
 	return %returnValues;
 }
