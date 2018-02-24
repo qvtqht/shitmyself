@@ -38,8 +38,8 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 
 	my $menuTemplate = "";
-	$menuTemplate .= GetMenuItem("/", "home");
-	$menuTemplate .= GetMenuItem("/submit.html", "submit");
+	$menuTemplate .= GetMenuItem("/", "read");
+	$menuTemplate .= GetMenuItem("/write.html", "write");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
@@ -362,8 +362,8 @@ sub GetSubmitPage {
 	my $txtIndex = "";
 
 
-	my $title = "Submit New Entry";
-	my $titleHtml = "Submit New Entry";
+	my $title = "Add Text";
+	my $titleHtml = "Add Text";
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
 
@@ -401,7 +401,7 @@ foreach my $file(@files) {
 }
 
 my $submitPage = GetSubmitPage();
-PutFile("./html/submit.html", $submitPage);
+PutFile("./html/write.html", $submitPage);
 
 # Make sure the submission form has somewhere to go
 my $graciasPage = GetPageHeader("Thank You", "Thank You");

@@ -1,6 +1,6 @@
 <form action="./gracias.html" class=submit>
     <textarea class=txtarea name=comment maxlength=8192 autofocus></textarea><br>
-    <input class=btn type=submit value="Go">
+    <input class=btn type=submit value="Add Text">
 
     <ul class=instructions>
         <li>You are invited to submit a message up to 8,192 bytes long.</li>
