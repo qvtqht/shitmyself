@@ -118,7 +118,7 @@ sub GetItemTemplate {
 		$message = GetFile($file{'file_path'});
 	}
 
-	$message = encode_entities($message, '<>&"');
+	$message = HtmlEscape($message);
 	$message =~ s/\n/<br>\n/g;
 
 	if ($isSigned && $gpgKey eq GetAdminKey()) {
@@ -136,7 +136,7 @@ sub GetItemTemplate {
 
 	# todo $alias = GetAlias($gpgKey);
 
-	$alias = encode_entities($alias, '<>&"');
+	$alias = HtmlEscape($alias);
 
 	my $itemTemplate = GetTemplate("item.template");
 
@@ -195,7 +195,7 @@ sub GetItemPage {
 	if (defined($file{'author_key'}) && $file{'author_key'}) {
 		# todo the .txt extension should not be hard-coded
 		my $alias = GetAlias($file{'author_key'});
-		$alias = encode_entities($alias, '<>&"');
+		$alias = HtmlEscape($alias);
 
 		$title = TrimPath($filePath) . ".txt by $alias";
 		$titleHtml = TrimPath($filePath) . ".txt by " . GetAvatar($file{'author_key'});
@@ -215,6 +215,8 @@ sub GetItemPage {
 
 	# Print it
 	$txtIndex .= $itemTemplate;
+
+	#print $file{''
 
 	$txtIndex .= GetTemplate("htmlend.template");
 
@@ -285,7 +287,7 @@ sub GetIndexPage {
 			$message = GetFile($file);
 		}
 
-		$message = encode_entities($message, '<>&"');
+		$message = HtmlEscape($message);
 		$message =~ s/\n/<br>\n/g;
 
 		if ($isSigned && $gpgKey eq GetAdminKey()) {
@@ -303,7 +305,7 @@ sub GetIndexPage {
 
 		# todo $alias = GetAlias($gpgKey);
 
-		$alias = encode_entities($alias, '<>&"');
+		$alias = HtmlEscape($alias);
 
 		my $itemTemplate = GetTemplate("item.template");
 

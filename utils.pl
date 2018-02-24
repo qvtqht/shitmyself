@@ -226,6 +226,14 @@ sub TrimPath {
 #	return;
 #}
 
+sub HtmlEscape {
+	my $text = shift;
+
+	$text = encode_entities($text, '<>&"');
+
+	return $text;
+}
+
 sub GpgParse {
 	# GpgParse
 	# $filePath = path to file containing the text
