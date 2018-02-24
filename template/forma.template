@@ -7,6 +7,7 @@
 <li>You can sign your message with GPG, but you don't have to</li>
 <li>Post your public key if you want your name to appear</li>
 <li>If a message contains an @ sign, it will be saved for the admin.</li>
+<li>If your key has an email addresses, it won't be displayed.</li>
 </ul>
 
 </form>
