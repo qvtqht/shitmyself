@@ -164,62 +164,68 @@ sub ProcessAccessLog {
 				# The message comes after the prefix, so just trim it
 				my $message = (substr($file, length($submitPrefix)));
 
-				# Unpack from URL encoding, probably exploitable :(
-				$message =~ s/\+/ /g;
-				$message = uri_decode($message);
-				$message = decode_entities($message);
-				$message = trim($message);
+				if ($message) {
 
-				# If we're parsing a vhost log, add the site name to the message
-				if ($vhostParse && $site) {
-					$message .= "\n" . $site;
-				}
+					# Unpack from URL encoding, probably exploitable :(
+					$message =~ s/\+/ /g;
+					$message = uri_decode($message);
+					$message = decode_entities($message);
+					$message = trim($message);
 
-				# Generate filename from date and time
-				my $filename;
-				my $filenameDir;
-
-				# If the submission contains an @-sign, hide it into the admin dir
-				# Also, if it contains the string ".onion", to curb spam @todo better solution
-				if (index($message, "@") != -1) {
-					$filenameDir = "$SCRIPTDIR/admin/";
-					$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-
-					print "I'm going to put $filename into $filenameDir because it contains an @";
-				} elsif (index($message, ".onion") != -1) {
-					$filenameDir = "$SCRIPTDIR/spam/";
-					$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-
-					print "I'm going to put $filename into $filenameDir because it contains a .onion";
-				} else {
-					# Prefix for new text posts
-					$filenameDir = $TXTDIR;
-
-					$filename = "$dateYear/$dateMonth/$dateDay";
-
-					if (!-d "$TXTDIR$filename") {
-						system("mkdir -p $TXTDIR$filename");
+					# If we're parsing a vhost log, add the site name to the message
+					if ($vhostParse && $site) {
+						$message .= "\n" . $site;
 					}
-					$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
 
-					print "I'm going to put $filename into $filenameDir\n";
+					# Generate filename from date and time
+					my $filename;
+					my $filenameDir;
+
+					# If the submission contains an @-sign, hide it into the admin dir
+					# Also, if it contains the string ".onion", to curb spam @todo better solution
+					if (index($message, "@") != - 1) {
+						$filenameDir = "$SCRIPTDIR/admin/";
+						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+
+						print "I'm going to put $filename into $filenameDir because it contains an @";
+					}
+					elsif (index($message, ".onion") != - 1) {
+						$filenameDir = "$SCRIPTDIR/spam/";
+						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+
+						print "I'm going to put $filename into $filenameDir because it contains a .onion";
+					}
+					else {
+						# Prefix for new text posts
+						$filenameDir = $TXTDIR;
+
+						$filename = "$dateYear/$dateMonth/$dateDay";
+
+						if (!-d "$TXTDIR$filename") {
+							system("mkdir -p $TXTDIR$filename");
+						}
+						$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+
+						print "I'm going to put $filename into $filenameDir\n";
+					}
+
+					# Make sure we don't clobber an existing file
+					# If filename exists, add (1), (2), and so on
+					my $filename_root = $filename;
+					my $i = 0;
+					while (-e $filenameDir . $filename . ".txt") {
+						$i++;
+						$filename = $filename_root . "(" . $i . ")";
+					}
+					$filename .= '.txt';
+
+					# Try to write to the file, exit if we can't
+					PutFile($filenameDir . $filename,
+						$message) or die('Could not open text file to write to ' . $filenameDir . $filename);
+
+					# Add the file to git
+					#system("git add \"$filenameDir$filename\"");
 				}
-
-				# Make sure we don't clobber an existing file
-				# If filename exists, add (1), (2), and so on
-				my $filename_root = $filename;
-				my $i = 0;
-				while (-e $filenameDir . $filename . ".txt") {
-					$i++;
-					$filename = $filename_root . "(" . $i . ")";
-				}
-				$filename .= '.txt';
-
-				# Try to write to the file, exit if we can't
-				PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to '.$filenameDir . $filename);
-
-				# Add the file to git
-				#system("git add \"$filenameDir$filename\"");
 			}
 		}
 
