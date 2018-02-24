@@ -399,5 +399,12 @@ my $submitPage = GetSubmitPage();
 PutFile("./html/submit.html", $submitPage);
 
 # Make sure the submission form has somewhere to go
+my $graciasPage = GetPageHeader("Thank You", "Thank You");
+$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/head>/;
+
 my $graciasTemplate = GetTemplate('gracias.template');
-PutFile("./html/gracias.html", $graciasTemplate);
+$graciasPage .= $graciasTemplate;
+
+$graciasPage .= GetTemplate('htmlend.template');
+
+PutFile("./html/gracias.html", $graciasPage);
