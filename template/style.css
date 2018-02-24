@@ -84,12 +84,15 @@ form.submit {
 	color: $secondaryColor;
 	border-radius: 5pt;
 	padding: 10pt;
+	transform: rotate(-0.3deg);
 }
 form.submit .btn {
 	background-color: $primaryColor;
 	color: $secondaryColor;
 	font-family: monospace;
 	font-size: large;
+	margin-top: 5pt;
+	transform: rotate(0.3deg);
 }
 form.submit .txtarea {
 	width: 100%;
@@ -99,6 +102,7 @@ form.submit .txtarea {
 	font-family: monospace;
 	font-size: large;
 	line-height: 2;
+	transform: rotate(0.5deg);
 }
 #logo {
 	text-decoration: none;
@@ -108,4 +112,6 @@ form.submit .txtarea {
 	vertical-align: middle;
 	font-size: 24pt;
 	padding: 3pt;
+	color: black;
+	background-color: white;
 }
