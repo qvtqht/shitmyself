@@ -165,7 +165,7 @@ sub DBGetItemList {
 	if ($whereClause) {
 		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause;";
 	} else {
-		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item;";
+		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item";
 	}
 
 	my @results = split("\n", SqliteQuery($query));

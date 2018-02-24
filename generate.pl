@@ -39,6 +39,7 @@ sub GetPageHeader {
 
 	my $menuTemplate = "";
 	$menuTemplate .= GetMenuItem("/", "read");
+	$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
@@ -223,7 +224,7 @@ sub GetItemPage {
 	return $txtIndex;
 }
 
-sub GetIndexPage {
+sub GetReadPage {
 	my $title;
 	my $titleHtml;
 
@@ -358,6 +359,121 @@ sub GetIndexPage {
 	return $txtIndex;
 }
 
+sub GetVotePage {
+	my $title;
+	my $titleHtml;
+
+	my $pageType = shift;
+
+	my @files;
+
+	$title = 'Voter Ballot';
+	$titleHtml = 'Voter Ballot';
+
+	#todo fix this hack where order is in the where clause
+	@files = DBGetItemList("id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 10) ORDER BY RANDOM();");
+
+	my $txtIndex = "";
+
+	my $htmlStart = GetPageHeader($title, $titleHtml);
+
+	$txtIndex .= $htmlStart;
+
+	foreach my $row (@files) {
+		my $file = $row->{'file_path'};
+		my $gitHash = $row->{'file_hash'};
+
+		my $gpgKey = $row->{'author_key'};
+
+		my $isSigned;
+		if ($gpgKey) {
+			$isSigned = 1;
+		} else {
+			$isSigned = 0;
+		}
+
+		my $alias;;
+
+		my $isAdmin = 0;
+
+		my $message;
+		if ($gpgKey) {
+			$message = GetFile("./cache/message/$gitHash.message");
+		} else {
+			$message = GetFile($file);
+		}
+
+		$message = HtmlEscape($message);
+		$message =~ s/\n/<br>\n/g;
+
+		if ($isSigned && $gpgKey eq GetAdminKey()) {
+			$isAdmin = 1;
+		}
+
+		my $signedCss = "";
+		if ($isSigned) {
+			if ($isAdmin) {
+				$signedCss = "signed admin";
+			} else {
+				$signedCss = "signed";
+			}
+		}
+
+		# todo $alias = GetAlias($gpgKey);
+
+		$alias = HtmlEscape($alias);
+
+		my $itemTemplate = GetTemplate("itemvote.template");
+
+		my $itemClass = "txt $signedCss";
+
+		my $authorUrl;
+		my $authorAvatar;
+		my $authorLink;
+
+		if ($gpgKey) {
+			$authorUrl = "/author/$gpgKey/";
+			$authorAvatar = GetAvatar($gpgKey);
+
+			$authorLink = GetTemplate('authorlink.template');
+
+			$authorLink =~ s/\$authorUrl/$authorUrl/g;
+			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+		} else {
+			$authorLink = "";
+		}
+		my $permalinkTxt = $file;
+		$permalinkTxt =~ s/^\.//;
+
+		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+		my $itemText = $message;
+		my $fileHash = GetFileHash($file);
+		my $itemName = TrimPath($file);
+
+		my $voteHash = GetRandomHash();
+
+		$itemTemplate =~ s/\$itemClass/$itemClass/g;
+		$itemTemplate =~ s/\$authorLink/$authorLink/g;
+		$itemTemplate =~ s/\$itemName/$itemName/g;
+		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+		$itemTemplate =~ s/\$itemText/$itemText/g;
+		$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+		my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
+		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+		# Print it
+		$txtIndex .= $itemTemplate;
+	}
+
+	# Close html
+	$txtIndex .= GetTemplate("htmlend.template");
+
+	return $txtIndex;
+}
+
 sub GetSubmitPage {
 	my $txtIndex = "";
 
@@ -376,16 +492,21 @@ sub GetSubmitPage {
 
 
 
-my $indexText = GetIndexPage();
+my $indexText = GetReadPage();
 
 PutFile('./html/index.html', $indexText);
+
+my $voteIndexText = GetVotePage();
+
+PutFile('./html/vote.html', $voteIndexText);
+
 
 my @authors = DBGetAuthorList();
 
 foreach my $key (@authors) {
 	mkdir("./html/author/$key");
 
-	my $authorIndex = GetIndexPage('author', $key);
+	my $authorIndex = GetReadPage('author', $key);
 
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }

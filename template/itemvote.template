@@ -3,4 +3,5 @@
 $authorLink
 <br>
 $itemText
+<p class=voter>$voterButtons</p>
 </div>
