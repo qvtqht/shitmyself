@@ -141,20 +141,20 @@ sub DBAddItem {
 
 sub DBAddVoteRecord {
 	my $fileHash = shift;
-	my $voteHash = shift;
+	my $ballotTime = shift;
 	my $voteValue = shift;
 
 	chomp $fileHash;
-	chomp $voteHash;
+	chomp $ballotTime;
 	chomp $voteValue;
 
 	$fileHash = SqliteEscape($fileHash);
-	$voteHash = SqliteEscape($voteHash);
+	$ballotTime = SqliteEscape($ballotTime);
 	$voteValue = SqliteEscape($voteValue);
 
 	SqliteQuery(
 		"INSERT OR REPLACE INTO vote(file_hash, vote_hash, vote_value) " .
-			"VALUES('$fileHash', '$voteHash', '$voteValue');"
+			"VALUES('$fileHash', '$ballotTime', '$voteValue');"
 	);
 }
 

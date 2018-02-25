@@ -6,6 +6,8 @@ use 5.010;
 
 use lib qw(lib);
 use HTML::Entities;
+use Digest::MD5 qw(md5_hex);
+
 
 require './utils.pl';
 require './sqlite.pl';
@@ -41,6 +43,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/", "read");
 	$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
+	#$menuTemplate .= GetMenuItem("/clone.html", "clone");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
@@ -63,10 +66,17 @@ sub GetMenuItem {
 
 sub GetVoterTemplate {
 	my $fileHash = shift;
-	my $voteHash = shift;
+	my $ballotTime = shift;
 
 	chomp $fileHash;
-	chomp $voteHash;
+	chomp $ballotTime;
+
+	if (!-e "./config/secret") {
+		my $randomHash = GetRandomHash();
+
+		PutFile("./config/secret", $randomHash);
+	}
+	my $mySecret = GetFile("./config/secret");
 
 	state $voteButtonsTemplate;
 
@@ -85,10 +95,13 @@ sub GetVoterTemplate {
 		}
 	}
 
-	if ($fileHash && $voteHash) {
+	if ($fileHash && $ballotTime) {
+		my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
+
 		my $voteButtons = $voteButtonsTemplate;
 		$voteButtons =~ s/\$fileHash/$fileHash/g;
-		$voteButtons =~ s/\$voteHash/$voteHash/g;
+		$voteButtons =~ s/\$ballotTime/$ballotTime/g;
+		$voteButtons =~ s/\$checksum/$checksum/g;
 
 		return $voteButtons;
 	}
@@ -135,8 +148,6 @@ sub GetItemTemplate {
 		}
 	}
 
-	# todo $alias = GetAlias($gpgKey);
-
 	$alias = HtmlEscape($alias);
 
 	my $itemTemplate = GetTemplate("item.template");
@@ -167,7 +178,7 @@ sub GetItemTemplate {
 	my $fileHash = GetFileHash($file{'file_path'});
 	my $itemName = TrimPath($file{'file_path'});
 
-	my $voteHash = GetRandomHash();
+	my $ballotTime = time();
 
 	$itemTemplate =~ s/\$itemClass/$itemClass/g;
 	$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -177,7 +188,7 @@ sub GetItemTemplate {
 	$itemTemplate =~ s/\$itemText/$itemText/g;
 	$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
-	my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
+	my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 	$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 	return $itemTemplate;
@@ -335,8 +346,7 @@ sub GetReadPage {
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
-
-		my $voteHash = GetRandomHash();
+		my $ballotTime = time();
 
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -346,7 +356,7 @@ sub GetReadPage {
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
-		my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
+		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 		# Print it
@@ -449,7 +459,7 @@ sub GetVotePage {
 		my $fileHash = GetFileHash($file);
 		my $itemName = TrimPath($file);
 
-		my $voteHash = GetRandomHash();
+		my $ballotTime = time();
 
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -459,7 +469,7 @@ sub GetVotePage {
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
-		my $voterButtons = GetVoterTemplate($fileHash, $voteHash);
+		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 		# Print it
@@ -532,3 +542,5 @@ $graciasPage .= $graciasTemplate;
 $graciasPage .= GetTemplate('htmlend.template');
 
 PutFile("./html/gracias.html", $graciasPage);
+
+PutFile("./html/ok.html", GetTemplate('ok.template'));

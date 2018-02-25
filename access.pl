@@ -238,12 +238,15 @@ sub ProcessAccessLog {
 
 			if ($actionArgs[2] eq 'vote') {
 				my $voteFile = $actionArgs[3];
-				my $voteHash = $actionArgs[4];
+				my $ballotTime = $actionArgs[4];
 				my $voteValue = $actionArgs[5];
 
-				my $voteEntry = "$voteFile|$voteHash|$voteValue";
+				my $currentTime = time();
+				if ($currentTime - $ballotTime < 7200) {
+					my $voteEntry = "$voteFile|$ballotTime|$voteValue";
 
-				AppendFile("log/votes.log", $voteEntry);
+					AppendFile("log/votes.log", $voteEntry);
+				}
 			}
 		}
 	}

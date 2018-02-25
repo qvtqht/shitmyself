@@ -23,9 +23,9 @@ sub MakeVoteIndex {
 		my @voteRecord = split("\n", GetFile("log/votes.log"));
 
 		foreach (@voteRecord) {
-			my ($fileHash, $voteHash, $voteValue) = split('\|', $_);
+			my ($fileHash, $ballotTime, $voteValue) = split('\|', $_);
 
-			DBAddVoteRecord($fileHash, $voteHash, $voteValue);
+			DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 		}
 	}
 }
@@ -82,6 +82,6 @@ sub MakeIndex {
 SqliteUnlinkDb();
 SqliteMakeTables();
 
-MakeVoteIndex();
-
 MakeIndex(@filesToInclude);
+
+MakeVoteIndex();
