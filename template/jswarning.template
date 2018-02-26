@@ -1,0 +1,3 @@
+<script><!--
+document.write('<div style="background-color: #800000; color: white; padding: 4pt; border-radius: 4pt;"><strong>Warning!</strong> JavaScript is enabled in your browser! JavaScript exposes you to additional security and privacy risks, while providing no extra functionality on this site, except for this warning.</div>');
+// --></script>
