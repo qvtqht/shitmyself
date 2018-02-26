@@ -363,6 +363,9 @@ sub GetReadPage {
 		$txtIndex .= $itemTemplate;
 	}
 
+	# Add javascript warning to the bottom of the page
+	$txtIndex .= GetTemplate("jswarning.template"));
+
 	# Close html
 	$txtIndex .= GetTemplate("htmlend.template");
 
