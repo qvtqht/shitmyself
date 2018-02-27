@@ -90,6 +90,7 @@ sub ProcessAccessLog {
 			next;
 		} else {
 			AppendFile("./log/processed.log", $lineHash);
+			$prevLines{$lineHash} = 2;
 		}
 
 		# These are the values we will pull out of access.log
@@ -253,6 +254,16 @@ sub ProcessAccessLog {
 
 	# Close the log file handle
 	close(LOGFILE);
+
+	#Clean up the access log tracker
+	my $newPrevLines = "";
+	foreach (keys %prevLines) {
+		if ($prevLines{$_} > 1) {
+			$newPrevLines .= $_;
+			$newPrevLines .= "\n";
+		}
+	}
+	PutFile("log/processed.log", $newPrevLines);
 }
 
 ProcessAccessLog("log/access.log", 0);
