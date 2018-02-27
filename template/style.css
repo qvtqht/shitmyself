@@ -6,7 +6,7 @@ body {
 	padding: 3pt;
 	font-family: monospace;
 	word-wrap: break-word;
-	max-width: 80em;
+	max-width: 60em;
 	border: 1pt dotted $primaryColor;
 	border-top: 1pt solid $primaryColor;
 	border-left: 1pt solid $primaryColor;
@@ -122,7 +122,7 @@ form.submit .txtarea {
 .topmessage {
 	font-family: sans-serif;
 	font-size: default;
-	border: 2pt solid $primaryColor	;
+	border: 2pt solid $primaryColor;
 	border-radius: 5pt;
 	background-color: $highlightColor;
 	padding: 5pt;
