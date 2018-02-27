@@ -45,7 +45,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/", "read");
 	$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
-	#$menuTemplate .= GetMenuItem("/clone.html", "clone");
+	$menuTemplate .= GetMenuItem("/clone.html", "clone");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
@@ -559,3 +559,13 @@ $graciasPage .= GetTemplate('htmlend.template');
 PutFile("./html/gracias.html", $graciasPage);
 
 PutFile("./html/ok.html", GetTemplate('ok.template'));
+
+my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
+
+$clonePage .= GetTemplate('clone.template');
+
+$clonePage .= GetTemplate('htmlend.template');
+
+PutFile('./html/clone.html', $clonePage);
+
+system("zip -r ./html/txt.zip ./txt/ ./log/votes.log");
