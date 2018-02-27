@@ -580,3 +580,5 @@ PutFile('./html/clone.html', $clonePage);
 unlink("./html/txt.zip");
 
 system("zip -r ./html/txt.zip ./txt/ ./log/votes.log");
+
+system("git archive --format zip --output html/hike.zip master");

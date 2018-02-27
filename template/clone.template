@@ -1,10 +1,11 @@
-<p>You can easily clone this message board onto your own server.</p>
+<p>You can easily clone this message board.</p>
 
-<p>All of the accounts are controlled by the users' private keys.</p>
+<p>There are no secrets stored here, except the anti-CSRF salt.</p>
 
-<p>There are no stored secrets on the server, except the anti-CSRF secret.</p>
+<p>Any signing accounts are controlled by the users' GPG private keys.</p>
 
-<p>The posts are a tree of text documents, which can be downloaded at <a href="/txt.zip">/txt.zip</a>.</p>
+<p>The posts are a tree of text documents: <a href="/txt.zip">/txt.zip</a>.</p>
 
-<p>The scripts are available on GitHub, <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
+<p>The scripts themselves are at <a href="/hike.zip">/hike.zip</a> and <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
 
+<p>Enjoy!</p>
