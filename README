@@ -22,6 +22,22 @@ currently doesn't do anything
 
 installation
 ============
-1. http/ should point to the html root
-2. log/access.log should point to the access log
+1. http/ should point to the html root. you can just symlink it.
+2. log/access.log should point to the access log. ditto on the symlink.
 3. access.pl, index.pl, and generate.pl should be in the crontab, in that order
+
+requirements
+============
+* Perl 5.010+
+* zip
+* gpg
+* URI::Encode
+* URI::Escape
+* HTML::Parser
+* Digest::MD5
+
+On Debian-derived, apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl
+
+known issues
+============
+this is just a basic prototype, and is not optimized to scale.
