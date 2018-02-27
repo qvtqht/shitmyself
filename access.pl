@@ -255,6 +255,6 @@ sub ProcessAccessLog {
 	close(LOGFILE);
 }
 
-ProcessAccessLog("log/lighttpd.log", 0);
+ProcessAccessLog("log/access.log", 0);
 
 1;
