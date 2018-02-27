@@ -22,7 +22,6 @@ body {
 	padding: 2pt;
 	font-family: sans-serif;
 	font-size: smaller;
-	margin-left: 3pt;
 	border: 1pt outset $primaryColor;
 	background-color: $primaryColor;
 	color: $secondaryColor;
