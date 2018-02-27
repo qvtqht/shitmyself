@@ -112,88 +112,91 @@ sub GetVoterTemplate {
 sub GetItemTemplate {
 	my %file = %{shift @_};
 
-	my $gitHash = $file{'file_hash'};
+	if (-e $file{'file_path'}) {
 
-	my $gpgKey = $file{'author_key'};
+		my $gitHash = $file{'file_hash'};
 
-	my $isSigned;
-	if ($gpgKey) {
-		$isSigned = 1;
-	} else {
-		$isSigned = 0;
-	}
+		my $gpgKey = $file{'author_key'};
 
-	my $alias;;
-
-	my $isAdmin = 0;
-
-	my $message;
-	if ($gpgKey) {
-		$message = GetFile("./cache/message/$gitHash.message");
-	} else {
-		$message = GetFile($file{'file_path'});
-	}
-
-	$message = HtmlEscape($message);
-	$message =~ s/\n/<br>\n/g;
-
-	if ($isSigned && $gpgKey eq GetAdminKey()) {
-		$isAdmin = 1;
-	}
-
-	my $signedCss = "";
-	if ($isSigned) {
-		if ($isAdmin) {
-			$signedCss = "signed admin";
+		my $isSigned;
+		if ($gpgKey) {
+			$isSigned = 1;
 		} else {
-			$signedCss = "signed";
+			$isSigned = 0;
 		}
+
+		my $alias;;
+
+		my $isAdmin = 0;
+
+		my $message;
+		if ($gpgKey) {
+			$message = GetFile("./cache/message/$gitHash.message");
+		} else {
+			$message = GetFile($file{'file_path'});
+		}
+
+		$message = HtmlEscape($message);
+		$message =~ s/\n/<br>\n/g;
+
+		if ($isSigned && $gpgKey eq GetAdminKey()) {
+			$isAdmin = 1;
+		}
+
+		my $signedCss = "";
+		if ($isSigned) {
+			if ($isAdmin) {
+				$signedCss = "signed admin";
+			} else {
+				$signedCss = "signed";
+			}
+		}
+
+		$alias = HtmlEscape($alias);
+
+		my $itemTemplate = GetTemplate("item.template");
+
+		my $itemClass = "txt $signedCss";
+
+		my $authorUrl;
+		my $authorAvatar;
+		my $authorLink;
+
+		if ($gpgKey) {
+			$authorUrl = "/author/$gpgKey/";
+			$authorAvatar = GetAvatar($gpgKey);
+
+			$authorLink = GetTemplate('authorlink.template');
+
+			$authorLink =~ s/\$authorUrl/$authorUrl/g;
+			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+		} else {
+			$authorLink = "";
+		}
+		my $permalinkTxt = $file{'file_path'};
+		$permalinkTxt =~ s/^\.//;
+
+		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+		my $itemText = $message;
+		my $fileHash = GetFileHash($file{'file_path'});
+		my $itemName = TrimPath($file{'file_path'});
+
+		my $ballotTime = time();
+
+		$itemTemplate =~ s/\$itemClass/$itemClass/g;
+		$itemTemplate =~ s/\$authorLink/$authorLink/g;
+		$itemTemplate =~ s/\$itemName/$itemName/g;
+		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+		$itemTemplate =~ s/\$itemText/$itemText/g;
+		$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+		return $itemTemplate;
 	}
-
-	$alias = HtmlEscape($alias);
-
-	my $itemTemplate = GetTemplate("item.template");
-
-	my $itemClass = "txt $signedCss";
-
-	my $authorUrl;
-	my $authorAvatar;
-	my $authorLink;
-
-	if ($gpgKey) {
-		$authorUrl = "/author/$gpgKey/";
-		$authorAvatar = GetAvatar($gpgKey);
-
-		$authorLink = GetTemplate('authorlink.template');
-
-		$authorLink =~ s/\$authorUrl/$authorUrl/g;
-		$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-	} else {
-		$authorLink = "";
-	}
-	my $permalinkTxt = $file{'file_path'};
-	$permalinkTxt =~ s/^\.//;
-
-	my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
-
-	my $itemText = $message;
-	my $fileHash = GetFileHash($file{'file_path'});
-	my $itemName = TrimPath($file{'file_path'});
-
-	my $ballotTime = time();
-
-	$itemTemplate =~ s/\$itemClass/$itemClass/g;
-	$itemTemplate =~ s/\$authorLink/$authorLink/g;
-	$itemTemplate =~ s/\$itemName/$itemName/g;
-	$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-	$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-	$itemTemplate =~ s/\$itemText/$itemText/g;
-	$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-	my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-	$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
-
-	return $itemTemplate;
 }
 
 sub GetItemPage {
@@ -227,8 +230,9 @@ sub GetItemPage {
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
-	# Print it
-	$txtIndex .= $itemTemplate;
+	if ($itemTemplate) {
+		$txtIndex .= $itemTemplate;
+	}
 
 	#print $file{''
 
@@ -282,90 +286,93 @@ sub GetReadPage {
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
-		my $gitHash = $row->{'file_hash'};
 
-		my $gpgKey = $row->{'author_key'};
+		if (-e $file) {
+			my $gitHash = $row->{'file_hash'};
 
-		my $isSigned;
-		if ($gpgKey) {
-			$isSigned = 1;
-		} else {
-			$isSigned = 0;
-		}
+			my $gpgKey = $row->{'author_key'};
 
-		my $alias;;
-
-		my $isAdmin = 0;
-
-		my $message;
-		if ($gpgKey) {
-			$message = GetFile("./cache/message/$gitHash.message");
-		} else {
-			$message = GetFile($file);
-		}
-
-		$message = HtmlEscape($message);
-		$message =~ s/\n/<br>\n/g;
-
-		if ($isSigned && $gpgKey eq GetAdminKey()) {
-			$isAdmin = 1;
-		}
-
-		my $signedCss = "";
-		if ($isSigned) {
-			if ($isAdmin) {
-				$signedCss = "signed admin";
+			my $isSigned;
+			if ($gpgKey) {
+				$isSigned = 1;
 			} else {
-				$signedCss = "signed";
+				$isSigned = 0;
 			}
+
+			my $alias;;
+
+			my $isAdmin = 0;
+
+			my $message;
+			if ($gpgKey) {
+				$message = GetFile("./cache/message/$gitHash.message");
+			} else {
+				$message = GetFile($file);
+			}
+
+			$message = HtmlEscape($message);
+			$message =~ s/\n/<br>\n/g;
+
+			if ($isSigned && $gpgKey eq GetAdminKey()) {
+				$isAdmin = 1;
+			}
+
+			my $signedCss = "";
+			if ($isSigned) {
+				if ($isAdmin) {
+					$signedCss = "signed admin";
+				} else {
+					$signedCss = "signed";
+				}
+			}
+
+			# todo $alias = GetAlias($gpgKey);
+
+			$alias = HtmlEscape($alias);
+
+			my $itemTemplate = GetTemplate("item.template");
+
+			my $itemClass = "txt $signedCss";
+
+			my $authorUrl;
+			my $authorAvatar;
+			my $authorLink;
+
+			if ($gpgKey) {
+				$authorUrl = "/author/$gpgKey/";
+				$authorAvatar = GetAvatar($gpgKey);
+
+				$authorLink = GetTemplate('authorlink.template');
+
+				$authorLink =~ s/\$authorUrl/$authorUrl/g;
+				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+			} else {
+				$authorLink = "";
+			}
+			my $permalinkTxt = $file;
+			$permalinkTxt =~ s/^\.//;
+
+			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+			my $itemText = $message;
+			my $fileHash = GetFileHash($file);
+			my $itemName = TrimPath($file);
+			my $ballotTime = time();
+
+			$itemTemplate =~ s/\$itemClass/$itemClass/g;
+			$itemTemplate =~ s/\$authorLink/$authorLink/g;
+			$itemTemplate =~ s/\$itemName/$itemName/g;
+			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+			$itemTemplate =~ s/\$itemText/$itemText/g;
+			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+			# Print it
+			$txtIndex .= $itemTemplate;
 		}
-
-		# todo $alias = GetAlias($gpgKey);
-
-		$alias = HtmlEscape($alias);
-
-		my $itemTemplate = GetTemplate("item.template");
-
-		my $itemClass = "txt $signedCss";
-
-		my $authorUrl;
-		my $authorAvatar;
-		my $authorLink;
-
-		if ($gpgKey) {
-			$authorUrl = "/author/$gpgKey/";
-			$authorAvatar = GetAvatar($gpgKey);
-
-			$authorLink = GetTemplate('authorlink.template');
-
-			$authorLink =~ s/\$authorUrl/$authorUrl/g;
-			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-		} else {
-			$authorLink = "";
-		}
-		my $permalinkTxt = $file;
-		$permalinkTxt =~ s/^\.//;
-
-		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
-
-		my $itemText = $message;
-		my $fileHash = GetFileHash($file);
-		my $itemName = TrimPath($file);
-		my $ballotTime = time();
-
-		$itemTemplate =~ s/\$itemClass/$itemClass/g;
-		$itemTemplate =~ s/\$authorLink/$authorLink/g;
-		$itemTemplate =~ s/\$itemName/$itemName/g;
-		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-		$itemTemplate =~ s/\$itemText/$itemText/g;
-		$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
-
-		# Print it
-		$txtIndex .= $itemTemplate;
 	}
 
 	# Add javascript warning to the bottom of the page
@@ -403,91 +410,93 @@ sub GetVotePage {
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
-		my $gitHash = $row->{'file_hash'};
+		if (-e $file) {
+			my $gitHash = $row->{'file_hash'};
 
-		my $gpgKey = $row->{'author_key'};
+			my $gpgKey = $row->{'author_key'};
 
-		my $isSigned;
-		if ($gpgKey) {
-			$isSigned = 1;
-		} else {
-			$isSigned = 0;
-		}
-
-		my $alias;;
-
-		my $isAdmin = 0;
-
-		my $message;
-		if ($gpgKey) {
-			$message = GetFile("./cache/message/$gitHash.message");
-		} else {
-			$message = GetFile($file);
-		}
-
-		$message = HtmlEscape($message);
-		$message =~ s/\n/<br>\n/g;
-
-		if ($isSigned && $gpgKey eq GetAdminKey()) {
-			$isAdmin = 1;
-		}
-
-		my $signedCss = "";
-		if ($isSigned) {
-			if ($isAdmin) {
-				$signedCss = "signed admin";
+			my $isSigned;
+			if ($gpgKey) {
+				$isSigned = 1;
 			} else {
-				$signedCss = "signed";
+				$isSigned = 0;
 			}
+
+			my $alias;;
+
+			my $isAdmin = 0;
+
+			my $message;
+			if ($gpgKey) {
+				$message = GetFile("./cache/message/$gitHash.message");
+			} else {
+				$message = GetFile($file);
+			}
+
+			$message = HtmlEscape($message);
+			$message =~ s/\n/<br>\n/g;
+
+			if ($isSigned && $gpgKey eq GetAdminKey()) {
+				$isAdmin = 1;
+			}
+
+			my $signedCss = "";
+			if ($isSigned) {
+				if ($isAdmin) {
+					$signedCss = "signed admin";
+				} else {
+					$signedCss = "signed";
+				}
+			}
+
+			# todo $alias = GetAlias($gpgKey);
+
+			$alias = HtmlEscape($alias);
+
+			my $itemTemplate = GetTemplate("itemvote.template");
+
+			my $itemClass = "txt $signedCss";
+
+			my $authorUrl;
+			my $authorAvatar;
+			my $authorLink;
+
+			if ($gpgKey) {
+				$authorUrl = "/author/$gpgKey/";
+				$authorAvatar = GetAvatar($gpgKey);
+
+				$authorLink = GetTemplate('authorlink.template');
+
+				$authorLink =~ s/\$authorUrl/$authorUrl/g;
+				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+			} else {
+				$authorLink = "";
+			}
+			my $permalinkTxt = $file;
+			$permalinkTxt =~ s/^\.//;
+
+			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+			my $itemText = $message;
+			my $fileHash = GetFileHash($file);
+			my $itemName = TrimPath($file);
+
+			my $ballotTime = time();
+
+			$itemTemplate =~ s/\$itemClass/$itemClass/g;
+			$itemTemplate =~ s/\$authorLink/$authorLink/g;
+			$itemTemplate =~ s/\$itemName/$itemName/g;
+			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+			$itemTemplate =~ s/\$itemText/$itemText/g;
+			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+			# Print it
+			$txtIndex .= $itemTemplate;
 		}
-
-		# todo $alias = GetAlias($gpgKey);
-
-		$alias = HtmlEscape($alias);
-
-		my $itemTemplate = GetTemplate("itemvote.template");
-
-		my $itemClass = "txt $signedCss";
-
-		my $authorUrl;
-		my $authorAvatar;
-		my $authorLink;
-
-		if ($gpgKey) {
-			$authorUrl = "/author/$gpgKey/";
-			$authorAvatar = GetAvatar($gpgKey);
-
-			$authorLink = GetTemplate('authorlink.template');
-
-			$authorLink =~ s/\$authorUrl/$authorUrl/g;
-			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-		} else {
-			$authorLink = "";
-		}
-		my $permalinkTxt = $file;
-		$permalinkTxt =~ s/^\.//;
-
-		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
-
-		my $itemText = $message;
-		my $fileHash = GetFileHash($file);
-		my $itemName = TrimPath($file);
-
-		my $ballotTime = time();
-
-		$itemTemplate =~ s/\$itemClass/$itemClass/g;
-		$itemTemplate =~ s/\$authorLink/$authorLink/g;
-		$itemTemplate =~ s/\$itemName/$itemName/g;
-		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-		$itemTemplate =~ s/\$itemText/$itemText/g;
-		$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
-
-		# Print it
-		$txtIndex .= $itemTemplate;
 	}
 
 	# Close html
@@ -567,5 +576,7 @@ $clonePage .= GetTemplate('clone.template');
 $clonePage .= GetTemplate('htmlend.template');
 
 PutFile('./html/clone.html', $clonePage);
+
+unlink("./html/txt.zip");
 
 system("zip -r ./html/txt.zip ./txt/ ./log/votes.log");
