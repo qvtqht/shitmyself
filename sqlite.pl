@@ -159,7 +159,9 @@ sub DBAddVoteRecord {
 }
 
 sub DBGetItemList {
-	my %params = @_;
+	my $paramHashRef = shift;
+	my %params = %$paramHashRef;
+
 	#supported params:
 	#where_clause = where clause for sql query
 
@@ -200,7 +202,7 @@ sub DBGetItemListForAuthor {
 
 	$params{'where_clause'} = "author_key = '$author'";
 
-	return DBGetItemList(%params);
+	return DBGetItemList(\%params);
 }
 
 sub DBGetAuthorList {

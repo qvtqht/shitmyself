@@ -24,6 +24,7 @@ sub GetPageHeader {
 	my $disabledColor = '#c0c0c0';
 	my $disabledTextColor = '#808080';
 	my $orangeColor = '#f08000';
+	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetTemplate("style.css");
 
 	# Get the HTML page template
@@ -38,6 +39,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$disabledTextColor/$disabledTextColor/g;
 	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
+	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
 
 	my $menuTemplate = "";
 	$menuTemplate .= GetMenuItem("/", "read");
@@ -254,13 +256,16 @@ sub GetReadPage {
 			$title = "Posts by $authorAliasHtml";
 			$titleHtml = "$authorAvatarHtml";
 
-			@files = DBGetItemList({'where_clause' => $whereClause});
+			my %queryParams;
+			$queryParams{'where_clause'} = $whereClause;
+			@files = DBGetItemList(\%queryParams);
 		}
 	} else {
 		$title = 'Message Board';
 		$titleHtml = 'Message Board';
 
-		@files = DBGetItemList();
+		my %queryParams;
+		@files = DBGetItemList(\%queryParams);
 	}
 
 	my $txtIndex = "";
@@ -383,13 +388,18 @@ sub GetVotePage {
 
 	#todo fix this hack where order is in the where clause
 	my $whereClause = "id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 10) ORDER BY RANDOM();";
-	@files = DBGetItemList({'where_clause' => $whereClause});
+	my %queryParams;
+	$queryParams{'where_clause'} = $whereClause;
+
+	@files = DBGetItemList(\%queryParams);
 
 	my $txtIndex = "";
 
 	my $htmlStart = GetPageHeader($title, $titleHtml);
 
 	$txtIndex .= $htmlStart;
+
+	$txtIndex .= GetTemplate('voteintro.template');
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -523,7 +533,8 @@ foreach my $key (@authors) {
 	PutFile("./html/author/$key/index.html", $authorIndex);
 }
 
-my @files = DBGetItemList();
+my %queryParams;
+my @files = DBGetItemList(\%queryParams);
 
 foreach my $file(@files) {
 	my $fileName = TrimPath($file->{'file_path'});

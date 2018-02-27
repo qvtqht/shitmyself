@@ -119,3 +119,11 @@ form.submit .txtarea {
 	color: black;
 	background-color: white;
 }
+.topmessage {
+	font-family: sans-serif;
+	font-size: default;
+	border: 2pt solid $primaryColor	;
+	border-radius: 5pt;
+	background-color: $highlightColor;
+	padding: 5pt;
+}
