@@ -8,8 +8,8 @@ body {
 	word-wrap: break-word;
 	max-width: 60em;
 	border: 1pt dotted $primaryColor;
-	border-top: 1pt solid $primaryColor;
-	border-left: 1pt solid $primaryColor;
+	border-top: 2pt solid $primaryColor;
+	border-left: 2pt solid $primaryColor;
 	border-radius: 5pt;
 	margin: 8pt;
 }
