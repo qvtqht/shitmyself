@@ -159,10 +159,13 @@ sub DBAddVoteRecord {
 }
 
 sub DBGetItemList {
-	my $whereClause = shift;
+	my %params = @_;
+	#supported params:
+	#where_clause = where clause for sql query
 
 	my $query;
-	if ($whereClause) {
+	if (defined ($params{'where_clause'})) {
+		my $whereClause = $params{'where_clause'};
 		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause;";
 	} else {
 		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item";
@@ -193,7 +196,11 @@ sub DBGetItemListForAuthor {
 	my $author = shift;
 	$author = SqliteEscape($author);
 
-	return DBGetItemList("author_key = '$author'");
+	my %params = {};
+
+	$params{'where_clause'} = "author_key = '$author'";
+
+	return DBGetItemList(%params);
 }
 
 sub DBGetAuthorList {

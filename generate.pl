@@ -254,7 +254,7 @@ sub GetReadPage {
 			$title = "Posts by $authorAliasHtml";
 			$titleHtml = "$authorAvatarHtml";
 
-			@files = DBGetItemList($whereClause);
+			@files = DBGetItemList({'where_clause' => $whereClause});
 		}
 	} else {
 		$title = 'Message Board';
@@ -382,7 +382,8 @@ sub GetVotePage {
 	$titleHtml = 'Voting Booth';
 
 	#todo fix this hack where order is in the where clause
-	@files = DBGetItemList("id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 10) ORDER BY RANDOM();");
+	my $whereClause = "id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 10) ORDER BY RANDOM();";
+	@files = DBGetItemList({'where_clause' => $whereClause});
 
 	my $txtIndex = "";
 
