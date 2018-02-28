@@ -4,7 +4,7 @@
 
 <p>Any signing accounts are controlled by the users' GPG private keys.</p>
 
-<p>The posts are a tree of text documents: <a href="/txt.zip">/txt.zip</a>.</p>
+<p>The posts are a tree of text files: <a href="/txt.zip">/txt.zip</a>.</p>
 
 <p>The scripts themselves are at <a href="/hike.zip">/hike.zip</a> and <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
 
