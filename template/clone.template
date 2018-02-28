@@ -1,6 +1,6 @@
 <p>You can easily clone this message board.</p>
 
-<p>There are no secrets stored here, except the anti-CSRF salt.</p>
+<p>There are no "secrets" stored here (e.g. passwords, private keys, password hashes), except the anti-CSRF salt.</p>
 
 <p>Any signing accounts are controlled by the users' GPG private keys.</p>
 
