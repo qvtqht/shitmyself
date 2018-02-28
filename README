@@ -22,9 +22,17 @@ currently doesn't do anything
 
 installation
 ============
-1. http/ should point to the html root. you can just symlink it.
-2. log/access.log should point to the access log. ditto on the symlink.
-3. access.pl, index.pl, and generate.pl should be in the crontab, in that order
+
+for local testing
+=================
+1. install lighttpd
+2. use included lighttpd.conf or run ./lighttpd.pl
+
+for apache and lighttpd
+=======================
+1. symlink log/access.log to wherever your access log lives
+2. symlink html root to html/
+3. add ./cron.sh to your crontab, set to run as often as you like
 
 requirements
 ============
