@@ -1,10 +1,13 @@
 <form action="./gracias.html" class=submit>
+    <ul class=instructions>
+        <li>You are invited to submit a message up to 8 kilobytes long.</li>
+        <li>There's no need to register if you want to write something.</li>
+    </ul>
+
     <textarea class=txtarea name=comment maxlength=8192 autofocus></textarea><br>
     <input class=btn type=submit value="Add Text">
 
     <ul class=instructions>
-        <li>You are invited to submit a message up to 8,192 bytes long.</li>
-        <li>There's no need to register if you want to write something.</li>
         <li>You can sign your messages with GPG, but you don't have to.</li>
         <li>Duplicate messages will be dropped silently; Our apologies.</li>
     </ul>

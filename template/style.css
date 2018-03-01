@@ -13,6 +13,15 @@ body {
 	border-radius: 5pt;
 	margin: 8pt;
 }
+.admin {
+	background: repeating-linear-gradient(
+     135deg,
+     #ffffe0,
+     #ffffe0 10px,
+     #fffff0 10px,
+     #fffff0 20px
+   );
+}
 .voter {
 	margin: 5pt 0pt 0pt 0pt;
 	text-align: right;
