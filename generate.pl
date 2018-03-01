@@ -577,6 +577,8 @@ $clonePage .= GetTemplate('htmlend.template');
 
 PutFile('./html/clone.html', $clonePage);
 
+unlink("./html/hike.zip");
+
 system("git archive --format zip --output html/hike.tmp.zip master");
 
 system("zip -r ./html/hike.tmp.zip ./txt/ ./log/votes.log .git/");
