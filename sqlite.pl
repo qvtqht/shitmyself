@@ -140,6 +140,16 @@ sub DBAddItem {
 	}
 }
 
+sub DbAddVoteWeight {
+	my $voteValue = shift;
+	my $weight = shift;
+
+	$voteValue = SqliteEscape($voteValue);
+	$weight = SqliteEscape($weight);
+
+	SqliteQuery("INSERT OR REPLACE INTO tag(vote_value, weight) VALUES('$voteValue', '$weight')");
+}
+
 sub DBAddVoteRecord {
 	my $fileHash = shift;
 	my $ballotTime = shift;

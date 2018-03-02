@@ -13,6 +13,22 @@ print "Using $SCRIPTDIR as install root...\n";
 require './utils.pl';
 require './sqlite.pl';
 
+sub MakeTagIndex {
+	print "MakeTagIndex()\n";
+
+	my $tagsWeight = GetFile("config/tags_weight");
+
+	if (defined($tagsWeight) && $tagsWeight) {
+		my @tagsToAdd = split("\n", $tagsWeight);
+
+		foreach (@tagsToAdd) {
+			my ($voteValue, $weight) = split('\|', $_);
+
+			DbAddVoteWeight($voteValue, $weight);
+		}
+	}
+}
+
 sub MakeVoteIndex {
 	print "MakeVoteIndex()\n";
 
@@ -91,3 +107,5 @@ my @filesToInclude = `find ./txt/ | grep \.txt\$ | sort -r`;
 MakeIndex(\@filesToInclude);
 
 MakeVoteIndex();
+
+MakeTagIndex();
