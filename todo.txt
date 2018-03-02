@@ -1,0 +1,5 @@
+Cookie auth via secret URL per public key, encrypted for that key
+Report size of zip in the clone page message
+Tag hooks for the admin (via cookie auth?)
+Tag ratings and enable/disable page
+Integrate Perl taint
