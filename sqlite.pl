@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 
-my $SqliteDbName = "db";
+my $SqliteDbName = "index.sqlite3";
 
 sub SqliteUnlinkDb {
 	unlink($SqliteDbName);
