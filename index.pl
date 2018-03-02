@@ -13,10 +13,9 @@ print "Using $SCRIPTDIR as install root...\n";
 require './utils.pl';
 require './sqlite.pl';
 
-# This holds all the files we will list in the primary index
-my @filesToInclude = `find ./txt/ -name \*.txt | sort -r`;
-
 sub MakeVoteIndex {
+	print "MakeVoteIndex()\n";
+
 	my $voteLog = GetFile("log/votes.log");
 
 	if (defined($voteLog) && $voteLog) {
@@ -31,6 +30,10 @@ sub MakeVoteIndex {
 }
 
 sub MakeIndex {
+	print "MakeIndex()...\n";
+
+	my @filesToInclude = @{$_[0]};
+
 	foreach my $file (@filesToInclude) {
 		chomp($file);
 
@@ -82,6 +85,9 @@ sub MakeIndex {
 SqliteUnlinkDb();
 SqliteMakeTables();
 
-MakeIndex(@filesToInclude);
+# This holds all the files we will list in the primary index
+my @filesToInclude = `find ./txt/ | grep \.txt\$ | sort -r`;
+
+MakeIndex(\@filesToInclude);
 
 MakeVoteIndex();
