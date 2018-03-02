@@ -225,4 +225,19 @@ sub DBGetAuthorAlias {
 	}
 }
 
+sub DBGetItemVoteTotals {
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	my $fileHashSql = SqliteEscape($fileHash);
+
+	my $query = "SELECT vote_value, count(vote_value) vote_count FROM vote " .
+		" WHERE file_hash = '$fileHashSql' GROUP BY vote_value ORDER BY vote_count DESC;";
+
+	my %voteTotals = SqliteGetHash($query);
+
+	return %voteTotals;
+}
+
+
 1;

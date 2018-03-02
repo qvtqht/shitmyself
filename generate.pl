@@ -234,11 +234,23 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
-	my $itemTxtTemplate = GetTemplate('itemtxt.template');
-	my $itemPlainText = HtmlEscape(GetFile($file{'file_path'}));
-	$itemTxtTemplate =~ s/\$itemTextPlain/$itemPlainText/;
+	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+	my $votesList = "";
+	foreach my $voteValue (keys %voteTotals) {
+		$votesList .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
+	}
 
-	$txtIndex .= $itemTxtTemplate;
+	if (!$votesList) {
+		$votesList = "(no votes)";
+	}
+
+	my $itemInfoTemplate = GetTemplate('iteminfo.template');
+	my $itemPlainText = HtmlEscape(GetFile($file{'file_path'}));
+	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
+	$itemInfoTemplate =~ s/\$votesList/$votesList/;
+
+	$txtIndex .= $itemInfoTemplate;
+
 
 	#print $file{''
 
@@ -529,18 +541,26 @@ sub GetSubmitPage {
 
 
 
+print "GetReadPage()...\n";
+
 my $indexText = GetReadPage();
 
 PutFile('./html/index.html', $indexText);
+
+print "GetVotePage()...\n";
 
 my $voteIndexText = GetVotePage();
 
 PutFile('./html/vote.html', $voteIndexText);
 
 
+print "Authors...\n";
+
 my @authors = DBGetAuthorList();
 
 foreach my $key (@authors) {
+	print "$key\n";
+
 	mkdir("./html/author/$key");
 
 	my $authorIndex = GetReadPage('author', $key);
@@ -585,7 +605,7 @@ PutFile('./html/clone.html', $clonePage);
 
 system("git archive --format zip --output html/hike.tmp.zip master");
 
-system("zip -r ./html/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+system("zip -qr ./html/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
 rename("./html/hike.tmp.zip/", "./html/hike.zip");
 

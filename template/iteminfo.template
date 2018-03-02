@@ -2,3 +2,8 @@
 <h2>Original Submission as Plain Text:</h2>
 <pre>$itemTextPlain</pre>
 </div>
+
+<div class="plain">
+<h2>Votes on this Item:</h2>
+<p>$votesList</p>
+</div>
