@@ -51,5 +51,4 @@ known issues
 ============
 this is just a basic prototype, and is not optimized to scale.
 the index db is regenerated every time, which can definitely be optimized.
-txt.zip and hike.zip can probably be merged into one zip once adding txt/ to the git repo is fleshed out.
 the voter id should be generated once per page, but is currently generated once per item.
