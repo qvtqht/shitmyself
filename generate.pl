@@ -234,6 +234,12 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
+	my $itemTxtTemplate = GetTemplate('itemtxt.template');
+	my $itemPlainText = HtmlEscape(GetFile($file{'file_path'}));
+	$itemTxtTemplate =~ s/\$itemTextPlain/$itemPlainText/;
+
+	$txtIndex .= $itemTxtTemplate;
+
 	#print $file{''
 
 	$txtIndex .= GetTemplate("htmlend.template");

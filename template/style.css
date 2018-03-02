@@ -135,3 +135,8 @@ form.submit .txtarea {
 	background-color: $highlightColor;
 	padding: 5pt;
 }
+.plain {
+	background-color: $secondaryColor;
+	padding: 5px;
+	max-width: 60em;
+}
