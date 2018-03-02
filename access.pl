@@ -182,21 +182,21 @@ sub ProcessAccessLog {
 					my $filename;
 					my $filenameDir;
 
-					# If the submission contains an @-sign, hide it into the admin dir
-					# Also, if it contains the string ".onion", to curb spam @todo better solution
-					if (index($message, "@") != - 1) {
-						$filenameDir = "$SCRIPTDIR/admin/";
-						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-
-						print "I'm going to put $filename into $filenameDir because it contains an @";
-					}
-					elsif (index($message, ".onion") != - 1) {
-						$filenameDir = "$SCRIPTDIR/spam/";
-						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-
-						print "I'm going to put $filename into $filenameDir because it contains a .onion";
-					}
-					else {
+#					# If the submission contains an @-sign, hide it into the admin dir
+#					# Also, if it contains the string ".onion", to curb spam @todo better solution
+#					if (index($message, "@") != - 1) {
+#						$filenameDir = "$SCRIPTDIR/admin/";
+#						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+#
+#						print "I'm going to put $filename into $filenameDir because it contains an @";
+#					}
+#					elsif (index($message, ".onion") != - 1) {
+#						$filenameDir = "$SCRIPTDIR/spam/";
+#						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+#
+#						print "I'm going to put $filename into $filenameDir because it contains a .onion";
+#					}
+#					else {
 						# Prefix for new text posts
 						$filenameDir = $TXTDIR;
 
@@ -208,7 +208,7 @@ sub ProcessAccessLog {
 						$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
 
 						print "I'm going to put $filename into $filenameDir\n";
-					}
+#					}
 
 					# Make sure we don't clobber an existing file
 					# If filename exists, add (1), (2), and so on
