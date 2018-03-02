@@ -245,7 +245,7 @@ sub GetItemPage {
 	}
 
 	my $itemInfoTemplate = GetTemplate('iteminfo.template');
-	my $itemPlainText = HtmlEscape(GetFile($file{'file_path'}));
+	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
 	$itemInfoTemplate =~ s/\$votesList/$votesList/;
 

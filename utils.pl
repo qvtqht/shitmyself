@@ -373,4 +373,15 @@ sub GpgParse {
 	return %returnValues;
 }
 
-1;
+sub FormatForWeb {
+	my $text = shift;
+	chomp $text;
+
+	$text = HtmlEscape($text);
+	$text =~ s/\n/<br>\n/g;
+
+	return $text;
+}
+
+
+	1;
