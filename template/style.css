@@ -35,6 +35,7 @@ body {
 	background-color: $primaryColor;
 	color: $secondaryColor;
 	border-radius: 3pt;
+	display: inline-block;
 }
 .voter a:active {
 	background-color: $primaryColor;
