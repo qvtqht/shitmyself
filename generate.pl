@@ -8,9 +8,9 @@ use lib qw(lib);
 use HTML::Entities;
 use Digest::MD5 qw(md5_hex);
 
-
 require './utils.pl';
 require './sqlite.pl';
+
 
 sub GetPageHeader {
 	my $title = shift;
@@ -18,7 +18,9 @@ sub GetPageHeader {
 
 	my $txtIndex = "";
 
-	my $primaryColor = "#008080";
+	my @primaryColorChoices = qw(008080 c08000 808080);
+
+	my $primaryColor = '#'.$primaryColorChoices[0];
 	my $secondaryColor = '#f0fff0';
 	my $neutralColor = '#202020';
 	my $disabledColor = '#c0c0c0';
@@ -251,9 +253,6 @@ sub GetItemPage {
 
 	$txtIndex .= $itemInfoTemplate;
 
-
-	#print $file{''
-
 	$txtIndex .= GetTemplate("htmlend.template");
 
 	return $txtIndex;
@@ -388,7 +387,6 @@ sub GetReadPage {
 			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
-			# Print it
 			$txtIndex .= $itemTemplate;
 		}
 	}
@@ -512,7 +510,6 @@ sub GetVotePage {
 			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
-			# Print it
 			$txtIndex .= $itemTemplate;
 		}
 	}
@@ -541,25 +538,25 @@ sub GetSubmitPage {
 
 
 
-print "GetReadPage()...\n";
+WriteLog ("GetReadPage()...");
 
 my $indexText = GetReadPage();
 
 PutFile('./html/index.html', $indexText);
 
-print "GetVotePage()...\n";
+WriteLog ("GetVotePage()...");
 
 my $voteIndexText = GetVotePage();
 
 PutFile('./html/vote.html', $voteIndexText);
 
 
-print "Authors...\n";
+WriteLog ("Authors...");
 
 my @authors = DBGetAuthorList();
 
 foreach my $key (@authors) {
-	print "$key\n";
+	WriteLog ("$key");
 
 	mkdir("./html/author/$key");
 

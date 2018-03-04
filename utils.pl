@@ -383,5 +383,15 @@ sub FormatForWeb {
 	return $text;
 }
 
+sub WriteLog {
+	#todo sanitize?
+	my $text = shift;
+	chomp $text;
 
-	1;
+	my $timestamp = time();
+
+	AppendFile("log/log.log", $timestamp . " " . $text);
+}
+
+
+1;
