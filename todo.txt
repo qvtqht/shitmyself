@@ -3,3 +3,4 @@ Report size of zip in the clone page message
 Tag hooks for the admin (via cookie auth?)
 Tag ratings and enable/disable page
 Integrate Perl taint
+Use the full fingerprint for avatars for more colors
