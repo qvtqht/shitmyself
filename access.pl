@@ -80,6 +80,9 @@ sub ProcessAccessLog {
 	# The log file should always be there
 	open(LOGFILE, $logfile) or die("Could not open log file.");
 
+	# anti-CSRF secret salt
+	my $mySecret = GetFile("./config/secret");
+
 	# The following section parses the access log
 	# Thank you, StackOverflow
 	foreach my $line (<LOGFILE>) {
@@ -241,9 +244,12 @@ sub ProcessAccessLog {
 				my $voteFile = $actionArgs[3];
 				my $ballotTime = $actionArgs[4];
 				my $voteValue = $actionArgs[5];
+				my $checksum = $actionArgs[6];
+
+				my $checksumCorrect = md5_hex($voteFile . $ballotTime . $mySecret);
 
 				my $currentTime = time();
-				if ($currentTime - $ballotTime < 7200) {
+				if ($checksum eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
 					my $voteEntry = "$voteFile|$ballotTime|$voteValue";
 
 					AppendFile("log/votes.log", $voteEntry);
