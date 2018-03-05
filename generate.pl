@@ -604,5 +604,5 @@ system("git archive --format zip --output html/hike.tmp.zip master");
 
 system("zip -qr ./html/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
-rename("./html/hike.tmp.zip/", "./html/hike.zip");
+rename("./html/hike.tmp.zip", "./html/hike.zip");
 
