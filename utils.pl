@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use utf8;
 use 5.010;
+use POSIX;
 
 use lib 'lib';
 
@@ -157,6 +158,42 @@ sub trim {
 	my $s = shift;
 	$s =~ s/^\s+|\s+$//g; return $s
 };
+
+sub GetFileSizeHtml {
+	my $fileSize = shift;
+	chomp $fileSize;
+
+	my $fileSizeString = $fileSize;
+
+	if ($fileSizeString > 1024) {
+		$fileSizeString = $fileSizeString / 1024;
+
+		if ($fileSizeString > 1024) {
+			$fileSizeString = $fileSizeString / 1024;
+
+			if ($fileSizeString > 1024) {
+				$fileSizeString = $fileSizeString / 1024;
+
+				if ($fileSizeString > 1024) {
+					$fileSizeString = $fileSizeString / 1024;
+
+					$fileSizeString = ceil($fileSizeString) . ' <abbr title="terabytes">TB</abbr>';
+				} else {
+
+					$fileSizeString = ceil($fileSizeString) . ' <abbr title="gigabytes">GB</abbr>';
+				}
+			} else {
+				$fileSizeString = ceil($fileSizeString) . ' <abbr title="megabytes">MB</abbr>';
+			}
+		} else {
+			$fileSizeString = ceil($fileSizeString) . ' <abbr title="kilobytes">KB</abbr>';
+		}
+	} else {
+		$fileSizeString .= " bytes";
+	}
+
+	return $fileSizeString;
+}
 
 
 sub GetAdminKey {

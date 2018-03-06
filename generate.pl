@@ -609,7 +609,10 @@ $graciasPage .= GetTemplate('htmlend.template');
 
 PutFile("./html/gracias.html", $graciasPage);
 
-PutFile("./html/ok.html", GetTemplate('ok.template'));
+my $okPage = GetTemplate('ok.template');
+$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
+
+PutFile("./html/ok.html", $okPage);
 
 system("git archive --format zip --output html/hike.tmp.zip master");
 
@@ -623,26 +626,7 @@ my $clonePageTemplate = GetTemplate('clone.template');
 
 my $sizeHikeZip = -s "./html/hike.zip";
 
-if ($sizeHikeZip > 1024) {
-	$sizeHikeZip = $sizeHikeZip / 1024;
-
-	if ($sizeHikeZip > 1024) {
-		$sizeHikeZip = $sizeHikeZip / 1024;
-
-		if ($sizeHikeZip > 1024) {
-			$sizeHikeZip = $sizeHikeZip / 1024;
-
-			$sizeHikeZip = ceil($sizeHikeZip) . ' <abbr title="gigabytes">GB</abbr>';
-
-		} else {
-			$sizeHikeZip = ceil($sizeHikeZip) . ' <abbr title="megabytes">MB</abbr>';
-		}
-	} else {
-		$sizeHikeZip = ceil($sizeHikeZip) . ' <abbr title="kilobytes">KB</abbr>';
-	}
-} else {
-	$sizeHikeZip .= " bytes";
-}
+$sizeHikeZip = GetFileSizeText($sizeHikeZip);
 
 $clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
 
@@ -666,3 +650,6 @@ $tfmPage .= $tfmPageTemplate;
 $tfmPage .= GetTemplate('htmlend.template');
 
 PutFile("./html/manual.html", $tfmPage);
+
+
+PutFile("./html/blank.html", "");
