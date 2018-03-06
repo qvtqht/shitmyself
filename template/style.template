@@ -43,12 +43,12 @@ body {
 .voter a.neg {
 	background-color: #b06060;
 }
-.voter a:active {
+.voter a.pos:active, .voter a.neg:active {
 	background-color: $primaryColor;
 	color: $primaryColor;
 	border: 1pt inset $primaryColor;
 }
-.voter a:visited {
+.voter a.pos:visited, .voter a.neg:visited {
 	color: $disabledTextColor;
 	background-color: $disabledColor;
 	border: 1pt solid $disabledColor;
