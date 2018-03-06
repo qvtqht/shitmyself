@@ -87,15 +87,19 @@ sub GetVoterTemplate {
 	state $voteButtonsTemplate;
 
 	if (!defined($voteButtonsTemplate)) {
-		my $voteValuesList = GetFile('./config/tags');
-		chomp $voteValuesList;
-		my @voteValues = split("\n", $voteValuesList);
+		my $tagsList = GetFile('./config/tags');
+		my $flagsList = GetFile('./config/flags');
+
+		chomp $tagsList;
+		chomp $flagsList;
+
+		my @voteValues = split("\n", $tagsList . "\n" . $flagsList);
 
 		foreach (@voteValues) {
 			my $buttonTemplate = GetTemplate("votebutton.template");
 
 			my $class = "pos";
-			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'advert.') {
+			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'advert.' || $_ eq 'troll' || $_ eq 'abuse') {
 				$class = "neg";
 			}
 
