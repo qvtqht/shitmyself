@@ -17,6 +17,9 @@ sub GetPageHeader {
 	my $title = shift;
 	my $titleHtml = shift;
 
+	chomp $title;
+	chomp $titleHtml;
+
 	my $logoText = GetFile('config/logotext');
 	$logoText = HtmlEscape($logoText);
 
