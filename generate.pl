@@ -565,13 +565,15 @@ WriteLog ("GetReadPage()...");
 
 my $indexText = GetReadPage();
 
-PutFile('./html/index.html', $indexText);
+my $HTMLDIR = "html.tmp";
+
+PutFile("$HTMLDIR/index.html", $indexText);
 
 WriteLog ("GetVotePage()...");
 
 my $voteIndexText = GetVotePage();
 
-PutFile('./html/vote.html', $voteIndexText);
+PutFile("$HTMLDIR/vote.html", $voteIndexText);
 
 
 WriteLog ("Authors...");
@@ -581,11 +583,11 @@ my @authors = DBGetAuthorList();
 foreach my $key (@authors) {
 	WriteLog ("$key");
 
-	mkdir("./html/author/$key");
+	mkdir("$HTMLDIR/author/$key");
 
 	my $authorIndex = GetReadPage('author', $key);
 
-	PutFile("./html/author/$key/index.html", $authorIndex);
+	PutFile("$HTMLDIR/author/$key/index.html", $authorIndex);
 }
 
 my %queryParams;
@@ -596,11 +598,11 @@ foreach my $file(@files) {
 
 	my $fileIndex = GetItemPage($file);
 
-	PutFile("./html/$fileName.html", $fileIndex);
+	PutFile("$HTMLDIR/$fileName.html", $fileIndex);
 }
 
 my $submitPage = GetSubmitPage();
-PutFile("./html/write.html", $submitPage);
+PutFile("$HTMLDIR/write.html", $submitPage);
 
 # Make sure the submission form has somewhere to go
 my $graciasPage = GetPageHeader("Thank You", "Thank You");
@@ -611,24 +613,24 @@ $graciasPage .= $graciasTemplate;
 
 $graciasPage .= GetTemplate('htmlend.template');
 
-PutFile("./html/gracias.html", $graciasPage);
+PutFile("$HTMLDIR/gracias.html", $graciasPage);
 
 my $okPage = GetTemplate('ok.template');
 $okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
-PutFile("./html/ok.html", $okPage);
+PutFile("$HTMLDIR/ok.html", $okPage);
 
 system("git archive --format zip --output html/hike.tmp.zip master");
 
-system("zip -qr ./html/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
-rename("./html/hike.tmp.zip", "./html/hike.zip");
+rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 
 my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
 
 my $clonePageTemplate = GetTemplate('clone.template');
 
-my $sizeHikeZip = -s "./html/hike.zip";
+my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
 
 $sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
 
@@ -638,11 +640,11 @@ $clonePage .= $clonePageTemplate;
 
 $clonePage .= GetTemplate('htmlend.template');
 
-PutFile('./html/clone.html', $clonePage);
+PutFile("$HTMLDIR/clone.html", $clonePage);
 
 my $HtaccessTemplate = GetTemplate('htaccess.template');
 
-PutFile('./html/.htaccess', $HtaccessTemplate);
+PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 
 my $tfmPage = GetPageHeader("Manual", "Manual");
@@ -653,7 +655,11 @@ $tfmPage .= $tfmPageTemplate;
 
 $tfmPage .= GetTemplate('htmlend.template');
 
-PutFile("./html/manual.html", $tfmPage);
+PutFile("$HTMLDIR/manual.html", $tfmPage);
 
 
-PutFile("./html/blank.html", "");
+PutFile("$HTMLDIR/blank.html", "");
+
+rename("html/", "html.old");
+rename("$HTMLDIR/", "html/");
+system("rm -rf html.old/");

@@ -12,7 +12,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
-my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author cache/message cache/gpg);
+my @dirsThatShouldExist = qw(log html html.tmp html.tmp/author txt spam admin key cache html/author cache/message cache/gpg);
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -161,7 +161,7 @@ sub trim {
 
 sub GetFileSizeHtml {
 	my $fileSize = shift;
-	chomp $fileSize;
+	chomp ($fileSize);
 
 	my $fileSizeString = $fileSize;
 
