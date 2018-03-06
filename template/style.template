@@ -32,11 +32,16 @@ body {
 	font-family: sans-serif;
 	font-size: smaller;
 	border: 1pt outset $primaryColor;
-	background-color: $primaryColor;
 	color: $secondaryColor;
 	border-radius: 3pt;
 	display: inline-block;
 	margin: 3pt 3pt 0pt 0pt;
+}
+.voter a.pos {
+	background-color: #408040;
+}
+.voter a.neg {
+	background-color: #b06060;
 }
 .voter a:active {
 	background-color: $primaryColor;

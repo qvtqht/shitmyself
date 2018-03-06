@@ -94,8 +94,14 @@ sub GetVoterTemplate {
 		foreach (@voteValues) {
 			my $buttonTemplate = GetTemplate("votebutton.template");
 
+			my $class = "pos";
+			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'advert.') {
+				$class = "neg";
+			}
+
 			$buttonTemplate =~ s/\$voteValue/$_/g;
 			$buttonTemplate =~ s/\$voteValueCaption/$_/g;
+			$buttonTemplate =~ s/\$class/$class/g;
 
 			$voteButtonsTemplate .= $buttonTemplate;
 		}
@@ -641,3 +647,14 @@ PutFile('./html/clone.html', $clonePage);
 my $HtaccessTemplate = GetTemplate('htaccess.template');
 
 PutFile('./html/.htaccess', $HtaccessTemplate);
+
+
+my $tfmPage = GetPageHeader("Manual", "Manual");
+
+my $tfmPageTemplate = GetTemplate('manual.template');
+
+$tfmPage .= $tfmPageTemplate;
+
+$tfmPage .= GetTemplate('htmlend.template');
+
+PutFile("./html/manual.html", $tfmPage);

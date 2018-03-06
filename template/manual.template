@@ -1,0 +1,68 @@
+<!-- manual.template -->
+<h3>Manual</h3>
+
+<p>This is a message board where you can talk to others.</p>
+
+<h3>Features You May Recognize</h3>
+
+<ul>
+    <li>Write messages using your name or anonymously</li>
+    <li>Read messages others have already posted</li>
+    <li>Vote on posted messages to improve quality</li>
+</ul>
+
+<h3>These Features May Be Confusing At First</h3>
+
+<ul>
+    <li>Create your "account" aka <em>key pair</em> on your own computer, <em>not on this website</em></li>
+    <li>This is accomplished with encryption called GPG.</li>
+    <li>Your key pair allows you to post on other forums too.</li>
+</ul>
+
+<h3>How to use GPG</h3>
+
+<p>To use GPG, you will need to download a special program or app.</p>
+
+<p>GPG is traditionally used for email encryption, but <b>you do not have to provide your email</b> to generate a key or use this forum.</p>
+
+<h4>Android</h4>
+
+<p>OpenKeychain<br><a href="https://www.openkeychain.org/about/">https://www.openkeychain.org/about/</a></p>
+
+<h4>Apple iOS, iPhone, iPad</h4>
+
+<p>PGP Everywhere<br><a href="http://pgpeverywhere.com/">http://pgpeverywhere.com/</a></p>
+
+<h4>Apple macOS</h4>
+
+<p>GPG Suite &lt;<a href="https://gpgtools.org/">https://gpgtools.org/</a></p>
+
+<h4>Microsoft Windows</h4>
+
+<p>Gpg4Win<br><a href="https://www.gpg4win.org/">https://www.gpg4win.org/</a></p>
+
+<h4>Linux and Command Line</h4>
+
+<p>GnuPG<br><a href="https://www.gnupg.org/">https://www.gnupg.org/</a></p>
+
+<h4>More Options</h4>
+
+<p>OpenPGP Software<br><a href="https://www.openpgp.org/software/">https://www.openpgp.org/software/</a></p>
+
+<h3>Command Line Instructions</h3>
+
+<p>First, ensure that you have GnuPG installed. Go here: <a href="https://www.opengpg.org/">https://www.opengpg.org/</a></p>
+
+<h4>Check GPG Version</h4>
+
+<p>gpg --version</p>
+
+<h4>Generate Key Pair</h4>
+
+<p>gpg --gen-key</p>
+
+<h4>Sign Message</h4>
+
+<p>gpg --clearsign example.txt</p>
+
+<!-- / manual.template -->

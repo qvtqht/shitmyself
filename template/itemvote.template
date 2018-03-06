@@ -3,8 +3,5 @@
 $authorLink
 <br>
 $itemText
-<details>
-<summary>Vote:</summary>
 <p class=voter>$voterButtons</p>
-</details>
 </div>
