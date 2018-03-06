@@ -52,7 +52,6 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/", "read");
 	$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
-	$menuTemplate .= GetMenuItem("/clone.html", "clone");
 	$menuTemplate .= GetMenuItem("/manual.html", "manual");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
