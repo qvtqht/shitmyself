@@ -7,6 +7,7 @@ use 5.010;
 use lib qw(lib);
 use HTML::Entities;
 use Digest::MD5 qw(md5_hex);
+use POSIX;
 
 require './utils.pl';
 require './sqlite.pl';
@@ -514,6 +515,9 @@ sub GetVotePage {
 		}
 	}
 
+	#Add vote status frame
+	$txtIndex .= GetTemplate("voteframe.template");
+
 	# Close html
 	$txtIndex .= GetTemplate("htmlend.template");
 
@@ -592,17 +596,47 @@ PutFile("./html/gracias.html", $graciasPage);
 
 PutFile("./html/ok.html", GetTemplate('ok.template'));
 
-my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
-
-$clonePage .= GetTemplate('clone.template');
-
-$clonePage .= GetTemplate('htmlend.template');
-
-PutFile('./html/clone.html', $clonePage);
-
 system("git archive --format zip --output html/hike.tmp.zip master");
 
 system("zip -qr ./html/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
 rename("./html/hike.tmp.zip", "./html/hike.zip");
 
+my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
+
+my $clonePageTemplate = GetTemplate('clone.template');
+
+my $sizeHikeZip = -s "./html/hike.zip";
+
+if ($sizeHikeZip > 1024) {
+	$sizeHikeZip = $sizeHikeZip / 1024;
+
+	if ($sizeHikeZip > 1024) {
+		$sizeHikeZip = $sizeHikeZip / 1024;
+
+		if ($sizeHikeZip > 1024) {
+			$sizeHikeZip = $sizeHikeZip / 1024;
+
+			$sizeHikeZip = ceil($sizeHikeZip) . ' <abbr title="gigabytes">GB</abbr>';
+
+		} else {
+			$sizeHikeZip = ceil($sizeHikeZip) . ' <abbr title="megabytes">MB</abbr>';
+		}
+	} else {
+		$sizeHikeZip = ceil($sizeHikeZip) . ' <abbr title="kilobytes">KB</abbr>';
+	}
+} else {
+	$sizeHikeZip .= " bytes";
+}
+
+$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
+
+$clonePage .= $clonePageTemplate;
+
+$clonePage .= GetTemplate('htmlend.template');
+
+PutFile('./html/clone.html', $clonePage);
+
+my $HtaccessTemplate = GetTemplate('htaccess.template');
+
+PutFile('./html/.htaccess', $HtaccessTemplate);

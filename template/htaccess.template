@@ -1,0 +1,10 @@
+# htaccess.template
+#
+# WARNING
+# if you're not editing htaccess.template, you're editing the wrong file
+# if this file is called .htaccess, it will be overwritten
+
+AddDefaultCharset utf-8
+
+RewriteEngine On
+RewriteRule ^action/.+ /ok.html
