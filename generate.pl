@@ -564,7 +564,8 @@ WriteLog ("GetReadPage()...");
 
 my $indexText = GetReadPage();
 
-my $HTMLDIR = "html.tmp";
+#my $HTMLDIR = "html.tmp";
+my $HTMLDIR = "html";
 
 PutFile("$HTMLDIR/index.html", $indexText);
 
@@ -659,6 +660,6 @@ PutFile("$HTMLDIR/manual.html", $tfmPage);
 
 PutFile("$HTMLDIR/blank.html", "");
 
-rename("html", "html.old");
-rename("$HTMLDIR", "html/");
-system("rm -rf html.old");
+#rename("html", "html.old");
+#rename("$HTMLDIR", "html/");
+#system("rm -rf html.old");
