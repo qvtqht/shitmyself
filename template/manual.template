@@ -23,8 +23,6 @@
 
 <p>To use GPG, you will need to download a special program or app.</p>
 
-<p>GPG is traditionally used for email encryption, but <b>you do not have to provide your email</b> to generate a key or use this forum.</p>
-
 <h4>Android</h4>
 
 <p>OpenKeychain<br><a href="https://www.openkeychain.org/about/">https://www.openkeychain.org/about/</a></p>
@@ -64,5 +62,29 @@
 <h4>Sign Message</h4>
 
 <p>gpg --clearsign example.txt</p>
+
+<h3>Creating a Key Pair</h3>
+
+<p>First, you will need to create a key pair. Look for this option in your software and use it.</p>
+
+<p>GPG is traditionally used for email, but <b>you do not have to provide your address</b> for this forum.</p>
+
+<h3>Writing As Yourself</h3>
+
+<p>To write something under your new name, first create the text.</p>
+
+<p>Look for the option to sign (not encrypt) your text in your GPG software.</p>
+
+<p>Some software will call it "encrypt", and has no "sign" option. In this case, you should make the "To:" field blank, and press Encrypt.</p>
+
+<p>You may see your message appear under a long string of digits and numbers instead of your name. This is your <i>fingerprint</i>. To alias your name to this fingerprint, see the next section.</p>
+
+<h3>Uploading Your Public Key</h3>
+
+<p>Look for the option to export your public key in your software. This will copy it to the clipboard.</p>
+
+<p>Then, go to the <a href="/write.html">Write</a> page, and paste it in there. Press "Add Text".</p>
+
+<p>You have now aliased your name to your key fingerprint.</p>
 
 <!-- / manual.template -->
