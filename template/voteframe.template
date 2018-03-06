@@ -1,1 +1,1 @@
-<iframe style="float: right; width: 3em; height: 3em; border: 2pt solid #808080; border-radius: 5pt;" name=voterFrame id=voterFrame></iframe>
+<iframe style="float: right; width: 3em; height: 3em; border: none;" name=voterFrame id=voterFrame></iframe>

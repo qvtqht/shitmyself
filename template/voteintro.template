@@ -1,5 +1,6 @@
+<!-- voteintro.template -->
 <div class=topmessage>
     $voteFrame
     Here are random items for you to vote on. Please vote using the buttons below each item.<br>
-    The little box that floats here is for browser compatibility, and can be ignored.
 </div>
+<!-- /voteintro.template -->

@@ -10,5 +10,5 @@ $styleSheet
 </style>
 </head>
 <body>
-<h1><a id=logo href=/>ॐ</a>$titleHtml</h1>
+<h1><a id=logo href=/>$logoText</a>$titleHtml</h1>
 <h2 class="menu">$menuItems</h2>

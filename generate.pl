@@ -17,6 +17,9 @@ sub GetPageHeader {
 	my $title = shift;
 	my $titleHtml = shift;
 
+	my $logoText = GetFile('config/logotext');
+	$logoText = HtmlEscape($logoText);
+
 	my $txtIndex = "";
 
 	my @primaryColorChoices = qw(008080 c08000 808080);
@@ -33,6 +36,7 @@ sub GetPageHeader {
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
+	$htmlStart =~ s/\$logoText/$logoText/g;
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$title/$title/;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/;
