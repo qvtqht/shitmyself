@@ -626,7 +626,7 @@ my $clonePageTemplate = GetTemplate('clone.template');
 
 my $sizeHikeZip = -s "./html/hike.zip";
 
-$sizeHikeZip = GetFileSizeText($sizeHikeZip);
+$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
 
 $clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
 
