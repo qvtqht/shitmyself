@@ -28,7 +28,7 @@ sub GetPageHeader {
 	my $disabledTextColor = '#808080';
 	my $orangeColor = '#f08000';
 	my $highlightColor = '#ffffc0';
-	my $styleSheet = GetTemplate("style.css");
+	my $styleSheet = GetTemplate("style.template");
 
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
@@ -49,6 +49,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
 	$menuTemplate .= GetMenuItem("/clone.html", "clone");
+	$menuTemplate .= GetMenuItem("/manual.html", "manual");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 

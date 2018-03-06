@@ -1,1 +1,1 @@
-<label for=voterFrame>Voting Status:</label><iframe name=voterFrame id=voterFrame></iframe>
+<label for=voterFrame>Voting Status:</label><br><iframe style="width: 60em; height: 2em;" name=voterFrame href="/ok.html" id=voterFrame></iframe>
