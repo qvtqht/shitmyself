@@ -1,3 +1,5 @@
 <div class=topmessage>
-    Here are random items for you to vote on. Please vote using the buttons below each item.
+    $voteFrame
+    Here are random items for you to vote on. Please vote using the buttons below each item.<br>
+    The little box that floats here for browser compatibility, an can be ignored.
 </div>

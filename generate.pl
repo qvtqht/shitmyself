@@ -434,7 +434,14 @@ sub GetVotePage {
 
 	$txtIndex .= $htmlStart;
 
-	$txtIndex .= GetTemplate('voteintro.template');
+	my $voteIntroTemplate = GetTemplate('voteintro.template');
+
+	#Add vote status frame
+	my $voteFrameTemplate = GetTemplate("voteframe.template");
+
+	$voteIntroTemplate =~ s/\$voteFrame/$voteFrameTemplate/g;
+
+	$txtIndex .= $voteIntroTemplate;
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -525,9 +532,6 @@ sub GetVotePage {
 			$txtIndex .= $itemTemplate;
 		}
 	}
-
-	#Add vote status frame
-	$txtIndex .= GetTemplate("voteframe.template");
 
 	# Close html
 	$txtIndex .= GetTemplate("htmlend.template");
