@@ -559,6 +559,9 @@ sub GetSubmitPage {
 
 	$txtIndex .= GetTemplate("htmlend.template");
 
+	$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
+
+
 	return $txtIndex;
 }
 
@@ -663,6 +666,9 @@ PutFile("$HTMLDIR/manual.html", $tfmPage);
 
 
 PutFile("$HTMLDIR/blank.html", "");
+
+
+PutFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.template'));
 
 #rename("html", "html.old");
 #rename("$HTMLDIR", "html/");

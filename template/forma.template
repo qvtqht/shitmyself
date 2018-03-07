@@ -1,13 +1,18 @@
+<!-- forma.template -->
 <form action="./gracias.html" class=submit>
     <ul class=instructions>
         <li>You are invited to write something up to 8000 letters long.</li>
         <li>There's no need to register if you want to write something.</li>
     </ul>
 
-    <textarea class=txtarea name=comment maxlength=8192 autofocus></textarea><br>
+    <textarea class=txtarea id=comment name=comment maxlength=8192 autofocus></textarea><br>
     <input class=btn type=submit value="Add Text">
+    <script><!--
+    document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="zalgo_textarea(\'comment\');">');
+    // --></script>
 
     <ul class=instructions>
         <li>You can sign your messages with GPG, but you don't have to.</li>
     </ul>
 </form>
+<!-- / forma.template -->
