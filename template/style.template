@@ -121,11 +121,10 @@ form.submit .txtarea {
 	text-decoration: none;
 	margin-right: 10pt;
 	vertical-align: middle;
-	font-size: 24pt;
+	font-size: 36pt;
 	font-family: monospace;
 	background-color: $primaryColor;
 	color: white;
-	padding: 3pt;
 }
 .topmessage {
 	font-family: sans-serif;
