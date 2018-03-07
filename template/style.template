@@ -100,7 +100,6 @@ form.submit {
 	color: $secondaryColor;
 	border-radius: 5pt;
 	padding: 10pt;
-	transform: rotate(-0.5deg);
 }
 form.submit .btn {
 	background-color: $primaryColor;
@@ -108,27 +107,22 @@ form.submit .btn {
 	font-family: monospace;
 	font-size: large;
 	margin-top: 7pt;
-	transform: rotate(1.5deg);
 }
 form.submit .txtarea {
 	width: 100%;
 	height: 24ex;
-	transform: rotate(0.5deg);
 }
 .instructions {
 	font-family: monospace;
 	font-size: large;
 	line-height: 2;
-	transform: rotate(0.7deg);
 }
 .instructions2 {
 	font-family: cursive;
 	font-size: large;
-	line-hieght: 2;
-	transform: rotate(-0.7deg);
+	line-height: 2;
 }
 #logo {
-	text-decoration: none;
 	border: 3pt inset $primaryColor;
 	border-radius: 17pt;
 	margin-right: 10pt;
@@ -136,7 +130,7 @@ form.submit .txtarea {
 	font-size: 24pt;
 	font-family: helvetica;
 	padding: 3pt;
-	color: black;
+	color: $primaryColor;
 	background-color: white;
 }
 .topmessage {
