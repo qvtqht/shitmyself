@@ -44,8 +44,7 @@ body {
 	background-color: #b06060;
 }
 .voter a.pos:active, .voter a.neg:active {
-	background-color: $primaryColor;
-	color: $primaryColor;
+	background-color: $orangeColor;
 	border: 1pt inset $primaryColor;
 }
 .voter a.pos:visited, .voter a.neg:visited {
