@@ -105,7 +105,7 @@ sub GetVoterTemplate {
 			my $buttonTemplate = GetTemplate("votebutton.template");
 
 			my $class = "pos";
-			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'advert' || $_ eq 'troll' || $_ eq 'abuse') {
+			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'troll' || $_ eq 'abuse') {
 				$class = "neg";
 			}
 
