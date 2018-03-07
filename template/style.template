@@ -122,7 +122,9 @@ form.submit .txtarea {
 	margin-right: 10pt;
 	vertical-align: middle;
 	font-size: 24pt;
-	font-family: helvetica;
+	font-family: monospace;
+	background-color: $primaryColor;
+	color: white;
 	padding: 3pt;
 }
 .topmessage {
