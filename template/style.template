@@ -129,8 +129,6 @@ form.submit .txtarea {
 	font-size: 24pt;
 	font-family: helvetica;
 	padding: 3pt;
-	color: $primaryColor;
-	background-color: white;
 }
 .topmessage {
 	font-family: sans-serif;
