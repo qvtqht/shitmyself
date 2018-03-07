@@ -143,3 +143,11 @@ function zalgo_textarea(id) {
 
     document.getElementById(id).value = newtxt;
 }
+
+function strip_timestamps(id) {
+    var i = document.getElementById(id);
+    var txt = i.value;
+    var re = /^\[\d\d:\d\d(:\d\d)?\] /;
+    var re2 = /\n\[\d\d:\d\d(:\d\d)?\] /g;
+    i.value = txt.replace(re, '').replace(re2, "\n");
+}
