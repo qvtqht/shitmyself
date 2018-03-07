@@ -6,4 +6,9 @@ $itemTextPlain
 <div class="plain">
 <h2>Votes on this Item:</h2>
 <p>$votesList</p>
+
+<div class="plain">
+<h2>Git Hash</h2>
+<p>$fileHash</p>
+</div>
 </div>

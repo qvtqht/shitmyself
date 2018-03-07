@@ -123,8 +123,7 @@ form.submit .txtarea {
 	line-height: 2;
 }
 #logo {
-	border: 3pt inset $primaryColor;
-	border-radius: 17pt;
+	text-decoration: none;
 	margin-right: 10pt;
 	vertical-align: middle;
 	font-size: 24pt;

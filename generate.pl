@@ -268,6 +268,7 @@ sub GetItemPage {
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
 	$itemInfoTemplate =~ s/\$votesList/$votesList/;
+	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
 	$txtIndex .= $itemInfoTemplate;
 
@@ -428,7 +429,7 @@ sub GetVotePage {
 	$titleHtml = 'Voting Booth';
 
 	#todo fix this hack where order is in the where clause
-	my $whereClause = "id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 10) ORDER BY RANDOM();";
+	my $whereClause = "id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 1) ORDER BY RANDOM();";
 	my %queryParams;
 	$queryParams{'where_clause'} = $whereClause;
 
