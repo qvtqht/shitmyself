@@ -28,9 +28,9 @@ body {
 }
 .voter a {
 	text-decoration: none;
-	padding: 2pt;
+	padding: 4pt;
 	font-family: sans-serif;
-	font-size: smaller;
+	font-size: large;
 	border: 1pt outset $primaryColor;
 	color: $secondaryColor;
 	border-radius: 3pt;
