@@ -117,11 +117,6 @@ form.submit .txtarea {
 	font-size: large;
 	line-height: 2;
 }
-.instructions2 {
-	font-family: cursive;
-	font-size: large;
-	line-height: 2;
-}
 #logo {
 	text-decoration: none;
 	margin-right: 10pt;

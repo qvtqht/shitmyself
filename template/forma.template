@@ -7,7 +7,7 @@
     <textarea class=txtarea name=comment maxlength=8192 autofocus></textarea><br>
     <input class=btn type=submit value="Add Text">
 
-    <ul class=instructions2>
+    <ul class=instructions>
         <li>You can sign your messages with GPG, but you don't have to.</li>
     </ul>
 </form>
