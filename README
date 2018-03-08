@@ -32,7 +32,10 @@ for apache and lighttpd
 =======================
 1. symlink log/access.log to wherever your access log lives
 2. symlink html root to html/
-3. add ./cron.sh to your crontab, set to run as often as you like
+3. symlink html/txt to txt/ *
+4. add ./cron.sh to your crontab, set to run as often as you like
+
+* this part is tricky if html/ is itself a symlink
 
 requirements
 ============
@@ -52,3 +55,4 @@ known issues
 this is just a basic prototype, and is not optimized to scale.
 the index db is regenerated every time, which can definitely be optimized.
 the voter id should be generated once per page, but is currently generated once per item.
+the html/txt/ symlink has to be created manually for now.
