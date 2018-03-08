@@ -25,7 +25,7 @@ sub GetPageHeader {
 
 	my $txtIndex = "";
 
-	my @primaryColorChoices = qw(008080 c08000 808080);
+	my @primaryColorChoices = qw(008080 c08000 808080 8098b0);
 	my $primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
 	#my $primaryColor = '#'.$primaryColorChoices[0];
