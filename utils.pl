@@ -23,6 +23,10 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
+if (!-e "html/txt") {
+	system('ln -s "../txt" html/txt');
+}
+
 ####################################################################################
 
 sub GetFileHash {
