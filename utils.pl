@@ -322,8 +322,40 @@ sub GpgParse {
 	# Public keys (that set the username) begin with this header
 	my $gpg_pubkey_header = "-----BEGIN PGP PUBLIC KEY BLOCK-----";
 
+	# Encrypted messages begin with this header
+	my $gpg_encrypted_header = "-----BEGIN PGP MESSAGE-----";
+
 	# This is where we check for a GPG signed message and sort it accordingly
 	#########################################################################
+
+	# If there is an encrypted message header...
+	if (substr($txt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
+		print "gpg --list-only --status-fd 1 \"$filePath\"";
+		my $gpg_result = `gpg --list-only --status-fd 1 "$filePath"`;
+
+		foreach (split ("\n", $gpg_result)) {
+			chomp;
+
+			my $key_id_prefix;
+			my $key_id_suffix;
+
+			if (index($gpg_result, "[GNUPG:] ENC_TO ") >= 0) {
+				$key_id_prefix = "[GNUPG:] ENC_TO ";
+				$key_id_suffix = " ";
+
+				if ($key_id_prefix) {
+					# Extract the key fingerprint from GPG's output.
+					$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
+					$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
+
+					$message = "Encrypted message for $gpg_key";
+
+					$isSigned = 1;
+
+				}
+			}
+		}
+	}
 
 	# If there is a GPG pubkey header...
 	if (substr($txt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {

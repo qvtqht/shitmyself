@@ -294,7 +294,7 @@ sub GetReadPage {
 			my $authorAliasHtml = GetAlias($authorKey);
 			my $authorAvatarHtml = GetAvatar($authorKey);
 
-			$title = "Posts by $authorAliasHtml";
+			$title = "Posts by or for $authorAliasHtml";
 			$titleHtml = "$authorAvatarHtml";
 
 			my %queryParams;
