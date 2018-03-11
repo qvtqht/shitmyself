@@ -385,7 +385,7 @@ sub GpgParse {
 		}
 	}
 
-	# If there is a GPG header...
+	# If there is a GPG signed message header...
 	if (substr($txt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 		# Verify the file by using command-line gpg
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
