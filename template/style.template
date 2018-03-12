@@ -101,7 +101,7 @@ form.submit {
 	padding: 10pt;
 }
 form.submit .btn {
-	background-color: $primaryColor;
+	background-color: $orangeColor;
 	color: $secondaryColor;
 	font-family: monospace;
 	font-size: large;
