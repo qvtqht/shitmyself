@@ -16,7 +16,7 @@ require './sqlite.pl';
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
 
-	my $timestamp = "This page was generated at " . strftime('%F %T', localtime(time()));
+	my $timestamp = strftime('%F %T', localtime(time()));
 
 	$txtFooter =~ s/\$footer/$timestamp/;
 
