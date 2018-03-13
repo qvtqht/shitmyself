@@ -13,6 +13,16 @@ require './utils.pl';
 require './sqlite.pl';
 
 
+sub GetPageFooter {
+	my $txtFooter = GetTemplate('htmlend.template');
+
+	my $timestamp = "This page was generated at " . strftime('%F %T', localtime(time()));
+
+	$txtFooter =~ s/\$footer/$timestamp/;
+
+	return $txtFooter;
+}
+
 sub GetPageHeader {
 	my $title = shift;
 	my $titleHtml = shift;
@@ -273,7 +283,7 @@ sub GetItemPage {
 
 	$txtIndex .= $itemInfoTemplate;
 
-	$txtIndex .= GetTemplate("htmlend.template");
+	$txtIndex .= GetPageFooter();
 
 	return $txtIndex;
 }
@@ -415,7 +425,7 @@ sub GetReadPage {
 	#$txtIndex .= GetTemplate("jswarning.template");
 
 	# Close html
-	$txtIndex .= GetTemplate("htmlend.template");
+	$txtIndex .= GetPageFooter();
 
 	return $txtIndex;
 }
@@ -542,7 +552,7 @@ sub GetVotePage {
 	}
 
 	# Close html
-	$txtIndex .= GetTemplate("htmlend.template");
+	$txtIndex .= GetPageFooter();
 
 	return $txtIndex;
 }
@@ -558,7 +568,7 @@ sub GetSubmitPage {
 
 	$txtIndex .= GetTemplate('forma.template');
 
-	$txtIndex .= GetTemplate("htmlend.template");
+	$txtIndex .= GetPageFooter();
 
 	$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
 
@@ -619,7 +629,7 @@ $graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/hea
 my $graciasTemplate = GetTemplate('gracias.template');
 $graciasPage .= $graciasTemplate;
 
-$graciasPage .= GetTemplate('htmlend.template');
+$graciasPage .= GetPageFooter();
 
 PutFile("$HTMLDIR/gracias.html", $graciasPage);
 
@@ -646,7 +656,7 @@ $clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
 
 $clonePage .= $clonePageTemplate;
 
-$clonePage .= GetTemplate('htmlend.template');
+$clonePage .= GetPageFooter();
 
 PutFile("$HTMLDIR/clone.html", $clonePage);
 
@@ -661,7 +671,7 @@ my $tfmPageTemplate = GetTemplate('manual.template');
 
 $tfmPage .= $tfmPageTemplate;
 
-$tfmPage .= GetTemplate('htmlend.template');
+$tfmPage .= GetPageFooter();
 
 PutFile("$HTMLDIR/manual.html", $tfmPage);
 
