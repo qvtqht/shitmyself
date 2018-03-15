@@ -1,6 +1,7 @@
 body {
 	font-family: monospace;
 	background-color: $secondaryColor;
+	color: #202020;
 }
 .txt {
 	padding: 3pt;
