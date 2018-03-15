@@ -703,30 +703,34 @@ sub MakeStaticPages {
 
 MakeStaticPages();
 
-system("git archive --format zip --output html/hike.tmp.zip master");
+sub MakeClonePage {
+	#This makes the zip file as well as the clone.html page that lists its size
 
-system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+	system("git archive --format zip --output html/hike.tmp.zip master");
 
-rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
+	system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
-my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
-
-my $clonePageTemplate = GetTemplate('clone.template');
-
-my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
-
-$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
-
-$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
-
-$clonePage .= $clonePageTemplate;
-
-$clonePage .= GetPageFooter();
-
-PutFile("$HTMLDIR/clone.html", $clonePage);
+	rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 
 
+	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
 
+	my $clonePageTemplate = GetTemplate('clone.template');
+
+	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
+
+	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
+
+	$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
+
+	$clonePage .= $clonePageTemplate;
+
+	$clonePage .= GetPageFooter();
+
+	PutFile("$HTMLDIR/clone.html", $clonePage);
+}
+
+MakeClonePage();
 
 
 #rename("html", "html.old");
