@@ -288,6 +288,35 @@ sub GetItemPage {
 	return $txtIndex;
 }
 
+sub GetPageParams {
+	my $pageType = shift;
+
+	my %pageParams;
+	my %queryParams;
+
+	if (defined($pageType)) {
+		if ($pageType eq 'author') {
+			my $authorKey = shift;
+			my $whereClause = "author_key='$authorKey'";
+
+			my $authorAliasHtml = GetAlias($authorKey);
+			my $authorAvatarHtml = GetAvatar($authorKey);
+
+			$pageParams{'title'} = "Posts by or for $authorAliasHtml";
+			$pageParams{'title_html'} = "$authorAvatarHtml";
+
+			$queryParams{'where_clause'} = $whereClause;
+		}
+	} else {
+		$pageParams{'title'} = 'Message Board';
+		$pageParams{'title_html'} = 'Message Board';
+	}
+
+	$pageParams{'query_params'} = %queryParams;
+
+	return %pageParams;
+}
+
 sub GetReadPage {
 	my $title;
 	my $titleHtml;
@@ -578,12 +607,12 @@ sub GetSubmitPage {
 
 
 
+#my $HTMLDIR = "html.tmp";
+my $HTMLDIR = "html";
+
 WriteLog ("GetReadPage()...");
 
 my $indexText = GetReadPage();
-
-#my $HTMLDIR = "html.tmp";
-my $HTMLDIR = "html";
 
 PutFile("$HTMLDIR/index.html", $indexText);
 
@@ -619,24 +648,60 @@ foreach my $file(@files) {
 	PutFile("$HTMLDIR/$fileName.html", $fileIndex);
 }
 
-my $submitPage = GetSubmitPage();
-PutFile("$HTMLDIR/write.html", $submitPage);
+sub MakeStaticPages {
 
-# Make sure the submission form has somewhere to go
-my $graciasPage = GetPageHeader("Thank You", "Thank You");
-$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/head>/;
+	# Submit page
+	my $submitPage = GetSubmitPage();
+	PutFile("$HTMLDIR/write.html", $submitPage);
 
-my $graciasTemplate = GetTemplate('gracias.template');
-$graciasPage .= $graciasTemplate;
 
-$graciasPage .= GetPageFooter();
+	# Target page for the submit page
+	my $graciasPage = GetPageHeader("Thank You", "Thank You");
+	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/head>/;
 
-PutFile("$HTMLDIR/gracias.html", $graciasPage);
+	my $graciasTemplate = GetTemplate('gracias.template');
+	$graciasPage .= $graciasTemplate;
 
-my $okPage = GetTemplate('ok.template');
-$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
+	$graciasPage .= GetPageFooter();
 
-PutFile("$HTMLDIR/ok.html", $okPage);
+	PutFile("$HTMLDIR/gracias.html", $graciasPage);
+
+
+	# Ok page
+	my $okPage = GetTemplate('ok.template');
+	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
+
+	PutFile("$HTMLDIR/ok.html", $okPage);
+
+
+	# Manual page
+	my $tfmPage = GetPageHeader("Manual", "Manual");
+
+	my $tfmPageTemplate = GetTemplate('manual.template');
+
+	$tfmPage .= $tfmPageTemplate;
+
+	$tfmPage .= GetPageFooter();
+
+	PutFile("$HTMLDIR/manual.html", $tfmPage);
+
+
+	# Blank page
+	PutFile("$HTMLDIR/blank.html", "");
+
+
+	# Zalgo javascript
+	PutFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.template'));
+
+
+	# .htaccess file for Apache
+	my $HtaccessTemplate = GetTemplate('htaccess.template');
+
+	PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
+}
+
+
+MakeStaticPages();
 
 system("git archive --format zip --output html/hike.tmp.zip master");
 
@@ -660,26 +725,9 @@ $clonePage .= GetPageFooter();
 
 PutFile("$HTMLDIR/clone.html", $clonePage);
 
-my $HtaccessTemplate = GetTemplate('htaccess.template');
-
-PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 
-my $tfmPage = GetPageHeader("Manual", "Manual");
 
-my $tfmPageTemplate = GetTemplate('manual.template');
-
-$tfmPage .= $tfmPageTemplate;
-
-$tfmPage .= GetPageFooter();
-
-PutFile("$HTMLDIR/manual.html", $tfmPage);
-
-
-PutFile("$HTMLDIR/blank.html", "");
-
-
-PutFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.template'));
 
 #rename("html", "html.old");
 #rename("$HTMLDIR", "html/");
