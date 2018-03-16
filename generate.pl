@@ -859,7 +859,9 @@ sub GetPageLinks {
 
 	if ($itemCount > $pageLimit + $pageThreshold) {
 		for (my $i = ($itemCount / $pageLimit); $i >= 1; $i--) {
-			$pageLinks .= ' ' . $i;
+			my $pageLinkTemplate = GetTemplate('pagelink.template');
+			$pageLinkTemplate =~ s/\$i/$i/g;
+			$pageLinks .= $pageLinkTemplate;
 		}
 	}
 
