@@ -26,6 +26,7 @@ body {
 .voter {
 	margin: 0pt 0pt 0pt 0pt;
 	text-align: right;
+	cursor: pointer;
 }
 .voter a {
 	text-decoration: none;
@@ -136,6 +137,6 @@ form.submit .txtarea {
 }
 .plain {
 	background-color: $secondaryColor;
-	padding: 5px;
+	padding: 5pt;
 	max-width: 60em;
 }
