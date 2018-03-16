@@ -185,7 +185,7 @@ sub GetItemTemplate {
 
 		$alias = HtmlEscape($alias);
 
-		my $itemTemplate = GetTemplate("item.template");
+		my $itemTemplate = GetTemplate("itemvote.template");
 
 		my $itemClass = "txt $signedCss";
 
@@ -252,8 +252,6 @@ sub GetItemPage {
 		$titleHtml = $title;
 	}
 
-
-
 	# Get the HTML page template
 	my $htmlStart = GetPageHeader($title, $titleHtml);
 
@@ -282,6 +280,8 @@ sub GetItemPage {
 	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
 	$txtIndex .= $itemInfoTemplate;
+
+	$txtIndex .= GetTemplate('voteframe.template');
 
 	$txtIndex .= GetPageFooter();
 
@@ -318,10 +318,116 @@ sub GetPageParams {
 }
 
 sub GetIndexPage {
-	my $paramsRef = shift;
-	my %params = %$paramsRef;
+	my $filesArrayReference = shift;
+	my @files = @$filesArrayReference;
 
+	my $txtIndex = "";
 
+	my $htmlStart = GetPageHeader("title", "title");
+
+	$txtIndex .= $htmlStart;
+
+	foreach my $row (@files) {
+		my $file = $row->{'file_path'};
+
+		if (-e $file) {
+			my $gitHash = $row->{'file_hash'};
+
+			my $gpgKey = $row->{'author_key'};
+
+			my $isSigned;
+			if ($gpgKey) {
+				$isSigned = 1;
+			} else {
+				$isSigned = 0;
+			}
+
+			my $alias;;
+
+			my $isAdmin = 0;
+
+			my $message;
+			if ($gpgKey) {
+				$message = GetFile("./cache/message/$gitHash.message");
+			} else {
+				$message = GetFile($file);
+			}
+
+			$message = HtmlEscape($message);
+			$message =~ s/\n/<br>\n/g;
+
+			if ($isSigned && $gpgKey eq GetAdminKey()) {
+				$isAdmin = 1;
+			}
+
+			my $signedCss = "";
+			if ($isSigned) {
+				if ($isAdmin) {
+					$signedCss = "signed admin";
+				} else {
+					$signedCss = "signed";
+				}
+			}
+
+			# todo $alias = GetAlias($gpgKey);
+
+			$alias = HtmlEscape($alias);
+
+			my $itemTemplate = GetTemplate("itemvote.template");
+
+			my $itemClass = "txt $signedCss";
+
+			my $authorUrl;
+			my $authorAvatar;
+			my $authorLink;
+
+			if ($gpgKey) {
+				$authorUrl = "/author/$gpgKey/";
+				$authorAvatar = GetAvatar($gpgKey);
+
+				$authorLink = GetTemplate('authorlink.template');
+
+				$authorLink =~ s/\$authorUrl/$authorUrl/g;
+				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+			} else {
+				$authorLink = "";
+			}
+			my $permalinkTxt = $file;
+			$permalinkTxt =~ s/^\.//;
+
+			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+			my $itemText = $message;
+			my $fileHash = GetFileHash($file);
+			my $itemName = TrimPath($file);
+			my $ballotTime = time();
+
+			$itemTemplate =~ s/\$itemClass/$itemClass/g;
+			$itemTemplate =~ s/\$authorLink/$authorLink/g;
+			$itemTemplate =~ s/\$itemName/$itemName/g;
+			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+			$itemTemplate =~ s/\$itemText/$itemText/g;
+			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+			$txtIndex .= $itemTemplate;
+		}
+	}
+
+	$txtIndex .= GetTemplate('voteframe.template');
+
+	$txtIndex .= GetPageLinks();
+
+	# Add javascript warning to the bottom of the page
+	#$txtIndex .= GetTemplate("jswarning.template");
+
+	# Close html
+	$txtIndex .= GetPageFooter();
+
+	return $txtIndex;
 
 }
 
@@ -742,6 +848,30 @@ sub MakeClonePage {
 }
 
 MakeClonePage();
+
+sub GetPageLinks {
+	my $pageLimit = 10;
+	my $pageThreshold = 5;
+
+	my $itemCount = DBGetItemCount();
+
+	my $pageLinks = "";
+
+	if ($itemCount > $pageLimit + $pageThreshold) {
+		for (my $i = ($itemCount / $pageLimit); $i >= 1; $i--) {
+			$pageLinks .= ' ' . $i;
+		}
+	}
+
+	return $pageLinks;
+}
+
+
+my %qp;
+$qp{'limit_clause'} = 'LIMIT 5';
+my @ft = DBGetItemList(\%qp);
+my $testIndex = GetIndexPage(\@ft);
+PutFile('./html/index2.html', $testIndex);
 
 #This has been commented out because it interferes with symlinked html dir
 #rename("html", "html.old");

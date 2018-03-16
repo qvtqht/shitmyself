@@ -73,7 +73,7 @@ sub SqliteGetValue {
 	return $result;
 }
 
-sub GetItemCount {
+sub DBGetItemCount {
 	my $itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
 
 	return $itemCount;
@@ -188,6 +188,9 @@ sub DBGetItemList {
 		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause;";
 	} else {
 		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item";
+	}
+	if (defined ($params{'limit_clause'})) {
+		$query .= " " . $params{'limit_clause'};
 	}
 
 	my @results = split("\n", SqliteQuery($query));
