@@ -6,6 +6,7 @@ $itemTextPlain
 <div class="plain">
 <h2>Votes on this Item:</h2>
 <p>$votesList</p>
+<p>Votes may take a few minutes to register.</p>
 </div>
 
 <div class="plain">

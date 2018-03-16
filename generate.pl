@@ -272,7 +272,7 @@ sub GetItemPage {
 	}
 
 	if (!$votesList) {
-		$votesList = "(no votes)";
+		$votesList = "(no votes yet)";
 	}
 
 	my $itemInfoTemplate = GetTemplate('iteminfo.template');
