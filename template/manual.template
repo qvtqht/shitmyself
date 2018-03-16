@@ -7,7 +7,7 @@
 <h3>Features You May Recognize</h3>
 
 <ul>
-    <li>Write messages using your name or anonymously</li>
+    <li>Write messages anonymously and under an identity</li>
     <li>Read messages others have already posted</li>
     <li>Vote on posted messages to improve quality</li>
 </ul>
@@ -49,23 +49,6 @@
 <h4>More Options</h4>
 
 <p>OpenPGP Software<br><a href="https://www.openpgp.org/software/">https://www.openpgp.org/software/</a></p>
-
-
-<h3>Command Line Instructions</h3>
-
-<p>First, ensure that you have GnuPG installed. Go here: <a href="https://www.opengpg.org/">https://www.opengpg.org/</a></p>
-
-<h4>Check GPG Version</h4>
-
-<p>gpg --version</p>
-
-<h4>Generate Key Pair</h4>
-
-<p>gpg --gen-key</p>
-
-<h4>Sign Message</h4>
-
-<p>gpg --clearsign example.txt</p>
 
 
 <h3>Creating Your Identity, AKA Key Pair</h3>
@@ -115,6 +98,33 @@
 <p>Copy the whole thing, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
 
 <p>You have now aliased your name to your key fingerprint.</p>
+
+
+<h3>Command Line Instructions</h3>
+
+<h4>Check GPG Version</h4>
+
+<p><tt>gpg --version</tt></p>
+
+<p>If you don't have GnuPG installed, go here: <a href="https://www.opengpg.org/">https://www.opengpg.org/</a></p>
+
+<h4>Generate Key Pair</h4>
+
+<p><tt>gpg --gen-key</tt></p>
+
+<h4>Export Public Key</h4>
+
+<p><tt>gpg --armor --export</tt></p>
+
+<h4>Sign Message in Text File</h4>
+
+<p><tt>gpg --clearsign example.txt</tt></p>
+
+<h4>Sign Message After Typing It</h4>
+
+<p><tt>gpg --clearsign</tt></p>
+
+<p>Start typing your message. When you're finished, press Enter, then ^D (Ctrl+D).</p>
 
 
 <h3>How to Clone This Site</h3>
