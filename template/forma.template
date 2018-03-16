@@ -14,7 +14,7 @@
 
     <ul class=instructions>
         <li>You can sign your messages with GPG, but you don't have to.</li>
-        <li>To alias a username, submit your public key.</li>
+        <li>To set username, submit public key. See manual for details.</li>
     </ul>
 </form>
 <!-- / forma.template -->
