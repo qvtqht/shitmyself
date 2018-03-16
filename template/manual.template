@@ -63,27 +63,48 @@
 
 <p>gpg --clearsign example.txt</p>
 
-<h3>Creating a Key Pair</h3>
+<h3>Creating Your Identity, AKA Key Pair</h3>
 
-<p>First, you will need to create a key pair. Look for this option in your software and use it.</p>
+<p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating an identity?</p>
 
-<p>GPG is traditionally used for email, but <b>you do not have to provide your address</b> for this forum.</p>
+<ul>
+    <li>All your posts will appear on your author page.</li>
+    <li>You can sign your posts with your name.</li>
+    <li>You can edit or delete your posts later.</li>
+    <li>You will get a colorful avatar that will appear with all your posts.</li>
+    <!--<li>If you sign your moderation votes, they will be given more weight.</li>-->
+</ul>
+
+<p>You will need to create a key pair. Look for this option in your software and use it. (More detailed guides to come.)</p>
+
+<p>GPG is traditionally used for email, but <b>you do not have to provide your address</b> for this forum.
+    In fact, we recommend that you either leave the field blank or add gibberish to it.
+    Otherwise, your email address will be accessible by anyone, including spambots.</p>
+
+<p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
 
 <h3>Writing As Yourself</h3>
 
-<p>To write something under your new name, first create the text.</p>
+<p>To write something under your new identity, you will need to sign your text.</p>
+
+<p>First, write the text that you want to post. Once you have finished writing it, save it to a .txt file.</p>
 
 <p>Look for the option to sign (not encrypt) your text in your GPG software.</p>
 
-<p>Some software will call it "encrypt", and has no "sign" option. In this case, you should make the "To:" field blank, and press Encrypt.</p>
+<p>Some software has no "sign" option. In this case, you should use the "Encrypt" command, but ensure that the "To:" field is blank.</p>
+
+<p>You should end up with a bi
 
 <p>You may see your message appear under a long string of digits and numbers instead of your name. This is your <i>fingerprint</i>. To alias your name to this fingerprint, see the next section.</p>
 
+
 <h3>Uploading Your Public Key</h3>
 
-<p>Look for the option to export your public key in your software. This will copy it to the clipboard.</p>
+<p>Look for the option to export your public key in your software.</p>
 
-<p>Then, go to the <a href="/write.html">Write</a> page, and paste it in there. Press "Add Text".</p>
+<p>You should end up with a block of text that starts with "<tt> -----BEGIN PGP PUBLIC KEY BLOCK-----</tt>".
+
+<p>Copy the whole thing, including the <tt>-----</tt> headers, and submit it via the <a href="/write.html">Write</a>.</p>
 
 <p>You have now aliased your name to your key fingerprint.</p>
 
