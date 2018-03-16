@@ -89,22 +89,24 @@
 
 <p>First, write the text that you want to post. Once you have finished writing it, save it to a .txt file.</p>
 
-<p>Look for the option to sign (not encrypt) your text in your GPG software.</p>
+<p>Look for the command to "Sign" (not encrypt) your text in your GPG software.</p>
 
-<p>Some software has no "sign" option. In this case, you should use the "Encrypt" command, but ensure that the "To:" field is blank.</p>
+<p>Some software has no such option. In this case, you should use the "Encrypt" command, but ensure that the "To:" field is blank.</p>
 
-<p>You should end up with a bi
+<p>You should end up with a big block of text that begins with "<tt>-----BEGIN PGP SIGNED MESSAGE-----</tt>"</p>
 
-<p>You may see your message appear under a long string of digits and numbers instead of your name. This is your <i>fingerprint</i>. To alias your name to this fingerprint, see the next section.</p>
+<p>Copy this entire block of text, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
+
+<p>That's it!</p>
 
 
 <h3>Uploading Your Public Key</h3>
 
 <p>Look for the option to export your public key in your software.</p>
 
-<p>You should end up with a block of text that starts with "<tt> -----BEGIN PGP PUBLIC KEY BLOCK-----</tt>".
+<p>You should end up with a block of text that starts with "<tt>-----BEGIN PGP PUBLIC KEY BLOCK-----</tt>".
 
-<p>Copy the whole thing, including the <tt>-----</tt> headers, and submit it via the <a href="/write.html">Write</a>.</p>
+<p>Copy the whole thing, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
 
 <p>You have now aliased your name to your key fingerprint.</p>
 
