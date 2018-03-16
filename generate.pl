@@ -64,7 +64,7 @@ sub GetPageHeader {
 
 	my $menuTemplate = "";
 	$menuTemplate .= GetMenuItem("/", "read");
-	$menuTemplate .= GetMenuItem("/vote.html", "vote");
+	#$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
 	$menuTemplate .= GetMenuItem("/manual.html", "manual");
 
@@ -415,7 +415,7 @@ sub GetReadPage {
 
 			$alias = HtmlEscape($alias);
 
-			my $itemTemplate = GetTemplate("item.template");
+			my $itemTemplate = GetTemplate("itemvote.template");
 
 			my $itemClass = "txt $signedCss";
 
@@ -458,6 +458,8 @@ sub GetReadPage {
 			$txtIndex .= $itemTemplate;
 		}
 	}
+
+	$txtIndex .= GetTemplate('voteframe.template');
 
 	# Add javascript warning to the bottom of the page
 	#$txtIndex .= GetTemplate("jswarning.template");
