@@ -849,16 +849,22 @@ sub MakeClonePage {
 
 MakeClonePage();
 
+my $PAGE_LIMIT = 10;
+my $PAGE_THRESHOLD = 5;
+
 sub GetPageLinks {
-	my $pageLimit = 10;
-	my $pageThreshold = 5;
+	state $pageLinks;
+
+	if (defined($pageLinks)) {
+		return $pageLinks;
+	}
 
 	my $itemCount = DBGetItemCount();
 
-	my $pageLinks = "";
+	$pageLinks = "";
 
-	if ($itemCount > $pageLimit + $pageThreshold) {
-		for (my $i = ($itemCount / $pageLimit); $i >= 1; $i--) {
+	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+		for (my $i = ($itemCount / $PAGE_LIMIT); $i >= 1; $i--) {
 			my $pageLinkTemplate = GetTemplate('pagelink.template');
 			$pageLinkTemplate =~ s/\$i/$i/g;
 			$pageLinks .= $pageLinkTemplate;
@@ -868,12 +874,21 @@ sub GetPageLinks {
 	return $pageLinks;
 }
 
+my $itemCount = DBGetItemCount();
+if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+	my $i;
+	for ($i = 1; $i <= ($itemCount / $PAGE_LIMIT); $i++) {
+		my %qp;
+		my $offset = $i * $PAGE_LIMIT - 1;
 
-my %qp;
-$qp{'limit_clause'} = 'LIMIT 5';
-my @ft = DBGetItemList(\%qp);
-my $testIndex = GetIndexPage(\@ft);
-PutFile('./html/index2.html', $testIndex);
+		$qp{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
+
+		my @ft = DBGetItemList(\%qp);
+		my $testIndex = GetIndexPage(\@ft);
+
+		PutFile("./html/index$i.html", $testIndex);
+	}
+}
 
 #This has been commented out because it interferes with symlinked html dir
 #rename("html", "html.old");
