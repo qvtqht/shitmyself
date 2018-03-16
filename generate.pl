@@ -877,7 +877,8 @@ sub GetPageLinks {
 my $itemCount = DBGetItemCount();
 if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
 	my $i;
-	for ($i = 1; $i <= ($itemCount / $PAGE_LIMIT); $i++) {
+	my $lastPage = ceil($itemCount / $PAGE_LIMIT);
+	for ($i = 1; $i <= $lastPage; $i++) {
 		my %qp;
 		my $offset = $i * $PAGE_LIMIT - 1;
 
