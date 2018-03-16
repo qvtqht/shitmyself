@@ -317,6 +317,15 @@ sub GetPageParams {
 	return %pageParams;
 }
 
+sub GetIndexPage {
+	my $paramsRef = shift;
+	my %params = %$paramsRef;
+
+
+
+}
+
+
 sub GetReadPage {
 	my $title;
 	my $titleHtml;
@@ -606,7 +615,7 @@ sub GetSubmitPage {
 }
 
 
-
+#This has been commented out because it interferes with symlinked html dir
 #my $HTMLDIR = "html.tmp";
 my $HTMLDIR = "html";
 
@@ -732,7 +741,7 @@ sub MakeClonePage {
 
 MakeClonePage();
 
-
+#This has been commented out because it interferes with symlinked html dir
 #rename("html", "html.old");
 #rename("$HTMLDIR", "html/");
 #system("rm -rf html.old");
