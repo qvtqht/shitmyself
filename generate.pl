@@ -840,9 +840,11 @@ MakeStaticPages();
 sub MakeClonePage {
 	#This makes the zip file as well as the clone.html page that lists its size
 
-	system("git archive --format zip --output html/hike.tmp.zip master");
+	WriteLog("Making zip file...");
 
-	system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+	system("git archive -v --format zip --output html/hike.tmp.zip master");
+
+	system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
 	rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 
