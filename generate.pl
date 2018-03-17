@@ -727,7 +727,7 @@ sub GetSubmitPage {
 	if (defined($itemCount)) {
 		if ($itemCount < $itemLimit) {
 			$txtIndex .= GetTemplate('forma.template');
-			$txtIndex .= "This board is currently limited to $itemLimit items, and $itemCount items already exist.";
+			$txtIndex .= "Curent Post Count: $itemCount; Current Post Limit: $itemLimit";
 		} else {
 			$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please delete some things before posting new ones (or increase the item limit in config)";
 		}
