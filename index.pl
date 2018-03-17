@@ -45,56 +45,62 @@ sub MakeVoteIndex {
 	}
 }
 
+sub IndexFile {
+	my $file = shift;
+
+	chomp($file);
+
+	my $txt = "";
+	my $message = "";
+	my $isSigned = 0;
+
+	my $gpgKey;
+	my $alias;
+
+	my $gitHash;
+	my $isAdmin = 0;
+
+	if (substr($file, length($file) -4, 4) eq ".txt") {
+		my %gpgResults = GpgParse($file);
+
+		$txt = $gpgResults{'text'};
+		$message = $gpgResults{'message'};
+		$isSigned = $gpgResults{'isSigned'};
+		$gpgKey = $gpgResults{'key'};
+		$alias = $gpgResults{'alias'};
+		$gitHash = $gpgResults{'gitHash'};
+
+		if ($isSigned && $gpgKey eq GetAdminKey()) {
+			$isAdmin = 1;
+		}
+
+		if ($isSigned && $gpgKey) {
+			DBAddAuthor($gpgKey);
+		}
+
+		if ($alias) {
+			DBAddKeyAlias ($gpgKey, $alias);
+		}
+
+		my $itemName = TrimPath($file);
+
+		if ($isSigned) {
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash);
+
+			PutFile("./cache/message/$gitHash.message", $message);
+		} else {
+			DBAddItem ($file, $itemName, '', $gitHash);
+		}
+	}
+}
+
 sub MakeIndex {
 	print "MakeIndex()...\n";
 
 	my @filesToInclude = @{$_[0]};
 
 	foreach my $file (@filesToInclude) {
-		chomp($file);
-
-		my $txt = "";
-		my $message = "";
-		my $isSigned = 0;
-
-		my $gpgKey;
-		my $alias;
-
-		my $gitHash;
-		my $isAdmin = 0;
-
-		if (substr($file, length($file) -4, 4) eq ".txt") {
-			my %gpgResults = GpgParse($file);
-
-			$txt = $gpgResults{'text'};
-			$message = $gpgResults{'message'};
-			$isSigned = $gpgResults{'isSigned'};
-			$gpgKey = $gpgResults{'key'};
-			$alias = $gpgResults{'alias'};
-			$gitHash = $gpgResults{'gitHash'};
-
-			if ($isSigned && $gpgKey eq GetAdminKey()) {
-				$isAdmin = 1;
-			}
-
-			if ($isSigned && $gpgKey) {
-				DBAddAuthor($gpgKey);
-			}
-
-			if ($alias) {
-				DBAddKeyAlias ($gpgKey, $alias);
-			}
-
-			my $itemName = TrimPath($file);
-
-			if ($isSigned) {
-				DBAddItem ($file, $itemName, $gpgKey, $gitHash);
-
-				PutFile("./cache/message/$gitHash.message", $message);
-			} else {
-				DBAddItem ($file, $itemName, '', $gitHash);
-			}
-		}
+		IndexFile($file);
 	}
 }
 
