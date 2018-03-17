@@ -139,11 +139,22 @@ sub GetFile {
 sub PutFile {
 	my $file = shift;
 	my $content = shift;
+	my $binMode = shift;
 
 	if (open (my $fileHandle, ">", $file)) {
+		if ($binMode) {
+			binmode $fileHandle, ':utf8';
+		}
 		print $fileHandle $content;
 		close $fileHandle;
 	}
+}
+
+sub PutHtmlFile {
+	my $file = shift;
+	my $content = shift;
+
+	return PutFile($file, $content);
 }
 
 # Appends line to a file
