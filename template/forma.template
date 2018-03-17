@@ -8,7 +8,7 @@
     <textarea class=txtarea id=comment name=comment maxlength=8192 autofocus></textarea><br>
     <input class=btn type=submit value="Add Text" onClick="">
     <script><!--
-    document.write('<input type=checkbox name="Proudly Posted With JS Enabled! 😤" id=js accesskey=j checked><label for=js>JS enabled</label>');
+    document.write('<input type=checkbox name="Proudly Posted With JS Enabled! 😤" id=js><label for=js>JS enabled</label>');
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');
     document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="zalgo_textarea(\'comment\');">');
     // --></script>
