@@ -5,7 +5,7 @@
         <li>There's no need to register if you want to write something.</li>
     </ul>
 
-    <textarea class=txtarea id=comment name=comment maxlength=8192 autofocus></textarea><br>
+    <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=8192 autofocus></textarea><br>
     <input class=btn type=submit value="Add Text" onClick="">
     <script><!--
     document.write('<input type=checkbox name="Proudly Posted With JS Enabled! 😤" id=js><label for=js>JS enabled</label>');

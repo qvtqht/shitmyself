@@ -2,6 +2,6 @@
 <a href="$permalinkHtml">$itemName</a> <a href="$permalinkTxt">.txt</a>
 $authorLink
 <br>
-$itemText
+$itemText<br>
 <details class=voter><summary>Vote</summary>$voterButtons</details>
 </div>
