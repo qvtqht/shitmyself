@@ -31,12 +31,16 @@ sub GetPageHeader {
 	chomp $title;
 	chomp $titleHtml;
 
-	my $logoText = GetFile('config/logotext');
-	if (!$logoText) {
-		#$logoText = random_emoji();
-		$logoText = "*"
+	state $logoText;
+	if (!defined($logoText)) {
+		$logoText = GetFile('config/logotext');
+		if (!$logoText) {
+			#$logoText = random_emoji();
+			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
+			$logoText = "*"
+		}
+		$logoText = HtmlEscape($logoText);
 	}
-	$logoText = HtmlEscape($logoText);
 
 	my $txtIndex = "";
 
@@ -744,13 +748,13 @@ WriteLog ("GetReadPage()...");
 
 my $indexText = GetReadPage();
 
-PutFile("$HTMLDIR/index.html", $indexText);
+PutHtmlFile("$HTMLDIR/index.html", $indexText);
 
 WriteLog ("GetVotePage()...");
 
 my $voteIndexText = GetVotePage();
 
-PutFile("$HTMLDIR/vote.html", $voteIndexText);
+PutHtmlFile("$HTMLDIR/vote.html", $voteIndexText);
 
 
 WriteLog ("Authors...");
@@ -764,7 +768,7 @@ foreach my $key (@authors) {
 
 	my $authorIndex = GetReadPage('author', $key);
 
-	PutFile("$HTMLDIR/author/$key/index.html", $authorIndex);
+	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
 }
 
 my %queryParams;
@@ -775,14 +779,14 @@ foreach my $file(@files) {
 
 	my $fileIndex = GetItemPage($file);
 
-	PutFile("$HTMLDIR/$fileName.html", $fileIndex);
+	PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
 }
 
 sub MakeStaticPages {
 
 	# Submit page
 	my $submitPage = GetSubmitPage();
-	PutFile("$HTMLDIR/write.html", $submitPage);
+	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
 
 
 	# Target page for the submit page
@@ -794,14 +798,14 @@ sub MakeStaticPages {
 
 	$graciasPage .= GetPageFooter();
 
-	PutFile("$HTMLDIR/gracias.html", $graciasPage);
+	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
 
 
 	# Ok page
 	my $okPage = GetTemplate('ok.template');
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
-	PutFile("$HTMLDIR/ok.html", $okPage);
+	PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 
 
 	# Manual page
@@ -813,21 +817,21 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetPageFooter();
 
-	PutFile("$HTMLDIR/manual.html", $tfmPage);
+	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
 
 	# Blank page
-	PutFile("$HTMLDIR/blank.html", "");
+	PutHtmlFile("$HTMLDIR/blank.html", "");
 
 
 	# Zalgo javascript
-	PutFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.template'));
+	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.template'));
 
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
 
-	PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
+	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 }
 
 
@@ -857,7 +861,7 @@ sub MakeClonePage {
 
 	$clonePage .= GetPageFooter();
 
-	PutFile("$HTMLDIR/clone.html", $clonePage);
+	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
 
 MakeClonePage();
@@ -904,7 +908,7 @@ if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
 		my @ft = DBGetItemList(\%qp);
 		my $testIndex = GetIndexPage(\@ft);
 
-		PutFile("./html/index$i.html", $testIndex);
+		PutHtmlFile("./html/index$i.html", $testIndex);
 	}
 }
 
