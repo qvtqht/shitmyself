@@ -724,17 +724,21 @@ sub GetSubmitPage {
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
 
-	if ($itemCount < $itemLimit) {
-		$txtIndex .= GetTemplate('forma.template');
-		$txtIndex .= "This board is currently limited to $itemLimit items, and $itemCount items already exist.";
+	if (defined($itemCount)) {
+		if ($itemCount < $itemLimit) {
+			$txtIndex .= GetTemplate('forma.template');
+			$txtIndex .= "This board is currently limited to $itemLimit items, and $itemCount items already exist.";
+		} else {
+			$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please delete some things before posting new ones (or increase the item limit in config)";
+		}
+
+		$txtIndex .= GetPageFooter();
+
+		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
 	} else {
-		$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please delete some things before posting new ones (or increase the item limit in config)";
+		$txtIndex .= GetTemplate('forma.template');
+		$txtIndex = "Something went wrong. Could not get item count.";
 	}
-
-	$txtIndex .= GetPageFooter();
-
-	$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
-
 
 	return $txtIndex;
 }
