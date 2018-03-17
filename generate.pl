@@ -8,6 +8,7 @@ use lib qw(lib);
 use HTML::Entities;
 use Digest::MD5 qw(md5_hex);
 use POSIX;
+use Acme::RandomEmoji qw(random_emoji);
 
 require './utils.pl';
 require './sqlite.pl';
@@ -31,6 +32,9 @@ sub GetPageHeader {
 	chomp $titleHtml;
 
 	my $logoText = GetFile('config/logotext');
+	if (!$logoText) {
+		$logoText = random_emoji();
+	}
 	$logoText = HtmlEscape($logoText);
 
 	my $txtIndex = "";
@@ -710,9 +714,17 @@ sub GetSubmitPage {
 	my $title = "Add Text";
 	my $titleHtml = "Add Text";
 
+	my $itemCount = DBGetItemCount();
+	my $itemLimit = 9000;
+
 	$txtIndex = GetPageHeader($title, $titleHtml);
 
-	$txtIndex .= GetTemplate('forma.template');
+	if ($itemCount < $itemLimit) {
+		$txtIndex .= GetTemplate('forma.template');
+		$txtIndex .= "This board is currently limited to $itemLimit items, and $itemCount items have already been posted.";
+	} else {
+		$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please delete some things before posting new ones (or increase the item limit in config)";
+	}
 
 	$txtIndex .= GetPageFooter();
 
@@ -863,8 +875,10 @@ sub GetPageLinks {
 
 	$pageLinks = "";
 
+	my $lastPageNum = floor($itemCount / $PAGE_LIMIT);
+
 	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
-		for (my $i = ($itemCount / $PAGE_LIMIT); $i >= 1; $i--) {
+		for (my $i = ($lastPageNum); $i >= 1; $i--) {
 			my $pageLinkTemplate = GetTemplate('pagelink.template');
 			$pageLinkTemplate =~ s/\$i/$i/g;
 			$pageLinks .= $pageLinkTemplate;
@@ -873,6 +887,8 @@ sub GetPageLinks {
 
 	return $pageLinks;
 }
+
+
 
 my $itemCount = DBGetItemCount();
 if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
