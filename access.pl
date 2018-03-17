@@ -175,7 +175,7 @@ sub ProcessAccessLog {
 					$message = uri_decode($message);
 					$message = decode_entities($message);
 					$message = trim($message);
-					$message =~ s/\&(.+)=on/\n$1/g; #is this dangerous?
+					$message =~ s/\&(.+)=on/\n-- \n$1/g; #is this dangerous?
 
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {
