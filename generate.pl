@@ -798,6 +798,24 @@ sub MakeStaticPages {
 	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/head>/;
 
 	my $graciasTemplate = GetTemplate('gracias.template');
+
+	my $currUpdateTime = time();
+	my $prevUpdateTime = GetFile('./config/last_update_time');
+	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
+		$prevUpdateTime = time();
+	}
+
+	my $updateInterval = $currUpdateTime - $prevUpdateTime;
+
+	PutFile("./config/last_update_time", $currUpdateTime);
+
+	$prevUpdateTime = EpochToHuman($prevUpdateTime);
+	$currUpdateTime = EpochToHuman($currUpdateTime);
+
+	$graciasTemplate =~ s/\$prevUpdateTime/$prevUpdateTime/;
+	$graciasTemplate =~ s/\$currUpdateTime/$currUpdateTime/;
+	$graciasTemplate =~ s/\$updateInterval/$updateInterval/;
+
 	$graciasPage .= $graciasTemplate;
 
 	$graciasPage .= GetPageFooter();

@@ -150,6 +150,12 @@ sub PutFile {
 	}
 }
 
+sub EpochToHuman {
+	my $time = shift;
+
+	return strftime('%F %T', localtime($time));
+}
+
 sub PutHtmlFile {
 	my $file = shift;
 	my $content = shift;
