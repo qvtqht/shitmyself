@@ -7,7 +7,8 @@ use 5.010;
 my $SqliteDbName = "index.sqlite3";
 
 sub SqliteUnlinkDb {
-	unlink($SqliteDbName);
+	#unlink($SqliteDbName);
+	rename($SqliteDbName, "$SqliteDbName.prev");
 }
 
 sub SqliteMakeTables() {
