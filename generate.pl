@@ -8,7 +8,7 @@ use lib qw(lib);
 use HTML::Entities;
 use Digest::MD5 qw(md5_hex);
 use POSIX;
-use Acme::RandomEmoji qw(random_emoji);
+#use Acme::RandomEmoji qw(random_emoji);
 
 require './utils.pl';
 require './sqlite.pl';
@@ -33,7 +33,8 @@ sub GetPageHeader {
 
 	my $logoText = GetFile('config/logotext');
 	if (!$logoText) {
-		$logoText = random_emoji();
+		#$logoText = random_emoji();
+		$logoText = "*"
 	}
 	$logoText = HtmlEscape($logoText);
 
