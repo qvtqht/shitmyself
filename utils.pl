@@ -154,6 +154,16 @@ sub PutHtmlFile {
 	my $file = shift;
 	my $content = shift;
 
+	state $stripNonAscii;
+	if (!defined($stripNonAscii)) {
+		$stripNonAscii = GetFile('./config/ascii');
+		if (!defined($stripNonAscii)) {
+			$stripNonAscii = 0;
+		}
+	}
+
+	$content =~ s/[^[:ascii:]]//g;
+
 	return PutFile($file, $content);
 }
 
