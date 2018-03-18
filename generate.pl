@@ -28,8 +28,13 @@ sub GetPageHeader {
 	my $title = shift;
 	my $titleHtml = shift;
 
-	chomp $title;
-	chomp $titleHtml;
+	if (defined($title) && defined($titleHtml)) {
+		chomp $title;
+		chomp $titleHtml;
+	} else {
+		$title="";
+		$titleHtml="";
+	}
 
 	state $logoText;
 	if (!defined($logoText)) {
@@ -47,8 +52,11 @@ sub GetPageHeader {
 	my @primaryColorChoices = qw(008080 c08000 808080 8098b0);
 	my $primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
+	my @secondaryColorChoices = qw(f0fff0 f);
+	my $secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
+
 	#my $primaryColor = '#'.$primaryColorChoices[0];
-	my $secondaryColor = '#f0fff0';
+	#my $secondaryColor = '#f0fff0';
 	my $neutralColor = '#202020';
 	my $disabledColor = '#c0c0c0';
 	my $disabledTextColor = '#808080';
@@ -255,7 +263,7 @@ sub GetItemPage {
 		$alias = HtmlEscape($alias);
 
 		$title = TrimPath($filePath) . ".txt by $alias";
-		$titleHtml = TrimPath($filePath) . ".txt by " . GetAvatar($file{'author_key'});
+		$titleHtml = TrimPath($filePath) . ".txt";
 	} else {
 		$title = TrimPath($filePath) . ".txt";
 		$titleHtml = $title;
@@ -324,8 +332,8 @@ sub GetPageParams {
 			$queryParams{'where_clause'} = $whereClause;
 		}
 	} else {
-		$pageParams{'title'} = 'Message Board';
-		$pageParams{'title_html'} = 'Message Board';
+		$pageParams{'title'} = GetFile('./config/site_name');
+		$pageParams{'title_html'} = GetFile('./config/site_name');
 	}
 
 	$pageParams{'query_params'} = %queryParams;
@@ -340,7 +348,9 @@ sub GetIndexPage {
 
 	my $txtIndex = "";
 
-	my $htmlStart = GetPageHeader("Message Board", "Message Board");
+	my $siteName = GetFile('./config/site_name');
+
+	my $htmlStart = GetPageHeader($siteName, $siteName);
 
 	$txtIndex .= $htmlStart;
 
@@ -477,8 +487,8 @@ sub GetReadPage {
 			@files = DBGetItemList(\%queryParams);
 		}
 	} else {
-		$title = 'Message Board';
-		$titleHtml = 'Message Board';
+		$title = GetFile('./config/site_name');
+		$titleHtml = GetFile('./config/site_name');
 
 		my %queryParams;
 		@files = DBGetItemList(\%queryParams);
@@ -488,7 +498,7 @@ sub GetReadPage {
 
 	# this will hold the title of the page
 	if (!$title) {
-		$title = "Message Board";
+		$title = GetFile('./config/site_name');
 	}
 	chomp $title;
 
@@ -813,7 +823,7 @@ sub MakeStaticPages {
 
 	# Target page for the submit page
 	my $graciasPage = GetPageHeader("Thank You", "Thank You");
-	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/head>/;
+	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
 	$graciasPage .= GetTemplate('maincontent.template');
 

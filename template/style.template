@@ -1,5 +1,6 @@
 body {
 	font-family: monospace;
+	font-size: large;
 	background-color: $secondaryColor;
 	color: #202020;
 }
@@ -8,10 +9,8 @@ body {
 	font-family: monospace;
 	word-wrap: break-word;
 	max-width: 60em;
-	border: 1pt dotted $primaryColor;
-	border-top: 2pt solid $primaryColor;
-	border-left: 2pt solid $primaryColor;
-	border-radius: 5pt;
+	border-bottom: 2pt solid $primaryColor;
+	border-radius: 1pt;
 	margin: 8pt;
 }
 .admin {
@@ -25,7 +24,6 @@ body {
 }
 .voter {
 	margin: 0pt 0pt 0pt 0pt;
-	text-align: right;
 	cursor: pointer;
 }
 .voter a {
@@ -34,7 +32,7 @@ body {
 	font-family: sans-serif;
 	font-size: large;
 	border: 1pt outset $primaryColor;
-	color: $secondaryColor;
+	color: white;
 	border-radius: 3pt;
 	display: inline-block;
 	margin: 3pt 3pt 0pt 0pt;
@@ -64,12 +62,9 @@ a {
 	background-color: $secondaryColor;
 }
 h1 {
-	background-color: $primaryColor;
-	color: $secondaryColor;
+	background-color: $secondaryColor;
+	color: $primaryColor;
 	margin-bottom: 0pt;
-	border: solid 5pt $primaryColor;
-	border-bottom: 0pt;
-	border-radius: 5pt 5pt 0pt 0pt;
 	padding: 3pt;
 }
 h2.menu {
@@ -77,9 +72,6 @@ h2.menu {
 	padding-right: 5pt;
 	background-color: $primaryColor;
 	color: $secondaryColor;
-	border: solid 5pt $primaryColor;
-	border-top: 0pt;
-	border-radius: 0pt 0pt 5pt 5pt;
 	text-align: right;
 }
 h2.menu a {
@@ -124,8 +116,7 @@ form.submit .txtarea {
 	vertical-align: middle;
 	font-size: 36pt;
 	font-family: monospace;
-	background-color: $primaryColor;
-	color: white;
+	color: $primaryColor;
 }
 .topmessage {
 	font-family: sans-serif;

@@ -10,6 +10,6 @@ $styleSheet
 </style>
 </head>
 <body>
-<a href="#maincontent">Skip to main content</a>
+<a href="#maincontent">Skip to main content</a> <a href="/">Home page</a>
 <h1><a id=logo href=/>$logoText</a>$titleHtml</h1>
 <h2 class="menu">$menuItems</h2>
