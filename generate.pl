@@ -928,7 +928,7 @@ sub GetPageLink {
 	my $pageLink = $pageLinkTemplate;
 	$pageLink =~ s/\$pageName/$pageNumber/;
 
-	if ($pageNumber > 1) {
+	if ($pageNumber > 0) {
 		$pageLink =~ s/\$pageNumber/$pageNumber/;
 	} else {
 		$pageLink =~ s/\$pageNumber//;
@@ -958,7 +958,7 @@ sub GetPageLinks {
 	my $lastPageNum = floor($itemCount / $PAGE_LIMIT);
 
 	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
-		for (my $i = 1; $i <= $lastPageNum; $i++) {
+		for (my $i = 0; $i < $lastPageNum; $i++) {
 			my $pageLinkTemplate = GetPageLink($i);
 
 			$pageLinks .= $pageLinkTemplate;
@@ -974,16 +974,16 @@ my $itemCount = DBGetItemCount();
 if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
 	my $i;
 	my $lastPage = ceil($itemCount / $PAGE_LIMIT);
-	for ($i = 1; $i <= $lastPage; $i++) {
+	for ($i = 0; $i < $lastPage; $i++) {
 		my %qp;
-		my $offset = $i * $PAGE_LIMIT - 1;
+		my $offset = $i * $PAGE_LIMIT;
 
 		$qp{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 
 		my @ft = DBGetItemList(\%qp);
 		my $testIndex = GetIndexPage(\@ft, $i);
 
-		if ($i > 1) {
+		if ($i > 0) {
 			PutHtmlFile("./html/index$i.html", $testIndex);
 		} else {
 			PutHtmlFile("./html/index.html", $testIndex);
