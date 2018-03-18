@@ -266,6 +266,8 @@ sub GetItemPage {
 
 	$txtIndex .= $htmlStart;
 
+	$txtIndex .= GetTemplate('maincontent.template');
+
 	my $itemTemplate = GetItemTemplate(\%file);
 
 	if ($itemTemplate) {
@@ -494,6 +496,8 @@ sub GetReadPage {
 
 	$txtIndex .= $htmlStart;
 
+	$txtIndex .= GetTemplate('maincontent.template');
+
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
@@ -617,6 +621,8 @@ sub GetVotePage {
 
 	$txtIndex .= $htmlStart;
 
+	$txtIndex .= GetTemplate('maincontent.template');
+
 	my $voteIntroTemplate = GetTemplate('voteintro.template');
 
 	#Add vote status frame
@@ -734,6 +740,8 @@ sub GetSubmitPage {
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
 
+	$txtIndex .= GetTemplate('maincontent.template');
+
 	if (defined($itemCount)) {
 		if ($itemCount < $itemLimit) {
 			$txtIndex .= GetTemplate('forma.template');
@@ -807,6 +815,8 @@ sub MakeStaticPages {
 	my $graciasPage = GetPageHeader("Thank You", "Thank You");
 	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/"><\/head>/;
 
+	$graciasPage .= GetTemplate('maincontent.template');
+
 	my $graciasTemplate = GetTemplate('gracias.template');
 
 	my $currUpdateTime = time();
@@ -842,6 +852,8 @@ sub MakeStaticPages {
 
 	# Manual page
 	my $tfmPage = GetPageHeader("Manual", "Manual");
+
+	$tfmPage .= GetTemplate('maincontent.template');
 
 	my $tfmPageTemplate = GetTemplate('manual.template');
 
@@ -882,6 +894,8 @@ sub MakeClonePage {
 
 
 	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
+
+	$clonePage .= GetTemplate('maincontent.template');
 
 	my $clonePageTemplate = GetTemplate('clone.template');
 
