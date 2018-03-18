@@ -15,7 +15,7 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, long_key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin)");
 	SqliteQuery("CREATE TABLE item(id INTEGER PRIMARY KEY AUTOINCREMENT, file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
-	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, confirmed DEFAULT 0)");
+	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed DEFAULT 0)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, weight)");
 #	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 #	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");

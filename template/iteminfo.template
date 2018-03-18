@@ -4,15 +4,15 @@ $itemTextPlain
 </div>
 
 <div class="plain">
-<h2>Unconfirmed Votes:</h2>
+<h2>Recent Votes:</h2>
 <p>$votesSummary</p>
-<pre>$unconfirmedVotesTable</pre>
+<pre>$recentVotesTable</pre>
 <p>Votes may take a few minutes to register.</p>
 </div>
 
 <div class="plain">
-<h2>Confirmed Votes:</h2>
-<p>$confirmedVotesTable</p>
+<h2>Signed Votes:</h2>
+<p>$signedVotesTable</p>
 <p>Confirmation takes place one cycle after verification of ballot.</p>
 </div>
 

@@ -284,15 +284,15 @@ sub GetItemPage {
 		$votesSummary = "(no votes yet)";
 	}
 
-	my $unconfirmedVotesTable = DBGetVotesTable($file{'file_hash'});
-	my $confirmedVotesTable = '(none)';
+	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
+	my $signedVotesTable = '(none)';
 
 	my $itemInfoTemplate = GetTemplate('iteminfo.template');
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
 	$itemInfoTemplate =~ s/\$votesSummary/$votesSummary/;
-	$itemInfoTemplate =~ s/\$unconfirmedVotesTable/$unconfirmedVotesTable/;
-	$itemInfoTemplate =~ s/\$confirmedVotesTable/$confirmedVotesTable/;
+	$itemInfoTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
+	$itemInfoTemplate =~ s/\$signedVotesTable/$signedVotesTable/;
 	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
 	$txtIndex .= $itemInfoTemplate;
