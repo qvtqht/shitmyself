@@ -62,8 +62,8 @@ a {
 	background-color: $secondaryColor;
 }
 h1 {
-	background-color: $secondaryColor;
-	color: $primaryColor;
+	background-color: $primaryColor;
+	color: $secondaryColor;
 	margin-bottom: 0pt;
 	padding: 3pt;
 }
@@ -116,7 +116,8 @@ form.submit .txtarea {
 	vertical-align: middle;
 	font-size: 36pt;
 	font-family: monospace;
-	color: $primaryColor;
+	color: $secondaryColor;
+	background-color: $primaryColor;
 }
 .topmessage {
 	font-family: sans-serif;
