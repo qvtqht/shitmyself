@@ -341,6 +341,8 @@ sub GetIndexPage {
 
 	$txtIndex .= $htmlStart;
 
+	$txtIndex .= GetPageLinks();
+
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
