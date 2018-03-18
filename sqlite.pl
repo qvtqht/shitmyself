@@ -15,14 +15,14 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, long_key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin)");
 	SqliteQuery("CREATE TABLE item(id INTEGER PRIMARY KEY AUTOINCREMENT, file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
-	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, vote_hash, vote_value, confirmed DEFAULT 0)");
+	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, confirmed DEFAULT 0)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, weight)");
 #	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 #	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 #	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
 #	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
-	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, vote_hash, vote_value);");
+	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value);");
 }
 
 sub SqliteQuery {
@@ -35,6 +35,24 @@ sub SqliteQuery {
 	
 	return $results;
 }
+
+sub DBGetVotesTable {
+	my $fileHash = shift;
+
+	my $query;
+	if ($fileHash) {
+		$query = "SELECT file_hash, ballot_time, vote_value FROM vote WHERE file_hash = '$fileHash';";
+	} else {
+		$query = "SELECT file_hash, ballot_time, vote_value FROM vote;";
+	}
+
+#	print $query;
+#	die;
+	my $result = SqliteQuery($query);
+
+	return $result;
+}
+PutFile('./html/votes.txt', DBGetVotesTable());
 
 sub SqliteGetHash {
 	my $query = shift;
@@ -171,7 +189,7 @@ sub DBAddVoteRecord {
 	$voteValue = SqliteEscape($voteValue);
 
 	SqliteQuery(
-		"INSERT OR REPLACE INTO vote(file_hash, vote_hash, vote_value) " .
+		"INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value) " .
 			"VALUES('$fileHash', '$ballotTime', '$voteValue');"
 	);
 }

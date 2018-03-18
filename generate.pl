@@ -273,19 +273,24 @@ sub GetItemPage {
 	}
 
 	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-	my $votesList = "";
+	my $votesSummary = "";
 	foreach my $voteValue (keys %voteTotals) {
-		$votesList .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
+		$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
 	}
 
-	if (!$votesList) {
-		$votesList = "(no votes yet)";
+	if (!$votesSummary) {
+		$votesSummary = "(no votes yet)";
 	}
+
+	my $unconfirmedVotesTable = DBGetVotesTable($file{'file_hash'});
+	my $confirmedVotesTable = '(none)';
 
 	my $itemInfoTemplate = GetTemplate('iteminfo.template');
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
-	$itemInfoTemplate =~ s/\$votesList/$votesList/;
+	$itemInfoTemplate =~ s/\$votesSummary/$votesSummary/;
+	$itemInfoTemplate =~ s/\$unconfirmedVotesTable/$unconfirmedVotesTable/;
+	$itemInfoTemplate =~ s/\$confirmedVotesTable/$confirmedVotesTable/;
 	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
 	$txtIndex .= $itemInfoTemplate;
@@ -907,7 +912,7 @@ sub GetPageLinks {
 	my $lastPageNum = floor($itemCount / $PAGE_LIMIT);
 
 	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
-		for (my $i = ($lastPageNum); $i >= 1; $i--) {
+		for (my $i = 1; $i <= $lastPageNum; $i++) {
 			my $pageLinkTemplate = GetTemplate('pagelink.template');
 			$pageLinkTemplate =~ s/\$i/$i/g;
 			$pageLinks .= $pageLinkTemplate;
