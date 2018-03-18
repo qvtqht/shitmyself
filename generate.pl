@@ -967,7 +967,7 @@ sub GetPageLinks {
 
 	my $frame = GetTemplate('pagination.template');
 
-	$frame =~ s/\$paginationButtons/$pageLinks/;
+	$frame =~ s/\$paginationLinks/$pageLinks/;
 
 	$pageLinks = $frame;
 
