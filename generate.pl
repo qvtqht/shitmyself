@@ -334,14 +334,17 @@ sub GetPageParams {
 sub GetIndexPage {
 	my $filesArrayReference = shift;
 	my @files = @$filesArrayReference;
+	my $currentPageNumber = shift;
 
 	my $txtIndex = "";
 
-	my $htmlStart = GetPageHeader("title", "title");
+	my $htmlStart = GetPageHeader("Message Board", "Message Board");
 
 	$txtIndex .= $htmlStart;
 
-	$txtIndex .= GetPageLinks();
+	$txtIndex .= GetPageLinks($currentPageNumber);
+
+	$txtIndex .= GetTemplate('maincontent.template');
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -435,7 +438,7 @@ sub GetIndexPage {
 
 	$txtIndex .= GetTemplate('voteframe.template');
 
-	$txtIndex .= GetPageLinks();
+	$txtIndex .= GetPageLinks($currentPageNumber);
 
 	# Add javascript warning to the bottom of the page
 	#$txtIndex .= GetTemplate("jswarning.template");
@@ -757,9 +760,9 @@ my $HTMLDIR = "html";
 
 WriteLog ("GetReadPage()...");
 
-my $indexText = GetReadPage();
+#my $indexText = GetReadPage();
 
-PutHtmlFile("$HTMLDIR/index.html", $indexText);
+#PutHtmlFile("$HTMLDIR/index.html", $indexText);
 
 WriteLog ("GetVotePage()...");
 
@@ -900,11 +903,38 @@ MakeClonePage();
 my $PAGE_LIMIT = 10;
 my $PAGE_THRESHOLD = 5;
 
+sub GetPageLink {
+	my $pageNumber = shift;
+
+	state $pageLinkTemplate;
+	if (!defined($pageLinkTemplate)) {
+		$pageLinkTemplate = GetTemplate('pagelink.template');
+	}
+
+	my $pageLink = $pageLinkTemplate;
+	$pageLink =~ s/\$pageName/$pageNumber/;
+
+	if ($pageNumber > 1) {
+		$pageLink =~ s/\$pageNumber/$pageNumber/;
+	} else {
+		$pageLink =~ s/\$pageNumber//;
+	}
+
+	return $pageLink;
+}
+
 sub GetPageLinks {
 	state $pageLinks;
 
+	my $currentPageNumber = shift;
+
 	if (defined($pageLinks)) {
-		return $pageLinks;
+		my $currentPageTemplate = GetPageLink($currentPageNumber);
+
+		my $pageLinksFinal = $pageLinks;
+		$pageLinksFinal =~ s/$currentPageTemplate/<b>$currentPageNumber<\/b> /g;
+
+		return $pageLinksFinal;
 	}
 
 	my $itemCount = DBGetItemCount();
@@ -915,13 +945,13 @@ sub GetPageLinks {
 
 	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
 		for (my $i = 1; $i <= $lastPageNum; $i++) {
-			my $pageLinkTemplate = GetTemplate('pagelink.template');
-			$pageLinkTemplate =~ s/\$i/$i/g;
+			my $pageLinkTemplate = GetPageLink($i);
+
 			$pageLinks .= $pageLinkTemplate;
 		}
 	}
 
-	return $pageLinks;
+	return GetPageLinks($currentPageNumber);
 }
 
 
@@ -937,9 +967,13 @@ if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
 		$qp{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 
 		my @ft = DBGetItemList(\%qp);
-		my $testIndex = GetIndexPage(\@ft);
+		my $testIndex = GetIndexPage(\@ft, $i);
 
-		PutHtmlFile("./html/index$i.html", $testIndex);
+		if ($i > 1) {
+			PutHtmlFile("./html/index$i.html", $testIndex);
+		} else {
+			PutHtmlFile("./html/index.html", $testIndex);
+		}
 	}
 }
 
