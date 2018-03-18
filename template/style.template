@@ -140,3 +140,10 @@ form.submit .txtarea {
 	padding: 5pt;
 	max-width: 60em;
 }
+.pagination {
+	font-family: sans-serif;
+	font-size: large;
+}
+.pagination a, .pagination b {
+	padding: 5pt;
+}

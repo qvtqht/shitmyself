@@ -965,6 +965,12 @@ sub GetPageLinks {
 		}
 	}
 
+	my $frame = GetTemplate('pagination.template');
+
+	$frame =~ s/\$paginationButtons/$pageLinks/;
+
+	$pageLinks = $frame;
+
 	return GetPageLinks($currentPageNumber);
 }
 
