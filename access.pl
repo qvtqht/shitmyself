@@ -225,8 +225,10 @@ sub ProcessAccessLog {
 					$filename .= '.txt';
 
 					# Try to write to the file, exit if we can't
-					PutFile($filenameDir . $filename,
-						$message) or die('Could not open text file to write to ' . $filenameDir . $filename);
+					PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to ' . $filenameDir . $filename);
+
+					my $logLine = $filename . '|' . GetFileHash($filenameDir . $filename) . '|' . time();
+					AppendFile('./log/added.log', $logLine);
 
 					# Add the file to git
 					#system("git add \"$filenameDir$filename\"");
