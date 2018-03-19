@@ -52,7 +52,7 @@ sub GetPageHeader {
 	my @primaryColorChoices = qw(008080 c08000 808080 8098b0);
 	my $primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
-	my @secondaryColorChoices = qw(f0fff0 f);
+	my @secondaryColorChoices = qw(f0fff0 ffffff);
 	my $secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
 
 	#my $primaryColor = '#'.$primaryColorChoices[0];
