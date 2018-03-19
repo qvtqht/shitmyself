@@ -168,7 +168,9 @@ sub PutHtmlFile {
 		}
 	}
 
-	$content =~ s/[^[:ascii:]]//g;
+	if ($stripNonAscii) {
+		$content =~ s/[^[:ascii:]]//g;
+	}
 
 	return PutFile($file, $content);
 }
