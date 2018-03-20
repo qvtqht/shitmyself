@@ -924,7 +924,7 @@ sub MakeClonePage {
 
 MakeClonePage();
 
-my $PAGE_LIMIT = 10;
+my $PAGE_LIMIT = 25;
 my $PAGE_THRESHOLD = 5;
 
 sub GetPageLink {
