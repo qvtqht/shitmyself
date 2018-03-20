@@ -195,6 +195,25 @@ sub DBAddVoteRecord {
 	);
 }
 
+sub DBAddAddedRecord {
+	my $filePath = shift;
+	my $fileHash = shift;
+	my $addedTime = shift;
+
+	chomp $filePath;
+	chomp $fileHash;
+	chomp $addedTime;
+
+	$filePath = SqliteEscape($filePath);
+	$fileHash = SqliteEscape($fileHash);
+	$addedTime = SqliteEscape($addedTime);
+
+	SqliteQuery(
+		"INSERT OR REPLACE INTO added_time(file_path, file_hash, add_timestamp) " .
+			"VALUES('$filePath', '$fileHash', '$addedTime');"
+	);
+}
+
 sub DBGetItemList {
 	my $paramHashRef = shift;
 	my %params = %$paramHashRef;

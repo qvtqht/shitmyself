@@ -45,6 +45,22 @@ sub MakeVoteIndex {
 	}
 }
 
+sub MakeAddedIndex {
+	print "MakeAddedIndex()\n";
+
+	my $addedLog = GetFile('log/added.log');
+
+	if (defined($addedLog) && $addedLog) {
+		my @addedRecord = split("\n", GetFile("log/added.log"));
+
+		foreach(@addedRecord) {
+			my ($filePath, $fileHash, $addedTime) = split('\|', $_);
+
+			DBAddAddedRecord($filePath, $fileHash, $addedTime);
+		}
+	}
+}
+
 sub IndexFile {
 	my $file = shift;
 
@@ -113,5 +129,7 @@ my @filesToInclude = `find ./txt/ | grep \.txt\$ | sort -r`;
 MakeIndex(\@filesToInclude);
 
 MakeVoteIndex();
+
+MakeAddedIndex();
 
 MakeTagIndex();
