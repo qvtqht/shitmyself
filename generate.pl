@@ -13,6 +13,12 @@ use POSIX;
 require './utils.pl';
 require './sqlite.pl';
 
+#This has been commented out because it interferes with symlinked html dir
+#my $HTMLDIR = "html.tmp";
+my $HTMLDIR = "html";
+
+my $PAGE_LIMIT = 25;
+my $PAGE_THRESHOLD = 5;
 
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
@@ -475,7 +481,6 @@ sub GetIndexPage {
 
 }
 
-
 sub GetReadPage {
 	my $title;
 	my $titleHtml;
@@ -791,47 +796,61 @@ sub GetSubmitPage {
 	return $txtIndex;
 }
 
+sub GetPageLink {
+	my $pageNumber = shift;
 
-#This has been commented out because it interferes with symlinked html dir
-#my $HTMLDIR = "html.tmp";
-my $HTMLDIR = "html";
+	state $pageLinkTemplate;
+	if (!defined($pageLinkTemplate)) {
+		$pageLinkTemplate = GetTemplate('pagelink.template');
+	}
 
-WriteLog ("GetReadPage()...");
+	my $pageLink = $pageLinkTemplate;
+	$pageLink =~ s/\$pageName/$pageNumber/;
 
-#my $indexText = GetReadPage();
+	if ($pageNumber > 0) {
+		$pageLink =~ s/\$pageNumber/$pageNumber/;
+	} else {
+		$pageLink =~ s/\$pageNumber//;
+	}
 
-#PutHtmlFile("$HTMLDIR/index.html", $indexText);
-
-WriteLog ("GetVotePage()...");
-
-my $voteIndexText = GetVotePage();
-
-PutHtmlFile("$HTMLDIR/vote.html", $voteIndexText);
-
-
-WriteLog ("Authors...");
-
-my @authors = DBGetAuthorList();
-
-foreach my $key (@authors) {
-	WriteLog ("$key");
-
-	mkdir("$HTMLDIR/author/$key");
-
-	my $authorIndex = GetReadPage('author', $key);
-
-	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
+	return $pageLink;
 }
 
-my %queryParams;
-my @files = DBGetItemList(\%queryParams);
+sub GetPageLinks {
+	state $pageLinks;
 
-foreach my $file(@files) {
-	my $fileName = TrimPath($file->{'file_path'});
+	my $currentPageNumber = shift;
 
-	my $fileIndex = GetItemPage($file);
+	if (defined($pageLinks)) {
+		my $currentPageTemplate = GetPageLink($currentPageNumber);
 
-	PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
+		my $pageLinksFinal = $pageLinks;
+		$pageLinksFinal =~ s/$currentPageTemplate/<b>$currentPageNumber<\/b> /g;
+
+		return $pageLinksFinal;
+	}
+
+	my $itemCount = DBGetItemCount();
+
+	$pageLinks = "";
+
+	my $lastPageNum = floor($itemCount / $PAGE_LIMIT);
+
+	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+		for (my $i = 0; $i < $lastPageNum; $i++) {
+			my $pageLinkTemplate = GetPageLink($i);
+
+			$pageLinks .= $pageLinkTemplate;
+		}
+	}
+
+	my $frame = GetTemplate('pagination.template');
+
+	$frame =~ s/\$paginationLinks/$pageLinks/;
+
+	$pageLinks = $frame;
+
+	return GetPageLinks($currentPageNumber);
 }
 
 sub MakeStaticPages {
@@ -909,6 +928,49 @@ sub MakeStaticPages {
 }
 
 
+
+if ($HTMLDIR) {
+	system("rm -rfv $HTMLDIR/*");
+}
+
+WriteLog ("GetReadPage()...");
+
+#my $indexText = GetReadPage();
+
+#PutHtmlFile("$HTMLDIR/index.html", $indexText);
+
+WriteLog ("GetVotePage()...");
+
+my $voteIndexText = GetVotePage();
+
+PutHtmlFile("$HTMLDIR/vote.html", $voteIndexText);
+
+WriteLog ("Authors...");
+
+my @authors = DBGetAuthorList();
+
+foreach my $key (@authors) {
+	WriteLog ("$key");
+
+	mkdir("$HTMLDIR/author/$key");
+
+	my $authorIndex = GetReadPage('author', $key);
+
+	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
+}
+
+my %queryParams;
+my @files = DBGetItemList(\%queryParams);
+
+foreach my $file(@files) {
+	my $fileName = TrimPath($file->{'file_path'});
+
+	my $fileIndex = GetItemPage($file);
+
+	PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
+}
+
+
 MakeStaticPages();
 
 sub MakeClonePage {
@@ -945,67 +1007,6 @@ sub MakeClonePage {
 }
 
 MakeClonePage();
-
-my $PAGE_LIMIT = 25;
-my $PAGE_THRESHOLD = 5;
-
-sub GetPageLink {
-	my $pageNumber = shift;
-
-	state $pageLinkTemplate;
-	if (!defined($pageLinkTemplate)) {
-		$pageLinkTemplate = GetTemplate('pagelink.template');
-	}
-
-	my $pageLink = $pageLinkTemplate;
-	$pageLink =~ s/\$pageName/$pageNumber/;
-
-	if ($pageNumber > 0) {
-		$pageLink =~ s/\$pageNumber/$pageNumber/;
-	} else {
-		$pageLink =~ s/\$pageNumber//;
-	}
-
-	return $pageLink;
-}
-
-sub GetPageLinks {
-	state $pageLinks;
-
-	my $currentPageNumber = shift;
-
-	if (defined($pageLinks)) {
-		my $currentPageTemplate = GetPageLink($currentPageNumber);
-
-		my $pageLinksFinal = $pageLinks;
-		$pageLinksFinal =~ s/$currentPageTemplate/<b>$currentPageNumber<\/b> /g;
-
-		return $pageLinksFinal;
-	}
-
-	my $itemCount = DBGetItemCount();
-
-	$pageLinks = "";
-
-	my $lastPageNum = floor($itemCount / $PAGE_LIMIT);
-
-	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
-		for (my $i = 0; $i < $lastPageNum; $i++) {
-			my $pageLinkTemplate = GetPageLink($i);
-
-			$pageLinks .= $pageLinkTemplate;
-		}
-	}
-
-	my $frame = GetTemplate('pagination.template');
-
-	$frame =~ s/\$paginationLinks/$pageLinks/;
-
-	$pageLinks = $frame;
-
-	return GetPageLinks($currentPageNumber);
-}
-
 
 
 my $itemCount = DBGetItemCount();

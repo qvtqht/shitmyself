@@ -2,22 +2,28 @@ Add support for linking sister sites
 	Add liste of sites in config(?)
 	Add menu item and page
 	List them all on page
-Add support for commenting on items
+Add support for replying to items
 	Add $replyCheckbox template [x]
 	Add $replyCheckbox placeholder to forma [x]
 	Add hooks to generate.pl [x]
 	Add hooks for accepting replies as an extra argument
 		Parse out reply=
-		Include the hash in the db field
+		Include BOTH hash AND filename in the db field
 			Ignore items with field when generating main index
 			When generating item page, do a lookup
 				Add items when generating page
+	What to do about orphaned replies?
+		Separate page?
 Replace GetFile with GetConfig when config files are involved [x]
-	Add default values to GetConfig
+	Add config/default/ tree
+	Add generation of default values to GetConfig
+		Site name
+		Site logo
+
 
 Cookie auth via secret URL per public key, encrypted for that key
 Tag hooks for the admin (via cookie auth?)
 Tag ratings and enable/disable page
 Integrate Perl taint
 Use the full fingerprint for avatars for more colors
-When writing new html dir, make a list of all existing files, and remove them later unless they were overwritten
+When writing new html dir, make a list of all existing files, and remove them later unless they were written
