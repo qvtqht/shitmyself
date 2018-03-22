@@ -7,6 +7,7 @@ Add support for commenting on items
 	Add $replyCheckbox placeholder to forma
 	Add hooks to generate.pl
 	Add hooks for accepting replies as an extra argument
+Replace GetFile with GetConfig when config files are involved
 
 Cookie auth via secret URL per public key, encrypted for that key
 Tag hooks for the admin (via cookie auth?)
