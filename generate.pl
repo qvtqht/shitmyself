@@ -282,6 +282,15 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
+#	my $replyForm = GetTemplate('reply.template');
+#	my $replyTag = GetTemplate('replytag.template');
+#
+#	$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
+#	$replyForm =~ s/\$extraFields/$replyTag/g;
+#
+#	$txtIndex .= $replyForm;
+
+	#page info
 	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 	my $votesSummary = "";
 	foreach my $voteValue (keys %voteTotals) {
@@ -297,6 +306,7 @@ sub GetItemPage {
 
 	my $itemInfoTemplate = GetTemplate('iteminfo.template');
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
+
 	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
 	$itemInfoTemplate =~ s/\$votesSummary/$votesSummary/;
 	$itemInfoTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
@@ -305,8 +315,10 @@ sub GetItemPage {
 
 	$txtIndex .= $itemInfoTemplate;
 
+	# voting target fame
 	$txtIndex .= GetTemplate('voteframe.template');
 
+	# end page
 	$txtIndex .= GetPageFooter();
 
 	return $txtIndex;
