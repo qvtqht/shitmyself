@@ -145,7 +145,7 @@ sub PutConfig {
 	my $configName = shift;
 	my $configValue = shift;
 
-	return PutFile("config/$configName");
+	return PutFile("config/$configName", $configValue);
 }
 
 # Writes to a file
