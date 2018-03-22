@@ -754,7 +754,11 @@ sub GetSubmitPage {
 
 	if (defined($itemCount)) {
 		if ($itemCount < $itemLimit) {
-			$txtIndex .= GetTemplate('forma.template');
+			my $submitForm = GetTemplate('forma.template');
+			$submitForm =~ s/\$extraFields//g;
+
+			$txtIndex .= $submitForm;
+
 			$txtIndex .= "Curent Post Count: $itemCount; Current Post Limit: $itemLimit";
 		} else {
 			$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please delete some things before posting new ones (or increase the item limit in config)";
@@ -764,7 +768,10 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
 	} else {
-		$txtIndex .= GetTemplate('forma.template');
+		my $submitForm = GetTemplate('forma.template');
+		$submitForm =~ s/\$extraFields//g;
+
+		$txtIndex .= $submitForm;
 		$txtIndex = "Something went wrong. Could not get item count.";
 	}
 
@@ -896,9 +903,11 @@ sub MakeClonePage {
 
 	WriteLog("Making zip file...");
 
-	system("git archive -v --format zip --output html/hike.tmp.zip master");
+	system("git archive --format zip --output html/hike.tmp.zip master");
+	#system("git archive -v --format zip --output html/hike.tmp.zip master");
 
-	system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+	system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+	#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
 	rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 

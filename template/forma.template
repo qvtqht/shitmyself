@@ -12,7 +12,7 @@
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');
     document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="zalgo_textarea(\'comment\');">');
     // --></script>
-
+    $extraFields
     <ul class=instructions>
         <li>You can sign your messages with GPG, but you don't have to.</li>
         <li>To set username, submit public key. See manual for details.</li>
