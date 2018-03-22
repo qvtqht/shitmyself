@@ -168,7 +168,7 @@ sub PutHtmlFile {
 
 	state $stripNonAscii;
 	if (!defined($stripNonAscii)) {
-		$stripNonAscii = GetFile('./config/ascii');
+		$stripNonAscii = GetConfig('ascii_only');
 		if (!defined($stripNonAscii)) {
 			$stripNonAscii = 0;
 		}
