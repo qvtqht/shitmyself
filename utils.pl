@@ -138,7 +138,15 @@ sub GetFile {
 sub GetConfig {
 	my $configName = shift;
 
-	return GetFile("config/$configName");
+	if (-e "config/$configName") {
+		return GetFile("config/$configName");
+	} else {
+		if (-e "config/default/$configName") {
+			return GetFile("config/default/$configName");
+		}
+	}
+
+	return;
 }
 
 sub PutConfig {
