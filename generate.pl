@@ -928,7 +928,7 @@ sub MakeStaticPages {
 }
 
 
-
+#todo this means occasional 404 errors, needs better solution
 if ($HTMLDIR) {
 	system("rm -rfv $HTMLDIR/*");
 }
