@@ -1,6 +1,6 @@
 <!-- gracias.template -->
 <p>Thank you. Your submission will be processed according to schedule.</p>
-<p>The last two updates occurred $updateInterval seconds apart, <br><br>at $prevUpdateTime and $currUpdateTime.</p>
+<p>The last two updates occurred <b>$updateInterval seconds</b> apart, <br><br>at $prevUpdateTime and $currUpdateTime.</p>
 <p></p>
 <p><a href="./">Continue</a></p>
 <!-- / gracias.template -->
