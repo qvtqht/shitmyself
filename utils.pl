@@ -142,7 +142,10 @@ sub GetConfig {
 		return GetFile("config/$configName");
 	} else {
 		if (-e "config/default/$configName") {
-			return GetFile("config/default/$configName");
+			my $configValue = GetFile("config/default/$configName");
+			PutConfig ($configName, $configValue);
+
+			return GetConfig($configName);
 		}
 	}
 
