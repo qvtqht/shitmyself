@@ -111,18 +111,19 @@ sub GetVoterTemplate {
 	chomp $fileHash;
 	chomp $ballotTime;
 
-	if (!-e "./config/secret") {
+	#todo move this to GetConfig()
+	if (!-e "config/secret") {
 		my $randomHash = GetRandomHash();
 
-		PutFile("./config/secret", $randomHash);
+		PutConfig("secret", $randomHash);
 	}
-	my $mySecret = GetFile("./config/secret");
+	my $mySecret = GetConfig("secret");
 
 	state $voteButtonsTemplate;
 
 	if (!defined($voteButtonsTemplate)) {
-		my $tagsList = GetFile('./config/tags');
-		my $flagsList = GetFile('./config/flags');
+		my $tagsList = GetConfig('tags');
+		my $flagsList = GetConfig('flags');
 
 		chomp $tagsList;
 		chomp $flagsList;
@@ -849,14 +850,14 @@ sub MakeStaticPages {
 	my $graciasTemplate = GetTemplate('gracias.template');
 
 	my $currUpdateTime = time();
-	my $prevUpdateTime = GetFile('./config/last_update_time');
+	my $prevUpdateTime = GetConfig('last_update_time');
 	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
 		$prevUpdateTime = time();
 	}
 
 	my $updateInterval = $currUpdateTime - $prevUpdateTime;
 
-	PutFile("./config/last_update_time", $currUpdateTime);
+	PutConfig("last_update_time", $currUpdateTime);
 
 	$prevUpdateTime = EpochToHuman($prevUpdateTime);
 	$currUpdateTime = EpochToHuman($currUpdateTime);

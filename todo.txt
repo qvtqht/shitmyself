@@ -3,11 +3,17 @@ Add support for linking sister sites
 	Add menu item and page
 	List them all on page
 Add support for commenting on items
-	Add $replyCheckbox template
-	Add $replyCheckbox placeholder to forma
-	Add hooks to generate.pl
+	Add $replyCheckbox template [x]
+	Add $replyCheckbox placeholder to forma [x]
+	Add hooks to generate.pl [x]
 	Add hooks for accepting replies as an extra argument
-Replace GetFile with GetConfig when config files are involved
+		Parse out reply=
+		Include the hash in the db field
+			Ignore items with field when generating main index
+			When generating item page, do a lookup
+				Add items when generating page
+Replace GetFile with GetConfig when config files are involved [x]
+	Add default values to GetConfig
 
 Cookie auth via secret URL per public key, encrypted for that key
 Tag hooks for the admin (via cookie auth?)

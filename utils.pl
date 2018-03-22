@@ -141,6 +141,13 @@ sub GetConfig {
 	return GetFile("config/$configName");
 }
 
+sub PutConfig {
+	my $configName = shift;
+	my $configValue = shift;
+
+	return PutFile("config/$configName");
+}
+
 # Writes to a file
 sub PutFile {
 	my $file = shift;

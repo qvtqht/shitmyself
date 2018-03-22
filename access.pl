@@ -81,7 +81,7 @@ sub ProcessAccessLog {
 	open(LOGFILE, $logfile) or die("Could not open log file.");
 
 	# anti-CSRF secret salt
-	my $mySecret = GetFile("./config/secret");
+	my $mySecret = GetConfig("secret");
 
 	# The following section parses the access log
 	# Thank you, StackOverflow

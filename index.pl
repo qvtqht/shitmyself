@@ -16,7 +16,7 @@ require './sqlite.pl';
 sub MakeTagIndex {
 	print "MakeTagIndex()\n";
 
-	my $tagsWeight = GetFile("config/tags_weight");
+	my $tagsWeight = GetConfig("tags_weight");
 
 	if (defined($tagsWeight) && $tagsWeight) {
 		my @tagsToAdd = split("\n", $tagsWeight);
