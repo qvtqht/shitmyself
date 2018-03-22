@@ -177,10 +177,20 @@ sub ProcessAccessLog {
 					$message = trim($message);
 					$message =~ s/\&(.+)=on/\n-- \n$1/g; #is this dangerous?
 
+					my $parentMessage;
+					if (GetConfig('replies') && $message =~ /\&parent=(.+)$/) {
+						my $parentId = $1;
+						#todo check for valid char count too
+						if ($parentId =~ /[0-9a-fA-F]+/) {
+							$parentMessage = $parentId;
+							$message =~ s/\&parent=(.+)$//; # is this too much?
+						}
+					}
+
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {
 						$message .= "\n" . $site;
-					}
+					} ##todo remove this unnecessary part
 
 					# Generate filename from date and time
 					my $filename;
@@ -227,8 +237,15 @@ sub ProcessAccessLog {
 					# Try to write to the file, exit if we can't
 					PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to ' . $filenameDir . $filename);
 
-					my $logLine = $filename . '|' . GetFileHash($filenameDir . $filename) . '|' . time();
+					my $fileHash = GetFileHash($filenameDir . $filename);
+
+					my $logLine = $filename . '|' . $fileHash . '|' . time();
 					AppendFile('./log/added.log', $logLine);
+
+					if (GetConfig('replies') && $parentMessage) {
+						my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
+						AppendFile('./log/parent.log', $parentLogLine);
+					}
 
 					# Add the file to git
 					#system("git add \"$filenameDir$filename\"");
