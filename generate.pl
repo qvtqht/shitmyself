@@ -332,8 +332,8 @@ sub GetPageParams {
 			$queryParams{'where_clause'} = $whereClause;
 		}
 	} else {
-		$pageParams{'title'} = GetFile('./config/site_name');
-		$pageParams{'title_html'} = GetFile('./config/site_name');
+		$pageParams{'title'} = GetFile('./config/home_title');
+		$pageParams{'title_html'} = GetFile('./config/home_title');
 	}
 
 	$pageParams{'query_params'} = %queryParams;
@@ -348,7 +348,7 @@ sub GetIndexPage {
 
 	my $txtIndex = "";
 
-	my $siteName = GetFile('./config/site_name');
+	my $siteName = GetFile('./config/home_title');
 
 	my $htmlStart = GetPageHeader($siteName, $siteName);
 
@@ -487,8 +487,8 @@ sub GetReadPage {
 			@files = DBGetItemList(\%queryParams);
 		}
 	} else {
-		$title = GetFile('./config/site_name');
-		$titleHtml = GetFile('./config/site_name');
+		$title = GetFile('./config/home_title');
+		$titleHtml = GetFile('./config/home_title');
 
 		my %queryParams;
 		@files = DBGetItemList(\%queryParams);
@@ -498,7 +498,7 @@ sub GetReadPage {
 
 	# this will hold the title of the page
 	if (!$title) {
-		$title = GetFile('./config/site_name');
+		$title = GetFile('./config/home_title');
 	}
 	chomp $title;
 
