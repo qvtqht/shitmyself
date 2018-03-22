@@ -332,7 +332,7 @@ sub GetPageParams {
 			$queryParams{'where_clause'} = $whereClause;
 		}
 	} else {
-		$pageParams{'title'} = GetConfig('home_title');
+		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
 		$pageParams{'title_html'} = GetConfig('home_title');
 	}
 
@@ -348,9 +348,9 @@ sub GetIndexPage {
 
 	my $txtIndex = "";
 
-	my $siteName = GetConfig('home_title');
+	my $pageTitle = GetConfig('home_title');
 
-	my $htmlStart = GetPageHeader($siteName, $siteName);
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
 
 	$txtIndex .= $htmlStart;
 
@@ -487,7 +487,7 @@ sub GetReadPage {
 			@files = DBGetItemList(\%queryParams);
 		}
 	} else {
-		$title = GetConfig('home_title');
+		$title = GetConfig('home_title') . ' - ' . GetConfig('logo_text');
 		$titleHtml = GetConfig('home_title');
 
 		my %queryParams;
