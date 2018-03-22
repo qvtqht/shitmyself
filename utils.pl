@@ -127,12 +127,18 @@ sub GetFile {
 	my $length = shift || 1048576;
 	# default to reading a max of 1MB of the file. #scaling
 
-	if (open (my $file, "<", $fileName)) {
+	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
 		read ($file, my $return, $length);
 		return $return;
 	}
 
 	return;
+}
+
+sub GetConfig {
+	my $configName = shift;
+
+	return GetFile("config/$configName");
 }
 
 # Writes to a file
