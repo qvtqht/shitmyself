@@ -289,13 +289,15 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
-#	my $replyForm = GetTemplate('reply.template');
-#	my $replyTag = GetTemplate('replytag.template');
-#
-#	$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
-#	$replyForm =~ s/\$extraFields/$replyTag/g;
-#
-#	$txtIndex .= $replyForm;
+	if (GetConfig('replies')) {
+		my $replyForm = GetTemplate('reply.template');
+		my $replyTag = GetTemplate('replytag.template');
+
+		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
+		$replyForm =~ s/\$extraFields/$replyTag/g;
+
+		$txtIndex .= $replyForm;
+	}
 
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 

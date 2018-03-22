@@ -1,4 +1,4 @@
-<!-- forma.template -->
+<!-- reply.template -->
 <form action="./gracias.html" class=submit>
     <ul class=instructions>
         <li>Respond to above using the field below. Just like new post.</li>
@@ -13,4 +13,4 @@
         <li>To set username, submit public key. See manual for details.</li>
     </ul>
 </form>
-<!-- / forma.template -->
+<!-- / reply.template -->
