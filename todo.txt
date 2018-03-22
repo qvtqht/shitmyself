@@ -1,6 +1,16 @@
+Add support for linking sister sites
+	Add liste of sites in config(?)
+	Add menu item and page
+	List them all on page
+Add support for commenting on items
+	Add $replyCheckbox template
+	Add $replyCheckbox placeholder to forma
+	Add hooks to generate.pl
+	Add hooks for accepting replies as an extra argument
+
 Cookie auth via secret URL per public key, encrypted for that key
 Tag hooks for the admin (via cookie auth?)
 Tag ratings and enable/disable page
 Integrate Perl taint
 Use the full fingerprint for avatars for more colors
-Write manual
+When writing new html dir, make a list of all existing files, and remove them later unless they were overwritten
