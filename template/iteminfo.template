@@ -4,19 +4,6 @@ $itemTextPlain
 </div>
 
 <div class="plain">
-<h2>Recent Votes:</h2>
-<p>$votesSummary</p>
-<pre>$recentVotesTable</pre>
-<p>Votes may take a few minutes to register.</p>
-</div>
-
-<div class="plain">
-<h2>Signed Votes:</h2>
-<p>$signedVotesTable</p>
-<p>Confirmation takes place one cycle after verification of ballot.</p>
-</div>
-
-<div class="plain">
 <h2>SHA1 Hash:</h2>
 <p>$fileHash</p>
 </div>

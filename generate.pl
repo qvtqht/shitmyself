@@ -297,30 +297,35 @@ sub GetItemPage {
 #
 #	$txtIndex .= $replyForm;
 
-	#page info
-	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-	my $votesSummary = "";
-	foreach my $voteValue (keys %voteTotals) {
-		$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
-	}
-
-	if (!$votesSummary) {
-		$votesSummary = "(no votes yet)";
-	}
-
-	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
-	my $signedVotesTable = '(none)';
-
-	my $itemInfoTemplate = GetTemplate('iteminfo.template');
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 
+	my $itemInfoTemplate = GetTemplate('iteminfo.template');
+
 	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
-	$itemInfoTemplate =~ s/\$votesSummary/$votesSummary/;
-	$itemInfoTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
-	$itemInfoTemplate =~ s/\$signedVotesTable/$signedVotesTable/;
 	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
 	$txtIndex .= $itemInfoTemplate;
+
+	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
+	my $signedVotesTable = '';
+
+	if (defined($recentVotesTable) && $recentVotesTable) {
+		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+		my $votesSummary = "";
+		foreach my $voteValue (keys %voteTotals) {
+			$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
+		}
+
+		my $recentVotesTemplate = GetTemplate('item/recent_votes.template');
+		$recentVotesTemplate =~ s/\$votesSummary/$votesSummary/;
+		$recentVotesTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
+		$txtIndex .= $recentVotesTemplate;
+	}
+
+	if (defined($signedVotesTable) && $signedVotesTable) {
+		#todo
+		## $itemInfoTemplate =~ s/\$signedVotesTable/$signedVotesTable/;
+	}
 
 	# voting target fame
 	$txtIndex .= GetTemplate('voteframe.template');
