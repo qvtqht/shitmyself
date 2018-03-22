@@ -38,7 +38,7 @@ sub GetPageHeader {
 
 	state $logoText;
 	if (!defined($logoText)) {
-		$logoText = GetFile('config/logotext');
+		$logoText = GetConfig('logo_text');
 		if (!$logoText) {
 			#$logoText = random_emoji();
 			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
