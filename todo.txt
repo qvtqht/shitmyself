@@ -6,9 +6,9 @@ Add support for replying to items
 	Add $replyCheckbox template [x]
 	Add $replyCheckbox placeholder to forma [x]
 	Add hooks to generate.pl [x]
-	Add hooks for accepting replies as an extra argument
-		Parse out reply=
-		Include BOTH hash AND filename in the db field
+	Add hooks for accepting replies as an extra argument [x]
+		Parse out reply= [x]
+		Include BOTH hash AND filename in the db field [x]
 			Ignore items with field when generating main index
 			When generating item page, do a lookup
 				Add items when generating page
