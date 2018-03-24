@@ -183,7 +183,7 @@ sub ProcessAccessLog {
 						#todo check for valid char count too
 						if ($parentId =~ /[0-9a-fA-F]+/) {
 							$parentMessage = $parentId;
-							$message =~ s/\&parent=(.+)$//; # is this too much?
+							$message =~ s/\&(parent=.+)$/\n-- \n$1/; # is this too much?
 						}
 					}
 
