@@ -960,7 +960,15 @@ my @authors = DBGetAuthorList();
 foreach my $key (@authors) {
 	WriteLog ("$key");
 
-	mkdir("$HTMLDIR/author/$key");
+	WriteLog("$HTMLDIR/author/$key");
+
+	if (!-e "$HTMLDIR/author") {
+		mkdir("$HTMLDIR/author");
+	}
+
+	if (!-e "$HTMLDIR/author/$key") {
+		mkdir("$HTMLDIR/author/$key");
+	}
 
 	my $authorIndex = GetReadPage('author', $key);
 
