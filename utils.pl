@@ -138,14 +138,27 @@ sub GetFile {
 sub GetConfig {
 	my $configName = shift;
 
+	state %configLookup;
+
+	if ($configLookup{$configName}) {
+		print '.';
+		return $configLookup{$configName};
+	}
+
+
+
 	if (-e "config/$configName") {
-		return GetFile("config/$configName");
+		my $configValue = GetFile("config/$configName");
+		$configLookup{$configValue} = $configValue;
+
+		return $configValue;
 	} else {
 		if (-e "config/default/$configName") {
 			my $configValue = GetFile("config/default/$configName");
+			$configLookup{$configName} = $configValue;
 			PutConfig ($configName, $configValue);
 
-			return GetConfig($configName);
+			return $configValue;
 		}
 	}
 
