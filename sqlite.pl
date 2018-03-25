@@ -14,7 +14,7 @@ sub SqliteUnlinkDb {
 sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, long_key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin)");
-	SqliteQuery("CREATE TABLE item(id INTEGER PRIMARY KEY AUTOINCREMENT, file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
+	SqliteQuery("CREATE TABLE item(id INTEGER PRIMARY KEY AUTOINCREMENT, file_path UNIQUE, item_name, author_key, file_hash UNIQUE, parent_hash)");
 	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed DEFAULT 0)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, weight)");
 	SqliteQuery("CREATE TABLE added_time(file_path, file_hash, add_timestamp);");
@@ -148,20 +148,22 @@ sub DBAddItem {
 	my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
+	my $parentHash = shift;
 
 	$filePath = SqliteEscape($filePath);
 	$itemName = SqliteEscape($itemName);
 	$fileHash = SqliteEscape($fileHash);
+	$parentHash = SqliteEscape($parentHash);
 
 	if ($authorKey) {
 		SqliteQuery(
-			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash)" .
-				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash');"
+			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash)" .
+				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash');"
 		);
 	} else {
 		SqliteQuery(
-			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash)" .
-				" VALUES('$filePath', '$itemName', NULL, '$fileHash');"
+			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash)" .
+				" VALUES('$filePath', '$itemName', NULL, '$fileHash', '$parentHash');"
 		);
 	}
 }
@@ -224,13 +226,15 @@ sub DBGetItemList {
 	my $query;
 	if (defined ($params{'where_clause'})) {
 		my $whereClause = $params{'where_clause'};
-		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause;";
+		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause";
 	} else {
 		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item";
 	}
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
 	}
+
+	print "$query\n";
 
 	my @results = split("\n", SqliteQuery($query));
 
