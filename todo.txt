@@ -5,9 +5,9 @@ Add support for replying to items
 	Add hooks for accepting replies as an extra argument [x]
 		Parse out reply= [x]
 		Include BOTH hash AND filename in the db field [x]
-			Ignore items with field when generating main index
-			When generating item page, do a lookup
-				Add items when generating page
+			Ignore items with field when generating main index [x]
+			When generating item page, do a lookup [x]
+				Add items when generating page [x]
 	What to do about orphaned replies?
 		Separate page?
 	Add CSRF token to reply form
