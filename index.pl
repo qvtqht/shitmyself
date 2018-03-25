@@ -100,12 +100,17 @@ sub IndexFile {
 
 		my $itemName = TrimPath($file);
 
+		my $parentHash = '';
+		if ($message =~ m/parent=(.+)/) {
+			$parentHash = $1;
+		}
+
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash);
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash);
 
 			PutFile("./cache/message/$gitHash.message", $message);
 		} else {
-			DBAddItem ($file, $itemName, '', $gitHash);
+			DBAddItem ($file, $itemName, '', $gitHash, $parentHash);
 		}
 	}
 }
