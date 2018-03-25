@@ -102,7 +102,9 @@ sub IndexFile {
 
 		my $parentHash = '';
 		if ($message =~ m/parent=(.+)/) {
-			$parentHash = $1;
+			if (IsSha1($1)) {
+				$parentHash = $1;
+			}
 		}
 
 		if ($isSigned) {
