@@ -230,7 +230,10 @@ sub trim {
 
 	if (defined($s)) {
 		$s =~ s/^\s+|\s+$//g;
-		return $s
+		$s =~ s/^\n+|\n+$//g;
+		chomp $s;
+
+		return $s;
 	}
 };
 
@@ -411,8 +414,8 @@ sub GpgParse {
 
 	# If there is an encrypted message header...
 	if (substr($txt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
-		print "gpg --list-only --status-fd 1 \"$filePath\"";
-		my $gpg_result = `gpg --list-only --status-fd 1 "$filePath"`;
+		print "gpg --batch --list-only --status-fd 1 \"$filePath\"";
+		my $gpg_result = `gpg --batch --list-only --status-fd 1 "$filePath"`;
 
 		foreach (split ("\n", $gpg_result)) {
 			chomp;

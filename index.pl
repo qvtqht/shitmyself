@@ -102,9 +102,6 @@ sub IndexFile {
 
 		my $parentHash = '';
 
-		chomp $message;
-		$message = trim($message);
-
 		if ($message =~ m/parent=(.+)/) {
 			if (IsSha1($1)) {
 				$parentHash = $1;
