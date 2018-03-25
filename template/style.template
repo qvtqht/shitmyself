@@ -64,6 +64,8 @@ h1 {
 	color: $secondaryColor;
 	margin-bottom: 0pt;
 	padding: 3pt;
+	border-style: 5pt solid $primaryColor;
+	border-radius: 5pt 5pt 0pt 0pt;
 }
 h2.menu {
 	margin-top: 0pt;
@@ -71,6 +73,8 @@ h2.menu {
 	background-color: $primaryColor;
 	color: $secondaryColor;
 	text-align: right;
+	border-style: 5pt solid $primaryColor;
+	border-radius: 0pt 0pt 5pt 5pt;
 }
 h2.menu a {
 	color: $secondaryColor;
