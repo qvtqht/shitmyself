@@ -2,5 +2,6 @@
 <h2>Recent Votes:</h2>
 <p>$votesSummary</p>
 <pre>$recentVotesTable</pre>
-<p>Votes may take a few minutes to register.</p>
+<p>Votes are registered on every update.</p>
+<p>Votes without a signature are retained for $voteRetention.</p>
 </div>

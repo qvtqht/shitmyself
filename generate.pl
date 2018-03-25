@@ -339,10 +339,13 @@ sub GetItemPage {
 		foreach my $voteValue (keys %voteTotals) {
 			$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
 		}
+		my $voteRetention = GetConfig('vote_limit');
+		$voteRetention = ($voteRetention / 86400) . " days";
 
 		my $recentVotesTemplate = GetTemplate('item/recent_votes.template');
 		$recentVotesTemplate =~ s/\$votesSummary/$votesSummary/;
 		$recentVotesTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
+		$recentVotesTemplate =~ s/\$voteRetention/$voteRetention/;
 		$txtIndex .= $recentVotesTemplate;
 	}
 
