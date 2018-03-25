@@ -809,7 +809,7 @@ sub MakeStaticPages {
 
 
 	# Ok page
-	my $okPage = GetTemplate('ok.template');
+	my $okPage = GetTemplate('actionvote.template');
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
