@@ -142,7 +142,6 @@ sub GetConfig {
 	state %configLookup;
 
 	if ($configLookup{$configName}) {
-		print '.';
 		return $configLookup{$configName};
 	}
 
