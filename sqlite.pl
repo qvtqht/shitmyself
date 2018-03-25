@@ -106,6 +106,17 @@ sub DBGetItemCount {
 	return $itemCount;
 }
 
+sub DBGetItemReplies {
+	my $itemHash = shift;
+	$itemHash = SqliteEscape($itemHash);
+
+	my %queryParams;
+	$queryParams{'where_clause'} = "parent_hash = '$itemHash'";
+
+	return DBGetItemList(\%queryParams);
+
+}
+
 sub SqliteEscape {
 	my $text = shift;
 
