@@ -94,7 +94,14 @@ sub SqliteGetValue {
 }
 
 sub DBGetItemCount {
-	my $itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
+	my $whereClause = shift;
+
+	my $itemCount;
+	if ($whereClause) {
+		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
+	} else {
+		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item WHERE $whereClause");
+	}
 
 	return $itemCount;
 }
