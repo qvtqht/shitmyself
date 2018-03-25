@@ -34,13 +34,20 @@ sub MakeVoteIndex {
 
 	my $voteLog = GetFile("log/votes.log");
 
+	#This is how long anonymous votes are counted for;
+	my $voteLimit = GetConfig('vote_limit');
+
+	my $currentTime = time();
+
 	if (defined($voteLog) && $voteLog) {
 		my @voteRecord = split("\n", GetFile("log/votes.log"));
 
 		foreach (@voteRecord) {
 			my ($fileHash, $ballotTime, $voteValue) = split('\|', $_);
 
-			DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
+			if ($currentTime - $ballotTime <= $voteLimit) {
+				DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
+			}
 		}
 	}
 }
