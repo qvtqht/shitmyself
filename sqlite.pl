@@ -112,6 +112,7 @@ sub DBGetItemReplies {
 
 	my %queryParams;
 	$queryParams{'where_clause'} = "parent_hash = '$itemHash'";
+	$queryParams{'order_clause'} = "ORDER BY item_name"; #todo this should be by timestamp
 
 	return DBGetItemList(\%queryParams);
 
@@ -250,6 +251,9 @@ sub DBGetItemList {
 	}
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
+	}
+	if (defined ($params{'order_clause'})) {
+		$query .= " " . $params{'order_clause'};
 	}
 
 	my @results = split("\n", SqliteQuery($query));
