@@ -3,7 +3,7 @@ Add support for replying to items
 	Add $replyCheckbox placeholder to forma [x]
 	Add hooks to generate.pl [x]
 	Add hooks for accepting replies as an extra argument [x]
-		Parse out reply= [x]
+		Parse out parent= [x]
 		Include BOTH hash AND filename in the db field [x]
 			Ignore items with field when generating main index [x]
 			When generating item page, do a lookup [x]
@@ -11,6 +11,7 @@ Add support for replying to items
 	What to do about orphaned replies?
 		Separate page?
 	Add CSRF token to reply form
+	Remove duplicate parent= footer
 Make adding new views easier
 Add support for linking sister sites
 	Add liste of sites in config(?)

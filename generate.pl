@@ -18,7 +18,7 @@ require './sqlite.pl';
 my $HTMLDIR = "html";
 
 my $PAGE_LIMIT = 25;
-my $PAGE_THRESHOLD = 5;
+#my $PAGE_THRESHOLD = 5;
 
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
@@ -749,9 +749,10 @@ sub GetPageLinks {
 
 	$pageLinks = "";
 
-	my $lastPageNum = floor($itemCount / $PAGE_LIMIT);
+	my $lastPageNum = ceil($itemCount / $PAGE_LIMIT);
 
-	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+	#if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+	if ($itemCount > $PAGE_LIMIT) {
 		for (my $i = 0; $i < $lastPageNum; $i++) {
 			my $pageLinkTemplate = GetPageLink($i);
 
@@ -929,9 +930,11 @@ MakeClonePage();
 
 {
 	my $itemCount = DBGetItemCount("parent_hash = ''");
-	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+
+	#if ($itemCount > 0) {
 		my $i;
 		my $lastPage = ceil($itemCount / $PAGE_LIMIT);
+
 		for ($i = 0; $i < $lastPage; $i++) {
 			my %queryParams;
 			my $offset = $i * $PAGE_LIMIT;
@@ -948,7 +951,7 @@ MakeClonePage();
 				PutHtmlFile("./html/index.html", $testIndex);
 			}
 		}
-	}
+	#}
 }
 
 #This has been commented out because it interferes with symlinked html dir
