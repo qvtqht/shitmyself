@@ -227,7 +227,11 @@ sub AppendFile {
 #Trims a string
 sub trim {
 	my $s = shift;
-	$s =~ s/^\s+|\s+$//g; return $s
+
+	if (defined($s)) {
+		$s =~ s/^\s+|\s+$//g;
+		return $s
+	}
 };
 
 sub GetFileSizeHtml {
@@ -497,7 +501,7 @@ sub GpgParse {
 			print "gpg --decrypt \"$filePath\"\n";
 			$message = `gpg --decrypt "$filePath"`;
 
-			$message = trim();
+			$message = trim($message);
 
 			$isSigned = 1;
 
