@@ -23,9 +23,10 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
-if (!-e "html/txt") {
-	system('ln -s "../txt" html/txt');
-}
+# this is not needed, because we are not clearing out the html dir
+#if (!-e "html/txt") {
+#	system('ln -s "../txt" html/txt');
+#}
 
 ####################################################################################
 
