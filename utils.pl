@@ -342,6 +342,16 @@ sub HtmlEscape {
 	return $text;
 }
 
+sub IsSha1 {
+	my $string = shift;
+
+	if ($string =~ m/[a-fA-F0-9]{40}/) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 sub GpgParse {
 	# GpgParse
 	# $filePath = path to file containing the text
