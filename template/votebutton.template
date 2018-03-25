@@ -1,1 +1,1 @@
-<a href="/action/vote.html?/$fileHash/$ballotTime/$voteValue/$checksum" class="$class">$voteValue</a>
+<a href="/action/vote.html?/$fileHash/$ballotTime/$voteValue/$checksum" target=voterFrame class="$class">$voteValue</a>
