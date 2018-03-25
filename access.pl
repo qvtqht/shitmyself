@@ -260,7 +260,7 @@ sub ProcessAccessLog {
 			# Put the arguments into an array
 			my @actionArgs = split("/", $file);
 
-			if ($actionArgs[2] eq 'vote') {
+			if ($actionArgs[2] eq 'vote.html?') {
 				my $voteFile = $actionArgs[3];
 				my $ballotTime = $actionArgs[4];
 				my $voteValue = $actionArgs[5];

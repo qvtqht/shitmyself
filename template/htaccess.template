@@ -6,5 +6,5 @@
 
 AddDefaultCharset utf-8
 
-RewriteEngine On
-RewriteRule ^action/.+ /ok.html
+#RewriteEngine On
+#RewriteRule ^action/.+ /ok.html

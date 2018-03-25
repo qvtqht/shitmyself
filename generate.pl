@@ -812,7 +812,8 @@ sub MakeStaticPages {
 	my $okPage = GetTemplate('ok.template');
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
-	PutHtmlFile("$HTMLDIR/ok.html", $okPage);
+	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
+	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
 
 
 	# Manual page
