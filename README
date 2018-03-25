@@ -58,3 +58,4 @@ the voter id should (debatable) be generated once per page, but is currently gen
 the html/txt/ symlink has to be created manually for now.
 on firefox esr with noscript enabled the iframe doesn't appear, so vote links open in new window/tab
 when replying anonymously, footer shows up twice if you leave it in the textarea
+"1 replies" is displayed instead of "1 reply", but wgaf?
