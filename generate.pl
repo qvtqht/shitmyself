@@ -289,7 +289,9 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
-	if (GetConfig('replies')) {
+	if (GetConfig('replies') == 1) { #todo fix this hack
+		$txtIndex .= GetConfig('replies');
+
 		my $replyForm = GetTemplate('reply.template');
 		my $replyTag = GetTemplate('replytag.template');
 
