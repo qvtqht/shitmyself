@@ -355,7 +355,7 @@ sub GetItemPage {
 	}
 
 	# voting target fame
-	$txtIndex .= GetTemplate('voteframe.template');
+	#$txtIndex .= GetTemplate('voteframe.template');
 
 	# end page
 	$txtIndex .= GetPageFooter();
@@ -505,7 +505,7 @@ sub GetIndexPage {
 		}
 	}
 
-	$txtIndex .= GetTemplate('voteframe.template');
+	#$txtIndex .= GetTemplate('voteframe.template');
 
 	$txtIndex .= GetPageLinks($currentPageNumber);
 
@@ -663,7 +663,7 @@ sub GetReadPage {
 		}
 	}
 
-	$txtIndex .= GetTemplate('voteframe.template');
+	#$txtIndex .= GetTemplate('voteframe.template');
 
 	# Add javascript warning to the bottom of the page
 	#$txtIndex .= GetTemplate("jswarning.template");
