@@ -150,13 +150,13 @@ sub GetConfig {
 	if (-e "config/$configName") {
 		my $configValue = GetFile("config/$configName");
 		$configLookup{$configValue} = $configValue;
-
++
 		return $configValue;
 	} else {
 		if (-e "config/default/$configName") {
 			my $configValue = GetFile("config/default/$configName");
 			$configLookup{$configName} = $configValue;
-			PutConfig ($configName, $configValue);
+			#PutConfig ($configName, $configValue);
 
 			return $configValue;
 		}
