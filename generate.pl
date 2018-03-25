@@ -307,7 +307,8 @@ sub GetItemPage {
 		}
 	}
 
-	if (GetConfig('replies') == 1 && $file{'author_key'}) { #todo fix this hack
+	# todo fix the == hack
+	if (GetConfig('replies') == 1 && ($file{'author_key'} || GetConfig('replies_anon'))) {
 		my $replyForm = GetTemplate('reply.template');
 		my $replyTag = GetTemplate('replytag.template');
 
