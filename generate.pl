@@ -976,17 +976,18 @@ foreach my $key (@authors) {
 	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
 }
 
-my %queryParams;
-my @files = DBGetItemList(\%queryParams);
+{
+	my %queryParams;
+	my @files = DBGetItemList(\%queryParams);
 
-foreach my $file(@files) {
-	my $fileName = TrimPath($file->{'file_path'});
+	foreach my $file(@files) {
+		my $fileName = TrimPath($file->{'file_path'});
 
-	my $fileIndex = GetItemPage($file);
+		my $fileIndex = GetItemPage($file);
 
-	PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
+		PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
+	}
 }
-
 
 MakeStaticPages();
 
@@ -1025,25 +1026,26 @@ sub MakeClonePage {
 
 MakeClonePage();
 
+{
+	my $itemCount = DBGetItemCount("parent_hash = ''");
+	if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+		my $i;
+		my $lastPage = ceil($itemCount / $PAGE_LIMIT);
+		for ($i = 0; $i < $lastPage; $i++) {
+			my %queryParams;
+			my $offset = $i * $PAGE_LIMIT;
 
-my $itemCount = DBGetItemCount("parent_hash = ''");
-if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
-	my $i;
-	my $lastPage = ceil($itemCount / $PAGE_LIMIT);
-	for ($i = 0; $i < $lastPage; $i++) {
-		my %queryParams;
-		my $offset = $i * $PAGE_LIMIT;
+			$queryParams{'where_clause'} = "parent_hash = ''";
+			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 
-		$queryParams{'where_clause'} = "parent_hash = ''";
-		$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
+			my @ft = DBGetItemList(\%queryParams);
+			my $testIndex = GetIndexPage(\@ft, $i);
 
-		my @ft = DBGetItemList(\%queryParams);
-		my $testIndex = GetIndexPage(\@ft, $i);
-
-		if ($i > 0) {
-			PutHtmlFile("./html/index$i.html", $testIndex);
-		} else {
-			PutHtmlFile("./html/index.html", $testIndex);
+			if ($i > 0) {
+				PutHtmlFile("./html/index$i.html", $testIndex);
+			} else {
+				PutHtmlFile("./html/index.html", $testIndex);
+			}
 		}
 	}
 }
