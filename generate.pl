@@ -516,6 +516,7 @@ sub GetReadPage {
 		$titleHtml = GetConfig('home_title');
 
 		my %queryParams;
+
 		@files = DBGetItemList(\%queryParams);
 	}
 
@@ -837,7 +838,7 @@ sub GetPageLinks {
 		return $pageLinksFinal;
 	}
 
-	my $itemCount = DBGetItemCount();
+	my $itemCount = DBGetItemCount("parent_hash = ''");
 
 	$pageLinks = "";
 
@@ -1025,17 +1026,18 @@ sub MakeClonePage {
 MakeClonePage();
 
 
-my $itemCount = DBGetItemCount();
+my $itemCount = DBGetItemCount("parent_hash = ''");
 if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
 	my $i;
 	my $lastPage = ceil($itemCount / $PAGE_LIMIT);
 	for ($i = 0; $i < $lastPage; $i++) {
-		my %qp;
+		my %queryParams;
 		my $offset = $i * $PAGE_LIMIT;
 
-		$qp{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
+		$queryParams{'where_clause'} = "parent_hash = ''";
+		$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 
-		my @ft = DBGetItemList(\%qp);
+		my @ft = DBGetItemList(\%queryParams);
 		my $testIndex = GetIndexPage(\@ft, $i);
 
 		if ($i > 0) {
