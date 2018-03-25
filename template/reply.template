@@ -1,11 +1,11 @@
 <!-- reply.template -->
-<form action="./gracias.html" class=submit>
+<form action="./gracias.html" class=reply>
     <!--<ul class=instructions>-->
         <!--<li>Respond to above using the field below. Just like new post.</li>-->
         <!--<li>There's no need to register if you want to write something.</li>-->
     <!--</ul>-->
 
-    <textarea class=txtarea id=comment rows=4 cols=60 name=comment maxlength=8192></textarea><br>
+    <textarea class=txtarea id=comment rows=4 cols=60 name=comment maxlength=8192>$prefillText</textarea><br>
     <input class=btn type=submit value="Post Reply" onClick="">
     $extraFields
     <!--<ul class=instructions>-->

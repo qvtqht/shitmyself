@@ -24,16 +24,18 @@ sub SqliteMakeTables() {
 #	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
 	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value);");
+
+	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
 }
 
 sub SqliteQuery {
 	my $query = shift;
 	chomp $query;
 
-	#print "$query\n";
+	print "$query\n";
 	
 	my $results = `sqlite3 $SqliteDbName "$query"`;
-	
+
 	return $results;
 }
 
@@ -47,8 +49,6 @@ sub DBGetVotesTable {
 		$query = "SELECT file_hash, ballot_time, vote_value FROM vote;";
 	}
 
-#	print $query;
-#	die;
 	my $result = SqliteQuery($query);
 
 	return $result;
@@ -244,15 +244,13 @@ sub DBGetItemList {
 	my $query;
 	if (defined ($params{'where_clause'})) {
 		my $whereClause = $params{'where_clause'};
-		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item WHERE $whereClause";
+		$query = "SELECT item.file_path, item.item_name, item.file_hash, item.author_key, child_count.child_count FROM item LEFT JOIN child_count ON ( item.id = child_count.id) WHERE $whereClause";
 	} else {
-		$query = "SELECT item.file_path, item.item_name, item.file_hash, author_key FROM item";
+		$query = "SELECT item.file_path, item.item_name, item.file_hash, item.author_key, child_count.child_count FROM item LEFT JOIN child_count ON ( item.id = child_count.id)";
 	}
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
 	}
-
-	print "$query\n";
 
 	my @results = split("\n", SqliteQuery($query));
 
@@ -261,13 +259,14 @@ sub DBGetItemList {
 	foreach (@results) {
 		chomp;
 
-		my ($file_path, $item_name, $file_hash, $author_key) = split(/\|/, $_);
+		my ($file_path, $item_name, $file_hash, $author_key, $child_count) = split(/\|/, $_);
 		my $row = {};
 
 		$row->{'file_path'} = $file_path;
 		$row->{'item_name'} = $item_name;
 		$row->{'file_hash'} = $file_hash;
 		$row->{'author_key'} = $author_key;
+		$row->{'child_count'} = $child_count;
 
 		push @return, $row;
 	}

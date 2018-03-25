@@ -497,6 +497,8 @@ sub GpgParse {
 			print "gpg --decrypt \"$filePath\"\n";
 			$message = `gpg --decrypt "$filePath"`;
 
+			$message = trim();
+
 			$isSigned = 1;
 
 			#$fingerprint = GetGpgFingerprint($filePath);

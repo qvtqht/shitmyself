@@ -87,7 +87,6 @@ sub GetPageHeader {
 
 	my $menuTemplate = "";
 	$menuTemplate .= GetMenuItem("/", "read");
-	#$menuTemplate .= GetMenuItem("/vote.html", "vote");
 	$menuTemplate .= GetMenuItem("/write.html", "write");
 	$menuTemplate .= GetMenuItem("/manual.html", "manual");
 
@@ -238,6 +237,7 @@ sub GetItemTemplate {
 		my $itemName = TrimPath($file{'file_path'});
 
 		my $ballotTime = time();
+		my $replyCount = $file{'child_count'};
 
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -246,6 +246,12 @@ sub GetItemTemplate {
 		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+		if ($replyCount) {
+			$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+		} else {
+			$itemTemplate =~ s/\$replyCount//g;
+		}
 
 		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
@@ -289,12 +295,27 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
-	if (GetConfig('replies') == 1) { #todo fix this hack
+	if ($file{'child_count'}) {
+		my @itemReplies = DBGetItemReplies($file{'file_hash'});
+
+		$txtIndex .= "<hr>";
+
+		foreach my $replyItem (@itemReplies) {
+			my $replyTemplate = GetItemTemplate($replyItem);
+
+			$txtIndex .= $replyTemplate;
+		}
+	}
+
+	if (GetConfig('replies') == 1 && $file{'author_key'}) { #todo fix this hack
 		my $replyForm = GetTemplate('reply.template');
 		my $replyTag = GetTemplate('replytag.template');
 
+		my $prefillText = "\n\n-- \nparent=" . $file{'file_hash'};
+
 		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
 		$replyForm =~ s/\$extraFields/$replyTag/g;
+		$replyForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $replyForm;
 	}
@@ -458,6 +479,7 @@ sub GetIndexPage {
 			my $fileHash = GetFileHash($file);
 			my $itemName = TrimPath($file);
 			my $ballotTime = time();
+			my $replyCount = $row->{'child_count'};
 
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -466,6 +488,11 @@ sub GetIndexPage {
 			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+			if ($replyCount) {
+				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+			} else {
+				$itemTemplate =~ s/\$replyCount//g;
+			}
 
 			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
@@ -512,12 +539,13 @@ sub GetReadPage {
 			@files = DBGetItemList(\%queryParams);
 		}
 	} else {
-		$title = GetConfig('home_title') . ' - ' . GetConfig('logo_text');
-		$titleHtml = GetConfig('home_title');
-
-		my %queryParams;
-
-		@files = DBGetItemList(\%queryParams);
+		return; #this code is deprecated
+#		$title = GetConfig('home_title') . ' - ' . GetConfig('logo_text');
+#		$titleHtml = GetConfig('home_title');
+#
+#		my %queryParams;
+#
+#		@files = DBGetItemList(\%queryParams);
 	}
 
 	my $txtIndex = "";
@@ -608,6 +636,7 @@ sub GetReadPage {
 			my $fileHash = GetFileHash($file);
 			my $itemName = TrimPath($file);
 			my $ballotTime = time();
+			my $replyCount = $row->{'child_count'};
 
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -616,6 +645,12 @@ sub GetReadPage {
 			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+			if ($replyCount) {
+				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+			} else {
+				$itemTemplate =~ s/\$replyCount//g;
+			}
 
 			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
@@ -628,135 +663,6 @@ sub GetReadPage {
 
 	# Add javascript warning to the bottom of the page
 	#$txtIndex .= GetTemplate("jswarning.template");
-
-	# Close html
-	$txtIndex .= GetPageFooter();
-
-	return $txtIndex;
-}
-
-sub GetVotePage {
-	my $title;
-	my $titleHtml;
-
-	my @files;
-
-	$title = 'Voting Booth';
-	$titleHtml = 'Voting Booth';
-
-	#todo fix this hack where order is in the where clause
-	my $whereClause = "id IN (SELECT id FROM item ORDER BY RANDOM() LIMIT 1) ORDER BY RANDOM();";
-	my %queryParams;
-	$queryParams{'where_clause'} = $whereClause;
-
-	@files = DBGetItemList(\%queryParams);
-
-	my $txtIndex = "";
-
-	my $htmlStart = GetPageHeader($title, $titleHtml);
-
-	$txtIndex .= $htmlStart;
-
-	$txtIndex .= GetTemplate('maincontent.template');
-
-	my $voteIntroTemplate = GetTemplate('voteintro.template');
-
-	#Add vote status frame
-	my $voteFrameTemplate = GetTemplate("voteframe.template");
-
-	$voteIntroTemplate =~ s/\$voteFrame/$voteFrameTemplate/g;
-
-	$txtIndex .= $voteIntroTemplate;
-
-	foreach my $row (@files) {
-		my $file = $row->{'file_path'};
-		if (-e $file) {
-			my $gitHash = $row->{'file_hash'};
-
-			my $gpgKey = $row->{'author_key'};
-
-			my $isSigned;
-			if ($gpgKey) {
-				$isSigned = 1;
-			} else {
-				$isSigned = 0;
-			}
-
-			my $alias;
-
-			my $isAdmin = 0;
-
-			my $message;
-			if ($gpgKey) {
-				$message = GetFile("./cache/message/$gitHash.message");
-			} else {
-				$message = GetFile($file);
-			}
-
-			$message = HtmlEscape($message);
-			$message =~ s/\n/<br>\n/g;
-
-			if ($isSigned && $gpgKey eq GetAdminKey()) {
-				$isAdmin = 1;
-			}
-
-			my $signedCss = "";
-			if ($isSigned) {
-				if ($isAdmin) {
-					$signedCss = "signed admin";
-				} else {
-					$signedCss = "signed";
-				}
-			}
-
-			# todo $alias = GetAlias($gpgKey);
-
-			$alias = HtmlEscape($alias);
-
-			my $itemTemplate = GetTemplate("itemvote.template");
-
-			my $itemClass = "txt $signedCss";
-
-			my $authorUrl;
-			my $authorAvatar;
-			my $authorLink;
-
-			if ($gpgKey) {
-				$authorUrl = "/author/$gpgKey/";
-				$authorAvatar = GetAvatar($gpgKey);
-
-				$authorLink = GetTemplate('authorlink.template');
-
-				$authorLink =~ s/\$authorUrl/$authorUrl/g;
-				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-			} else {
-				$authorLink = "";
-			}
-			my $permalinkTxt = $file;
-			$permalinkTxt =~ s/^\.//;
-
-			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
-
-			my $itemText = $message;
-			my $fileHash = GetFileHash($file);
-			my $itemName = TrimPath($file);
-
-			my $ballotTime = time();
-
-			$itemTemplate =~ s/\$itemClass/$itemClass/g;
-			$itemTemplate =~ s/\$authorLink/$authorLink/g;
-			$itemTemplate =~ s/\$itemName/$itemName/g;
-			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-			$itemTemplate =~ s/\$itemText/$itemText/g;
-			$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
-
-			$txtIndex .= $itemTemplate;
-		}
-	}
 
 	# Close html
 	$txtIndex .= GetPageFooter();
@@ -939,7 +845,7 @@ sub MakeStaticPages {
 #todo this means occasional 404 errors, needs better solution
 if ($HTMLDIR) {
 	#system("rm -rfv $HTMLDIR/*");
-	system("rm -rf $HTMLDIR/*");
+	#system("rm -rf $HTMLDIR/*");
 }
 
 WriteLog ("GetReadPage()...");
@@ -947,12 +853,6 @@ WriteLog ("GetReadPage()...");
 #my $indexText = GetReadPage();
 
 #PutHtmlFile("$HTMLDIR/index.html", $indexText);
-
-WriteLog ("GetVotePage()...");
-
-my $voteIndexText = GetVotePage();
-
-PutHtmlFile("$HTMLDIR/vote.html", $voteIndexText);
 
 WriteLog ("Authors...");
 

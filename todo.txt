@@ -10,6 +10,7 @@ Add support for replying to items
 				Add items when generating page
 	What to do about orphaned replies?
 		Separate page?
+	Add CSRF token to reply form
 Make adding new views easier
 Add support for linking sister sites
 	Add liste of sites in config(?)
