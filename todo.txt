@@ -1,8 +1,3 @@
-Add support for linking sister sites
-	Add liste of sites in config(?)
-	Add page
-	List them all on page
-	Add menu item for page
 Add support for replying to items
 	Add $replyCheckbox template [x]
 	Add $replyCheckbox placeholder to forma [x]
@@ -15,6 +10,12 @@ Add support for replying to items
 				Add items when generating page
 	What to do about orphaned replies?
 		Separate page?
+Make adding new views easier
+Add support for linking sister sites
+	Add liste of sites in config(?)
+	Add page
+	List them all on page
+	Add menu item for page
 Replace GetFile with GetConfig when config files are involved [x]
 	Add config/default/ tree
 	Add generation of default values to GetConfig
