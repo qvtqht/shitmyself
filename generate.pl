@@ -140,6 +140,8 @@ sub GetVoterTemplate {
 
 			my $class = "pos";
 			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'troll' || $_ eq 'abuse') {
+				#todo make this not hard-coded but to match to config/flags
+
 				$class = "neg";
 			}
 
@@ -208,7 +210,7 @@ sub GetItemTemplate {
 
 		$alias = HtmlEscape($alias);
 
-		my $itemTemplate = GetTemplate("itemvote.template");
+		my $itemTemplate = GetTemplate("itemvoteex.template");
 
 		my $itemClass = "txt $signedCss";
 
@@ -261,6 +263,8 @@ sub GetItemTemplate {
 }
 
 sub GetItemPage {
+	#returns html for individual item page
+
 	my %file = %{shift @_};
 
 	my $txtIndex = "";

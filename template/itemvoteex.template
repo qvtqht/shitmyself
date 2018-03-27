@@ -1,0 +1,8 @@
+<div class="$itemClass">
+<a href="$permalinkHtml">$itemName</a> <a href="$permalinkTxt">.txt</a>
+$authorLink
+$replyCount
+<br>
+$itemText<br>
+<span class=voter>Vote: $voterButtons</span>
+</div><hr>

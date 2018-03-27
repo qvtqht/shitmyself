@@ -1,17 +1,3 @@
-Add support for replying to items
-	Add $replyCheckbox template [x]
-	Add $replyCheckbox placeholder to forma [x]
-	Add hooks to generate.pl [x]
-	Add hooks for accepting replies as an extra argument [x]
-		Parse out parent= [x]
-		Include BOTH hash AND filename in the db field [x]
-			Ignore items with field when generating main index [x]
-			When generating item page, do a lookup [x]
-				Add items when generating page [x]
-	What to do about orphaned replies?
-		Separate page?
-	Add CSRF token to reply form
-	Remove duplicate parent= footer
 Make adding new views easier
 Add support for linking sister sites
 	Add liste of sites in config(?)
@@ -31,3 +17,5 @@ Tag ratings and enable/disable page
 Integrate Perl taint
 Use the full fingerprint for avatars for more colors
 When writing new html dir, make a list of all existing files, and remove from hash when written to, then delete all others remaining in hash
+Add CSRF token to reply form
+Remove duplicate parent= footer
