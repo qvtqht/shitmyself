@@ -33,7 +33,7 @@ my $TXTDIR = "$SCRIPTDIR/txt/";
 #         CustomLog /foo/bar/log/access.log combined
 
 my $LOGFILE = "$SCRIPTDIR/log/lighttpd.log";
-print "\$LOGFILE=$LOGFILE\n";
+WriteLog( "\$LOGFILE=$LOGFILE\n");
 
 
 ##################
@@ -75,7 +75,7 @@ sub ProcessAccessLog {
 		close (LOGFILELOG);
 	}
 
-	print "Processing $logfile...\n";
+	WriteLog ("Processing $logfile...\n");
 
 	# The log file should always be there
 	open(LOGFILE, $logfile) or die("Could not open log file.");
@@ -163,7 +163,7 @@ sub ProcessAccessLog {
 		if ($submitPrefix) {
 			# Look for it in the beginning of the requested URL
 			if (substr($file, 0, length($submitPrefix)) eq $submitPrefix) {
-				print "Found a message...\n";
+				WriteLog ("Found a message...\n");
 
 				# The message comes after the prefix, so just trim it
 				my $message = (substr($file, length($submitPrefix)));
@@ -221,7 +221,7 @@ sub ProcessAccessLog {
 						}
 						$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
 
-						print "I'm going to put $filename into $filenameDir\n";
+						WriteLog ("I'm going to put $filename into $filenameDir\n");
 #					}
 
 					# Make sure we don't clobber an existing file

@@ -203,9 +203,13 @@ sub PutHtmlFile {
 		if (!defined($stripNonAscii)) {
 			$stripNonAscii = 0;
 		}
+		if ($stripNonAscii != 1) {
+			$stripNonAscii = 0;
+		}
 	}
 
-	if ($stripNonAscii) {
+	if ($stripNonAscii == 1) {
+		WriteLog( '$stripNonAscii == 1');
 		$content =~ s/[^[:ascii:]]//g;
 	}
 
@@ -413,7 +417,7 @@ sub GpgParse {
 
 	# If there is an encrypted message header...
 	if (substr($txt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
-		print "gpg --batch --list-only --status-fd 1 \"$filePath\"";
+		WriteLog( "gpg --batch --list-only --status-fd 1 \"$filePath\"");
 		my $gpg_result = `gpg --batch --list-only --status-fd 1 "$filePath"`;
 
 		foreach (split ("\n", $gpg_result)) {
@@ -442,7 +446,7 @@ sub GpgParse {
 
 	# If there is a GPG pubkey header...
 	if (substr($txt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
-		print "gpg --keyid-format LONG \"$filePath\"";
+		WriteLog( "gpg --keyid-format LONG \"$filePath\"");
 		my $gpg_result = `gpg --keyid-format LONG "$filePath"`;
 
 		foreach (split ("\n", $gpg_result)) {
@@ -472,7 +476,7 @@ sub GpgParse {
 	if (substr($txt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 		# Verify the file by using command-line gpg
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
-		print "gpg --verify --status-fd 1 \"$filePath\"\n";
+		WriteLog( "gpg --verify --status-fd 1 \"$filePath\"\n");
 		my $gpg_result = `gpg --verify --status-fd 1 "$filePath"`;
 
 		my $key_id_prefix;
@@ -500,7 +504,7 @@ sub GpgParse {
 			$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 			$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
 
-			print "gpg --decrypt \"$filePath\"\n";
+			WriteLog( "gpg --decrypt \"$filePath\"\n");
 			$message = `gpg --decrypt "$filePath"`;
 
 			$message = trim($message);
@@ -549,6 +553,10 @@ sub WriteLog {
 	my $timestamp = time();
 
 	AppendFile("log/log.log", $timestamp . " " . $text);
+
+	if (GetConfig("debug")) {
+		print $timestamp . " " . $text . "\n";
+	}
 }
 
 

@@ -8,29 +8,30 @@ use utf8;
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
 
-print "Using $SCRIPTDIR as install root...\n";
 
 require './utils.pl';
 require './sqlite.pl';
 
-sub MakeTagIndex {
-	print "MakeTagIndex()\n";
+WriteLog( "Using $SCRIPTDIR as install root...\n");
 
-	my $tagsWeight = GetConfig("tags_weight");
-
-	if (defined($tagsWeight) && $tagsWeight) {
-		my @tagsToAdd = split("\n", $tagsWeight);
-
-		foreach (@tagsToAdd) {
-			my ($voteValue, $weight) = split('\|', $_);
-
-			DbAddVoteWeight($voteValue, $weight);
-		}
-	}
-}
+#sub MakeTagIndex {
+#	print "MakeTagIndex()\n";
+#
+#	my $tagsWeight = GetConfig("tags_weight");
+#
+#	if (defined($tagsWeight) && $tagsWeight) {
+#		my @tagsToAdd = split("\n", $tagsWeight);
+#
+#		foreach (@tagsToAdd) {
+#			my ($voteValue, $weight) = split('\|', $_);
+#
+#			DbAddVoteWeight($voteValue, $weight);
+#		}
+#	}
+#}
 
 sub MakeVoteIndex {
-	print "MakeVoteIndex()\n";
+	WriteLog( "MakeVoteIndex()\n");
 
 	my $voteLog = GetFile("log/votes.log");
 
@@ -53,7 +54,7 @@ sub MakeVoteIndex {
 }
 
 sub MakeAddedIndex {
-	print "MakeAddedIndex()\n";
+	WriteLog( "MakeAddedIndex()\n");
 
 	my $addedLog = GetFile('log/added.log');
 
@@ -126,7 +127,7 @@ sub IndexFile {
 }
 
 sub MakeIndex {
-	print "MakeIndex()...\n";
+	WriteLog( "MakeIndex()...\n");
 
 	my @filesToInclude = @{$_[0]};
 
@@ -147,4 +148,4 @@ MakeVoteIndex();
 
 MakeAddedIndex();
 
-MakeTagIndex();
+#MakeTagIndex();
