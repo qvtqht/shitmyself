@@ -17,7 +17,7 @@ require './sqlite.pl';
 #my $HTMLDIR = "html.tmp";
 my $HTMLDIR = "html";
 
-my $PAGE_LIMIT = 25;
+my $PAGE_LIMIT = GetConfig('page_limit');
 #my $PAGE_THRESHOLD = 5;
 
 sub GetPageFooter {
