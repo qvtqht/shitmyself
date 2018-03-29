@@ -787,11 +787,11 @@ sub GetPageLinks {
 	if ($itemCount > $PAGE_LIMIT) {
 		for (my $i = 0; $i < $lastPageNum; $i++) {
 			my $pageLinkTemplate;
-			if ($i == $currentPageNumber) {
-				$pageLinkTemplate = "<b>" . $i . "</b>";
-			} else {
+#			if ($i == $currentPageNumber) {
+#				$pageLinkTemplate = "<b>" . $i . "</b>";
+#			} else {
 				$pageLinkTemplate = GetPageLink($i);
-			}
+#			}
 
 			$pageLinks .= $pageLinkTemplate;
 		}
