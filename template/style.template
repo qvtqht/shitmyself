@@ -141,8 +141,8 @@ form.reply .txtarea {
 .pagination {
 	font-family: sans-serif;
 	font-size: large;
-	padding: 3pt;
+	padding: 5pt;
 }
 .pagination a {
-	padding: 3pt;
+	padding: 5pt;
 }
