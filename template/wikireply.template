@@ -1,0 +1,17 @@
+<!-- wikireply.template -->
+<form action="./gracias.html" class=reply>
+    <!--<ul class=instructions>-->
+        <!--<li>Respond to above using the field below. Just like new post.</li>-->
+        <!--<li>There's no need to register if you want to write something.</li>-->
+    <!--</ul>-->
+
+    <textarea class=txtarea id=comment rows=4 cols=60 name=comment maxlength=8192>$prefillText</textarea><br>
+    <input class=btn type=submit value="Post Reply" onClick="">
+    $extraFields
+    <ul class=instructions>
+        <li>If you are signing reply, include footer in signed message.</li>
+        <!--<li>You can sign your messages with GPG, but you don't have to.</li>-->
+        <!--<li>To set username, submit public key. See manual for details.</li>-->
+    </ul>
+</form>
+<!-- / wikireply.template -->

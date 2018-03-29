@@ -86,9 +86,9 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
 
 	my $menuTemplate = "";
-	$menuTemplate .= GetMenuItem("/", "read");
-	$menuTemplate .= GetMenuItem("/write.html", "write");
-	$menuTemplate .= GetMenuItem("/manual.html", "manual");
+	$menuTemplate .= GetMenuItem("/write.html", "Write");
+	$menuTemplate .= GetMenuItem("/manual.html", "Manual");
+	$menuTemplate .= GetMenuItem("/clone.html", "Clone");
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
@@ -313,10 +313,17 @@ sub GetItemPage {
 
 	# todo fix the == hack
 	if (GetConfig('replies') == 1 && ($file{'author_key'} || GetConfig('replies_anon') == 1)) {
-		my $replyForm = GetTemplate('reply.template');
+		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
+		my $prefillText;
 
-		my $prefillText = "\n\n-- \nparent=" . $file{'file_hash'};
+		if (GetFile($file{'file_path'}) =~ m/\n-- \nwiki$/) {
+			$replyForm = GetTemplate('wikireply.template');
+			$prefillText = "[wiki prefill]";
+		} else {
+			$replyForm = GetTemplate('reply.template');
+			$prefillText = "\n\n-- \nparent=" . $file{'file_hash'};
+		}
 
 		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
 		$replyForm =~ s/\$extraFields/$replyTag/g;
@@ -758,10 +765,33 @@ sub GetPageLinks {
 
 	my $lastPageNum = ceil($itemCount / $PAGE_LIMIT);
 
-	#if ($itemCount > $PAGE_LIMIT + $PAGE_THRESHOLD) {
+#	my $beginExpando;
+#	my $endExpando;
+#
+#	if ($lastPageNum > 15) {
+#		if ($currentPageNumber < 5) {
+#			$beginExpando = 0;
+#		} elsif ($currentPageNumber < $lastPageNum - 5) {
+#			$beginExpando = $currentPageNumber - 2;
+#		} else {
+#			$beginExpando = $lastPageNum - 5;
+#		}
+#
+#		if ($currentPageNumber < $lastPageNum - 5) {
+#			$endExpando = $lastPageNum - 2;
+#		} else {
+#			$endExpando = $currentPageNumber;
+#		}
+#	}
+
 	if ($itemCount > $PAGE_LIMIT) {
 		for (my $i = 0; $i < $lastPageNum; $i++) {
-			my $pageLinkTemplate = GetPageLink($i);
+			my $pageLinkTemplate;
+			if ($i == $currentPageNumber) {
+				$pageLinkTemplate = "<b>" . $i . "</b>";
+			} else {
+				$pageLinkTemplate = GetPageLink($i);
+			}
 
 			$pageLinks .= $pageLinkTemplate;
 		}
