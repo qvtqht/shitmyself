@@ -1,11 +1,12 @@
-<!-- forma.template -->
+<!-- write.template -->
 <form action="./gracias.html" class=submit>
     <ul class=instructions>
-        <li>You are invited to write up to 8 kilobytes.</li>
+        <li>Use at your own risk. This form comes with no warranty, express or implied.</li>
+        <li>Limited to about 6000 characters.</li>
         <li>There's no need to register.</li>
     </ul>
 
-    <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=8192 autofocus></textarea><br>
+    <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=6000 autofocus></textarea><br>
     <input class=btn type=submit value="Add Text" onClick="">
     <input type=checkbox name=wiki id=wiki><label for=wiki>Encourage editing</label>
     <script><!--
@@ -14,9 +15,13 @@
     document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="zalgo_textarea(\'comment\');">');
     // --></script>
     $extraFields
-    <ul class=instructions>
-        <li>You can sign your messages with GPG, but you don't have to.</li>
+    <details class=instructions>
+        <summary>Instructions for command-line GPG users:</summary>
+        <li>If you know how to sign with GPG, you can do that:<br>
+            <tt>gpg [--default-key john] --clearsign [file.txt]</tt><br>
+            Paste the whole thing into the textbox.</li>
+        <li>To set a username, upoad your </li>
         <li>To set username, submit public key. See manual for details.</li>
-    </ul>
+    </details>
 </form>
-<!-- / forma.template -->
+<!-- / write.template -->

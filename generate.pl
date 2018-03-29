@@ -701,7 +701,7 @@ sub GetSubmitPage {
 
 	if (defined($itemCount)) {
 		if ($itemCount < $itemLimit) {
-			my $submitForm = GetTemplate('forma.template');
+			my $submitForm = GetTemplate('write.template');
 			$submitForm =~ s/\$extraFields//g;
 
 			$txtIndex .= $submitForm;
@@ -715,7 +715,7 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
 	} else {
-		my $submitForm = GetTemplate('forma.template');
+		my $submitForm = GetTemplate('write.template');
 		$submitForm =~ s/\$extraFields//g;
 
 		$txtIndex .= $submitForm;

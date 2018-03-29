@@ -11,3 +11,4 @@ $styleSheet
 </head>
 <body>
 <p><a href="#maincontent">Skip to main content</a> <a href="/">Home page</a> $menuItems</p>
+<hr>
