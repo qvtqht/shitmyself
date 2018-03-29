@@ -146,3 +146,9 @@ form.reply .txtarea {
 .pagination a {
 	padding: 5pt;
 }
+.pagination b {
+	padding: 5pt;
+	border: 1pt solid $primaryColor;
+	border-radius: 5pt;
+	background-color: white;
+}
