@@ -1,8 +1,8 @@
 <!-- forma.template -->
 <form action="./gracias.html" class=submit>
     <ul class=instructions>
-        <li>You are invited to write something up to 8000 letters long.</li>
-        <li>There's no need to register if you want to write something.</li>
+        <li>You are invited to write up to 8 kilobytes.</li>
+        <li>There's no need to register.</li>
     </ul>
 
     <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=8192 autofocus></textarea><br>
