@@ -210,7 +210,7 @@ sub GetItemTemplate {
 
 		$alias = HtmlEscape($alias);
 
-		my $itemTemplate = GetTemplate("itemvoteex.template");
+		my $itemTemplate = GetTemplate("itemvote.template");
 
 		my $itemClass = "txt $signedCss";
 
