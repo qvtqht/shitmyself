@@ -23,7 +23,7 @@
             (Paste the entire signed message into textbox.)</li>
         <li>To set username, export and submit your public key:<br>
         <tt>gpg --armor --export [john]</tt></li>
-        <li><a href="/manual.html">See manual for details.</a></li>
+        <li><a href="/manual.html#cli">See manual for details.</a></li>
         </ul>
     </details>
 </form>

@@ -19,7 +19,7 @@
     <li>Your key pair allows you to post on other forums too.</li>
 </ul>
 
-
+<a name=gpg>
 <h3>How to use GPG</h3>
 
 <p>To use GPG, you will need to download a special program or app.</p>
@@ -48,7 +48,7 @@
 
 <p>OpenPGP Software<br><a href="https://www.openpgp.org/software/">https://www.openpgp.org/software/</a></p>
 
-
+<a name=keypair>
 <h3>Creating Your Identity, AKA Key Pair</h3>
 
 <p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating an identity?</p>
@@ -69,7 +69,7 @@
 
 <p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
 
-
+<a name=sign>
 <h3>Writing As Yourself</h3>
 
 <p>To write something under your new identity, you will need to sign your text.</p>
@@ -87,6 +87,7 @@
 <p>That's it!</p>
 
 
+<a name=uploadkey>
 <h3>Uploading Your Public Key</h3>
 
 <p>Look for the option to export your public key in your software.</p>
@@ -98,6 +99,7 @@
 <p>You have now aliased your name to your key fingerprint.</p>
 
 
+<a name=cli>
 <h3>Command Line Instructions</h3>
 
 <h4>Check GPG Version</h4>
@@ -125,11 +127,12 @@
 <p>Start typing your message. When you're finished, press Enter, then ^D (Ctrl+D).</p>
 
 
+<a name=clone>
 <h3>How to Clone This Site</h3>
 
 <a href="clone.html">See clone.html</a>.
 
-
+<a name=other>
 <h3>Other Questions</h3>
 
 <a href="write.html">Please ask them using the Write page</a>.
