@@ -1,9 +1,58 @@
+/* body and headers */
 body {
 	font-family: monospace;
 	font-size: large;
 	background-color: $secondaryColor;
 	color: #202020;
 }
+a {
+	color: $primaryColor;
+	background-color: $secondaryColor;
+}
+a:visited {
+	color: #806080;
+}
+h1 {
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	margin-bottom: 0pt;
+	padding: 3pt;
+	border-style: 5pt solid $primaryColor;
+	border-radius: 5pt 5pt 0pt 0pt;
+}
+h2.menu {
+	margin-top: 0pt;
+	padding-right: 5pt;
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	text-align: right;
+	border-style: 5pt solid $primaryColor;
+	border-radius: 0pt 0pt 5pt 5pt;
+}
+	h2.menu a {
+	color: $secondaryColor;
+	background-color: $primaryColor;
+}
+#logo {
+	text-decoration: none;
+	margin-right: 10pt;
+	vertical-align: middle;
+	font-size: 36pt;
+	font-family: monospace;
+	color: $secondaryColor;
+	background-color: $primaryColor;
+}
+.topmessage {
+	font-family: sans-serif;
+	font-size: default;
+	border: 2pt solid $primaryColor;
+	border-radius: 5pt;
+	background-color: $highlightColor;
+	padding: 5pt;
+}
+
+
+/* textboxes */
 .txt {
 	padding: 3pt;
 	font-family: monospace;
@@ -20,6 +69,13 @@ body {
      #fffff0 20px
    );
 }
+details.txt a.header {
+	font-family: monospace;
+	font-weight: bold;
+	font-size: larger;
+}
+
+/* voting buttons */
 .voter {
 	margin: 0pt 0pt 0pt 0pt;
 	cursor: pointer;
@@ -50,36 +106,8 @@ body {
 	background-color: $disabledColor;
 	border: 1pt solid $disabledColor;
 }
-details.txt a.header {
-	font-family: monospace;
-	font-weight: bold;
-	font-size: larger;
-}
-a {
-	color: $primaryColor;
-	background-color: $secondaryColor;
-}
-h1 {
-	background-color: $primaryColor;
-	color: $secondaryColor;
-	margin-bottom: 0pt;
-	padding: 3pt;
-	border-style: 5pt solid $primaryColor;
-	border-radius: 5pt 5pt 0pt 0pt;
-}
-h2.menu {
-	margin-top: 0pt;
-	padding-right: 5pt;
-	background-color: $primaryColor;
-	color: $secondaryColor;
-	text-align: right;
-	border-style: 5pt solid $primaryColor;
-	border-radius: 0pt 0pt 5pt 5pt;
-}
-h2.menu a {
-	color: $secondaryColor;
-	background-color: $primaryColor;
-}
+
+/* avatars */
 .avatar .icon {
 	font-weight: bold;
 	margin-right: 2pt;
@@ -89,11 +117,10 @@ h2.menu a {
 	background-color: $secondaryColor;
 	color: $primaryColor;
 }
+
+/* submit forms */
 form.submit, form.reply {
-	background-color: $primaryColor;
-	border: 1pt solid $primaryColor;
 	color: $secondaryColor;
-	border-radius: 5pt;
 	padding: 10pt;
 }
 form.submit .btn, form.reply .btn {
@@ -112,35 +139,21 @@ form.reply .txtarea {
 	height: 12ex;
 }
 .instructions {
-	background-color: $secondaryColor;
 	color: black;
 	font-family: sans-serif;
 	padding: 5pt;
 	font-size: large;
 	line-height: 2;
 }
-#logo {
-	text-decoration: none;
-	margin-right: 10pt;
-	vertical-align: middle;
-	font-size: 36pt;
-	font-family: monospace;
-	color: $secondaryColor;
-	background-color: $primaryColor;
-}
-.topmessage {
-	font-family: sans-serif;
-	font-size: default;
-	border: 2pt solid $primaryColor;
-	border-radius: 5pt;
-	background-color: $highlightColor;
-	padding: 5pt;
-}
+
+/* misc */
 .plain {
 	background-color: $secondaryColor;
 	padding: 5pt;
 	max-width: 60em;
 }
+
+/* pagination */
 .pagination {
 	font-family: sans-serif;
 	font-size: large;
@@ -154,7 +167,4 @@ form.reply .txtarea {
 	border: 1pt solid $primaryColor;
 	border-radius: 5pt;
 	background-color: white;
-}
-a:visited {
-	color: #806080;
 }
