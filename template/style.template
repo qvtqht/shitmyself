@@ -112,7 +112,10 @@ form.reply .txtarea {
 	height: 12ex;
 }
 .instructions {
-	font-family: monospace;
+	background-color: $secondaryColor;
+	color: black;
+	font-family: sans-serif;
+	padding: 5pt;
 	font-size: large;
 	line-height: 2;
 }

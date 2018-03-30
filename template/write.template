@@ -1,14 +1,14 @@
 <!-- write.template -->
-<form action="./gracias.html" class=submit>
-    <ul class=instructions>
-        <li>Use at your own risk. This form comes with no warranty, express or implied.</li>
-        <li>Limited to about 6000 characters.</li>
-        <li>There's no need to register.</li>
-    </ul>
+<form action="./gracias.html" class=submit name=submit>
+    <details class=instructions>
+        <summary>Use at your own risk. Comes with NO WARRANTY, express or implied.</summary>
+        Limited to about 6,000 characters.<br>
+        Registration optional, see below.
+    </details>
 
-    <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=6000 autofocus></textarea><br>
+    <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=6000 autofocus>(Enter text here.)</textarea><br>
     <input class=btn type=submit value="Add Text" onClick="">
-    <input type=checkbox name=wiki id=wiki><label for=wiki>Encourage editing</label>
+    <!--<input type=checkbox onclick="document.getElementById('js').checked=false;" name=wiki id=wiki><label for=wiki>Encourage editing</label>-->
     <script><!--
     document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');
@@ -16,12 +16,15 @@
     // --></script>
     $extraFields
     <details class=instructions>
-        <summary>Instructions for command-line GPG users:</summary>
+        <summary>Instructions for command-line GPG users (hit me to expand)</summary>
+        <ul>
         <li>If you know how to sign with GPG, you can do that:<br>
             <tt>gpg [--default-key john] --clearsign [file.txt]</tt><br>
-            Paste the whole thing into the textbox.</li>
-        <li>To set a username, upoad your </li>
-        <li>To set username, submit public key. See manual for details.</li>
+            (Paste the entire signed message into textbox.</li>
+        <li>To set username, export and submit your public key:<br>
+        <tt>gpg --armor --export [john]</tt></li>
+        <li><a href="/manual.html">See manual for details.</a></li>
+        </ul>
     </details>
 </form>
 <!-- / write.template -->
