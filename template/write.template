@@ -6,7 +6,7 @@
         Registration optional, see below.
     </details>
 
-    <textarea class=txtarea id=comment rows=12 cols=60 name=comment maxlength=6000 autofocus>(Enter text here.)</textarea><br>
+    <textarea class=txtarea onclick="if (this.value.toString() == this.title.toString()) {this.focus(); this.select();} this.removeAttribute('onclick');" id=comment title="(Enter text here.)" rows=12 cols=60 name=comment maxlength=6000 autofocus>(Enter text here.)</textarea><br>
     <input class=btn type=submit value="Add Text" onClick="">
     <!--<input type=checkbox onclick="document.getElementById('js').checked=false;" name=wiki id=wiki><label for=wiki>Encourage editing</label>-->
     <script><!--
