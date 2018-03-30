@@ -4,9 +4,8 @@ Make gracias.html redirect to next drop from access.pl, which will contain any n
 	Create IndexLogLine() in index.pl
 	Create IndexParentLine() in index.pl
 
-Add anchors to manual
-
 Add GetHashFromFile function
+	To do what?
 
 Make updates instant
 	Make access.pl write to the index

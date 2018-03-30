@@ -9,6 +9,6 @@ system('perl access.pl');
 
 system('perl rebuild.pl');
 
-system('perl generate.pl');
+#system('perl generate.pl');
 
 WriteLog( "Finished!");
