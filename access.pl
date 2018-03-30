@@ -248,7 +248,9 @@ sub ProcessAccessLog {
 						my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
 						AppendFile('./log/parent.log', $parentLogLine);
 					}
-					IndexFile($filenameDir . $filename);
+					if (GetConfig('access_update')) {
+						IndexFile($filenameDir . $filename);
+					}
 
 					# Add the file to git
 					#system("git add \"$filenameDir$filename\"");
