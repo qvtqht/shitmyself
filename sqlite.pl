@@ -13,8 +13,8 @@ sub SqliteUnlinkDb {
 
 #schema
 sub SqliteMakeTables() {
-	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, long_key UNIQUE)");
-	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin)");
+	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
+	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin, fingerprint)");
 	SqliteQuery("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,
@@ -164,13 +164,13 @@ sub DBAddAuthor {
 sub DBAddKeyAlias {
 	my $key = shift;
 	my $alias = shift;
-	my $isAdmin = shift;
+	my $fingerprint = shift;
 
 	$key = SqliteEscape($key);
 	$alias = SqliteEscape($alias);
-	$isAdmin = SqliteEscape($isAdmin);
+	$fingerprint = SqliteEscape($fingerprint);
 
-	SqliteQuery("INSERT OR REPLACE INTO author_alias(key, alias) VALUES ('$key', '$alias');");
+	SqliteQuery("INSERT OR REPLACE INTO author_alias(key, alias, fingerprint) VALUES ('$key', '$alias', '$fingerprint');");
 }
 
 sub DBAddItem {

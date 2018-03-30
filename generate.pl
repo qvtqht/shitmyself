@@ -697,6 +697,7 @@ sub GetSubmitPage {
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
 
+
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	if (defined($itemCount)) {
@@ -713,7 +714,7 @@ sub GetSubmitPage {
 
 		$txtIndex .= GetPageFooter();
 
-		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script><\/head>/;
+		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script><\/head>/;
 	} else {
 		my $submitForm = GetTemplate('write.template');
 		$submitForm =~ s/\$extraFields//g;
@@ -872,7 +873,12 @@ sub MakeStaticPages {
 
 
 	# Zalgo javascript
-	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.template'));
+	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.js.template'));
+
+
+	# OpenPGP javascript
+	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('openpgp.js.template'));
+	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('openpgp.worker.js.template'));
 
 
 	# .htaccess file for Apache

@@ -330,8 +330,6 @@ sub GetGpgFingerprint {
 	WriteLog( "gpg --with-colons --with-fingerprint --decrypt \"$file\"\n");
 	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint --decrypt "$file"`);
 
-
-
 	foreach my $line (@gpgResults) {
 		if (substr($line, 0, 3) eq "fpr") {
 			my $fingerprint = substr($line, 3);

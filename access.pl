@@ -24,6 +24,7 @@ if (!-e './utils.pl') {
 	die ("Sanity check failed, can't find ./utils.pl in $SCRIPTDIR");
 }
 require './utils.pl';
+require './index.pl';
 
 # We'll use ./txt as the text repo
 my $TXTDIR = "$SCRIPTDIR/txt/";
@@ -236,6 +237,7 @@ sub ProcessAccessLog {
 
 					# Try to write to the file, exit if we can't
 					PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to ' . $filenameDir . $filename);
+					#todo make if statement instead of die
 
 					my $fileHash = GetFileHash($filenameDir . $filename);
 
@@ -246,6 +248,7 @@ sub ProcessAccessLog {
 						my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
 						AppendFile('./log/parent.log', $parentLogLine);
 					}
+					IndexFile($filenameDir . $filename);
 
 					# Add the file to git
 					#system("git add \"$filenameDir$filename\"");

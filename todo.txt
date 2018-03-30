@@ -1,7 +1,8 @@
 Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
 	If there is only one post, automatically redirect to it
 	Otherwise, "is this one of your posts?"
-
+	Create IndexLogLine() in index.pl
+	Create IndexParentLine() in index.pl
 
 Add anchors to manual
 

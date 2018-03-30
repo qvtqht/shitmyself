@@ -156,5 +156,5 @@ form.reply .txtarea {
 	background-color: white;
 }
 a:visited {
-	color: #808080;
+	color: #806080;
 }

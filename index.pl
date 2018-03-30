@@ -80,6 +80,7 @@ sub IndexFile {
 
 	my $gpgKey;
 	my $alias;
+	my $fingerprint;
 
 	my $gitHash;
 	my $isAdmin = 0;
@@ -93,6 +94,7 @@ sub IndexFile {
 		$gpgKey = $gpgResults{'key'};
 		$alias = $gpgResults{'alias'};
 		$gitHash = $gpgResults{'gitHash'};
+		$fingerprint = $gpgResults{'fingerprint'};
 
 		if ($isSigned && $gpgKey eq GetAdminKey()) {
 			$isAdmin = 1;
@@ -103,7 +105,7 @@ sub IndexFile {
 		}
 
 		if ($alias) {
-			DBAddKeyAlias ($gpgKey, $alias);
+			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
 		}
 
 		my $itemName = TrimPath($file);
@@ -143,16 +145,6 @@ sub MakeIndex {
 	}
 }
 
-SqliteUnlinkDb();
-SqliteMakeTables();
-
-# This holds all the files we will list in the primary index
-my @filesToInclude = `find ./txt/ | grep \.txt\$ | sort -r`;
-
-MakeIndex(\@filesToInclude);
-
-MakeVoteIndex();
-
-MakeAddedIndex();
 
 #MakeTagIndex();
+1;
