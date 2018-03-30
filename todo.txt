@@ -1,3 +1,8 @@
+Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
+	If there is only one post, automatically redirect to it
+	Otherwise, "is this one of your posts?"
+
+
 Add anchors to manual
 
 Add GetHashFromFile function
@@ -31,3 +36,4 @@ Add support for messages with multiple ENC_TOs
 	Add loop
 	Limit to 5? 10?
 	List all of them on details page
+Add support for public key included inside signed message

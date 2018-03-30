@@ -9,6 +9,6 @@ $styleSheet
 -->
 </style>
 </head>
-<body>
+<body link="$primaryColor" vlink="#808080" text=black bgcolor=white>
 <p><a href="#maincontent">Skip to main content</a> <a href="/">Home page</a> $menuItems</p>
 <hr>

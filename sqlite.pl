@@ -11,10 +11,20 @@ sub SqliteUnlinkDb {
 	rename($SqliteDbName, "$SqliteDbName.prev");
 }
 
+#schema
 sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, long_key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin)");
-	SqliteQuery("CREATE TABLE item(id INTEGER PRIMARY KEY AUTOINCREMENT, file_path UNIQUE, item_name, author_key, file_hash UNIQUE, parent_hash)");
+	SqliteQuery("CREATE TABLE item(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		file_path UNIQUE,
+		item_name,
+		author_key,
+		file_hash UNIQUE,
+		parent_hash,
+		is_pubkey,
+		last_bump
+	)");
 	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed DEFAULT 0)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, weight)");
 	SqliteQuery("CREATE TABLE added_time(file_path, file_hash, add_timestamp);");
@@ -26,6 +36,7 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value);");
 
 	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
+	SqliteQuery("CREATE VIEW last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
 }
 
 sub SqliteQuery {
@@ -168,22 +179,33 @@ sub DBAddItem {
 	my $authorKey = shift;
 	my $fileHash = shift;
 	my $parentHash = shift;
+	my $isPubKey = shift;
 
 	$filePath = SqliteEscape($filePath);
 	$itemName = SqliteEscape($itemName);
 	$fileHash = SqliteEscape($fileHash);
 	$parentHash = SqliteEscape($parentHash);
+	if ($isPubKey) {
+		$isPubKey = 1;
+	} else {
+		$isPubKey = 0;
+	}
 
+	#todo clean up
 	if ($authorKey) {
 		SqliteQuery(
-			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash)" .
-				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash');"
+			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, is_pubkey)" .
+				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash', $isPubKey);"
 		);
 	} else {
 		SqliteQuery(
-			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash)" .
-				" VALUES('$filePath', '$itemName', NULL, '$fileHash', '$parentHash');"
+			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, is_pubkey)" .
+				" VALUES('$filePath', '$itemName', NULL, '$fileHash', '$parentHash', $isPubKey);"
 		);
+	}
+
+	if ($parentHash) {
+		my $query = "UPDATE item SET last_bump = ";
 	}
 }
 

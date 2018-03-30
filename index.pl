@@ -116,12 +116,19 @@ sub IndexFile {
 			}
 		}
 
+		my $isPubKey;
+		if ($alias) {
+			$isPubKey = 1;
+		} else {
+			$isPubKey = 0;
+		}
+
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash);
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash, $isPubKey);
 
 			PutFile("./cache/message/$gitHash.message", $message);
 		} else {
-			DBAddItem ($file, $itemName, '', $gitHash, $parentHash);
+			DBAddItem ($file, $itemName, '', $gitHash, $parentHash, 0);
 		}
 	}
 }

@@ -465,7 +465,7 @@ sub GpgParse {
 				$alias =~ s/^\s+//;
 				$alias =~ s/\s+$//;
 
-				$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"\n";
+				$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
 
 				$isSigned = 1;
 
