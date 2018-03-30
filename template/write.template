@@ -20,7 +20,7 @@
         <ul>
         <li>If you know how to sign with GPG, you can do that:<br>
             <tt>gpg [--default-key john] --clearsign [file.txt]</tt><br>
-            (Paste the entire signed message into textbox.</li>
+            (Paste the entire signed message into textbox.)</li>
         <li>To set username, export and submit your public key:<br>
         <tt>gpg --armor --export [john]</tt></li>
         <li><a href="/manual.html">See manual for details.</a></li>
