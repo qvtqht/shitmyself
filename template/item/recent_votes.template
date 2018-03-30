@@ -3,5 +3,5 @@
 <p>$votesSummary</p>
 <pre>$recentVotesTable</pre>
 <p>Votes are registered on every update.</p>
-<p>Votes without a signature are retained for $voteRetention.</p>
+<p>Votes without a signature are included in the statistics for $voteRetention.</p>
 </div>

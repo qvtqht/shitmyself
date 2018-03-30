@@ -437,7 +437,7 @@ sub GpgParse {
 					$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 					$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
 
-					$message = "Encrypted message for $gpg_key";
+					$message = "Encrypted message for $gpg_key\n";
 
 					$isSigned = 1;
 

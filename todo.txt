@@ -1,3 +1,7 @@
+Add anchors to manual
+
+Add GetHashFromFile function
+
 Make updates instant
 	Make access.pl write to the index
 	Hook calls to generate.pl
@@ -23,3 +27,7 @@ Use the full fingerprint for avatars for more colors
 When writing new html dir, make a list of all existing files, and remove from hash when written to, then delete all others remaining in hash
 Add CSRF token to reply form
 Remove duplicate parent= footer
+Add support for messages with multiple ENC_TOs
+	Add loop
+	Limit to 5? 10?
+	List all of them on details page
