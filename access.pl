@@ -281,6 +281,8 @@ sub ProcessAccessLog {
 
 					if (GetConfig('access_update')) {
 						DBAddVoteRecord($voteFile, $ballotTime, $voteValue);
+
+						#todo IndexFile
 					}
 				}
 			}
