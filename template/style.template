@@ -120,7 +120,6 @@ details.txt a.header {
 
 /* submit forms */
 form.submit, form.reply {
-	color: $secondaryColor;
 	padding: 10pt;
 }
 form.submit .btn, form.reply .btn {
