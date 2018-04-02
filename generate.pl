@@ -135,18 +135,19 @@ sub GetVoterTemplate {
 
 		my @voteValues = split("\n", $tagsList . "\n" . $flagsList);
 
-		foreach (@voteValues) {
+		foreach my $tag (@voteValues) {
 			my $buttonTemplate = GetTemplate("votebutton.template");
 
 			my $class = "pos";
-			if ($_ eq 'spam' || $_ eq 'flag' || $_ eq 'troll' || $_ eq 'abuse') {
-				#todo make this not hard-coded but to match to config/flags
 
+			my @flags = split("\n", GetFile('config/flags'));
+
+			if (grep($_ eq $tag, @flags)) {
 				$class = "neg";
 			}
 
-			$buttonTemplate =~ s/\$voteValue/$_/g;
-			$buttonTemplate =~ s/\$voteValueCaption/$_/g;
+			$buttonTemplate =~ s/\$voteValue/$tag/g;
+			$buttonTemplate =~ s/\$voteValueCaption/$tag/g;
 			$buttonTemplate =~ s/\$class/$class/g;
 
 			$voteButtonsTemplate .= $buttonTemplate;
