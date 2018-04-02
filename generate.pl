@@ -834,12 +834,15 @@ sub MakeStaticPages {
 
 	PutConfig("last_update_time", $currUpdateTime);
 
+	my $nextUpdateTime = EpochToHuman($currUpdateTime + $updateInterval);
+
 	$prevUpdateTime = EpochToHuman($prevUpdateTime);
 	$currUpdateTime = EpochToHuman($currUpdateTime);
 
 	$graciasTemplate =~ s/\$prevUpdateTime/$prevUpdateTime/;
 	$graciasTemplate =~ s/\$currUpdateTime/$currUpdateTime/;
 	$graciasTemplate =~ s/\$updateInterval/$updateInterval/;
+	$graciasTemplate =~ s/\$nextUpdateTime/$nextUpdateTime/;
 
 	$graciasPage .= $graciasTemplate;
 
