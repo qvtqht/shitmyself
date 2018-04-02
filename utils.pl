@@ -29,6 +29,20 @@ foreach(@dirsThatShouldExist) {
 #}
 
 ####################################################################################
+#
+#sub GetIntlString {
+#	my $key = shift;
+#
+#	state %strings;
+#
+#	if (!defined %strings) {
+#		# get them from language/en
+#
+#		#put them in the hash
+#	}
+#
+#	#return string from hash
+#}
 
 sub GetFileHash {
 	my $fileName = shift;
@@ -145,16 +159,14 @@ sub GetConfig {
 		return $configLookup{$configName};
 	}
 
-
-
 	if (-e "config/$configName") {
 		my $configValue = GetFile("config/$configName");
 		$configLookup{$configValue} = $configValue;
 
 		return $configValue;
 	} else {
-		if (-e "config/default/$configName") {
-			my $configValue = GetFile("config/default/$configName");
+		if (-e "default/$configName") {
+			my $configValue = GetFile("default/$configName");
 			$configLookup{$configName} = $configValue;
 			#PutConfig ($configName, $configValue);
 
