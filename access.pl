@@ -278,6 +278,10 @@ sub ProcessAccessLog {
 					my $voteEntry = "$voteFile|$ballotTime|$voteValue";
 
 					AppendFile("log/votes.log", $voteEntry);
+
+					if (GetConfig('access_update')) {
+						DBAddVoteRecord($voteFile, $ballotTime, $voteValue);
+					}
 				}
 			}
 		}
