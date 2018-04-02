@@ -86,6 +86,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
 
 	my $menuTemplate = "";
+	$menuTemplate .= GetMenuItem("/", "Home Page");
 	$menuTemplate .= GetMenuItem("/write.html", "Write");
 	$menuTemplate .= GetMenuItem("/manual.html", "Manual");
 	$menuTemplate .= GetMenuItem("/clone.html", "Clone");

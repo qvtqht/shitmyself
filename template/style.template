@@ -50,7 +50,14 @@ h2.menu {
 	background-color: $highlightColor;
 	padding: 5pt;
 }
-
+.menu {
+	font-weight: larger;
+	font-family: sans-serif;
+	font-weight: bold;
+}
+.menu a {
+	padding-left: 1em;
+}
 
 /* textboxes */
 .txt {
