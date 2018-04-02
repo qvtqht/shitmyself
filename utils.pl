@@ -30,19 +30,31 @@ foreach(@dirsThatShouldExist) {
 
 ####################################################################################
 #
-#sub GetIntlString {
-#	my $key = shift;
-#
-#	state %strings;
-#
-#	if (!defined %strings) {
-#		# get them from language/en
-#
-#		#put them in the hash
-#	}
-#
-#	#return string from hash
-#}
+sub GetIntlString {
+	my $stringKey = shift;
+
+	state %strings;
+
+	if (!%strings) {
+		# get them from language/en
+
+		my $stringsFile = GetFile('language/en');
+
+		my @results = split("\n", $stringsFile);
+
+		foreach (@results) {
+			chomp;
+
+			my ($key, $value) = split(/\|/, $_);
+
+			$strings{$key} = $value;
+		}
+	}
+
+	if (defined($strings{$stringKey})) {
+		return $strings{$stringKey};
+	}
+}
 
 sub GetFileHash {
 	my $fileName = shift;

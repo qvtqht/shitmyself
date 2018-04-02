@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 
 require './utils.pl';
 
-if (GetConfig('git_stash')) {
+if (GetConfig('git_stash') == 1) {
 	system('git stash');
 }
 
@@ -12,7 +12,5 @@ system('git pull');
 system('perl access.pl');
 
 system('perl rebuild.pl');
-
-#system('perl generate.pl');
 
 WriteLog( "Finished!");
