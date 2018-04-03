@@ -67,6 +67,8 @@ sub ProcessAccessLog {
 
 	my %prevLines;
 
+	my $newItemCount = 0;
+
 	if (-e "./log/processed.log") {
 		open (LOGFILELOG, "./log/processed.log");
 		foreach my $procLine (<LOGFILELOG>) {
@@ -165,6 +167,8 @@ sub ProcessAccessLog {
 			# Look for it in the beginning of the requested URL
 			if (substr($file, 0, length($submitPrefix)) eq $submitPrefix) {
 				WriteLog ("Found a message...\n");
+
+				$newItemCount++;
 
 				# The message comes after the prefix, so just trim it
 				my $message = (substr($file, length($submitPrefix)));
@@ -279,6 +283,8 @@ sub ProcessAccessLog {
 
 					AppendFile("log/votes.log", $voteEntry);
 
+					$newItemCount++;
+
 					if (GetConfig('access_update')) {
 						DBAddVoteRecord($voteFile, $ballotTime, $voteValue);
 
@@ -301,8 +307,8 @@ sub ProcessAccessLog {
 		}
 	}
 	PutFile("log/processed.log", $newPrevLines);
-}
 
-ProcessAccessLog("log/access.log", 0);
+	return $newItemCount;
+}
 
 1;

@@ -2,6 +2,7 @@ use strict;
 use warnings FATAL => 'all';
 
 require './utils.pl';
+require './access.pl';
 
 if (GetConfig('git_stash') == 1) {
 	system('git stash');
@@ -9,8 +10,10 @@ if (GetConfig('git_stash') == 1) {
 
 system('git pull');
 
-system('perl access.pl');
+my $newItemCount = ProcessAccessLog("log/access.log", 0);
 
-system('perl rebuild.pl');
+if ($newItemCount > 0) {
+	system('perl rebuild.pl');
+}
 
 WriteLog( "Finished!");

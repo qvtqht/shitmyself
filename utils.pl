@@ -578,7 +578,7 @@ sub WriteLog {
 
 	AppendFile("log/log.log", $timestamp . " " . $text);
 
-	if (GetConfig("debug")) {
+	if (GetConfig("debug") == 1) {
 		print $timestamp . " " . $text . "\n";
 	}
 }
