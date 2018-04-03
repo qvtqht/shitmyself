@@ -1,12 +1,14 @@
 use strict;
 use warnings FATAL => 'all';
+use threads;
 
 require './utils.pl';
 require './index.pl';
+require './access.pl';
 
 system('git pull');
 
-system('perl access.pl');
+ProcessAccessLog("log/access.log");
 
 SqliteUnlinkDb();
 SqliteMakeTables();
