@@ -237,8 +237,25 @@ sub PutHtmlFile {
 		$content =~ s/[^[:ascii:]]//g;
 	}
 
+	AppendFile("log/written.log", $file);
+
 	return PutFile($file, $content);
 }
+
+sub GetFileAsHashKeys {
+	my $fileName = shift;
+
+	my @lines = split('\n', GetFile($fileName));
+
+	my %hash;
+
+	foreach my $line (@lines) {
+		$hash{$line} = 0;
+	}
+
+	return %hash;
+}
+
 
 # Appends line to a file
 sub AppendFile {
