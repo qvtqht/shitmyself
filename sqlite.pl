@@ -321,11 +321,18 @@ sub DBGetAuthorList {
 
 sub DBGetAuthorAlias {
 	my $key = shift;
+
+	state %aliasCache;
+	if (exists($aliasCache{$key})) {
+		return $aliasCache{$key};
+	}
+
 	$key = SqliteEscape($key);
 
 	if ($key) {
 		my $query = "SELECT alias FROM author_alias WHERE key = '$key'";
-		return SqliteGetValue($query);
+		$aliasCache{$key} = SqliteGetValue($query);
+		return $aliasCache{$key};
 	} else {
 		return "";
 	}

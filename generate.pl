@@ -93,6 +93,9 @@ sub GetPageHeader {
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
+	my $writeSmall = GetTemplate("write-small.template");
+	$htmlStart .= $writeSmall;
+
 	$txtIndex .= $htmlStart;
 
 	return $txtIndex;
@@ -893,12 +896,6 @@ sub MakeStaticPages {
 }
 
 
-#todo this means occasional 404 errors, needs better solution
-if ($HTMLDIR) {
-	#system("rm -rfv $HTMLDIR/*");
-	#system("rm -rf $HTMLDIR/*");
-}
-
 WriteLog ("GetReadPage()...");
 
 #my $indexText = GetReadPage();
@@ -975,8 +972,6 @@ sub MakeClonePage {
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
 
-MakeClonePage();
-
 {
 	my $itemCount = DBGetItemCount("parent_hash = ''");
 
@@ -1002,6 +997,13 @@ MakeClonePage();
 		}
 	#}
 }
+
+# This is a special call which gathers up last run's written html files
+# that were not updated on this run and removes them
+PutHtmlFile("removePreviousFiles", "1");
+
+MakeClonePage();
+
 
 #This has been commented out because it interferes with symlinked html dir
 #rename("html", "html.old");
