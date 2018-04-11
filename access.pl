@@ -128,6 +128,7 @@ sub ProcessAccessLog {
 		my $time = substr($date, 13);
 		$date = substr($date, 1, 11);
 
+		# convert date to yyyy-mm-dd format
 		my ($dateDay, $dateMonth, $dateYear) = split('/', $date);
 		my %mon2num = qw(jan 01 feb 02 mar 03 apr 04 may 05 jun 06 jul 07 aug 08 sep 09 oct 10 nov 11 dec 12);
 		$dateMonth = lc($dateMonth);
@@ -136,7 +137,7 @@ sub ProcessAccessLog {
 		#my $dateIso = "$dateYear-$dateMonth-$dateDay";
 		my ($timeHour, $timeMinute, $timeSecond) = split(':', $time);
 
-		# todo add comment here
+		# remove the first character from $req
 		$req  = substr($req, 1);
 		chop($gmt);
 		chop($proto);

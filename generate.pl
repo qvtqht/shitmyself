@@ -320,18 +320,21 @@ sub GetItemPage {
 	if (GetConfig('replies') == 1 && ($file{'author_key'} || GetConfig('replies_anon') == 1)) {
 		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
+		my $replyFooter;
 		my $prefillText;
+		$prefillText = "";
 
 		if (GetFile($file{'file_path'}) =~ m/\n-- \nwiki$/) {
 			$replyForm = GetTemplate('wikireply.template');
 			$prefillText = "[wiki prefill]";
 		} else {
 			$replyForm = GetTemplate('reply.template');
-			$prefillText = "\n\n-- \nparent=" . $file{'file_hash'};
+			$replyFooter = "\n\n-- \nparent=" . $file{'file_hash'};
 		}
 
 		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
 		$replyForm =~ s/\$extraFields/$replyTag/g;
+		$replyForm =~ s/\$replyFooter/$replyFooter/g;
 		$replyForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $replyForm;
