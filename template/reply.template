@@ -4,7 +4,7 @@
         <!--<li>Respond to above using the field below. Just like new post.</li>-->
         <!--<li>There's no need to register if you want to write something.</li>-->
     <!--</ul>-->
-    <p>You can post a reply using the field below.<br>If not using GPG, you can clear the field and go there.</p>
+    <p>You can post a reply using the field below.<br>If not using GPG, you can clear the field and go from there.</p>
 
     <textarea class=txtarea id=comment rows=4 cols=60 name=comment maxlength=8192>$prefillText</textarea><br>
     <input class=btn type=submit value="Post Reply" onClick="">
