@@ -93,9 +93,6 @@ sub GetPageHeader {
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
-	my $writeSmall = GetTemplate("write-small.template");
-	$htmlStart .= $writeSmall;
-
 	$txtIndex .= $htmlStart;
 
 	return $txtIndex;
@@ -421,6 +418,9 @@ sub GetIndexPage {
 	my $pageTitle = GetConfig('home_title');
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
+
+	my $writeSmall = GetTemplate("write-small.template");
+	$htmlStart .= $writeSmall;
 
 	$txtIndex .= $htmlStart;
 

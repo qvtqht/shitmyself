@@ -1,10 +1,11 @@
 <!-- write-small.template -->
 <form action="./gracias.html" class=submit name=submit>
 	<details class=instructions>
-		<summary>You can send a short message below. Click for more instructions.</summary>
+		<summary>You can send a short message below. Expand for more instructions.</summary>
         Use at your own risk.<br>
         Comes with NO WARRANTY, express or implied.<br>
-		Limited to about 6,000 characters, including spaces.
+		Limited to about 6,000 characters, including spaces.<br>
+		For a larger textbox, <a href="/write.html">use the Write page.</a>
 	</details>
 
 	<input id=comment name=comment size=80 maxlength=6000> <input type=submit value="Send" onClick="">
