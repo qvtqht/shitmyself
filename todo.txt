@@ -1,3 +1,5 @@
+Save written files to log/written.log
+
 Integrate OpenPGP.js
 	Allow key generation
 	Store key in cookie or browserstorage
