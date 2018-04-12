@@ -1,0 +1,78 @@
+Work on installer; Should be easy to install.
+
+Edit button on item pages
+	(o) Post new copy item
+	(o) Remove current item (requires signature same as current item)
+	
+Replace non-ASCII characters with ANSI boxes
+
+Make item page sections into detail expandos
+
+JS-less reply form: type in the item ID you're replying to
+
+Allow keygen and signing with OpenPGP.js, but tag it as insecure
+
+Play a joke on Z button users -- keep the original text and use that instead
+
+Clear the unclaimed votes every X hours/days
+
+Only use unclaimed votes in queue (wild west) section
+
+Use confirmed/claimed votes for sorting
+
+More than one key can confirm each vote, and confirmed count rises
+
+By setting the vote tags we target the audience/voters' efforts
+
+Add basic watch for any scripts returning "error"
+
+Make sure "response" pages are not cached (make webserver send a header)
+
+"Style mode" vs "Switch to accessibility mode"
+
+Is it safe to use server-side includes?
+
+Timer: This post will be removed in X day, unless it is given a positive vote
+
+Section: Soon to expire posts
+
+Next item/ Prev item links on every page
+
+"Delete" section, sorted by different criteria
+
+config/auto_delete using
+	using all votes
+	using only signed votes
+	using only admin rights, aka rm txt
+
+Once 9000 posts reached, different options to clone on Add page:
+	Best
+	Smartest
+	etc
+	Include only best 5-25% to seed the next one
+
+[x] Encourage editing instead of replying
+	- Fill in the reply form with the current post's text
+	- Change caption of submit button
+
+Home page contents:
+	Instead of latest posts, just a form to submit your public key
+	Create symlink for that key, and post encrypted message
+
+Sort tags randomly at first, but allow alphabetizing
+
+How to do preferences???
+	Server-side includes and per-user settings via access.log?
+
+Fade pages with more views to make them look more read
+
+How to detect that a particular browser has trouble browsing the site? Dropped connections? No clickthroughs?
+
+Pop up a new node
+	Upser uploads tor private key
+	Append it to torrc
+	Read hostname from /var/lib/tor
+	Add to links list
+	
+NoScript button
+	
