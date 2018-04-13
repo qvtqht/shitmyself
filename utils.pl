@@ -151,6 +151,10 @@ sub GetAlias {
 sub GetFile {
 	my $fileName = shift;
 
+	if (!$fileName) {
+		return;
+	}
+
 	my $length = shift || 1048576;
 	# default to reading a max of 1MB of the file. #scaling
 
@@ -231,7 +235,7 @@ sub PutHtmlFile {
 	if (%previousFiles && $file eq "removePreviousFiles" && $content eq "1") {
 		WriteLog("Cleaning up old html files");
 		foreach (keys %previousFiles) {
-			if ($_ ne "removePreviousFiles" && $previousFiles{$_} > 0) {
+			if ($_ ne "removePreviousFiles" || $previousFiles{$_} > 0) {
 				next;
 			} else {
 				WriteLog("unlink($_)");
@@ -599,6 +603,12 @@ sub GpgParse {
 
 sub FormatForWeb {
 	my $text = shift;
+
+	if (!$text) {
+		WriteLog("trying to use FormatForWeb() with empty parameter");
+		return;
+	}
+
 	chomp $text;
 
 	$text = HtmlEscape($text);

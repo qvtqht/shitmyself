@@ -6,7 +6,7 @@
     <!--</ul>-->
 
     <textarea class=txtarea id=comment rows=4 cols=60 name=comment maxlength=8192>$prefillText</textarea><br>
-    <input class=btn type=submit value="Post Reply" onClick="">
+    <input class=btn type=submit value="Save Edit" onClick="">
     $extraFields
     <ul class=instructions>
         <li>If you are signing reply, include footer in signed message.</li>

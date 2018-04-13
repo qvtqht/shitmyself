@@ -319,14 +319,18 @@ sub GetItemPage {
 		my $replyTag = GetTemplate('replytag.template');
 		my $replyFooter;
 		my $prefillText;
-		$prefillText = "";
 
 		if (GetFile($file{'file_path'}) =~ m/\n-- \nwiki$/) {
 			$replyForm = GetTemplate('wikireply.template');
-			$prefillText = "[wiki prefill]";
+
+			my $fileMessage = GetFile($file{'file_path'});
+
+			$prefillText = HtmlEscape($fileMessage);
 		} else {
 			$replyForm = GetTemplate('reply.template');
 			$replyFooter = "\n\n-- \nparent=" . $file{'file_hash'};
+
+			$prefillText = "";
 		}
 
 		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
@@ -711,11 +715,14 @@ sub GetSubmitPage {
 	if (defined($itemCount)) {
 		if ($itemCount < $itemLimit) {
 			my $submitForm = GetTemplate('write.template');
+			my $prefillText = "";
+
 			$submitForm =~ s/\$extraFields//g;
+			$submitForm =~ s/\$prefillText/$prefillText/g;
 
 			$txtIndex .= $submitForm;
 
-			$txtIndex .= "Curent Post Count: $itemCount; Current Post Limit: $itemLimit";
+			$txtIndex .= "Current Post Count: $itemCount; Current Post Limit: $itemLimit";
 		} else {
 			$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please delete some things before posting new ones (or increase the item limit in config)";
 		}
@@ -725,7 +732,10 @@ sub GetSubmitPage {
 		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script><\/head>/;
 	} else {
 		my $submitForm = GetTemplate('write.template');
+		my $prefillText = "";
+
 		$submitForm =~ s/\$extraFields//g;
+		$submitForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $submitForm;
 		$txtIndex = "Something went wrong. Could not get item count.";
