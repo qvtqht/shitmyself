@@ -152,6 +152,7 @@ sub GetFile {
 	my $fileName = shift;
 
 	if (!$fileName) {
+		WriteLog('attempting GetFile() without $fileName');
 		return;
 	}
 
