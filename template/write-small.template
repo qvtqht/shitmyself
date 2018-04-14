@@ -8,7 +8,7 @@
 		For a larger textbox, <a href="/write.html">use the Write page.</a>
 	</details>
 
-	<input id=comment name=comment size=80 maxlength=6000> <input type=submit value="Send" onClick="">
+	<input id=comment name=comment size=80 style="max-width: 100%" maxlength=6000> <input type=submit value="Send" onClick="">
 
 </form>
 <!-- / write-small.template -->
