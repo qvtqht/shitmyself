@@ -62,13 +62,25 @@ foreach (@submitReceivers) {
 #		1 = vhost log
 # )
 sub ProcessAccessLog {
-	my $logfile = shift;       # Path to log file
-	my $vhostParse = shift;    # Whether we use the vhost log format
+	# Processes the specified access.log file
+	# Returns the number of new items and/or actions found
 
+	#Parameters
+
+	my $logfile = shift;
+	# Path to log file
+
+	my $vhostParse = shift;
+	# Whether we use the vhost log format
+
+	#This hash will hold the previous lines we've already processed
 	my %prevLines;
 
+	#Count of the new items/actions
 	my $newItemCount = 0;
 
+	#If processed.log exists, we load it into %prevLines
+	#This is how we will know if we've already looked at a line in the log fil
 	if (-e "./log/processed.log") {
 		open (LOGFILELOG, "./log/processed.log");
 		foreach my $procLine (<LOGFILELOG>) {
@@ -89,12 +101,15 @@ sub ProcessAccessLog {
 	# The following section parses the access log
 	# Thank you, StackOverflow
 	foreach my $line (<LOGFILE>) {
+		#Check to see if we've already processed this line
+		# by hashing it and looking for its hash in %prevLines
 		my $lineHash = md5_hex($line);
-
 		if (defined($prevLines{$lineHash})) {
+			# If it exists, return to the beginning of the loop
 			$prevLines{$lineHash} ++;
 			next;
 		} else {
+			# Otherwise add the hash to processed.log
 			AppendFile("./log/processed.log", $lineHash);
 			$prevLines{$lineHash} = 2;
 		}
@@ -137,7 +152,7 @@ sub ProcessAccessLog {
 		#my $dateIso = "$dateYear-$dateMonth-$dateDay";
 		my ($timeHour, $timeMinute, $timeSecond) = split(':', $time);
 
-		# remove the first character from $req
+		# remove the quotes around the request field
 		$req  = substr($req, 1);
 		chop($gmt);
 		chop($proto);
@@ -169,11 +184,13 @@ sub ProcessAccessLog {
 			if (substr($file, 0, length($submitPrefix)) eq $submitPrefix) {
 				WriteLog ("Found a message...\n");
 
+				# Found a new item, increase the counter
 				$newItemCount++;
 
 				# The message comes after the prefix, so just trim it
 				my $message = (substr($file, length($submitPrefix)));
 
+				# If there is a message...
 				if ($message) {
 
 					# Unpack from URL encoding, probably exploitable :(
@@ -181,13 +198,17 @@ sub ProcessAccessLog {
 					$message = uri_decode($message);
 					$message = decode_entities($message);
 					$message = trim($message);
-					$message =~ s/\&(.+)=on/\n-- \n$1/g; #is this dangerous?
+					$message =~ s/\&(.+)=on/\n-- \n$1/g;
+					#is this dangerous?
 
+					#Look for a reference to a parent message in the footer
 					my $parentMessage;
+
+				 	# Only if the "replies" config is enabled
 					if (GetConfig('replies') && $message =~ /\&parent=(.+)$/) {
 						my $parentId = $1;
 						#todo check for valid char count too
-						if ($parentId =~ /[0-9a-fA-F]+/) {
+						if ($parentId =~ /[0-9a-fA-F]+/ && IsSha1($parentId)) {
 							$parentMessage = $parentId;
 							$message =~ s/\&(parent=.+)$/\n-- \n$1/; # is this too much?
 						}
@@ -196,39 +217,28 @@ sub ProcessAccessLog {
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {
 						$message .= "\n" . $site;
-					} ##todo remove this unnecessary part
+					}
+					#todo remove this unnecessary part
 
 					# Generate filename from date and time
 					my $filename;
 					my $filenameDir;
 
-#					# If the submission contains an @-sign, hide it into the admin dir
-#					# Also, if it contains the string ".onion", to curb spam @todo better solution
-#					if (index($message, "@") != - 1) {
-#						$filenameDir = "$SCRIPTDIR/admin/";
-#						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-#
-#						print "I'm going to put $filename into $filenameDir because it contains an @";
-#					}
-#					elsif (index($message, ".onion") != - 1) {
-#						$filenameDir = "$SCRIPTDIR/spam/";
-#						$filename = "$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-#
-#						print "I'm going to put $filename into $filenameDir because it contains a .onion";
-#					}
-#					else {
-						# Prefix for new text posts
-						$filenameDir = $TXTDIR;
+				  	# Get the directory name
+					$filenameDir = $TXTDIR;
 
-						$filename = "$dateYear/$dateMonth/$dateDay";
+				  	# The filename will be placed in sub-dirs based on date
+					$filename = "$dateYear/$dateMonth/$dateDay";
 
-						if (!-d "$TXTDIR$filename") {
-							system("mkdir -p $TXTDIR$filename");
-						}
-						$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+				  	# Make any necessary directories
+					if (!-d "$TXTDIR$filename") {
+						system("mkdir -p $TXTDIR$filename");
+					}
 
-						WriteLog ("I'm going to put $filename into $filenameDir\n");
-#					}
+				  	#This is the full filename, except for the .txt extension
+					$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+
+					WriteLog ("I'm going to put $filename into $filenameDir\n");
 
 					# Make sure we don't clobber an existing file
 					# If filename exists, add (1), (2), and so on
@@ -238,21 +248,29 @@ sub ProcessAccessLog {
 						$i++;
 						$filename = $filename_root . "(" . $i . ")";
 					}
+
+				  	#Add the .txt extension
 					$filename .= '.txt';
 
 					# Try to write to the file, exit if we can't
 					PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to ' . $filenameDir . $filename);
 					#todo make if statement instead of die
 
+					#Get the hash for this file
 					my $fileHash = GetFileHash($filenameDir . $filename);
 
+					#Add a line to the added.log that records the timestamp
 					my $logLine = $filename . '|' . $fileHash . '|' . time();
 					AppendFile('./log/added.log', $logLine);
 
+					#If we're doing replies, and there is a parent message specified...
 					if (GetConfig('replies') && $parentMessage) {
+						#... add it to parent.log
 						my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
 						AppendFile('./log/parent.log', $parentLogLine);
 					}
+
+					#If we're doing instant updates, index the file right away
 					if (GetConfig('access_update')) {
 						IndexFile($filenameDir . $filename);
 					}

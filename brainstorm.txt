@@ -1,3 +1,5 @@
+Consider https://dkg.fifthhorseman.net/notes/inline-pgp-harmful/
+
 Work on installer; Should be easy to install.
 
 Edit button on item pages
