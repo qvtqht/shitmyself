@@ -383,6 +383,10 @@ sub GetItemPage {
 	return $txtIndex;
 }
 
+sub GetAuthorHeader {
+	return "HI";
+}
+
 sub GetPageParams {
 	my $pageType = shift;
 
@@ -729,7 +733,7 @@ sub GetSubmitPage {
 
 		$txtIndex .= GetPageFooter();
 
-		$txtIndex =~ s/<\/head>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script><\/head>/;
+		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script><\/body>/;
 	} else {
 		my $submitForm = GetTemplate('write.template');
 		my $prefillText = "";
