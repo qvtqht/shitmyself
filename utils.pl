@@ -191,7 +191,7 @@ sub GetConfig {
 		}
 	}
 
-	return;
+	return 0;
 }
 
 sub PutConfig {
