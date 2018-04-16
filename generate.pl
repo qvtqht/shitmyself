@@ -388,35 +388,49 @@ sub GetAuthorHeader {
 }
 
 sub GetPageParams {
+	# Used for getting the title and query for a page given its type and parameters
 	my $pageType = shift;
 
 	my %pageParams;
 	my %queryParams;
 
 	if (defined($pageType)) {
+		# If there is a page type specified
 		if ($pageType eq 'author') {
+			# Author, get the author key
 			my $authorKey = shift;
-			my $whereClause = "author_key='$authorKey'";
 
+			# Get the pretty versions of the alias and the avatar
+			# for the title
 			my $authorAliasHtml = GetAlias($authorKey);
 			my $authorAvatarHtml = GetAvatar($authorKey);
 
+			# Set title params
 			$pageParams{'title'} = "Posts by or for $authorAliasHtml";
 			$pageParams{'title_html'} = "$authorAvatarHtml";
 
+			# Set the WHERE clause for the query
+			my $whereClause = "author_key='$authorKey'";
 			$queryParams{'where_clause'} = $whereClause;
 		}
 	} else {
+		# Default = main home page title
 		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
 		$pageParams{'title_html'} = GetConfig('home_title');
 	}
 
+	# Add the query parameters to the page parameters
 	$pageParams{'query_params'} = %queryParams;
 
+	# Return the page parameters
 	return %pageParams;
 }
 
 sub GetIndexPage {
+	# Returns index#.html files given an array of files
+	# Called by a loop in generate.pl
+	# Should probably be replaced with GetReadPage()
+
 	my $filesArrayReference = shift;
 	my @files = @$filesArrayReference;
 	my $currentPageNumber = shift;
