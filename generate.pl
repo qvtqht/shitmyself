@@ -269,6 +269,8 @@ sub GetItemPage {
 
 	my %file = %{shift @_};
 
+	WriteLog("GetItemPage(" . $file{'file_path'} . ")");
+
 	my $txtIndex = "";
 
 	my $filePath = $file{'file_path'};
@@ -319,17 +321,24 @@ sub GetItemPage {
 		my $replyTag = GetTemplate('replytag.template');
 		my $replyFooter;
 		my $prefillText;
+		my $fileContents;
 
-		if (GetFile($file{'file_path'}) =~ m/\n-- \nwiki$/) {
+		$fileContents = GetFile($file{'file_path'});
+
+		if ($fileContents =~ m/\n-- \nwiki$/) {
 			$replyForm = GetTemplate('wikireply.template');
 
-			my $fileMessage = GetFile($file{'file_path'});
+			my $fileMessage = GetFile($fileContents);
 
 			$prefillText = HtmlEscape($fileMessage);
 		} else {
 			$replyForm = GetTemplate('reply.template');
 			$replyFooter = "\n\n-- \nparent=" . $file{'file_hash'};
 
+			$prefillText = "";
+		}
+
+		if (!$prefillText) {
 			$prefillText = "";
 		}
 

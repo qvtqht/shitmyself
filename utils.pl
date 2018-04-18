@@ -160,7 +160,10 @@ sub GetFile {
 	# default to reading a max of 1MB of the file. #scaling
 
 	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
-		read ($file, my $return, $length);
+		my $return;
+
+		read ($file, $return, $length);
+
 		return $return;
 	}
 
@@ -605,7 +608,7 @@ sub GpgParse {
 sub FormatForWeb {
 	my $text = shift;
 
-	if (!$text) {
+	if (!$text && $text ne '') {
 		WriteLog("trying to use FormatForWeb() with empty parameter");
 		return;
 	}
