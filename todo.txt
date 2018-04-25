@@ -1,5 +1,3 @@
-Test
-
 Save written files to log/written.log
 
 Integrate OpenPGP.js
