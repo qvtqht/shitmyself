@@ -1,3 +1,7 @@
+Elaborate on setting up a dev environment
+    Trisquel
+    IntelliJ
+
 Save written files to log/written.log
 
 Integrate OpenPGP.js
