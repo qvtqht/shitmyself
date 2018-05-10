@@ -1,6 +1,12 @@
+Newly dropped text files should get their own added time.
+	Adjust the sorting to be based on added time, then filesystem path
+
 Elaborate on setting up a dev environment
     Trisquel
     IntelliJ
+    sqlite3
+    lighttpd
+
 
 Save written files to log/written.log
 
