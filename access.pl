@@ -288,12 +288,15 @@ sub ProcessAccessLog {
 			# Put the arguments into an array
 			my @actionArgs = split("/", $file);
 
+			# If the action is "vote.html"
 			if ($actionArgs[2] eq 'vote.html?') {
+				# Get the arguments: file, time, value, checksum
 				my $voteFile = $actionArgs[3];
 				my $ballotTime = $actionArgs[4];
 				my $voteValue = $actionArgs[5];
 				my $checksum = $actionArgs[6];
 
+				# Verify the checksum
 				my $checksumCorrect = md5_hex($voteFile . $ballotTime . $mySecret);
 
 				my $currentTime = time();
