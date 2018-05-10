@@ -1,5 +1,10 @@
+Change admin.key to ./admin/*.txt
+
+Change ./txt to ./html/txt
+
 Newly dropped text files should get their own added time.
 	Adjust the sorting to be based on added time, then filesystem path
+	Add an ./incoming dir for new textfiles that are manually copied?
 
 Elaborate on setting up a dev environment
     Trisquel
