@@ -14,7 +14,7 @@
     <script><!--
     // document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');
-    document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="zalgo_textarea(\'comment\');">');
+    document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="if (typeof zalgo_textarea === \'function\') { zalgo_textarea(\'comment\'); }">');
     // --></script>
     $extraFields
     <details class=instructions>
