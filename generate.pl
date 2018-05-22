@@ -168,6 +168,13 @@ sub GetVoterTemplate {
 }
 
 sub GetItemTemplate {
+	# Returns HTML template for outputting one item
+	# %file(array for each file)
+	# file_path = file path including filename
+	# file_hash = git's hash of the file's contents
+	# author_key = gpg key of author (if any)
+	# add_timestamp = time file was added as unix_time #todo
+
 	my %file = %{shift @_};
 
 	if (-e $file{'file_path'}) {
@@ -325,18 +332,10 @@ sub GetItemPage {
 
 		$fileContents = GetFile($file{'file_path'});
 
-		if ($fileContents =~ m/\n-- \nwiki$/) {
-			$replyForm = GetTemplate('wikireply.template');
+		$replyForm = GetTemplate('reply.template');
+		$replyFooter = "\n\n-- \nparent=" . $file{'file_hash'};
 
-			my $fileMessage = GetFile($fileContents);
-
-			$prefillText = HtmlEscape($fileMessage);
-		} else {
-			$replyForm = GetTemplate('reply.template');
-			$replyFooter = "\n\n-- \nparent=" . $file{'file_hash'};
-
-			$prefillText = "";
-		}
+		$prefillText = "";
 
 		if (!$prefillText) {
 			$prefillText = "";
@@ -368,8 +367,8 @@ sub GetItemPage {
 		foreach my $voteValue (keys %voteTotals) {
 			$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
 		}
-#		my $voteRetention = GetConfig('vote_limit');
-#		$voteRetention = ($voteRetention / 86400) . " days";
+		my $voteRetention = GetConfig('vote_limit');
+		$voteRetention = ($voteRetention / 86400) . " days";
 
 		my $recentVotesTemplate = GetTemplate('item/recent_votes.template');
 		$recentVotesTemplate =~ s/\$votesSummary/$votesSummary/;

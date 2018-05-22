@@ -10,7 +10,6 @@
     <label for="comment">Enter text here: (Then press the "Add Text" button below.)</label>
     <textarea class=txtarea id=comment title="Enter text here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
     <input class=btn type=submit value="Add Text" onclick="">
-    <input type=checkbox onclick="document.getElementById('js').checked=false;" name=wiki id=wiki><label for=wiki>Encourage editing</label>
     <script><!--
     // document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');
