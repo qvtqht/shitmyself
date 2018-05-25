@@ -11,7 +11,7 @@
     $extraFields
     <ul class=instructions>
         <li>If you are signing your reply with GPG, please include this footer at the bottom your signed message:<br>
-            <pre style="border:1px solid blue">$replyFooter</pre>
+            <textarea rows=4 cols=80 name="replyfooter">$replyFooter</textarea>
         </li>
         <!--<li>You can sign your messages with GPG, but you don't have to.</li>-->
         <!--<li>To set username, submit public key. See manual for details.</li>-->
