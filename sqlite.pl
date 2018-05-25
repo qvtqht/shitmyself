@@ -123,7 +123,7 @@ sub DBGetItemReplies {
 
 	my %queryParams;
 	$queryParams{'where_clause'} = "parent_hash = '$itemHash'";
-	$queryParams{'order_clause'} = "ORDER BY add_timestamp, item_name"; #todo this should be by timestamp
+	$queryParams{'order_clause'} = "ORDER BY item_name"; #todo this should be by timestamp
 
 	return DBGetItemList(\%queryParams);
 

@@ -322,7 +322,6 @@ sub GetItemPage {
 		}
 	}
 
-	# todo fix the == hack
 	if (GetConfig('replies') == 1 && ($file{'author_key'} || GetConfig('replies_anon') == 1)) {
 		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
