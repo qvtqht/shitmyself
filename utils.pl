@@ -617,6 +617,8 @@ sub FormatForWeb {
 
 	$text = HtmlEscape($text);
 	$text =~ s/\n/<br>\n/g;
+	$text =~ s/^ /&nbsp;/g;
+	$text =~ s/  / &nbsp;/g;
 
 	return $text;
 }

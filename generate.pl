@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -30,6 +31,8 @@ sub GetPageFooter {
 	return $txtFooter;
 }
 
+my $primaryColor;
+
 sub GetPageHeader {
 	my $title = shift;
 	my $titleHtml = shift;
@@ -56,7 +59,7 @@ sub GetPageHeader {
 	my $txtIndex = "";
 
 	my @primaryColorChoices = qw(008080 c08000 808080 8098b0 c5618e);
-	my $primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
+	$primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
 	my @secondaryColorChoices = qw(f0fff0 ffffff);
 	my $secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
@@ -201,8 +204,7 @@ sub GetItemTemplate {
 			$message = GetFile($file{'file_path'});
 		}
 
-		$message = HtmlEscape($message);
-		$message =~ s/\n/<br>\n/g;
+		$message = FormatForWeb($message);
 
 		if ($isSigned && $gpgKey eq GetAdminKey()) {
 			$isAdmin = 1;
@@ -313,7 +315,7 @@ sub GetItemPage {
 	if ($file{'child_count'}) {
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
-		$txtIndex .= "<hr>";
+		$txtIndex .= "<hr size=5 color=\"$primaryColor\">";
 
 		foreach my $replyItem (@itemReplies) {
 			my $replyTemplate = GetItemTemplate($replyItem);
@@ -483,8 +485,7 @@ sub GetIndexPage {
 				$message = GetFile($file);
 			}
 
-			$message = HtmlEscape($message);
-			$message =~ s/\n/<br>\n/g;
+			$message = FormatForWeb($message);
 
 			if ($isSigned && $gpgKey eq GetAdminKey()) {
 				$isAdmin = 1;
