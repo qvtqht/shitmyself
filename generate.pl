@@ -315,7 +315,7 @@ sub GetItemPage {
 	if ($file{'child_count'}) {
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
-		$txtIndex .= "<hr size=5 color=\"$primaryColor\">";
+		$txtIndex .= "<hr>";
 
 		foreach my $replyItem (@itemReplies) {
 			my $replyTemplate = GetItemTemplate($replyItem);
@@ -505,6 +505,7 @@ sub GetIndexPage {
 			$alias = HtmlEscape($alias);
 
 			my $itemTemplate = GetTemplate("itemvote.template");
+			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 
 			my $itemClass = "txt $signedCss";
 

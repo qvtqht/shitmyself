@@ -74,7 +74,22 @@ details.txt a.header {
 	font-size: larger;
 }
 
+/* vote summary */
+.vote {
+	text-decoration: underline;
+	color: $primaryColor;
+}
+
+/* submission textbox */
+#comment, #submit {
+	border-color: $primaryColor;
+	border-width: 3pt;
+	border-radius: 3pt;
+	padding: 3pt;
+}
+
 /* voting buttons */
+/*
 .voter {
 	margin: 0pt 0pt 0pt 0pt;
 	cursor: pointer;
@@ -93,9 +108,6 @@ details.txt a.header {
 .voter a.pos {
 	background-color: #408040;
 }
-.voter a.neg {
-	background-color: #b06060;
-}
 .voter a.pos:active, .voter a.neg:active {
 	background-color: $orangeColor;
 	border: 1pt inset $primaryColor;
@@ -104,6 +116,10 @@ details.txt a.header {
 	color: $disabledTextColor;
 	background-color: $disabledColor;
 	border: 1pt solid $disabledColor;
+}*/
+
+a.neg {
+	color: red;
 }
 
 /* avatars */
