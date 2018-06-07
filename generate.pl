@@ -569,6 +569,134 @@ sub GetIndexPage {
 
 }
 
+sub GetRssPage {
+	#my $filesArrayReference = shift;
+	#my @files = @$filesArrayReference;
+
+	my $txtRssPage = "";
+
+	my $aboutUrl = "about url";
+	my $feedTitle = " feed title ";
+	my $feedLink = "feed link ";
+	my $feedDescription = "feed description";
+	my $feedPubDate = "feed pub date";
+	
+	my $feedItemsList = "feed items list";
+	my $feedItems = "feed itms";
+	
+	$txtRssPage = GetTemplate('rss/feed.xml.template');
+	
+	$txtRssPage =~ s/\$aboutUrl/$aboutUrl/g;
+	$txtRssPage =~ s/\$feedTitle/$feedTitle/g;
+	$txtRssPage =~ s/\$feedLink/$feedLink/g;
+	$txtRssPage =~ s/\$feedDescription/$feedDescription/g;
+	$txtRssPage =~ s/\$feedPubDate/$feedPubDate/g;
+
+	$txtRssPage =~ s/\$feedItemsList/$feedItemsList/g;
+	$txtRssPage =~ s/\$feedItems/$feedItems/g;
+		
+#	foreach my $row (@files) {
+#		my $file = $row->{'file_path'};
+#
+#		if (-e $file) {
+#			my $gitHash = $row->{'file_hash'};
+#
+#			my $gpgKey = $row->{'author_key'};
+#
+#			my $isSigned;
+#			if ($gpgKey) {
+#				$isSigned = 1;
+#			} else {
+#				$isSigned = 0;
+#			}
+#
+#			my $alias;;
+#
+#			my $isAdmin = 0;
+#
+#			my $message;
+#			if ($gpgKey) {
+#				$message = GetFile("./cache/message/$gitHash.message");
+#			} else {
+#				$message = GetFile($file);
+#			}
+#
+#			$message = FormatForWeb($message);
+#
+#			if ($isSigned && $gpgKey eq GetAdminKey()) {
+#				$isAdmin = 1;
+#			}
+#
+#			my $signedCss = "";
+#			if ($isSigned) {
+#				if ($isAdmin) {
+#					$signedCss = "signed admin";
+#				} else {
+#					$signedCss = "signed";
+#				}
+#			}
+#
+#			# todo $alias = GetAlias($gpgKey);
+#
+#			$alias = HtmlEscape($alias);
+#
+#			my $itemTemplate = GetTemplate("itemvote.template");
+#			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
+#
+#			my $itemClass = "txt $signedCss";
+#
+#			my $authorUrl;
+#			my $authorAvatar;
+#			my $authorLink;
+#
+#			if ($gpgKey) {
+#				$authorUrl = "/author/$gpgKey/";
+#				$authorAvatar = GetAvatar($gpgKey);
+#
+#				$authorLink = GetTemplate('authorlink.template');
+#
+#				$authorLink =~ s/\$authorUrl/$authorUrl/g;
+#				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+#			} else {
+#				$authorLink = "";
+#			}
+#			my $permalinkTxt = $file;
+#			$permalinkTxt =~ s/^\.//;
+#
+#			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+#
+#			my $itemText = $message;
+#			my $fileHash = GetFileHash($file);
+#			my $itemName = TrimPath($file);
+#			my $ballotTime = time();
+#			my $replyCount = $row->{'child_count'};
+#
+#			$itemTemplate =~ s/\$itemClass/$itemClass/g;
+#			$itemTemplate =~ s/\$authorLink/$authorLink/g;
+#			$itemTemplate =~ s/\$itemName/$itemName/g;
+#			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+#			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+#			$itemTemplate =~ s/\$itemText/$itemText/g;
+#			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+#			if ($replyCount) {
+#				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+#			} else {
+#				$itemTemplate =~ s/\$replyCount//g;
+#			}
+#
+#			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+#			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+#
+#			$txtIndex .= $itemTemplate;
+#		}
+#	}
+
+	$txtRssPage .= GetTemplate('voteframe.template');
+
+	return $txtRssPage;
+
+}
+
 sub GetReadPage {
 	my $title;
 	my $titleHtml;
@@ -934,7 +1062,6 @@ sub MakeStaticPages {
 
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 }
-
 
 WriteLog ("GetReadPage()...");
 

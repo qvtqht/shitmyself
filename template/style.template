@@ -118,8 +118,9 @@ details.txt a.header {
 	border: 1pt solid $disabledColor;
 }*/
 
+/* flag buttons */
 a.neg {
-	color: red;
+	color: #e08080;
 }
 
 /* avatars */
@@ -138,7 +139,7 @@ form.submit, form.reply {
 	padding: 10pt;
 }
 form.submit .btn, form.reply .btn {
-	background-color: $orangeColor;
+	background-color: $primaryColor;
 	color: $secondaryColor;
 	font-family: monospace;
 	font-size: large;
