@@ -10,7 +10,9 @@ if (GetConfig('git_stash') == 1) {
 
 system('git pull');
 
-my $newItemCount = ProcessAccessLog("log/access.log", 0);
+my $accessLogPath = GetConfig('access_log_path');
+
+my $newItemCount = ProcessAccessLog($accessLogPath, 0);
 
 if ($newItemCount > 0) {
 	system('perl rebuild.pl');
