@@ -89,10 +89,11 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
 
 	my $menuTemplate = "";
-	$menuTemplate .= GetMenuItem("/", "Home Page");
-	$menuTemplate .= GetMenuItem("/write.html", "Write");
-	$menuTemplate .= GetMenuItem("/manual.html", "Manual");
-	$menuTemplate .= GetMenuItem("/clone.html", "Clone");
+
+	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
@@ -451,6 +452,10 @@ sub GetIndexPage {
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
 
 	my $writeSmall = GetTemplate("write-small.template");
+
+	my $writeShortMessage = GetString('write_short_message');
+	$writeSmall =~ s/\$writeShortMessage/$writeShortMessage/g;
+
 	$htmlStart .= $writeSmall;
 
 	$txtIndex .= $htmlStart;

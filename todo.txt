@@ -1,3 +1,6 @@
+Feeds list
+	OPML
+
 Text::Markdown?
 
 Change admin.key to ./admin/*.txt

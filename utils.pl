@@ -30,31 +30,51 @@ foreach(@dirsThatShouldExist) {
 
 ####################################################################################
 #
-sub GetIntlString {
+
+sub GetString {
 	my $stringKey = shift;
 
 	state %strings;
 
-	if (!%strings) {
-		# get them from language/en
+	if (!defined($strings{$stringKey})) {
+		my $string = GetFile('string/en/'.$stringKey);
 
-		my $stringsFile = GetFile('language/en');
+		chomp $string;
 
-		my @results = split("\n", $stringsFile);
-
-		foreach (@results) {
-			chomp;
-
-			my ($key, $value) = split(/\|/, $_);
-
-			$strings{$key} = $value;
-		}
+		$strings{$stringKey} = $string;
 	}
 
 	if (defined($strings{$stringKey})) {
 		return $strings{$stringKey};
 	}
 }
+
+
+#sub GetString {
+#	my $stringKey = shift;
+#
+#	state %strings;
+#
+#	if (!%strings) {
+#		# get them from language/en
+#
+#		my $stringsFile = GetFile('language/en');
+#
+#		my @results = split("\n", $stringsFile);
+#
+#		foreach (@results) {
+#			chomp;
+#
+#			my ($key, $value) = split(/\|/, $_);
+#
+#			$strings{$key} = $value;
+#		}
+#	}
+#
+#	if (defined($strings{$stringKey})) {
+#		return $strings{$stringKey};
+#	}
+#}
 
 sub GetFileHash {
 	my $fileName = shift;
@@ -613,7 +633,7 @@ sub FormatForWeb {
 		return;
 	}
 
-	chomp $text;
+	#chomp $text;
 
 	$text = HtmlEscape($text);
 	$text =~ s/\n/<br>\n/g;

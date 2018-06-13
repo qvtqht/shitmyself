@@ -8,7 +8,10 @@ if (GetConfig('git_stash') == 1) {
 	system('git stash');
 }
 
+# Update from repo
 system('git pull');
+
+# Read access.log using the path in the config
 
 my $accessLogPath = GetConfig('access_log_path');
 

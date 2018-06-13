@@ -1,7 +1,7 @@
 <!-- write-small.template -->
 <form action="./gracias.html" class=submit name=submit>
 	<details class=instructions>
-		<summary>Write a short <u>public</u> message below. Expand for more instructions.</summary>
+		<summary>$writeShortMessage</summary>
         Use at your own risk.<br>
         Comes with NO WARRANTY, express or implied.<br>
 		Limited to about 6,000 characters, including spaces.<br>
