@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # This file parses the access logs
-# It posts messages to ./txt/
+# It posts messages to ./html/txt/
 
 use strict;
 use warnings FATAL => 'all';
@@ -27,7 +27,7 @@ require './utils.pl';
 require './index.pl';
 
 # We'll use ./txt as the text repo
-my $TXTDIR = "$SCRIPTDIR/txt/";
+my $TXTDIR = "$SCRIPTDIR/html/txt/";
 
 # Logfile for default site domain
 # In Apache, use CustomLog, e.g.:
