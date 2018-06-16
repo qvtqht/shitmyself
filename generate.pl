@@ -8,7 +8,7 @@ use 5.010;
 use lib qw(lib);
 use HTML::Entities;
 use Digest::MD5 qw(md5_hex);
-use POSIX;
+#use POSIX;
 #use Acme::RandomEmoji qw(random_emoji);
 
 require './utils.pl';
@@ -416,7 +416,7 @@ sub GetPageParams {
 			my $authorAvatarHtml = GetAvatar($authorKey);
 
 			# Set title params
-			$pageParams{'title'} = "Posts by or for $authorAliasHtml";
+			$pageParams{'title'} = "Posts by (or for) $authorAliasHtml";
 			$pageParams{'title_html'} = "$authorAvatarHtml";
 
 			# Set the WHERE clause for the query
@@ -828,7 +828,7 @@ sub GetReadPage {
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
 			$itemTemplate =~ s/\$itemName/$itemName/g;
-			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g; #txtrefactor
 			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
@@ -1100,13 +1100,19 @@ foreach my $key (@authors) {
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
 
+	my $fileList = "";
+
 	foreach my $file(@files) {
 		my $fileName = TrimPath($file->{'file_path'});
+
+		$fileList .= $fileName . "\n";
 
 		my $fileIndex = GetItemPage($file);
 
 		PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
 	}
+
+	PutFile("$HTMLDIR/rss.txt", $fileList);
 }
 
 MakeStaticPages();
