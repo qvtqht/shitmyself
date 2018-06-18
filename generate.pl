@@ -1103,9 +1103,13 @@ foreach my $key (@authors) {
 	my $fileList = "";
 
 	foreach my $file(@files) {
-		my $fileName = TrimPath($file->{'file_path'});
+		my $fileName = $file->{'file_path'};
 
-		$fileList .= $fileName . "\n";
+		$fileName =~ s/^\.//;
+
+		my $fileHash = $file->{'file_hash'};
+
+		$fileList .= $fileName . "|" . $fileHash . "\n";
 
 		my $fileIndex = GetItemPage($file);
 
