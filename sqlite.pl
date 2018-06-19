@@ -28,7 +28,7 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed DEFAULT 0)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, weight)");
 	SqliteQuery("CREATE TABLE added_time(file_path, file_hash, add_timestamp);");
-#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
++#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 #	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 #	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
 #	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
@@ -36,7 +36,7 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value);");
 
 	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
-	SqliteQuery("CREATE VIEW last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
+	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
 }
 
 sub SqliteQuery {

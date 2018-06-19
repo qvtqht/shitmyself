@@ -1,3 +1,6 @@
+Link target encryption key with parent id key using gpg --list-keys
+	This way "Encrypted message for ..." is linked to the correct profile
+
 Feeds list
 	OPML
 
