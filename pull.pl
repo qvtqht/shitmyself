@@ -50,20 +50,33 @@ sub PullFeedFromHost {
 
 				print 'Absent: ' . $fileUrl . "\n";
 
-				PullItemFromHost($fileUrl, $fileHash);
+				PullItemFromHost($hostBase, $fileName, $fileHash);
 			}
 		}
 	}
 }
 
 sub PullItemFromHost {
-	my $url = shift;
+	my $host = shift;
+	my $fileName = shift;
 	my $hash = shift;
 
-	chomp $url;
+	chomp $host;
+	chomp $fileName;
 	chomp $hash;
 
-	print "Pull $url\n";
+	my $url = $host . $fileName;
+
+	#print $url;
+
+	my $remoteFileContents = `curl -s $url`;
+
+	my $localPath = '.' . $fileName;
+
+	PutFile($localPath, $remoteFileContents);
+
+	print "###\n###\n###\n" . $localPath . "\n###\n###\n";
+
 
 }
 
