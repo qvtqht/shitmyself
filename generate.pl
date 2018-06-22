@@ -1184,6 +1184,11 @@ sub MakeClonePage {
 # that were not updated on this run and removes them
 PutHtmlFile("removePreviousFiles", "1");
 
+my $votesInDatabase = DBGetVotesTable();
+if ($votesInDatabase) {
+	PutFile('./html/votes.txt', DBGetVotesTable());
+}
+
 MakeClonePage();
 
 

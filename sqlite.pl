@@ -64,7 +64,6 @@ sub DBGetVotesTable {
 
 	return $result;
 }
-PutFile('./html/votes.txt', DBGetVotesTable());
 
 sub SqliteGetHash {
 	my $query = shift;
