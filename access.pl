@@ -253,30 +253,31 @@ sub ProcessAccessLog {
 					$filename .= '.txt';
 
 					# Try to write to the file, exit if we can't
-					PutFile($filenameDir . $filename, $message) or die('Could not open text file to write to ' . $filenameDir . $filename);
-					#todo make if statement instead of die
+					if (PutFile($filenameDir . $filename, $message)) {
+						#Get the hash for this file
+						my $fileHash = GetFileHash($filenameDir . $filename);
 
-					#Get the hash for this file
-					my $fileHash = GetFileHash($filenameDir . $filename);
+						#Add a line to the added.log that records the timestamp
+						my $logLine = $filename . '|' . $fileHash . '|' . time();
+						AppendFile('./log/added.log', $logLine);
 
-					#Add a line to the added.log that records the timestamp
-					my $logLine = $filename . '|' . $fileHash . '|' . time();
-					AppendFile('./log/added.log', $logLine);
+						#If we're doing replies, and there is a parent message specified...
+						if (GetConfig('replies') && $parentMessage) {
+							#... add it to parent.log
+							my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
+							AppendFile('./log/parent.log', $parentLogLine);
+						}
 
-					#If we're doing replies, and there is a parent message specified...
-					if (GetConfig('replies') && $parentMessage) {
-						#... add it to parent.log
-						my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
-						AppendFile('./log/parent.log', $parentLogLine);
+						#If we're doing instant updates, index the file right away
+						if (GetConfig('access_update')) {
+							IndexFile($filenameDir . $filename);
+						}
+
+						# Add the file to git
+						#system("git add \"$filenameDir$filename\"");
+					} else {
+						WriteLog("WARNING: Could not open text file to write to ' . $filenameDir . $filename");
 					}
-
-					#If we're doing instant updates, index the file right away
-					if (GetConfig('access_update')) {
-						IndexFile($filenameDir . $filename);
-					}
-
-					# Add the file to git
-					#system("git add \"$filenameDir$filename\"");
 				}
 			}
 		}
