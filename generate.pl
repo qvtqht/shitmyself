@@ -1191,8 +1191,3 @@ if ($votesInDatabase) {
 
 MakeClonePage();
 
-
-#This has been commented out because it interferes with symlinked html dir
-#rename("html", "html.old");
-#rename("$HTMLDIR", "html/");
-#system("rm -rf html.old");
