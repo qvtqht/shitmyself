@@ -242,7 +242,7 @@ sub GetItemTemplate {
 			$authorLink = "";
 		}
 		my $permalinkTxt = $file{'file_path'};
-		$permalinkTxt =~ s/^\.//;
+		$permalinkTxt =~ s/^\.\/html//;
 
 		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
 
