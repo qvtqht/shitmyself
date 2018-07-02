@@ -241,10 +241,12 @@ sub GetItemTemplate {
 		} else {
 			$authorLink = "";
 		}
-		my $permalinkTxt = $file{'file_path'};
-		$permalinkTxt =~ s/^\.\/html//;
-
+		
+		my $permalinkTxt = $file;
 		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+		$permalinkTxt =~ s/^\.//;
+		$permalinkTxt =~ s/^html\//\//;
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file{'file_path'});
@@ -530,9 +532,10 @@ sub GetIndexPage {
 				$authorLink = "";
 			}
 			my $permalinkTxt = $file;
-			$permalinkTxt =~ s/^\.//;
-
 			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+			$permalinkTxt =~ s/^\.//;
+			$permalinkTxt =~ s/^html\//\//;
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
