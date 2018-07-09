@@ -14,7 +14,7 @@ SqliteUnlinkDb();
 SqliteMakeTables();
 
 # This holds all the files we will list in the primary index
-my @filesToInclude = `find ./txt/ | grep \.txt\$ | sort -r`;
+my @filesToInclude = `find ./html/txt/ | grep \.txt\$ | sort -r`;
 
 MakeIndex(\@filesToInclude);
 
