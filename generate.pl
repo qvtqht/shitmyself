@@ -246,7 +246,7 @@ sub GetItemTemplate {
 		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
 
 		$permalinkTxt =~ s/^\.//;
-		$permalinkTxt =~ s/html\//\//;
+		$permalinkTxt =~ s/html\///;
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file{'file_path'});
@@ -819,7 +819,7 @@ sub GetReadPage {
 			}
 			my $permalinkTxt = $file;
 			$permalinkTxt =~ s/^\.//;
-			$permalinkTxt =~ s/^html\///;
+			$permalinkTxt =~ s/html\///;
 
 			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
 
