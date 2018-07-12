@@ -1104,6 +1104,8 @@ foreach my $key (@authors) {
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
 
+	WriteLog("DBGetItemList() returned " . scalar(@files) . " items");
+
 	my $fileList = "";
 
 	foreach my $file(@files) {
@@ -1117,7 +1119,9 @@ foreach my $key (@authors) {
 
 		my $fileIndex = GetItemPage($file);
 
-		PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
+		my $targetPath = $HTMLDIR . '/' . TrimPath($fileName) . '.html';
+
+		PutHtmlFile($targetPath, $fileIndex);
 	}
 
 	PutFile("$HTMLDIR/rss.txt", $fileList);
