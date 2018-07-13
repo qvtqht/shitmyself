@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>OpenPGPJS Tests</title>
+
+</head>
+<body onload="prefillFromStorage()">
+
+<script src="dist/openpgp.js"></script>
+<script type="text/javascript"><!--
+
+function logOut() {
+    window.localStorage.removeItem('privatekey');
+    window.localStorage.removeItem('publickey');
+    window.localStorage.removeItem('password');
+
+    showStatus('success logging out', '^_^');
+}
+
+function showStatus(status_message, private_key) {
+    if (status_message) {
+        document.getElementById('status').value = status_message;
+    }
+
+    if (private_key) {
+        document.getElementById('privatekey').value = private_key;
+    }
+}
+
+function prefillFromStorage() {
+    var privateKey = localStorage.getItem('privatekey');
+
+    if (privateKey === null || privateKey.length === 0) {
+    } else {
+        showStatus('key preloaded!', privateKey.toString());
+    }
+
+}
+
+function getKey(username, password) {
+    if (typeof(Storage) !== "undefined") {
+        var privateKey = localStorage.getItem('privatekey');
+
+        if (privateKey === null || privateKey.length === 0) {
+            var privkey;
+            var pubkey;
+
+            var openpgp = window.openpgp;
+            openpgp.initWorker({path:'dist/openpgp.worker.js'});
+
+            var options = {
+                userIds: [{ name:username }],
+                numBist: 4096,
+                passphrase: password
+            };
+
+            openpgp.generateKey(options).then(
+                function(key) {
+                    window.localStorage.setItem("privatekey", key.privateKeyArmored);
+                    window.localStorage.setItem("publickey", key.publicKeyArmored);
+                    window.localStorage.setItem("password", password);
+
+                    showStatus('new key generated!', key.privateKeyArmored.toString());
+                }
+            );
+
+        } else {
+            //document.write("private key already exists! yay!");
+            //document.write('<pre style="coor:blue;">');
+            showStatus('key already exists!', privateKey.toString());
+        }
+    } else {
+        document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+    }
+}
+
+function makeKeyFromInputs() {
+    var user = document.getElementById('name').value;
+    var pass = document.getElementById('pass').value;
+
+    getKey(user, pass);
+}
+
+function encryptMessage() {
+    var message = document.getElementById('message').value;
+
+    alert(message);
+}
+
+
+		// -->
+
+
+</script>
+
+<!--<a onclick="getKey(document.getElementById('name'), document.getElementById('pass'));">generate new key</a>-->
+<a onclick="makeKeyFromInputs();">generate new key</a> | <a onclick="logOut()">log out</a>
+<table><tr><td>
+<form>
+    <input type=text size=40 maxlength=100 name=name id=name>
+    <input type=text size=40 maxlength=100 name=pass id=pass><br>
+    <textarea cols=80 rows=25 id=privatekey></textarea><br>
+    <textarea cols=80 rows=5 id=status></textarea>
+</form>
+</td><td>
+<hr>
+
+<form>
+    <textarea cols=80 rows=25 id=message></textarea><br>
+    <input type=button onclick="encryptMessage()" value="encrypt">
+</form>
+
+
+</body>
+</html>
