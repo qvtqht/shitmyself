@@ -6,7 +6,7 @@ use utf8;
 use 5.010;
 
 use lib qw(lib);
-use HTML::Entities;
+use HTML::Entities qw(encode_entities);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 #use Acme::RandomEmoji qw(random_emoji);
