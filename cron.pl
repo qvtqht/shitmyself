@@ -4,12 +4,12 @@ use warnings FATAL => 'all';
 require './utils.pl';
 require './access.pl';
 
-if (GetConfig('git_stash') == 1) {
-	system('git stash');
-}
+# if (GetConfig('git_stash') == 1) {
+# 	system('git stash');
+# }
 
 # Update from repo
-system('git pull');
+#system('git pull');
 
 # Read access.log using the path in the config
 

@@ -553,7 +553,8 @@ sub GpgParse {
 				$alias =~ s/^\s+//;
 				$alias =~ s/\s+$//;
 
-				$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
+				$message = "Everyone please welcome $alias, whose key with the fingerprint $gpg_key has been submitted.";
+				#$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
 
 				$isSigned = 1;
 
@@ -636,9 +637,9 @@ sub FormatForWeb {
 	#chomp $text;
 
 	$text = HtmlEscape($text);
-	$text =~ s/\n/<br>\n/g;
+	$text =~ s/  /&nbsp; /g;
 	$text =~ s/^ /&nbsp;/g;
-	$text =~ s/  / &nbsp;/g;
+	$text =~ s/\n/<br>\n/g;
 
 	return $text;
 }

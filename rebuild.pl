@@ -6,7 +6,7 @@ require './utils.pl';
 require './index.pl';
 require './access.pl';
 
-system('git pull');
+#system('git pull');
 
 ProcessAccessLog("log/access.log");
 
