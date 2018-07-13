@@ -2,5 +2,4 @@
 <h2>Recent Votes:</h2>
 <p>$votesSummary</p>
 <pre>$recentVotesTable</pre>
-<p>Votes are registered on every update.</p>
 </div>
