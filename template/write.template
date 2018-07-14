@@ -1,4 +1,5 @@
 <!-- write.template -->
+
 <form action="./gracias.html" class=submit name=submit>
     <details class=instructions>
         <summary>Welcome! What you write below is public.</summary>

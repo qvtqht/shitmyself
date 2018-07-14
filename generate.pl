@@ -92,6 +92,7 @@ sub GetPageHeader {
 
 	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$menuTemplate .= GetMenuItem("/identity.html", GetString('menu/identity'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
@@ -745,6 +746,7 @@ sub GetReadPage {
 		$title = GetConfig('home_title');
 	}
 	chomp $title;
+	$title = HtmlEscape($title);
 
 	my $htmlStart = GetPageHeader($title, $titleHtml);
 
@@ -861,6 +863,27 @@ sub GetReadPage {
 	return $txtIndex;
 }
 
+sub GetIdentityPage {
+	my $txtIndex = "";
+
+	my $title = "Identity Management";
+	my $titleHtml = "Identity Management";
+
+	$txtIndex = GetPageHeader($title, $titleHtml);
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $idPage = GetTemplate('identity.template');
+
+	$txtIndex .= $idPage;
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+
+	return $txtIndex;
+}
+
 sub GetSubmitPage {
 	my $txtIndex = "";
 
@@ -872,7 +895,6 @@ sub GetSubmitPage {
 	my $itemLimit = 9000;
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
-
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -893,7 +915,7 @@ sub GetSubmitPage {
 
 		$txtIndex .= GetPageFooter();
 
-		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script><\/body>/;
+		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script>\<script src="crypto.js"><\/script><\/body>/;
 	} else {
 		my $submitForm = GetTemplate('write.template');
 		my $prefillText = "";
@@ -996,6 +1018,11 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
 
 
+	# Identity page
+	my $identityPage = GetIdentityPage();
+	PutHtmlFile("$HTMLDIR/identity.html", $identityPage);
+
+
 	# Target page for the submit page
 	my $graciasPage = GetPageHeader("Thank You", "Thank You");
 	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
@@ -1064,6 +1091,9 @@ sub MakeStaticPages {
 	# OpenPGP javascript
 	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('openpgp.js.template'));
 	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('openpgp.worker.js.template'));
+
+	# Write form javasript
+	PutHtmlFile("$HTMLDIR/crypto.js", GetTemplate('crypto.js.template'));
 
 
 	# .htaccess file for Apache

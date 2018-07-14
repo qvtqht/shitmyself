@@ -1,6 +1,8 @@
 function logOut() {
-    window.localStorage.removeItem('privatekey');
-    window.localStorage.removeItem('password');
+    if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
+        window.localStorage.removeItem('privatekey');
+        window.localStorage.removeItem('password');
+    }
 }
 
 function getPrivateKey() {
@@ -23,8 +25,6 @@ function getPassword() {
     }
 }
 
-
-
 function setPrivateKey(privateKey, password) {
     window.localStorage.setItem("privatekey", key.privateKeyArmored);
     window.localStorage.setItem("password", password);
@@ -40,17 +40,18 @@ function makePrivateKey(username, password) {
             var pubkey;
 
             var openpgp = window.openpgp;
-            openpgp.initWorker({path:'dist/openpgp.worker.js'});
+            openpgp.initWorker({path:'openpgp.worker.js'});
 
             var options = {
-                userIds: [{ name:username }],
-                numBist: 4096,
+                userIds: [{ name: username }],
+                numBits: 4096,
                 passphrase: password
             };
 
             openpgp.generateKey(options).then(
                 function(key) {
-                    setPrivateKey(key.privateKeyArmored, password;
+                    //setPrivateKey(key.privateKeyArmored, password);
+                    alert(key.privateKeyArmored);
                 }
             );
 
@@ -66,12 +67,10 @@ function makeKeyFromInputs() {
     var user = document.getElementById('name').value;
     var pass = document.getElementById('pass').value;
 
-    getKey(user, pass);
+    makePrivateKey(user, pass);
 }
 
-function signMessageInTextarea() {
-    var message = document.getElementById('comment').value;
-
+function signMessage(message) {
     var privkey = getPrivateKey();
 
     var passphrase = getPassword();
@@ -86,7 +85,7 @@ function signMessageInTextarea() {
 
     openpgp.sign(options).then(function(signed) {
         cleartext = signed.data;
-        document.getElementById('comment').value = cleartext;
     });
+
 
 }

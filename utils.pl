@@ -176,7 +176,7 @@ sub GetFile {
 		return;
 	}
 
-	my $length = shift || 1048576;
+	my $length = shift || 2097152;
 	# default to reading a max of 1MB of the file. #scaling
 
 	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
@@ -553,7 +553,7 @@ sub GpgParse {
 				$alias =~ s/^\s+//;
 				$alias =~ s/\s+$//;
 
-				$message = "Everyone please welcome $alias, whose key with the fingerprint $gpg_key has been submitted.";
+				$message = "Welcome, $alias\nFingerprint: $gpg_key";
 				#$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
 
 				$isSigned = 1;
