@@ -95,7 +95,7 @@ function signMessageInTextarea() {
     privKeyObj.decrypt(passphrase);
 
     options = {
-        data: 'Hello, World!',                             // input as String (or Uint8Array)
+        data: message,                             // input as String (or Uint8Array)
         privateKeys: [privKeyObj]                          // for signing
     };
 
@@ -126,7 +126,7 @@ function signMessageInTextarea() {
 
 <form>
     <textarea cols=80 rows=25 id=message></textarea><br>
-    <input type=button onclick="signMessageInTextarea();" value="encrypt">
+    <input type=button onclick="signMessageInTextarea();" value="sign">
 </form>
 
 
