@@ -1,5 +1,4 @@
-
-
+<!-- identity.template -->
 <form>
     <a onclick="makeKeyFromInputs();">generate new key</a> | <a onclick="logOut()">clear identity</a><br>
     Username: <input type=text size=40 maxlength=100 name=name id=name><br>
@@ -9,3 +8,4 @@
 </form>
 </td><td>
 <hr>
+<!-- / identity.template -->
