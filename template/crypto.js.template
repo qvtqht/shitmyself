@@ -48,10 +48,21 @@ function makePrivateKey(username, password) {
                 passphrase: password
             };
 
+            var status = document.getElementById('status');
+            if (status) {
+                status.value = 'Generating key...';
+            }
+
             openpgp.generateKey(options).then(
                 function(key) {
                     //setPrivateKey(key.privateKeyArmored, password);
-                    alert(key.privateKeyArmored);
+                    var taPrivateKey = document.getElementById('privatekey');
+                    if (taPrivateKey) {
+                        taPrivateKey.value = key.privateKeyArmored;
+                    }
+                    if (status) {
+                        status.value = 'Key generated!';
+                    }
                 }
             );
 

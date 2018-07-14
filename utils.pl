@@ -256,6 +256,7 @@ sub PutHtmlFile {
 		%previousFiles = GetFileAsHashKeys("log/written.log");
 	}
 
+	#todo there is a bug here
 	if (%previousFiles && $file eq "removePreviousFiles" && $content eq "1") {
 		WriteLog("Cleaning up old html files");
 		foreach (keys %previousFiles) {
