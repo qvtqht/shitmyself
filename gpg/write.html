@@ -38,6 +38,7 @@ function prefillFromStorage() {
 
 }
 
+
 function getKey(username, password) {
     if (typeof(Storage) !== "undefined") {
         var privateKey = localStorage.getItem('privatekey');
@@ -82,10 +83,27 @@ function makeKeyFromInputs() {
     getKey(user, pass);
 }
 
-function encryptMessage() {
+
+function signMessageInTextarea() {
     var message = document.getElementById('message').value;
 
-    alert(message);
+    var privkey = document.getElementById('privatekey').value;
+
+    var passphrase = '';
+
+    var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+    privKeyObj.decrypt(passphrase);
+
+    options = {
+        data: 'Hello, World!',                             // input as String (or Uint8Array)
+        privateKeys: [privKeyObj]                          // for signing
+    };
+
+    openpgp.sign(options).then(function(signed) {
+        cleartext = signed.data;
+        document.getElementById('message').value = cleartext;
+    });
+
 }
 
 
@@ -96,19 +114,19 @@ function encryptMessage() {
 
 <!--<a onclick="getKey(document.getElementById('name'), document.getElementById('pass'));">generate new key</a>-->
 <a onclick="makeKeyFromInputs();">generate new key</a> | <a onclick="logOut()">log out</a>
-<table><tr><td>
+<table><tr valign=top><td>
 <form>
     <input type=text size=40 maxlength=100 name=name id=name>
     <input type=text size=40 maxlength=100 name=pass id=pass><br>
     <textarea cols=80 rows=25 id=privatekey></textarea><br>
-    <textarea cols=80 rows=5 id=status></textarea>
+    <textarea cols=80 rows=5 id=status></textarea><br>
 </form>
 </td><td>
 <hr>
 
 <form>
     <textarea cols=80 rows=25 id=message></textarea><br>
-    <input type=button onclick="encryptMessage()" value="encrypt">
+    <input type=button onclick="signMessageInTextarea();" value="encrypt">
 </form>
 
 
