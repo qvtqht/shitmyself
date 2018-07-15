@@ -2,21 +2,18 @@
 <form>
 <fieldset>
 <legend>Create Identity</legend>
-<table>
-<tr><td colspan=2>All fields are <u>optional</u></td></tr>
-<tr><td>Username:</td><td><input type=text size=40 maxlength=100 name=name id=name></td></tr>
-<tr><td>Email:</td><td><input type=text size=40 maxlength=100 name=name id=name></td></tr>
-<tr><td>Passphrase:</td><td><input type=password size=40 maxlength=100 name=pass id=pass></td></tr>
-<tr><td colspan=2><input type=button value="Generate Key" onclick="makeKeyFromInputs();"></td></tr>
-
-</table>
+<label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name>
+<details><summary>Advanced</summary>
+<label for=email>email:</label></td><td><input type=text size=40 maxlength=100 name=email id=email><br>
+<label for=pass>passphrase:</label></td><td><input type=password size=40 maxlength=100 name=pass id=pass>
+</details>
+<input type=button value="Generate Key" onclick="makeKeyFromInputs();"></td></tr>
 </fieldset>
 </form>
 <hr>
 <form>
-<table>
-<tr><td colspan=2><textarea cols=80 rows=10 id=privatekey></textarea></td></tr>
-<tr><td colspan=2><a onclick="logOut()">clear identity</a></td></tr>
-</table>
+<textarea cols=80 rows=10 id=privatekey></textarea><br>
+<input type=button value="Save Identity" onclick="saveId();">
+<input type=button value="Remove Identity" onclick="logOut();">
 </form>
 <!-- / identity.template -->

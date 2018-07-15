@@ -1,7 +1,12 @@
 function logOut() {
     if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
         window.localStorage.removeItem('privatekey');
-        window.localStorage.removeItem('password');
+
+        var textbox = document.getElementById('privatekey');
+
+        if (textbox) {
+            textbox.value = '';
+        }
     }
 }
 
@@ -15,6 +20,25 @@ function getPrivateKey() {
     }
 }
 
+function popId() {
+    var pk = getPrivateKey();
+    if (pk) {
+        var textbox = document.getElementById('privatekey');
+
+        if (textbox) {
+            textbox.value = pk;
+        }
+    }
+}
+
+function saveId() {
+    var textbox = document.getElementById('privatekey');
+
+    if (textbox) {
+        setPrivateKey(textbox.value);
+    }
+}
+
 function getPassword() {
     var privateKey = localStorage.getItem('password');
 
@@ -25,10 +49,8 @@ function getPassword() {
     }
 }
 
-function setPrivateKey(privateKey, password) {
-    window.localStorage.setItem("privatekey", key.privateKeyArmored);
-    window.localStorage.setItem("password", password);
-
+function setPrivateKey(privateKey) {
+    window.localStorage.setItem("privatekey", privateKey);
 }
 
 function makePrivateKey(username, password) {
@@ -50,12 +72,12 @@ function makePrivateKey(username, password) {
 
             var textbox = document.getElementById('privatekey');
             if (textbox) {
-                textbox.value = 'Generating key...';
+                textbox.value = 'Generating key, please wait...';
             }
 
             openpgp.generateKey(options).then(
                 function(key) {
-                    //setPrivateKey(key.privateKeyArmored, password);
+                    setPrivateKey(key.privateKeyArmored);
                     if (textbox) {
                         textbox.value = key.privateKeyArmored;
                     }
