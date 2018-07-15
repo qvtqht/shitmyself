@@ -18,7 +18,6 @@
 <legend>Current Identity</legend>
 <textarea cols=80 rows=10 id=privatekey></textarea><br>
 <input type=button value="Save Identity" onclick="saveId();">
-<input type=button value="Share Identity" onClick="shareId();">
 <input type=button class=rmid value="Remove Identity" onclick="logOut();">
 </fieldset>
 </form>

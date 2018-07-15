@@ -10,8 +10,9 @@
 
     <label for="comment">Enter text here: (Then press the "Add Text" button below.)</label>
     <textarea class=txtarea id=comment title="Enter text here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
-    <input class=btn type=submit value="Share Anonymously" onclick="">
-    <input class=btn type=button value="Sign with PGP" onclick="signMessage()">
+    <input type=submit value="Add Text" onclick="">
+    <input class=btn type=button value="Sign with PGP" onclick="signMessage();">
+    <input class=btn type=button value="Public Key" onClick="insertPubKey();">
     <script><!--
     document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');

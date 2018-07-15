@@ -20,6 +20,26 @@ function getPrivateKey() {
     }
 }
 
+function insertPubKey() {
+    var comment = document.getElementById('comment');
+    if (comment) {
+        var pubkey = getPublicKey();
+
+        if (pubkey) {
+            comment.value = pubkey;
+        }
+    }
+}
+
+function getPublicKey() {
+    var publicKey = localStorage.getItem('publickey');
+    if (publicKey === null || publicKey.length === 0) {
+        return null;
+    } else {
+        return publicKey;
+    }
+}
+
 function popId() {
     var pk = getPrivateKey();
     if (pk) {
@@ -58,6 +78,10 @@ function getPassword() {
 
 function setPrivateKey(privateKey) {
     window.localStorage.setItem("privatekey", privateKey);
+}
+
+function setPublicKey(publicKey) {
+    window.localStorage.setItem("publickey", publicKey);
 }
 
 function shareId() {
