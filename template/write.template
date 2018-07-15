@@ -10,7 +10,7 @@
 
     <label for="comment">Enter text here: (Then press the "Add Text" button below.)</label>
     <textarea class=txtarea id=comment title="Enter text here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
-    <input type=submit value="Add Text" onclick="">
+    <input type=submit value="Add Text" onclick="" id=addtext>
     <input class=btn type=button value="Sign with PGP" onclick="signMessage();">
     <script><!--
     document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');

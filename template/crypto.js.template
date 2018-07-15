@@ -142,7 +142,7 @@ function signMessage() {
         if (textbox) {
             var message = textbox.value;
 
-            var passphrase = '';
+            var passphrase = prompt('Enter password');
 
             var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
             privKeyObj.decrypt(passphrase);

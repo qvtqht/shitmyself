@@ -1,4 +1,6 @@
 <!-- identity.template -->
+<p>This page requires JavaScript.</p>
+
 <form>
 <fieldset style="display: inline">
 <legend>Create Identity</legend>
@@ -21,4 +23,6 @@
 <input type=button class=rmid value="Remove Identity" onclick="logOut();">
 </fieldset>
 </form>
+
+<p>For more security, please use your own PGP/GPG.</p>
 <!-- / identity.template -->
