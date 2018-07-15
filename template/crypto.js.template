@@ -29,6 +29,13 @@ function popId() {
             textbox.value = pk;
         }
     }
+
+    var nametext = document.getElementById('name');
+    if (nametext) {
+        if (nametext.value == '') {
+            nametext.value = 'Anonymous';
+        }
+    }
 }
 
 function saveId() {
@@ -40,17 +47,21 @@ function saveId() {
 }
 
 function getPassword() {
-    var privateKey = localStorage.getItem('password');
+    var password = localStorage.getItem('password');
 
-    if (privateKey === null || privateKey.length === 0) {
-        return null;
+    if (password === null || password.length === 0) {
+        password = prompt('Please enter passphrase');
     } else {
-        return privateKey;
+        return password;
     }
 }
 
 function setPrivateKey(privateKey) {
     window.localStorage.setItem("privatekey", privateKey);
+}
+
+function shareId() {
+    alert();
 }
 
 function makePrivateKey(username, password) {
@@ -99,22 +110,30 @@ function makeKeyFromInputs() {
     makePrivateKey(user, pass);
 }
 
-function signMessage(message) {
+function signMessage() {
     var privkey = getPrivateKey();
 
-    var passphrase = getPassword();
+    if (privkey) {
+        var textbox = document.getElementById('comment');
+        if (textbox) {
+            var message = textbox.value;
 
-    var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-    privKeyObj.decrypt(passphrase);
+            var passphrase = '';
 
-    options = {
-        data: message,                             // input as String (or Uint8Array)
-        privateKeys: [privKeyObj]                          // for signing
-    };
+            var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+            privKeyObj.decrypt(passphrase);
 
-    openpgp.sign(options).then(function(signed) {
-        cleartext = signed.data;
-    });
+            options = {
+                data: message,                             // input as String (or Uint8Array)
+                privateKeys: [privKeyObj]                  // for signing
+            };
 
+            openpgp.sign(options).then(function(signed) {
+                textbox.value = signed.data;
+            });
+        }
+    } else {
+        alert('No identity defined, cannot sign.');
+    }
 
 }

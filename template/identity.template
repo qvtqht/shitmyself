@@ -1,6 +1,6 @@
 <!-- identity.template -->
 <form>
-<fieldset>
+<fieldset style="display: inline">
 <legend>Create Identity</legend>
 <label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name>
 <details><summary>Advanced</summary>
@@ -10,10 +10,16 @@
 <input type=button value="Generate Key" onclick="makeKeyFromInputs();"></td></tr>
 </fieldset>
 </form>
-<hr>
+
+<br>
+
 <form>
+<fieldset style="display: inline">
+<legend>Current Identity</legend>
 <textarea cols=80 rows=10 id=privatekey></textarea><br>
 <input type=button value="Save Identity" onclick="saveId();">
-<input type=button value="Remove Identity" onclick="logOut();">
+<input type=button value="Share Identity" onClick="shareId();">
+<input type=button class=rmid value="Remove Identity" onclick="logOut();">
+</fieldset>
 </form>
 <!-- / identity.template -->
