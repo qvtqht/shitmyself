@@ -208,7 +208,7 @@ sub GetConfig {
 		if (-e "default/$configName") {
 			my $configValue = GetFile("default/$configName");
 			$configLookup{$configName} = $configValue;
-			#PutConfig ($configName, $configValue);
+			PutConfig ($configName, $configValue);
 
 			return $configValue;
 		}
