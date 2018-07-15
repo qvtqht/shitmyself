@@ -1,12 +1,17 @@
 function logOut() {
     if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
-        window.localStorage.removeItem('privatekey');
+        removeStoredKeys();
+    }
+}
 
-        var textbox = document.getElementById('privatekey');
+function removeStoredKeys() {
+    window.localStorage.removeItem('privatekey');
+    window.localStorage.removeItem('publickey');
 
-        if (textbox) {
-            textbox.value = '';
-        }
+    var textbox = document.getElementById('privatekey');
+
+    if (textbox) {
+        textbox.value = '';
     }
 }
 
@@ -47,6 +52,15 @@ function popId() {
 
         if (textbox) {
             textbox.value = pk;
+        }
+    }
+
+    var pubk = getPublicKey();
+    if (pubk) {
+        var textboxPub = document.getElementById('publickey');
+
+        if (textboxPub) {
+            textboxPub.value = pubk;
         }
     }
 
@@ -116,9 +130,13 @@ function makePrivateKey(username, password) {
                     if (textbox) {
                         textbox.value = key.privateKeyArmored;
                     }
+
+                    var pubTextbox = document.getElementById('publickey');
+                    if (pubTextbox) {
+                        pubTextbox.value = key.publicKeyArmored;
+                    }
                 }
             );
-
         } else {
             // key already exists in storage
         }
@@ -128,6 +146,18 @@ function makePrivateKey(username, password) {
 }
 
 function makeKeyFromInputs() {
+    var privkey = getPrivateKey();
+
+    if (privkey) {
+        var sure = confirm('Another identity already exists. Overwrite?');
+
+        if (sure == true) {
+            removeStoredKeys();
+        } else {
+            return;
+        }
+    }
+
     var user = document.getElementById('name').value;
     var pass = document.getElementById('pass').value;
 
@@ -145,7 +175,10 @@ function signMessage() {
             var passphrase = prompt('Enter password');
 
             var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-            privKeyObj.decrypt(passphrase);
+
+            if (passphrase) {
+                privKeyObj.decrypt(passphrase);
+            }
 
             options = {
                 data: message,                             // input as String (or Uint8Array)
