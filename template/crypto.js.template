@@ -131,6 +131,8 @@ function makePrivateKey(username, password) {
                         textbox.value = key.privateKeyArmored;
                     }
 
+                    setPublicKey(key.publicKeyArmored);
+
                     var pubTextbox = document.getElementById('publickey');
                     if (pubTextbox) {
                         pubTextbox.value = key.publicKeyArmored;
