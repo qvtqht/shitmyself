@@ -129,6 +129,8 @@ function makePrivateKey(username, password) {
                 pubTextbox.value = '';
             }
 
+            openpgp.config.show_version = false;
+            openpgp.config.show_comment = false;
 
             openpgp.generateKey(options).then(
                 function(key) {
@@ -172,6 +174,11 @@ function makeKeyFromInputs() {
 }
 
 function insPubKey() {
+    var pubkey = getPublicKey();
+    if (!pubkey) {
+        alert('Public key not defined. Please create an identity first.');
+    }
+
     var textbox = document.getElementById('comment');
 
     if (textbox) {
@@ -181,7 +188,6 @@ function insPubKey() {
             }
         }
 
-        var pubkey = getPublicKey();
         if (pubkey) {
             textbox.value = pubkey;
         }
@@ -208,6 +214,9 @@ function signMessage() {
                 data: message,                             // input as String (or Uint8Array)
                 privateKeys: [privKeyObj]                  // for signing
             };
+
+            openpgp.config.show_version = false;
+            openpgp.config.show_comment = false;
 
             openpgp.sign(options).then(function(signed) {
                 textbox.value = signed.data;
