@@ -147,6 +147,7 @@ sub SqliteAddKeyValue {
 
 	$table = SqliteEscape ($table);
 	$key = SqliteEscape($key);
+	$value = SqliteEscape($value);
 
 	SqliteQuery("INSERT INTO $table(key, alias) VALUES ('$key', '$value');");
 
@@ -204,7 +205,7 @@ sub DBAddItem {
 	}
 
 	if ($parentHash) {
-		my $query = "UPDATE item SET last_bump = ";
+		my $query = "UPDATE item SET last_bump = "; #todo
 	}
 }
 
