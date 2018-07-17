@@ -124,6 +124,12 @@ function makePrivateKey(username, password) {
                 textbox.value = 'Generating key, please wait...';
             }
 
+            var pubTextbox = document.getElementById('publickey');
+            if (pubTextbox) {
+                pubTextbox.value = '';
+            }
+
+
             openpgp.generateKey(options).then(
                 function(key) {
                     setPrivateKey(key.privateKeyArmored);
@@ -133,7 +139,6 @@ function makePrivateKey(username, password) {
 
                     setPublicKey(key.publicKeyArmored);
 
-                    var pubTextbox = document.getElementById('publickey');
                     if (pubTextbox) {
                         pubTextbox.value = key.publicKeyArmored;
                     }
@@ -166,6 +171,23 @@ function makeKeyFromInputs() {
     makePrivateKey(user, pass);
 }
 
+function insPubKey() {
+    var textbox = document.getElementById('comment');
+
+    if (textbox) {
+        if (textbox.value) {
+            if (confirm('Replace existing text with public key?') != true) {
+                return;
+            }
+        }
+
+        var pubkey = getPublicKey();
+        if (pubkey) {
+            textbox.value = pubkey;
+        }
+    }
+}
+
 function signMessage() {
     var privkey = getPrivateKey();
 
@@ -174,7 +196,7 @@ function signMessage() {
         if (textbox) {
             var message = textbox.value;
 
-            var passphrase = prompt('Enter password');
+            var passphrase = prompt('Enter password, leave blank for none');
 
             var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
