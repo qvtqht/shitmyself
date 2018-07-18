@@ -918,6 +918,8 @@ sub GetSubmitPage {
 		$txtIndex .= GetPageFooter();
 
 		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script>\<script src="crypto.js"><\/script><\/body>/;
+
+		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
 		my $submitForm = GetTemplate('write.template');
 		my $prefillText = "";

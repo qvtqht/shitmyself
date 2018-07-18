@@ -21,6 +21,7 @@
 <textarea cols=80 rows=10 id=privatekey></textarea><br>
 <textarea cols=80 rows=10 id=publickey></textarea><br>
 <!--<input type=button value="Save Identity" onclick="saveId();">-->
+<input type=button value="Share Public Key" onclick="window.open('/write.html#inspubkey','_self');">
 <input type=button class=rmid value="Remove Identity" onclick="logOut();">
 </fieldset>
 </form>

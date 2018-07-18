@@ -175,21 +175,22 @@ function makeKeyFromInputs() {
 
 function insPubKey() {
     var pubkey = getPublicKey();
-    if (!pubkey) {
-        alert('Public key not defined. Please create an identity first.');
-    }
 
-    var textbox = document.getElementById('comment');
+    if (pubkey) {
+        var textbox = document.getElementById('comment');
 
-    if (textbox) {
-        if (textbox.value) {
-            if (confirm('Replace existing text with public key?') != true) {
-                return;
+        if (textbox) {
+            if (pubkey) {
+                textbox.value = pubkey;
             }
         }
+    }
+}
 
-        if (pubkey) {
-            textbox.value = pubkey;
+function writeOnload() {
+    if (window.location.hash) {
+        if (window.location.hash == '#inspubkey') {
+            insPubKey();
         }
     }
 }
