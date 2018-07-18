@@ -7,7 +7,6 @@
 <label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name>
 <input type=button value="Generate Key" onclick="makeKeyFromInputs();"></td></tr>
 <details><summary>Advanced</summary>
-<label for=email>email:</label></td><td><input type=text size=40 maxlength=100 name=email id=email><br>
 <label for=pass>passphrase:</label></td><td><input type=password size=40 maxlength=100 name=pass id=pass>
 </details>
 </fieldset>
