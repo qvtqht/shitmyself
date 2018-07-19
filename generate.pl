@@ -1146,6 +1146,7 @@ foreach my $key (@authors) {
 		my $fileName = $file->{'file_path'};
 
 		$fileName =~ s/^\.//;
+        $fileName =~ s/\/html//;
 
 		my $fileHash = $file->{'file_hash'};
 
