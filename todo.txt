@@ -1,3 +1,27 @@
+curl
+    add to tree
+        add timestamp
+
+Fix add time when .txt uploaded into tree manually
+    All .txt
+        added_time exists?
+            No?
+                Current time
+                    save
+
+Current ID in top right corner
+    Private key set?
+        Get public key
+            Generate avatar in JS
+                Colors
+                Text
+                    Place in corner
+
+textarea onchange
+    begins with header?
+        verify with openpgp
+            green if valid
+
 Validate signed input on Write page
     textarea onchange
         begins with header?
