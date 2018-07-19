@@ -1211,12 +1211,12 @@ sub MakeClonePage {
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 
 			my @ft = DBGetItemList(\%queryParams);
-			my $testIndex = GetIndexPage(\@ft, $i);
+			my $indexPage = GetIndexPage(\@ft, $i);
 
 			if ($i > 0) {
-				PutHtmlFile("./html/index$i.html", $testIndex);
+				PutHtmlFile("./html/index$i.html", $indexPage);
 			} else {
-				PutHtmlFile("./html/index.html", $testIndex);
+				PutHtmlFile("./html/index.html", $indexPage);
 			}
 		}
 	#}
