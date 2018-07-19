@@ -84,7 +84,7 @@ function getPassword() {
     var password = localStorage.getItem('password');
 
     if (password === null || password.length === 0) {
-        password = prompt('Please enter passphrase');
+        password = prompt('Please enter passphrase, leave blank for none');
     } else {
         return password;
     }
@@ -203,7 +203,7 @@ function signMessage() {
         if (textbox) {
             var message = textbox.value;
 
-            var passphrase = prompt('Enter password, leave blank for none');
+            var passphrase = getPassword();
 
             var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 

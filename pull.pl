@@ -65,6 +65,7 @@ sub PullItemFromHost {
 
 	print "Pull $url\n";
 
+
 }
 
-PullFeedFromHost("localhost:3001");
+PullFeedFromHost("hike.qdb.us");
