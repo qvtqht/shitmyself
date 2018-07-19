@@ -126,7 +126,7 @@ function makePrivateKey(username, password) {
 
             var pubTextbox = document.getElementById('publickey');
             if (pubTextbox) {
-                pubTextbox.value = '';
+                pubTextbox.value = 'Generating key, please wait...';
             }
 
             openpgp.config.show_version = false;
