@@ -3,6 +3,6 @@
 $authorLink
 $replyCount
 <br>
-$itemText<br><br>
-<b>Opine:</b> $voterButtons
-</div><hr size=5>
+$itemText<br>
+<details class=voter><summary>Vote</summary> $voterButtons
+</div><hr>

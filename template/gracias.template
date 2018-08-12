@@ -1,7 +1,18 @@
 <!-- gracias.template -->
+<p>Thank you!</p>
+<pre>
+      _   _                 _                        _
+     | |_| |__   __ _ _ __ | | __ͥ  _   _  ___  _   _| |
+     | __| '_ \ / _` | '_ \| |/ / | | | |/ _͐̈̊̇̔̾͏͕ \| | | | |
+     | |_| | | | (_̗͉̭͇̫͙̏ͪͩ̓ͣ͘| | | | |   <  | |_| | (_) | |_| |_|
+      \__|_| |_̄̌ͩ|\__,_|_| |_|_|\_\  \__, |\___/ \__,_(_͍̯͇̹̼̰̈̕)
+                                   |___/
+</pre>
+<!--
 <p>Thank you. Your submission will be processed according to schedule.</p>
 <p>The last two updates occurred <b>$updateInterval seconds</b> apart, <br><br>at $prevUpdateTime and $currUpdateTime.</p>
 <p>If this trend continues, the next update is due at: <br><br> $nextUpdateTime.</p>
 <p></p>
+-->
 <p><a href="./">Continue</a></p>
 <!-- / gracias.template -->

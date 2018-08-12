@@ -11,7 +11,7 @@ use 5.010;
 use lib qw(lib);
 
 use Digest::MD5 qw(md5_hex);
-use HTML::Entities;
+use HTML::Entities qw(decode_entities);
 use URI::Encode qw(uri_decode);
 
 ## CONFIG AND SANITY CHECKS ##
@@ -199,6 +199,7 @@ sub ProcessAccessLog {
 					$message = decode_entities($message);
 					$message = trim($message);
 					$message =~ s/\&(.+)=on/\n-- \n$1/g;
+					$message =~ s/=on\&/\n/g;
 					#is this dangerous?
 
 					#Look for a reference to a parent message in the footer

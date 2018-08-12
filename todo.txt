@@ -1,3 +1,34 @@
+curl
+    add to tree
+        add timestamp
+
+Fix add time when .txt uploaded into tree manually
+    All .txt
+        added_time exists?
+            No?
+                Current time
+                    save
+
+Current ID in top right corner
+    Private key set?
+        Get public key
+            Generate avatar in JS
+                Colors
+                Text
+                    Place in corner
+
+textarea onchange
+    begins with header?
+        verify with openpgp
+            green if valid
+
+Validate signed input on Write page
+    textarea onchange
+        begins with header?
+            verify signature with opengpg
+                green if valid
+
+
 Link target encryption key with parent id key using gpg --list-keys
 	This way "Encrypted message for ..." is linked to the correct profile
 
@@ -20,13 +51,6 @@ Elaborate on setting up a dev environment
 
 
 Save written files to log/written.log
-
-Integrate OpenPGP.js
-	Allow key generation
-	Store key in cookie or browserstorage
-	Allow exporting private and public key
-	Allow signing of messages
-	Warn user adequately of how insecure all of this is
 
 Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
 	If there is only one post, automatically redirect to it

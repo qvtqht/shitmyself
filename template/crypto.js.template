@@ -1,0 +1,230 @@
+function logOut() {
+    if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
+        removeStoredKeys();
+    }
+}
+
+function removeStoredKeys() {
+    window.localStorage.removeItem('privatekey');
+    window.localStorage.removeItem('publickey');
+
+    var textbox = document.getElementById('privatekey');
+
+    if (textbox) {
+        textbox.value = '';
+    }
+}
+
+function getPrivateKey() {
+    var privateKey = localStorage.getItem('privatekey');
+
+    if (privateKey === null || privateKey.length === 0) {
+        return null;
+    } else {
+        return privateKey;
+    }
+}
+
+function insertPubKey() {
+    var comment = document.getElementById('comment');
+    if (comment) {
+        var pubkey = getPublicKey();
+
+        if (pubkey) {
+            comment.value = pubkey;
+        }
+    }
+}
+
+function getPublicKey() {
+    var publicKey = localStorage.getItem('publickey');
+    if (publicKey === null || publicKey.length === 0) {
+        return null;
+    } else {
+        return publicKey;
+    }
+}
+
+function popId() {
+    var pk = getPrivateKey();
+    if (pk) {
+        var textbox = document.getElementById('privatekey');
+
+        if (textbox) {
+            textbox.value = pk;
+        }
+    }
+
+    var pubk = getPublicKey();
+    if (pubk) {
+        var textboxPub = document.getElementById('publickey');
+
+        if (textboxPub) {
+            textboxPub.value = pubk;
+        }
+    }
+
+    var nametext = document.getElementById('name');
+    if (nametext) {
+        if (nametext.value == '') {
+            nametext.value = 'Anonymous';
+        }
+    }
+}
+
+function saveId() {
+    var textbox = document.getElementById('privatekey');
+
+    if (textbox) {
+        setPrivateKey(textbox.value);
+    }
+}
+
+function getPassword() {
+    var password = localStorage.getItem('password');
+
+    if (password === null || password.length === 0) {
+        password = prompt('Please enter passphrase, leave blank for none');
+    } else {
+        return password;
+    }
+}
+
+function setPrivateKey(privateKey) {
+    window.localStorage.setItem("privatekey", privateKey);
+}
+
+function setPublicKey(publicKey) {
+    window.localStorage.setItem("publickey", publicKey);
+}
+
+function shareId() {
+    alert();
+}
+
+function makePrivateKey(username, password) {
+    if (typeof(Storage) !== "undefined") {
+        var privateKey = getPrivateKey();
+
+        if (privateKey === null || privateKey.length === 0) {
+            var privkey;
+            var pubkey;
+
+            var openpgp = window.openpgp;
+            openpgp.initWorker({path:'openpgp.worker.js'});
+
+            var options = {
+                userIds: [{ name: username }],
+                numBits: 4096,
+                passphrase: password
+            };
+
+            var textbox = document.getElementById('privatekey');
+            if (textbox) {
+                textbox.value = 'Generating key, please wait...';
+            }
+
+            var pubTextbox = document.getElementById('publickey');
+            if (pubTextbox) {
+                pubTextbox.value = 'Generating key, please wait...';
+            }
+
+            openpgp.config.show_version = false;
+            openpgp.config.show_comment = false;
+
+            openpgp.generateKey(options).then(
+                function(key) {
+                    setPrivateKey(key.privateKeyArmored);
+                    if (textbox) {
+                        textbox.value = key.privateKeyArmored;
+                    }
+
+                    setPublicKey(key.publicKeyArmored);
+
+                    if (pubTextbox) {
+                        pubTextbox.value = key.publicKeyArmored;
+                    }
+                }
+            );
+        } else {
+            // key already exists in storage
+        }
+    } else {
+        // sorry, your browser does not support Web Storage...
+    }
+}
+
+function makeKeyFromInputs() {
+    var privkey = getPrivateKey();
+
+    if (privkey) {
+        var sure = confirm('Another identity already exists. Overwrite?');
+
+        if (sure == true) {
+            removeStoredKeys();
+        } else {
+            return;
+        }
+    }
+
+    var user = document.getElementById('name').value;
+    var pass = document.getElementById('pass').value;
+
+    makePrivateKey(user, pass);
+}
+
+function insPubKey() {
+    var pubkey = getPublicKey();
+
+    if (pubkey) {
+        var textbox = document.getElementById('comment');
+
+        if (textbox) {
+            if (pubkey) {
+                textbox.value = pubkey;
+            }
+        }
+    }
+}
+
+function writeOnload() {
+    if (window.location.hash) {
+        if (window.location.hash == '#inspubkey') {
+            insPubKey();
+        }
+    }
+}
+
+function signMessage() {
+    var privkey = getPrivateKey();
+
+    if (privkey) {
+        var textbox = document.getElementById('comment');
+        if (textbox) {
+            var message = textbox.value;
+
+            var passphrase = getPassword();
+
+            var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+
+            if (passphrase) {
+                privKeyObj.decrypt(passphrase);
+            }
+
+            options = {
+                data: message,                             // input as String (or Uint8Array)
+                privateKeys: [privKeyObj]                  // for signing
+            };
+
+            openpgp.config.show_version = false;
+            openpgp.config.show_comment = false;
+
+            openpgp.sign(options).then(function(signed) {
+                textbox.value = signed.data;
+            });
+        }
+    } else {
+        alert('No identity defined, cannot sign.');
+    }
+
+}

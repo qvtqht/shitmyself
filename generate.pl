@@ -6,7 +6,7 @@ use utf8;
 use 5.010;
 
 use lib qw(lib);
-use HTML::Entities;
+use HTML::Entities qw(encode_entities);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 #use Acme::RandomEmoji qw(random_emoji);
@@ -92,6 +92,7 @@ sub GetPageHeader {
 
 	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$menuTemplate .= GetMenuItem("/identity.html", GetString('menu/identity'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
@@ -241,10 +242,12 @@ sub GetItemTemplate {
 		} else {
 			$authorLink = "";
 		}
+		
 		my $permalinkTxt = $file{'file_path'};
-		$permalinkTxt =~ s/^\.//;
-
 		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+		$permalinkTxt =~ s/^\.//;
+		$permalinkTxt =~ s/html\///;
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file{'file_path'});
@@ -530,9 +533,10 @@ sub GetIndexPage {
 				$authorLink = "";
 			}
 			my $permalinkTxt = $file;
-			$permalinkTxt =~ s/^\.//;
-
 			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+
+			$permalinkTxt =~ s/^\.//;
+			$permalinkTxt =~ s/html\///;
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
@@ -742,6 +746,7 @@ sub GetReadPage {
 		$title = GetConfig('home_title');
 	}
 	chomp $title;
+	$title = HtmlEscape($title);
 
 	my $htmlStart = GetPageHeader($title, $titleHtml);
 
@@ -816,6 +821,7 @@ sub GetReadPage {
 			}
 			my $permalinkTxt = $file;
 			$permalinkTxt =~ s/^\.//;
+			$permalinkTxt =~ s/html\///;
 
 			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
 
@@ -857,6 +863,29 @@ sub GetReadPage {
 	return $txtIndex;
 }
 
+sub GetIdentityPage {
+	my $txtIndex = "";
+
+	my $title = "Identity Management";
+	my $titleHtml = "Identity Management";
+
+	$txtIndex = GetPageHeader($title, $titleHtml);
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $idPage = GetTemplate('identity.template');
+
+	$txtIndex .= $idPage;
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+
+	$txtIndex =~ s/<body /<body onload="popId();" /;
+
+	return $txtIndex;
+}
+
 sub GetSubmitPage {
 	my $txtIndex = "";
 
@@ -868,7 +897,6 @@ sub GetSubmitPage {
 	my $itemLimit = 9000;
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
-
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -889,7 +917,9 @@ sub GetSubmitPage {
 
 		$txtIndex .= GetPageFooter();
 
-		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script><\/body>/;
+		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script>\<script src="crypto.js"><\/script><\/body>/;
+
+		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
 		my $submitForm = GetTemplate('write.template');
 		my $prefillText = "";
@@ -992,6 +1022,11 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
 
 
+	# Identity page
+	my $identityPage = GetIdentityPage();
+	PutHtmlFile("$HTMLDIR/identity.html", $identityPage);
+
+
 	# Target page for the submit page
 	my $graciasPage = GetPageHeader("Thank You", "Thank You");
 	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
@@ -1061,6 +1096,9 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('openpgp.js.template'));
 	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('openpgp.worker.js.template'));
 
+	# Write form javasript
+	PutHtmlFile("$HTMLDIR/crypto.js", GetTemplate('crypto.js.template'));
+
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
@@ -1100,12 +1138,15 @@ foreach my $key (@authors) {
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
 
+	WriteLog("DBGetItemList() returned " . scalar(@files) . " items");
+
 	my $fileList = "";
 
 	foreach my $file(@files) {
 		my $fileName = $file->{'file_path'};
 
 		$fileName =~ s/^\.//;
+        $fileName =~ s/\/html//;
 
 		my $fileHash = $file->{'file_hash'};
 
@@ -1113,7 +1154,9 @@ foreach my $key (@authors) {
 
 		my $fileIndex = GetItemPage($file);
 
-		PutHtmlFile("$HTMLDIR/$fileName.html", $fileIndex);
+		my $targetPath = $HTMLDIR . '/' . TrimPath($fileName) . '.html';
+
+		PutHtmlFile($targetPath, $fileIndex);
 	}
 
 	PutFile("$HTMLDIR/rss.txt", $fileList);
@@ -1169,12 +1212,12 @@ sub MakeClonePage {
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 
 			my @ft = DBGetItemList(\%queryParams);
-			my $testIndex = GetIndexPage(\@ft, $i);
+			my $indexPage = GetIndexPage(\@ft, $i);
 
 			if ($i > 0) {
-				PutHtmlFile("./html/index$i.html", $testIndex);
+				PutHtmlFile("./html/index$i.html", $indexPage);
 			} else {
-				PutHtmlFile("./html/index.html", $testIndex);
+				PutHtmlFile("./html/index.html", $indexPage);
 			}
 		}
 	#}
@@ -1191,8 +1234,3 @@ if ($votesInDatabase) {
 
 MakeClonePage();
 
-
-#This has been commented out because it interferes with symlinked html dir
-#rename("html", "html.old");
-#rename("$HTMLDIR", "html/");
-#system("rm -rf html.old");

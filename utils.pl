@@ -176,7 +176,7 @@ sub GetFile {
 		return;
 	}
 
-	my $length = shift || 1048576;
+	my $length = shift || 2097152;
 	# default to reading a max of 1MB of the file. #scaling
 
 	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
@@ -208,7 +208,7 @@ sub GetConfig {
 		if (-e "default/$configName") {
 			my $configValue = GetFile("default/$configName");
 			$configLookup{$configName} = $configValue;
-			#PutConfig ($configName, $configValue);
+			PutConfig ($configName, $configValue);
 
 			return $configValue;
 		}
@@ -256,6 +256,7 @@ sub PutHtmlFile {
 		%previousFiles = GetFileAsHashKeys("log/written.log");
 	}
 
+	#todo there is a bug here
 	if (%previousFiles && $file eq "removePreviousFiles" && $content eq "1") {
 		WriteLog("Cleaning up old html files");
 		foreach (keys %previousFiles) {
@@ -553,7 +554,8 @@ sub GpgParse {
 				$alias =~ s/^\s+//;
 				$alias =~ s/\s+$//;
 
-				$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
+				$message = "Welcome, $alias\nFingerprint: $gpg_key";
+				#$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
 
 				$isSigned = 1;
 
@@ -636,9 +638,9 @@ sub FormatForWeb {
 	#chomp $text;
 
 	$text = HtmlEscape($text);
-	$text =~ s/\n/<br>\n/g;
+	$text =~ s/  /&nbsp; /g;
 	$text =~ s/^ /&nbsp;/g;
-	$text =~ s/  / &nbsp;/g;
+	$text =~ s/\n/<br>\n/g;
 
 	return $text;
 }

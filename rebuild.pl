@@ -6,7 +6,7 @@ require './utils.pl';
 require './index.pl';
 require './access.pl';
 
-system('git pull');
+#system('git pull');
 
 ProcessAccessLog("log/access.log");
 
@@ -14,7 +14,7 @@ SqliteUnlinkDb();
 SqliteMakeTables();
 
 # This holds all the files we will list in the primary index
-my @filesToInclude = `find ./txt/ | grep \.txt\$ | sort -r`;
+my @filesToInclude = `find ./html/txt/ | grep \.txt\$ | sort -r`;
 
 MakeIndex(\@filesToInclude);
 

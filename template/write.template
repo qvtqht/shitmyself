@@ -1,4 +1,5 @@
 <!-- write.template -->
+
 <form action="./gracias.html" class=submit name=submit>
     <details class=instructions>
         <summary>Welcome! What you write below is public.</summary>
@@ -9,7 +10,9 @@
 
     <label for="comment">Enter text here: (Then press the "Add Text" button below.)</label>
     <textarea class=txtarea id=comment title="Enter text here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
-    <input class=btn type=submit value="Add Text" onclick="">
+    <input type=submit value="Add Text" onclick="" id=addtext>
+    <input class=btn type=button value="Sign with PGP" onclick="signMessage();">
+    <input type=checkbox name=showip id=showip><label for=showip>Show IP Address</label>
     <script><!--
     document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
     document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');

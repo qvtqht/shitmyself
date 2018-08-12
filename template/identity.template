@@ -1,0 +1,33 @@
+<!-- identity.template -->
+<p>This page uses JavaScript.</p>
+<p>To create an identity outside of the browser, you can use PGP. See the Manual for more information.</p>
+<p><strong>Back up your private key to retain your identity. It will not be saved for you.</strong></p>
+
+<form>
+<fieldset style="display: inline;">
+<legend>Create Identity</legend>
+<label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name>
+<input type=button value="Generate Key" onclick="makeKeyFromInputs();"></td></tr>
+<details><summary>Advanced</summary>
+<label for=pass>passphrase:</label></td><td><input type=password size=40 maxlength=100 name=pass id=pass>
+</details>
+</fieldset>
+</form>
+
+<br>
+
+<form>
+<fieldset style="display: inline">
+<legend>Current Identity</legend>
+<textarea cols=80 rows=10 id=publickey></textarea><br>
+<input type=button value="Share Public Key" onclick="window.open('/write.html#inspubkey','_self');">
+<input type=button class=rmid value="Remove Identity" onclick="logOut();"><br>
+<details><summary>Private Key</summary>
+<textarea cols=80 rows=10 id=privatekey></textarea><br>
+<input type=button value="Save Identity" onclick="saveId();">
+</details>
+</fieldset>
+</form>
+
+<p>For more security, please use your own PGP/GPG.</p>
+<!-- / identity.template -->
