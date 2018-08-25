@@ -12,13 +12,18 @@
     <li>Vote on posted messages to improve quality</li>
 </ul>
 
-
 <h3>These Features May Be Confusing At First</h3>
 
 <ul>
     <li>Create your "account" aka <em>key pair</em> on your own computer, <em>not on this website</em></li>
     <li>This is accomplished with encryption called GPG.</li>
     <li>Your key pair allows you to post on other forums too.</li>
+</ul>
+
+<h3>Known Issues</h3>
+
+<ul>
+    <li>Client-side PGP only works on desktop browsers.</li>
 </ul>
 
 <a name=gpg><h3>How to use GPG</h3></a>
