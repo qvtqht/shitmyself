@@ -1,10 +1,8 @@
 <!-- reply.template -->
 <form class=reply>
-    <details><summary><b>To reply use PGP...</b></summary>
+    <b>To reply use PGP:</b><br>
         Include this footer at the bottom your signed message:<br>
         <textarea rows=4 cols=80 name="replyfooter" readonly>$replyFooter</textarea><br>
         Post your reply using the Write page.<br>
-
-    </details>
 </form>
 <!-- / reply.template -->

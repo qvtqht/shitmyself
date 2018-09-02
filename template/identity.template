@@ -6,11 +6,9 @@
 <form>
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
-<label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name>
-<input type=button value="Generate Key" onclick="makeKeyFromInputs();"></td></tr>
-<details><summary>Advanced</summary>
-<label for=pass>passphrase:</label></td><td><input type=password size=40 maxlength=100 name=pass id=pass>
-</details>
+<label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name><br>
+<label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br>
+<input type=button value="Generate Key" onclick="makeKeyFromInputs();"><br>
 </fieldset>
 </form>
 
@@ -22,10 +20,8 @@
 <textarea cols=80 rows=10 id=publickey></textarea><br>
 <input type=button value="Share Public Key" onclick="window.open('/write.html#inspubkey','_self');">
 <input type=button class=rmid value="Remove Identity" onclick="logOut();"><br>
-<details><summary>Private Key</summary>
 <textarea cols=80 rows=10 id=privatekey></textarea><br>
 <input type=button value="Set Identity" onclick="saveId();">
-</details>
 </fieldset>
 </form>
 

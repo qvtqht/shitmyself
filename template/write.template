@@ -1,12 +1,9 @@
 <!-- write.template -->
 
 <form action="./gracias.html" class=submit name=submit>
-    <details class=instructions>
-        <summary>Welcome! What you write below is public.</summary>
+        Welcome! What you write below is public.<br>
         Limited to about 6,000 characters.<br>
         Registration optional, see below.
-
-    </details>
 
     <label for="comment">Enter text here: (Then press the "Add Text" button below.)</label>
     <textarea class=txtarea id=comment title="Enter text here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
@@ -19,8 +16,7 @@
     document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="if (typeof zalgo_textarea === \'function\') { zalgo_textarea(\'comment\'); }">');
     // --></script>
     $extraFields
-    <details class=instructions>
-        <summary>Instructions for command-line GPG users (hit me to expand)</summary>
+        <p>Instructions for command-line GPG users</p>
         <ul>
         <li>Use at your own risk. Comes with NO WARRANTY, express or implied.</li>
         <li>If you know how to sign with GPG, you can do that:<br>
@@ -30,6 +26,5 @@
         <tt>gpg --armor --export [john]</tt></li>
         <li><a href="/manual.html#cli">See manual for details.</a></li>
         </ul>
-    </details>
 </form>
 <!-- / write.template -->

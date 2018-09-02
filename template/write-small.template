@@ -1,12 +1,6 @@
 <!-- write-small.template -->
 <form action="./gracias.html" class=submit name=submit>
-	<details class=instructions>
-		<summary>$writeShortMessage</summary>
-        Use at your own risk.<br>
-        Comes with NO WARRANTY, express or implied.<br>
-		Limited to about 6,000 characters, including spaces.<br>
-		For a larger textbox, <a href="/write.html">use the Write page.</a>
-	</details>
+	$writeShortMessage Use at your own risk. Comes with NO WARRANTY, express or implied. For a larger textbox, <a href="/write.html">use the Write page.</a>
 
 	<input id=comment name=comment size=80 style="max-width: 100%" maxlength=6000> <input type=submit id=submit value="Send" onClick="">
 
