@@ -90,38 +90,6 @@ details.txt a.header {
 
 /* voting buttons */
 /*
-.voter {
-	margin: 0pt 0pt 0pt 0pt;
-	cursor: pointer;
-}
-.voter a {
-	text-decoration: none;
-	padding: 4pt;
-	font-family: sans-serif;
-	font-size: large;
-	border: 1pt outset $primaryColor;
-	color: white;
-	border-radius: 3pt;
-	display: inline-block;
-	margin: 3pt 3pt 0pt 0pt;
-}
-.voter a.pos {
-	background-color: #408040;
-}
-.voter a.pos:active, .voter a.neg:active {
-	background-color: $orangeColor;
-	border: 1pt inset $primaryColor;
-}
-.voter a.pos:visited, .voter a.neg:visited {
-	color: $disabledTextColor;
-	background-color: $disabledColor;
-	border: 1pt solid $disabledColor;
-}*/
-
-/* flag buttons */
-a.neg {
-	color: #e08080;
-}
 
 /* avatars */
 .avatar .icon {
