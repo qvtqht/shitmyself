@@ -1,5 +1,6 @@
 <!-- identity.template -->
-<p>This page uses JavaScript. It currently does not work on Android or iOS.</p>
+<noscript><p><strong>This page does not work without JavaScript. Please use standalone GPG/PGP instead.</strong></p></noscript>
+<p>This page currently does not work on Android or iOS.</p>
 <p>To create an identity outside of the browser, you can use PGP. See the Manual for more information.</p>
 <p><strong>Back up your private key to retain your identity. It will not be saved for you.</strong></p>
 
