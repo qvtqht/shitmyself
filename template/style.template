@@ -131,6 +131,9 @@ form.reply .txtarea {
 	padding: 5pt;
 	max-width: 60em;
 }
+.warning {
+	background-color: #c08000;
+}
 
 /* pagination */
 .pagination {
