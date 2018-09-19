@@ -5,10 +5,16 @@ function logOut() {
 }
 
 function removeStoredKeys() {
-    window.localStorage.removeItem('privatekey');
-    window.localStorage.removeItem('publickey');
+    window.localStorage.removeItem("privatekey");
+    window.localStorage.removeItem("publickey");
 
-    var textbox = document.getElementById('privatekey');
+    var textbox = document.getElementById("privatekey");
+
+    if (textbox) {
+        textbox.value = '';
+    }
+
+    textbox = document.getElementById("publickey");
 
     if (textbox) {
         textbox.value = '';
@@ -16,17 +22,17 @@ function removeStoredKeys() {
 }
 
 function getPrivateKey() {
-    var privateKey = localStorage.getItem('privatekey');
+	var privateKey = localStorage.getItem("privatekey");
 
-    if (privateKey === null || privateKey.length === 0) {
-        return null;
-    } else {
-        return privateKey;
-    }
+	if (privateKey === null || privateKey.length === 0) {
+		return null;
+	} else {
+		return privateKey;
+	}
 }
 
 function insertPubKey() {
-    var comment = document.getElementById('comment');
+    var comment = document.getElementById("comment");
     if (comment) {
         var pubkey = getPublicKey();
 
@@ -37,7 +43,7 @@ function insertPubKey() {
 }
 
 function getPublicKey() {
-    var publicKey = localStorage.getItem('publickey');
+    var publicKey = localStorage.getItem("publickey");
     if (publicKey === null || publicKey.length === 0) {
         return null;
     } else {
@@ -48,7 +54,7 @@ function getPublicKey() {
 function popId() {
     var pk = getPrivateKey();
     if (pk) {
-        var textbox = document.getElementById('privatekey');
+        var textbox = document.getElementById("privatekey");
 
         if (textbox) {
             textbox.value = pk;
@@ -57,23 +63,23 @@ function popId() {
 
     var pubk = getPublicKey();
     if (pubk) {
-        var textboxPub = document.getElementById('publickey');
+        var textboxPub = document.getElementById("publickey");
 
         if (textboxPub) {
             textboxPub.value = pubk;
         }
     }
 
-    var nametext = document.getElementById('name');
+    var nametext = document.getElementById("name");
     if (nametext) {
         if (nametext.value == '') {
-            nametext.value = 'Anonymous';
+            nametext.value = "Anonymous";
         }
     }
 }
 
 function saveId() {
-    var textbox = document.getElementById('privatekey');
+    var textbox = document.getElementById("privatekey");
 
     if (textbox) {
         setPrivateKey(textbox.value);
@@ -81,10 +87,10 @@ function saveId() {
 }
 
 function getPassword() {
-    var password = localStorage.getItem('password');
+    var password = localStorage.getItem("password");
 
     if (password === null || password.length === 0) {
-        password = prompt('Please enter passphrase, leave blank for none');
+        password = prompt("Please enter passphrase, leave blank for none");
     } else {
         return password;
     }
@@ -98,9 +104,17 @@ function setPublicKey(publicKey) {
     window.localStorage.setItem("publickey", publicKey);
 }
 
-function shareId() {
-    alert();
+function getPublicKeyFromPrivateKey(privateKey) {
+	var openpgp = window.openpgp;
+	openpgp.initWorker({path:'openpgp.worker.js'});
+
+	var privKeyObj = openpgp.key.readArmored(privateKey).keys[0];
+
+
+
+
 }
+
 
 function makePrivateKey(username, password) {
     if (typeof(Storage) !== "undefined") {
@@ -119,14 +133,14 @@ function makePrivateKey(username, password) {
                 passphrase: password
             };
 
-            var textbox = document.getElementById('privatekey');
+            var textbox = document.getElementById("privatekey");
             if (textbox) {
                 textbox.value = 'Generating key, please wait...';
             }
 
-            var pubTextbox = document.getElementById('publickey');
+            var pubTextbox = document.getElementById("publickey");
             if (pubTextbox) {
-                pubTextbox.value = 'Generating key, please wait...';
+                pubTextbox.value = "Generating key, please wait...";
             }
 
             openpgp.config.show_version = false;
