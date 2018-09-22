@@ -4,7 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 use utf8;
 
-require './utils.pl';
+use File::Basename qw(dirname);
 
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
@@ -35,6 +35,8 @@ sub PullFeedFromHost {
 			}
 		}
 
+		WriteLog("Items found: " . scalar @items);
+
 		foreach my $item (@items) {
 			my @itemArray = split('\|', $item);
 
@@ -45,18 +47,24 @@ sub PullFeedFromHost {
 
 				my $fileLocalHash = GetFileHash('.' . $fileName);
 
-				print 'Remote: ' . $fileHash . "\n";
-				print ' Local: ' . $fileLocalHash . "\n";
+				WriteLog ('Remote: ' . $fileHash);
+				WriteLog (' Local: ' . $fileLocalHash);
 			} else {
 				my $fileUrl = $hostBase . $fileName;
 
-				print 'Absent: ' . $fileUrl . "\n";
+				WriteLog('Absent: ' . $fileUrl);
 
 				PullItemFromHost($hostBase, $fileName, $fileHash);
 			}
 		}
 	}
 }
+
+
+my $FILE = '/etc/sysconfig/network';
+my $DIR = dirname($FILE);
+print $DIR, "\n";
+
 
 sub PullItemFromHost {
 	my $host = shift;
@@ -67,20 +75,28 @@ sub PullItemFromHost {
 	chomp $fileName;
 	chomp $hash;
 
+	WriteLog("PullItemFromHost($host, $fileName, $hash");
+
 	my $url = $host . $fileName;
 
 	#print $url;
+
+	WriteLog ("curl -s $url");
 
 	my $remoteFileContents = `curl -s $url`;
 
 	my $localPath = '.' . $fileName;
 
+	my $localDir = dirname($localPath);
+
+	#todo refactor into a utils function
+	if (!-d "$localDir") {
+		system("mkdir -p $localDir");
+	}
+
+	WriteLog("PutFile($localPath)");
+
 	PutFile($localPath, $remoteFileContents);
-
-	print "###\n###\n###\n" . $localPath . "\n###\n###\n";
-
-
-
 }
 
 PullFeedFromHost("hike.qdb.us");
