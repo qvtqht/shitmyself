@@ -4,6 +4,8 @@ use strict;
 use warnings FATAL => 'all';
 use utf8;
 
+require './utils.pl';
+
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;

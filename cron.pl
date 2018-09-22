@@ -12,7 +12,7 @@ if ($lockTime) {
 		WriteLog('Quitting due to lock file');
 		die();
 	} else {
-		WriteLog('Lock file exists, but too old. Continueing.');
+		WriteLog('Lock file exists, but too old. Continuing.');
 	}
 }
 PutFile('cron.lock', $currentTime);
