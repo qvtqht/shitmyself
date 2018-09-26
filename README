@@ -47,6 +47,7 @@ requirements
 * URI::Escape
 * HTML::Parser
 * Digest::MD5
+* DBD:SQLite
 
 On Debian-derived, apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl
 
