@@ -8,7 +8,7 @@
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
 <label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name><br>
-<label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br>
+<label style="display:none" for=pass>passphrase:</label><input style="display:none" type=password size=40 maxlength=100 name=pass id=pass> (optional)<br>
 <input type=button value="Generate Key" onclick="makeKeyFromInputs();"><br>
 </fieldset>
 </form>
