@@ -7,10 +7,10 @@ use DBI;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
-my $SqliteDbName2 = "test.sqlite3";
+my $SqliteDbName2 = "test.db";
 
 my $dbh = DBI->connect(
-	"dbi:SQLite:dbname=$SqliteDbName2",
+	"dbi:SQLite:dbname=test.db",
 	"",
 	"",
 	{ RaiseError => 1 },
