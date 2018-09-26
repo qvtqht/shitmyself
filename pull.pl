@@ -37,6 +37,9 @@ sub PullFeedFromHost {
 
 		WriteLog("Items found: " . scalar @items);
 
+		my $pullItemLimit = GetConfig('pull_item_limit');
+		my $itemsPulledCounter = 0;
+
 		foreach my $item (@items) {
 			my @itemArray = split('\|', $item);
 
@@ -54,7 +57,15 @@ sub PullFeedFromHost {
 
 				WriteLog('Absent: ' . $fileUrl);
 
+				$itemsPulledCounter++;
+
 				PullItemFromHost($hostBase, $fileName, $fileHash);
+			}
+
+			if ($itemsPulledCounter >= $pullItemLimit) {
+				WriteLog("Items to pull limit reached for host, exiting PullFeedFromHost");
+
+				last;
 			}
 		}
 	}
