@@ -1,6 +1,9 @@
 <!-- identity.template -->
 <noscript><p class=warning><strong>This page does not work without JavaScript. Please use standalone GPG/PGP instead.</strong></p></noscript>
 
+<ul id=messages>
+<li>Welcome! Please, make yourself at home.</li>
+</ul>
 
 <p>This page currently does not work on Android or iOS.</p>
 <p>To create an identity outside of the browser, you can use PGP. See the Manual for more information.</p>

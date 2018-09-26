@@ -1,3 +1,6 @@
+var myFingerprint = '';
+var myUsername = '';
+
 function logOut() {
     if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
         removeStoredKeys();
@@ -104,8 +107,40 @@ function saveId() {
 			if (pubTextbox) {
 				pubTextbox.value = pubkey;
 			}
+
+			myFingerprint = pubKeyObj.primaryKey.fingerprint;
+
+			myUsername = pubKeyObj.users[0].userId.userid;
+
+			pushMessage('logged in as ' + window.myFingerprint + '(' + window.myUsername + ')');
+
+
     }
 }
+
+function pushMessage(message) {
+	var ul = document.getElementById("messages");
+	if (ul) {
+		var li = document.createElement("li");
+		li.appendChild(document.createTextNode(message));
+		ul.appendChild(li);
+	}
+}
+
+
+
+//
+//function getIdFingerprint() {
+//	var privkey = getPrivateKey();
+//
+//	var privKeyObj = openpgp.key.readArmored(privkey);;
+//
+//	var pubKeyObj = privKeyObj.keys[0].toPublic();
+//
+//	var fingerprint = pubKeyObj.primaryKey.fingerprint;
+//
+//	return fingerprint;
+//}
 
 function getPassword() {
     var password = localStorage.getItem("password");
@@ -160,8 +195,8 @@ function makePrivateKey(username, password) {
                 pubTextbox.value = "Generating key, please wait...";
             }
 
-            openpgp.config.show_version = false;
-            openpgp.config.show_comment = false;
+//            openpgp.config.show_version = false;
+//            openpgp.config.show_comment = false;
 
             openpgp.generateKey(options).then(
                 function(key) {
@@ -247,8 +282,8 @@ function signMessage() {
                 privateKeys: [privKeyObj]                  // for signing
             };
 
-            openpgp.config.show_version = false;
-            openpgp.config.show_comment = false;
+//            openpgp.config.show_version = false;
+//            openpgp.config.show_comment = false;
 
             openpgp.sign(options).then(function(signed) {
                 textbox.value = signed.data;
