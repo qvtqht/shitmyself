@@ -50,6 +50,7 @@ sub MakeVoteIndex {
 				DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 			}
 		}
+		DBAddVoteRecord("flush");
 	}
 }
 
@@ -66,6 +67,8 @@ sub MakeAddedIndex {
 
 			DBAddAddedRecord($filePath, $fileHash, $addedTime);
 		}
+
+		DBAddAddedRecord('flush');
 	}
 }
 
@@ -73,6 +76,16 @@ sub IndexFile {
 	my $file = shift;
 
 	chomp($file);
+
+	if ($file eq 'flush') {
+		WriteLog("IndexFile(flush)");
+
+		DBAddAuthor('flush');
+		DBAddKeyAlias('flush');
+		DBAddItem('flush');
+
+		return;
+	}
 
 	my $txt = "";
 	my $message = "";
@@ -143,6 +156,8 @@ sub MakeIndex {
 	foreach my $file (@filesToInclude) {
 		IndexFile($file);
 	}
+
+	IndexFile('flush');
 }
 
 

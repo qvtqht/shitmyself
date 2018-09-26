@@ -2,6 +2,7 @@
 use strict;
 use warnings FATAL => 'all';
 use utf8;
+#use DBD::SQLite;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
@@ -41,6 +42,15 @@ sub SqliteMakeTables() {
 
 sub SqliteQuery {
 	my $query = shift;
+#
+#	my $dbh = DBI->connect("dbi:SQLite:dbname=dbi.sqlite3","","");
+
+	if (!$query) {
+		WriteLog("SqliteQuery called without query");
+
+		return;
+	}
+
 	chomp $query;
 
 	WriteLog( "$query\n");
@@ -154,15 +164,45 @@ sub SqliteAddKeyValue {
 }
 
 sub DBAddAuthor {
+	state $query;
+
 	my $key = shift;
+
+	if ($key eq 'flush') {
+		WriteLog("DBAddAuthor(flush)");
+
+		SqliteQuery($query);
+
+		return;
+	}
 
 	$key = SqliteEscape($key);
 
-	SqliteQuery("INSERT OR REPLACE INTO author(key) VALUES ('$key');");
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO author(key) VALUES ";
+		$query .= "('$key')";
+	} else {
+		$query .= ",('$key')";
+	}
 }
 
 sub DBAddKeyAlias {
+	state $query;
+
 	my $key = shift;
+
+	if ($key eq 'flush') {
+		WriteLog("DBAddKeyAlias(flush)");
+
+		$query .= ';';
+
+		SqliteQuery($query);
+
+		$query = "";
+
+		return;
+	}
+
 	my $alias = shift;
 	my $fingerprint = shift;
 
@@ -170,11 +210,31 @@ sub DBAddKeyAlias {
 	$alias = SqliteEscape($alias);
 	$fingerprint = SqliteEscape($fingerprint);
 
-	SqliteQuery("INSERT OR REPLACE INTO author_alias(key, alias, fingerprint) VALUES ('$key', '$alias', '$fingerprint');");
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO author_alias(key, alias, fingerprint) VALUES ";
+	} else {
+		$query .= ",";
+	}
+	$query .= "('$key', '$alias', '$fingerprint')";
 }
 
 sub DBAddItem {
+	state $query;
+
 	my $filePath = shift;
+
+	if ($filePath eq 'flush') {
+		WriteLog("DBAddItem(flush)");
+
+		$query .= ';';
+
+		SqliteQuery($query);
+
+		$query = "";
+
+		return;
+	}
+
 	my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
@@ -191,36 +251,84 @@ sub DBAddItem {
 		$isPubKey = 0;
 	}
 
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, is_pubkey) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
 	#todo clean up
 	if ($authorKey) {
-		SqliteQuery(
-			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, is_pubkey)" .
-				" VALUES('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash', $isPubKey);"
-		);
+		$query .= "('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash', $isPubKey)"
 	} else {
-		SqliteQuery(
-			"INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, is_pubkey)" .
-				" VALUES('$filePath', '$itemName', NULL, '$fileHash', '$parentHash', $isPubKey);"
-		);
+		$query .= "('$filePath', '$itemName', NULL, '$fileHash', '$parentHash', $isPubKey)"
 	}
 
-	if ($parentHash) {
-		my $query = "UPDATE item SET last_bump = "; #todo
-	}
+#	if ($parentHash) {
+#		my $query = "UPDATE item SET last_bump = "; #todo
+#	}
 }
 
-sub DbAddVoteWeight {
+sub DbAddVoteWeight { #todo test this function, as it is apparently unused as of now
+	state $query;
+	state $tagQuery;
+
 	my $voteValue = shift;
+
+	if ($voteValue eq 'flush') {
+		WriteLog("DbAddVoteWeight(flush)");
+
+		$query .= ';';
+		$tagQuery .= ';';
+
+		SqliteQuery($query);
+		SqliteQuery($tagQuery);
+
+		$query = '';
+		$tagQuery = '';
+
+		return;
+	}
+
 	my $weight = shift;
 
 	$voteValue = SqliteEscape($voteValue);
 	$weight = SqliteEscape($weight);
 
-	SqliteQuery("INSERT OR REPLACE INTO tag(vote_value, weight) VALUES('$voteValue', '$weight')");
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO tag(vote_value, weight) VALUES ";
+	} else {
+		$query .= ',';
+	}
+
+	$query .= "('$voteValue', '$weight')";
+
+	if (!$tagQuery) {
+		$tagQuery = "INSERT OR REPLACE INTO tag(vote_value, weight) VALUES ";
+	} else {
+		$tagQuery .= ",";
+	}
+
+	$tagQuery .= "('$voteValue', '$weight')";
 }
 
 sub DBAddVoteRecord {
+	state $query;
+
 	my $fileHash = shift;
+
+	if ($fileHash eq 'flush') {
+		WriteLog("flush");
+
+		$query .= ';';
+
+		SqliteQuery($query);
+
+		$query = '';
+
+		return;
+	}
+
 	my $ballotTime = shift;
 	my $voteValue = shift;
 
@@ -232,14 +340,32 @@ sub DBAddVoteRecord {
 	$ballotTime = SqliteEscape($ballotTime);
 	$voteValue = SqliteEscape($voteValue);
 
-	SqliteQuery(
-		"INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value) " .
-			"VALUES('$fileHash', '$ballotTime', '$voteValue');"
-	);
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= "('$fileHash', '$ballotTime', '$voteValue')";
 }
 
 sub DBAddAddedRecord {
+	state $query;
+
 	my $filePath = shift;
+
+	if ($filePath eq 'flush') {
+		WriteLog("DBAddAddedRecord(flush)");
+
+		$query .= ';';
+
+		SqliteQuery($query);
+
+		$query = '';
+
+		return;
+	}
+
 	my $fileHash = shift;
 	my $addedTime = shift;
 
@@ -251,10 +377,13 @@ sub DBAddAddedRecord {
 	$fileHash = SqliteEscape($fileHash);
 	$addedTime = SqliteEscape($addedTime);
 
-	SqliteQuery(
-		"INSERT OR REPLACE INTO added_time(file_path, file_hash, add_timestamp) " .
-			"VALUES('$filePath', '$fileHash', '$addedTime');"
-	);
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO added_time(file_path, file_hash, add_timestamp) VALUES ";
+	} else {
+		$query .= ',';
+	}
+
+	$query .= "('$filePath', '$fileHash', '$addedTime')";
 }
 
 sub DBGetItemList {
