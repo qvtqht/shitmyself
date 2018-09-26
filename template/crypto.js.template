@@ -73,6 +73,10 @@ function popId() {
         }
     }
 
+    if (pk) {
+    	saveId();
+	 }
+
     var nametext = document.getElementById("name");
     if (nametext) {
         if (nametext.value == '') {
