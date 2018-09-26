@@ -172,7 +172,11 @@ sub DBAddAuthor {
 	if ($key eq 'flush') {
 		WriteLog("DBAddAuthor(flush)");
 
+		$query .= ';';
+
 		SqliteQuery($query);
+
+		$query = '';
 
 		return;
 	}
@@ -181,10 +185,10 @@ sub DBAddAuthor {
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO author(key) VALUES ";
-		$query .= "('$key')";
 	} else {
-		$query .= ",('$key')";
+		$query .= ",";
 	}
+	$query .= "('$key')";
 }
 
 sub DBAddKeyAlias {
@@ -194,6 +198,11 @@ sub DBAddKeyAlias {
 
 	if ($key eq 'flush') {
 		WriteLog("DBAddKeyAlias(flush)");
+
+		if (!$query) {
+			WriteLog('Aborting, no query');
+			return;
+		}
 
 		$query .= ';';
 
@@ -217,6 +226,8 @@ sub DBAddKeyAlias {
 		$query .= ",";
 	}
 	$query .= "('$key', '$alias', '$fingerprint')";
+
+	DBAddKeyAlias('flush'); #temporary while fixing bug todo
 }
 
 sub DBAddItem {
