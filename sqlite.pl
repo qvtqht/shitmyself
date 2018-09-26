@@ -7,9 +7,10 @@ use DBI;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
+my $SqliteDbName2 = "test.sqlite3";
 
 my $dbh = DBI->connect(
-	"dbi:SQLite:dbname=test.db",
+	"dbi:SQLite:dbname=$SqliteDbName2",
 	"",
 	"",
 	{ RaiseError => 1 },
@@ -18,6 +19,7 @@ my $dbh = DBI->connect(
 sub SqliteUnlinkDb {
 	#unlink($SqliteDbName);
 	rename($SqliteDbName, "$SqliteDbName.prev");
+	rename($SqliteDbName2, "$SqliteDbName2.prev");
 }
 
 #schema
