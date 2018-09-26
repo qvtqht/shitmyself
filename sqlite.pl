@@ -2,11 +2,18 @@
 use strict;
 use warnings FATAL => 'all';
 use utf8;
-#use DBD::SQLite;
+use DBD::SQLite;
 use DBI;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
+
+my $dbh = DBI->connect(
+	"dbi:SQLite:dbname=test.db",
+	"",
+	"",
+	{ RaiseError => 1 },
+) or die $DBI::errstr;
 
 sub SqliteUnlinkDb {
 	#unlink($SqliteDbName);
@@ -41,10 +48,29 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
 }
 
+sub SqliteQuery2 {
+	my $query = shift;
+
+	if (!$query) {
+		WriteLog("SqliteQuery2 called without query");
+
+		return;
+	}
+
+	chomp $query;
+
+	WriteLog("** $query");
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
+
+	WriteLog ($sth);
+
+	return $sth;
+}
+
 sub SqliteQuery {
 	my $query = shift;
-#
-#	my $dbh = DBI->connect("dbi:SQLite:dbname=dbi.sqlite3","","");
 
 	if (!$query) {
 		WriteLog("SqliteQuery called without query");
@@ -55,6 +81,8 @@ sub SqliteQuery {
 	chomp $query;
 
 	WriteLog( "$query\n");
+
+	SqliteQuery2($query);
 	
 	my $results = `sqlite3 $SqliteDbName "$query"`;
 
@@ -108,8 +136,26 @@ sub SqliteGetValue {
 	my $query = shift;
 	chomp $query;
 
-	my $result = SqliteQuery($query);
-	chomp $result;
+	my $result;
+
+	$result = SqliteQuery($query);
+
+	return $result;
+}
+
+sub SqliteGetValue2 {
+	my $query = shift;
+	chomp $query;
+
+	my $sth = SqliteQuery2($query);
+	my @row;
+	my $result;
+
+	if (@row = $sth->fetchrow_array()) {
+		$result = $row[0];
+	} else {
+		$result = ''; #todo this is not great
+	}
 
 	return $result;
 }
@@ -119,9 +165,9 @@ sub DBGetItemCount {
 
 	my $itemCount;
 	if ($whereClause) {
-		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item WHERE $whereClause");
+		$itemCount = SqliteGetValue2("SELECT COUNT(*) FROM item WHERE $whereClause");
 	} else {
-		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
+		$itemCount = SqliteGetValue2("SELECT COUNT(*) FROM item");
 	}
 
 	return $itemCount;
