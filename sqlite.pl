@@ -3,6 +3,7 @@ use strict;
 use warnings FATAL => 'all';
 use utf8;
 #use DBD::SQLite;
+use DBI;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
@@ -318,7 +319,7 @@ sub DBAddVoteRecord {
 	my $fileHash = shift;
 
 	if ($fileHash eq 'flush') {
-		WriteLog("flush");
+		WriteLog("DBAddVoteRecord(flush)");
 
 		$query .= ';';
 
