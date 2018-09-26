@@ -82,7 +82,28 @@ function saveId() {
     var textbox = document.getElementById("privatekey");
 
     if (textbox) {
-        setPrivateKey(textbox.value);
+			var privkey = textbox.value;
+
+			setPrivateKey(privkey);
+
+			var openpgp = window.openpgp;
+
+			openpgp.config.show_version = false;
+			openpgp.config.show_comment = false;
+
+			var privKeyObj = openpgp.key.readArmored(privkey);;
+
+			var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+			var pubkey = pubKeyObj.armor();
+
+			setPublicKey(pubkey);
+
+			var pubTextbox = document.getElementById("publickey");
+
+			if (pubTextbox) {
+				pubTextbox.value = pubkey;
+			}
     }
 }
 
@@ -109,10 +130,6 @@ function getPublicKeyFromPrivateKey(privateKey) {
 	openpgp.initWorker({path:'openpgp.worker.js'});
 
 	var privKeyObj = openpgp.key.readArmored(privateKey).keys[0];
-
-
-
-
 }
 
 
