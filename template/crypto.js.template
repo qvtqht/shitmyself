@@ -172,7 +172,7 @@ function getPublicKeyFromPrivateKey(privateKey) {
 }
 
 
-function makePrivateKey(username, password) {
+function makePrivateKey(username, password, bits) {
     if (typeof(Storage) !== "undefined") {
         var privateKey = getPrivateKey();
 
@@ -185,7 +185,7 @@ function makePrivateKey(username, password) {
 
             var options = {
                 userIds: [{ name: username }],
-                numBits: 2048,
+                numBits: bits,
                 passphrase: password
             };
 
@@ -239,8 +239,9 @@ function makeKeyFromInputs() {
 
     var user = document.getElementById('name').value;
     var pass = document.getElementById('pass').value;
+    var bits = document.getElementById('bits').value;
 
-    makePrivateKey(user, pass);
+    makePrivateKey(user, pass, bits);
 }
 
 function insPubKey() {
