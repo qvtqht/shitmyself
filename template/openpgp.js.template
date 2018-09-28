@@ -44495,7 +44495,7 @@ function generateKey(_ref2) {
   userIds = toArray(userIds);
   var options = { userIds: userIds, passphrase: passphrase, numBits: numBits, keyExpirationTime: keyExpirationTime, curve: curve, date: date, subkeys: subkeys };
   if (_util2.default.getWebCryptoAll() && numBits < 2048) {
-    throw new Error('numBits should be 2048 or 4096, found: ' + numBits);
+    //throw new Error('numBits should be 2048 or 4096, found: ' + numBits);
   }
 
   if (!_util2.default.getWebCryptoAll() && asyncProxy) {
