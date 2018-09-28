@@ -160,6 +160,7 @@ sub GetAlias {
 	if ($alias) {
 		$alias =~ s|<.+?>||g;
 		trim($alias);
+		chomp $alias;
 
 		return $alias;
 	} else {
