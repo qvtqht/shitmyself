@@ -11,6 +11,7 @@ require './access.pl';
 ProcessAccessLog("log/access.log");
 
 SqliteUnlinkDb();
+SqliteConnect();
 SqliteMakeTables();
 
 # This holds all the files we will list in the primary index

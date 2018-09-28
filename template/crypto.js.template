@@ -55,34 +55,34 @@ function getPublicKey() {
 }
 
 function popId() {
-    var pk = getPrivateKey();
-    if (pk) {
-        var textbox = document.getElementById("privatekey");
+	var pk = getPrivateKey();
+	if (pk) {
+		var textbox = document.getElementById("privatekey");
 
-        if (textbox) {
-            textbox.value = pk;
-        }
-    }
+		if (textbox) {
+			textbox.value = pk;
+		}
+	}
 
-    var pubk = getPublicKey();
-    if (pubk) {
-        var textboxPub = document.getElementById("publickey");
+	var pubk = getPublicKey();
+	if (pubk) {
+		var textboxPub = document.getElementById("publickey");
 
-        if (textboxPub) {
-            textboxPub.value = pubk;
-        }
-    }
+		if (textboxPub) {
+			textboxPub.value = pubk;
+		}
+	}
 
-    if (pk) {
-    	saveId();
-	 }
+	if (pk) {
+		saveId();
+	}
 
-    var nametext = document.getElementById("name");
-    if (nametext) {
-        if (nametext.value == '') {
-            nametext.value = "Anonymous";
-        }
-    }
+	var nametext = document.getElementById("name");
+	if (nametext) {
+		if (nametext.value == '') {
+			nametext.value = "Anonymous";
+		}
+	}
 }
 
 function saveId() {
@@ -95,8 +95,8 @@ function saveId() {
 
 			var openpgp = window.openpgp;
 
-			openpgp.config.show_version = false;
-			openpgp.config.show_comment = false;
+			//openpgp.config.show_version = false;
+			//openpgp.config.show_comment = false;
 
 			var privKeyObj = openpgp.key.readArmored(privkey);;
 
@@ -112,11 +112,11 @@ function saveId() {
 				pubTextbox.value = pubkey;
 			}
 
-			myFingerprint = pubKeyObj.primaryKey.fingerprint;
+			//myFingerprint = pubKeyObj.primaryKey.fingerprint;
 
 			myUsername = pubKeyObj.users[0].userId.userid;
 
-			pushMessage('logged in as ' + window.myFingerprint + '(' + window.myUsername + ')');
+			pushMessage('Welcome, ' + window.myUsername);
 
 
     }

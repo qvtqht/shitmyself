@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use utf8;
 use DBD::SQLite;
 use DBI;
@@ -8,13 +8,16 @@ use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
 my $SqliteDbName2 = "test.db";
+my $dbh;
 
-my $dbh = DBI->connect(
-	"dbi:SQLite:dbname=test.db",
-	"",
-	"",
-	{ RaiseError => 1 },
-) or die $DBI::errstr;
+sub SqliteConnect {
+	$dbh = DBI->connect(
+		"dbi:SQLite:dbname=test.db",
+		"",
+		"",
+		{ RaiseError => 1 },
+	) or die $DBI::errstr;
+}
 
 sub SqliteUnlinkDb {
 	#unlink($SqliteDbName);
@@ -51,6 +54,7 @@ sub SqliteMakeTables() {
 }
 
 sub SqliteQuery2 {
+	return;
 	my $query = shift;
 
 	if (!$query) {
@@ -63,12 +67,29 @@ sub SqliteQuery2 {
 
 	WriteLog("** $query");
 
-	my $sth = $dbh->prepare($query);
-	$sth->execute();
+	if ($query) {
 
-	WriteLog ($sth);
+		my $sth = $dbh->prepare($query);
+		$sth->execute();
 
-	return $sth;
+		WriteLog ($sth);
+
+		return $sth;
+	}
+}
+
+sub EscapeShellChars {
+	my $string = shift;
+	chomp $string;
+
+	#WriteLog($string);
+
+	$string =~ s/([\"|\$`\\])/\\$1/g;
+	# " | $ ` \
+
+	#WriteLog($string);
+
+	return $string;
 }
 
 sub SqliteQuery {
@@ -82,10 +103,14 @@ sub SqliteQuery {
 
 	chomp $query;
 
+	$query = EscapeShellChars($query);
+
 	WriteLog( "$query\n");
 
-	SqliteQuery2($query);
-	
+	#SqliteQuery2($query);
+
+
+
 	my $results = `sqlite3 $SqliteDbName "$query"`;
 
 	return $results;
@@ -146,6 +171,7 @@ sub SqliteGetValue {
 }
 
 sub SqliteGetValue2 {
+	break;
 	my $query = shift;
 	chomp $query;
 
@@ -167,9 +193,9 @@ sub DBGetItemCount {
 
 	my $itemCount;
 	if ($whereClause) {
-		$itemCount = SqliteGetValue2("SELECT COUNT(*) FROM item WHERE $whereClause");
+		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item WHERE $whereClause");
 	} else {
-		$itemCount = SqliteGetValue2("SELECT COUNT(*) FROM item");
+		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
 	}
 
 	return $itemCount;
@@ -220,11 +246,13 @@ sub DBAddAuthor {
 	if ($key eq 'flush') {
 		WriteLog("DBAddAuthor(flush)");
 
-		$query .= ';';
+		if ($query) {
+			$query .= ';';
 
-		SqliteQuery($query);
+			SqliteQuery($query);
 
-		$query = '';
+			$query = '';
+		}
 
 		return;
 	}
@@ -245,18 +273,20 @@ sub DBAddKeyAlias {
 	my $key = shift;
 
 	if ($key eq 'flush') {
-		WriteLog("DBAddKeyAlias(flush)");
+		if ($query) {
+			WriteLog("DBAddKeyAlias(flush)");
 
-		if (!$query) {
-			WriteLog('Aborting, no query');
-			return;
+			if (!$query) {
+				WriteLog('Aborting, no query');
+				return;
+			}
+
+			$query .= ';';
+
+			SqliteQuery($query);
+
+			$query = "";
 		}
-
-		$query .= ';';
-
-		SqliteQuery($query);
-
-		$query = "";
 
 		return;
 	}
@@ -274,8 +304,6 @@ sub DBAddKeyAlias {
 		$query .= ",";
 	}
 	$query .= "('$key', '$alias', '$fingerprint')";
-
-	DBAddKeyAlias('flush'); #temporary while fixing bug todo
 }
 
 sub DBAddItem {
@@ -284,13 +312,15 @@ sub DBAddItem {
 	my $filePath = shift;
 
 	if ($filePath eq 'flush') {
-		WriteLog("DBAddItem(flush)");
+		if ($query) {
+			WriteLog("DBAddItem(flush)");
 
-		$query .= ';';
+			$query .= ';';
 
-		SqliteQuery($query);
+			SqliteQuery($query);
 
-		$query = "";
+			$query = "";
+		}
 
 		return;
 	}
@@ -338,14 +368,21 @@ sub DbAddVoteWeight { #todo test this function, as it is apparently unused as of
 	if ($voteValue eq 'flush') {
 		WriteLog("DbAddVoteWeight(flush)");
 
-		$query .= ';';
-		$tagQuery .= ';';
+		if ($query) {
+			$query .= ';';
 
-		SqliteQuery($query);
-		SqliteQuery($tagQuery);
+			SqliteQuery($query);
 
-		$query = '';
-		$tagQuery = '';
+			$query = '';
+		}
+
+		if ($tagQuery) {
+			$tagQuery .= ';';
+
+			SqliteQuery($tagQuery);
+
+			$tagQuery = '';
+		}
 
 		return;
 	}
@@ -380,11 +417,13 @@ sub DBAddVoteRecord {
 	if ($fileHash eq 'flush') {
 		WriteLog("DBAddVoteRecord(flush)");
 
-		$query .= ';';
+		if ($query) {
+			$query .= ';';
 
-		SqliteQuery($query);
+			SqliteQuery($query);
 
-		$query = '';
+			$query = '';
+		}
 
 		return;
 	}
@@ -417,11 +456,13 @@ sub DBAddAddedRecord {
 	if ($filePath eq 'flush') {
 		WriteLog("DBAddAddedRecord(flush)");
 
-		$query .= ';';
+		if ($query) {
+			$query .= ';';
 
-		SqliteQuery($query);
+			SqliteQuery($query);
 
-		$query = '';
+			$query = '';
+		}
 
 		return;
 	}
