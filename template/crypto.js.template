@@ -95,8 +95,8 @@ function saveId() {
 
 			var openpgp = window.openpgp;
 
-			//openpgp.config.show_version = false;
-			//openpgp.config.show_comment = false;
+			openpgp.config.show_version = false;
+			openpgp.config.show_comment = false;
 
 			var privKeyObj = openpgp.key.readArmored(privkey);;
 
@@ -199,8 +199,8 @@ function makePrivateKey(username, password) {
                 pubTextbox.value = "Generating key, please wait...";
             }
 
-//            openpgp.config.show_version = false;
-//            openpgp.config.show_comment = false;
+            openpgp.config.show_version = false;
+            openpgp.config.show_comment = false;
 
             openpgp.generateKey(options).then(
                 function(key) {
@@ -286,8 +286,8 @@ function signMessage() {
                 privateKeys: [privKeyObj]                  // for signing
             };
 
-//            openpgp.config.show_version = false;
-//            openpgp.config.show_comment = false;
+            openpgp.config.show_version = false;
+            openpgp.config.show_comment = false;
 
             openpgp.sign(options).then(function(signed) {
                 textbox.value = signed.data;
