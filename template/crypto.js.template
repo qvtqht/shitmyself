@@ -146,16 +146,6 @@ function pushMessage(message) {
 //	return fingerprint;
 //}
 
-function getPassword() {
-    var password = localStorage.getItem("password");
-
-    if (password === null || password.length === 0) {
-        password = prompt("Please enter passphrase, leave blank for none");
-    } else {
-        return password;
-    }
-}
-
 function setPrivateKey(privateKey) {
     window.localStorage.setItem("privatekey", privateKey);
 }
@@ -172,7 +162,7 @@ function getPublicKeyFromPrivateKey(privateKey) {
 }
 
 
-function makePrivateKey(username, password, bits) {
+function makePrivateKey(username, bits) {
     if (typeof(Storage) !== "undefined") {
         var privateKey = getPrivateKey();
 
@@ -186,7 +176,7 @@ function makePrivateKey(username, password, bits) {
             var options = {
                 userIds: [{ name: username }],
                 numBits: bits,
-                passphrase: password
+                passphrase: ''
             };
 
             var textbox = document.getElementById("privatekey");
@@ -238,10 +228,9 @@ function makeKeyFromInputs() {
     }
 
     var user = document.getElementById('name').value;
-    var pass = document.getElementById('pass').value;
     var bits = document.getElementById('bits').value;
 
-    makePrivateKey(user, pass, bits);
+    makePrivateKey(user, bits);
 }
 
 function insPubKey() {
@@ -274,13 +263,7 @@ function signMessage() {
         if (textbox) {
             var message = textbox.value;
 
-            var passphrase = getPassword();
-
             var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-
-            if (passphrase) {
-                privKeyObj.decrypt(passphrase);
-            }
 
             options = {
                 data: message,                             // input as String (or Uint8Array)
