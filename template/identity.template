@@ -12,9 +12,9 @@
 <form>
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
-<label for=name>name:</label></td><td><input type=text size=40 maxlength=100 name=name id=name><br>
-<label for=bits>bits:</label></td><td><input type=text value=512 size=10 maxlength=5 name=bits id=bits> (512, 1024, 2048, 4096)<br>
-<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>
+<label for=name>name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
+<label for=bits>bits:</label><input type=text value=512 size=10 maxlength=5 name=bits id=bits> (512, 1024, 2048, 4096)<br>
+<!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
 <input type=button value="Generate Key" onclick="makeKeyFromInputs();"><br>
 </fieldset>
 </form>
