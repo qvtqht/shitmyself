@@ -112,11 +112,11 @@ function saveId() {
 				pubTextbox.value = pubkey;
 			}
 
-			myFingerprint = pubKeyObj.primaryKey.fingerprint.toString('utf-8');
+			myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
 
 			myUsername = pubKeyObj.users[0].userId.userid;
 
-			pushMessage('Welcome, ' + window.myUsername);
+			pushMessage('Welcome, ' + window.myUsername + '(' + myFingerprint + ')');
 
 			var myidBox = document.getElementById('myid');
 			if (myidBox) {
