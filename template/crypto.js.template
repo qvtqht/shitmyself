@@ -192,6 +192,10 @@ function makePrivateKey(username, bits) {
             openpgp.config.show_version = false;
             openpgp.config.show_comment = false;
 
+            var statusBox = document.getElementById('status');
+            var startDate = new Date();
+            statusBox.value = statusBox.value + "\n" + "Generating key at " + startDate.getTime();
+
             openpgp.generateKey(options).then(
                 function(key) {
                     setPrivateKey(key.privateKeyArmored);
@@ -204,6 +208,10 @@ function makePrivateKey(username, bits) {
                     if (pubTextbox) {
                         pubTextbox.value = key.publicKeyArmored;
                     }
+
+							var endDate = new Date();
+
+                    statusBox.value = statusBox.value + "\n" + "Finished at " + endDate.getTime() + "(" + (endDate.getTime() - startDate.getTime()) + ")";
                 }
             );
         } else {
@@ -260,7 +268,9 @@ function signMessage() {
 
     if (privkey) {
         var textbox = document.getElementById('comment');
-        if (textbox) {
+        var composeForm = document.getElementById('compose');
+
+        if (textbox && composeForm) {
             var message = textbox.value;
 
             var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
@@ -275,6 +285,7 @@ function signMessage() {
 
             openpgp.sign(options).then(function(signed) {
                 textbox.value = signed.data;
+                composeForm.submit();
             });
         }
     } else {

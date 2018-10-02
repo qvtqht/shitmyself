@@ -1,14 +1,12 @@
 <!-- write.template -->
 
-<form action="./gracias.html" class=submit name=submit>
-        Welcome! What you write below is public.<br>
-        Limited to about 6,000 characters.<br>
-        Registration optional, see below.
+<form action="./gracias.html" id=compose class=submit name=submit>
+    <p>Welcome! What you write below is public. Limited to about 6,000 characters, including signature.</p>
 
-    <label for="comment">Enter text here: (Then press the "Add Text" button below.)</label>
-    <textarea class=txtarea id=comment title="Enter text here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
-    <input type=submit value="Add Text" onclick="" id=addtext>
-    <input class=btn type=button value="Sign with PGP" onclick="signMessage();">
+    <label for="comment">Enter some text to share here:</label>
+    <textarea class=txtarea id=comment title="Enter some text to share here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
+    <input type=button value="Sign and Post" onclick="signMessage();">
+    <input type=submit value="Post As Is" onclick="" id=addtext>
     <input type=checkbox name=showip id=showip><label for=showip>Publish my IP address</label>
     <script><!--
     document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
