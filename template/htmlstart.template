@@ -10,5 +10,5 @@ $styleSheet
 </style>
 </head>
 <body link="$primaryColor" vlink="#806080" text=black bgcolor=white>
-<p><a href="#maincontent">Skip to main content</a> <span class=menu>$menuItems</span></p>
+<p><a href="#maincontent">Skip to main content</a> <span class=menu>$menuItems</span><span class=myid id=myid></span></p>
 <hr size=5>

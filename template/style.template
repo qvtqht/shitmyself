@@ -42,13 +42,16 @@ h2.menu a {
 	background-color: $highlightColor;
 	padding: 5pt;
 }
-.menu {
+.menu, .myid {
 	font-weight: larger;
 	font-family: sans-serif;
 	font-weight: bold;
 }
 .menu a {
 	padding-left: 1em;
+}
+.myid {
+    float: right;
 }
 
 /* textboxes */
@@ -138,7 +141,7 @@ form.reply .txtarea {
 /* pagination */
 .pagination {
 	font-family: sans-serif;
-	font-size: large;
+	font-size: x-large;
 	spacing: 5pt;
 }
 .pagination b {
