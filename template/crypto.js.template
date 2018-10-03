@@ -10,6 +10,7 @@ function logOut() {
 function removeStoredKeys() {
     window.localStorage.removeItem("privatekey");
     window.localStorage.removeItem("publickey");
+    window.localStorage.removeItem("avatar");
 
     var textbox = document.getElementById("privatekey");
 
@@ -22,6 +23,39 @@ function removeStoredKeys() {
     if (textbox) {
         textbox.value = '';
     }
+
+    avatar = document.getElementById("avatar");
+
+    if (textbox) {
+        textbox.innerHTML = '';
+    }
+}
+
+function fallbackCopyTextToClipboard() {
+  var textArea = document.getElementById('privatekey');
+  textArea.focus();
+  textArea.select();
+
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
+}
+
+function copyTextToClipboard() {
+  var text = document.getElementById('privatekey').value;
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
 }
 
 function getPrivateKey() {
@@ -85,6 +119,18 @@ function popId() {
 	}
 }
 
+function getAvatar() {
+    var avatar = localStorage.getItem("avatar");
+    if (avatar === null || avatar.length === 0) {
+        return null;
+    } else {
+        return avatar;
+    }
+}
+function setAvatar(avatar) {
+    window.localStorage.setItem("avatar", avatar);
+}
+
 function saveId() {
     var textbox = document.getElementById("privatekey");
 
@@ -118,9 +164,22 @@ function saveId() {
 
 			pushMessage('Welcome, ' + window.myUsername + '(' + myFingerprint + ')');
 
+			var color1 = myFingerprint.substr(0, 6);
+			var color2 = myFingerprint.substr(3, 6);
+			var color3 = myFingerprint.substr(7, 6);
+
+			var avatar = '';
+
+			avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
+			avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
+			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + window.myUsername + '</span></span>';
+
+			//setAvatar('<a href="/author/' + window.myFingerprint.toString() + '/">' + window.myUsername + '</a>');
+			setAvatar(avatar);
+
 			var myidBox = document.getElementById('myid');
 			if (myidBox) {
-				myidBox.innerHTML = '<a href="/author/' + window.myFingerprint.toString() + '/">' + window.myUsername + '</a>';
+				myidBox.innerHTML = getAvatar();
 			}
     }
 }
@@ -212,7 +271,7 @@ function makePrivateKey(username, bits) {
                         pubTextbox.value = key.publicKeyArmored;
                     }
 
-                    saveId()
+                    saveId();
 
 							var endDate = new Date();
 
@@ -297,4 +356,11 @@ function signMessage() {
         alert('No identity defined, cannot sign.');
     }
 
+}
+
+var myidBox = document.getElementById('myid');
+if (myidBox) {
+	if (getAvatar()) {
+		myidBox.innerHTML = getAvatar();
+	}
 }

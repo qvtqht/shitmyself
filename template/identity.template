@@ -9,29 +9,41 @@
 <p>To create an identity outside of the browser, you can use PGP. See the Manual for more information.</p>
 <p><strong>Back up your private key to retain your identity. It will not be saved for you.</strong></p>
 
-<form>
+<form><!-- current identity -->
+    <fieldset style="display: inline">
+        <legend>Current Identity</legend>
+        Name: <span id=currentName></span><br>
+        Fingerprint: <span id=currentId></span><br>
+        <textarea cols=80 rows=10 id=publickey spellcheck=false></textarea><br>
+        <input type=button value="Share Public Key" onclick="window.open('/write.html#inspubkey','_self');">
+        <input type=button class=rmid value="Remove Identity" onclick="logOut();"><br>
+    </fieldset>
+
+    <fieldset style="display: inline">
+        <legend>Backup and Restore</legend>
+        <textarea cols=80 rows=10 id=privatekey spellcheck=false></textarea><br>
+        <input type=button value="Copy to Clipboard" onClick="copyTextToClipboard();">
+        <input type=button value="Restore Identity" onclick="saveId();">
+    </fieldset>
+</form><!-- / current identity -->
+
+<form><!-- create identity -->
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
 <label for=name>name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
-<label for=bits>bits:</label><select name=bits id=bits><option value=512>512</option><option value=1024>1024</option><option value=2048>2048</option><option value=4096>4096</option></select><br>
+<label for=bits>bits:</label><select name=bits id=bits>
+<option value=512>512</option>
+<option value=1024>1024</option>
+<option value=2048>2048</option>
+<option value=4096>4096</option>
+</select><br>
 <!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
 <input type=button value="Generate Key" onclick="makeKeyFromInputs();"><br>
 <textarea cols=40 rows=5 name=status id=status>Status will be displayed here.</textarea>
 </fieldset>
-</form>
+</form><!-- / create identity -->
 
 <br>
-
-<form>
-<fieldset style="display: inline">
-<legend>Current Identity</legend>
-<textarea cols=80 rows=10 id=publickey spellcheck=false></textarea><br>
-<input type=button value="Share Public Key" onclick="window.open('/write.html#inspubkey','_self');">
-<input type=button class=rmid value="Remove Identity" onclick="logOut();"><br>
-<textarea cols=80 rows=10 id=privatekey spellcheck=false></textarea><br>
-<input type=button value="Set Identity" onclick="saveId();">
-</fieldset>
-</form>
 
 <p>For more security, please use your own PGP/GPG.</p>
 <!-- / identity.template -->
