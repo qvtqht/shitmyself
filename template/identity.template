@@ -1,15 +1,7 @@
 <!-- identity.template -->
 <noscript><p class=warning><strong>This page does not work without JavaScript. Please use standalone GPG/PGP instead.</strong></p></noscript>
 
-<ul id=messages>
-<li>Welcome! Please, make yourself at home.</li>
-</ul>
-
-<p>This page currently does not work on Android or iOS.</p>
-<p>To create an identity outside of the browser, you can use PGP. See the Manual for more information.</p>
-<p><strong>Back up your private key to retain your identity. It will not be saved for you.</strong></p>
-
-<form><!-- current identity -->
+<form id=curid><!-- current identity -->
     <fieldset style="display: inline">
         <legend>Current Identity</legend>
         <span id=myAvatar class=avatar></span><br>
@@ -46,5 +38,5 @@
 
 <br>
 
-<p>For more security, please use your own PGP/GPG.</p>
+<p>For more security at the expense of convenience, use your own PGP/GPG. See the Manual for more information.</p>
 <!-- / identity.template -->

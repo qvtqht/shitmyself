@@ -1,0 +1,17 @@
+// just the avatar, please
+
+function getAvatar() {
+    var avatar = localStorage.getItem("avatar");
+    if (avatar === null || avatar.length === 0) {
+        return null;
+    } else {
+        return avatar;
+    }
+}
+
+var myidBox = document.getElementById('myid');
+if (myidBox) {
+	if (getAvatar()) {
+		myidBox.innerHTML = getAvatar();
+	}
+}

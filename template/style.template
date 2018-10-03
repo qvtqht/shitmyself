@@ -42,7 +42,7 @@ h2.menu a {
 	background-color: $highlightColor;
 	padding: 5pt;
 }
-.menu, .myid {
+.menu, .myid, #myAvatar, #myAvatar2 {
 	font-weight: larger;
 	font-family: sans-serif;
 	font-weight: bold;
