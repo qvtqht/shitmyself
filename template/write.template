@@ -5,7 +5,7 @@
 
     <label for="comment">Enter some text to share here:</label>
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
-    <input type=button value="Sign and Post" onclick="signMessage();">
+    <span id=signAndPost></span>
     <input type=submit value="Post As Is" onclick="" id=addtext>
     <input type=checkbox name=showip id=showip><label for=showip>Publish my IP address</label>
     <script><!--

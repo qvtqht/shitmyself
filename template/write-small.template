@@ -2,7 +2,7 @@
 <form action="./gracias.html" class=submit name=submit>
 	$writeShortMessage Use at your own risk. Comes with NO WARRANTY, express or implied. For a larger textbox, <a href="/write.html">use the Write page.</a><br>
 
-	<input id=comment name=comment size=80 style="max-width: 100%" maxlength=6000> <input type=submit id=submit value="Send" onClick="">
+	<input id=comment name=comment size=80 style="max-width: 100%" maxlength=6000> <input type=submit id=submit value="Send Unsigned" onClick=""> <a href="/write.html">Write Signed Message</a>
 
 </form>
 <!-- / write-small.template -->

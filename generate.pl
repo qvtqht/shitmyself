@@ -91,12 +91,15 @@ sub GetPageHeader {
 	my $menuTemplate = "";
 
 	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$menuTemplate .= GetMenuItem("/identity.html", GetString('menu/identity'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
+
+	my $identityLink = GetMenuItem("/identity.html", GetString('menu/identity'));
+	$htmlStart =~ s/\$loginLink/$identityLink/g;
 
 	$txtIndex .= $htmlStart;
 
@@ -574,6 +577,8 @@ sub GetIndexPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
+	$txtIndex =~ s/<\/body>/\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+
 	return $txtIndex;
 
 }
@@ -886,6 +891,42 @@ sub GetIdentityPage {
 	return $txtIndex;
 }
 
+sub GetVotesPage {
+	#todo rewrite this more pretty
+	my $txtIndex = "";
+
+	my $title = 'Tags';
+	my $titleHtml = 'Tags';
+
+	$txtIndex = GetPageHeader($title, $titleHtml);
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $voteCounts = DBGetVoteCounts();
+
+	my @voteCountsArray = split("\n", $voteCounts);
+
+	foreach my $row (@voteCountsArray) {
+		my @rowSplit = split(/\|/, $row);
+
+		my $voteItemTemplate = GetTemplate('vote_page_link.template');
+
+		my $tagName = $rowSplit[0];
+		my $voteItemLink = "/top/" . $tagName . ".html";
+
+		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
+		$voteItemTemplate =~ s/\$tagName/$tagName/g;
+
+		$txtIndex .= $voteItemTemplate;
+	}
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+
+	return $txtIndex;
+}
+
 sub GetSubmitPage {
 	my $txtIndex = "";
 
@@ -1081,6 +1122,8 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetPageFooter();
 
+	$tfmPage =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
 
@@ -1098,6 +1141,9 @@ sub MakeStaticPages {
 
 	# Write form javasript
 	PutHtmlFile("$HTMLDIR/crypto.js", GetTemplate('crypto.js.template'));
+
+	# Write form javasript
+	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('avatar.js.template'));
 
 
 	# .htaccess file for Apache
@@ -1194,6 +1240,8 @@ sub MakeClonePage {
 
 	$clonePage .= GetPageFooter();
 
+	$clonePage =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
 
@@ -1222,6 +1270,9 @@ sub MakeClonePage {
 		}
 	#}
 }
+
+my $votesPage = GetVotesPage();
+PutHtmlFile("./html/tags.html", $votesPage); #todo are they tags or votes?
 
 # This is a special call which gathers up last run's written html files
 # that were not updated on this run and removes them
