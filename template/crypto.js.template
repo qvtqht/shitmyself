@@ -392,7 +392,8 @@ if (myidBox) {
 //		}
 		var sp = document.getElementById('signAndPost');
 		if (sp) {
-			sp.innerHTML = '<input type=button value="Sign and Post" onclick="signMessage();">';
+			//sp.innerHTML = '<input type=button value="Sign and Post" onclick="signMessage();">';
+			sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
 		}
 	} else {
 		myidBox.innerHTML = '<a href="/identity.html">Identity</a>'
