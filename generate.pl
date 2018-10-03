@@ -58,10 +58,12 @@ sub GetPageHeader {
 
 	my $txtIndex = "";
 
-	my @primaryColorChoices = qw(008080 c08000 808080 8098b0 c5618e);
+	#my @primaryColorChoices = qw(008080 c08000 808080 8098b0 c5618e);
+	my @primaryColorChoices = split("\n", GetConfig('primary_colors'));
 	$primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
-	my @secondaryColorChoices = qw(f0fff0 ffffff);
+	#my @secondaryColorChoices = qw(f0fff0 ffffff);
+	my @secondaryColorChoices = split("\n", GetConfig('secondary_colors'));
 	my $secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
 
 	#my $primaryColor = '#'.$primaryColorChoices[0];
@@ -91,8 +93,8 @@ sub GetPageHeader {
 	my $menuTemplate = "";
 
 	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
-	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
@@ -395,6 +397,8 @@ sub GetItemPage {
 
 	# end page
 	$txtIndex .= GetPageFooter();
+
+	$txtIndex =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
 
 	return $txtIndex;
 }
@@ -864,6 +868,8 @@ sub GetReadPage {
 
 	# Close html
 	$txtIndex .= GetPageFooter();
+
+	$txtIndex =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
 
 	return $txtIndex;
 }
