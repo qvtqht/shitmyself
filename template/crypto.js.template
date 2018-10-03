@@ -24,10 +24,22 @@ function removeStoredKeys() {
         textbox.value = '';
     }
 
-    avatar = document.getElementById("avatar");
+    var avatar = document.getElementById("myid");
 
-    if (textbox) {
-        textbox.innerHTML = '';
+    if (avatar) {
+        avatar.innerHTML = '';
+    }
+
+    avatar = document.getElementById("myAvatar");
+
+    if (avatar) {
+        avatar.innerHTML = '';
+    }
+
+    avatar = document.getElementById("myAvatar2");
+
+    if (avatar) {
+        avatar.innerHTML = '';
     }
 }
 
