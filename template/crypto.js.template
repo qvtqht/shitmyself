@@ -162,8 +162,6 @@ function saveId() {
 
 			myUsername = pubKeyObj.users[0].userId.userid;
 
-			pushMessage('Welcome, ' + window.myUsername + '(' + myFingerprint + ')');
-
 			var color1 = myFingerprint.substr(0, 6);
 			var color2 = myFingerprint.substr(3, 6);
 			var color3 = myFingerprint.substr(7, 6);
@@ -180,6 +178,15 @@ function saveId() {
 			var myidBox = document.getElementById('myid');
 			if (myidBox) {
 				myidBox.innerHTML = getAvatar();
+			}
+
+			var myAvatar = document.getElementById('myAvatar');
+			if (myAvatar) {
+				myAvatar.innerHTML = getAvatar();
+			}
+			myAvatar = document.getElementById('myAvatar2');
+			if (myAvatar) {
+				myAvatar.innerHTML = getAvatar();
 			}
     }
 }
@@ -256,7 +263,7 @@ function makePrivateKey(username, bits) {
 
             var statusBox = document.getElementById('status');
             var startDate = new Date();
-            statusBox.value = statusBox.value + "\n" + "Generating key at " + startDate.getTime();
+            statusBox.value = statusBox.value + "\n" + "Generating key..."
 
             openpgp.generateKey(options).then(
                 function(key) {
@@ -275,7 +282,7 @@ function makePrivateKey(username, bits) {
 
 							var endDate = new Date();
 
-                    statusBox.value = statusBox.value + "\n" + "Finished at " + endDate.getTime() + "(" + (endDate.getTime() - startDate.getTime()) + ")";
+                    statusBox.value = statusBox.value + "\n" + "Finished! " + (endDate.getTime() - startDate.getTime()) + "ms";
                 }
             );
         } else {
@@ -314,6 +321,12 @@ function insPubKey() {
         if (textbox) {
             if (pubkey) {
                 textbox.value = pubkey;
+
+					var composeForm = document.getElementById('compose');
+					if (composeForm) {
+							composeForm.submit();
+					}
+
             }
         }
     }
@@ -363,4 +376,9 @@ if (myidBox) {
 	if (getAvatar()) {
 		myidBox.innerHTML = getAvatar();
 	}
+}
+
+var statusBox = document.getElementById('status');
+if (statusBox) {
+	statusBox.value = statusBox.value + 'Ready!';
 }
