@@ -212,6 +212,8 @@ function makePrivateKey(username, bits) {
                         pubTextbox.value = key.publicKeyArmored;
                     }
 
+                    saveId()
+
 							var endDate = new Date();
 
                     statusBox.value = statusBox.value + "\n" + "Finished at " + endDate.getTime() + "(" + (endDate.getTime() - startDate.getTime()) + ")";
