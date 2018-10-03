@@ -267,6 +267,14 @@ sub DBAddAuthor {
 	$query .= "('$key')";
 }
 
+sub DBGetVoteCounts {
+	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
+
+	my $voteCounts = SqliteQuery($query);
+
+	return $voteCounts;
+}
+
 sub DBAddKeyAlias {
 	state $query;
 
