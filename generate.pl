@@ -398,7 +398,7 @@ sub GetItemPage {
 	# end page
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+	$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
 
 	return $txtIndex;
 }
@@ -869,7 +869,7 @@ sub GetReadPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+	$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
 
 	return $txtIndex;
 }
@@ -928,7 +928,7 @@ sub GetVotesPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+	$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
 
 	return $txtIndex;
 }
@@ -1106,6 +1106,8 @@ sub MakeStaticPages {
 
 	$graciasPage .= GetPageFooter();
 
+	$graciasPage =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+
 	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
 
 
@@ -1128,7 +1130,7 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetPageFooter();
 
-	$tfmPage =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+	$tfmPage =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
 
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -1246,7 +1248,7 @@ sub MakeClonePage {
 
 	$clonePage .= GetPageFooter();
 
-	$clonePage =~ s/<\/body>/\<script src="avatar.js">\<\/script><\/body>/;
+	$clonePage =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
 
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
