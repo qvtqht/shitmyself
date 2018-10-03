@@ -22,6 +22,7 @@ sub PullFeedFromHost {
 
 	my $hostFeedUrl = $hostBase . "/rss.txt";
 
+	#my $feed = `curl -A useragent $hostFeedUrl`;
 	my $feed = `curl $hostFeedUrl`;
 
 	if ($feed) {
@@ -94,6 +95,7 @@ sub PullItemFromHost {
 
 	WriteLog ("curl -s $url");
 
+	#my $remoteFileContents = `curl -A useragent -s $url`;
 	my $remoteFileContents = `curl -s $url`;
 
 	my $localPath = '.' . $fileName;
