@@ -28,10 +28,19 @@ PutFile('cron.lock', $currentTime);
 
 my $accessLogPath = GetConfig('access_log_path');
 
-my $newItemCount = ProcessAccessLog($accessLogPath, 0);
+my $startTime = time();
+my $interval = 1;
 
-if ($newItemCount > 0) {
-	system('perl rebuild.pl');
+while (time() < $startTime + $interval) {
+	sleep(1);
+
+	WriteLog('.');
+
+	my $newItemCount = ProcessAccessLog($accessLogPath, 0);
+
+	if ($newItemCount > 0) {
+		system('perl rebuild.pl');
+	}
 }
 
 WriteLog( "Finished!");
