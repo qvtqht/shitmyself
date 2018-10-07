@@ -36,11 +36,35 @@ function removeStoredKeys() {
         avatar.innerHTML = '';
     }
 
-    avatar = document.getElementById("myAvatar2");
+	showHideForms();
+}
 
-    if (avatar) {
-        avatar.innerHTML = '';
-    }
+function showHideForms() {
+	if (getAvatar()) {
+		var formCur = document.getElementById('formCurId');
+
+		if (formCur) {
+			formCur.style.display = 'block';
+		}
+
+		var formCreate = document.getElementById('formCreateId');
+
+		if (formCreate) {
+			formCreate.style.display = 'none';
+		}
+	} else {
+		var formCur = document.getElementById('formCurId');
+
+		if (formCur) {
+			formCur.style.display = 'none';
+		}
+
+		var formCreate = document.getElementById('formCreateId');
+
+		if (formCreate) {
+			formCreate.style.display = 'block';
+		}
+	}
 }
 
 function fallbackCopyTextToClipboard() {
@@ -129,6 +153,8 @@ function popId() {
 			nametext.value = "Anonymous";
 		}
 	}
+
+	showHideForms();
 }
 
 function getAvatar() {
@@ -182,7 +208,7 @@ function saveId() {
 
 			avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
 			avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
-			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + window.myUsername + '</span></span>';
+			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escape(window.myUsername) + '</span></span>';
 
 			setAvatar('<a href="/author/' + window.myFingerprint.toString() + '/">' + avatar + '</a>');
 			//setAvatar(avatar);
@@ -200,6 +226,8 @@ function saveId() {
 			if (myAvatar) {
 				myAvatar.innerHTML = getAvatar();
 			}
+
+			showHideForms();
     }
 }
 
