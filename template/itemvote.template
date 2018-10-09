@@ -4,5 +4,5 @@ $authorLink
 $replyCount
 <br>
 $itemText<br>
-<details class=voter><summary>Vote</summary> $voterButtons
+<details class=voter><summary>Respond</summary> $voterButtons</details>
 </div><hr>

@@ -83,6 +83,10 @@ details.txt a.header {
 	color: $primaryColor;
 }
 
+.voter summary {
+	font-weight: bold;
+}
+
 /* submission textbox */
 #comment, #submit {
 	border-color: $primaryColor;
