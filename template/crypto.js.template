@@ -208,7 +208,7 @@ function saveId() {
 
 			avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
 			avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
-			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escape(window.myUsername) + '</span></span>';
+			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(window.myUsername) + '</span></span>';
 
 			setAvatar('<a href="/author/' + window.myFingerprint.toString() + '/">' + avatar + '</a>');
 			//setAvatar(avatar);
@@ -230,6 +230,18 @@ function saveId() {
 			showHideForms();
     }
 }
+
+var escapeTA = document.createElement('textarea');
+function escapeHTML(html) {
+    escapeTA.textContent = html;
+    return escapeTA.innerHTML;
+}
+
+function unescapeHTML(html) {
+    escapeTA.innerHTML = html;
+    return escapeTA.textContent;
+}
+
 
 function pushMessage(message) {
 	var ul = document.getElementById("messages");
