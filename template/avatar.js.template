@@ -12,8 +12,8 @@ function getAvatar() {
 var myidBox = document.getElementById('myid');
 if (myidBox) {
 	if (getAvatar()) {
-		myidBox.innerHTML = getAvatar() + ' ' + '<a href="/identity.html">[&gt;]</a>';
+		myidBox.innerHTML = 'Signed in as ' + getAvatar() + '. ' + '<a href="/identity.html">Manage</a>';
 	} else {
-		myidBox.innerHTML = '<a href="/identity.html">Identity</a>'
+		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>'
 	}
 }

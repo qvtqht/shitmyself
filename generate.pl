@@ -587,7 +587,13 @@ sub GetIndexPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+	#$txtIndex =~ s/<\/body>/\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject/;
 
 	return $txtIndex;
 
