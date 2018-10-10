@@ -100,7 +100,7 @@ sub GetPageHeader {
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
-	my $identityLink = GetMenuItem("/identity.html", GetString('menu/identity'));
+	my $identityLink = GetMenuItem("/identity.html", GetString('menu/sign_in'));
 	$htmlStart =~ s/\$loginLink/$identityLink/g;
 
 	$txtIndex .= $htmlStart;
@@ -398,7 +398,13 @@ sub GetItemPage {
 	# end page
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	#$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject/;
 
 	return $txtIndex;
 }
@@ -869,7 +875,12 @@ sub GetReadPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject/;
+
 
 	return $txtIndex;
 }
@@ -928,7 +939,12 @@ sub GetVotesPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject/;
+
 
 	return $txtIndex;
 }
@@ -1106,7 +1122,12 @@ sub MakeStaticPages {
 
 	$graciasPage .= GetPageFooter();
 
-	$graciasPage =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$graciasPage =~ s/<\/body>/$scriptInject/;
+
 
 	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
 
@@ -1130,7 +1151,11 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetPageFooter();
 
-	$tfmPage =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	$scriptInject = GetTemplate('scriptinject.template');
+	$avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$tfmPage =~ s/<\/body>/$scriptInject/;
 
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -1248,7 +1273,12 @@ sub MakeClonePage {
 
 	$clonePage .= GetPageFooter();
 
-	$clonePage =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$clonePage =~ s/<\/body>/$scriptInject/;
+
 
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
