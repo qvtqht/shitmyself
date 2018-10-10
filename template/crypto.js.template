@@ -67,8 +67,8 @@ function showHideForms() {
 	}
 }
 
-function fallbackCopyTextToClipboard() {
-  var textArea = document.getElementById('privatekey');
+function fallbackCopyTextToClipboard(textareaId) {
+  var textArea = document.getElementById(textareaId);
   textArea.focus();
   textArea.select();
 
@@ -81,10 +81,10 @@ function fallbackCopyTextToClipboard() {
   }
 }
 
-function copyTextToClipboard() {
-  var text = document.getElementById('privatekey').value;
+function copyTextToClipboard(textareaId) {
+  var text = document.getElementById(textareaId).value;
   if (!navigator.clipboard) {
-    fallbackCopyTextToClipboard(text);
+    fallbackCopyTextToClipboard(textareaId);
     return;
   }
   navigator.clipboard.writeText(text).then(function() {
@@ -215,7 +215,7 @@ function saveId() {
 
 			var myidBox = document.getElementById('myid');
 			if (myidBox) {
-				myidBox.innerHTML = getAvatar() + ' ' + '<a href="/identity.html">[&gt;]</a>';
+				myidBox.innerHTML = 'Signed in as ' + getAvatar();
 			}
 
 			var myAvatar = document.getElementById('myAvatar');
