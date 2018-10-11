@@ -5,6 +5,8 @@ use warnings FATAL => 'all';
 use utf8;
 
 use File::Basename qw(dirname);
+use URI::Encode qw(uri_encode);
+
 
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
@@ -77,6 +79,29 @@ my $FILE = '/etc/sysconfig/network';
 my $DIR = dirname($FILE);
 print $DIR, "\n";
 
+sub PushItemToHost {
+	my $host = shift;
+	my $fileName = shift;
+	my $hash = shift;
+
+	chomp $host;
+	chomp $fileName;
+	chomp $hash;
+
+	WriteLog("PushItemToHost($host, $fileName, $hash");
+
+	my $fileContents = GetFile("./html/$fileName");
+	$fileContents = uri_encode($fileContents);
+
+	my $url = $host . "/gracias.html?comment=" . $fileContents;
+	#also needs to be shell-encoded
+
+	WriteLog("curl \"$url\"");
+
+	my $curlResult = system('curl \"' . $url . '\"');
+
+	return $curlResult;
+}
 
 sub PullItemFromHost {
 	my $host = shift;
@@ -113,3 +138,4 @@ sub PullItemFromHost {
 }
 
 PullFeedFromHost("hike.qdb.us");
+PullFeedFromHost("irc30.qdb.us");

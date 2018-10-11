@@ -50,9 +50,6 @@ h2.menu a {
 .menu a {
 	padding-left: 1em;
 }
-.myid {
-    float: right;
-}
 
 /* textboxes */
 .txt {
