@@ -52,6 +52,18 @@ function showHideForms() {
 		if (formCreate) {
 			formCreate.style.display = 'none';
 		}
+
+		var restoreIdButton = document.getElementById('restoreid');
+
+		if (restoreIdButton) {
+			restoreIdButton.disabled = true;
+		}
+
+		var copyPrivButton = document.getElementById('copypriv');
+
+		if (copyPrivButton) {
+			copyPrivButton.disabled = false;
+		}
 	} else {
 		var formCur = document.getElementById('formCurId');
 
@@ -63,6 +75,18 @@ function showHideForms() {
 
 		if (formCreate) {
 			formCreate.style.display = 'block';
+		}
+
+		var restoreIdButton = document.getElementById('restoreid');
+
+		if (restoreIdButton) {
+			restoreIdButton.disabled = false;
+		}
+
+		var copyPrivButton = document.getElementById('copypriv');
+
+		if (copyPrivButton) {
+			copyPrivButton.disabled = true;
 		}
 	}
 }
@@ -210,12 +234,12 @@ function saveId() {
 			avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
 			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(window.myUsername) + '</span></span>';
 
-			setAvatar('<a href="/author/' + window.myFingerprint.toString() + '/">' + avatar + '</a>');
-			//setAvatar(avatar);
+			//setAvatar('<a href="/author/' + window.myFingerprint.toString() + '/">' + avatar + '</a>');
+			setAvatar(avatar);
 
 			var myidBox = document.getElementById('myid');
 			if (myidBox) {
-				myidBox.innerHTML = 'Signed in as ' + getAvatar();
+				myidBox.innerHTML = '<a href="/identity.html">' + getAvatar() + '</a>';
 			}
 
 			var myAvatar = document.getElementById('myAvatar');
@@ -425,7 +449,8 @@ function signMessage() {
 var myidBox = document.getElementById('myid');
 if (myidBox) {
 	if (getAvatar()) {
-		myidBox.innerHTML = 'Signed in as ' + getAvatar() + '. ' + '<a href="/identity.html">Manage</a>';
+		//myidBox.innerHTML = getAvatar() + ' ' + '<a href="/identity.html">Manage</a>';
+		myidBox.innerHTML = '<a href="/identity.html">' + getAvatar() + '</a>';
 //		var ssc = document.getElementById('signSmallContainer');
 //		if (ssc) {
 //			ssc.innerHTML = '<input type=submit id=signSmall value="Sign and Send" onclick="signMessage();">';
@@ -436,7 +461,7 @@ if (myidBox) {
 			sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
 		}
 	} else {
-		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>'
+		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
 	}
 }
 

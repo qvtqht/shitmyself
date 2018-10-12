@@ -68,6 +68,9 @@ h2.menu a {
      #fffff0 20px
    );
 }
+.admin a .avatar {
+	color: green;
+}
 details.txt a.header {
 	font-family: monospace;
 	font-weight: bold;

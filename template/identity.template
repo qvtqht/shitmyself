@@ -34,8 +34,8 @@
     <fieldset style="display: inline">
         <legend>Private Key</legend>
         <textarea cols=61 rows=10 id=privatekey spellcheck=false></textarea><br>
-        <input type=button value="Restore Identity" onclick="saveId();">
-        <input type=button value="Copy Private Key" onClick="copyTextToClipboard('privatekey');">
+        <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
+        <input type=button id=copypriv value="Copy Private Key" onClick="copyTextToClipboard('privatekey');">
     </fieldset>
 </form><!-- / private key -->
 
