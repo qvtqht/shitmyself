@@ -197,7 +197,7 @@ sub ProcessAccessLog {
 					$message =~ s/\+/ /g;
 					$message = uri_decode($message);
 					$message = decode_entities($message);
-					$message = trim($message);
+					#$message = trim($message);
 					$message =~ s/\&(.+)=on/\n-- \n$1/g;
 					$message =~ s/=on\&/\n/g;
 					#is this dangerous?
