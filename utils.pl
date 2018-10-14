@@ -507,8 +507,10 @@ sub GpgParse {
 	# This is where we check for a GPG signed message and sort it accordingly
 	#########################################################################
 
+	my $trimmedTxt = trim($txt);
+
 	# If there is an encrypted message header...
-	if (substr($txt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
+	if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
 		WriteLog( "gpg --batch --list-only --status-fd 1 \"$filePath\"");
 		my $gpg_result = `gpg --batch --list-only --status-fd 1 "$filePath"`;
 
@@ -537,7 +539,7 @@ sub GpgParse {
 	}
 
 	# If there is a GPG pubkey header...
-	if (substr($txt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
+	if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
 		WriteLog( "gpg --keyid-format LONG \"$filePath\"");
 		my $gpg_result = `gpg --keyid-format LONG "$filePath"`;
 
@@ -566,7 +568,7 @@ sub GpgParse {
 	}
 
 	# If there is a GPG signed message header...
-	if (substr($txt, 0, length($gpg_message_header)) eq $gpg_message_header) {
+	if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 		# Verify the file by using command-line gpg
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
 		WriteLog( "gpg --verify --status-fd 1 \"$filePath\"\n");
