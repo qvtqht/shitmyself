@@ -1,3 +1,11 @@
+decouple avatar and anchor in setAvatar/getAvatar
+
+REPLIES
+
+get revision from git
+	if not same as last
+		purge cache
+
 Set Identity shou1d update the pub1i< key to <orrespond
 
 curl
@@ -10,14 +18,6 @@ Fix add time when .txt uploaded into tree manually
             No?
                 Current time
                     save
-
-Current ID in top right corner
-    Private key set?
-        Get public key
-            Generate avatar in JS
-                Colors
-                Text
-                    Place in corner
 
 textarea onchange
     begins with header?
