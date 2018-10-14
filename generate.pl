@@ -801,8 +801,7 @@ sub GetReadPage {
 				$message = GetFile($file);
 			}
 
-			$message = HtmlEscape($message);
-			$message =~ s/\n/<br>\n/g;
+			#$message = FormatForWeb($message);
 
 			if ($isSigned && $gpgKey eq GetAdminKey()) {
 				$isAdmin = 1;
@@ -846,7 +845,7 @@ sub GetReadPage {
 
 			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
 
-			my $itemText = $message;
+			my $itemText = FormatForWeb($message);
 			my $fileHash = GetFileHash($file);
 			my $itemName = TrimPath($file);
 			my $ballotTime = time();

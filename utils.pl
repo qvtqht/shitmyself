@@ -12,7 +12,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
-my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/action cache/message cache/gpg);
+my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/action cache/message cache/gpg html/top);
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -469,7 +469,7 @@ sub GpgParse {
 
 	my $filePath = shift;
 
-	my $txt = trim(GetFile($filePath));
+	my $txt = GetFile($filePath);
 
 	my $message;
 
@@ -600,7 +600,7 @@ sub GpgParse {
 			WriteLog( "gpg --decrypt \"$filePath\"\n");
 			$message = `gpg --decrypt "$filePath"`;
 
-			$message = trim($message);
+			#$message = trim($message);
 
 			$isSigned = 1;
 
@@ -638,10 +638,23 @@ sub FormatForWeb {
 
 	#chomp $text;
 
+
 	$text = HtmlEscape($text);
-	$text =~ s/  /&nbsp; /g;
-	$text =~ s/^ /&nbsp;/g;
+	$text =~ s/\n /<br>&nbsp;/g;
+	$text =~ s/^ /&nbsp;/gd;
+	$text =~ s/  / &nbsp;/g;
 	$text =~ s/\n/<br>\n/g;
+
+
+	#htmlspecialchars(
+	## nl2br(
+	## str_replace(
+	## '  ', ' &nbsp;',
+	# htmlspecialchars(
+	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
+	#));?><?=$tt_c?></description>
+
+
 
 	return $text;
 }
