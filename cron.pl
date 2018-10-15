@@ -12,10 +12,11 @@ if ($lockTime) {
 		WriteLog('Quitting due to lock file');
 		die();
 	} else {
-		WriteLog('Lock file exists, but too old. Continuing.');
+		WriteLog('Lock file exists, but old. Continuing.');
 	}
 }
 PutFile('cron.lock', $currentTime);
+$lockTime = $currentTime;
 
 # if (GetConfig('git_stash') == 1) {
 # 	system('git stash');
@@ -29,12 +30,15 @@ PutFile('cron.lock', $currentTime);
 my $accessLogPath = GetConfig('access_log_path');
 
 my $startTime = time();
-my $interval = 1;
+my $interval = GetConfig('cron_continue');
 
 while (time() < $startTime + $interval) {
 	sleep(1);
 
-	WriteLog('.');
+	if (!GetFile('cron.lock') || GetFile('cron.lock') ne $lockTime) {
+		WriteLog('Lock file has changed, quitting.');
+		last;
+	}
 
 	my $newItemCount = ProcessAccessLog($accessLogPath, 0);
 
