@@ -525,7 +525,7 @@ sub GetIndexPage {
 
 			$alias = HtmlEscape($alias);
 
-			my $itemTemplate = GetTemplate("itemvote.template");
+			my $itemTemplate = GetTemplate("item.template");
 			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 
 			my $itemClass = "txt $signedCss";
@@ -570,8 +570,8 @@ sub GetIndexPage {
 				$itemTemplate =~ s/\$replyCount//g;
 			}
 
-			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+			#my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+			#$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 			$txtIndex .= $itemTemplate;
 		}
@@ -906,6 +906,12 @@ sub GetIdentityPage {
 
 	$txtIndex .= GetPageFooter();
 
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject/;
+
 	$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="popId();" /;
@@ -950,8 +956,20 @@ sub GetVotesPage {
 
 	$txtIndex =~ s/<\/body>/$scriptInject/;
 
-
 	return $txtIndex;
+}
+
+sub GetTopPage {
+	my $tag = shift;
+	chomp($tag);
+
+	my $txtIndex = '';
+
+	my $items = GetTopItemsForTag('interesting');
+
+	return $items;
+
+
 }
 
 sub GetSubmitPage {
@@ -984,6 +1002,12 @@ sub GetSubmitPage {
 		}
 
 		$txtIndex .= GetPageFooter();
+
+		my $scriptInject = GetTemplate('scriptinject.template');
+		my $avatarjs = GetTemplate('avatar.js.template');
+		$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+		$txtIndex =~ s/<\/body>/$scriptInject/;
 
 		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script>\<script src="crypto.js"><\/script><\/body>/;
 
@@ -1316,6 +1340,13 @@ sub MakeClonePage {
 
 my $votesPage = GetVotesPage();
 PutHtmlFile("./html/tags.html", $votesPage); #todo are they tags or votes?
+
+
+my $voteCounts = DBGetVoteCounts();
+if ($voteCounts) {
+
+}
+
 
 # This is a special call which gathers up last run's written html files
 # that were not updated on this run and removes them

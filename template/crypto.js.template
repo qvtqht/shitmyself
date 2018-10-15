@@ -181,14 +181,14 @@ function popId() {
 	showHideForms();
 }
 
-function getAvatar() {
-    var avatar = localStorage.getItem("avatar");
-    if (avatar === null || avatar.length === 0) {
-        return null;
-    } else {
-        return avatar;
-    }
-}
+//function getAvatar() {
+//    var avatar = localStorage.getItem("avatar");
+//    if (avatar === null || avatar.length === 0) {
+//        return null;
+//    } else {
+//        return avatar;
+//    }
+//}
 function setAvatar(avatar) {
     window.localStorage.setItem("avatar", avatar);
 }
@@ -446,23 +446,10 @@ function signMessage() {
 
 }
 
-var myidBox = document.getElementById('myid');
-if (myidBox) {
-	if (getAvatar()) {
-		//myidBox.innerHTML = getAvatar() + ' ' + '<a href="/identity.html">Manage</a>';
-		//myidBox.innerHTML = '<a href="/identity.html">' + getAvatar() + '</a>';
-		myidBox.innerHTML = getAvatar() + ' <a href="/identity.html">Sign Out</a>';
-//		var ssc = document.getElementById('signSmallContainer');
-//		if (ssc) {
-//			ssc.innerHTML = '<input type=submit id=signSmall value="Sign and Send" onclick="signMessage();">';
-//		}
-		var sp = document.getElementById('signAndPost');
-		if (sp) {
-			//sp.innerHTML = '<input type=button value="Sign and Post" onclick="signMessage();">';
-			sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
-		}
-	} else {
-		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
+if (getAvatar()) {
+	var sp = document.getElementById('signAndPost');
+	if (sp) {
+		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
 	}
 }
 

@@ -12,7 +12,7 @@ function getAvatar() {
 var myidBox = document.getElementById('myid');
 if (myidBox) {
 	if (getAvatar()) {
-		myidBox.innerHTML = getAvatar() + ' <a href="/identity.html">Sign Out</a>';
+		myidBox.innerHTML = getAvatar() + ' <a href="/identity.html">Settings</a>';
 	} else {
 		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
 	}
