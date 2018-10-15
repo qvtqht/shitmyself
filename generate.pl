@@ -404,7 +404,7 @@ sub GetItemPage {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$txtIndex =~ s/<\/body>/$scriptInject/;
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 	return $txtIndex;
 }
@@ -593,7 +593,7 @@ sub GetIndexPage {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$txtIndex =~ s/<\/body>/$scriptInject/;
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 	return $txtIndex;
 
@@ -884,7 +884,7 @@ sub GetReadPage {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$txtIndex =~ s/<\/body>/$scriptInject/;
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 
 	return $txtIndex;
@@ -910,7 +910,7 @@ sub GetIdentityPage {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$txtIndex =~ s/<\/body>/$scriptInject/;
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 	$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
 
@@ -954,7 +954,7 @@ sub GetVotesPage {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$txtIndex =~ s/<\/body>/$scriptInject/;
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 	return $txtIndex;
 }
@@ -1007,7 +1007,7 @@ sub GetSubmitPage {
 		my $avatarjs = GetTemplate('avatar.js.template');
 		$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-		$txtIndex =~ s/<\/body>/$scriptInject/;
+		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script>\<script src="crypto.js"><\/script><\/body>/;
 
@@ -1155,7 +1155,7 @@ sub MakeStaticPages {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$graciasPage =~ s/<\/body>/$scriptInject/;
+	$graciasPage =~ s/<\/body>/$scriptInject<\/body>/;
 
 
 	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
@@ -1184,7 +1184,7 @@ sub MakeStaticPages {
 	$avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$tfmPage =~ s/<\/body>/$scriptInject/;
+	$tfmPage =~ s/<\/body>/$scriptInject<\/body>/;
 
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -1306,7 +1306,7 @@ sub MakeClonePage {
 	my $avatarjs = GetTemplate('avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$clonePage =~ s/<\/body>/$scriptInject/;
+	$clonePage =~ s/<\/body>/$scriptInject<\/body>/;
 
 
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
