@@ -10,6 +10,7 @@ function logOut() {
 function removeStoredKeys() {
     window.localStorage.removeItem("privatekey");
     window.localStorage.removeItem("publickey");
+    window.localStorage.removeItem("fingerprint");
     window.localStorage.removeItem("avatar");
 
     var textbox = document.getElementById("privatekey");
@@ -39,8 +40,21 @@ function removeStoredKeys() {
 	showHideForms();
 }
 
+var escapeTA = document.createElement('textarea');
+function escapeHTML(html) {
+    escapeTA.textContent = html;
+    return escapeTA.innerHTML;
+}
+
+function unescapeHTML(html) {
+    escapeTA.innerHTML = html;
+    return escapeTA.textContent;
+}
+
+
+
 function showHideForms() {
-	if (getAvatar()) {
+	if (getUserFp()) {
 		var formCur = document.getElementById('formCurId');
 
 		if (formCur) {
@@ -193,6 +207,15 @@ function setAvatar(avatar) {
     window.localStorage.setItem("avatar", avatar);
 }
 
+function getUserFp() {
+	var fingerprint = localStorage.getItem("fingerprint");
+	if (fingerprint === null || fingerprint.length === 0) {
+		return null;
+	} else {
+		return fingerprint;
+	}
+}
+
 function saveId() {
     var textbox = document.getElementById("privatekey");
 
@@ -222,6 +245,9 @@ function saveId() {
 
 			myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
 
+			window.localStorage.setItem("avatar", avatar);
+			window.localStorage.setItem("fingerprint", myFingerprint);
+
 			myUsername = pubKeyObj.users[0].userId.userid;
 
 			var color1 = myFingerprint.substr(0, 6);
@@ -232,10 +258,9 @@ function saveId() {
 
 			avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
 			avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
-			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(window.myUsername) + '</span></span>';
+			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
 
-			setAvatar('<a href="/author/' + window.myFingerprint.toString() + '/">' + avatar + '</a>');
-			//setAvatar(avatar);
+			setAvatar(avatar);
 
 			var myidBox = document.getElementById('myid');
 			if (myidBox) {
@@ -250,22 +275,19 @@ function saveId() {
 			if (myAvatar) {
 				myAvatar.innerHTML = getAvatar();
 			}
+			myAlgo = document.getElementById('myAlgo');
+			if (myAlgo) {
+				myAlgo.innerHTML = pubKeyObj.primaryKey.algorithm.toString();
+			}
+
+			myCrea = document.getElementById('myCrea');
+			if (myCrea) {
+				myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+			}
 
 			showHideForms();
     }
 }
-
-var escapeTA = document.createElement('textarea');
-function escapeHTML(html) {
-    escapeTA.textContent = html;
-    return escapeTA.innerHTML;
-}
-
-function unescapeHTML(html) {
-    escapeTA.innerHTML = html;
-    return escapeTA.textContent;
-}
-
 
 function pushMessage(message) {
 	var ul = document.getElementById("messages");
@@ -446,7 +468,7 @@ function signMessage() {
 
 }
 
-if (getAvatar()) {
+if (getUserFp()) {
 	var sp = document.getElementById('signAndPost');
 	if (sp) {
 		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';

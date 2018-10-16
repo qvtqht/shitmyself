@@ -4,7 +4,11 @@
 <form id=formCurId><!-- current identity -->
     <fieldset style="display: inline">
         <legend>Current Identity</legend>
-        <span id=myAvatar class=avatar></span><br>
+        <label for=myAvatar>You are:</label> <span id=myAvatar class=avatar></span><br>
+        <label for=myAlgo>Algorithm:</label> <span id=myAlgo></span><br>
+        <label for=myCrea>Created:</label> <span id=myCrea></span><br>
+
+        <hr>
 
         <textarea cols=61 rows=10 id=publickey spellcheck=false></textarea><br>
         <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');">

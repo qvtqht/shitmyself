@@ -1,12 +1,12 @@
 // just the avatar, please
 
 function getAvatar() {
-    var avatar = localStorage.getItem("avatar");
-    if (avatar === null || avatar.length === 0) {
+	var myAvatar = localStorage.getItem("avatar");
+    if (myAvatar === null || myAvatar.length === 0) {
         return null;
     } else {
-        return avatar;
-    }
+    	return myAvatar;
+	}
 }
 
 var myidBox = document.getElementById('myid');
