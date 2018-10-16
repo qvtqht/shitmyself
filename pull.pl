@@ -8,6 +8,8 @@ use File::Basename qw(dirname);
 use URI::Encode qw(uri_encode);
 use Digest::SHA qw(sha1_hex);
 
+use lib 'lib';
+
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
