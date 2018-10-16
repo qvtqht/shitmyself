@@ -639,18 +639,25 @@ sub AddItemToConfigList {
 
 	my $myHosts = GetConfig($configList);
 
-	my @hostsArray = split("\n", $myHosts);
+	if ($myHosts) {
 
-	foreach my $h (@hostsArray) {
-		if ($h eq $item) {
-			return;
+		my @hostsArray = split("\n", $myHosts);
+
+		foreach my $h (@hostsArray) {
+			if ($h eq $item) {
+				return;
+			}
 		}
+
+		$myHosts .= "\n";
+		$myHosts .= $item;
+		$myHosts = trim($myHosts);
+		$myHosts .= "\n";
+	} else {
+		$myHosts = $item . "\n";
 	}
 
-	$myHosts .= "\n";
-	$myHosts .= $item;
-	$myHosts = trim($myHosts);
-	$myHosts .= "\n";
+	$myHosts =~ s/\n\n/\n/g;
 
 	PutConfig($configList, $myHosts);
 }
