@@ -630,6 +630,31 @@ sub GpgParse {
 	return %returnValues;
 }
 
+sub AddItemToConfigList {
+	my $configList = shift;
+	chomp($configList);
+
+	my $item = shift;
+	chomp($item);
+
+	my $myHosts = GetConfig($configList);
+
+	my @hostsArray = split("\n", $myHosts);
+
+	foreach my $h (@hostsArray) {
+		if ($h eq $item) {
+			return;
+		}
+	}
+
+	$myHosts .= "\n";
+	$myHosts .= $item;
+	$myHosts = trim($myHosts);
+	$myHosts .= "\n";
+
+	PutConfig($configList, $myHosts);
+}
+
 sub FormatForWeb {
 	my $text = shift;
 

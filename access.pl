@@ -54,6 +54,28 @@ foreach (@submitReceivers) {
 
 ##################
 
+sub AddHost {
+# $host
+# $ownAlias = whether it belongs to this instance
+
+	my $host = shift;
+	chomp ($host);
+
+	my $ownAlias = shift;
+	chomp ($ownAlias);
+
+	WriteLog("AddHost($host, $ownAlias)");
+
+	if ($ownAlias) {
+		AddItemToConfigList('my_hosts', $host);
+	}
+
+	AddItemToConfigList('pull_hosts', $host);
+
+	return;
+
+}
+
 
 # ProcessAccessLog (
 #	access log file path
@@ -282,6 +304,29 @@ sub ProcessAccessLog {
 						WriteLog("WARNING: Could not open text file to write to ' . $filenameDir . $filename");
 					}
 				}
+			}
+		}
+
+		my $rssPrefix = "/rss.txt?";
+		if (substr($file, 0, length($rssPrefix)) eq $rssPrefix) {
+			WriteLog("Found RSS line!");
+
+			my $paramString = (substr($file, length($rssPrefix)));
+
+			my @params = split('&', $paramString);
+
+			foreach my $param (@params) {
+				my ($paramKey, $paramValue) = split('=', $param);
+				$paramKey = uri_decode($paramKey);
+				$paramValue = uri_decode($paramValue);
+
+				if ($paramKey eq 'you') {
+					AddHost($paramValue, 1);
+				}
+				if ($paramKey eq 'me') {
+					AddHost($paramValue, 0);
+				}
+
 			}
 		}
 

@@ -197,6 +197,7 @@ sub DBGetItemCount {
 	} else {
 		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
 	}
+	chomp($itemCount);
 
 	return $itemCount;
 }
@@ -273,6 +274,22 @@ sub DBGetVoteCounts {
 	my $voteCounts = SqliteQuery($query);
 
 	return $voteCounts;
+}
+
+sub GetTopItemsForTag {
+	my $tag = shift;
+	chomp($tag);
+
+	my $query = "SELECT * FROM item WHERE file_hash IN (
+	SELECT file_hash FROM (
+		SELECT file_hash, COUNT(vote_value) AS vote_count
+		FROM vote WHERE vote_value = '" . SqliteEscape($tag) . "'
+		GROUP BY file_hash
+		ORDER BY vote_count DESC
+	)
+	);";
+
+	return $query;
 }
 
 sub DBAddKeyAlias {

@@ -6,7 +6,7 @@ use utf8;
 
 use File::Basename qw(dirname);
 use URI::Encode qw(uri_encode);
-
+use Digest::SHA qw(sha1_hex);
 
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
@@ -24,7 +24,17 @@ sub PullFeedFromHost {
 
 	my $hostFeedUrl = $hostBase . "/rss.txt";
 
+	$hostFeedUrl = $hostFeedUrl . '?you=' . uri_encode($host);
+
+	my @myHosts = split("\n", GetConfig('my_hosts'));
+	my $myHostUrl = $myHosts[rand @myHosts];
+
+	$hostFeedUrl .= '&me=' . uri_encode($myHostUrl);
+
 	#my $feed = `curl -A useragent $hostFeedUrl`;
+
+	WriteLog("curl $hostFeedUrl");
+
 	my $feed = `curl $hostFeedUrl`;
 
 	if ($feed) {
@@ -82,23 +92,21 @@ print $DIR, "\n";
 sub PushItemToHost {
 	my $host = shift;
 	my $fileName = shift;
-	my $hash = shift;
 
 	chomp $host;
 	chomp $fileName;
-	chomp $hash;
 
-	WriteLog("PushItemToHost($host, $fileName, $hash");
+	WriteLog("PushItemToHost($host, $fileName");
 
-	my $fileContents = GetFile("./html/$fileName");
+	my $fileContents = GetFile($fileName);
 	$fileContents = uri_encode($fileContents);
 
-	my $url = $host . "/gracias.html?comment=" . $fileContents;
-	#also needs to be shell-encoded
+	my $url = 'http://' . $host . "/gracias.html?comment=" . $fileContents;
+	$url = EscapeShellChars($url);
 
 	WriteLog("curl \"$url\"");
 
-	my $curlResult = system('curl \"' . $url . '\"');
+	my $curlResult = `curl \"$url\"`;
 
 	return $curlResult;
 }
@@ -137,5 +145,32 @@ sub PullItemFromHost {
 	PutFile($localPath, $remoteFileContents);
 }
 
-PullFeedFromHost("hike.qdb.us");
-PullFeedFromHost("irc30.qdb.us");
+
+sub PushItemsToHost {
+	my $host = shift;
+	chomp($host);
+
+	my %queryParams;
+	my @files = DBGetItemList(\%queryParams);
+
+	my $cachePrefix = "./cache/push/";
+
+	foreach my $file(@files) {
+		my $fileName = $file->{'file_path'};
+		my $fileHash = $file->{'file_hash'};
+
+		my $hostHash = sha1_hex($host);
+
+		if (!GetFile("$cachePrefix/$hostHash/$fileHash")) {
+			PushItemToHost($host, $fileName);
+			PutFile("$cachePrefix/$hostHash/$fileHash", 1);
+		}
+	}
+}
+
+my @hostsToPull = split("\n", GetConfig('pull_hosts'));
+
+foreach my $host (@hostsToPull) {
+	PullFeedFromHost($host);
+	#PushItemsToHost($host);
+}
