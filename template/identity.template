@@ -1,23 +1,39 @@
 <!-- identity.template -->
-<noscript><p class=warning><strong>This page does not work without JavaScript. Please use standalone GPG/PGP instead.</strong></p></noscript>
+<noscript><p class=warning><strong>Attention! You must use PGP/GPG to use identity features without JavaScript, which appears to be disabled in your browser.</strong></p>
+<p>Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
+</noscript>
 
-<form id=formCurId><!-- current identity -->
+<form id=formCurId style="display: none"><!-- current identity -->
     <fieldset style="display: inline">
         <legend>Current Identity</legend>
         <label for=myAvatar>You are:</label> <span id=myAvatar class=avatar></span><br>
+        <label for=myFP>Fingerprint:</label> <span id=myFP></span><br>
         <label for=myAlgo>Algorithm:</label> <span id=myAlgo></span><br>
         <label for=myCrea>Created:</label> <span id=myCrea></span><br>
 
         <hr>
 
         <textarea cols=61 rows=10 id=publickey spellcheck=false></textarea><br>
-        <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');">
-        <input type=button value="Copy Public Key" onClick="copyTextToClipboard('publickey');">
-        <input type=button class=rmid value="Log Out" onclick="logOut();"><br>
+        <input type=button value="Copy" onClick="copyTextToClipboard('publickey');">
+
+        <p>
+            <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
+            Publish your name to the board.<br>Also allows receiving encrypted messages.<br>Sort of like creating a profile.
+        </p>
+
+        <p>
+            <input type=button id=copypriv value="Copy Private Key" onClick="peekPrivKey();copyTextToClipboard('privatekey');"><br>
+            Save it somewhere if you want to keep it.<br>This is also how you log in on another device.
+        </p>
+
+        <p>
+            <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
+            <strong>Attention!</strong> Save your private key to sign in again!
+        </p>
     </fieldset>
 </form><!-- / current identity -->
 
-<form id=formCreateId><!-- create identity -->
+<form id=formCreateId style="display: none"><!-- create identity -->
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
 <label for=name>name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
@@ -34,16 +50,23 @@
 </fieldset>
 </form><!-- / create identity -->
 
-<form id=formprivkey><!-- private key -->
+<form id=formprivkey style="display: none"><!-- private key -->
     <fieldset style="display: inline">
         <legend>Private Key</legend>
         <textarea cols=61 rows=10 id=privatekey spellcheck=false></textarea><br>
         <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
-        <input type=button id=copypriv value="Copy Private Key" onClick="copyTextToClipboard('privatekey');">
     </fieldset>
 </form><!-- / private key -->
 
 <br>
 
-<p>For more security at the expense of convenience, use your own PGP/GPG. See the Manual for more information.</p>
+<p><b>Notice:</b> This page uses in-browser JavaScript encryption. It's good
+enough if you are not paranoid. If you do happen to be the paranoid type, for
+more security at the expense of convenience, you can use your own own PGP/GPG.</p>
+
+<p>To create an identity, generate your own key and <tt>--armor</tt> it.</p>
+
+<p>To post a signed message, <tt>--clearsign</tt> and post away.</p>
+
+<p>For more information, <a href="/manual.html">reference the fine Manual</a>.
 <!-- / identity.template -->

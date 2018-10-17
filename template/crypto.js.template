@@ -73,11 +73,14 @@ function showHideForms() {
 			restoreIdButton.disabled = true;
 		}
 
-		var copyPrivButton = document.getElementById('copypriv');
+//		var copyPrivButton = document.getElementById('copypriv');
+//
+//		if (copyPrivButton) {
+//			copyPrivButton.disabled = false;
+//		}
 
-		if (copyPrivButton) {
-			copyPrivButton.disabled = false;
-		}
+        //todo for both key textboxes
+		//document.getElementById("myTextarea").readOnly = true;
 	} else {
 		var formCur = document.getElementById('formCurId');
 
@@ -97,11 +100,17 @@ function showHideForms() {
 			restoreIdButton.disabled = false;
 		}
 
-		var copyPrivButton = document.getElementById('copypriv');
+//		var copyPrivButton = document.getElementById('copypriv');
+//
+//		if (copyPrivButton) {
+//			copyPrivButton.disabled = true;
+//		}
 
-		if (copyPrivButton) {
-			copyPrivButton.disabled = true;
-		}
+		var formPrivKey = document.getElementById('formprivkey');
+
+        if (formPrivKey) {
+            formPrivKey.style.display = 'block';
+        }
 	}
 }
 
@@ -117,6 +126,30 @@ function fallbackCopyTextToClipboard(textareaId) {
   } catch (err) {
     console.error('Fallback: Oops, unable to copy', err);
   }
+}
+
+function peekPrivKey() {
+// this will allow the user to see the private key form until it loses focus
+// only hides it if still logged in
+
+    var formPrivKey = document.getElementById('formprivkey');
+    if (formPrivKey) {
+        formPrivKey.style.display='block';
+        formPrivKey.style.backgroundColor='red';
+
+        if (getUserFp()) {
+            var privKeyField = document.getElementById('privatekey');
+            if (privKeyField) {
+                privKeyField.onblur = function(){
+                    var formPrivKey = document.getElementById('formprivkey');
+                    if (formPrivKey && getUserFp()) {
+                        formPrivKey.style.display='none';
+                        formPrivKey.style.backgroundColor='';
+                    }
+                };
+            }
+        }
+    }
 }
 
 function copyTextToClipboard(textareaId) {
@@ -271,19 +304,26 @@ function saveId() {
 			if (myAvatar) {
 				myAvatar.innerHTML = getAvatar();
 			}
+
 			myAvatar = document.getElementById('myAvatar2');
 			if (myAvatar) {
 				myAvatar.innerHTML = getAvatar();
 			}
-			myAlgo = document.getElementById('myAlgo');
+
+			var myAlgo = document.getElementById('myAlgo');
 			if (myAlgo) {
 				myAlgo.innerHTML = pubKeyObj.primaryKey.algorithm.toString();
 			}
 
-			myCrea = document.getElementById('myCrea');
+			var myCrea = document.getElementById('myCrea');
 			if (myCrea) {
 				myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
 			}
+
+			var myFinger = document.getElementById('myFP');
+			if (myFinger) {
+			    myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+            }
 
 			showHideForms();
     }

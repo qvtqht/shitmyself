@@ -7,6 +7,7 @@ use utf8;
 use File::Basename qw(dirname);
 use URI::Encode qw(uri_encode);
 use Digest::SHA qw(sha1_hex);
+use URI::Escape qw(uri_escape);
 
 use lib 'lib';
 
@@ -26,12 +27,12 @@ sub PullFeedFromHost {
 
 	my $hostFeedUrl = $hostBase . "/rss.txt";
 
-	$hostFeedUrl = $hostFeedUrl . '?you=' . uri_encode($host);
+	$hostFeedUrl = $hostFeedUrl . '?you=' . uri_escape($host);
 
 	my @myHosts = split("\n", GetConfig('my_hosts'));
 	my $myHostUrl = $myHosts[rand @myHosts];
 
-	$hostFeedUrl .= '&me=' . uri_encode($myHostUrl);
+	$hostFeedUrl .= '&me=' . uri_escape($myHostUrl);
 
 	#my $feed = `curl -A useragent $hostFeedUrl`;
 
@@ -94,21 +95,40 @@ print $DIR, "\n";
 sub PushItemToHost {
 	my $host = shift;
 	my $fileName = shift;
+	my $fileHash = shift;
 
 	chomp $host;
 	chomp $fileName;
+	chomp $fileHash;
 
-	WriteLog("PushItemToHost($host, $fileName");
+	my $pushHash = sha1_hex($host . '|' . $fileHash);
+
+	WriteLog("PushItemToHost($host, $fileName, $fileHash");
+
+	my $pushLog = "./log/push.log";
+	my $grepResult = `grep -i "$pushHash" $pushLog`;
+	if ($grepResult) {
+		WriteLog('found!');
+	} else {
+		WriteLog('not found!');
+		AppendFile($pushLog, "$pushHash");
+	}
+	#WriteLog($grepResult);
+
+#	if (!GetFile("$cachePrefix/$hostHash/$fileHash")) {
+#		PushItemToHost($host, $fileName);
+#		PutFile("$cachePrefix/$hostHash/$fileHash", 1);
+#	}
 
 	my $fileContents = GetFile($fileName);
-	$fileContents = uri_encode($fileContents);
+	$fileContents = uri_escape($fileContents);
 
 	my $url = 'http://' . $host . "/gracias.html?comment=" . $fileContents;
 	$url = EscapeShellChars($url);
 
 	WriteLog("curl \"$url\"");
 
-	my $curlResult = `curl \"$url\"`;
+	my $curlResult = '';#####`curl \"$url\"`;
 
 	return $curlResult;
 }
@@ -130,8 +150,8 @@ sub PullItemFromHost {
 
 	WriteLog ("curl -s $url");
 
-	#my $remoteFileContents = `curl -A useragent -s $url`;
-	my $remoteFileContents = `curl -s $url`;
+	my $remoteFileContents = '';#####`curl -A useragent -s $url`;
+	#####my $remoteFileContents = `curl -s $url`;
 
 	my $localPath = '.' . $fileName;
 
@@ -155,24 +175,17 @@ sub PushItemsToHost {
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
 
-	my $cachePrefix = "./cache/push/";
-
 	foreach my $file(@files) {
 		my $fileName = $file->{'file_path'};
 		my $fileHash = $file->{'file_hash'};
 
-		my $hostHash = sha1_hex($host);
-
-		if (!GetFile("$cachePrefix/$hostHash/$fileHash")) {
-			PushItemToHost($host, $fileName);
-			PutFile("$cachePrefix/$hostHash/$fileHash", 1);
-		}
+		PushItemToHost($host, $fileName, $fileHash);
 	}
 }
 
 my @hostsToPull = split("\n", GetConfig('pull_hosts'));
 
 foreach my $host (@hostsToPull) {
-	PullFeedFromHost($host);
-	#PushItemsToHost($host);
+	#PullFeedFromHost($host);
+	PushItemsToHost($host);
 }
