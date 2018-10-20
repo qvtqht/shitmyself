@@ -453,6 +453,11 @@ sub DBAddVoteRecord {
 		return;
 	}
 
+	if (length($query) > 10240) {
+		DBAddVoteRecord('flush');
+		$query = '';
+	}	
+
 	my $ballotTime = shift;
 	my $voteValue = shift;
 
