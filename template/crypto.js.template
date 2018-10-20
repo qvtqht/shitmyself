@@ -2,53 +2,53 @@ var myFingerprint = '';
 var myUsername = '';
 
 function logOut() {
-    if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
-        removeStoredKeys();
-    }
+	//if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
+		removeStoredKeys();
+	//}
 }
 
 function removeStoredKeys() {
-    window.localStorage.removeItem("privatekey");
-    window.localStorage.removeItem("publickey");
-    window.localStorage.removeItem("fingerprint");
-    window.localStorage.removeItem("avatar");
+	window.localStorage.removeItem("privatekey");
+	window.localStorage.removeItem("publickey");
+	window.localStorage.removeItem("fingerprint");
+	window.localStorage.removeItem("avatar");
 
-    var textbox = document.getElementById("privatekey");
+	var textbox = document.getElementById("privatekey");
 
-    if (textbox) {
-        textbox.value = '';
-    }
+	if (textbox) {
+		textbox.value = '';
+	}
 
-    textbox = document.getElementById("publickey");
+	textbox = document.getElementById("publickey");
 
-    if (textbox) {
-        textbox.value = '';
-    }
+	if (textbox) {
+		textbox.value = '';
+	}
 
-    var avatar = document.getElementById("myid");
+	var avatar = document.getElementById("myid");
 
-    if (avatar) {
-        avatar.innerHTML = '';
-    }
+	if (avatar) {
+		avatar.innerHTML = '';
+	}
 
-    avatar = document.getElementById("myAvatar");
+	avatar = document.getElementById("myAvatar");
 
-    if (avatar) {
-        avatar.innerHTML = '';
-    }
+	if (avatar) {
+		avatar.innerHTML = '';
+	}
 
 	showHideForms();
 }
 
 var escapeTA = document.createElement('textarea');
 function escapeHTML(html) {
-    escapeTA.textContent = html;
-    return escapeTA.innerHTML;
+	escapeTA.textContent = html;
+	return escapeTA.innerHTML;
 }
 
 function unescapeHTML(html) {
-    escapeTA.innerHTML = html;
-    return escapeTA.textContent;
+	escapeTA.innerHTML = html;
+	return escapeTA.textContent;
 }
 
 
@@ -73,13 +73,13 @@ function showHideForms() {
 			restoreIdButton.disabled = true;
 		}
 
-//		var copyPrivButton = document.getElementById('copypriv');
-//
-//		if (copyPrivButton) {
-//			copyPrivButton.disabled = false;
-//		}
+		var copyPrivButton = document.getElementById('copypriv');
 
-        //todo for both key textboxes
+		if (copyPrivButton) {
+			copyPrivButton.disabled = false;
+		}
+
+		//todo for both key textboxes
 		//document.getElementById("myTextarea").readOnly = true;
 	} else {
 		var formCur = document.getElementById('formCurId');
@@ -100,17 +100,17 @@ function showHideForms() {
 			restoreIdButton.disabled = false;
 		}
 
-//		var copyPrivButton = document.getElementById('copypriv');
+		var copyPrivButton = document.getElementById('copypriv');
+
+		if (copyPrivButton) {
+			copyPrivButton.disabled = true;
+		}
 //
-//		if (copyPrivButton) {
-//			copyPrivButton.disabled = true;
+//		var formPrivKey = document.getElementById('formprivkey');
+//
+//		if (formPrivKey) {
+//			formPrivKey.style.display = 'block';
 //		}
-
-		var formPrivKey = document.getElementById('formprivkey');
-
-        if (formPrivKey) {
-            formPrivKey.style.display = 'block';
-        }
 	}
 }
 
@@ -120,49 +120,48 @@ function fallbackCopyTextToClipboard(textareaId) {
   textArea.select();
 
   try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Fallback: Copying text command was ' + msg);
+	var successful = document.execCommand('copy');
+	var msg = successful ? 'successful' : 'unsuccessful';
+	console.log('Fallback: Copying text command was ' + msg);
   } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
+	console.error('Fallback: Oops, unable to copy', err);
   }
-}
-
-function peekPrivKey() {
-// this will allow the user to see the private key form until it loses focus
-// only hides it if still logged in
-
-    var formPrivKey = document.getElementById('formprivkey');
-    if (formPrivKey) {
-        formPrivKey.style.display='block';
-        formPrivKey.style.backgroundColor='red';
-
-        if (getUserFp()) {
-            var privKeyField = document.getElementById('privatekey');
-            if (privKeyField) {
-                privKeyField.onblur = function(){
-                    var formPrivKey = document.getElementById('formprivkey');
-                    if (formPrivKey && getUserFp()) {
-                        formPrivKey.style.display='none';
-                        formPrivKey.style.backgroundColor='';
-                    }
-                };
-            }
-        }
-    }
 }
 
 function copyTextToClipboard(textareaId) {
-  var text = document.getElementById(textareaId).value;
+  var textbox = document.getElementById(textareaId);
+  var text = textbox.value;
+
   if (!navigator.clipboard) {
-    fallbackCopyTextToClipboard(textareaId);
-    return;
+	fallbackCopyTextToClipboard(textareaId);
+	return;
   }
   navigator.clipboard.writeText(text).then(function() {
-    console.log('Async: Copying to clipboard was successful!');
+	console.log('Async: Copying to clipboard was successful!');
   }, function(err) {
-    console.error('Async: Could not copy text: ', err);
+	console.error('Async: Could not copy text: ', err);
   });
+}
+
+function peekAndCopy(textareaId) {
+// this will allow the user to see the private key form until it loses focus
+// only hides it if still logged in
+
+	var textarea = document.getElementById(textareaId);
+	if (textarea) {
+		textarea.style.display='block';
+
+		textarea.onblur = function(){
+			var textarea = document.getElementById(textareaId);
+			if (textarea) {
+				textarea.style.display='none';
+			}
+		};
+
+		textarea.focus();
+
+		copyTextToClipboard(textareaId);
+	}
 }
 
 function getPrivateKey() {
@@ -176,23 +175,23 @@ function getPrivateKey() {
 }
 
 function insertPubKey() {
-    var comment = document.getElementById("comment");
-    if (comment) {
-        var pubkey = getPublicKey();
+	var comment = document.getElementById("comment");
+	if (comment) {
+		var pubkey = getPublicKey();
 
-        if (pubkey) {
-            comment.value = pubkey;
-        }
-    }
+		if (pubkey) {
+			comment.value = pubkey;
+		}
+	}
 }
 
 function getPublicKey() {
-    var publicKey = localStorage.getItem("publickey");
-    if (publicKey === null || publicKey.length === 0) {
-        return null;
-    } else {
-        return publicKey;
-    }
+	var publicKey = localStorage.getItem("publickey");
+	if (publicKey === null || publicKey.length === 0) {
+		return null;
+	} else {
+		return publicKey;
+	}
 }
 
 function popId() {
@@ -237,16 +236,16 @@ function popId() {
 //    }
 //}
 function setAvatar(avatar) {
-    window.localStorage.setItem("avatar", avatar);
+	window.localStorage.setItem("avatar", avatar);
 }
 
 
 function getAvatar() {
 	var myAvatar = localStorage.getItem("avatar");
-    if (myAvatar === null || myAvatar.length === 0) {
-        return null;
-    } else {
-    	return myAvatar;
+	if (myAvatar === null || myAvatar.length === 0) {
+		return null;
+	} else {
+		return myAvatar;
 	}
 }
 
@@ -260,90 +259,79 @@ function getUserFp() {
 }
 
 function saveId() {
-    var textbox = document.getElementById("privatekey");
+	var textbox = document.getElementById("privatekey");
 
-    if (textbox) {
-			var privkey = textbox.value;
+	if (textbox) {
+		var privkey = textbox.value;
 
-			setPrivateKey(privkey);
+		setPrivateKey(privkey);
 
-			var openpgp = window.openpgp;
+		var openpgp = window.openpgp;
 
-			openpgp.config.show_version = false;
-			openpgp.config.show_comment = false;
+		openpgp.config.show_version = false;
+		openpgp.config.show_comment = false;
 
-			var privKeyObj = openpgp.key.readArmored(privkey);;
+		var privKeyObj = openpgp.key.readArmored(privkey);;
 
-			var pubKeyObj = privKeyObj.keys[0].toPublic();
+		var pubKeyObj = privKeyObj.keys[0].toPublic();
 
-			var pubkey = pubKeyObj.armor();
+		var pubkey = pubKeyObj.armor();
 
-			setPublicKey(pubkey);
+		setPublicKey(pubkey);
 
-			var pubTextbox = document.getElementById("publickey");
+		myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
 
-			if (pubTextbox) {
-				pubTextbox.value = pubkey;
+		window.localStorage.setItem("avatar", avatar);
+		window.localStorage.setItem("fingerprint", myFingerprint);
+
+		myUsername = pubKeyObj.users[0].userId.userid;
+
+		var color1 = myFingerprint.substr(0, 6);
+		var color2 = myFingerprint.substr(3, 6);
+		var color3 = myFingerprint.substr(7, 6);
+
+		var avatar = '';
+
+		avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
+		avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
+		avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
+
+		setAvatar(avatar);
+
+		var myidBox = document.getElementById('myid');
+		if (myidBox) {
+			var myAvatar = localStorage.getItem('avatar');
+
+			if (myAvatar === null || myAvatar.length === 0) {
+				myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
+			} else {
+				var myFp = localStorage.getItem('fingerprint');
+				myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
 			}
+		}
 
-			myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+		var myId2 = document.getElementById('myId2');
+		if (myId2) {
+			myId2.innerHTML = getAvatar();
+		}
 
-			window.localStorage.setItem("avatar", avatar);
-			window.localStorage.setItem("fingerprint", myFingerprint);
+		var myAlgo = document.getElementById('myAlgo');
+		if (myAlgo) {
+			myAlgo.innerHTML = pubKeyObj.primaryKey.algorithm.toString();
+		}
 
-			myUsername = pubKeyObj.users[0].userId.userid;
+		var myCrea = document.getElementById('myCrea');
+		if (myCrea) {
+			myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+		}
 
-			var color1 = myFingerprint.substr(0, 6);
-			var color2 = myFingerprint.substr(3, 6);
-			var color3 = myFingerprint.substr(7, 6);
+		var myFinger = document.getElementById('myFP');
+		if (myFinger) {
+			myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+		}
 
-			var avatar = '';
-
-			avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
-			avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
-			avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
-
-			setAvatar(avatar);
-
-			var myidBox = document.getElementById('myid');
-			if (myidBox) {
-				var myAvatar = localStorage.getItem('avatar');
-
-				if (myAvatar === null || myAvatar.length === 0) {
-					myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
-				} else {
-					var myFp = localStorage.getItem('fingerprint');
-					myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
-				}
-			}
-
-			var myAvatar = document.getElementById('myAvatar');
-			if (myAvatar) {
-				myAvatar.innerHTML = getAvatar();
-			}
-
-			myAvatar = document.getElementById('myAvatar2');
-			if (myAvatar) {
-				myAvatar.innerHTML = getAvatar();
-			}
-
-			var myAlgo = document.getElementById('myAlgo');
-			if (myAlgo) {
-				myAlgo.innerHTML = pubKeyObj.primaryKey.algorithm.toString();
-			}
-
-			var myCrea = document.getElementById('myCrea');
-			if (myCrea) {
-				myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
-			}
-
-			var myFinger = document.getElementById('myFP');
-			if (myFinger) {
-			    myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-            }
-
-			showHideForms();
-    }
+		showHideForms();
+	}
 }
 
 function pushMessage(message) {
@@ -371,11 +359,11 @@ function pushMessage(message) {
 //}
 
 function setPrivateKey(privateKey) {
-    window.localStorage.setItem("privatekey", privateKey);
+	window.localStorage.setItem("privatekey", privateKey);
 }
 
 function setPublicKey(publicKey) {
-    window.localStorage.setItem("publickey", publicKey);
+	window.localStorage.setItem("publickey", publicKey);
 }
 
 function getPublicKeyFromPrivateKey(privateKey) {
@@ -386,142 +374,145 @@ function getPublicKeyFromPrivateKey(privateKey) {
 }
 
 function makePrivateKey(username, bits) {
-    if (typeof(Storage) !== "undefined") {
-        var privateKey = getPrivateKey();
+	if (typeof(Storage) !== "undefined") {
+		var privateKey = getPrivateKey();
 
-        if (privateKey === null || privateKey.length === 0) {
-            var privkey;
-            var pubkey;
+		if (privateKey === null || privateKey.length === 0) {
+			var privkey;
+			var pubkey;
 
-            var openpgp = window.openpgp;
-            openpgp.initWorker({path:'openpgp.worker.js'});
+			var openpgp = window.openpgp;
+			openpgp.initWorker({path:'openpgp.worker.js'});
 
-            var options = {
-                userIds: [{ name: username }],
-                numBits: bits,
-                passphrase: ''
-            };
+			var options = {
+				userIds: [{ name: username }],
+				numBits: bits,
+				passphrase: ''
+			};
 
-            var textbox = document.getElementById("privatekey");
-            if (textbox) {
-                textbox.value = 'Generating key, please wait...';
-            }
+			var textbox = document.getElementById("privatekey");
+			if (textbox) {
+				textbox.value = 'Generating key, please wait...';
+			}
 
-            var pubTextbox = document.getElementById("publickey");
-            if (pubTextbox) {
-                pubTextbox.value = "Generating key, please wait...";
-            }
+			openpgp.config.show_version = false;
+			openpgp.config.show_comment = false;
 
-            openpgp.config.show_version = false;
-            openpgp.config.show_comment = false;
+			//var statusBox = document.getElementById('status');
+			var startDate = new Date();
+			//statusBox.value = statusBox.value + "\n" + "Generating key..."
 
-            var statusBox = document.getElementById('status');
-            var startDate = new Date();
-            statusBox.value = statusBox.value + "\n" + "Generating key..."
+			openpgp.generateKey(options).then(
+				function(key) {
+					setPrivateKey(key.privateKeyArmored);
+					if (textbox) {
+						textbox.value = key.privateKeyArmored;
+					}
 
-            openpgp.generateKey(options).then(
-                function(key) {
-                    setPrivateKey(key.privateKeyArmored);
-                    if (textbox) {
-                        textbox.value = key.privateKeyArmored;
-                    }
+					setPublicKey(key.publicKeyArmored);
+//
+//					if (pubTextbox) {
+//						pubTextbox.value = key.publicKeyArmored;
+//					}
+//
+					saveId();
 
-                    setPublicKey(key.publicKeyArmored);
+					var cbMakeProfile = document.getElementById('pubNewProfile');
+					if (cbMakeProfile) {
+						if (cbMakeProfile.checked) {
+							window.open('/write.html#inspubkey','_self');
+						}
+					}
 
-                    if (pubTextbox) {
-                        pubTextbox.value = key.publicKeyArmored;
-                    }
 
-                    saveId();
+					var endDate = new Date();
 
-							var endDate = new Date();
-
-                    statusBox.value = statusBox.value + "\n" + "Finished! " + (endDate.getTime() - startDate.getTime()) + "ms";
-                }
-            );
-        } else {
-            // key already exists in storage
-        }
-    } else {
-        // sorry, your browser does not support Web Storage...
-    }
+					//statusBox.value = statusBox.value + "\n" + "Finished! " + (endDate.getTime() - startDate.getTime()) + "ms";
+				}
+			);
+		} else {
+			// key already exists in storage
+		}
+	} else {
+		// sorry, your browser does not support Web Storage...
+	}
 }
 
 function makeKeyFromInputs() {
-    var privkey = getPrivateKey();
+	var privkey = getPrivateKey();
 
-    if (privkey) {
-        var sure = confirm('Another identity already exists. Overwrite?');
+	if (privkey) {
+		var sure = confirm('Another identity already exists. Overwrite?');
 
-        if (sure == true) {
-            removeStoredKeys();
-        } else {
-            return;
-        }
-    }
+		if (sure == true) {
+			removeStoredKeys();
+		} else {
+			return;
+		}
+	}
 
-    var user = document.getElementById('name').value;
-    var bits = document.getElementById('bits').value;
+	var user = document.getElementById('name').value;
+	var bits = document.getElementById('bits').value;
 
-    makePrivateKey(user, bits);
+	makePrivateKey(user, bits);
 }
 
 function insPubKey() {
-    var pubkey = getPublicKey();
+	var pubkey = getPublicKey();
 
-    if (pubkey) {
-        var textbox = document.getElementById('comment');
+	if (pubkey) {
+		var textbox = document.getElementById('comment');
 
-        if (textbox) {
-            if (pubkey) {
-                textbox.value = pubkey;
+		if (textbox) {
+			if (pubkey) {
+				textbox.value = pubkey;
 
 					var composeForm = document.getElementById('compose');
 					if (composeForm) {
 							composeForm.submit();
 					}
 
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 function writeOnload() {
-    if (window.location.hash) {
-        if (window.location.hash == '#inspubkey') {
-            insPubKey();
-        }
-    }
+	if (window.location.hash) {
+		if (window.location.hash == '#inspubkey') {
+			insPubKey();
+		}
+	}
 }
 
 function signMessage() {
-    var privkey = getPrivateKey();
+	var privkey = getPrivateKey();
 
-    if (privkey) {
-        var textbox = document.getElementById('comment');
-        var composeForm = document.getElementById('compose');
+	if (privkey) {
+		var textbox = document.getElementById('comment');
+		var composeForm = document.getElementById('compose');
 
-        if (textbox && composeForm) {
-            var message = textbox.value;
+		if (textbox && composeForm) {
+			var message = textbox.value;
 
-            var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
-            options = {
-                data: message,                             // input as String (or Uint8Array)
-                privateKeys: [privKeyObj]                  // for signing
-            };
+			options = {
+				data: message,                             // input as String (or Uint8Array)
+				privateKeys: [privKeyObj]                  // for signing
+			};
 
-            openpgp.config.show_version = false;
-            openpgp.config.show_comment = false;
+			openpgp.config.show_version = false;
+			openpgp.config.show_comment = false;
 
-            openpgp.sign(options).then(function(signed) {
-                textbox.value = signed.data;
-                composeForm.submit();
-            });
-        }
-    } else {
-        alert('No identity defined, cannot sign.');
-    }
+			openpgp.sign(options).then(function(signed) {
+				textbox.value = signed.data;
+				composeForm.submit();
+			});
+		}
+	} else {
+		alert('No identity defined, cannot sign.');
+	}
 
 }
 
@@ -532,7 +523,7 @@ if (getUserFp()) {
 	}
 }
 
-var statusBox = document.getElementById('status');
-if (statusBox) {
-	statusBox.value = statusBox.value + '\nReady!';
-}
+//var statusBox = document.getElementById('status');
+//if (statusBox) {
+//	statusBox.value = statusBox.value + '\nReady!';
+//}

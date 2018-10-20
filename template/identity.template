@@ -3,37 +3,33 @@
 <p>Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
 </noscript>
 
-<form id=formCurId style="display: none"><!-- current identity -->
+<!-- current identity -->
+<form id=formCurId style="display: none">
     <fieldset style="display: inline">
         <legend>Current Identity</legend>
-        <label for=myAvatar>You are:</label> <span id=myAvatar class=avatar></span><br>
+        <label for=myId2>You are:</label> <span id=myId2 class=avatar></span><br>
         <label for=myFP>Fingerprint:</label> <span id=myFP></span><br>
         <label for=myAlgo>Algorithm:</label> <span id=myAlgo></span><br>
         <label for=myCrea>Created:</label> <span id=myCrea></span><br>
-
-        <hr>
-
-        <textarea cols=61 rows=10 id=publickey spellcheck=false></textarea><br>
-        <input type=button value="Copy" onClick="copyTextToClipboard('publickey');">
-
-        <p>
-            <input type=button value="Create Profile" onclick="window.open('/write.html#inspubkey','_self');"><br>
-            Publish your name and public key to the board.<br>Also allows receiving encrypted messages.<br>Sort of like creating a profile.
-        </p>
-
-        <p>
-            <input type=button id=copypriv value="Copy Private Key" onClick="peekPrivKey();copyTextToClipboard('privatekey');"><br>
-            Save it somewhere if you want to keep it.<br>This is also how you log in on another device.
-        </p>
 
         <p>
             <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
             <strong>Attention!</strong> Save your private key to sign in again!
         </p>
-    </fieldset>
-</form><!-- / current identity -->
 
-<form id=formCreateId style="display: none"><!-- create identity -->
+        <hr>
+
+        <p>
+            <input type=button value="Create Profile" onclick="window.open('/write.html#inspubkey','_self');"><br>
+            Publish your name and public key to the board.<br>Also allows receiving encrypted messages.
+        </p>
+
+    </fieldset>
+</form>
+<!-- / current identity -->
+
+<!-- create identity -->
+<form id=formCreateId style="display: none">
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
 <label for=name>name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
@@ -42,21 +38,25 @@
 <option value=1024>1024</option>
 <option value=2048>2048</option>
 <option value=4096>4096</option>
-</select><br>
+</select>
+<input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>
+<br>
 <!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
 <input type=button value="Generate Key" onclick="makeKeyFromInputs();"><br>
-<hr>
-<textarea cols=61 rows=5 name=status id=status>Getting ready... </textarea>
 </fieldset>
-</form><!-- / create identity -->
+</form>
+<!-- / create identity -->
 
-<form id=formprivkey style="display: none"><!-- private key -->
+<!-- private key -->
+<form id=formprivkey>
     <fieldset style="display: inline">
         <legend>Private Key</legend>
         <textarea cols=61 rows=10 id=privatekey spellcheck=false></textarea><br>
         <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
+        <input type=button id=copypriv value="Copy Private Key" onClick="copyTextToClipboard('privatekey');"><br>
     </fieldset>
-</form><!-- / private key -->
+</form>
+<!-- / private key -->
 
 <br>
 
