@@ -17,8 +17,8 @@
         <input type=button value="Copy" onClick="copyTextToClipboard('publickey');">
 
         <p>
-            <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
-            Publish your name to the board.<br>Also allows receiving encrypted messages.<br>Sort of like creating a profile.
+            <input type=button value="Create Profile" onclick="window.open('/write.html#inspubkey','_self');"><br>
+            Publish your name and public key to the board.<br>Also allows receiving encrypted messages.<br>Sort of like creating a profile.
         </p>
 
         <p>

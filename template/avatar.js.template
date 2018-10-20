@@ -1,19 +1,13 @@
 // just the avatar, please
 
-function getAvatar() {
-	var myAvatar = localStorage.getItem("avatar");
-    if (myAvatar === null || myAvatar.length === 0) {
-        return null;
-    } else {
-    	return myAvatar;
-	}
-}
-
 var myidBox = document.getElementById('myid');
 if (myidBox) {
-	if (getAvatar()) {
-		myidBox.innerHTML = getAvatar() + ' <a href="/identity.html">Settings</a>';
-	} else {
+    var myAvatar = localStorage.getItem('avatar');
+
+	if (myAvatar === null || myAvatar.length === 0) {
 		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
+	} else {
+		var myFp = localStorage.getItem('fingerprint');
+		myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
 	}
 }
