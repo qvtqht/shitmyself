@@ -442,13 +442,13 @@ function makeKeyFromInputs() {
 	var privkey = getPrivateKey();
 
 	if (privkey) {
-		var sure = confirm('Another identity already exists. Overwrite?');
-
-		if (sure == true) {
-			removeStoredKeys();
-		} else {
-			return;
-		}
+//		var sure = confirm('Another identity already exists. Overwrite?');
+//
+//		if (sure == true) {
+		removeStoredKeys();
+//		} else {
+//			return;
+//		}
 	}
 
 	var user = document.getElementById('name').value;
