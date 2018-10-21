@@ -28,12 +28,14 @@ $lockTime = $currentTime;
 # Read access.log using the path in the config
 
 my $accessLogPath = GetConfig('access_log_path');
+WriteLog("\$accessLogPath = $accessLogPath");
 
 my $startTime = time();
 my $interval = GetConfig('cron_continue');
+my $touch = 0;
 
-while (time() < $startTime + $interval) {
-	sleep(1);
+while (!$touch || time() < $startTime + $interval) {
+	$touch = 1;
 
 	if (!GetFile('cron.lock') || GetFile('cron.lock') ne $lockTime) {
 		WriteLog('Lock file has changed, quitting.');
@@ -45,6 +47,8 @@ while (time() < $startTime + $interval) {
 	if ($newItemCount > 0) {
 		system('perl rebuild.pl');
 	}
+	
+	sleep(1);
 }
 
 WriteLog( "Finished!");
