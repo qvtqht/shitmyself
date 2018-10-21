@@ -32,6 +32,8 @@ sub GetPageFooter {
 }
 
 my $primaryColor;
+my $secondaryColor;
+my $textColor;
 
 sub GetPageHeader {
 	my $title = shift;
@@ -64,7 +66,11 @@ sub GetPageHeader {
 
 	#my @secondaryColorChoices = qw(f0fff0 ffffff);
 	my @secondaryColorChoices = split("\n", GetConfig('secondary_colors'));
-	my $secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
+	$secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
+
+	my @textColorChoices = split("\n", GetConfig('text_colors'));
+	$textColor = "#" . $textColorChoices[int(rand(@textColorChoices))];
+
 
 	#my $primaryColor = '#'.$primaryColorChoices[0];
 	#my $secondaryColor = '#f0fff0';
@@ -84,6 +90,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$titleHtml/$titleHtml/;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$textColor/$textColor/g;
 	$htmlStart =~ s/\$disabledColor/$disabledColor/g;
 	$htmlStart =~ s/\$disabledTextColor/$disabledTextColor/g;
 	$htmlStart =~ s/\$orangeColor/$orangeColor/g;

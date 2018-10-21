@@ -3,7 +3,7 @@ body {
 	font-family: monospace;
 	font-size: large;
 	background-color: $secondaryColor;
-	color: #202020;
+	color: #$textColor;
 }
 a {
 	color: $primaryColor;
