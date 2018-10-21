@@ -131,7 +131,7 @@ form.reply .txtarea {
 .rmid {
     color: red;
 }
-button, input {
+button, input, textarea {
 	font-size: x-large;
 }
 
