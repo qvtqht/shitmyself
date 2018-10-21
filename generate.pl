@@ -886,7 +886,12 @@ sub GetReadPage {
 	$txtIndex .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs;
+	if ($pageType == 'author') {
+		$avatarjs = GetTemplate('avatar.userpage.js.template');
+	} else {
+		$avatarjs = GetTemplate('avatar.js.template');
+	}
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
