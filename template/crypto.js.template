@@ -143,26 +143,26 @@ function copyTextToClipboard(textareaId) {
   });
 }
 
-function peekAndCopy(textareaId) {
-// this will allow the user to see the private key form until it loses focus
-// only hides it if still logged in
-
-	var textarea = document.getElementById(textareaId);
-	if (textarea) {
-		textarea.style.display='block';
-
-		textarea.onblur = function(){
-			var textarea = document.getElementById(textareaId);
-			if (textarea) {
-				textarea.style.display='none';
-			}
-		};
-
-		textarea.focus();
-
-		copyTextToClipboard(textareaId);
-	}
-}
+//function peekAndCopy(textareaId) {
+//// this will allow the user to see the private key form until it loses focus
+//// only hides it if still logged in
+//
+//	var textarea = document.getElementById(textareaId);
+//	if (textarea) {
+//		textarea.style.display='block';
+//
+//		textarea.onblur = function(){
+//			var textarea = document.getElementById(textareaId);
+//			if (textarea) {
+//				textarea.style.display='none';
+//			}
+//		};
+//
+//		textarea.focus();
+//
+//		copyTextToClipboard(textareaId);
+//	}
+//}
 
 function getPrivateKey() {
 	var privateKey = localStorage.getItem("privatekey");
