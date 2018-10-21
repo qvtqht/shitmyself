@@ -264,7 +264,12 @@ sub DBAddAuthor {
 		return;
 	}
 
-	$key = SqliteEscape($key);
+	if ($query && length($query) > 10240) {
+	    DBAddAuthor('flush');
+	    $query = '';
+    }
+
+    $key = SqliteEscape($key);
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO author(key) VALUES ";
@@ -322,7 +327,12 @@ sub DBAddKeyAlias {
 		return;
 	}
 
-	my $alias = shift;
+    if ($query && length($query) > 10240) {
+        DBAddKeyAlias('flush');
+        $query = '';
+    }
+
+    my $alias = shift;
 	my $fingerprint = shift;
 
 	$key = SqliteEscape($key);
@@ -356,7 +366,12 @@ sub DBAddItem {
 		return;
 	}
 
-	my $itemName = shift;
+    if ($query && length($query) > 10240) {
+        DBAddItem('flush');
+        $query = '';
+    }
+
+    my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
 	my $parentHash = shift;
@@ -390,7 +405,7 @@ sub DBAddItem {
 #	}
 }
 
-sub DbAddVoteWeight { #todo test this function, as it is apparently unused as of now
+sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of now
 	state $query;
 	state $tagQuery;
 
@@ -418,7 +433,12 @@ sub DbAddVoteWeight { #todo test this function, as it is apparently unused as of
 		return;
 	}
 
-	my $weight = shift;
+    if ($query && length($query) > 10240) {
+        DBAddVoteWeight('flush');
+        $query = '';
+    }
+
+    my $weight = shift;
 
 	$voteValue = SqliteEscape($voteValue);
 	$weight = SqliteEscape($weight);
@@ -503,7 +523,12 @@ sub DBAddAddedRecord {
 		return;
 	}
 
-	my $fileHash = shift;
+    if ($query && length($query) > 10240) {
+        DBAddAddedRecord('flush');
+        $query = '';
+    }
+
+    my $fileHash = shift;
 	my $addedTime = shift;
 
 	chomp $filePath;
