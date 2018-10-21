@@ -16,6 +16,7 @@ my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
+push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -176,6 +177,11 @@ sub GetAvatar {
 		return $avatarCache{$gpg_key};
 	}
 
+	my $avCacheFile = GetCache("avatar/$gpg_key");
+	if ($avCacheFile) {
+		return $avCacheFile;
+	}
+
 	my $avatar = GetTemplate('avatar.template');
 
 	if ($gpg_key) {
@@ -194,6 +200,8 @@ sub GetAvatar {
 	}
 
 	$avatarCache{$gpg_key} = $avatar;
+
+	PutCache("avatar/$gpg_key", $avatar);
 
 	return $avatar;
 }

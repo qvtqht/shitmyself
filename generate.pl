@@ -500,7 +500,7 @@ sub GetIndexPage {
 				$isSigned = 0;
 			}
 
-			my $alias;;
+			my $alias;
 
 			my $isAdmin = 0;
 
