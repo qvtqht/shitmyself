@@ -1,10 +1,4 @@
-decouple avatar and anchor in setAvatar/getAvatar
-
 REPLIES
-
-get revision from git
-	if not same as last
-		purge cache
 
 Set Identity shou1d update the pub1i< key to <orrespond
 
