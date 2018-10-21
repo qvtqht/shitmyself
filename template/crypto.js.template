@@ -434,7 +434,7 @@ function makePrivateKey(username, bits) {
 							a.src = "/write.html#inspubkey";
 							a.width = "50";
 							a.height = "50";
-							document.querySelector('body').appendChild(a)
+							document.getElementById('profIframe').appendChild(a)
 						}
 					}
 
