@@ -33,9 +33,6 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 # In Apache, use CustomLog, e.g.:
 #         CustomLog /foo/bar/log/access.log combined
 
-my $LOGFILE = "$SCRIPTDIR/log/lighttpd.log";
-WriteLog( "\$LOGFILE=$LOGFILE\n");
-
 
 ##################
 
