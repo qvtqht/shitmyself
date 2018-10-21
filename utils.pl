@@ -13,6 +13,7 @@ use URI::Escape;
 use Storable;
 
 my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/action cache/message cache/gpg html/top);
+push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -21,6 +22,20 @@ foreach(@dirsThatShouldExist) {
 	if (!-e $_ || !-d $_) {
 		die("$_ should exist, but it doesn't. aborting.");
 	}
+}
+
+sub GetMyVersion {
+	state $myVersion;
+
+	if ($myVersion) {
+		return $myVersion;
+	}
+
+	$myVersion = `git rev-parse HEAD`;
+
+	chomp($myVersion);
+
+	return $myVersion;
 }
 
 # this is not needed, because we are not clearing out the html dir
@@ -628,6 +643,15 @@ sub GpgParse {
 	store \%returnValues, $cachePath;
 
 	return %returnValues;
+}
+
+sub EncryptMessage {
+#	For example:
+#
+#	gpg --primary-keyring temporary.gpg --import key.asc
+#		gpg --primary-keyring temporary.gpg --recipient 0xDEADBEEF --encrypt
+#		rm ~/.gnupg/temporary.gpg # can be omitted, not loaded by default
+
 }
 
 sub AddItemToConfigList {
