@@ -453,7 +453,7 @@ sub DBAddVoteRecord {
 		return;
 	}
 
-	if (length($query) > 10240) {
+	if ($query && length($query) > 10240) {
 		DBAddVoteRecord('flush');
 		$query = '';
 	}	

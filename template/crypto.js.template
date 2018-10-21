@@ -420,7 +420,11 @@ function makePrivateKey(username, bits) {
 					var cbMakeProfile = document.getElementById('pubNewProfile');
 					if (cbMakeProfile) {
 						if (cbMakeProfile.checked) {
-							window.open('/write.html#inspubkey','_self');
+							var a = document.createElement('iframe');
+							a.src = "/write.html#inspubkey";
+							a.width = "50";
+							a.height = "50";
+							document.querySelector('body').appendChild(a)
 						}
 					}
 

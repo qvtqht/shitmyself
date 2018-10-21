@@ -98,6 +98,11 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
+	my $adminKey = GetAdminKey();
+	if ($adminKey) {
+		$menuTemplate .= GetMenuItem('/author/' . $adminKey, 'Blog');
+	}
+
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
 	my $identityLink = GetMenuItem("/identity.html", GetString('menu/sign_in'));
@@ -1275,15 +1280,24 @@ MakeStaticPages();
 sub MakeClonePage {
 	#This makes the zip file as well as the clone.html page that lists its size
 
-	WriteLog("Making zip file...");
+	my $zipInterval = 3600;
+	my $lastZip = GetConfig('last_zip');
 
-	system("git archive --format zip --output html/hike.tmp.zip master");
-	#system("git archive -v --format zip --output html/hike.tmp.zip master");
+	if (!$lastZip || (time() - $lastZip) > $zipInterval) {
+		WriteLog("Making zip file...");
 
-	system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
-	#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+		system("git archive --format zip --output html/hike.tmp.zip master");
+		#system("git archive -v --format zip --output html/hike.tmp.zip master");
 
-	rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
+		system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+		#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+
+		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
+
+		PutConfig('last_zip', time());
+	} else {
+		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
+	}
 
 
 	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
