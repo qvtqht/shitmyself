@@ -43,10 +43,10 @@
 <option value=brainpoolP256r1>brainpoolP256r1</option>
 <option value=brainpoolP384r1>brainpoolP384r1</option>
 <option value=brainpoolP512r1>brainpoolP512r1</option>
-<option value=512>RSA 512-bit</option>
-<option value=1024>RSA 1024-bit</option>
-<option value=2048>RSA 2048-bit</option>
-<option value=4096>RSA 4096-bit</option>
+<option value=512>rsa512</option>
+<option value=1024>rsa1024</option>
+<option value=2048>rsa2048</option>
+<option value=4096>rsa4096</option>
 </select>
 <input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>
 <br>
