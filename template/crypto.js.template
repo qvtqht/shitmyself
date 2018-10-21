@@ -384,11 +384,20 @@ function makePrivateKey(username, bits) {
 			var openpgp = window.openpgp;
 			openpgp.initWorker({path:'openpgp.worker.js'});
 
-			var options = {
-				userIds: [{ name: username }],
-				numBits: bits,
-				passphrase: ''
-			};
+			var options;
+			if (bits == 512 || bits == 1024 || bits == 2048 || bits == 4096) {
+				options = {
+					userIds: [{ name: username }],
+					numBits: bits,
+					passphrase: ''
+				};
+			} else {
+				options = {
+					userIds: [{ name: username }],
+					curve: bits,
+					passphrase: ''
+				};
+			}
 
 			var textbox = document.getElementById("privatekey");
 			if (textbox) {
