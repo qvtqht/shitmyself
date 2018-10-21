@@ -888,7 +888,7 @@ sub GetReadPage {
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs;
 	if ($pageType == 'author') {
-		$avatarjs = GetTemplate('avatar.userpage.js.template');
+		$avatarjs = GetTemplate('avatar.authorpage.js.template');
 	} else {
 		$avatarjs = GetTemplate('avatar.js.template');
 	}
