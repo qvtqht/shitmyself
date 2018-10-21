@@ -359,6 +359,8 @@ sub ProcessAccessLog {
 					if (GetConfig('access_update')) {
 						DBAddVoteRecord($voteFile, $ballotTime, $voteValue);
 
+						UnlinkCache("file/$voteFile");
+
 						#todo IndexFile
 					}
 				}
