@@ -14,6 +14,8 @@ use Storable;
 
 my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/action cache/message cache/gpg html/top);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
+push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
+push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -21,6 +23,38 @@ foreach(@dirsThatShouldExist) {
 	}
 	if (!-e $_ || !-d $_) {
 		die("$_ should exist, but it doesn't. aborting.");
+	}
+}
+
+sub GetCache {
+	my $cacheName = shift;
+	chomp($cacheName);
+
+	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+
+	return GetFile($cacheName);
+}
+
+sub PutCache {
+	my $cacheName = shift;
+	chomp($cacheName);
+
+	my $content = shift;
+	chomp($content);
+
+	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+
+	return PutFile($cacheName, $content);
+}
+
+sub UnlinkCache {
+	my $cacheName = shift;
+	chomp($cacheName);
+
+	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+
+	if (-e $cacheName) {
+		unlink($cacheName);
 	}
 }
 
@@ -434,15 +468,13 @@ sub GetGpgFingerprint {
 	my $file = shift;
 	chomp $file;
 
-	WriteLog( "gpg --with-colons --with-fingerprint --decrypt \"$file\"\n");
-	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint --decrypt "$file"`);
+	WriteLog( "gpg --with-colons --with-fingerprint \"$file\"\n");
+	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint "$file"`);
 
 	foreach my $line (@gpgResults) {
 		if (substr($line, 0, 3) eq "fpr") {
 			my $fingerprint = substr($line, 3);
 			$fingerprint =~ s/://g;
-
-			print $fingerprint;
 
 			return $fingerprint;
 		}
@@ -577,7 +609,7 @@ sub GpgParse {
 
 				$isSigned = 1;
 
-				$fingerprint = GetGpgFingerprint($filePath);
+				$fingerprint = GetGpgFingerprint($filePath); #todo
 			}
 		}
 	}
@@ -621,7 +653,7 @@ sub GpgParse {
 
 			$isSigned = 1;
 
-			$fingerprint = GetGpgFingerprint($filePath);
+			#$fingerprint = GetGpgFingerprint($filePath); #todo
 		}
 	}
 

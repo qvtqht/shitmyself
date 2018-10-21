@@ -293,7 +293,7 @@ sub ProcessAccessLog {
 
 						#If we're doing instant updates, index the file right away
 						if (GetConfig('access_update')) {
-							IndexFile($filenameDir . $filename);
+							IndexFile($filenameDir . $filename, 1);
 
 							IndexFile('flush');
 						}

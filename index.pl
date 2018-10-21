@@ -74,7 +74,6 @@ sub MakeAddedIndex {
 
 sub IndexFile {
 	my $file = shift;
-
 	chomp($file);
 
 	if ($file eq 'flush') {
@@ -85,6 +84,13 @@ sub IndexFile {
 		DBAddItem('flush');
 
 		return;
+	}
+
+	my $newFile = shift;
+	if ($newFile) {
+		chomp($newFile);
+	} else {
+		$newFile = 0;
 	}
 
 	my $txt = "";
@@ -115,6 +121,9 @@ sub IndexFile {
 
 		if ($isSigned && $gpgKey) {
 			DBAddAuthor($gpgKey);
+			if ($newFile) {
+				UnlinkCache("key/$gpgKey");
+			}
 		}
 
 		if ($alias) {

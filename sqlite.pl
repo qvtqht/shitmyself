@@ -28,7 +28,13 @@ sub SqliteUnlinkDb {
 #schema
 sub SqliteMakeTables() {
 	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
-	SqliteQuery("CREATE TABLE author_alias(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, alias, is_admin, fingerprint)");
+	SqliteQuery("CREATE TABLE author_alias(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		key UNIQUE,
+		alias,
+		is_admin,
+		fingerprint
+	)");
 	SqliteQuery("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,

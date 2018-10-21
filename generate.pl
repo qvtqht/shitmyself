@@ -1229,8 +1229,16 @@ WriteLog ("Authors...");
 
 my @authors = DBGetAuthorList();
 
+my $authorInterval = 3600;
+
 foreach my $key (@authors) {
 	WriteLog ("$key");
+
+	my $lastTouch = GetCache("key/$key");
+	if ($lastTouch && $lastTouch + $authorInterval > time()) {
+		WriteLog("I already did $key recently, too lazy to do it again");
+		next;
+	}
 
 	WriteLog("$HTMLDIR/author/$key");
 
@@ -1245,6 +1253,8 @@ foreach my $key (@authors) {
 	my $authorIndex = GetReadPage('author', $key);
 
 	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
+
+	PutCache("key/$key", time());
 }
 
 {
@@ -1255,13 +1265,21 @@ foreach my $key (@authors) {
 
 	my $fileList = "";
 
+	my $fileInterval = 3600;
+
 	foreach my $file(@files) {
+		my $fileHash = $file->{'file_hash'};
+
+		my $lastTouch = GetCache("file/$fileHash");
+		if ($lastTouch && $lastTouch + $fileInterval > time()) {
+			WriteLog("I already did $fileHash recently, too lazy to do it again");
+			next;
+		}
+
 		my $fileName = $file->{'file_path'};
 
 		$fileName =~ s/^\.//;
         $fileName =~ s/\/html//;
-
-		my $fileHash = $file->{'file_hash'};
 
 		$fileList .= $fileName . "|" . $fileHash . "\n";
 
@@ -1270,6 +1288,8 @@ foreach my $key (@authors) {
 		my $targetPath = $HTMLDIR . '/' . TrimPath($fileName) . '.html';
 
 		PutHtmlFile($targetPath, $fileIndex);
+
+		PutCache("file/$fileHash", time());
 	}
 
 	PutFile("$HTMLDIR/rss.txt", $fileList);
