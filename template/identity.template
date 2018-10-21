@@ -32,14 +32,10 @@
 <form id=formCreateId style="display: none">
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
-<label for=name>name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
-<label for=bits>bits:</label><select name=bits id=bits>
-<option value=512>RSA 512</option>
-<option value=1024>RSA 1024</option>
-<option value=2048>RSA 2048</option>
-<option value=4096>RSA 4096</option>
+<label for=name>Name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
+<label for=bits>Algorithm:</label><select name=bits id=bits>
 <option value=curve25519>curve25519</option>
-<option value=ed25519>ed25519</option>
+<option value=ed25519 selected>ed25519</option>
 <option value=p256>p256</option>
 <option value=p384>p384</option>
 <option value=p521>p521</option>
@@ -47,6 +43,10 @@
 <option value=brainpoolP256r1>brainpoolP256r1</option>
 <option value=brainpoolP384r1>brainpoolP384r1</option>
 <option value=brainpoolP512r1>brainpoolP512r1</option>
+<option value=512>RSA 512-bit</option>
+<option value=1024>RSA 1024-bit</option>
+<option value=2048>RSA 2048-bit</option>
+<option value=4096>RSA 4096-bit</option>
 </select>
 <input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>
 <br>
@@ -57,7 +57,7 @@
 <!-- / create identity -->
 
 <!-- private key -->
-<form id=formprivkey>
+<form id=formprivkey style="display: none">
     <fieldset style="display: inline">
         <legend>Private Key</legend>
         <textarea cols=61 rows=10 id=privatekey spellcheck=false></textarea><br>

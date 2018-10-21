@@ -54,6 +54,13 @@ function unescapeHTML(html) {
 
 
 function showHideForms() {
+	// the private key form should always be visible, except while the page is loading
+	var formPrivKey = document.getElementById('formprivkey');
+
+	if (formPrivKey) {
+		formPrivKey.style.display = 'block';
+	}
+
 	if (getUserFp()) {
 		var formCur = document.getElementById('formCurId');
 
@@ -105,12 +112,6 @@ function showHideForms() {
 		if (copyPrivButton) {
 			copyPrivButton.disabled = true;
 		}
-//
-//		var formPrivKey = document.getElementById('formprivkey');
-//
-//		if (formPrivKey) {
-//			formPrivKey.style.display = 'block';
-//		}
 	}
 }
 
