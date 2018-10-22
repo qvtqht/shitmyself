@@ -225,6 +225,10 @@ function popId() {
 		}
 	}
 
+	if (!pk) {
+		makeKeyFromInputs();
+	}
+
 	showHideForms();
 }
 
