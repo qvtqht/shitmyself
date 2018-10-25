@@ -544,7 +544,7 @@ function signForm(formId) {
 	}
 }
 
-signForm('compose');
+//signForm('compose');
 
 function signMessage() {
 	var privkey = getPrivateKey();
