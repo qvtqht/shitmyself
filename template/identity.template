@@ -35,7 +35,7 @@
 <label for=name>Name:</label><input type=text size=40 maxlength=100 name=name id=name><br>
 <label for=bits>Algorithm:</label><select name=bits id=bits>
 <option value=curve25519>curve25519</option>
-<option value=ed25519 selected>ed25519</option>
+<option value=ed25519>ed25519</option>
 <option value=p256>p256</option>
 <option value=p384>p384</option>
 <option value=p521>p521</option>
@@ -43,7 +43,7 @@
 <option value=brainpoolP256r1>brainpoolP256r1</option>
 <option value=brainpoolP384r1>brainpoolP384r1</option>
 <option value=brainpoolP512r1>brainpoolP512r1</option>
-<option value=512>rsa512</option>
+<option value=512 selected>rsa512</option>
 <option value=1024>rsa1024</option>
 <option value=2048>rsa2048</option>
 <option value=4096>rsa4096</option>
@@ -51,7 +51,7 @@
 <input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>
 <br>
 <!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
-<input type=button value="Generate Key" onclick="makeKeyFromInputs();"><br><span id=profIframe></span>
+<input type=button value="Create Identity" onclick="makeKeyFromInputs();"><br><span id=profIframe></span>
 </fieldset>
 </form>
 <!-- / create identity -->
