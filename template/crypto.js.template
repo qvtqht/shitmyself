@@ -514,24 +514,24 @@ function signForm(formId) {
 		var elements = form.elements;
 
 		for (var i=0, element; element = elements[i++];) {
-			alert(element.type);
-			alert(element.name);
-			alert(element.value);
+			//alert(element.type);
+			//alert(element.name);
+			//alert(element.value);
 		}
 
-//	var elements = document.getElementById("my-form").elements;
-//
-//    for (var i = 0, element; element = elements[i++];) {
-//        if (element.type === "text" && element.value === "")
-//            console.log("it's an empty textfield")
-//    }
+		//	var elements = document.getElementById("my-form").elements;
+		//
+		//    for (var i = 0, element; element = elements[i++];) {
+		//        if (element.type === "text" && element.value === "")
+		//            console.log("it's an empty textfield")
+		//    }
 
-//function getFormElelemets(formName){
-//  var elements = document.forms[formName].elements;
-//  for (i=0; i<elements.length; i++){
-//    some code...
-//  }
-//}
+		//function getFormElelemets(formName){
+		//  var elements = document.forms[formName].elements;
+		//  for (i=0; i<elements.length; i++){
+		//    some code...
+		//  }
+		//}
 
 		//document.getElementById("someFormId").elements;
 
@@ -577,12 +577,12 @@ function signMessage() {
 
 }
 
-//if (getUserFp()) {
-//	var sp = document.getElementById('signAndPost');
-//	if (sp) {
-//		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
-//	}
-//}
+if (getUserFp()) {
+	var sp = document.getElementById('signAndPost');
+	if (sp) {
+		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
+	}
+}
 
 //var statusBox = document.getElementById('status');
 //if (statusBox) {
