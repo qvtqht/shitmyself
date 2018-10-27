@@ -8,51 +8,30 @@ function logOut() {
 	//}
 }
 
-function removeStoredKeys() {
-	window.localStorage.removeItem("privatekey");
-	window.localStorage.removeItem("publickey");
-	window.localStorage.removeItem("fingerprint");
-	window.localStorage.removeItem("avatar");
-
-	var textbox = document.getElementById("privatekey");
-
-	if (textbox) {
-		textbox.value = '';
+function getUserFp() {
+	var fingerprint = localStorage.getItem("fingerprint");
+	if (fingerprint === null || fingerprint.length === 0) {
+		return null;
+	} else {
+		return fingerprint;
 	}
-
-	textbox = document.getElementById("publickey");
-
-	if (textbox) {
-		textbox.value = '';
-	}
-
-	var avatar = document.getElementById("myid");
-
-	if (avatar) {
-		avatar.innerHTML = '';
-	}
-
-	avatar = document.getElementById("myAvatar");
-
-	if (avatar) {
-		avatar.innerHTML = '';
-	}
-
-	showHideForms();
 }
 
-var escapeTA = document.createElement('textarea');
-function escapeHTML(html) {
-	escapeTA.textContent = html;
-	return escapeTA.innerHTML;
+function getAvatar() {
+	var myAvatar = localStorage.getItem("avatar");
+	if (myAvatar === null || myAvatar.length === 0) {
+		return null;
+	} else {
+		return myAvatar;
+	}
 }
 
-function unescapeHTML(html) {
-	escapeTA.innerHTML = html;
-	return escapeTA.textContent;
+if (getUserFp()) {
+	var sp = document.getElementById('signAndPost');
+	if (sp) {
+		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
+	}
 }
-
-
 
 function showHideForms() {
 	// the private key form should always be visible, except while the page is loading
@@ -60,6 +39,8 @@ function showHideForms() {
 
 	if (formPrivKey) {
 		formPrivKey.style.display = 'block';
+	} else {
+		return;
 	}
 
 	if (getUserFp()) {
@@ -114,6 +95,52 @@ function showHideForms() {
 			copyPrivButton.disabled = true;
 		}
 	}
+}
+
+showHideForms();
+
+function removeStoredKeys() {
+	window.localStorage.removeItem("privatekey");
+	window.localStorage.removeItem("publickey");
+	window.localStorage.removeItem("fingerprint");
+	window.localStorage.removeItem("avatar");
+
+	var textbox = document.getElementById("privatekey");
+
+	if (textbox) {
+		textbox.value = '';
+	}
+
+	textbox = document.getElementById("publickey");
+
+	if (textbox) {
+		textbox.value = '';
+	}
+
+	var avatar = document.getElementById("myid");
+
+	if (avatar) {
+		avatar.innerHTML = '';
+	}
+
+	avatar = document.getElementById("myAvatar");
+
+	if (avatar) {
+		avatar.innerHTML = '';
+	}
+
+	showHideForms();
+}
+
+var escapeTA = document.createElement('textarea');
+function escapeHTML(html) {
+	escapeTA.textContent = html;
+	return escapeTA.innerHTML;
+}
+
+function unescapeHTML(html) {
+	escapeTA.innerHTML = html;
+	return escapeTA.textContent;
 }
 
 function fallbackCopyTextToClipboard(textareaId) {
@@ -249,24 +276,6 @@ function setAvatar(avatar) {
 	window.localStorage.setItem("avatar", avatar);
 }
 
-
-function getAvatar() {
-	var myAvatar = localStorage.getItem("avatar");
-	if (myAvatar === null || myAvatar.length === 0) {
-		return null;
-	} else {
-		return myAvatar;
-	}
-}
-
-function getUserFp() {
-	var fingerprint = localStorage.getItem("fingerprint");
-	if (fingerprint === null || fingerprint.length === 0) {
-		return null;
-	} else {
-		return fingerprint;
-	}
-}
 
 function saveId() {
 	var textbox = document.getElementById("privatekey");
@@ -577,12 +586,6 @@ function signMessage() {
 
 }
 
-if (getUserFp()) {
-	var sp = document.getElementById('signAndPost');
-	if (sp) {
-		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
-	}
-}
 
 //var statusBox = document.getElementById('status');
 //if (statusBox) {
