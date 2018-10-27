@@ -7,12 +7,6 @@
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
     <span id=signAndPost></span>
     <input type=submit value="Post Without Signing" onclick="" id=addtext>
-    <input type=checkbox name=showip id=showip><label for=showip>Publish my IP address</label>
-    <script><!--
-    document.write('<input type=checkbox name="Proudly posted with JS enabled! 😤" id=js><label for=js>JS Enabled</label>');
-    document.write('<input class=btn style="float:right; border: none;" title="Remove Timestamps" type=button value="RT" onClick="strip_timestamps(\'comment\');"> ');
-    document.write('<input class=btn style="float:right; border: none;" type=button value="Z" onClick="if (typeof zalgo_textarea === \'function\') { zalgo_textarea(\'comment\'); }">');
-    // --></script>
     $extraFields
         <p>Instructions for command-line GPG users</p>
         <ul>
