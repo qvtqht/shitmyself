@@ -2,7 +2,7 @@
 
 <h1>Manual</h1>
 
-<p>This is a message board where you can talk to others.</p>
+<p>This is a message board where you can write things for others to read.</p>
 
 <h3>Features You May Recognize</h3>
 
@@ -20,10 +20,10 @@
     <li>Your key pair allows you to post on other forums too.</li>
 </ul>
 
-<h3>Known Issues</h3>
+<h3>Known Issues aka Features</h3>
 
 <ul>
-    <li>Client-side PGP only works on desktop browsers.</li>
+    <li>Actions do not take effect immediately.</li>
 </ul>
 
 <a name=gpg><h3>How to use GPG</h3></a>
