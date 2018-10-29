@@ -59,6 +59,9 @@ h2.menu a {
 	max-width: 60em;
 	margin: 8pt;
 }
+div.txt {
+	border-bottom: 3pt dotted $primaryColor;
+}
 .admin {
 	background: repeating-linear-gradient(
      135deg,
