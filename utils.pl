@@ -18,6 +18,13 @@ push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 
+my $gpg;
+if (GetConfig('use_gpg2')) {
+	$gpg = 'gpg2';
+} else {
+	$gpg = 'gpg';
+}
+
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
 		mkdir $_;
@@ -57,6 +64,19 @@ sub UnlinkCache {
 	if (-e $cacheName) {
 		unlink($cacheName);
 	}
+}
+
+sub CacheExists {
+    my $cacheName = shift;
+    chomp($cacheName);
+
+    $cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+
+    if (-e $cacheName) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 sub GetMyVersion {
@@ -543,8 +563,9 @@ sub GpgParse {
 	my $cachePath;
 	$cachePath = "./cache/gpg/$gitHash.cache";
 
-
 	if (-e $cachePath) {
+		WriteLog("GpgParse cache hit! $cachePath");
+
 		my %returnValues = %{retrieve($cachePath)};
 
 		return %returnValues;
@@ -598,6 +619,22 @@ sub GpgParse {
 		WriteLog( "gpg --keyid-format LONG \"$filePath\"");
 		my $gpg_result = `gpg --keyid-format LONG "$filePath"`;
 
+#		WriteLog( "gpg --with-colons --with-fingerprint \"$file\"\n");
+#		my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint "$file"`);
+#
+#		foreach my $line (@gpgResults) {
+#			if (substr($line, 0, 3) eq "fpr") {
+#				my $fingerprint = substr($line, 3);
+#				$fingerprint =~ s/://g;
+#
+#				return $fingerprint;
+#			}
+#		}
+#
+#		return;
+
+
+
 		foreach (split ("\n", $gpg_result)) {
 			chomp;
 			if (substr($_, 0, 4) eq 'pub ') {
@@ -616,8 +653,6 @@ sub GpgParse {
 				#$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
 
 				$isSigned = 1;
-
-				$fingerprint = GetGpgFingerprint($filePath); #todo
 			}
 		}
 	}
@@ -626,8 +661,11 @@ sub GpgParse {
 	if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 		# Verify the file by using command-line gpg
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
-		WriteLog( "gpg --verify --status-fd 1 \"$filePath\"\n");
-		my $gpg_result = `gpg --verify --status-fd 1 "$filePath"`;
+		WriteLog( "$gpg --verify --status-fd 1 \"$filePath\"\n");
+		my $gpg_result = `$gpg --verify --status-fd 1 "$filePath"`;
+
+		#WriteLog($gpg_result);
+		#die();
 
 		my $key_id_prefix;
 		my $key_id_suffix;
@@ -681,6 +719,8 @@ sub GpgParse {
 	$returnValues{'fingerprint'} = $fingerprint;
 
 	store \%returnValues, $cachePath;
+
+	WriteLog("GpgParse success! $cachePath");
 
 	return %returnValues;
 }
