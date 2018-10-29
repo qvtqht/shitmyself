@@ -1,8 +1,6 @@
 <div class="$itemClass">
-<a href="$permalinkHtml">$itemName</a> <a href="$permalinkTxt">.txt</a>
-$authorLink
-$replyCount
-<br>
-$itemText<br>
+<p><a href="$permalinkHtml">$itemName</a> <a href="$permalinkTxt">.txt</a></p>
+<p>$itemText</p>
+<p>$authorLink</p>
 <details class=voter><summary>Respond</summary> $voterButtons</details>
 </div><hr>
