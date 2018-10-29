@@ -548,6 +548,33 @@ sub DBAddAddedRecord {
 	$query .= "('$filePath', '$fileHash', '$addedTime')";
 }
 
+sub DBGetItemsForTag {
+	my $tag = shift;
+	chomp($tag);
+
+	$tag = SqliteEscape($tag);
+
+	my $query = "
+		SELECT file_hash FROM (
+			SELECT
+				file_hash,
+				COUNT(file_hash) AS vote_count
+			FROM vote
+			WHERE
+				vote_value = '$tag'
+			GROUP BY file_hash
+			ORDER BY vote_count DESC
+			LIMIT 100
+		) AS item_tag
+	";
+
+	my $result = SqliteQuery($query);
+
+	my @itemsArray = split("\n", $result);
+
+	return @itemsArray;
+}
+
 sub DBGetItemList {
 	my $paramHashRef = shift;
 	my %params = %$paramHashRef;
