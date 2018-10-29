@@ -353,15 +353,15 @@ function saveId() {
 	}
 }
 
-function pushMessage(message) {
-	var ul = document.getElementById("messages");
-	if (ul) {
-		var li = document.createElement("li");
-		li.appendChild(document.createTextNode(message));
-		ul.appendChild(li);
-	}
-}
-
+//function pushMessage(message) {
+//	var ul = document.getElementById("messages");
+//	if (ul) {
+//		var li = document.createElement("li");
+//		li.appendChild(document.createTextNode(message));
+//		ul.appendChild(li);
+//	}
+//}
+//
 
 
 //
@@ -562,6 +562,9 @@ function signMessage() {
 		var textbox = document.getElementById('comment');
 		var composeForm = document.getElementById('compose');
 
+		textbox.style.color = '#00ff00';
+		textbox.style.backgroundColor = '#c0c000';
+
 		if (textbox && composeForm) {
 			var message = textbox.value;
 
@@ -573,6 +576,7 @@ function signMessage() {
 			};
 
 			openpgp.config.show_version = false;
+
 			openpgp.config.show_comment = false;
 
 			openpgp.sign(options).then(function(signed) {
