@@ -24,6 +24,8 @@
 
 <ul>
     <li>Actions do not take effect immediately.</li>
+    <li>New profiles will 404 until something is posted.</li>
+    <li>Top tags are listed, but the links 404 for now.</li>
 </ul>
 
 <a name=gpg><h3>How to use GPG</h3></a>
@@ -129,12 +131,19 @@
 <p>Start typing your message. When you're finished, press Enter, then ^D (Ctrl+D).</p>
 
 
-<a name=clone><h3>How to Clone This Site</h3></a>
+<a name=clone><h3>Cloning</h3></a>
 
-<a href="clone.html">See clone.html</a>.
+<p>You can easily clone this message board.</p>
 
-<a name=other>
-<h3>Other Questions</h3>
+<p>There are no "secrets" stored here (e.g. passwords, private keys, password hashes), except the anti-CSRF salt.</p>
+
+<p>Any signing accounts are controlled by the users' private keys.</p>
+
+<p>An hourly zip of the entire site can be downloaded here: <a href="/hike.zip">/hike.zip</a>, including the git repo.</p>
+
+<p>The scripts are on GitHub here: <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
+
+<a name=other><h3>Other Questions</h3>
 
 <a href="write.html">Please ask them using the Write page</a>.
 
