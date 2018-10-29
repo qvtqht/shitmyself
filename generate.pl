@@ -103,7 +103,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
-	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
+#	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 	my $adminKey = GetAdminKey();
 	if ($adminKey) {
@@ -349,13 +349,15 @@ sub GetItemPage {
 		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
 		my $replyFooter;
+		my $replyTo;
 		my $prefillText;
 		my $fileContents;
 
 		$fileContents = GetFile($file{'file_path'});
 
 		$replyForm = GetTemplate('reply.template');
-		$replyFooter = "\n\n-- \nparent=" . $file{'file_hash'};
+		$replyFooter = "&gt;" . $file{'file_hash'} . "\n\n";
+		$replyTo = $file{'file_hash'};
 
 		$prefillText = "";
 
@@ -366,6 +368,7 @@ sub GetItemPage {
 		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
 		$replyForm =~ s/\$extraFields/$replyTag/g;
 		$replyForm =~ s/\$replyFooter/$replyFooter/g;
+		$replyForm =~ s/\$replyTo/$replyTo/g;
 		$replyForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $replyForm;
@@ -437,6 +440,7 @@ sub GetPageParams {
 		if ($pageType eq 'author') {
 			# Author, get the author key
 			my $authorKey = shift;
+			chomp($authorKey);
 
 			# Get the pretty versions of the alias and the avatar
 			# for the title
@@ -450,6 +454,19 @@ sub GetPageParams {
 			# Set the WHERE clause for the query
 			my $whereClause = "author_key='$authorKey'";
 			$queryParams{'where_clause'} = $whereClause;
+		}
+		if ($pageType eq 'tag') {
+			my $tagKey = shift;
+			chomp($tagKey);
+
+			$pageParams{'title'} = $tagKey;
+			$pageParams{'title_html'} = $tagKey;
+
+			my @items = DBGetItemsForTag($tagKey);
+			my $itemsList = "'" . join ("','", @items) . "'";
+
+			$queryParams{'where_clause'} = "file_hash IN (" . $itemsList . ")";
+			$queryParams{'limit_clause'} = "LIMIT 1024";
 		}
 	} else {
 		# Default = main home page title
@@ -740,6 +757,13 @@ sub GetRssPage {
 }
 
 sub GetReadPage {
+# GetReadPage
+#   $pageType
+#		author
+#		tag
+#	$parameter
+#		for author = author's key hash
+#		for tag = tag name/value
 	my $title;
 	my $titleHtml;
 
@@ -761,6 +785,9 @@ sub GetReadPage {
 			my %queryParams;
 			$queryParams{'where_clause'} = $whereClause;
 			@files = DBGetItemList(\%queryParams);
+		}
+		if ($pageType eq 'tag') {
+			#todo
 		}
 	} else {
 		return; #this code is deprecated
@@ -1390,6 +1417,18 @@ PutHtmlFile("./html/tags.html", $votesPage); #todo are they tags or votes?
 
 my $voteCounts = DBGetVoteCounts();
 if ($voteCounts) {
+	my @voteCountsArray = split("\n", $voteCounts);
+
+	foreach my $row (@voteCountsArray) {
+		WriteLog($row);
+
+		my @rowSplit = split(/\|/, $row);
+		my $tagName = $rowSplit[0];
+
+		my $indexPage = GetReadPage('tag', $tagName);
+
+		PutHtmlFile('./html/top/' . $tagName . '.html', $indexPage);
+	}
 
 }
 
