@@ -50,6 +50,9 @@ h2.menu a {
 .menu a {
 	padding-left: 1em;
 }
+hr {
+	color: $primaryColor;
+}
 
 /* textboxes */
 .txt {
@@ -123,6 +126,10 @@ form.submit .txtarea {
 form.reply .txtarea {
 	width: 100%;
 	height: 12ex;
+}
+#privatekey {
+	width: 100%;
+	height: 24ex;
 }
 .instructions {
 	color: black;

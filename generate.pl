@@ -408,7 +408,7 @@ sub GetItemPage {
 	}
 
 	# voting target fame
-	$txtIndex .= GetTemplate('voteframe.template');
+#	$txtIndex .= GetTemplate('voteframe.template');
 
 	# end page
 	$txtIndex .= GetPageFooter();
@@ -465,7 +465,7 @@ sub GetPageParams {
 			my @items = DBGetItemsForTag($tagKey);
 			my $itemsList = "'" . join ("','", @items) . "'";
 
-			$queryParams{'where_clause'} = "file_hash IN (" . $itemsList . ")";
+			$queryParams{'where_clause'} = "WHERE file_hash IN (" . $itemsList . ")";
 			$queryParams{'limit_clause'} = "LIMIT 1024";
 		}
 	} else {
@@ -606,7 +606,7 @@ sub GetIndexPage {
 		}
 	}
 
-	$txtIndex .= GetTemplate('voteframe.template');
+#	$txtIndex .= GetTemplate('voteframe.template');
 
 	$txtIndex .= GetPageLinks($currentPageNumber);
 
@@ -750,7 +750,7 @@ sub GetRssPage {
 #		}
 #	}
 
-	$txtRssPage .= GetTemplate('voteframe.template');
+#	$txtRssPage .= GetTemplate('voteframe.template');
 
 	return $txtRssPage;
 
@@ -774,7 +774,7 @@ sub GetReadPage {
 	if (defined($pageType)) {
 		if ($pageType eq 'author') {
 			my $authorKey = shift;
-			my $whereClause = "author_key='$authorKey'";
+			my $whereClause = "WHERE author_key='$authorKey'";
 
 			my $authorAliasHtml = GetAlias($authorKey);
 			my $authorAvatarHtml = GetAvatar($authorKey);
@@ -859,7 +859,7 @@ sub GetReadPage {
 
 			$alias = HtmlEscape($alias);
 
-			my $itemTemplate = GetTemplate("itemvote.template");
+			my $itemTemplate = GetTemplate("item.template");
 
 			my $itemClass = "txt $signedCss";
 
@@ -911,7 +911,7 @@ sub GetReadPage {
 		}
 	}
 
-	$txtIndex .= GetTemplate('voteframe.template');
+#	$txtIndex .= GetTemplate('voteframe.template');
 
 	# Add javascript warning to the bottom of the page
 	#$txtIndex .= GetTemplate("jswarning.template");
@@ -1207,7 +1207,7 @@ sub MakeStaticPages {
 
 	# Ok page
 	my $okPage = GetTemplate('actionvote.template');
-	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
+	#$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
@@ -1390,14 +1390,18 @@ sub MakeClonePage {
 
 	#if ($itemCount > 0) {
 		my $i;
+
+		WriteLog("\$itemCount = $itemCount");
+
 		my $lastPage = ceil($itemCount / $PAGE_LIMIT);
 
 		for ($i = 0; $i < $lastPage; $i++) {
 			my %queryParams;
 			my $offset = $i * $PAGE_LIMIT;
 
-			$queryParams{'where_clause'} = "parent_hash = ''";
+			$queryParams{'where_clause'} = "WHERE parent_hash = ''";
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
+			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 
 			my @ft = DBGetItemList(\%queryParams);
 			my $indexPage = GetIndexPage(\@ft, $i);

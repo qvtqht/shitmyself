@@ -225,14 +225,26 @@ sub ProcessAccessLog {
 					my $parentMessage;
 
 				 	# Only if the "replies" config is enabled
-					if (GetConfig('replies') && $message =~ /\&parent=(.+)$/) {
-						my $parentId = $1;
-						#todo check for valid char count too
-						if ($parentId =~ /[0-9a-fA-F]+/ && IsSha1($parentId)) {
-							$parentMessage = $parentId;
-							$message =~ s/\&(parent=.+)$/\n-- \n$1/; # is this too much?
+					if (GetConfig('replies')) {
+						my @messageLines = split("\n", $message);
+
+						foreach my $ln (@messageLines) {
+							$ln = trim($ln);
+							if ($ln =~ />[0-9a-fA-F]{40}/) {
+								WriteLog("\n\n\n\n\nOMG\n\n\n\n");
+
+							}
 						}
 					}
+#
+#					 && $message =~ /\&parent=(.+)$/) {
+#						my $parentId = $1;
+#						#todo check for valid char count too
+#						if ($parentId =~ /[0-9a-fA-F]+/ && IsSha1($parentId)) {
+#							$parentMessage = $parentId;
+#							$message =~ s/\&(parent=.+)$/\n-- \n$1/; # is this too much?
+#						}
+#					}
 
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {
@@ -278,7 +290,7 @@ sub ProcessAccessLog {
 						my $fileHash = GetFileHash($filenameDir . $filename);
 
 						#Add a line to the added.log that records the timestamp
-						my $logLine = $filename . '|' . $fileHash . '|' . time();
+						my $logLine = $fileHash . '|' . time();
 						AppendFile('./log/added.log', $logLine);
 
 						#If we're doing replies, and there is a parent message specified...

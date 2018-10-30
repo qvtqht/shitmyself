@@ -63,12 +63,12 @@ sub MakeAddedIndex {
 		my @addedRecord = split("\n", GetFile("log/added.log"));
 
 		foreach(@addedRecord) {
-			my ($filePath, $fileHash, $addedTime) = split('\|', $_);
+			my ($filePath, $addedTime) = split('\|', $_);
 
-			DBAddAddedRecord($filePath, $fileHash, $addedTime);
+			DBAddAddedTimeRecord($filePath, $addedTime);
 		}
 
-		DBAddAddedRecord('flush');
+		DBAddAddedTimeRecord('flush');
 	}
 }
 
@@ -100,6 +100,7 @@ sub IndexFile {
 	my $gpgKey;
 	my $alias;
 	my $fingerprint;
+	my $addedTime;
 
 	my $gitHash;
 	my $isAdmin = 0;
@@ -114,6 +115,20 @@ sub IndexFile {
 		$alias = $gpgResults{'alias'};
 		$gitHash = $gpgResults{'gitHash'};
 		$fingerprint = $gpgResults{'fingerprint'};
+		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
+
+		if (!$addedTime) {
+			# This file was not added through access.pl, and has
+			# not been indexed before, so it should get an added_time
+			# record. This is what we'll do here. It will be picked
+			# up and put into the database on the next cycle
+			# unless we add provisions for that here later #todo
+
+			WriteLog("No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
+
+			my $logLine = $gpgResults{'gitHash'} . '|' . time();
+			AppendFile('./log/added.log', $logLine);
+		}
 
 		if ($isSigned && $gpgKey eq GetAdminKey()) {
 			$isAdmin = 1;

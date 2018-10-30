@@ -47,16 +47,32 @@ sub SqliteMakeTables() {
 	)");
 	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed DEFAULT 0)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, weight)");
-	SqliteQuery("CREATE TABLE added_time(file_path, file_hash, add_timestamp);");
+	SqliteQuery("CREATE TABLE added_time(file_hash, add_timestamp);");
 +#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 #	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 #	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
 #	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
 	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value);");
+	SqliteQuery("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 
 	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
 	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
+	SqliteQuery("
+		CREATE VIEW item_flat AS
+			SELECT
+				item.file_path AS file_path,
+				item.item_name AS item_name,
+				item.file_hash AS file_hash,
+				item.author_key AS author_key,
+				item.parent_hash AS parent_hash,
+				child_count.child_count AS child_count,
+				added_time.add_timestamp AS add_timestamp
+			FROM
+				item
+				LEFT JOIN child_count ON ( item.id = child_count.id)
+				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash);
+	");
 }
 
 sub SqliteQuery2 {
@@ -199,9 +215,9 @@ sub DBGetItemCount {
 
 	my $itemCount;
 	if ($whereClause) {
-		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item WHERE $whereClause");
+		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item_flat WHERE $whereClause");
 	} else {
-		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item");
+		$itemCount = SqliteGetValue("SELECT COUNT(*) FROM item_flat");
 	}
 	chomp($itemCount);
 
@@ -213,7 +229,7 @@ sub DBGetItemReplies {
 	$itemHash = SqliteEscape($itemHash);
 
 	my %queryParams;
-	$queryParams{'where_clause'} = "parent_hash = '$itemHash'";
+	$queryParams{'where_clause'} = "WHERE parent_hash = '$itemHash'";
 	$queryParams{'order_clause'} = "ORDER BY item_name"; #todo this should be by timestamp
 
 	return DBGetItemList(\%queryParams);
@@ -291,7 +307,7 @@ sub GetTopItemsForTag {
 	my $tag = shift;
 	chomp($tag);
 
-	my $query = "SELECT * FROM item WHERE file_hash IN (
+	my $query = "SELECT * FROM item_flat WHERE file_hash IN (
 	SELECT file_hash FROM (
 		SELECT file_hash, COUNT(vote_value) AS vote_count
 		FROM vote WHERE vote_value = '" . SqliteEscape($tag) . "'
@@ -407,7 +423,7 @@ sub DBAddItem {
 
 sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of now
 	state $query;
-	state $tagQuery;
+#	state $tagQuery;
 
 	my $voteValue = shift;
 
@@ -421,14 +437,14 @@ sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of
 
 			$query = '';
 		}
-
-		if ($tagQuery) {
-			$tagQuery .= ';';
-
-			SqliteQuery($tagQuery);
-
-			$tagQuery = '';
-		}
+#
+#		if ($tagQuery) {
+#			$tagQuery .= ';';
+#
+#			SqliteQuery($tagQuery);
+#
+#			$tagQuery = '';
+#		}
 
 		return;
 	}
@@ -450,14 +466,14 @@ sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of
 	}
 
 	$query .= "('$voteValue', '$weight')";
-
-	if (!$tagQuery) {
-		$tagQuery = "INSERT OR REPLACE INTO tag(vote_value, weight) VALUES ";
-	} else {
-		$tagQuery .= ",";
-	}
-
-	$tagQuery .= "('$voteValue', '$weight')";
+#
+#	if (!$tagQuery) {
+#		$tagQuery = "INSERT OR REPLACE INTO tag(vote_value, weight) VALUES ";
+#	} else {
+#		$tagQuery .= ",";
+#	}
+#
+#	$tagQuery .= "('$voteValue', '$weight')";
 }
 
 sub DBAddVoteRecord {
@@ -504,13 +520,19 @@ sub DBAddVoteRecord {
 	$query .= "('$fileHash', '$ballotTime', '$voteValue')";
 }
 
-sub DBAddAddedRecord {
+sub DBAddAddedTimeRecord {
+# Adds a new record to added_time, typically from log/added.log
+# This records the time that the file was first submitted or picked up by the indexer
+#	$filePath = path to file
+#	$fileHash = file's hash
+#	$addedTime = time it was added
+#
 	state $query;
 
-	my $filePath = shift;
+	my $fileHash = shift;
 
-	if ($filePath eq 'flush') {
-		WriteLog("DBAddAddedRecord(flush)");
+	if ($fileHash eq 'flush') {
+		WriteLog("DBAddAddedTimeRecord(flush)");
 
 		if ($query) {
 			$query .= ';';
@@ -524,28 +546,40 @@ sub DBAddAddedRecord {
 	}
 
     if ($query && length($query) > 10240) {
-        DBAddAddedRecord('flush');
+        DBAddAddedTimeRecord('flush');
         $query = '';
     }
 
-    my $fileHash = shift;
 	my $addedTime = shift;
 
-	chomp $filePath;
 	chomp $fileHash;
 	chomp $addedTime;
 
-	$filePath = SqliteEscape($filePath);
 	$fileHash = SqliteEscape($fileHash);
 	$addedTime = SqliteEscape($addedTime);
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO added_time(file_path, file_hash, add_timestamp) VALUES ";
+		$query = "INSERT OR REPLACE INTO added_time(file_hash, add_timestamp) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= "('$filePath', '$fileHash', '$addedTime')";
+	$query .= "('$fileHash', '$addedTime')";
+}
+
+sub DBGetAddedTime {
+	my $fileHash = shift;
+	chomp ($fileHash);
+
+	if ($fileHash ne SqliteEscape($fileHash)) {
+		die('DBGetAddedTime() this should never happen');
+	} #todo ideally this should verify it's a proper hash too
+
+	my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
+
+	my $result = SqliteQuery($query);
+
+	return $result;
 }
 
 sub DBGetItemsForTag {
@@ -583,17 +617,26 @@ sub DBGetItemList {
 	#where_clause = where clause for sql query
 
 	my $query;
+	$query = "
+		SELECT
+			file_path,
+			item_name,
+			file_hash,
+			author_key,
+			child_count,
+			add_timestamp
+		FROM
+			item_flat
+	 ";
+
 	if (defined ($params{'where_clause'})) {
-		my $whereClause = $params{'where_clause'};
-		$query = "SELECT item.file_path, item.item_name, item.file_hash, item.author_key, child_count.child_count FROM item LEFT JOIN child_count ON ( item.id = child_count.id) WHERE $whereClause";
-	} else {
-		$query = "SELECT item.file_path, item.item_name, item.file_hash, item.author_key, child_count.child_count FROM item LEFT JOIN child_count ON ( item.id = child_count.id)";
-	}
-	if (defined ($params{'limit_clause'})) {
-		$query .= " " . $params{'limit_clause'};
+		$query .= " " . $params{'where_clause'};
 	}
 	if (defined ($params{'order_clause'})) {
 		$query .= " " . $params{'order_clause'};
+	}
+	if (defined ($params{'limit_clause'})) {
+		$query .= " " . $params{'limit_clause'};
 	}
 
 	my @results = split("\n", SqliteQuery($query));
@@ -624,7 +667,7 @@ sub DBGetItemListForAuthor {
 
 	my %params = {};
 
-	$params{'where_clause'} = "author_key = '$author'";
+	$params{'where_clause'} = "WHERE author_key = '$author'";
 
 	return DBGetItemList(\%params);
 }
