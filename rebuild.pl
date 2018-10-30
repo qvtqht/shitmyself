@@ -8,7 +8,8 @@ require './access.pl';
 
 #system('git pull');
 
-ProcessAccessLog("log/access.log");
+my $accessLogPath = GetConfig('access_log_path');
+ProcessAccessLog($accessLogPath);
 
 SqliteUnlinkDb();
 SqliteConnect();
