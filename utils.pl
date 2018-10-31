@@ -24,6 +24,8 @@ if (GetConfig('use_gpg2')) {
 } else {
 	$gpg = 'gpg';
 }
+WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpg = $gpg");
+
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -279,12 +281,14 @@ sub GetConfig {
 
 	if (-e "config/$configName") {
 		my $configValue = GetFile("config/$configName");
+		$configValue = trim($configValue);
 		$configLookup{$configValue} = $configValue;
 
 		return $configValue;
 	} else {
 		if (-e "default/$configName") {
 			my $configValue = GetFile("default/$configName");
+			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 			PutConfig ($configName, $configValue);
 
