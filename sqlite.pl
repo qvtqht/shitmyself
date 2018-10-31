@@ -73,6 +73,16 @@ sub SqliteMakeTables() {
 				LEFT JOIN child_count ON ( item.id = child_count.id)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash);
 	");
+	SqliteQuery("
+		CREATE VIEW item_vote_count AS
+			SELECT
+				file_hash,
+				vote_value AS vote_value,
+				COUNT(file_hash) AS vote_count
+			FROM vote
+			GROUP BY file_hash, vote_value
+			ORDER BY vote_count DESC
+	");
 }
 
 sub SqliteQuery2 {
