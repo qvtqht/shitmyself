@@ -113,18 +113,12 @@ sub PushItemToHost {
 	my $pushLog = "./log/push.log";
 	my $grepResult = `grep -i "$pushHash" $pushLog`;
 	if ($grepResult) {
-		WriteLog('found!');
+		WriteLog('Already pushed! ' . $grepResult);
 		return 0;
 	} else {
-		WriteLog('not found!');
+		WriteLog('Not pushed yet, trying now');
 		AppendFile($pushLog, $pushHash);
 	}
-	WriteLog($grepResult);
-
-#	if (!GetFile("$cachePrefix/$hostHash/$fileHash")) {
-#		PushItemToHost($host, $fileName);
-#		PutFile("$cachePrefix/$hostHash/$fileHash", 1);
-#	}
 
 	my $fileContents = GetFile($fileName);
 	$fileContents = uri_escape($fileContents);

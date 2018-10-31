@@ -64,15 +64,17 @@ hr {
 }
 div.txt {
 	border-bottom: 3pt dotted $primaryColor;
+	border-radius: 8pt;
 }
 .admin {
 	background: repeating-linear-gradient(
-     135deg,
-     #ffffe0,
-     #ffffe0 10px,
-     #fffff0 10px,
-     #fffff0 20px
+		135deg,
+		#ffffe0,
+		#ffffe0 10px,
+		#fffff0 10px,
+		#fffff0 20px
    );
+   border-radius: 8pt;
 }
 .admin a .avatar {
 	color: green;
