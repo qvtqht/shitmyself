@@ -127,6 +127,10 @@ form.reply .txtarea {
 	width: 100%;
 	height: 12ex;
 }
+.name {
+    width: 100%;
+    height: 12ex;
+}
 #privatekey {
 	width: 100%;
 	height: 24ex;
