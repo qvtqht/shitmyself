@@ -101,6 +101,11 @@ sub PushItemToHost {
 	chomp $fileName;
 	chomp $fileHash;
 
+	my $curlPrefix = '';
+	if ($host =~ /\.onion$/ || $host =~ /\.onion:.+/) {
+		$curlPrefix = 'torify ';
+	}
+
 	my $pushHash = sha1_hex($host . '|' . $fileHash);
 
 	WriteLog("PushItemToHost($host, $fileName, $fileHash");
@@ -109,11 +114,12 @@ sub PushItemToHost {
 	my $grepResult = `grep -i "$pushHash" $pushLog`;
 	if ($grepResult) {
 		WriteLog('found!');
+		return;
 	} else {
 		WriteLog('not found!');
 		AppendFile($pushLog, "$pushHash");
 	}
-	#WriteLog($grepResult);
+	WriteLog($grepResult);
 
 #	if (!GetFile("$cachePrefix/$hostHash/$fileHash")) {
 #		PushItemToHost($host, $fileName);
@@ -126,9 +132,10 @@ sub PushItemToHost {
 	my $url = 'http://' . $host . "/gracias.html?comment=" . $fileContents;
 	$url = EscapeShellChars($url);
 
-	WriteLog("curl \"$url\"");
+	my $curlCommand = $curlPrefix . 'curl';
+	WriteLog("$curlCommand \"$url\"");
 
-	my $curlResult = '';#####`curl \"$url\"`;
+	my $curlResult = `$curlCommand \"$url\"`;
 
 	return $curlResult;
 }
@@ -144,14 +151,21 @@ sub PullItemFromHost {
 
 	WriteLog("PullItemFromHost($host, $fileName, $hash");
 
+	my $curlPrefix = '';
+	if ($host =~ /\.onion$/ || $host =~ /\.onion:.+/) {
+		$curlPrefix = 'torify ';
+	}
+
 	my $url = $host . $fileName;
 
 	#print $url;
 
-	WriteLog ("curl -s $url");
+	my $curlCommand = $curlPrefix . 'curl';
 
-	my $remoteFileContents = '';#####`curl -A useragent -s $url`;
-	#####my $remoteFileContents = `curl -s $url`;
+	WriteLog ("$curlCommand -s $url");
+
+	#my $remoteFileContents = '';#####`curl -A useragent -s $url`;
+	my $remoteFileContents = `$curlCommand -s $url`;
 
 	my $localPath = '.' . $fileName;
 
