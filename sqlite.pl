@@ -608,7 +608,7 @@ sub DBGetItemsForTag {
 				vote_value = '$tag'
 			GROUP BY file_hash
 			ORDER BY vote_count DESC
-			LIMIT 100
+			LIMIT 32
 		) AS item_tag
 	";
 
