@@ -787,7 +787,15 @@ sub GetReadPage {
 			@files = DBGetItemList(\%queryParams);
 		}
 		if ($pageType eq 'tag') {
-			#todo
+			my $tagName = shift;
+			chomp($tagName);
+
+			my @items = DBGetItemsForTag($tagName);
+			my $itemsList = "'" . join ("','", @items) . "'";
+
+			my %queryParams;
+			$queryParams{'where_clause'} = "WHERE file_hash IN (" . $itemsList . ")";
+			@files = DBGetItemList(\%queryParams);
 		}
 	} else {
 		return; #this code is deprecated

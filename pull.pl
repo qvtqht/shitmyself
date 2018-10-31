@@ -114,10 +114,10 @@ sub PushItemToHost {
 	my $grepResult = `grep -i "$pushHash" $pushLog`;
 	if ($grepResult) {
 		WriteLog('found!');
-		return;
+		return 0;
 	} else {
 		WriteLog('not found!');
-		AppendFile($pushLog, "$pushHash");
+		AppendFile($pushLog, $pushHash);
 	}
 	WriteLog($grepResult);
 
@@ -189,11 +189,22 @@ sub PushItemsToHost {
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
 
+	my $pushItemLimit = GetConfig('push_item_limit');
+	my $itemsPushedCounter = 0;
+
 	foreach my $file(@files) {
 		my $fileName = $file->{'file_path'};
 		my $fileHash = $file->{'file_hash'};
 
-		PushItemToHost($host, $fileName, $fileHash);
+		if (PushItemToHost($host, $fileName, $fileHash)) {
+			$itemsPushedCounter++;
+		}
+
+		if ($itemsPushedCounter >= $pushItemLimit) {
+			WriteLog("Items to pull limit reached for host, exiting PullFeedFromHost");
+
+			last;
+		}
 	}
 }
 
