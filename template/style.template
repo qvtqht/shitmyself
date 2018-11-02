@@ -49,6 +49,9 @@ h2.menu a {
 }
 .menu a {
 	padding-left: 1em;
+	text-shadow: $primaryColor 1pt 1pt;
+	font-family: monospace;
+	font-size: large;
 }
 hr {
 	color: $primaryColor;
