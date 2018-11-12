@@ -117,6 +117,9 @@ sub IndexFile {
 		$fingerprint = $gpgResults{'fingerprint'};
 		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
 
+		WriteLog("\$addedTime = $addedTime");
+		WriteLog($gpgResults{'gitHash'});
+
 		if (!$addedTime) {
 			# This file was not added through access.pl, and has
 			# not been indexed before, so it should get an added_time

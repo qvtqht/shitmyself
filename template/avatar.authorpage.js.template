@@ -1,23 +1,25 @@
 // just the avatar, please
 
-var myidBox = document.getElementById('myid');
-if (myidBox) {
-    var myAvatar = localStorage.getItem('avatar');
+if (window.localStorage) {
+	var myidBox = document.getElementById('myid');
+	if (myidBox) {
+		var myAvatar = localStorage.getItem('avatar');
 
-	if (myAvatar === null || myAvatar.length === 0) {
-		myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
-	} else {
-		var myFp = localStorage.getItem('fingerprint');
-		myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
+		if (myAvatar == null || myAvatar.length == 0) {
+			myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
+		} else {
+			var myFp = localStorage.getItem('fingerprint');
+			myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
 
-		if (window.location.pathname == '/author/' + myFp + '/') {
-			// Create a new element
-			var itsYou = document.createElement('h3');
-			itsYou.innerHTML = 'This is you!';
+			if (window.location.pathname == '/author/' + myFp + '/') {
+				// Create a new element
+				var itsYou = document.createElement('h3');
+				itsYou.innerHTML = 'This is you!';
 
-			var parentNode = document.getElementById('maincontent');
+				var parentNode = document.getElementById('maincontent');
 
-			parentNode.insertBefore(itsYou, parentNode.firstChild);
+				parentNode.insertBefore(itsYou, parentNode.firstChild);
+			}
 		}
 	}
 }
