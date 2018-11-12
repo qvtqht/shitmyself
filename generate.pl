@@ -378,7 +378,7 @@ sub GetItemPage {
 
 	my $itemInfoTemplate = GetTemplate('iteminfo.template');
 
-	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
+#	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
 	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
 	$txtIndex .= $itemInfoTemplate;

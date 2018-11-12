@@ -1,9 +1,4 @@
 <div class="plain">
-<h2>Original Submission as Plain Text:</h2>
-$itemTextPlain
-</div>
-
-<div class="plain">
 <h2>SHA1 Hash:</h2>
 <p>$fileHash</p>
 </div>
