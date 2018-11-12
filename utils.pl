@@ -12,6 +12,10 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
+# We'll use pwd for for the install root dir
+my $SCRIPTDIR = `pwd`; #hardcode #todo
+chomp $SCRIPTDIR;
+
 my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/action cache/message cache/gpg html/top);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
@@ -117,7 +121,12 @@ sub GetString {
 	}
 
 	if (defined($strings{$stringKey})) {
-		return $strings{$stringKey};
+		my @stringLines = split("\n", $strings{$stringKey});
+		my $randomNumber = int(rand(@stringLines));
+		my $randomLine = $stringLines[$randomNumber];
+
+		return $randomLine;
+		#return $strings{$stringKey};
 	}
 }
 
@@ -166,10 +175,6 @@ sub GetRandomHash {
 	}
 	return $randomString;
 }
-
-# We'll use pwd for for the install root dir
-my $SCRIPTDIR = `pwd`; #hardcode #todo
-chomp $SCRIPTDIR;
 
 # Gets template from template dir
 # Should not fail
@@ -730,6 +735,12 @@ sub GpgParse {
 }
 
 sub EncryptMessage {
+	my $targetKey = shift;
+	# file path
+	chomp($targetKey);
+
+
+
 #	For example:
 #
 #	gpg --primary-keyring temporary.gpg --import key.asc
