@@ -76,6 +76,8 @@ sub IndexFile {
 	my $file = shift;
 	chomp($file);
 
+	WriteLog("IndexFile($file)");
+
 	if ($file eq 'flush') {
 		WriteLog("IndexFile(flush)");
 
@@ -116,6 +118,15 @@ sub IndexFile {
 		$gitHash = $gpgResults{'gitHash'};
 		$fingerprint = $gpgResults{'fingerprint'};
 		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
+
+		if (GetFile('log/deleted.log') =~ $gitHash) {
+			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
+
+			unlink($file);
+			unlink($file . ".html");
+
+			return;
+		}
 
 		WriteLog("\$addedTime = $addedTime");
 		WriteLog($gpgResults{'gitHash'});
