@@ -312,8 +312,8 @@ function saveId() {
 		var avatar = '';
 
 		avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
-		avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">&bull;</font>';
-		avatar = avatar + '<font color="#' + color3 + '">&bull;</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
+		avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">*</font>';
+		avatar = avatar + '<font color="#' + color3 + '">*</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
 
 		setAvatar(avatar);
 

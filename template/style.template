@@ -24,6 +24,8 @@ h2.menu {
 h2.menu a {
 	color: $secondaryColor;
 	background-color: $primaryColor;
+	padding-top: 2pt;
+	padding-bottom: 2pt;
 }
 #logo {
 	text-decoration: none;

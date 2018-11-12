@@ -1,7 +1,8 @@
 <!-- write.template -->
 
 <form action="./gracias.html" id=compose class=submit name=submit>
-    <p>Welcome! What you write below is public. Limited to about 6,000 characters, including signature.</p>
+    <p>Welcome! Use at your own risk. Comes with NO WARRANTY, express or implied. Limited to about 6,000 characters, including signature.</p>
+    <p>What you write below is public, you could say the whole world is watching. Be nice, please.</p>
 
     <label for="comment">Enter some text to share here:</label>
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
@@ -10,7 +11,6 @@
     $extraFields
         <p>Instructions for command-line GPG users</p>
         <ul>
-        <li>Use at your own risk. Comes with NO WARRANTY, express or implied.</li>
         <li>If you know how to sign with GPG, you can do that:<br>
             <tt>gpg [--default-key john] --clearsign [file.txt]</tt><br>
             (Paste the entire signed message into textbox.)</li>
