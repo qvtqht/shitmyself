@@ -5,7 +5,7 @@
     <p>What you write below is public, you could say the whole world is watching. Be nice, please.</p>
 
     <label for="comment">Enter some text to share here:</label>
-    <textarea class=txtarea id=comment title="Enter some text to share here." rows=12 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
+    <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
     <span id=signAndPost></span>
     <input type=submit value="Post Without Signing" onclick="" id=addtext>
     $extraFields
