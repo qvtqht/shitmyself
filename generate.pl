@@ -99,7 +99,7 @@ sub GetPageHeader {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$menuTemplate .= GetMenuItem("/", 'Read');
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
@@ -411,6 +411,7 @@ sub GetItemPage {
 #	$txtIndex .= GetTemplate('voteframe.template');
 
 	# end page
+
 	$txtIndex .= GetPageFooter();
 
 	#$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
@@ -1230,6 +1231,8 @@ sub MakeStaticPages {
 
 	$tfmPage .= $tfmPageTemplate;
 
+	$tfmPage .= GetTemplate('netnow3.template');
+
 	$tfmPage .= GetPageFooter();
 
 	$scriptInject = GetTemplate('scriptinject.template');
@@ -1317,7 +1320,13 @@ foreach my $key (@authors) {
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
-		my $lastTouch = GetCache("file/$fileHash");
+        if (GetFile('log/deleted.log') =~ $fileHash) {
+            WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+
+            return;
+        }
+
+        my $lastTouch = GetCache("file/$fileHash");
 		if ($lastTouch && $lastTouch + $fileInterval > time()) {
 			WriteLog("I already did $fileHash recently, too lazy to do it again");
 			next;

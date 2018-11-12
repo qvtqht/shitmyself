@@ -97,6 +97,12 @@ sub PushItemToHost {
 	my $fileName = shift;
 	my $fileHash = shift;
 
+	if (GetFile('log/deleted.log') =~ $fileHash) {
+		WriteLog("PushItemToHost: $fileHash exists in deleted.log, skipping");
+
+		return;
+	}
+
 	chomp $host;
 	chomp $fileName;
 	chomp $fileHash;
@@ -142,6 +148,12 @@ sub PullItemFromHost {
 	chomp $host;
 	chomp $fileName;
 	chomp $hash;
+
+	if (GetFile('log/deleted.log') =~ $hash) {
+		WriteLog("PullItemFromHost: $hash exists in deleted.log, skipping");
+
+		return;
+	}
 
 	WriteLog("PullItemFromHost($host, $fileName, $hash");
 
