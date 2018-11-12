@@ -1,7 +1,8 @@
+
+
 If only one page hide pagination buttons
 
 Fix the vote/tag links
-	No-js: problem with the meta refresh, remove the meta refresh
 	Js: implement
 
 REPLIES
