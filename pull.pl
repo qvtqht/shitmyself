@@ -97,7 +97,7 @@ sub PushItemToHost {
 	my $fileName = shift;
 	my $fileHash = shift;
 
-	if (GetFile('log/deleted.log') =~ $fileHash) {
+	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 		WriteLog("PushItemToHost: $fileHash exists in deleted.log, skipping");
 
 		return;
