@@ -1,0 +1,28 @@
+function formToText(formId) {
+	var form = document.getElementById(formId);
+
+	if (form) {
+		var elements = form.elements;
+
+		if (elements) {
+			for (var i = 0; i < elements.length; i++) {
+				switch (elements[i].type) {
+					case 'checkbox':
+						if (elements[i].checked) {
+							//voteLines = voteLines + elements[i].name + '\n';
+							if ( ! localStorage.getItem('vvvv') ) {
+								localStorage.setItem('vvvv', elements[i].name);
+								alert('Note: All votes are stored locally until submitted.'); //todo
+							} else {
+								localStorage.setItem('vvvv', localStorage.getItem('vvvv') + "\n" + elements[i].name);
+							}
+						}
+
+						break;
+					default:
+
+				}
+			}
+		}
+	}
+}
