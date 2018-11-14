@@ -159,7 +159,8 @@ sub GetVoterTemplate {
 		my @voteValues = split("\n", $tagsList . "\n" . $flagsList);
 
 		foreach my $tag (@voteValues) {
-			my $buttonTemplate = GetTemplate("votebutton.template");
+			#my $buttonTemplate = GetTemplate("votebutton.template");
+			my $buttonTemplate = GetTemplate("votecheck.template");
 
 			my $class = "pos";
 
@@ -415,10 +416,11 @@ sub GetItemPage {
 	$txtIndex .= GetPageFooter();
 
 	#$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
-
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $formEncodeJs = GetTemplate('js/formencode.js.template');
+	my $fullJs = $avatarjs . "\n" . $formEncodeJs;
+	$scriptInject =~ s/\$javascript/$fullJs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -972,6 +974,29 @@ sub GetIdentityPage {
 	return $txtIndex;
 }
 
+#sub InjectJs {
+#	my $scriptName = shift;
+#	chomp($scriptName);
+#
+#	if (!$scriptName) {
+#		WriteLog('WARNING! InjectJs() called with missing $scriptName. Returning empty string');
+#		return '';
+#	}
+#
+#	WriteLog("InjectJs($scriptName)");
+#
+#	my $scriptInject = GetTemplate('scriptinject.template');
+#
+#	WriteLog($scriptInject);
+#	my $javascript = GetTemplate($scriptName);
+#
+#	WriteLog($
+#
+#	$scriptInject =~ s/\$javascript/$javascript/g;
+#
+#	return $scriptInject;
+#}
+
 sub GetVotesPage {
 	#todo rewrite this more pretty
 	my $txtIndex = "";
@@ -1320,7 +1345,7 @@ foreach my $key (@authors) {
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
-        if (GetFile('log/deleted.log') =~ $fileHash) {
+        if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
             WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
 
             return;

@@ -1,0 +1,1 @@
+<input type=checkbox name="addtag/$fileHash/$ballotTime/$voteValue/$checksum" id=$fileHash_$voteValue><label for=$fileHash_$voteValue>$voteValue</label>

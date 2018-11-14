@@ -1,3 +1,44 @@
+Sometimes generated keys have the header/comment field
+
+The Meta refresh seems to be responsible for the scriptless links not turning color
+
+Blank text files still cause problems
+
+NN3 compatibility still needs some work
+
+rebuilding everything twice is a good way of maintaining integrity
+
+move csrf salt to config
+
+forgot to add conversions to user pages
+
+some pages (author pages?) are still in a different func
+
+mod_security can interfere with some signed posts
+
+it would be nice to cut down the posting time from 1-2 minutes to instant.
+
+On the profile page, the items are not displayed in reverse chron order. They also don't appear right away, on the first update.
+
+"create profile" should go to a prefilled textbox with profile template OR to a page to edit profile
+
+Some of the buttons can probably be made full width
+	To make them easier to press on mobile
+
+Sometimes on Android the button push is cancelled by the keyboard retract
+	Or something like that
+		Load page
+		Press Write
+		Fill in message
+		Press the "Post" button
+			Expected: Posted
+			Actual: First tab is usually ignored
+
+sign with pgp button should be hidden for nojs users
+	write-small
+
+#bug on edge: tag links change colors, but flag links do not
+
 
 
 If only one page hide pagination buttons
