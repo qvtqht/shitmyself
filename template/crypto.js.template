@@ -499,11 +499,26 @@ function insPubKey() {
 			if (pubkey) {
 				textbox.value = pubkey;
 
-					var composeForm = document.getElementById('compose');
-					if (composeForm) {
-							composeForm.submit();
-					}
+				var composeForm = document.getElementById('compose');
+				if (composeForm) {
+					composeForm.submit();
+				}
+			}
+		}
+	}
+}
 
+function insVotes() {
+	var pubkey = getPublicKey();
+	var vv = localStorage.getItem('vvvv');
+
+	if (pubkey && vv) {
+		var textbox = document.getElementById('comment');
+
+		if (textbox) {
+			if (pubkey) {
+				textbox.value = vv;
+				localStorage.removeItem('vvvv');
 			}
 		}
 	}
@@ -513,6 +528,9 @@ function writeOnload() {
 	if (window.location.hash) {
 		if (window.location.hash == '#inspubkey') {
 			insPubKey();
+		}
+		if (window.location.hash == '#insvotes') {
+			insVotes();
 		}
 	}
 }
@@ -554,6 +572,41 @@ function signForm(formId) {
 }
 
 //signForm('compose');
+//
+//function signMessage2(message) {
+//	var privkey = getPrivateKey();
+//
+//	if (privkey) {
+//		var textbox = document.getElementById('comment');
+//		var composeForm = document.getElementById('compose');
+//
+//		textbox.style.color = '#00ff00';
+//		textbox.style.backgroundColor = '#c0c000';
+//
+//		if (textbox && composeForm) {
+//			var message = textbox.value;
+//
+//			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+//
+//			options = {
+//				data: message,                             // input as String (or Uint8Array)
+//				privateKeys: [privKeyObj]                  // for signing
+//			};
+//
+//			openpgp.config.show_version = false;
+//
+//			openpgp.config.show_comment = false;
+//
+//			openpgp.sign(options).then(function(signed) {
+//				textbox.value = signed.data;
+//				composeForm.submit();
+//			});
+//		}
+//	} else {
+//		alert('No identity defined, cannot sign.');
+//	}
+//
+//}
 
 function signMessage() {
 	var privkey = getPrivateKey();

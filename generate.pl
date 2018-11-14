@@ -787,6 +787,7 @@ sub GetReadPage {
 
 			my %queryParams;
 			$queryParams{'where_clause'} = $whereClause;
+			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 			@files = DBGetItemList(\%queryParams);
 		}
 		if ($pageType eq 'tag') {
