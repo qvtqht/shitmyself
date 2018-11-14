@@ -180,13 +180,18 @@ sub GetRandomHash {
 # Should not fail
 sub GetTemplate {
 	my $filename = shift;
-
 	chomp $filename;
+
+	WriteLog("GetTemplate($filename)");
+
 	$filename = "$SCRIPTDIR/template/$filename";
 
-	return GetFile($filename);
-
-	die("GetTemplate failed, something is probably wrong");
+	if (-e $filename) {
+		return GetFile($filename);
+	} else {
+		WriteLog("WARNING! GetTemplate() called with non-existing file $filename. Returning empty string.");
+		return '';
+	}
 }
 
 my %avatarCache;
