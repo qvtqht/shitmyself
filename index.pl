@@ -119,7 +119,7 @@ sub IndexFile {
 		$fingerprint = $gpgResults{'fingerprint'};
 		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
 
-		if (GetFile('log/deleted.log') =~ $gitHash) {
+		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $gitHash) {
 			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
 
 			unlink($file);
