@@ -509,17 +509,14 @@ function insPubKey() {
 }
 
 function insVotes() {
-	var pubkey = getPublicKey();
 	var vv = localStorage.getItem('vvvv');
 
-	if (pubkey && vv) {
+	if (vv) {
 		var textbox = document.getElementById('comment');
 
 		if (textbox) {
-			if (pubkey) {
-				textbox.value = vv;
-				localStorage.removeItem('vvvv');
-			}
+			textbox.value = vv;
+			localStorage.removeItem('vvvv');
 		}
 	}
 }
