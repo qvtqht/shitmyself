@@ -163,9 +163,39 @@ sub IndexFile {
 
 		my $parentHash = '';
 
-		if ($message =~ m/parent=(.+)/) {
-			if (IsSha1($1)) {
-				$parentHash = $1;
+		# look for quoted message ids
+		{
+			if ($message =~ m/^\>([0-9a-fA-F]{40})/) {
+				if (IsSha1($1)) {
+					$parentHash = $1;
+				}
+			}
+		}
+		#addtag/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
+
+		#look for votes
+		{
+			my @voteLines = ( $message =~ m/^addtag\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
+			#								 addtag /file hash         /time     /tag      /csrf
+
+			WriteLog('@voteLines = ' . @voteLines);
+
+			if (@voteLines) {
+				while(@voteLines) {
+					my $fileHash   = shift @voteLines;
+					my $ballotTime = shift @voteLines;
+					my $voteValue  = shift @voteLines;
+					#my $csrf = shift @voteLines;
+					shift @voteLines;
+
+					if ($isSigned) {
+						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
+					} else {
+						DBAddVoteRecord($fileHash, $ballotTime, $voteValue, $gpgKey);
+					}
+				}
+
+				DBAddVoteRecord('flush');
 			}
 		}
 

@@ -154,9 +154,9 @@ sub DBGetVotesTable {
 
 	my $query;
 	if ($fileHash) {
-		$query = "SELECT file_hash, ballot_time, vote_value FROM vote WHERE file_hash = '$fileHash';";
+		$query = "SELECT file_hash, ballot_time, vote_value, signed_by FROM vote WHERE file_hash = '$fileHash';";
 	} else {
-		$query = "SELECT file_hash, ballot_time, vote_value FROM vote;";
+		$query = "SELECT file_hash, ballot_time, vote_value, signed_by FROM vote;";
 	}
 
 	my $result = SqliteQuery($query);
@@ -488,6 +488,11 @@ sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of
 }
 
 sub DBAddVoteRecord {
+# DBAddVoteRecord
+# $fileHash
+# $ballotTime
+# $voteValue
+# $signedBy
 	state $query;
 
 	my $fileHash = shift;
@@ -513,22 +518,28 @@ sub DBAddVoteRecord {
 
 	my $ballotTime = shift;
 	my $voteValue = shift;
+	my $signedBy = shift;
 
 	chomp $fileHash;
 	chomp $ballotTime;
 	chomp $voteValue;
+	if ($signedBy) {
+		chomp $signedBy;
+	} else {
+		$signedBy = '';
+	}
 
 	$fileHash = SqliteEscape($fileHash);
 	$ballotTime = SqliteEscape($ballotTime);
 	$voteValue = SqliteEscape($voteValue);
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value) VALUES ";
+		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= "('$fileHash', '$ballotTime', '$voteValue')";
+	$query .= "('$fileHash', '$ballotTime', '$voteValue', '$signedBy')";
 }
 
 sub DBAddAddedTimeRecord {
