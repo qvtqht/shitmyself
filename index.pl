@@ -189,9 +189,9 @@ sub IndexFile {
 					shift @voteLines;
 
 					if ($isSigned) {
-						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
-					} else {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue, $gpgKey);
+					} else {
+						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 					}
 				}
 
