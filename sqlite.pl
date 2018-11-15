@@ -45,7 +45,7 @@ sub SqliteMakeTables() {
 		is_pubkey,
 		last_bump
 	)");
-	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed DEFAULT 0)");
+	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
 	SqliteQuery("CREATE TABLE added_time(file_hash, add_timestamp);");
 +#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
