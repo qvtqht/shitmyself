@@ -176,9 +176,9 @@ sub IndexFile {
 		#look for votes
 		{
 			my @voteLines = ( $message =~ m/^addtag\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
-			#								 addtag /file hash         /time     /tag      /csrf
+			#								 prefix /file hash         /time     /tag      /csrf
 
-			WriteLog('@voteLines = ' . @voteLines);
+			my $lineCount = @voteLines / 4;
 
 			if (@voteLines) {
 				while(@voteLines) {
@@ -193,6 +193,12 @@ sub IndexFile {
 					} else {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 					}
+				}
+
+				if ($isSigned) {
+					$message = "$gpgKey has added $lineCount votes.";
+				} else {
+					$message = "A mysterious stranger has added $lineCount votes.";
 				}
 
 				DBAddVoteRecord('flush');
