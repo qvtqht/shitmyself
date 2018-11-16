@@ -15,6 +15,14 @@ SqliteUnlinkDb();
 SqliteConnect();
 SqliteMakeTables();
 
+if (!-e './html/txt') {
+    mkdir('./html/txt');
+}
+
+if (!glob('./html/txt')) {
+    PutFile('./html/txt/hello.txt', 'Hello, World!');
+}
+
 # This holds all the files we will list in the primary index
 my @filesToInclude = `find ./html/txt/ | grep \.txt\$ | sort -r`;
 
