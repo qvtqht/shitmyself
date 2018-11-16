@@ -311,9 +311,15 @@ function saveId() {
 
 		var avatar = '';
 
+		var char1 = myFingerprint.substr(0, 1);
+		var char2 = myFingerprint.substr(7, 1);
+
+		char1 = char1.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+')
+		char2 = char2.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+')
+
 		avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
-		avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">*</font>';
-		avatar = avatar + '<font color="#' + color3 + '">*</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
+		avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">' + char1 + '</font>';
+		avatar = avatar + '<font color="#' + color3 + '">' + char2 + '</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
 
 		setAvatar(avatar);
 
