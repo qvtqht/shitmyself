@@ -4,7 +4,9 @@
 <p>$authorLink</p>
 <form method=GET action="/action/vote2.html" name=voteon$fileHash id=voteon$fileHash>
 $voterButtons
-<input type=button onclick="formToText('voteon$fileHash')" value="Vote">
-<noscript><input type=submit value=Vote2></noscript>
+<br>
+<span id=voteAsUser></span>
+<input type=submit value="Vote Anonymously">
+
 </form>
 </div><hr>

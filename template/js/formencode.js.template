@@ -7,24 +7,24 @@ function formToText(formId) {
 
 		if (elements) {
 			for (var i = 0; i < elements.length; i++) {
-				switch (elements[i].type) {
-					case 'checkbox':
-						if (elements[i].checked) {
-							//voteLines = voteLines + elements[i].name + '\n';
-							if ( ! localStorage.getItem('vvvv') ) {
-								localStorage.setItem('vvvv', elements[i].name);
-							} else {
-								localStorage.setItem('vvvv', localStorage.getItem('vvvv') + "\n" + elements[i].name);
-							}
-
-							window.open('/write.html#insvotes','_self');
+				if (elements[i].type == 'checkbox') {
+					if (elements[i].checked) {
+						//voteLines = voteLines + elements[i].name + '\n';
+						if ( ! localStorage.getItem('vvvv') ) {
+							localStorage.setItem('vvvv', elements[i].name);
+						} else {
+							localStorage.setItem('vvvv', localStorage.getItem('vvvv') + "\n" + elements[i].name);
 						}
 
-						break;
-					default:
-
+						window.open('/write.html#insvotes','_self');
+					}
 				}
 			}
 		}
 	}
+}
+
+var pau = document.getElementById('voteAsUser');
+if (pau) {
+	pau.innerHTML = '<input type=button onclick="formToText(this.form.id)" value="Vote With Signature">'
 }

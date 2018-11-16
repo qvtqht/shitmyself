@@ -1,1 +1,1 @@
-<span class=avatar style="border: 1pt dotted #$color1;"><span class=icon style="background-color: #$color1"><font color="#$color2">$char1</font><font color="#$color3">$char2</font></span><span class=username>$alias</span></span>
+<span class=avatar style="border: 1pt dotted #$color1;"><span class=icon style="background-color: #$color1"><font color="#$color2">$char1</font><font color="#$color3">$char2</font><font color="#$color2">$char3</font></span><span class=username>$alias</span></span>

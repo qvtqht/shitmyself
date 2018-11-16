@@ -219,15 +219,17 @@ sub GetAvatar {
 	if ($gpg_key) {
 		my $color1 = substr($gpg_key, 0, 6);
 		my $color2 = substr($gpg_key, 3, 6);
-		my $color3 = substr($gpg_key, 7, 6);
+		my $color3 = substr($gpg_key, 6, 6);
 		my $alias = GetAlias($gpg_key);
 		$alias = encode_entities($alias, '<>&"');
 
-		my $char1 = substr($gpg_key, 0, 1);
-		my $char2 = substr($gpg_key, 7, 1);
+		my $char1 = substr($gpg_key, 12, 1);
+		my $char2 = substr($gpg_key, 13, 1);
+		my $char3 = substr($gpg_key, 14, 1);
 
 		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
 		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
 
 		$avatar =~ s/\$color1/$color1/g;
 		$avatar =~ s/\$color2/$color2/g;
@@ -235,6 +237,7 @@ sub GetAvatar {
 		$avatar =~ s/\$alias/$alias/g;
 		$avatar =~ s/\$char1/$char1/g;
 		$avatar =~ s/\$char2/$char2/g;
+		$avatar =~ s/\$char3/$char3/g;
 	} else {
 		$avatar = "";
 	}

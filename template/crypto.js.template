@@ -276,6 +276,9 @@ function setAvatar(avatar) {
 	window.localStorage.setItem("avatar", avatar);
 }
 
+function hexToChar(string) {
+	return string.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+');
+}
 
 function saveId() {
 	var textbox = document.getElementById("privatekey");
@@ -307,19 +310,30 @@ function saveId() {
 
 		var color1 = myFingerprint.substr(0, 6);
 		var color2 = myFingerprint.substr(3, 6);
-		var color3 = myFingerprint.substr(7, 6);
+		var color3 = myFingerprint.substr(6, 6);
 
 		var avatar = '';
 
-		var char1 = myFingerprint.substr(0, 1);
-		var char2 = myFingerprint.substr(7, 1);
+		var char1 = myFingerprint.substr(12, 1);
+		var char2 = myFingerprint.substr(13, 1);
+		var char3 = myFingerprint.substr(14, 1);
 
-		char1 = char1.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+')
-		char2 = char2.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+')
+		char1 = hexToChar(char1);
+		char2 = hexToChar(char2);
+		char3 = hexToChar(char3);
+		//char4 = hexToChar(char4);
 
-		avatar = avatar + '<span class=avatar style="border: 1pt dotted #' + color1 + ';">';
-		avatar = avatar + '<span class=icon style="background-color: ' + color1 +'"><font color="#' + color2 + '">' + char1 + '</font>';
-		avatar = avatar + '<font color="#' + color3 + '">' + char2 + '</font></span><span class=username>' + escapeHTML(myUsername) + '</span></span>';
+		avatar = ''
+			+ '<span class=avatar style="border: 1pt dotted #' + color1 + ';">'
+			+ '<span class=icon style="background-color: ' + color1 +'">'
+			+ '<font color="#' + color2 + '">' + char1 + '</font>'
+			+ '<font color="#' + color3 + '">' + char2 + '</font>'
+			+ '<font color="#' + color2 + '">' + char3 + '</font>'
+			+ '</span>'
+			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
+			+ '<span class=icon style="background-color: ' + color1 +'">'
+			+ '</span>'
+			+ '</span>';
 
 		setAvatar(avatar);
 
