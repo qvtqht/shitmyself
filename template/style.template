@@ -1,13 +1,12 @@
 /* body and headers */
 body {
-	font-family: monospace;
+	font-family: courier, monospace;
 	font-size: large;
 	background-color: $secondaryColor;
 	color: #$textColor;
 }
 a {
 	color: $primaryColor;
-	background-color: $secondaryColor;
 }
 a:visited {
 	color: #806080;
