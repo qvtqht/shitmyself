@@ -339,12 +339,55 @@ sub ProcessAccessLog {
 			}
 		}
 
-		# If the URL begins with "/action/" run it through the processor
+		my $voteAction = '/action/vote2.html?';
+		if (substr($file, 0, length($voteAction)) eq $voteAction) {
+			#				http://localhost:3000/action/vote2.html?
+			#				addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Finformative%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ffriendly%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fmeta%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fremove%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ftextart%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fabuse%2F435fcd62a628d7b918e243fe97912d7b=on
+			#
+			#					everything after ?
+			#				split by &
+			#					remove =on
+			#					urldecode
+			#						parse as a vote record
+			my $votesQuery = substr($file, index($file, '?') + 1);
+			my @voteAtoms = split('&', $votesQuery);
+			foreach my $voteAtom (@voteAtoms) {
+				$voteAtom =~ s/=on$//;
+				$voteAtom = uri_decode($voteAtom);
+
+				my @voteLines = ( $voteAtom =~ m/^addtag\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
+				if (@voteLines) {
+					my $fileHash   = shift @voteLines;
+					my $ballotTime = shift @voteLines;
+					my $voteValue  = shift @voteLines;
+					my $csrf = shift @voteLines;
+
+					my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
+
+					my $currentTime = time();
+					if ($csrf eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
+						my $voteEntry = "$fileHash|$ballotTime|$voteValue";
+
+						AppendFile("log/votes.log", $voteEntry);
+
+						$newItemCount++;
+					}
+				}
+			}
+		}
+
+			# If the URL begins with "/action/" run it through the processor
 		my $actionPrefix = "/action/";
 		if (substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
-
 			# Put the arguments into an array
 			my @actionArgs = split("/", $file);
+
 
 			# If the action is "vote.html"
 			if ($actionArgs[2] eq 'vote.html?') {
