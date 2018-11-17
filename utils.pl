@@ -12,6 +12,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
+
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
@@ -220,6 +221,7 @@ sub GetAvatar {
 		my $color1 = substr($gpg_key, 0, 6);
 		my $color2 = substr($gpg_key, 3, 6);
 		my $color3 = substr($gpg_key, 6, 6);
+		my $color4 = substr($gpg_key, 9, 6);
 		my $alias = GetAlias($gpg_key);
 		$alias = encode_entities($alias, '<>&"');
 
@@ -234,6 +236,7 @@ sub GetAvatar {
 		$avatar =~ s/\$color1/$color1/g;
 		$avatar =~ s/\$color2/$color2/g;
 		$avatar =~ s/\$color3/$color3/g;
+		$avatar =~ s/\$color4/$color4/g;
 		$avatar =~ s/\$alias/$alias/g;
 		$avatar =~ s/\$char1/$char1/g;
 		$avatar =~ s/\$char2/$char2/g;

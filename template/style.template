@@ -113,11 +113,24 @@ details.txt a.header {
 .avatar .icon {
 	font-weight: bold;
 	margin-right: 2pt;
+	border-radius: 2pt;
+	padding: 1pt;
 }
 .avatar {
 	border-radius: 1pt;
-	background-color: $secondaryColor;
 	color: $primaryColor;
+	padding: 2pt;
+}
+.avatar .username {
+	color: #e0e0e0;
+	text-shadow:
+	-1pt -1pt 0 #404040,
+	1pt -1pt 0 #404040,
+	-1pt 1pt 0 #404040,
+	1pt 1pt 0 #404040;
+}
+a.avatar {
+	text-decoration: none;
 }
 
 /* submit forms */

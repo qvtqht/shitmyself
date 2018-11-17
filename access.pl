@@ -112,7 +112,10 @@ sub ProcessAccessLog {
 	WriteLog ("Processing $logfile...\n");
 
 	# The log file should always be there
-	open(LOGFILE, $logfile) or die("Could not open log file.");
+	if (!open(LOGFILE, $logfile)) {
+		WriteLog('Could not open log file.');
+		return;
+	}
 
 	# anti-CSRF secret salt
 	my $mySecret = GetConfig("secret");

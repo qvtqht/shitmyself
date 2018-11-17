@@ -107,6 +107,8 @@ sub IndexFile {
 	my $gitHash;
 	my $isAdmin = 0;
 
+	#my $isAction = 0;
+
 	if (substr($file, length($file) -4, 4) eq ".txt") {
 		my %gpgResults = GpgParse($file);
 
@@ -136,7 +138,7 @@ sub IndexFile {
 			# not been indexed before, so it should get an added_time
 			# record. This is what we'll do here. It will be picked
 			# up and put into the database on the next cycle
-			# unless we add provisions for that here later #todo
+			# unless we add provisions for that here #todo
 
 			WriteLog("No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
 
@@ -202,6 +204,8 @@ sub IndexFile {
 				}
 
 				DBAddVoteRecord('flush');
+
+				#$isAction = 1;
 			}
 		}
 

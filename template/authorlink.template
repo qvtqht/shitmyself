@@ -1,1 +1,1 @@
-posted by <a href="$authorUrl">$authorAvatar</a>
+<a class=avatar href="$authorUrl">$authorAvatar</a>

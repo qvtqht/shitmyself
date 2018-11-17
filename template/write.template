@@ -2,7 +2,7 @@
 
 <form action="./gracias.html" id=compose class=submit name=submit>
     <p>Welcome! Use at your own risk. Comes with NO WARRANTY, express or implied. Limited to about 6,000 characters, including signature.</p>
-    <p>What you write below is public... You <em>could</em> say the whole world is watching. Be nice, please.</p>
+    <p>What you write below is public... You <i>could</i> say the whole world is watching. Be nice, please.</p>
     <p>You can also submit commands, signed messages, public keys, and more! See manual and source code for details.</p>
 
     <label for="comment">Enter some text to send here:</label>

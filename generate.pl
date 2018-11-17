@@ -565,6 +565,7 @@ sub GetIndexPage {
 			my $authorUrl;
 			my $authorAvatar;
 			my $authorLink;
+			my $byString = GetString('by');
 
 			if ($gpgKey) {
 				$authorUrl = "/author/$gpgKey/";
@@ -596,6 +597,7 @@ sub GetIndexPage {
 			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
+			$itemTemplate =~ s/\$by/$byString/g;
 			if ($replyCount) {
 				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
 			} else {

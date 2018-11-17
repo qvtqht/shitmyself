@@ -15,7 +15,7 @@
 <h3>These Features May Be Confusing At First</h3>
 
 <ul>
-    <li>Create your "account" aka <em>key pair</em> on your own computer, <em>not on this website</em></li>
+    <li>Create your "account" aka <u>key pair</u> on your own computer, as <u>not on this website or server</u>.</li>
     <li>This is accomplished with encryption called GPG.</li>
     <li>Your key pair allows you to post on other forums too.</li>
 </ul>

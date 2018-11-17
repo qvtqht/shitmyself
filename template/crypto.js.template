@@ -311,6 +311,7 @@ function saveId() {
 		var color1 = myFingerprint.substr(0, 6);
 		var color2 = myFingerprint.substr(3, 6);
 		var color3 = myFingerprint.substr(6, 6);
+		var color4 = myFingerprint.substr(9, 6);
 
 		var avatar = '';
 
@@ -324,15 +325,14 @@ function saveId() {
 		//char4 = hexToChar(char4);
 
 		avatar = ''
-			+ '<span class=avatar style="border: 1pt dotted #' + color1 + ';">'
-			+ '<span class=icon style="background-color: ' + color1 +'">'
+
+			+ '<span class=avatar style="background-color: #' + color1 + '">'
+			+ '<span class=icon>'
 			+ '<font color="#' + color2 + '">' + char1 + '</font>'
 			+ '<font color="#' + color3 + '">' + char2 + '</font>'
-			+ '<font color="#' + color2 + '">' + char3 + '</font>'
+			+ '<font color="#' + color4 + '">' + char3 + '</font>'
 			+ '</span>'
 			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
-			+ '<span class=icon style="background-color: ' + color1 +'">'
-			+ '</span>'
 			+ '</span>';
 
 		setAvatar(avatar);
@@ -345,7 +345,7 @@ function saveId() {
 				myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
 			} else {
 				var myFp = localStorage.getItem('fingerprint');
-				myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
+				myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
 			}
 		}
 

@@ -1,3 +1,38 @@
+When listing replies, we can strip the >parenthash part from replies
+	while leaving it in the detail view for that comment
+
+Entertaining stats page
+	top voter + top tags = top tags by voter
+	top voters
+	top used tags
+		add to profile page
+	number of voters
+	number of vote records
+	busiest days?
+
+Read profile from user submission
+	Decide on syntax
+	Receive submission
+	Replace into /author/abc/profile.html
+	Update added_timestamp
+		How? It's in added.log
+
+Post profile
+	Wording for instructions
+	Decide on format
+		Prefill Write
+		Or
+		Dedicated page
+
+Profile page
+	Fingerprint:
+	Name:
+	Creation Date:
+	Posts:
+	Voted:
+	Votes Earned:
+	Most Recent Action:
+
 Add "via [sitename]" to pulled and pushed items
 
 Sometimes generated keys have the header/comment field
