@@ -116,9 +116,13 @@ sub GetString {
 	if (!defined($strings{$stringKey})) {
 		my $string = GetFile('string/en/'.$stringKey);
 
-		chomp $string;
+		if ($string) {
+    		chomp ($string);
 
-		$strings{$stringKey} = $string;
+	    	$strings{$stringKey} = $string;
+        } else {
+            return $stringKey;
+        }
 	}
 
 	if (defined($strings{$stringKey})) {
