@@ -285,7 +285,7 @@ sub GetFile {
 	}
 
 	my $length = shift || 2097152;
-	# default to reading a max of 1MB of the file. #scaling
+	# default to reading a max of 2MB of the file. #scaling
 
 	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
 		my $return;
@@ -443,6 +443,11 @@ sub trim {
 
 sub GetFileSizeHtml {
 	my $fileSize = shift;
+  
+	if (!$fileSize) {
+		return;
+	}
+	
 	chomp ($fileSize);
 
 	my $fileSizeString = $fileSize;
