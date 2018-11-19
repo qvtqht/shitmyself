@@ -59,6 +59,7 @@ Redhat/Centos/Fedora
 ======
 perl-Digest-MD5
 perl-HTML-Parser
+perl-DBD-SQLite
 
 known issues
 ============
