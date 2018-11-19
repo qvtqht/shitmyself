@@ -58,6 +58,7 @@ libhtml-parser-perl
 Redhat/Centos/Fedora
 ======
 perl-Digest-MD5
+perl-HTML-Parser
 
 known issues
 ============
