@@ -54,6 +54,11 @@ Debian-derived
 uri-encode-perl
 libany-uri-escape-perl
 libhtml-parser-perl
+libdbd-sqlite3-perl
+sqlite3
+lighttpd
+gnupg
+gnupg2
 
 Redhat/Centos/Fedora
 ======
