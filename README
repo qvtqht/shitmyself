@@ -49,7 +49,15 @@ requirements
 * Digest::MD5
 * DBI
 
-On Debian-derived, apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl
+Debian-derived
+==============
+uri-encode-perl
+libany-uri-escape-perl
+libhtml-parser-perl
+
+Redhat/Centos/Fedora
+======
+perl-Digest-MD5
 
 known issues
 ============
