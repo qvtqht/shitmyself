@@ -152,6 +152,11 @@ sub SqliteQuery {
 sub DBGetVotesTable {
 	my $fileHash = shift;
 
+	if (!IsSha1($fileHash)) {
+		WriteLog("DBGetVotesTable called with invalid parameter! returning");
+		return '';
+	}
+
 	my $query;
 	if ($fileHash) {
 		$query = "SELECT file_hash, ballot_time, vote_value, signed_by FROM vote WHERE file_hash = '$fileHash';";
@@ -237,6 +242,12 @@ sub DBGetItemCount {
 
 sub DBGetItemReplies {
 	my $itemHash = shift;
+
+	if (!IsSha1($itemHash)) {
+		WriteLog('DBGetItemReplies called with invalid parameter! returning');
+		return '';
+	}
+
 	$itemHash = SqliteEscape($itemHash);
 
 	my %queryParams;
@@ -552,6 +563,7 @@ sub DBAddAddedTimeRecord {
 	state $query;
 
 	my $fileHash = shift;
+	chomp $fileHash;
 
 	if ($fileHash eq 'flush') {
 		WriteLog("DBAddAddedTimeRecord(flush)");
@@ -567,15 +579,23 @@ sub DBAddAddedTimeRecord {
 		return;
 	}
 
+	if (!IsSha1($fileHash)) {
+		WriteLog('DBAddAddedTimeRecord called with invalid parameter! returning');
+		return;
+	}
+
+	my $addedTime = shift;
+	chomp $addedTime;
+
+	if (!$addedTime =~ m/[0-9]{9-10}/) { #todo is this clean enough?
+		WriteLog('DBAddAddedTimeRecord called with invalid parameter! returning');
+		return;
+	}
+
     if ($query && length($query) > 10240) {
         DBAddAddedTimeRecord('flush');
         $query = '';
     }
-
-	my $addedTime = shift;
-
-	chomp $fileHash;
-	chomp $addedTime;
 
 	$fileHash = SqliteEscape($fileHash);
 	$addedTime = SqliteEscape($addedTime);
@@ -592,6 +612,11 @@ sub DBAddAddedTimeRecord {
 sub DBGetAddedTime {
 	my $fileHash = shift;
 	chomp ($fileHash);
+
+	if (!IsSha1($fileHash)) {
+		WriteLog('DBGetAddedTime called with invalid parameter! returning');
+		return;
+	}
 
 	if ($fileHash ne SqliteEscape($fileHash)) {
 		die('DBGetAddedTime() this should never happen');
@@ -685,6 +710,12 @@ sub DBGetItemList {
 
 sub DBGetItemListForAuthor {
 	my $author = shift;
+	chomp($author);
+
+	if (!IsFingerprint($author)) {
+		WriteLog('DBGetItemListForAuthor called with invalid parameter! returning');
+		return;
+	}
 	$author = SqliteEscape($author);
 
 	my %params = {};
@@ -704,6 +735,12 @@ sub DBGetAuthorList {
 
 sub DBGetAuthorAlias {
 	my $key = shift;
+	chomp ($key);
+
+	if (!IsFingerprint($key)) {
+		WriteLog('DBGetAuthorAlias called with invalid parameter! returning');
+		return;
+	}
 
 	state %aliasCache;
 	if (exists($aliasCache{$key})) {
@@ -724,6 +761,11 @@ sub DBGetAuthorAlias {
 sub DBGetItemVoteTotals {
 	my $fileHash = shift;
 	chomp $fileHash;
+
+	if (!IsSha1($fileHash)) {
+		WriteLog('DBGetItemVoteTotals called with invalid $fileHash! returning');
+		return;
+	}
 
 	my $fileHashSql = SqliteEscape($fileHash);
 

@@ -837,7 +837,8 @@ sub GetReadPage {
 		my $authorAvatarHtml = GetAvatar($authorKey);
 
 		$userInfo =~ s/\$alias/$authorAliasHtml/;
-
+		$userInfo =~ s/\$fingerprint/$authorKey/;
+		
 		$txtIndex .= $userInfo;
 	}
 

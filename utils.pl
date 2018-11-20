@@ -566,6 +566,26 @@ sub IsSha1 {
 	}
 }
 
+sub IsMd5 {
+	my $string = shift;
+
+	if ($string =~ m/[a-fA-F0-9]{32}/) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+sub IsFingerprint {
+	my $string = shift;
+
+	if ($string =~ m/[a-fA-F0-9]{16}/) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 sub GpgParse {
 	# GpgParse
 	# $filePath = path to file containing the text
