@@ -776,9 +776,11 @@ sub GetReadPage {
 
 	my @files;
 
+	my $authorKey;
+
 	if (defined($pageType)) {
 		if ($pageType eq 'author') {
-			my $authorKey = shift;
+			$authorKey = shift;
 			my $whereClause = "WHERE author_key='$authorKey'";
 
 			my $authorAliasHtml = GetAlias($authorKey);
@@ -827,6 +829,17 @@ sub GetReadPage {
 	$txtIndex .= $htmlStart;
 
 	$txtIndex .= GetTemplate('maincontent.template');
+
+	if ($pageType eq 'author') {
+		my $userInfo = GetTemplate('userinfo.template');
+
+		my $authorAliasHtml = GetAlias($authorKey);
+		my $authorAvatarHtml = GetAvatar($authorKey);
+
+		$userInfo =~ s/\$alias/$authorAliasHtml/;
+
+		$txtIndex .= $userInfo;
+	}
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
