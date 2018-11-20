@@ -16,6 +16,7 @@ h2.menu {
 	border-radius: 0pt 0pt 5pt 5pt;
 }
 h2.menu a {
+	font-size: 20pt;
 }
 #logo {
 	text-decoration: none;
