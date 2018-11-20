@@ -1248,6 +1248,7 @@ sub MakeStaticPages {
 
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
+	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 
 
 	# Manual page

@@ -88,9 +88,9 @@ sub PullFeedFromHost {
 }
 
 
-my $FILE = '/etc/sysconfig/network';
-my $DIR = dirname($FILE);
-print $DIR, "\n";
+# my $FILE = '/etc/sysconfig/network';
+# my $DIR = dirname($FILE);
+# print $DIR, "\n";
 
 sub PushItemToHost {
 	my $host = shift;
