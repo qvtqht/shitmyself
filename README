@@ -47,6 +47,7 @@ requirements
 * URI::Escape
 * HTML::Parser
 * Digest::MD5
+* Digest::SHA
 * DBI
 
 Debian-derived
@@ -63,8 +64,10 @@ gnupg2
 Redhat/Centos/Fedora
 ======
 perl-Digest-MD5
+perl-Digest-SHA
 perl-HTML-Parser
 perl-DBD-SQLite
+perl-URI-Encode
 
 known issues
 ============
