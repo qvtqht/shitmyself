@@ -559,6 +559,10 @@ sub HtmlEscape {
 sub IsSha1 {
 	my $string = shift;
 
+	if (!$string) {
+		return 0;
+	}
+
 	if ($string =~ m/[a-fA-F0-9]{40}/) {
 		return 1;
 	} else {
@@ -569,6 +573,10 @@ sub IsSha1 {
 sub IsMd5 {
 	my $string = shift;
 
+	if (!$string) {
+		return 0;
+	}
+
 	if ($string =~ m/[a-fA-F0-9]{32}/) {
 		return 1;
 	} else {
@@ -578,6 +586,10 @@ sub IsMd5 {
 
 sub IsFingerprint {
 	my $string = shift;
+
+	if (!$string) {
+		return 0;
+	}
 
 	if ($string =~ m/[a-fA-F0-9]{16}/) {
 		return 1;
