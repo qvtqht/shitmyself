@@ -240,8 +240,13 @@ sub GetItemTemplate {
 		}
 
 		$alias = HtmlEscape($alias);
+		my $itemTemplate = '';
 
-		my $itemTemplate = GetTemplate("itemvote.template");
+		if ($file{'vote_buttons'}) {
+			$itemTemplate = GetTemplate("itemvote.template");
+		} else {
+			$itemTemplate = GetTemplate("item.template");
+		}
 
 		my $itemClass = "txt $signedCss";
 
@@ -328,6 +333,8 @@ sub GetItemPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
+	$file{'vote_buttons'} = 1;
+
 	my $itemTemplate = GetItemTemplate(\%file);
 
 	if ($itemTemplate) {
@@ -357,7 +364,7 @@ sub GetItemPage {
 		$fileContents = GetFile($file{'file_path'});
 
 		$replyForm = GetTemplate('reply.template');
-		$replyFooter = "&gt;" . $file{'file_hash'} . "\n\n";
+		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
 		$replyTo = $file{'file_hash'};
 
 		$prefillText = "";
