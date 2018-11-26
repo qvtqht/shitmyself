@@ -315,14 +315,17 @@ function saveId() {
 
 		var avatar = '';
 
-		var char1 = myFingerprint.substr(12, 1);
-		var char2 = myFingerprint.substr(13, 1);
-		var char3 = myFingerprint.substr(14, 1);
+//		var char1 = myFingerprint.substr(12, 1);
+//		var char2 = myFingerprint.substr(13, 1);
+//		var char3 = myFingerprint.substr(14, 1);
 
-		char1 = hexToChar(char1);
-		char2 = hexToChar(char2);
-		char3 = hexToChar(char3);
+		//char1 = hexToChar(char1);
+		//char2 = hexToChar(char2);
+		//char3 = hexToChar(char3);
 		//char4 = hexToChar(char4);
+
+		var char1 = '*';
+		var char2 = '*';
 
 		avatar = ''
 
@@ -330,7 +333,7 @@ function saveId() {
 			+ '<span class=icon>'
 			+ '<font color="#' + color2 + '">' + char1 + '</font>'
 			+ '<font color="#' + color3 + '">' + char2 + '</font>'
-			+ '<font color="#' + color4 + '">' + char3 + '</font>'
+			//+ '<font color="#' + color4 + '">' + char3 + '</font>'
 			+ '</span>'
 			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
 			+ '</span>';
