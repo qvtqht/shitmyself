@@ -1,6 +1,6 @@
 <!-- reply.template -->
 <form class=reply action="gracias.html">
-    <textarea rows=4 cols=80 style="width: 100%; height: 5ex;" name="comment">$replyFooter</textarea><br>
+    <textarea rows=4 cols=80 style="width: 100%;" name="comment">$replyFooter</textarea><br>
     <span id=replySignedContainer></span><input type=submit value="Reply Unsigned">
     <input type=hidden name=replyto value="$replyTo">
     <p><b>To reply using standalone GPG,</b> ensure that you include

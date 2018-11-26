@@ -240,8 +240,13 @@ sub GetItemTemplate {
 		}
 
 		$alias = HtmlEscape($alias);
+		my $itemTemplate = '';
 
-		my $itemTemplate = GetTemplate("itemvote.template");
+		if ($file{'vote_buttons'}) {
+			$itemTemplate = GetTemplate("itemvote.template");
+		} else {
+			$itemTemplate = GetTemplate("item.template");
+		}
 
 		my $itemClass = "txt $signedCss";
 
@@ -328,6 +333,8 @@ sub GetItemPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
+	$file{'vote_buttons'} = 1;
+
 	my $itemTemplate = GetItemTemplate(\%file);
 
 	if ($itemTemplate) {
@@ -357,7 +364,7 @@ sub GetItemPage {
 		$fileContents = GetFile($file{'file_path'});
 
 		$replyForm = GetTemplate('reply.template');
-		$replyFooter = "&gt;" . $file{'file_hash'} . "\n\n";
+		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
 		$replyTo = $file{'file_hash'};
 
 		$prefillText = "";
@@ -776,9 +783,11 @@ sub GetReadPage {
 
 	my @files;
 
+	my $authorKey;
+
 	if (defined($pageType)) {
 		if ($pageType eq 'author') {
-			my $authorKey = shift;
+			$authorKey = shift;
 			my $whereClause = "WHERE author_key='$authorKey'";
 
 			my $authorAliasHtml = GetAlias($authorKey);
@@ -827,6 +836,18 @@ sub GetReadPage {
 	$txtIndex .= $htmlStart;
 
 	$txtIndex .= GetTemplate('maincontent.template');
+
+	if ($pageType eq 'author') {
+		my $userInfo = GetTemplate('userinfo.template');
+
+		my $authorAliasHtml = GetAlias($authorKey);
+		my $authorAvatarHtml = GetAvatar($authorKey);
+
+		$userInfo =~ s/\$alias/$authorAliasHtml/;
+		$userInfo =~ s/\$fingerprint/$authorKey/;
+		
+		$txtIndex .= $userInfo;
+	}
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -1248,6 +1269,7 @@ sub MakeStaticPages {
 
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
+	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 
 
 	# Manual page

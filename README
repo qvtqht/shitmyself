@@ -47,9 +47,27 @@ requirements
 * URI::Escape
 * HTML::Parser
 * Digest::MD5
+* Digest::SHA
 * DBI
 
-On Debian-derived, apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl
+Debian-derived
+==============
+uri-encode-perl
+libany-uri-escape-perl
+libhtml-parser-perl
+libdbd-sqlite3-perl
+sqlite3
+lighttpd
+gnupg
+gnupg2
+
+Redhat/Centos/Fedora
+======
+perl-Digest-MD5
+perl-Digest-SHA
+perl-HTML-Parser
+perl-DBD-SQLite
+perl-URI-Encode
 
 known issues
 ============

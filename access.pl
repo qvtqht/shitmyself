@@ -358,11 +358,18 @@ sub ProcessAccessLog {
 			#					remove =on
 			#					urldecode
 			#						parse as a vote record
+			#
+			WriteLog("/action/vote2.html");
+	
 			my $votesQuery = substr($file, index($file, '?') + 1);
 			my @voteAtoms = split('&', $votesQuery);
 			foreach my $voteAtom (@voteAtoms) {
+				WriteLog($voteAtom);
+
 				$voteAtom =~ s/=on$//;
 				$voteAtom = uri_decode($voteAtom);
+
+				WriteLog($voteAtom);
 
 				my @voteLines = ( $voteAtom =~ m/^addtag\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
 				if (@voteLines) {

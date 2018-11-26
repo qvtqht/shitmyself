@@ -3,6 +3,8 @@
 <p>Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
 </noscript>
 
+<p id=loading style="color: green;">Loading...</p>
+
 <!-- current identity -->
 <form id=formCurId style="display: none">
     <fieldset style="display: inline">

@@ -167,7 +167,7 @@ sub IndexFile {
 
 		# look for quoted message ids
 		{
-			if ($message =~ m/^\>([0-9a-fA-F]{40})/) {
+			if ($message =~ m/^\>>([0-9a-fA-F]{40})/) {
 				if (IsSha1($1)) {
 					$parentHash = $1;
 				}

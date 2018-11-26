@@ -95,6 +95,11 @@ function showHideForms() {
 			copyPrivButton.disabled = true;
 		}
 	}
+
+	var loading = document.getElementById('loading');
+	if (loading) {
+		loading.style.display = 'none';
+	}
 }
 
 showHideForms();
