@@ -587,7 +587,7 @@ sub DBAddAddedTimeRecord {
 	my $addedTime = shift;
 	chomp $addedTime;
 
-	if (!$addedTime =~ m/[0-9]{9-10}/) { #todo is this clean enough?
+	if (!$addedTime =~ m/\d{9,10}/) { #todo is this clean enough?
 		WriteLog('DBAddAddedTimeRecord called with invalid parameter! returning');
 		return;
 	}
