@@ -164,7 +164,7 @@ sub GetVoterTemplate {
 
 			my $class = "pos";
 
-			my @flags = split("\n", GetFile('config/flags'));
+			my @flags = split("\n", GetConfig('flags'));
 
 			if (grep($_ eq $tag, @flags)) {
 				$class = "neg";
