@@ -183,6 +183,12 @@ sub IndexFile {
 			my $lineCount = @voteLines / 4;
 
 			if (@voteLines) {
+				if ($isSigned) {
+					$message = "$gpgKey is adding $lineCount votes:\n";
+				} else {
+					$message = "A mysterious stranger is adding $lineCount votes:\n";
+				}
+
 				while(@voteLines) {
 					my $fileHash   = shift @voteLines;
 					my $ballotTime = shift @voteLines;
@@ -195,12 +201,8 @@ sub IndexFile {
 					} else {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 					}
-				}
 
-				if ($isSigned) {
-					$message = "$gpgKey has added $lineCount votes.";
-				} else {
-					$message = "A mysterious stranger has added $lineCount votes.";
+					$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
 				}
 
 				DBAddVoteRecord('flush');
