@@ -378,6 +378,8 @@ sub ProcessAccessLog {
 					my $voteValue  = shift @voteLines;
 					my $csrf = shift @voteLines;
 
+					#todo my $voteBallot .= "$fileHash/$ballotTime/$voteValue
+
 					my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
 
 					my $currentTime = time();
@@ -388,6 +390,8 @@ sub ProcessAccessLog {
 
 						$newItemCount++;
 					}
+
+					#todo PutFile($newPathHere, $voteBallot);
 				}
 			}
 		}
