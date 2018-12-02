@@ -218,7 +218,7 @@ sub GetItemTemplate {
 		my $isAdmin = 0;
 
 		my $message;
-		if ($gpgKey) {
+		if (-e "./cache/message/$gitHash.message") {
 			$message = GetFile("./cache/message/$gitHash.message");
 		} else {
 			$message = GetFile($file{'file_path'});
@@ -539,7 +539,7 @@ sub GetIndexPage {
 			my $isAdmin = 0;
 
 			my $message;
-			if ($gpgKey) {
+			if (-e "./cache/message/$gitHash.message") {
 				$message = GetFile("./cache/message/$gitHash.message");
 			} else {
 				$message = GetFile($file);

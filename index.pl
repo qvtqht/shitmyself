@@ -207,6 +207,8 @@ sub IndexFile {
 
 				DBAddVoteRecord('flush');
 
+
+
 				#$isAction = 1;
 			}
 		}
@@ -218,10 +220,10 @@ sub IndexFile {
 			$isPubKey = 0;
 		}
 
+		PutFile("./cache/message/$gitHash.message", $message);
+
 		if ($isSigned) {
 			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash, $isPubKey);
-
-			PutFile("./cache/message/$gitHash.message", $message);
 		} else {
 			DBAddItem ($file, $itemName, '', $gitHash, $parentHash, 0);
 		}
