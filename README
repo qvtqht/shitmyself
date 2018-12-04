@@ -87,3 +87,10 @@ when replying anonymously, footer shows up twice if you leave it in the textarea
 	* This is why the wiki checkbox is disabled for now.
 
 * When an encrypted message has multiple recipients, only the first is used.
+
+terminology
+===========
+author = anyone with a private key who has posted at least one item
+item = a text file with some text in it
+tag = a string which can be applied to items as an indicator of its properties
+vote = an application of a tag to an item
