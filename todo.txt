@@ -1,3 +1,6 @@
+[Admin] has assigned a weight of [100] to [ABC]
+abc can assign a weight of up to 100 to anyone else?
+
 When listing replies, we can strip the >parenthash part from replies
 	while leaving it in the detail view for that comment
 
