@@ -177,27 +177,6 @@ function copyTextToClipboard(textareaId) {
   });
 }
 
-//function peekAndCopy(textareaId) {
-//// this will allow the user to see the private key form until it loses focus
-//// only hides it if still logged in
-//
-//	var textarea = document.getElementById(textareaId);
-//	if (textarea) {
-//		textarea.style.display='block';
-//
-//		textarea.onblur = function(){
-//			var textarea = document.getElementById(textareaId);
-//			if (textarea) {
-//				textarea.style.display='none';
-//			}
-//		};
-//
-//		textarea.focus();
-//
-//		copyTextToClipboard(textareaId);
-//	}
-//}
-
 function getPrivateKey() {
 	var privateKey = localStorage.getItem("privatekey");
 
@@ -269,14 +248,6 @@ function popId() {
 	showHideForms();
 }
 
-//function getAvatar() {
-//    var avatar = localStorage.getItem("avatar");
-//    if (avatar === null || avatar.length === 0) {
-//        return null;
-//    } else {
-//        return avatar;
-//    }
-//}
 function setAvatar(avatar) {
 	window.localStorage.setItem("avatar", avatar);
 }
@@ -381,30 +352,6 @@ function saveId() {
 	}
 }
 
-//function pushMessage(message) {
-//	var ul = document.getElementById("messages");
-//	if (ul) {
-//		var li = document.createElement("li");
-//		li.appendChild(document.createTextNode(message));
-//		ul.appendChild(li);
-//	}
-//}
-//
-
-
-//
-//function getIdFingerprint() {
-//	var privkey = getPrivateKey();
-//
-//	var privKeyObj = openpgp.key.readArmored(privkey);;
-//
-//	var pubKeyObj = privKeyObj.keys[0].toPublic();
-//
-//	var fingerprint = pubKeyObj.primaryKey.fingerprint;
-//
-//	return fingerprint;
-//}
-
 function setPrivateKey(privateKey) {
 	window.localStorage.setItem("privatekey", privateKey);
 }
@@ -466,11 +413,7 @@ function makePrivateKey(username, bits) {
 					}
 
 					setPublicKey(key.publicKeyArmored);
-//
-//					if (pubTextbox) {
-//						pubTextbox.value = key.publicKeyArmored;
-//					}
-//
+
 					saveId();
 
 					var cbMakeProfile = document.getElementById('pubNewProfile');
@@ -486,8 +429,6 @@ function makePrivateKey(username, bits) {
 
 
 					var endDate = new Date();
-
-					//statusBox.value = statusBox.value + "\n" + "Finished! " + (endDate.getTime() - startDate.getTime()) + "ms";
 				}
 			);
 		} else {
@@ -502,13 +443,7 @@ function makeKeyFromInputs() {
 	var privkey = getPrivateKey();
 
 	if (privkey) {
-//		var sure = confirm('Another identity already exists. Overwrite?');
-//
-//		if (sure == true) {
 		removeStoredKeys();
-//		} else {
-//			return;
-//		}
 	}
 
 	var user = document.getElementById('name').value;
