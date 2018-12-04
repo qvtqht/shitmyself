@@ -173,11 +173,11 @@ sub IndexFile {
 				}
 			}
 		}
-		#addtag/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
+		#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
 		#look for votes
 		{
-			my @voteLines = ( $message =~ m/^addtag\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
+			my @voteLines = ( $message =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
 			#								 prefix /file hash         /time     /tag      /csrf
 
 			my $lineCount = @voteLines / 4;
