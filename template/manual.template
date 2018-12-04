@@ -25,7 +25,6 @@
 <ul>
     <li>Actions do not take effect immediately.</li>
     <li>New profiles will 404 until something is posted.</li>
-    <li>Top tags are listed, but the links 404 for now.</li>
 </ul>
 
 <a name=gpg><h3>How to use GPG</h3></a>
