@@ -175,14 +175,38 @@ sub IndexFile {
 		}
 		#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
+		#look for addweight, which adds a voting weight for a user
+		{
+			my @weightLines = ( $message =~ m/^addweight\/([0-9a-fA-F]{16})\/([0-9]+)/mg );
+
+			if (@weightLines) {
+				my $lineCount = @weightLines / 2;
+
+				if ($isSigned) {
+					if ($gpgKey = GetAdminKey()) {
+						while(@weightLines) {
+							my $voterId = shift @weightLines;
+							my $voterWt = shift @weightLines;
+
+							DBAddVoteWeight($voterId, $voterWt);
+						}
+
+						DBAddVoteWeight('flush');
+
+						$message = "Voting weight has been set for one or more voters.";
+					}
+				}
+			}
+		}
+
 		#look for votes
 		{
 			my @voteLines = ( $message =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
 			#								 prefix /file hash         /time     /tag      /csrf
 
-			my $lineCount = @voteLines / 4;
-
 			if (@voteLines) {
+				my $lineCount = @voteLines / 4;
+
 				if ($isSigned) {
 					$message = "$gpgKey is adding $lineCount votes:\n";
 				} else {
