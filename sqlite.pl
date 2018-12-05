@@ -53,12 +53,16 @@ sub SqliteMakeTables() {
 #	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
 #	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
-	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value);");
+	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 	SqliteQuery("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
+	SqliteQuery("CREATE UNIQUE INDEX vote_weight_unique ON vote_weight(key);");
+
 
 	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
 	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
+	SqliteQuery("CREATE VIEW vote_weighed AS SELECT vote.*, vote_weight.vote_weight FROM vote LEFT JOIN vote_weight ON (vote.signed_by = vote_weight.key)");
+
 	SqliteQuery("
 		CREATE VIEW item_flat AS
 			SELECT
@@ -159,9 +163,9 @@ sub DBGetVotesTable {
 
 	my $query;
 	if ($fileHash) {
-		$query = "SELECT file_hash, ballot_time, vote_value, signed_by FROM vote WHERE file_hash = '$fileHash';";
+		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = '$fileHash';";
 	} else {
-		$query = "SELECT file_hash, ballot_time, vote_value, signed_by FROM vote;";
+		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed;";
 	}
 
 	my $result = SqliteQuery($query);
@@ -752,8 +756,19 @@ sub DBGetItemVoteTotals {
 
 	my $fileHashSql = SqliteEscape($fileHash);
 
-	my $query = "SELECT vote_value, count(vote_value) vote_count FROM vote " .
-		" WHERE file_hash = '$fileHashSql' GROUP BY vote_value ORDER BY vote_count DESC;";
+	my $query = "
+		SELECT
+			vote_value,
+			SUM(IFNULL(vote_weight,1)) AS vote_weight
+		FROM
+			vote_weighed
+		WHERE
+			file_hash = '$fileHashSql'
+		GROUP BY
+			vote_value
+		ORDER BY
+			vote_weight DESC;
+	";
 
 	my %voteTotals = SqliteGetHash($query);
 
