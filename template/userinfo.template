@@ -1,6 +1,6 @@
 <table>
 <tr><td>name:</td><td>$alias</td>
 <tr><td>fingerprint:</td><td>$fingerprint</td>
-<tr><td>post count:</td><td>$postcount</td></tr>
-<tr><td>vote count:</td><td>$votecount</td></tr>
+<!--<tr><td>post count:</td><td>$postcount</td></tr>
+<tr><td>vote count:</td><td>$votecount</td></tr>-->
 </table>
