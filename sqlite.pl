@@ -27,6 +27,7 @@ sub SqliteUnlinkDb {
 
 #schema
 sub SqliteMakeTables() {
+	SqliteQuery("CREATE TABLE added_time(file_hash, add_timestamp);");
 	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
 	SqliteQuery("CREATE TABLE author_alias(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +36,7 @@ sub SqliteMakeTables() {
 		is_admin,
 		fingerprint
 	)");
+	SqliteQuery("CREATE TABLE vote_weight(key UNIQUE, vote_weight)");
 	SqliteQuery("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,
@@ -42,12 +44,10 @@ sub SqliteMakeTables() {
 		author_key,
 		file_hash UNIQUE,
 		parent_hash,
-		is_pubkey,
-		last_bump
+		is_pubkey
 	)");
-	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
-	SqliteQuery("CREATE TABLE added_time(file_hash, add_timestamp);");
+	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, vote_weight, signed_by)");
 +#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 #	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 #	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
