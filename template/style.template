@@ -74,6 +74,9 @@ div.txt {
 .admin a .avatar {
 	color: green;
 }
+.accepted {
+	border: green 3pt;
+}
 details.txt a.header {
 	font-family: monospace;
 	font-weight: bold;
