@@ -47,7 +47,7 @@ sub SqliteMakeTables() {
 		is_pubkey
 	)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
-	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, vote_weight, signed_by)");
+	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
 +#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
 #	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
 #	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
@@ -443,13 +443,12 @@ sub DBAddItem {
 #	}
 }
 
-sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of now
+sub DBAddVoteWeight {
 	state $query;
-#	state $tagQuery;
 
-	my $voteValue = shift;
+	my $key = shift;
 
-	if ($voteValue eq 'flush') {
+	if ($key eq 'flush') {
 		WriteLog("DbAddVoteWeight(flush)");
 
 		if ($query) {
@@ -459,14 +458,6 @@ sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of
 
 			$query = '';
 		}
-#
-#		if ($tagQuery) {
-#			$tagQuery .= ';';
-#
-#			SqliteQuery($tagQuery);
-#
-#			$tagQuery = '';
-#		}
 
 		return;
 	}
@@ -478,24 +469,16 @@ sub DBAddVoteWeight { #todo test this function, as it is apparently unused as of
 
     my $weight = shift;
 
-	$voteValue = SqliteEscape($voteValue);
+	$key = SqliteEscape($key);
 	$weight = SqliteEscape($weight);
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO tag(vote_value, weight) VALUES ";
+		$query = "INSERT OR REPLACE INTO vote_weight(key, vote_weight) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= "('$voteValue', '$weight')";
-#
-#	if (!$tagQuery) {
-#		$tagQuery = "INSERT OR REPLACE INTO tag(vote_value, weight) VALUES ";
-#	} else {
-#		$tagQuery .= ",";
-#	}
-#
-#	$tagQuery .= "('$voteValue', '$weight')";
+	$query .= "('$key', '$weight')";
 }
 
 sub DBAddVoteRecord {
