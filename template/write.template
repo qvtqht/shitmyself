@@ -7,8 +7,8 @@
 
     <label for="comment">Enter some text to send here:</label>
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
-    <span id=signAndPost></span>
     <input type=submit value="Post Without Signing" onclick="" id=addtext>
+    <span id=signAndPost></span>
     $extraFields
         <p>Instructions for command-line GPG users</p>
         <ul>
