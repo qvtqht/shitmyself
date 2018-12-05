@@ -107,7 +107,7 @@ sub GetPageHeader {
 
 	my $adminKey = GetAdminKey();
 	if ($adminKey) {
-		$menuTemplate .= GetMenuItem('/author/' . $adminKey, 'Blog');
+		$menuTemplate .= GetMenuItem('/author/' . $adminKey, 'Admin\'s Blog');
 	}
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
