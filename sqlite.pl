@@ -88,6 +88,17 @@ sub SqliteMakeTables() {
 			GROUP BY file_hash, vote_value
 			ORDER BY vote_count DESC
 	");
+
+	SqliteQuery("
+		CREATE VIEW author_flat AS
+			SELECT
+				author.key,
+				vote_weight.vote_weight,
+				author_alias.alias
+			FROM author
+				LEFT JOIN vote_weight ON (author.key = vote_weight.key)
+				LEFT JOIN author_alias ON (author.key = author_alias.key)
+	");
 }
 
 sub SqliteQuery2 {
