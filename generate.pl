@@ -243,7 +243,7 @@ sub GetItemTemplate {
 		my $itemTemplate = '';
 
 		if ($file{'vote_buttons'}) {
-			$itemTemplate = GetTemplate("itemvote.template");
+			$itemTemplate = $itemTemplate = GetTemplate("item.template") . GetTemplate("itemvote.template");
 		} else {
 			$itemTemplate = GetTemplate("item.template");
 		}
@@ -711,7 +711,7 @@ sub GetRssPage {
 #
 #			$alias = HtmlEscape($alias);
 #
-#			my $itemTemplate = GetTemplate("itemvote.template");
+#			my $itemTemplate = GetTemplate("item.template") . GetTemplate("itemvote.template");
 #			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 #
 #			my $itemClass = "txt $signedCss";

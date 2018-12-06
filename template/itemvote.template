@@ -1,12 +1,6 @@
-<div class="$itemClass">
-<p>$itemText</p>
-<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a>
-$authorLink</p>
 <form method=GET action="/action/vote2.html" name=voteon$fileHash id=voteon$fileHash>
-$voterButtons
-<br>
-<span id=voteAsUser></span>
-<input type=submit value="Vote Anonymously">
-
+    $voterButtons
+    <br>
+    <span id=voteAsUser></span>
+    <input type=submit value="Vote Anonymously">
 </form>
-</div><hr>
