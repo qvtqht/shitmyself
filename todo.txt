@@ -1,3 +1,5 @@
+Add a message that appears the first time someone is posting something, like on HN
+
 [Admin] has assigned a weight of [100] to [ABC]
 abc can assign a weight of up to 100 to anyone else?
 
