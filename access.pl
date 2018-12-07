@@ -233,7 +233,7 @@ sub ProcessAccessLog {
 
 						foreach my $ln (@messageLines) {
 							$ln = trim($ln);
-							if ($ln =~ />[0-9a-fA-F]{40}/) {
+							if ($ln =~ />>[0-9a-fA-F]{40}/) {
 								WriteLog("\n\n\n\n\nOMG\n\n\n\n");
 
 							}
