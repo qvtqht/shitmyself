@@ -1,9 +1,8 @@
 <!-- identity.template -->
-<noscript><p class=warning><strong>Attention! You must use PGP/GPG to use identity features without JavaScript, which appears to be disabled in your browser.</strong></p>
-<p>Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
+<noscript>
+<p class=warning><strong>In order to use identity features without JavaScript, use GPG/PGP.</strong><br><br>
+Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
 </noscript>
-
-<p id=loading style="color: green;">Loading...</p>
 
 <!-- current identity -->
 <form id=formCurId style="display: none">
