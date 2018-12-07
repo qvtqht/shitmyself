@@ -1,3 +1,6 @@
+Merge vote and reply forms
+	With JS, make the checkboxes appear/disappear inside the textbox as addvote/ lines
+
 Add a message that appears the first time someone is posting something, like on HN
 
 [Admin] has assigned a weight of [100] to [ABC]
@@ -60,8 +63,6 @@ mod_security can interfere with some signed posts
 
 it would be nice to cut down the posting time from 1-2 minutes to instant.
 
-On the profile page, the items are not displayed in reverse chron order. They also don't appear right away, on the first update.
-
 "create profile" should go to a prefilled textbox with profile template OR to a page to edit profile
 
 Some of the buttons can probably be made full width
@@ -76,9 +77,6 @@ Sometimes on Android the button push is cancelled by the keyboard retract
 			Expected: Posted
 			Actual: First tab is usually ignored
 
-sign with pgp button should be hidden for nojs users
-	write-small
-
 #bug on edge: tag links change colors, but flag links do not
 
 
@@ -87,8 +85,6 @@ If only one page hide pagination buttons
 
 Fix the vote/tag links
 	Js: implement
-
-REPLIES
 
 Set Identity shou1d update the pub1i< key to <orrespond
 
@@ -123,8 +119,6 @@ Feeds list
 
 Text::Markdown?
 
-Change admin.key to ./admin/*.txt
-
 Newly dropped text files should get their own added time.
 	Adjust the sorting to be based on added time, then filesystem path
 	Add an ./incoming dir for new textfiles that are manually copied?
@@ -134,9 +128,6 @@ Elaborate on setting up a dev environment
     IntelliJ
     sqlite3
     lighttpd
-
-
-Save written files to log/written.log
 
 Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
 	If there is only one post, automatically redirect to it
@@ -153,15 +144,14 @@ Make updates instant
 
 Make adding new views easier
 Add support for linking sister sites
-	Add liste of sites in config(?)
+	Add list of sites in config(?)
 	Add page
 	List them all on page
 	Add menu item for page
-Replace GetFile with GetConfig when config files are involved [x]
-	Add config/default/ tree
-	Add generation of default values to GetConfig
-		Site name
-		Site logo
+
+Add generation of default values to GetConfig
+	Site name
+	Site logo
 
 
 Cookie auth via secret URL per public key, encrypted for that key
