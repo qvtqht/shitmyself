@@ -431,6 +431,8 @@ sub GetItemPage {
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
+	$txtIndex =~ s/<\/body>/<\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+
 	return $txtIndex;
 }
 

@@ -1,7 +1,8 @@
 <!-- reply.template -->
-<form class=reply action="gracias.html">
-    <textarea rows=4 cols=80 style="width: 100%;" name="comment">$replyFooter</textarea><br>
-    <span id=replySignedContainer></span><input type=submit value="Reply Unsigned">
+<form class=reply action="gracias.html" id=compose>
+    <textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
+    <span id=replySignedContainer></span>
+    <input type=submit value="Reply Unsigned">
     <input type=hidden name=replyto value="$replyTo">
     <p><b>To reply using standalone GPG,</b> ensure that you include
     the line beginning with <tt>&gt;</tt> inside your signed message, by itself.</p>

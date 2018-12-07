@@ -28,8 +28,13 @@ function getAvatar() {
 
 if (getUserFp()) {
 	var sp = document.getElementById('signAndPost');
+	var actName = 'Post as ';
+	if (!sp) {
+		sp = document.getElementById('replySignedContainer');
+		actName = 'Reply as ';
+	}
 	if (sp) {
-		sp.innerHTML = '<button onclick="signMessage();">Post as ' + getAvatar() + '</button>';
+		sp.innerHTML = '<button onclick="signMessage();">' + actName + getAvatar() + '</button>';
 	}
 }
 
