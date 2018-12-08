@@ -102,8 +102,31 @@
 
 <p>You have now aliased your name to your key fingerprint.</p>
 
+<a name=commands><h3>Commands</h3></a>
 
-<a name=cli><h3>Command Line Instructions</h3></a>
+<h4>Introduction</h4>
+
+<p>Commands are in the form of simple tokens, length-constricted, ASCII only.</p>
+
+<h4>Adding a Vote</h4>
+
+<p>Voting is the process of applying a tag to an item. A voting token has the following parameters</p>
+
+<p><code>addvote/hash/time/tag/checksum</code></p>
+
+<p>The checksum is generated on the server, using the following formula:</p>
+
+<code>MD5( concat(file hash, ballot creation time, secret) )</code>
+
+<p>The secret string is stored in config/secret, and a random one is automatically generated if the config is empty.</p>
+
+<p>Example:</p>
+
+<pre>
+addvote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa
+        item hash                                time       tag   checksum</pre>
+
+<a name=gpgcli><h3>Signing With Command-Line GPG</h3></a>
 
 <h4>Check GPG Version</h4>
 
