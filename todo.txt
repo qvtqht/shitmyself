@@ -1,3 +1,19 @@
+If something is already signed, don't re-sign it again
+(Write page)
+
+Hide voting, weight-setting, and other messages from home page
+	Add an /all page that displays a feed of everything
+
+In reply box, if >> line goes missing, replace it somehow without annoying the user.
+
+When private key is pasted into [restore] textarea,
+	automatically check it for presence of private key
+		restore if it validates
+
+Make access.pl make a new text file instead of adding to votes.log
+
+Ensure caches are deleted when a vote occurs
+
 Merge vote and reply forms
 	With JS, make the checkboxes appear/disappear inside the textbox as addvote/ lines
 
