@@ -60,7 +60,23 @@ sub SqliteMakeTables() {
 
 	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
 	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
-	SqliteQuery("CREATE VIEW vote_weighed AS SELECT vote.*, vote_weight.vote_weight FROM vote LEFT JOIN vote_weight ON (vote.signed_by = vote_weight.key)");
+	SqliteQuery("
+		CREATE VIEW vote_weighed AS
+			SELECT
+				vote.file_hash,
+				vote.ballot_time,
+				vote.vote_value,
+				vote.signed_by,
+				sum(ifnull(vote_weight.vote_weight, 1)) vote_weight
+			FROM
+				vote
+				LEFT JOIN vote_weight ON (vote.signed_by = vote_weight.key)
+			GROUP BY
+				vote.file_hash,
+				vote.ballot_time,
+				vote.vote_value,
+				vote.signed_by
+	");
 
 	SqliteQuery("
 		CREATE VIEW item_flat AS
