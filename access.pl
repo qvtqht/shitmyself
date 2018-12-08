@@ -379,6 +379,8 @@ sub ProcessAccessLog {
 	
 			my $votesQuery = substr($file, index($file, '?') + 1);
 			my @voteAtoms = split('&', $votesQuery);
+			my $newFile = '';
+
 			foreach my $voteAtom (@voteAtoms) {
 				WriteLog($voteAtom);
 
@@ -400,15 +402,25 @@ sub ProcessAccessLog {
 
 					my $currentTime = time();
 					if ($csrf eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
-						my $voteEntry = "$fileHash|$ballotTime|$voteValue";
+						#my $voteEntry = "$fileHash|$ballotTime|$voteValue";
+						#AppendFile("log/votes.log", $voteEntry);
 
-						AppendFile("log/votes.log", $voteEntry);
+						my $newLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
+						if ($newFile) {
+							$newFile .= "\n";
+						}
+						$newFile .= $newLine;
 
 						$newItemCount++;
 					}
-
-					#todo PutFile($newPathHere, $voteBallot);
 				}
+			}
+
+			if ($newFile) {
+				my $filename;
+				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
+
+				PutFile('html/txt/' . $filename, $newFile);
 			}
 		}
 
