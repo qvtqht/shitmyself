@@ -61,7 +61,7 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <form id=formprivkey style="display: none">
     <fieldset style="display: inline">
         <legend>Private Key</legend>
-        <textarea cols=61 rows=10 id=privatekey spellcheck=false></textarea><br>
+        <textarea cols=61 rows=10 id=privatekey autocomplete=off spellcheck=false></textarea><br>
         <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
         <input type=button id=copypriv value="Copy Private Key" onClick="copyTextToClipboard('privatekey');"><br>
     </fieldset>
