@@ -1,4 +1,5 @@
 <form method=GET action="/action/vote2.html" name=voteon$fileHash id=voteon$fileHash>
+<p>To vote, check one or more of the boxes, then push the button.</p>
     $voterButtons
     <br>
     <span id=voteAsUser></span>
