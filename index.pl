@@ -175,11 +175,11 @@ sub IndexFile {
 		}
 		#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
-		#look for setweight, which adds a voting weight for a user
+		#look for addweight, which adds a voting weight for a user
 		#
-		# setweight/F82FCD75AAEF7CC8/20
+		# addweight/F82FCD75AAEF7CC8/20
 		{
-			my @weightLines = ( $message =~ m/^setweight\/([0-9a-fA-F]{16})\/([0-9]+)/mg );
+			my @weightLines = ( $message =~ m/^addweight\/([0-9a-fA-F]{16})\/([0-9]+)/mg );
 
 			if (@weightLines) {
 				my $lineCount = @weightLines / 2;
@@ -192,9 +192,9 @@ sub IndexFile {
 
 							DBAddVoteWeight($voterId, $voterWt);
 
-							my $reconLine = "setweight/$voterId/$voterWt";
+							my $reconLine = "addweight/$voterId/$voterWt";
 
-							$message =~ s/$reconLine/[Voting weight for $voterId has been set to $voterWt voters.]/g;
+							$message =~ s/$reconLine/[Voting weight for $voterId has been incremented by $voterWt voters.]/g;
 						}
 
 						DBAddVoteWeight('flush');

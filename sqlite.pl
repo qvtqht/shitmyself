@@ -36,7 +36,7 @@ sub SqliteMakeTables() {
 		is_admin,
 		fingerprint
 	)");
-	SqliteQuery("CREATE TABLE vote_weight(key UNIQUE, vote_weight)");
+	SqliteQuery("CREATE TABLE vote_weight(key, vote_weight)");
 	SqliteQuery("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,
@@ -56,7 +56,6 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 	SqliteQuery("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
-	SqliteQuery("CREATE UNIQUE INDEX vote_weight_unique ON vote_weight(key);");
 
 
 	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
