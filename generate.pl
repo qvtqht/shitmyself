@@ -667,8 +667,13 @@ sub GetReadPage {
 			my $authorAliasHtml = GetAlias($authorKey);
 			my $authorAvatarHtml = GetAvatar($authorKey);
 
-			$title = "Posts by or for $authorAliasHtml";
-			$titleHtml = "$authorAvatarHtml";
+			if ($authorKey eq GetAdminKey()) {
+				$title = "Admin's Blog (Posts by or for $authorAliasHtml)";
+				$titleHtml = "Admin's Blog ($authorAvatarHtml)";
+			} else {
+				$title = "Posts by or for $authorAliasHtml";
+				$titleHtml = "$authorAvatarHtml";
+			}
 
 			my %queryParams;
 			$queryParams{'where_clause'} = $whereClause;
@@ -678,6 +683,9 @@ sub GetReadPage {
 		if ($pageType eq 'tag') {
 			my $tagName = shift;
 			chomp($tagName);
+
+			$title = "$tagName, posts with tag";
+			$titleHtml = $title;
 
 			my @items = DBGetItemsForTag($tagName);
 			my $itemsList = "'" . join ("','", @items) . "'";
