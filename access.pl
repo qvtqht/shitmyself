@@ -73,6 +73,47 @@ sub AddHost {
 
 }
 
+sub GenerateFilenameFromTime {
+	# Generate filename from date and time
+	my $filename;
+	my $filenameDir;
+
+	my $dateYear = shift;
+	my $dateMonth = shift;
+	my $dateDay = shift;
+	my $timeHour = shift;
+	my $timeMinute = shift;
+	my $timeSecond = shift;
+
+	# Get the directory name
+	$filenameDir = $TXTDIR;
+
+	# The filename will be placed in sub-dirs based on date
+	$filename = "$dateYear/$dateMonth/$dateDay";
+
+	# Make any necessary directories
+	if (!-d "$TXTDIR$filename") {
+		system("mkdir -p $TXTDIR$filename");
+	}
+
+	#This is the full filename, except for the .txt extension
+	$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
+
+	# Make sure we don't clobber an existing file
+	# If filename exists, add (1), (2), and so on
+	my $filename_root = $filename;
+	my $i = 0;
+	while (-e $filenameDir . $filename . ".txt") {
+		$i++;
+		$filename = $filename_root . "(" . $i . ")";
+	}
+
+	#Add the .txt extension
+	$filename .= '.txt';
+
+	return $filename;
+}
+
 
 # ProcessAccessLog (
 #	access log file path
@@ -257,63 +298,38 @@ sub ProcessAccessLog {
 
 					# Generate filename from date and time
 					my $filename;
-					my $filenameDir;
+					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
-				  	# Get the directory name
-					$filenameDir = $TXTDIR;
 
-				  	# The filename will be placed in sub-dirs based on date
-					$filename = "$dateYear/$dateMonth/$dateDay";
-
-				  	# Make any necessary directories
-					if (!-d "$TXTDIR$filename") {
-						system("mkdir -p $TXTDIR$filename");
-					}
-
-				  	#This is the full filename, except for the .txt extension
-					$filename .= "/$dateYear$dateMonth$dateDay$timeHour$timeMinute$timeSecond";
-
-					WriteLog ("I'm going to put $filename into $filenameDir\n");
-
-					# Make sure we don't clobber an existing file
-					# If filename exists, add (1), (2), and so on
-					my $filename_root = $filename;
-					my $i = 0;
-					while (-e $filenameDir . $filename . ".txt") {
-						$i++;
-						$filename = $filename_root . "(" . $i . ")";
-					}
-
-				  	#Add the .txt extension
-					$filename .= '.txt';
+					WriteLog ("I'm going to put $filename\n");
 
 					# Try to write to the file, exit if we can't
-					if (PutFile($filenameDir . $filename, $message)) {
+					if (PutFile('./html/txt/' . $filename, $message)) {
 						#Get the hash for this file
-						my $fileHash = GetFileHash($filenameDir . $filename);
+						my $fileHash = GetFileHash('./html/txt/' . $filename);
 
 						#Add a line to the added.log that records the timestamp
 						my $logLine = $fileHash . '|' . time();
 						AppendFile('./log/added.log', $logLine);
 
-						#If we're doing replies, and there is a parent message specified...
-						if (GetConfig('replies') && $parentMessage) {
-							#... add it to parent.log
-							my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
-							AppendFile('./log/parent.log', $parentLogLine);
-						}
+#						#If we're doing replies, and there is a parent message specified...
+#						if (GetConfig('replies') && $parentMessage) {
+#							#... add it to parent.log
+#							my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
+#							AppendFile('./log/parent.log', $parentLogLine);
+#						}
 
 						#If we're doing instant updates, index the file right away
-						if (GetConfig('access_update')) {
-							IndexFile($filenameDir . $filename, 1);
-
-							IndexFile('flush');
-						}
+#						if (GetConfig('access_update')) {
+#							IndexFile('./html/txt/' . $filename, 1);
+#
+#							IndexFile('flush');
+#						}
 
 						# Add the file to git
 						#system("git add \"$filenameDir$filename\"");
 					} else {
-						WriteLog("WARNING: Could not open text file to write to ' . $filenameDir . $filename");
+						WriteLog("WARNING: Could not open text file to write to ' . $filename");
 					}
 				}
 			}
