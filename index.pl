@@ -191,11 +191,13 @@ sub IndexFile {
 							my $voterWt = shift @weightLines;
 
 							DBAddVoteWeight($voterId, $voterWt);
+
+							my $reconLine = "setweight/$voterId/$voterWt";
+
+							$message =~ s/$reconLine/[Voting weight for $voterId has been set to $voterWt voters.]/g;
 						}
 
 						DBAddVoteWeight('flush');
-
-						$message = "Voting weight has been set for one or more voters.";
 					}
 				}
 			}
@@ -204,23 +206,23 @@ sub IndexFile {
 		#look for votes
 		{
 			my @voteLines = ( $message =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
-			#								 prefix /file hash         /time     /tag      /csrf
+			#                                prefix  /file hash         /time     /tag      /csrf
 
 			if (@voteLines) {
 				my $lineCount = @voteLines / 4;
 
-				if ($isSigned) {
-					$message = "$gpgKey is adding $lineCount votes:\n";
-				} else {
-					$message = "A mysterious stranger is adding $lineCount votes:\n";
-				}
+#				if ($isSigned) {
+#					$message = "$gpgKey is adding $lineCount votes:\n";
+#				} else {
+#					$message = "A mysterious stranger is adding $lineCount votes:\n";
+#				}
 
 				while(@voteLines) {
 					my $fileHash   = shift @voteLines;
 					my $ballotTime = shift @voteLines;
 					my $voteValue  = shift @voteLines;
-					#my $csrf = shift @voteLines;
-					shift @voteLines;
+					my $csrf = shift @voteLines;
+					#shift @voteLines;
 
 					if ($isSigned) {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue, $gpgKey);
@@ -228,7 +230,9 @@ sub IndexFile {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 					}
 
-					$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
+					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
+					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
+					$message =~ s/$reconLine/[Vote for $fileHash at $ballotTime: $voteValue]/g;
 				}
 
 				DBAddVoteRecord('flush');
