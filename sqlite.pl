@@ -44,8 +44,7 @@ sub SqliteMakeTables() {
 		author_key,
 		file_hash UNIQUE,
 		parent_hash,
-		item_type,
-		is_pubkey
+		item_type
 	)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
 	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
@@ -456,6 +455,7 @@ sub DBAddItem {
 #		case 'pubkey':
 #		case 'admin':
 #		case 'vote':
+#		case 'reply':
 #			$itemType = SqliteEscape($itemType);
 #			break;
 #		default:
@@ -682,6 +682,8 @@ sub DBGetItemList {
 
 	#supported params:
 	#where_clause = where clause for sql query
+	#order_clause
+	#limit_clause
 
 	my $query;
 	$query = "
