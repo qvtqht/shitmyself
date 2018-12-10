@@ -1,5 +1,7 @@
-If something is already signed, don't re-sign it again
-(Write page)
+Change item-reply relationship from 1-m to m-m
+
+If something is already signed, don't re-sign it again (or ask)
+(Write page, reply page)
 
 Hide voting, weight-setting, and other messages from home page
 	Add an /all page that displays a feed of everything
