@@ -44,6 +44,7 @@ sub SqliteMakeTables() {
 		author_key,
 		file_hash UNIQUE,
 		parent_hash,
+		item_type,
 		is_pubkey
 	)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
@@ -439,33 +440,39 @@ sub DBAddItem {
         $query = '';
     }
 
-    my $itemName = shift;
+	my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
 	my $parentHash = shift;
-	my $isPubKey = shift;
+	my $itemType = shift;
 
 	$filePath = SqliteEscape($filePath);
 	$itemName = SqliteEscape($itemName);
 	$fileHash = SqliteEscape($fileHash);
 	$parentHash = SqliteEscape($parentHash);
-	if ($isPubKey) {
-		$isPubKey = 1;
-	} else {
-		$isPubKey = 0;
-	}
+	$itemType = SqliteEscape($itemType);
+#	switch($itemType) {
+#		case 'text':
+#		case 'pubkey':
+#		case 'admin':
+#		case 'vote':
+#			$itemType = SqliteEscape($itemType);
+#			break;
+#		default:
+#			$itemType = '';
+#	}
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, is_pubkey) VALUES ";
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, item_type) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
 	#todo clean up
 	if ($authorKey) {
-		$query .= "('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash', $isPubKey)"
+		$query .= "('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash', '$itemType')"
 	} else {
-		$query .= "('$filePath', '$itemName', NULL, '$fileHash', '$parentHash', $isPubKey)"
+		$query .= "('$filePath', '$itemName', NULL, '$fileHash', '$parentHash', '$itemType')"
 	}
 
 #	if ($parentHash) {

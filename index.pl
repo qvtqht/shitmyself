@@ -106,6 +106,7 @@ sub IndexFile {
 
 	my $gitHash;
 	my $isAdmin = 0;
+	my $itemType = 'text';
 
 	#my $isAction = 0;
 
@@ -172,6 +173,8 @@ sub IndexFile {
 					$parentHash = $1;
 				}
 			}
+
+			$itemType = 'reply';
 		}
 		#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
@@ -201,6 +204,8 @@ sub IndexFile {
 					}
 				}
 			}
+
+			$itemType = 'admin';
 		}
 
 		#look for votes
@@ -237,25 +242,21 @@ sub IndexFile {
 
 				DBAddVoteRecord('flush');
 
-
-
 				#$isAction = 1;
+				$itemType = 'vote'
 			}
 		}
 
-		my $isPubKey;
 		if ($alias) {
-			$isPubKey = 1;
-		} else {
-			$isPubKey = 0;
+			$itemType = 'pubkey';
 		}
 
 		PutFile("./cache/message/$gitHash.message", $message);
 
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash, $isPubKey);
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash, $itemType);
 		} else {
-			DBAddItem ($file, $itemName, '', $gitHash, $parentHash, 0);
+			DBAddItem ($file, $itemName, '',      $gitHash, $parentHash, $itemType);
 		}
 	}
 }
