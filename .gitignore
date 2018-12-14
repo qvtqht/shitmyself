@@ -1,2 +1,4 @@
 config/*
 html/*
+cache/*
+.idea/*
