@@ -1,4 +1,4 @@
 <div class="$itemClass">
 <p>$itemText</p>
-<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink</p>
+<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink $replyCount</p>
 </div>

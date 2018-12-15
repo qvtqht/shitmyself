@@ -354,7 +354,7 @@ sub GetItemPage {
 #		}
 	}
 
-	if ((GetConfig('replies') == 1 && ($file{'author_key'}) || GetConfig('replies_anon') == 1)) {
+	if (GetConfig('replies') == 1) {
 		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
 		my $replyFooter;
@@ -485,7 +485,7 @@ sub GetPageParams {
 		# Default = main home page title
 		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
 		$pageParams{'title_html'} = GetConfig('home_title');
-		$queryParams{'where_clause'} = "item_type = 'text'";
+		$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 	}
 
 	# Add the query parameters to the page parameters
@@ -599,6 +599,7 @@ sub GetIndexPage {
 			my $fileHash = GetFileHash($file);
 			my $itemName = TrimPath($file);
 #			my $ballotTime = time();
+
 			my $replyCount = $row->{'child_count'};
 
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
@@ -609,6 +610,7 @@ sub GetIndexPage {
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
 			$itemTemplate =~ s/\$by/$byString/g;
+
 			if ($replyCount) {
 				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
 			} else {
@@ -1350,7 +1352,7 @@ sub MakeClonePage {
 			my %queryParams;
 			my $offset = $i * $PAGE_LIMIT;
 
-			$queryParams{'where_clause'} = "WHERE item_type = 'text'";
+			$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 

@@ -270,14 +270,22 @@ sub ProcessAccessLog {
 
 				 	# Only if the "replies" config is enabled
 					if (GetConfig('replies')) {
-						my @messageLines = split("\n", $message);
+						my @replyLines = ( $message =~ m/^\>>([0-9a-fA-F]{40})/mg );
 
-						foreach my $ln (@messageLines) {
-							$ln = trim($ln);
-							if ($ln =~ />>[0-9a-fA-F]{40}/) {
-								WriteLog("\n\n\n\n\nOMG\n\n\n\n");
+						if (@replyLines) {
+							while(@replyLines) {
+								my $parentHash = shift @replyLines;
 
+								if (IsSha1($parentHash)) {
+									WriteLog("Found a parent comment, removing caches for $parentHash");
+									UnlinkCache(GetMyVersion() . "/file/$parentHash");
+									UnlinkCache("message/$parentHash.message");
+									UnlinkCache("gpg/$parentHash.cache");
+
+								}
 							}
+
+							DBAddItemParent('flush');
 						}
 					}
 #
@@ -320,11 +328,11 @@ sub ProcessAccessLog {
 #						}
 
 						#If we're doing instant updates, index the file right away
-#						if (GetConfig('access_update')) {
-#							IndexFile('./html/txt/' . $filename, 1);
-#
-#							IndexFile('flush');
-#						}
+						if (GetConfig('access_update')) {
+							IndexFile('./html/txt/' . $filename, 1);
+
+							IndexFile('flush');
+						}
 
 						# Add the file to git
 						#system("git add \"$filenameDir$filename\"");
