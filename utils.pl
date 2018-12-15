@@ -17,7 +17,7 @@ use Storable;
 my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
-my @dirsThatShouldExist = qw(log html txt spam admin key cache html/author html/action cache/message cache/gpg html/top config);
+my @dirsThatShouldExist = qw(log html html/txt spam admin key cache html/author html/action cache/message cache/gpg html/top config);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
