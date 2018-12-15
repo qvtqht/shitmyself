@@ -1201,8 +1201,9 @@ sub MakeStaticPages {
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
-
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
+
+	PutHtmlFile("$HTMLDIR/favicon.ico", '');
 }
 
 WriteLog ("GetReadPage()...");
