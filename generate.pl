@@ -342,18 +342,19 @@ sub GetItemPage {
 	}
 
 	if ($file{'child_count'}) {
+		WriteLog($file{'child_count'} . " REPLIES!!!");
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
 		$txtIndex .= "<hr>";
-
-		foreach my $replyItem (@itemReplies) {
-			my $replyTemplate = GetItemTemplate($replyItem);
-
-			$txtIndex .= $replyTemplate;
-		}
+#
+#		foreach my $replyItem (@itemReplies) {
+#			my $replyTemplate = GetItemTemplate($replyItem);
+#
+#			$txtIndex .= $replyTemplate;
+#		}
 	}
 
-	if (GetConfig('replies') == 1 && ($file{'author_key'} || GetConfig('replies_anon') == 1)) {
+	if ((GetConfig('replies') == 1 && ($file{'author_key'}) || GetConfig('replies_anon') == 1)) {
 		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
 		my $replyFooter;
@@ -384,12 +385,12 @@ sub GetItemPage {
 
 	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 
-	my $itemInfoTemplate = GetTemplate('iteminfo.template');
+	#my $itemInfoTemplate = GetTemplate('iteminfo.template');
 
 #	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
-	$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
+	#$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
 
-	$txtIndex .= $itemInfoTemplate;
+	#$txtIndex .= $itemInfoTemplate;
 
 	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
 	my $signedVotesTable = '';
@@ -484,6 +485,7 @@ sub GetPageParams {
 		# Default = main home page title
 		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
 		$pageParams{'title_html'} = GetConfig('home_title');
+		$queryParams{'where_clause'} = "item_type = 'text'";
 	}
 
 	# Add the query parameters to the page parameters
@@ -596,7 +598,7 @@ sub GetIndexPage {
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
 			my $itemName = TrimPath($file);
-			my $ballotTime = time();
+#			my $ballotTime = time();
 			my $replyCount = $row->{'child_count'};
 
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
@@ -1044,7 +1046,7 @@ sub GetPageLinks {
 		return $pageLinksFinal;
 	}
 
-	my $itemCount = DBGetItemCount("parent_hash = ''");
+	my $itemCount = DBGetItemCount("item_type = 'text'");
 
 	$pageLinks = "";
 
@@ -1335,7 +1337,7 @@ sub MakeClonePage {
 }
 
 {
-	my $itemCount = DBGetItemCount("parent_hash = ''");
+	my $itemCount = DBGetItemCount("item_type = 'text'");
 
 	#if ($itemCount > 0) {
 		my $i;
@@ -1348,7 +1350,7 @@ sub MakeClonePage {
 			my %queryParams;
 			my $offset = $i * $PAGE_LIMIT;
 
-			$queryParams{'where_clause'} = "WHERE parent_hash = ''";
+			$queryParams{'where_clause'} = "WHERE item_type = 'text'";
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 

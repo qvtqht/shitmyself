@@ -164,17 +164,21 @@ sub IndexFile {
 
 		my $itemName = TrimPath($file);
 
-		my $parentHash = '';
-
 		# look for quoted message ids
 		{
-			if ($message =~ m/^\>>([0-9a-fA-F]{40})/) {
-				if (IsSha1($1)) {
-					$parentHash = $1;
-				}
-			}
+			my @replyLines = ( $message =~ m/^\>>([0-9a-fA-F]{40})/mg );
 
-			$itemType = 'reply';
+			if (@replyLines) {
+				while(@replyLines) {
+					if (IsSha1($1)) {
+						my $parentHash = shift @replyLines;
+
+						DBAddItemParent($gitHash, $parentHash);
+					}
+				}
+
+				DBAddItemParent('flush');
+			}
 		}
 
 		#look for addweight, which adds a voting weight for a user
@@ -200,11 +204,11 @@ sub IndexFile {
 						}
 
 						DBAddVoteWeight('flush');
+
+						$itemType = 'admin';
 					}
 				}
 			}
-
-			$itemType = 'admin';
 		}
 
 		#look for votes
@@ -239,12 +243,11 @@ sub IndexFile {
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
 					$message =~ s/$reconLine/[Vote for $fileHash at $ballotTime: $voteValue]/g;
+
+					$itemType = 'vote'
 				}
 
 				DBAddVoteRecord('flush');
-
-				#$isAction = 1;
-				$itemType = 'vote'
 			}
 		}
 
@@ -255,9 +258,9 @@ sub IndexFile {
 		PutFile("./cache/message/$gitHash.message", $message);
 
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $parentHash, $itemType);
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemType);
 		} else {
-			DBAddItem ($file, $itemName, '',      $gitHash, $parentHash, $itemType);
+			DBAddItem ($file, $itemName, '',      $gitHash, $itemType);
 		}
 	}
 }

@@ -43,9 +43,9 @@ sub SqliteMakeTables() {
 		item_name,
 		author_key,
 		file_hash UNIQUE,
-		parent_hash,
 		item_type
 	)");
+	SqliteQuery("CREATE TABLE item_parent(item_hash, parent_hash)");
 	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
 	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
 +#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
@@ -58,7 +58,16 @@ sub SqliteMakeTables() {
 	SqliteQuery("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 
 
-	SqliteQuery("CREATE VIEW child_count AS select p.id, count(c.id) child_count FROM item p, item c WHERE p.file_hash = c.parent_hash GROUP BY p.id;");
+	SqliteQuery("
+		CREATE VIEW child_count AS
+		SELECT
+			parent_hash AS parent_hash,
+			COUNT(*) AS child_count
+		FROM
+			item_parent
+		GROUP BY
+			parent_hash
+	");
 	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
 	SqliteQuery("
 		CREATE VIEW vote_weighed AS
@@ -85,12 +94,12 @@ sub SqliteMakeTables() {
 				item.item_name AS item_name,
 				item.file_hash AS file_hash,
 				item.author_key AS author_key,
-				item.parent_hash AS parent_hash,
+				item.item_type AS item_type,
 				child_count.child_count AS child_count,
 				added_time.add_timestamp AS add_timestamp
 			FROM
 				item
-				LEFT JOIN child_count ON ( item.id = child_count.id)
+				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash);
 	");
 	SqliteQuery("
@@ -105,14 +114,18 @@ sub SqliteMakeTables() {
 	");
 
 	SqliteQuery("
-		CREATE VIEW author_flat AS
-			SELECT
-				author.key,
-				vote_weight.vote_weight,
-				author_alias.alias
-			FROM author
-				LEFT JOIN vote_weight ON (author.key = vote_weight.key)
-				LEFT JOIN author_alias ON (author.key = author_alias.key)
+		CREATE VIEW 
+			author_flat 
+		AS 
+		SELECT 
+			author.key AS author_key, 
+			SUM(vote_weight.vote_weight) AS vote_weight, 
+			author_alias.alias AS author_alias
+		FROM 
+			author 
+			LEFT JOIN vote_weight ON (author.key = vote_weight.key) 
+			LEFT JOIN author_alias ON (author.key = author_alias.key)
+			GROUP BY author.key, author_alias.alias
 	");
 }
 
@@ -140,6 +153,8 @@ sub SqliteQuery2 {
 		return $sth;
 	}
 }
+
+
 
 sub EscapeShellChars {
 	my $string = shift;
@@ -182,8 +197,9 @@ sub SqliteQuery {
 sub DBGetVotesTable {
 	my $fileHash = shift;
 
-	if (!IsSha1($fileHash)) {
+	if (!IsSha1($fileHash) && $fileHash) {
 		WriteLog("DBGetVotesTable called with invalid parameter! returning");
+		WriteLog("$fileHash");
 		return '';
 	}
 
@@ -270,6 +286,19 @@ sub DBGetItemCount {
 	return $itemCount;
 }
 
+sub DBGetReplyCount {
+	my $parentHash = shift;
+
+	if (!IsSha1($parentHash)) {
+		WriteLog('WARNING: DBGetReplyCount() called with invalid parameter');
+	}
+
+	my $itemCount = SqliteGetValue("SELECT COUNT(*) FROM item_parent WHERE parent_hash = '$parentHash'");
+	chomp($itemCount);
+
+	return $itemCount;
+}
+
 sub DBGetItemReplies {
 	my $itemHash = shift;
 
@@ -281,11 +310,10 @@ sub DBGetItemReplies {
 	$itemHash = SqliteEscape($itemHash);
 
 	my %queryParams;
-	$queryParams{'where_clause'} = "WHERE parent_hash = '$itemHash'";
+	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash')";
 	$queryParams{'order_clause'} = "ORDER BY item_name"; #todo this should be by timestamp
 
 	return DBGetItemList(\%queryParams);
-
 }
 
 sub SqliteEscape {
@@ -312,6 +340,15 @@ sub SqliteAddKeyValue {
 	SqliteQuery("INSERT INTO $table(key, alias) VALUES ('$key', '$value');");
 
 }
+
+sub DBGetAuthor {
+	my $query = "SELECT author_key, author_alias, vote_weight FROM author_flat";
+
+	my $authorInfo = SqliteQuery($query);
+
+	return $authorInfo;
+}
+
 
 sub DBAddAuthor {
 	state $query;
@@ -415,6 +452,44 @@ sub DBAddKeyAlias {
 	$query .= "('$key', '$alias', '$fingerprint')";
 }
 
+sub DBAddItemParent {
+	state $query;
+
+	my $itemHash = shift;
+
+	if ($itemHash eq 'flush') {
+		if ($query) {
+			WriteLog('DBAddItemParent(flush)');
+
+			$query .= ';';
+
+			SqliteQuery($query);
+
+			$query = '';
+		}
+
+		return;
+	}
+
+	if ($query && length($query) > 10240) {
+		DBAddItemParent('flush');
+		$query = '';
+	}
+
+	my $parentHash = shift;
+
+	$itemHash = SqliteEscape($itemHash);
+	$parentHash = SqliteEscape($parentHash);
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO item_parent(item_hash, parent_hash) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= "('$itemHash', '$parentHash')";
+}
+
 sub DBAddItem {
 	state $query;
 
@@ -434,22 +509,23 @@ sub DBAddItem {
 		return;
 	}
 
-    if ($query && length($query) > 10240) {
-        DBAddItem('flush');
-        $query = '';
-    }
+	if ($query && length($query) > 10240) {
+		DBAddItem('flush');
+		$query = '';
+	}
 
 	my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
-	my $parentHash = shift;
 	my $itemType = shift;
+
+	WriteLog("DBAddItem($itemName, $authorKey, $fileHash, $itemType);");
 
 	$filePath = SqliteEscape($filePath);
 	$itemName = SqliteEscape($itemName);
 	$fileHash = SqliteEscape($fileHash);
-	$parentHash = SqliteEscape($parentHash);
 	$itemType = SqliteEscape($itemType);
+
 #	switch($itemType) {
 #		case 'text':
 #		case 'pubkey':
@@ -463,21 +539,19 @@ sub DBAddItem {
 #	}
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, parent_hash, item_type) VALUES ";
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
 	#todo clean up
-	if ($authorKey) {
-		$query .= "('$filePath', '$itemName', '$authorKey', '$fileHash', '$parentHash', '$itemType')"
-	} else {
-		$query .= "('$filePath', '$itemName', NULL, '$fileHash', '$parentHash', '$itemType')"
-	}
-
-#	if ($parentHash) {
-#		my $query = "UPDATE item SET last_bump = "; #todo
+#	if ($authorKey) {
+		$query .= "('$filePath', '$itemName', '$authorKey', '$fileHash', '$itemType')"
+#	} else {
+#		$query .= "('$filePath', '$itemName', NULL, '$fileHash', '$itemType')"
 #	}
+
+
 }
 
 sub DBAddVoteWeight {
@@ -707,6 +781,8 @@ sub DBGetItemList {
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
 	}
+
+	WriteLog("DBGetItemList()");
 
 	my @results = split("\n", SqliteQuery($query));
 
