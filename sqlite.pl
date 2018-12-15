@@ -108,8 +108,8 @@ sub SqliteMakeTables() {
 				item.file_hash AS file_hash,
 				item.author_key AS author_key,
 				item.item_type AS item_type,
-				child_count.child_count AS child_count,
-				parent_count.parent_count AS parent_count,
+				IFNULL(child_count.child_count, 0) AS child_count,
+				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp
 			FROM
 				item
