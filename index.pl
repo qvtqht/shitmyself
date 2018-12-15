@@ -170,9 +170,9 @@ sub IndexFile {
 
 			if (@replyLines) {
 				while(@replyLines) {
-					if (IsSha1($1)) {
-						my $parentHash = shift @replyLines;
+					my $parentHash = shift @replyLines;
 
+					if (IsSha1($parentHash)) {
 						DBAddItemParent($gitHash, $parentHash);
 					}
 				}
