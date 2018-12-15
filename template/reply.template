@@ -5,6 +5,6 @@
     <input type=submit value="Reply Unsigned">
     <input type=hidden name=replyto value="$replyTo">
     <p><b>To reply using standalone GPG,</b> ensure that you include
-    the line beginning with <tt>&gt;</tt> inside your signed message, by itself.</p>
+    the line beginning with <tt>&gt;&gt;</tt> inside your signed message, by itself.</p>
 </form>
 <!-- / reply.template -->
