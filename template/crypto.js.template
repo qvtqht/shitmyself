@@ -580,10 +580,10 @@ function signMessage() {
 		var textbox = document.getElementById('comment');
 		var composeForm = document.getElementById('compose');
 
-		textbox.style.color = '#00ff00';
-		textbox.style.backgroundColor = '#c0c000';
-
 		if (textbox && composeForm) {
+			textbox.style.color = '#00ff00';
+			textbox.style.backgroundColor = '#c0c000';
+
 			var message = textbox.value;
 
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
