@@ -197,6 +197,7 @@ sub GetItemTemplate {
 	# file_hash = git's hash of the file's contents
 	# author_key = gpg key of author (if any)
 	# add_timestamp = time file was added as unix_time #todo
+	# child_count = number of replies
 
 	my %file = %{shift @_};
 
@@ -274,7 +275,7 @@ sub GetItemTemplate {
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file{'file_path'});
-		my $itemName = TrimPath($file{'file_path'});
+		my $itemName = $fileHash;
 
 		my $ballotTime = time();
 		my $replyCount = $file{'child_count'};
@@ -341,17 +342,26 @@ sub GetItemPage {
 		$txtIndex .= $itemTemplate;
 	}
 
+	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
+
 	if ($file{'child_count'}) {
 		WriteLog($file{'child_count'} . " REPLIES!!!");
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
+		WriteLog('@itemReplies = ' . @itemReplies);
+
 		$txtIndex .= "<hr>";
-#
-#		foreach my $replyItem (@itemReplies) {
-#			my $replyTemplate = GetItemTemplate($replyItem);
-#
-#			$txtIndex .= $replyTemplate;
-#		}
+
+		foreach my $replyItem (@itemReplies) {
+			WriteLog('$replyItem: ' . $replyItem);
+			foreach my $replyVar ($replyItem) {
+				WriteLog($replyVar);
+			}
+
+			my $replyTemplate = GetItemTemplate($replyItem);
+
+			$txtIndex .= $replyTemplate;
+		}
 	}
 
 	if (GetConfig('replies') == 1) {
@@ -383,7 +393,7 @@ sub GetItemPage {
 		$txtIndex .= $replyForm;
 	}
 
-	my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
+	#my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
 
 	#my $itemInfoTemplate = GetTemplate('iteminfo.template');
 
@@ -485,7 +495,7 @@ sub GetPageParams {
 		# Default = main home page title
 		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
 		$pageParams{'title_html'} = GetConfig('home_title');
-		$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
+		#$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 	}
 
 	# Add the query parameters to the page parameters
@@ -568,6 +578,8 @@ sub GetIndexPage {
 
 			$alias = HtmlEscape($alias);
 
+			WriteLog('GetTemplate("item.template") 1');
+
 			my $itemTemplate = GetTemplate("item.template");
 			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 
@@ -590,14 +602,14 @@ sub GetIndexPage {
 				$authorLink = "";
 			}
 			my $permalinkTxt = $file;
-			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+			my $permalinkHtml = "/" . TrimPath($gitHash) . ".html";
 
 			$permalinkTxt =~ s/^\.//;
 			$permalinkTxt =~ s/html\///;
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
-			my $itemName = TrimPath($file);
+			my $itemName = $gitHash;
 #			my $ballotTime = time();
 
 			my $replyCount = $row->{'child_count'};
@@ -780,6 +792,7 @@ sub GetReadPage {
 
 			$alias = HtmlEscape($alias);
 
+			WriteLog('GetTemplate("item.template") 2');
 			my $itemTemplate = GetTemplate("item.template");
 
 			my $itemClass = "txt $signedCss";
@@ -807,7 +820,7 @@ sub GetReadPage {
 
 			my $itemText = FormatForWeb($message);
 			my $fileHash = GetFileHash($file);
-			my $itemName = TrimPath($file);
+			my $itemName = $gitHash;
 			my $ballotTime = time();
 			my $replyCount = $row->{'child_count'};
 
@@ -1048,7 +1061,8 @@ sub GetPageLinks {
 		return $pageLinksFinal;
 	}
 
-	my $itemCount = DBGetItemCount("item_type = 'text'");
+	#my $itemCount = DBGetItemCount("item_type = 'text'");
+	my $itemCount = DBGetItemCount();
 
 	$pageLinks = "";
 
@@ -1257,22 +1271,22 @@ foreach my $key (@authors) {
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
-        if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-            WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
 
-            return;
-        }
+			return;
+		}
 
-        my $lastTouch = GetCache("file/$fileHash");
+		my $lastTouch = GetCache("file/$fileHash");
 		if ($lastTouch && $lastTouch + $fileInterval > time()) {
 			WriteLog("I already did $fileHash recently, too lazy to do it again");
 			next;
 		}
 
-		my $fileName = $file->{'file_path'};
+		my $fileName = $file->{'file_hash'};
 
 		$fileName =~ s/^\.//;
-        $fileName =~ s/\/html//;
+		$fileName =~ s/\/html//;
 
 		$fileList .= $fileName . "|" . $fileHash . "\n";
 
@@ -1322,6 +1336,9 @@ sub MakeClonePage {
 	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
 
 	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
+	if (!$sizeHikeZip) {
+		$sizeHikeZip = 0;
+	}
 
 	$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
 
@@ -1340,7 +1357,8 @@ sub MakeClonePage {
 }
 
 {
-	my $itemCount = DBGetItemCount("item_type = 'text'");
+	#my $itemCount = DBGetItemCount("item_type = 'text'");
+	my $itemCount = DBGetItemCount();
 
 	#if ($itemCount > 0) {
 		my $i;
@@ -1353,7 +1371,7 @@ sub MakeClonePage {
 			my %queryParams;
 			my $offset = $i * $PAGE_LIMIT;
 
-			$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
+			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 
@@ -1393,7 +1411,7 @@ if ($voteCounts) {
 
 # This is a special call which gathers up last run's written html files
 # that were not updated on this run and removes them
-PutHtmlFile("removePreviousFiles", "1");
+#PutHtmlFile("removePreviousFiles", "1");
 
 my $votesInDatabase = DBGetVotesTable();
 if ($votesInDatabase) {
