@@ -987,7 +987,7 @@ sub GetSubmitPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	if (defined($itemCount)) {
+	if (defined($itemCount) && defined($itemLimit)) {
 		if ($itemCount < $itemLimit) {
 			my $submitForm = GetTemplate('write.template');
 			my $prefillText = "";
