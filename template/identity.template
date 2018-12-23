@@ -4,6 +4,10 @@
 Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
 </noscript>
 
+<p id=loading style="color: green; border: 5pt green solid; border-radius: 10pt; background-color: green; color: white;">
+    <br><br>Loading...<br><br><br>
+</p>
+
 <!-- current identity -->
 <form id=formCurId style="display: none">
     <fieldset style="display: inline">
