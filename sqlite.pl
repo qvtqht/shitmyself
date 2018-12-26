@@ -4,40 +4,42 @@ use warnings;
 use utf8;
 use DBD::SQLite;
 use DBI;
+use Data::Dumper;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
-my $SqliteDbName2 = "test.db";
+#my $SqliteDbName2 = "test.db";
 my $dbh;
 
 sub SqliteConnect {
 	$dbh = DBI->connect(
-		"dbi:SQLite:dbname=test.db",
+		"dbi:SQLite:dbname=$SqliteDbName",
 		"",
 		"",
 		{ RaiseError => 1 },
 	) or die $DBI::errstr;
 }
+SqliteConnect();
 
 sub SqliteUnlinkDb {
 	#unlink($SqliteDbName);
 	rename($SqliteDbName, "$SqliteDbName.prev");
-	rename($SqliteDbName2, "$SqliteDbName2.prev");
+#	rename($SqliteDbName2, "$SqliteDbName2.prev");
 }
 
 #schema
 sub SqliteMakeTables() {
-	SqliteQuery("CREATE TABLE added_time(file_hash, add_timestamp);");
-	SqliteQuery("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
-	SqliteQuery("CREATE TABLE author_alias(
+	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp);");
+	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
+	SqliteQuery2("CREATE TABLE author_alias(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		key UNIQUE,
 		alias,
 		is_admin,
 		fingerprint
 	)");
-	SqliteQuery("CREATE TABLE vote_weight(key, vote_weight)");
-	SqliteQuery("CREATE TABLE item(
+	SqliteQuery2("CREATE TABLE vote_weight(key, vote_weight)");
+	SqliteQuery2("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,
 		item_name,
@@ -45,21 +47,21 @@ sub SqliteMakeTables() {
 		file_hash UNIQUE,
 		item_type
 	)");
-	SqliteQuery("CREATE TABLE item_parent(item_hash, parent_hash)");
-	SqliteQuery("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
-	SqliteQuery("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
-+#	SqliteQuery("CREATE TABLE author(key UNIQUE)");
-#	SqliteQuery("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
-#	SqliteQuery("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
-#	SqliteQuery("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
+	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
+	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
++#	SqliteQuery2("CREATE TABLE author(key UNIQUE)");
+#	SqliteQuery2("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
+#	SqliteQuery2("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
+#	SqliteQuery2("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
-	SqliteQuery("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
-	SqliteQuery("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
-	SqliteQuery("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
-	SqliteQuery("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
+	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
+	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
+	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
+	SqliteQuery2("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
 
 
-	SqliteQuery("
+	SqliteQuery2("
 		CREATE VIEW child_count AS
 		SELECT
 			parent_hash AS parent_hash,
@@ -70,7 +72,7 @@ sub SqliteMakeTables() {
 			parent_hash
 	");
 
-	SqliteQuery("
+	SqliteQuery2("
 		CREATE VIEW parent_count AS
 		SELECT
 			item_hash AS item_hash,
@@ -81,8 +83,8 @@ sub SqliteMakeTables() {
 			item_hash
 	");
 
-	SqliteQuery("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
-	SqliteQuery("
+	SqliteQuery2("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
+	SqliteQuery2("
 		CREATE VIEW vote_weighed AS
 			SELECT
 				vote.file_hash,
@@ -100,7 +102,7 @@ sub SqliteMakeTables() {
 				vote.signed_by
 	");
 
-	SqliteQuery("
+	SqliteQuery2("
 		CREATE VIEW item_flat AS
 			SELECT
 				item.file_path AS file_path,
@@ -117,7 +119,7 @@ sub SqliteMakeTables() {
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash);
 	");
-	SqliteQuery("
+	SqliteQuery2("
 		CREATE VIEW item_vote_count AS
 			SELECT
 				file_hash,
@@ -128,7 +130,7 @@ sub SqliteMakeTables() {
 			ORDER BY vote_count DESC
 	");
 
-	SqliteQuery("
+	SqliteQuery2("
 		CREATE VIEW 
 			author_flat 
 		AS 
@@ -145,30 +147,22 @@ sub SqliteMakeTables() {
 }
 
 sub SqliteQuery2 {
-	return;
 	my $query = shift;
-
-	if (!$query) {
-		WriteLog("SqliteQuery2 called without query");
-
-		return;
-	}
-
 	chomp $query;
 
-	WriteLog("** $query");
-
 	if ($query) {
+		WriteLog($query);
 
 		my $sth = $dbh->prepare($query);
-		$sth->execute();
+		$sth->execute(@_);
 
-		WriteLog ($sth);
+		my $aref = $sth->fetchall_arrayref();
 
-		return $sth;
+		$sth->finish();
+
+		return $aref;
 	}
 }
-
 
 
 sub EscapeShellChars {
@@ -219,13 +213,16 @@ sub DBGetVotesTable {
 	}
 
 	my $query;
+	my @queryParams = ();
+
 	if ($fileHash) {
-		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = '$fileHash';";
+		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = ?;";
+		@queryParams = ($fileHash);
 	} else {
 		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed;";
 	}
 
-	my $result = SqliteQuery($query);
+	my $result = SqliteQuery($query, @queryParams);
 
 	return $result;
 }
@@ -265,24 +262,6 @@ sub SqliteGetValue {
 	my $result;
 
 	$result = SqliteQuery($query);
-
-	return $result;
-}
-
-sub SqliteGetValue2 {
-	break;
-	my $query = shift;
-	chomp $query;
-
-	my $sth = SqliteQuery2($query);
-	my @row;
-	my $result;
-
-	if (@row = $sth->fetchrow_array()) {
-		$result = $row[0];
-	} else {
-		$result = ''; #todo this is not great
-	}
 
 	return $result;
 }
@@ -367,6 +346,7 @@ sub DBGetAuthor {
 
 sub DBAddAuthor {
 	state $query;
+	state @queryParams;
 
 	my $key = shift;
 
@@ -376,27 +356,30 @@ sub DBAddAuthor {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery($query, @queryParams);
 
 			$query = '';
+			@queryParams = ();
 		}
 
 		return;
 	}
 
 	if ($query && length($query) > 10240) {
-	    DBAddAuthor('flush');
-	    $query = '';
-    }
-
-    $key = SqliteEscape($key);
+		DBAddAuthor('flush');
+		$query = '';
+		@queryParams = ();
+	}
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO author(key) VALUES ";
 	} else {
 		$query .= ",";
 	}
-	$query .= "('$key')";
+
+	$query .= '(?)';
+	push @queryParams, $key;
+
 }
 
 sub DBGetVoteCounts {
@@ -507,6 +490,7 @@ sub DBAddItemParent {
 
 sub DBAddItem {
 	state $query;
+	state @queryParams;
 
 	my $filePath = shift;
 
@@ -516,17 +500,19 @@ sub DBAddItem {
 
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery2($query, @queryParams);
 
-			$query = "";
+			$query = '';
+			@queryParams = ();
 		}
 
 		return;
 	}
 
-	if ($query && length($query) > 10240) {
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
 		DBAddItem('flush');
 		$query = '';
+		@queryParams = ();
 	}
 
 	my $itemName = shift;
@@ -534,24 +520,7 @@ sub DBAddItem {
 	my $fileHash = shift;
 	my $itemType = shift;
 
-	WriteLog("DBAddItem($itemName, $authorKey, $fileHash, $itemType);");
-
-	$filePath = SqliteEscape($filePath);
-	$itemName = SqliteEscape($itemName);
-	$fileHash = SqliteEscape($fileHash);
-	$itemType = SqliteEscape($itemType);
-
-#	switch($itemType) {
-#		case 'text':
-#		case 'pubkey':
-#		case 'admin':
-#		case 'vote':
-#		case 'reply':
-#			$itemType = SqliteEscape($itemType);
-#			break;
-#		default:
-#			$itemType = '';
-#	}
+	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType);");
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type) VALUES ";
@@ -559,14 +528,9 @@ sub DBAddItem {
 		$query .= ",";
 	}
 
-	#todo clean up
-#	if ($authorKey) {
-		$query .= "('$filePath', '$itemName', '$authorKey', '$fileHash', '$itemType')"
-#	} else {
-#		$query .= "('$filePath', '$itemName', NULL, '$fileHash', '$itemType')"
-#	}
+	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType;
 
-
+	$query .= "(?, ?, ?, ?, ?)";
 }
 
 sub DBAddVoteWeight {
