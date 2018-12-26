@@ -8,7 +8,6 @@ use Data::Dumper;
 use 5.010;
 
 my $SqliteDbName = "index.sqlite3";
-#my $SqliteDbName2 = "test.db";
 my $dbh;
 
 sub SqliteConnect {
@@ -22,9 +21,7 @@ sub SqliteConnect {
 SqliteConnect();
 
 sub SqliteUnlinkDb {
-	#unlink($SqliteDbName);
 	rename($SqliteDbName, "$SqliteDbName.prev");
-#	rename($SqliteDbName2, "$SqliteDbName2.prev");
 }
 
 #schema
@@ -50,10 +47,6 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
 	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
 	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
-+#	SqliteQuery2("CREATE TABLE author(key UNIQUE)");
-#	SqliteQuery2("CREATE TABLE author_alias(key UNIQUE, alias, is_admin)");
-#	SqliteQuery2("CREATE TABLE item(file_path UNIQUE, item_name, author_key, file_hash UNIQUE)");
-#	SqliteQuery2("CREATE TABLE vote(file_hash, vote_hash, vote_value)");
 
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
@@ -169,12 +162,8 @@ sub EscapeShellChars {
 	my $string = shift;
 	chomp $string;
 
-	#WriteLog($string);
-
 	$string =~ s/([\"|\$`\\])/\\$1/g;
 	# " | $ ` \
-
-	#WriteLog($string);
 
 	return $string;
 }
@@ -193,10 +182,6 @@ sub SqliteQuery {
 	$query = EscapeShellChars($query);
 
 	WriteLog( "$query\n");
-
-	#SqliteQuery2($query);
-
-
 
 	my $results = `sqlite3 $SqliteDbName "$query"`;
 
@@ -356,7 +341,7 @@ sub DBAddAuthor {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query, @queryParams);
+			SqliteQuery2($query, @queryParams);
 
 			$query = '';
 			@queryParams = ();
@@ -535,6 +520,7 @@ sub DBAddItem {
 
 sub DBAddVoteWeight {
 	state $query;
+	state @queryParams;
 
 	my $key = shift;
 
@@ -544,23 +530,22 @@ sub DBAddVoteWeight {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery($query, @queryParams);
 
 			$query = '';
+			@queryParams = ();
 		}
 
 		return;
 	}
 
-    if ($query && length($query) > 10240) {
-        DBAddVoteWeight('flush');
-        $query = '';
-    }
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+		DBAddVoteWeight('flush');
+		$query = '';
+		@queryParams = ();
+	}
 
-    my $weight = shift;
-
-	$key = SqliteEscape($key);
-	$weight = SqliteEscape($weight);
+	my $weight = shift;
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO vote_weight(key, vote_weight) VALUES ";
@@ -568,7 +553,8 @@ sub DBAddVoteWeight {
 		$query .= ',';
 	}
 
-	$query .= "('$key', '$weight')";
+	$query .= '(?, ?)';
+	push @queryParams, $key, $weight;
 }
 
 sub DBAddVoteRecord {
