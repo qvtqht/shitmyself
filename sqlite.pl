@@ -393,6 +393,7 @@ sub GetTopItemsForTag {
 
 sub DBAddKeyAlias {
 	state $query;
+	state @queryParams;
 
 	my $key = shift;
 
@@ -407,32 +408,32 @@ sub DBAddKeyAlias {
 
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery2($query, @queryParams);
 
 			$query = "";
+			@queryParams = ();
 		}
 
 		return;
 	}
 
-    if ($query && length($query) > 10240) {
-        DBAddKeyAlias('flush');
-        $query = '';
-    }
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+		DBAddKeyAlias('flush');
+		$query = '';
+		@queryParams = ();
+	}
 
-    my $alias = shift;
+	my $alias = shift;
 	my $fingerprint = shift;
-
-	$key = SqliteEscape($key);
-	$alias = SqliteEscape($alias);
-	$fingerprint = SqliteEscape($fingerprint);
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO author_alias(key, alias, fingerprint) VALUES ";
 	} else {
 		$query .= ",";
 	}
-	$query .= "('$key', '$alias', '$fingerprint')";
+
+	$query .= "(?, ?, ?)";
+	push @queryParams, $key, $alias, $fingerprint;
 }
 
 sub DBAddItemParent {
@@ -651,10 +652,10 @@ sub DBAddAddedTimeRecord {
 		return;
 	}
 
-    if ($query && length($query) > 10240) {
-        DBAddAddedTimeRecord('flush');
-        $query = '';
-    }
+	if ($query && length($query) > 10240) {
+		DBAddAddedTimeRecord('flush');
+		$query = '';
+	}
 
 	$fileHash = SqliteEscape($fileHash);
 	$addedTime = SqliteEscape($addedTime);
