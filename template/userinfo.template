@@ -1,6 +1,8 @@
 <table>
-<tr><td>name:</td><td>$alias</td>
-<tr><td>fingerprint:</td><td>$fingerprint</td>
+<tr><td>avatar:</td><td>$avatar</td></tr>
+<tr><td>alias:</td><td>$alias</td></tr>
+<tr><td>fingerprint:</td><td>$fingerprint</td></tr>
+<tr><td>importance:</td><td>$importance</td></tr>
 <!--<tr><td>post count:</td><td>$postcount</td></tr>
 <tr><td>vote count:</td><td>$votecount</td></tr>-->
 </table>
