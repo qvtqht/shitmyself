@@ -110,7 +110,11 @@
 
 <h4>Adding a Vote</h4>
 
-<p>Voting is the process of applying a tag to an item. A voting token has the following parameters</p>
+<p>Voting is the process of applying a <u>tag</u> to an <u>item</u>.</p>
+
+<p style="font-size: larger">item + tag = vote</p>
+
+<p>A voting token has the following parameters</p>
 
 <p><code>addvote/hash/time/tag/checksum</code></p>
 
