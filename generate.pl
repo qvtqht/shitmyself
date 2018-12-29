@@ -268,7 +268,7 @@ sub GetItemTemplate {
 		}
 		
 		my $permalinkTxt = $file{'file_path'};
-		my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+		my $permalinkHtml = "/" . $gitHash . ".html";
 
 		$permalinkTxt =~ s/^\.//;
 		$permalinkTxt =~ s/html\///;
@@ -393,15 +393,7 @@ sub GetItemPage {
 		$txtIndex .= $replyForm;
 	}
 
-	#my $itemPlainText = FormatForWeb(GetFile($file{'file_path'}));
-
-	#my $itemInfoTemplate = GetTemplate('iteminfo.template');
-
-#	$itemInfoTemplate =~ s/\$itemTextPlain/$itemPlainText/;
-	#$itemInfoTemplate =~ s/\$fileHash/$file{'file_hash'}/;
-
-	#$txtIndex .= $itemInfoTemplate;
-
+	# Get votes in the database for the current file
 	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
 	my $signedVotesTable = '';
 
@@ -421,25 +413,25 @@ sub GetItemPage {
 		$txtIndex .= $recentVotesTemplate;
 	}
 
-	if (defined($signedVotesTable) && $signedVotesTable) {
-		#todo
-		## $itemInfoTemplate =~ s/\$signedVotesTable/$signedVotesTable/;
-	}
-
-	# voting target fame
-#	$txtIndex .= GetTemplate('voteframe.template');
-
-	# end page
-
+	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	#$txtIndex =~ s/<\/body>/\<script src="\/avatar.js">\<\/script><\/body>/;
+	#Inject necessary javascript
 	my $scriptInject = GetTemplate('scriptinject.template');
+
+	#avatar.js
 	my $avatarjs = GetTemplate('avatar.js.template');
+
+	#formencode.js
 	my $formEncodeJs = GetTemplate('js/formencode.js.template');
+
+	#add them together
 	my $fullJs = $avatarjs . "\n" . $formEncodeJs;
+
+	#replace the scripts in scriptinject.template
 	$scriptInject =~ s/\$javascript/$fullJs/g;
 
+	#add to the end of the page
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 	$txtIndex =~ s/<\/body>/<\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
@@ -602,7 +594,7 @@ sub GetIndexPage {
 				$authorLink = "";
 			}
 			my $permalinkTxt = $file;
-			my $permalinkHtml = "/" . TrimPath($gitHash) . ".html";
+			my $permalinkHtml = "/" . $gitHash . ".html";
 
 			$permalinkTxt =~ s/^\.//;
 			$permalinkTxt =~ s/html\///;
@@ -610,7 +602,8 @@ sub GetIndexPage {
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
 			my $itemName = $gitHash;
-#			my $ballotTime = time();
+
+			#			my $ballotTime = time();
 
 			my $replyCount = $row->{'child_count'};
 
@@ -740,10 +733,13 @@ sub GetReadPage {
 
 		my $authorAliasHtml = GetAlias($authorKey);
 		my $authorAvatarHtml = GetAvatar($authorKey);
+		my $authorImportance = 1337;
 
+		$userInfo =~ s/\$avatar/$authorAvatarHtml/;
 		$userInfo =~ s/\$alias/$authorAliasHtml/;
 		$userInfo =~ s/\$fingerprint/$authorKey/;
-		
+		$userInfo =~ s/\$importance/$authorImportance/;
+
 		$txtIndex .= $userInfo;
 	}
 
@@ -816,7 +812,7 @@ sub GetReadPage {
 			$permalinkTxt =~ s/^\.//;
 			$permalinkTxt =~ s/html\///;
 
-			my $permalinkHtml = "/" . TrimPath($permalinkTxt) . ".html";
+			my $permalinkHtml = "/" . $gitHash . ".html";
 
 			my $itemText = FormatForWeb($message);
 			my $fileHash = GetFileHash($file);
@@ -827,7 +823,7 @@ sub GetReadPage {
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
 			$itemTemplate =~ s/\$itemName/$itemName/g;
-			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g; #txtrefactor
+			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
 			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
@@ -1230,6 +1226,8 @@ WriteLog ("Authors...");
 
 my @authors = DBGetAuthorList();
 
+WriteLog('@authors: ' . scalar(@authors));
+
 my $authorInterval = 3600;
 
 foreach my $key (@authors) {
@@ -1292,7 +1290,7 @@ foreach my $key (@authors) {
 
 		my $fileIndex = GetItemPage($file);
 
-		my $targetPath = $HTMLDIR . '/' . TrimPath($fileName) . '.html';
+		my $targetPath = $HTMLDIR . '/' . $fileHash . '.html';
 
 		PutHtmlFile($targetPath, $fileIndex);
 
@@ -1413,10 +1411,10 @@ if ($voteCounts) {
 # that were not updated on this run and removes them
 #PutHtmlFile("removePreviousFiles", "1");
 
-my $votesInDatabase = DBGetVotesTable();
-if ($votesInDatabase) {
-	PutFile('./html/votes.txt', DBGetVotesTable());
-}
+#my $votesInDatabase = DBGetVotesTable();
+#if ($votesInDatabase) {
+#	PutFile('./html/votes.txt', DBGetVotesTable());
+#}
 
 MakeClonePage();
 
