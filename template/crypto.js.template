@@ -212,13 +212,28 @@ function getPublicKey() {
 	}
 }
 
-function popId() {
+function identityOnload() {
 	var pk = getPrivateKey();
-	if (pk) {
-		var textbox = document.getElementById("privatekey");
 
-		if (textbox) {
-			textbox.value = pk;
+	if (pk) {
+		if (
+			window.location.hash
+			&&
+			(
+				window.location.hash == '#logout'
+				||
+				window.location.hash == '#signout'
+			)
+		)
+		{
+   			logOut();
+   			pk = getPrivateKey();
+   	} else {
+			var textbox = document.getElementById("privatekey");
+
+			if (textbox) {
+				textbox.value = pk;
+			}
 		}
 	}
 
@@ -251,6 +266,14 @@ function popId() {
 	}
 
 	showHideForms();
+
+	if (window.location.hash) {
+		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
+			if (getPrivateKey()) {
+				logOut();
+			}
+		}
+	}
 }
 
 function setAvatar(avatar) {
