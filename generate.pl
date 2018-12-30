@@ -9,6 +9,7 @@ use lib qw(lib);
 use HTML::Entities qw(encode_entities);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
+use Data::Dumper;
 #use Acme::RandomEmoji qw(random_emoji);
 
 require './utils.pl';
@@ -396,25 +397,31 @@ sub GetItemPage {
 		$txtIndex .= $replyForm;
 	}
 
-	# Get votes in the database for the current file
-	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
-	my $signedVotesTable = '';
+#	# Get votes in the database for the current file
+#	my @itemVotes = DBGetVotesForItem($file{'file_hash'});
 
-	if (defined($recentVotesTable) && $recentVotesTable) {
-		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-		my $votesSummary = "";
-		foreach my $voteValue (keys %voteTotals) {
-			$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
-		}
-		my $voteRetention = GetConfig('vote_limit');
-		$voteRetention = ($voteRetention / 86400) . " days";
+#	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
+#	my $signedVotesTable = '';
 
-		my $recentVotesTemplate = GetTemplate('item/recent_votes.template');
-		$recentVotesTemplate =~ s/\$votesSummary/$votesSummary/;
-		$recentVotesTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
-		$recentVotesTemplate =~ s/\$voteRetention/$voteRetention/;
-		$txtIndex .= $recentVotesTemplate;
-	}
+#	my $recentVotesData = Data::Dumper->Dump($recentVotesTable);
+#
+#	$txtIndex .= $recentVotesData;
+
+#	if (defined($recentVotesTable) && $recentVotesTable) {
+#		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+#		my $votesSummary = "";
+#		foreach my $voteValue (keys %voteTotals) {
+#			$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
+#		}
+#		my $voteRetention = GetConfig('vote_limit');
+#		$voteRetention = ($voteRetention / 86400) . " days";
+#
+#		my $recentVotesTemplate = GetTemplate('item/recent_votes.template');
+#		$recentVotesTemplate =~ s/\$votesSummary/$votesSummary/;
+#		$recentVotesTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
+#		$recentVotesTemplate =~ s/\$voteRetention/$voteRetention/;
+#		$txtIndex .= $recentVotesTemplate;
+#	}
 
 	# end page with footer
 	$txtIndex .= GetPageFooter();
