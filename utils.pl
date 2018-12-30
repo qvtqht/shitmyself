@@ -362,28 +362,6 @@ sub PutHtmlFile {
 	my $file = shift;
 	my $content = shift;
 
-	state %previousFiles;
-
-	if (-e "log/written.log" && !%previousFiles) {
-		WriteLog('Getting %previousFiles, hopefully just once');
-		%previousFiles = GetFileAsHashKeys("log/written.log");
-	}
-
-	#todo there is a bug here
-	if (%previousFiles && $file eq "removePreviousFiles" && $content eq "1") {
-		WriteLog("Cleaning up old html files");
-		foreach (keys %previousFiles) {
-			if ($_ ne "removePreviousFiles" || $previousFiles{$_} > 0) {
-				next;
-			} else {
-				WriteLog("unlink($_)");
-				unlink($_);
-			}
-		}
-	} else {
-		$previousFiles{$file} ++;
-	}
-
 	state $stripNonAscii;
 	if (!defined($stripNonAscii)) {
 		$stripNonAscii = GetConfig('ascii_only');
@@ -399,8 +377,6 @@ sub PutHtmlFile {
 		WriteLog( '$stripNonAscii == 1');
 		$content =~ s/[^[:ascii:]]//g;
 	}
-
-	AppendFile("log/written.log", $file);
 
 	return PutFile($file, $content);
 }
@@ -525,7 +501,7 @@ sub TrimPath {
 		$string = substr($string, index($string, "/") + 1);
 	}
 
-	$string = substr($string, 0, index($string, "."));
+	$string = substr($string, 0, index($string, ".") + 0);
 
 	return $string;
 }
@@ -704,8 +680,6 @@ sub GpgParse {
 #		}
 #
 #		return;
-
-
 
 		foreach (split ("\n", $gpg_result)) {
 			chomp;
