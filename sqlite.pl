@@ -207,7 +207,27 @@ sub DBGetVotesTable {
 		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed;";
 	}
 
-	my $result = SqliteQuery($query, @queryParams);
+	my $result = SqliteQuery2($query, @queryParams);
+
+	return $result;
+}
+
+sub DBGetVotesForItem {
+	my $fileHash = shift;
+
+	if (!IsSha1($fileHash)) {
+		WriteLog("DBGetVotesTable called with invalid parameter! returning");
+		WriteLog("$fileHash");
+		return '';
+	}
+
+	my $query;
+	my @queryParams;
+
+	$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = ?;";
+	@queryParams = ($fileHash);
+
+	my $result = SqliteQuery2($query, @queryParams);
 
 	return $result;
 }
@@ -716,6 +736,24 @@ sub DBGetItemsForTag {
 	return @itemsArray;
 }
 
+sub DBGetItemList2 {
+	my $paramHashRef = shift;
+	my %params = %$paramHashRef;
+
+	my $query;
+	$query = "
+		SELECT
+			file_path,
+			item_name,
+			file_hash,
+			author_key,
+			child_count,
+			add_timestamp
+		FROM
+			item_flat
+	";
+}
+
 sub DBGetItemList {
 	my $paramHashRef = shift;
 	my %params = %$paramHashRef;
@@ -736,7 +774,7 @@ sub DBGetItemList {
 			add_timestamp
 		FROM
 			item_flat
-	 ";
+	";
 
 	if (defined ($params{'where_clause'})) {
 		$query .= " " . $params{'where_clause'};
