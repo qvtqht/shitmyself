@@ -846,11 +846,12 @@ sub GetReadPage {
 
 			my $itemText = FormatForWeb($message);
 
-			$itemText =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+			#$itemText =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+			$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
 			#$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
 
 			my $fileHash = GetFileHash($file);
-			my $itemName = $gitHash;
+			my $itemName = substr($gitHash, 0, 10) . '...';
 			my $ballotTime = time();
 			my $replyCount = $row->{'child_count'};
 
