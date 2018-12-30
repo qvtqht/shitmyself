@@ -227,17 +227,14 @@ sub GetItemTemplate {
 
 		$message = FormatForWeb($message);
 
-		if ($isSigned && $gpgKey eq GetAdminKey()) {
-			$isAdmin = 1;
-		}
+		$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
 
-		my $signedCss = "";
-		if ($isSigned) {
-			if ($isAdmin) {
-				$signedCss = "signed admin";
-			} else {
-				$signedCss = "signed";
-			}
+		if (
+			$isSigned
+				&&
+			$gpgKey eq GetAdminKey()
+		) {
+			$isAdmin = 1;
 		}
 
 		$alias = HtmlEscape($alias);
@@ -249,7 +246,13 @@ sub GetItemTemplate {
 			$itemTemplate = GetTemplate("item.template");
 		}
 
-		my $itemClass = "txt $signedCss";
+		my $itemClass = "txt";
+		if ($isSigned) {
+			$itemClass .= ' signed';
+		}
+		if ($isAdmin) {
+			$itemClass .= ' admin';
+		}
 
 		my $authorUrl;
 		my $authorAvatar;
@@ -553,6 +556,8 @@ sub GetIndexPage {
 
 			$message = FormatForWeb($message);
 
+			$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+
 			if ($isSigned && $gpgKey eq GetAdminKey()) {
 				$isAdmin = 1;
 			}
@@ -815,6 +820,9 @@ sub GetReadPage {
 			my $permalinkHtml = "/" . $gitHash . ".html";
 
 			my $itemText = FormatForWeb($message);
+
+			$itemText =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+
 			my $fileHash = GetFileHash($file);
 			my $itemName = $gitHash;
 			my $ballotTime = time();
@@ -888,7 +896,7 @@ sub GetIdentityPage {
 
 	$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
 
-	$txtIndex =~ s/<body /<body onload="popId();" /;
+	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
 
 	return $txtIndex;
 }
