@@ -199,6 +199,7 @@ sub GetItemTemplate {
 	# author_key = gpg key of author (if any)
 	# add_timestamp = time file was added as unix_time #todo
 	# child_count = number of replies
+	# display_full_hash = display full hash for file
 
 	my %file = %{shift @_};
 
@@ -228,7 +229,8 @@ sub GetItemTemplate {
 
 		$message = FormatForWeb($message);
 
-		$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+		$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
 
 		if (
 			$isSigned
@@ -279,7 +281,12 @@ sub GetItemTemplate {
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file{'file_path'});
-		my $itemName = $fileHash;
+		my $itemName;
+		if ($file{'display_full_hash'}) {
+			$itemName = $fileHash;
+		} else {
+			$itemName = substr($fileHash, 0, 10) . '...';
+		}
 
 		my $ballotTime = time();
 		my $replyCount = $file{'child_count'};
@@ -339,6 +346,7 @@ sub GetItemPage {
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	$file{'vote_buttons'} = 1;
+	$file{'display_full_hash'} = 1;
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
@@ -406,6 +414,16 @@ sub GetItemPage {
 #	my $recentVotesData = Data::Dumper->Dump($recentVotesTable);
 #
 #	$txtIndex .= $recentVotesData;
+
+	$txtIndex .= $file{'file_hash'};
+
+	my $votesSummary = '';
+	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+
+	foreach my $voteTag (keys %voteTotals) {
+		$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+	}
+	$txtIndex .= $votesSummary;
 
 #	if (defined($recentVotesTable) && $recentVotesTable) {
 #		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
@@ -563,7 +581,7 @@ sub GetIndexPage {
 
 			$message = FormatForWeb($message);
 
-			$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+			$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
 
 			if ($isSigned && $gpgKey eq GetAdminKey()) {
 				$isAdmin = 1;
@@ -613,7 +631,7 @@ sub GetIndexPage {
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
-			my $itemName = $gitHash;
+			my $itemName = substr($gitHash, 0, 10) . "...";
 
 			#			my $ballotTime = time();
 
@@ -829,6 +847,7 @@ sub GetReadPage {
 			my $itemText = FormatForWeb($message);
 
 			$itemText =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
+			#$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
 
 			my $fileHash = GetFileHash($file);
 			my $itemName = $gitHash;
