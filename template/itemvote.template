@@ -1,5 +1,10 @@
-<form method=GET action="/action/vote2.html" name=voteon$fileHash id=voteon$fileHash>
-<p>To vote, check one or more of the boxes, then push the button.</p>
+<form class=reply method=GET action="/action/vote2.html" name=voteon$fileHash id=voteon$fileHash style="border: 5pt solid #f0f0e0; background-color: #f0f0e0; border-radius: 5pt;">
+<p><b><i><u>Sea of Checkboxes Used for Voting</u></i></b><br>
+To vote, check one or more of the boxes, then push the button.<br>
+<b>Voting with signature?</b> Be sure to <u>submit</u> on the next page.<br>
+Before submitting, you may enter additional comments, carefully.<br>
+What, you thought voting was going to be easy?
+</p>
     $voterButtons
     <br>
     <span id=voteAsUser></span>
