@@ -242,7 +242,7 @@ sub IndexFile {
 
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
-					$message =~ s/$reconLine/[Vote for $fileHash at $ballotTime: $voteValue]/g;
+					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
 
 					$itemType = 'vote'
 				}
