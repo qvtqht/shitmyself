@@ -316,6 +316,7 @@ sub GetItemPage {
 	#returns html for individual item page
 
 	my %file = %{shift @_};
+	my $fileHash = $file{'file_hash'};
 
 	WriteLog("GetItemPage(" . $file{'file_path'} . ")");
 
@@ -415,7 +416,7 @@ sub GetItemPage {
 #
 #	$txtIndex .= $recentVotesData;
 
-	$txtIndex .= $file{'file_hash'};
+#	$txtIndex .= $file{'file_hash'};
 
 	my $votesSummary = '';
 	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
