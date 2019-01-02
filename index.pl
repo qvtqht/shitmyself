@@ -240,6 +240,8 @@ sub IndexFile {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 					}
 
+					DBAddItemParent($gitHash, $fileHash);
+
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
 					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
@@ -248,6 +250,8 @@ sub IndexFile {
 				}
 
 				DBAddVoteRecord('flush');
+
+				DBAddItemParent('flush');
 			}
 		}
 
