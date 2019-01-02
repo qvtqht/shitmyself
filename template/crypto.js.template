@@ -506,7 +506,7 @@ function insVotes() {
 		var textbox = document.getElementById('comment');
 
 		if (textbox) {
-			textbox.value = vv;
+			textbox.value = vv + "\n\n";
 			localStorage.removeItem('vvvv');
 		}
 	}
