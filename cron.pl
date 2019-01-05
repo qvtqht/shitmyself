@@ -46,6 +46,7 @@ while (!$touch || time() < $startTime + $interval) {
 
 	if ($newItemCount > 0) {
 		system('perl rebuild.pl');
+		#WriteLog('Skipping rebuild');
 	}
 	
 	sleep(1);
