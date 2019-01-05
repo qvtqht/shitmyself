@@ -90,7 +90,7 @@ sub IndexFile {
 
 	my $newFile = shift;
 	if ($newFile) {
-		chomp($newFile);
+		$newFile = 1;
 	} else {
 		$newFile = 0;
 	}
@@ -160,6 +160,10 @@ sub IndexFile {
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
+
+			if ($newFile) {
+				UnlinkCache("key/$gpgKey");
+			}
 		}
 
 		my $itemName = TrimPath($file);
@@ -222,9 +226,9 @@ sub IndexFile {
 				my $lineCount = @voteLines / 4;
 
 #				if ($isSigned) {
-#					$message = "$gpgKey is adding $lineCount votes:\n";
+#					$message = "$gpgKey is adding $lineCount votes:\n" . $message;
 #				} else {
-#					$message = "A mysterious stranger is adding $lineCount votes:\n";
+#					$message = "A mysterious stranger is adding $lineCount votes:\n" . $message;
 #				}
 
 				while(@voteLines) {
