@@ -232,6 +232,8 @@ sub GetItemTemplate {
 		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
 		$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
 
+		#$message =~ s/([A-F0-9]{16})/xxx/g;
+
 		if (
 			$isSigned
 				&&
