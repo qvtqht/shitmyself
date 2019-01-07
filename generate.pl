@@ -221,8 +221,12 @@ sub GetItemTemplate {
 		my $isAdmin = 0;
 
 		my $message;
-		if (-e "./cache/message/$gitHash.message") {
-			$message = GetFile("./cache/message/$gitHash.message");
+		my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+		WriteLog('$messageCacheName (2) = ' . $messageCacheName);
+
+
+		if (-e $messageCacheName) {
+			$message = GetFile($messageCacheName);
 		} else {
 			$message = GetFile($file{'file_path'});
 		}
@@ -576,8 +580,10 @@ sub GetIndexPage {
 			my $isAdmin = 0;
 
 			my $message;
-			if (-e "./cache/message/$gitHash.message") {
-				$message = GetFile("./cache/message/$gitHash.message");
+			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+			WriteLog('$messageCacheName (3) = ' . $messageCacheName);
+			if (-e $messageCacheName) {
+				$message = GetFile($messageCacheName);
 			} else {
 				$message = GetFile($file);
 			}
@@ -759,6 +765,9 @@ sub GetReadPage {
 
 	$txtIndex .= $htmlStart;
 
+#<span class="replies">last reply at [unixtime]</span>
+#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
+
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	if ($pageType eq 'author') {
@@ -796,8 +805,10 @@ sub GetReadPage {
 			my $isAdmin = 0;
 
 			my $message;
+			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+			WriteLog('$messageCacheName (1) = ' . $messageCacheName);
 			if ($gpgKey) {
-				$message = GetFile("./cache/message/$gitHash.message");
+				$message = GetFile($messageCacheName);
 			} else {
 				$message = GetFile($file);
 			}
