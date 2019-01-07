@@ -35,7 +35,7 @@ if ($lastVersion ne $currVersion) {
 	my $changeLogMessage = 'Version has changed from ' . $lastVersion . ' to ' . $currVersion;
 	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
 
-	SetConfig('current_version', $currVersion);
+	PutConfig('current_version', $currVersion);
 }
 
 # Read access.log using the path in the config
