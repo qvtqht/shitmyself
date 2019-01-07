@@ -26,10 +26,6 @@ if (GetConfig('git_cron_pull') == 1) {
 my $lastVersion = GetConfig('current_version');
 my $currVersion = GetMyVersion();
 
-if (!$lastVersion) {
-	$lastVersion = 0;
-}
-
 if ($lastVersion ne $currVersion) {
 	my $changeLogFilename = 'changelog_' . time() . '.txt';
 	my $changeLogMessage = 'Version has changed from ' . $lastVersion . ' to ' . $currVersion;
