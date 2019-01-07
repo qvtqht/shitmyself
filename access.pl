@@ -265,18 +265,44 @@ sub ProcessAccessLog {
 					$message =~ s/=on\&/\n/g;
 					#is this dangerous?
 
-					#Look for a reference to a parent message in the footer
+					# Look for a reference to a parent message in the footer
+					# This would come from the hidden variable on the reply form
+					# We will use this as a fallback, in case the user has removed
+					# the >> line
+
 					my $parentMessage;
+
+					if ($message =~ /\&replyto=([0-9a-f]{40})$/) {
+						WriteLog("Found &replyto=");
+						my $parentId = $1;
+						#todo check for valid char count too
+						if ($parentId =~ /[0-9a-fA-F]+/ && IsSha1($parentId)) {
+							$parentMessage = $parentId;
+							UnlinkCache("file/$parentMessage");
+							UnlinkCache("message/$parentMessage.message");
+
+							if ($message =~ m/^\>\>$parentMessage/) {
+								$message =~ s/\&replyto=([0-9a-f]{40})$//;
+							} else {
+								$message =~ s/\&replyto=([0-9a-f]{40})$/\n\n\>\>$1/;
+							}
+						}
+					}
 
 				 	# Only if the "replies" config is enabled
 					if (GetConfig('replies')) {
-						my @replyLines = ( $message =~ m/^\>>([0-9a-fA-F]{40})/mg );
+						my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
 
 						if (@replyLines) {
 							while(@replyLines) {
 								my $parentHash = shift @replyLines;
 
 								if (IsSha1($parentHash)) {
+									#Fallback mentioned above is not necessary in this case
+									if ($parentHash eq $parentMessage) {
+										$parentMessage = 0;
+									}
+
 									WriteLog("Found a parent comment, removing caches for $parentHash");
 									UnlinkCache("/file/$parentHash");
 									UnlinkCache("message/$parentHash.message");
@@ -285,18 +311,11 @@ sub ProcessAccessLog {
 								}
 							}
 
-							DBAddItemParent('flush');
+							if ($parentMessage) {
+								$message = ">>$parentMessage" . "\n\n" . $message;
+							}
 						}
 					}
-#
-#					 && $message =~ /\&parent=(.+)$/) {
-#						my $parentId = $1;
-#						#todo check for valid char count too
-#						if ($parentId =~ /[0-9a-fA-F]+/ && IsSha1($parentId)) {
-#							$parentMessage = $parentId;
-#							$message =~ s/\&(parent=.+)$/\n-- \n$1/; # is this too much?
-#						}
-#					}
 
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {

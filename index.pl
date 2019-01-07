@@ -170,7 +170,7 @@ sub IndexFile {
 
 		# look for quoted message ids
 		{
-			my @replyLines = ( $message =~ m/^\>>([0-9a-fA-F]{40})/mg );
+			my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
 
 			if (@replyLines) {
 				while(@replyLines) {
