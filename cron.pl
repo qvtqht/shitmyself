@@ -28,7 +28,7 @@ my $currVersion = GetMyVersion();
 
 if ($lastVersion ne $currVersion) {
 	my $changeLogFilename = 'changelog_' . time() . '.txt';
-	my $changeLogMessage = 'Version has changed from ' . $lastVersion . ' to ' . $currVersion;
+	my $changeLogMessage = 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
 	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
 
 	PutConfig('current_version', $currVersion);
