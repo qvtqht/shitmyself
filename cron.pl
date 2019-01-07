@@ -18,12 +18,11 @@ if ($lockTime) {
 PutFile('cron.lock', $currentTime);
 $lockTime = $currentTime;
 
-# if (GetConfig('git_stash') == 1) {
-# 	system('git stash');
-# }
+if (GetConfig('git_cron_pull') == 1) {
+	system('git stash');
+	system('git pull');
+}
 
-# Update from repo
-#system('git pull');
 
 # Read access.log using the path in the config
 
