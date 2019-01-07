@@ -26,8 +26,11 @@ sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
 
 	my $timestamp = strftime('%F %T', localtime(time()));
+	my $myVersion = GetMyVersion();
 
-	$txtFooter =~ s/\$footer/$timestamp/;
+	my $footer = $timestamp . " version " . $myVersion;
+
+	$txtFooter =~ s/\$footer/$footer/;
 
 	return $txtFooter;
 }
@@ -159,17 +162,12 @@ sub GetVoterTemplate {
 
 		my @voteValues = split("\n", $tagsList . "\n" . $flagsList);
 
+		$flagsList = "\n" . $flagsList . "\n";
+
 		foreach my $tag (@voteValues) {
-			#my $buttonTemplate = GetTemplate("votebutton.template");
 			my $buttonTemplate = GetTemplate("votecheck.template");
 
 			my $class = "pos";
-
-			my @flags = split("\n", GetConfig('flags'));
-
-			if (grep($_ eq $tag, @flags)) {
-				$class = "neg";
-			}
 
 			$buttonTemplate =~ s/\$voteValue/$tag/g;
 			$buttonTemplate =~ s/\$voteValueCaption/$tag/g;
@@ -234,7 +232,7 @@ sub GetItemTemplate {
 		$message = FormatForWeb($message);
 
 		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-		$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
+		$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
 
 		#$message =~ s/([A-F0-9]{16})/xxx/g;
 
@@ -291,7 +289,7 @@ sub GetItemTemplate {
 		if ($file{'display_full_hash'}) {
 			$itemName = $fileHash;
 		} else {
-			$itemName = substr($fileHash, 0, 10) . '...';
+			$itemName = substr($fileHash, 0, 10) . '..';
 		}
 
 		my $ballotTime = time();
@@ -311,6 +309,7 @@ sub GetItemTemplate {
 			$itemTemplate =~ s/\$replyCount//g;
 		}
 
+		WriteLog("Call to GetVoterTemplate() :309");
 		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
@@ -378,6 +377,9 @@ sub GetItemPage {
 			}
 
 			my $replyTemplate = GetItemTemplate($replyItem);
+
+			WriteLog('$replyTemplate');
+			WriteLog($replyTemplate);
 
 			$txtIndex .= $replyTemplate;
 		}
@@ -590,7 +592,7 @@ sub GetIndexPage {
 
 			$message = FormatForWeb($message);
 
-			$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
+			$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
 
 			if ($isSigned && $gpgKey eq GetAdminKey()) {
 				$isAdmin = 1;
@@ -640,7 +642,7 @@ sub GetIndexPage {
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 10) . "...";
+			my $itemName = substr($gitHash, 0, 10) . "..";
 
 			#			my $ballotTime = time();
 
@@ -861,11 +863,11 @@ sub GetReadPage {
 			my $itemText = FormatForWeb($message);
 
 			#$itemText =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-			$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
-			#$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1...<\/a>/g;
+			$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
+			#$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
 
 			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 10) . '...';
+			my $itemName = substr($gitHash, 0, 10) . '..';
 			my $ballotTime = time();
 			my $replyCount = $row->{'child_count'};
 
@@ -883,6 +885,7 @@ sub GetReadPage {
 				$itemTemplate =~ s/\$replyCount//g;
 			}
 
+			WriteLog("Call to GetVoterTemplate() :881");
 			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
