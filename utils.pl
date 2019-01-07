@@ -22,6 +22,7 @@ push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
+push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
 
 my $gpg;
 if (GetConfig('use_gpg2')) {
@@ -347,10 +348,12 @@ sub PutFile {
 		return;
 	}
 
+	WriteLog("PutFile($file, ...");
+
 	my $content = shift;
 	my $binMode = shift;
 
-	if ($content) {
+	if (!$content) {
 		return;
 	}
 	if (!$binMode) {
@@ -360,11 +363,12 @@ sub PutFile {
 	}
 
 	WriteLog("PutFile($file, (\$content), $binMode)");
-	WriteLog("====");
+	WriteLog("==== \$content ====");
 	WriteLog($content);
 	WriteLog("====");
 
 	if (open (my $fileHandle, ">", $file)) {
+		WriteLog("file handle opened.");
 		if ($binMode) {
 			binmode $fileHandle, ':utf8';
 		}
