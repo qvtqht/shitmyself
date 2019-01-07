@@ -28,7 +28,7 @@ sub GetPageFooter {
 	my $timestamp = strftime('%F %T', localtime(time()));
 	my $myVersion = GetMyVersion();
 
-	my $footer = $timestamp . " version " . $myVersion;
+	my $footer = $timestamp . " ; " . $myVersion;
 
 	$txtFooter =~ s/\$footer/$footer/;
 
