@@ -263,7 +263,9 @@ sub IndexFile {
 			$itemType = 'pubkey';
 		}
 
-		PutFile("./cache/message/$gitHash.message", $message);
+		my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+		WriteLog( "\n====\n"  . $messageCacheName . "\n====\n" . $message .  "\n====\n" . $txt .  "\n====\n" );
+		PutFile($messageCacheName, $message);
 
 		if ($isSigned) {
 			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemType);

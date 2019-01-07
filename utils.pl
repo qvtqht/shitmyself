@@ -287,7 +287,7 @@ sub GetFile {
 		return;
 	}
 
-	my $length = shift || 2097152;
+	my $length = shift || 209715200;
 	# default to reading a max of 2MB of the file. #scaling
 
 	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
@@ -339,9 +339,30 @@ sub PutConfig {
 
 # Writes to a file
 sub PutFile {
+	WriteLog("PutFile(...)");
+
 	my $file = shift;
+
+	if (!$file) {
+		return;
+	}
+
 	my $content = shift;
 	my $binMode = shift;
+
+	if ($content) {
+		return;
+	}
+	if (!$binMode) {
+		$binMode = 0;
+	} else {
+		$binMode = 1;
+	}
+
+	WriteLog("PutFile($file, (\$content), $binMode)");
+	WriteLog("====");
+	WriteLog($content);
+	WriteLog("====");
 
 	if (open (my $fileHandle, ">", $file)) {
 		if ($binMode) {
@@ -821,20 +842,15 @@ sub AddItemToConfigList {
 sub FormatForWeb {
 	my $text = shift;
 
-	if (!$text && $text ne '') {
-		WriteLog("trying to use FormatForWeb() with empty parameter");
-		return;
+	if (!$text) {
+		return '';
 	}
-
-	#chomp $text;
-
 
 	$text = HtmlEscape($text);
 	$text =~ s/\n /<br>&nbsp;/g;
 	$text =~ s/^ /&nbsp;/gd;
 	$text =~ s/  / &nbsp;/g;
 	$text =~ s/\n/<br>\n/g;
-
 
 	#htmlspecialchars(
 	## nl2br(
