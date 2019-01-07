@@ -279,7 +279,7 @@ sub ProcessAccessLog {
 								if (IsSha1($parentHash)) {
 									WriteLog("Found a parent comment, removing caches for $parentHash");
 									UnlinkCache("/file/$parentHash");
-#									UnlinkCache("message/$parentHash.message");
+									UnlinkCache("message/$parentHash.message");
 #									UnlinkCache("gpg/$parentHash.cache");
 
 								}
