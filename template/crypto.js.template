@@ -609,6 +609,16 @@ function signMessage() {
 
 			var message = textbox.value;
 
+			// if the message already has the header,
+			//    assume it's already signed and return
+			// #todo make it also verify that it's signed before returning
+			// #todo some kind of *unobtrusive* indicator/confirmation/option
+			// #todo change color of textbox when message is properly signed
+
+			if (message.trim().substring(0, 34) == ('-----BEGIN PGP SIGNED MESSAGE-----')) {
+				return;
+			}
+
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
 			options = {
