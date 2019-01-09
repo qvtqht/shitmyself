@@ -26,5 +26,5 @@ function formToText(formId) {
 
 var pau = document.getElementById('voteAsUser');
 if (pau) {
-	pau.innerHTML = '<input type=button onclick="formToText(this.form.id)" value="Vote With Signature">'
+	pau.innerHTML = '<input type=button onclick="formToText(this.form.id)" value="Sign and/or Comment">'
 }

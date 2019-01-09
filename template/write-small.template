@@ -1,7 +1,10 @@
 <!-- write-small.template -->
-<form action="./gracias.html" class=submit name=submit>
-	$writeShortMessage Use at your own risk. Comes with NO WARRANTY, express or implied.  <a href="/write.html">For more room or to sign your message, use the <big>Write</big> page.</a><br>
+<form action="./gracias.html" class=submit name=submit style="background-color: #e0e0e0; border: 5pt solid #d0d0d0; border-radius: 5pt;">
+	<p>Hello! Would you like to say something <u>right away</u>? Use this orange textbox!</p>
 
-	<input autocomplete=off id=comment name=comment size=80 style="max-width: 100%" maxlength=6000> <input type=submit id=submit value="Send Unsigned" onClick="">
+	<p><input autocomplete=off id=comment name=comment size=80 style="max-width: 100%; background-color: #ffffc0" maxlength=6000> <input type=submit id=submit value="Send Unsigned" onClick=""></p>
+
+	<p align=right style="display: inline; float: right;"><a href="/write.html">More Writing Options</a></p>
 </form>
+
 <!-- / write-small.template -->

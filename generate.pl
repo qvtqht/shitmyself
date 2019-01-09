@@ -551,8 +551,8 @@ sub GetIndexPage {
 
 	my $writeSmall = GetTemplate("write-small.template");
 
-	my $writeShortMessage = GetString('write_short_message');
-	$writeSmall =~ s/\$writeShortMessage/$writeShortMessage/g;
+	#my $writeShortMessage = GetString('write_short_message');
+	#$writeSmall =~ s/\$writeShortMessage/$writeShortMessage/g;
 
 	$htmlStart .= $writeSmall;
 
