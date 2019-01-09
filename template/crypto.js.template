@@ -352,7 +352,8 @@ function saveId() {
 				myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
 			} else {
 				var myFp = localStorage.getItem('fingerprint');
-				myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
+//				myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
+				myidBox.innerHTML = '<fieldset><legend>You are signed in as</legend> <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></fieldset>';
 			}
 		}
 
@@ -444,17 +445,17 @@ function makePrivateKey(username, bits) {
 
 					saveId();
 
-					var cbMakeProfile = document.getElementById('pubNewProfile');
-					if (cbMakeProfile) {
-						if (cbMakeProfile.checked) {
-							var a = document.createElement('iframe');
-							a.src = "/write.html#inspubkey";
-							a.width = "50";
-							a.height = "50";
-							document.getElementById('profIframe').appendChild(a)
-						}
-					}
-
+//					var cbMakeProfile = document.getElementById('pubNewProfile');
+//					if (cbMakeProfile) {
+//						if (cbMakeProfile.checked) {
+//							var a = document.createElement('iframe');
+//							a.src = "/write.html#inspubkey";
+//							a.width = "50";
+//							a.height = "50";
+//							document.getElementById('profIframe').appendChild(a)
+//						}
+//					}
+//
 
 					var endDate = new Date();
 				}
@@ -489,11 +490,16 @@ function insPubKey() {
 		if (textbox) {
 			if (pubkey) {
 				textbox.value = pubkey;
-
-				var composeForm = document.getElementById('compose');
-				if (composeForm) {
-					composeForm.submit();
-				}
+//
+//				var writeIntro = document.getElementById('writeintro');
+//				if (writeIntro) {
+//					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>If you want your profile to contain something other than your public key, put it <i>below</i> the key, and sign your post.<br><br>This post will replace your current profile, if there is one set for you.</font></p>';
+//				}
+//
+//				var composeForm = document.getElementById('compose');
+//				if (composeForm) {
+//					composeForm.submit();
+//				}
 			}
 		}
 	}

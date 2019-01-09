@@ -1,5 +1,6 @@
 // just the avatar, please
 
+
 if (window.localStorage) {
 	var myidBox = document.getElementById('myid');
 	if (myidBox) {
@@ -9,7 +10,8 @@ if (window.localStorage) {
 			myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
 		} else {
 			var myFp = localStorage.getItem('fingerprint');
-			myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
+//			myidBox.innerHTML = '<a href="/author/' + myFp + '">' + myAvatar + '</a>' + ' <a href="/identity.html">Settings</a>';
+			myidBox.innerHTML = '<fieldset><legend>You are signed in as</legend> <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></fieldset>';
 
 			if (window.location.pathname == '/author/' + myFp + '/') {
 				// Create a new element

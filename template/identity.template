@@ -19,14 +19,19 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 
         <p>
             <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
-            <strong>Attention!</strong> Save your private key to sign in again!
+            <strong><b>Attention!</b></strong> Save your private key to sign in again!
         </p>
 
         <hr>
 
         <p>
-            <input type=button value="Create Profile" onclick="window.open('/write.html#inspubkey','_self');"><br>
-            Publish your name and public key to the board.<br>Also allows receiving encrypted messages.
+            <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
+            Publish your public key to the board.<br>Allows others to see your username.<br>Allows others to send you encrypted messages.
+        </p>
+
+        <p>
+            <input type=button value="Create Profile" onclick="window.open('/write.html#profile','_self');"><br>
+            Create or replace your current profile.<br>If one already exists, overwrite it.<br>
         </p>
 
     </fieldset>
@@ -37,6 +42,9 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <form id=formCreateId style="display: none">
 <fieldset style="display: inline;">
 <legend>Create Identity</legend>
+<input type=submit value="Create Identity" onclick="makeKeyFromInputs();return false;"><br><span id=profIframe></span><br>
+<fieldset style="display: inline;">
+<legend>Advanced Options</legend>
 <label for=name>Name:</label><input type=text size=16 maxlength=100 name=name id=name><br>
 <label for=bits>Algorithm:</label><select name=bits id=bits>
 <option value=curve25519>curve25519</option>
@@ -54,9 +62,8 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <option value=4096>rsa4096</option>
 </select>
 <!--<input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>-->
-<br>
+<br></fieldset>
 <!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
-<input type=submit value="Create Identity" onclick="makeKeyFromInputs();return false;"><br><span id=profIframe></span>
 </fieldset>
 </form>
 <!-- / create identity -->
@@ -74,13 +81,19 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 
 <br>
 
-<p><b>Notice:</b> This page uses in-browser JavaScript encryption. It's good
-enough if you are not paranoid. If you do happen to be the paranoid type, for
-more security at the expense of convenience, you can use your own own PGP/GPG.</p>
+<p><u>Instructions for Users With Advanced Levels of Paranoi</u><br><br>
 
-<p>To create an identity, generate your own key and <tt>--armor</tt> it.</p>
+Yeah, I get it, in-browser encryption is for noobs what about <i>me</i>?<br><br>
 
-<p>To post a signed message, <tt>--clearsign</tt> and post away.</p>
+If you are paranoid and industrious, I advise you to disable JS and use your own own PGP/GPG.<br><br>
 
-<p>For more information, <a href="/manual.html">reference the fine Manual</a>.
+Just paste GPG's output, including the PGP headers, into the <a href="/write.html">Write page</a>.
+
+To create a user page: <tt>gpg --armor --export [KEY ID]</tt> (-----BEGIN PGP PUBLIC KEY-----)<br><br>
+
+To post a message, <tt>gpg --clearsign</tt> and post away! (-----BEGIN PGP SIGNED MESSAGE-----)<br><br>
+
+For more information, <a title="RTFM" href="/manual.html">reference the fine Manual</a>.</p>
+
+<p><u>Not sure what any of this means?</u> Ask around!</p>
 <!-- / identity.template -->
