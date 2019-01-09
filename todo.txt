@@ -1,3 +1,16 @@
+redir anon vote page (to where?)
+
+vote with signature should/nt? show up if not signed in?
+
+site ui elements should be a different color than all the user-entered text content
+
+vote with signature --> write page, but not submitted --> still count as anon vote?
+
+post separator should be color of hash
+
+js fallback for saving via "more options" link on write-small.template
+
+
 Hide voting, weight-setting, and other messages from home page
 	Add an /all page that displays a feed of everything
 
