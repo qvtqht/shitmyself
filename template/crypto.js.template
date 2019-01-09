@@ -505,6 +505,27 @@ function insPubKey() {
 	}
 }
 
+function insProfileTemplate() {
+	var pubkey = getPublicKey();
+
+	if (pubkey) {
+		var textbox = document.getElementById('comment');
+
+		if (textbox) {
+			if (pubkey) {
+				var writeIntro = document.getElementById('writeintro');
+				if (writeIntro) {
+					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>If you want your profile to contain something other than your public key, put it <i>below</i> the key, and sign your post.<br><br>This post will replace your current profile, if there is one set for you.</font></p>';
+				}
+
+				textbox.value = '-----BEGIN PROFILE-----\n\n[... insert profile here ...]\n\n-----END PROFILE-----' ;
+			}
+		}
+	}
+}
+
+
+
 function insVotes() {
 	var vv = localStorage.getItem('vvvv');
 
@@ -525,6 +546,9 @@ function writeOnload() {
 		}
 		if (window.location.hash == '#insvotes') {
 			insVotes();
+		}
+		if (window.location.hash == '#profile') {
+			insProfileTemplate();
 		}
 	}
 }
