@@ -1,4 +1,9 @@
 <!-- gracias.template -->
+<script><!--
+if (window.location.href.toString().match(/\/gracias.html\?comment=\-\-\-\-\-BEGIN\+PGP\+PUBLIC\+KEY\+BLOCK\-\-\-\-\-.+\-\-\-\-\-END\+PGP\+PUBLIC\+KEY\+BLOCK\-\-\-\-\-/g)) {
+    window.open('/identity.html', '_self');
+}
+// --></script>
 <p>Thank you!</p>
 <p>Posted content may not appear immediately.</p>
 <pre>

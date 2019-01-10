@@ -39,6 +39,7 @@ h2.menu a {
 	font-weight: larger;
 	font-family: sans-serif;
 	font-weight: bold;
+	color: gray;
 }
 .menu a {
 	padding-left: 1em;

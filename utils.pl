@@ -660,8 +660,9 @@ sub GpgParse {
 
 	# If there is an encrypted message header...
 	if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
-		WriteLog( "gpg --batch --list-only --status-fd 1 \"$filePath\"");
-		my $gpg_result = `gpg --batch --list-only --status-fd 1 "$filePath"`;
+		WriteLog("$gpg --batch --list-only --status-fd 1 \"$filePath\"");
+		my $gpg_result = `$gpg --batch --list-only --status-fd 1 "$filePath"`;
+		WriteLog($gpg_result);
 
 		foreach (split ("\n", $gpg_result)) {
 			chomp;
@@ -689,8 +690,13 @@ sub GpgParse {
 
 	# If there is a GPG pubkey header...
 	if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
-		WriteLog( "gpg --keyid-format LONG \"$filePath\"");
-		my $gpg_result = `gpg --keyid-format LONG "$filePath"`;
+		WriteLog( "$gpg --keyid-format LONG \"$filePath\"");
+		my $gpg_result = `$gpg --keyid-format LONG "$filePath"`;
+		WriteLog($gpg_result);
+
+		WriteLog("$gpg --import \"$filePath\"");
+		my $gpgImportKeyResult = `$gpg --import "$filePath"`;
+		WriteLog($gpgImportKeyResult);
 
 #		WriteLog( "gpg --with-colons --with-fingerprint \"$file\"\n");
 #		my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint "$file"`);
@@ -734,6 +740,7 @@ sub GpgParse {
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
 		WriteLog( "$gpg --verify --status-fd 1 \"$filePath\"\n");
 		my $gpg_result = `$gpg --verify --status-fd 1 "$filePath"`;
+		WriteLog($gpg_result);
 
 		#WriteLog($gpg_result);
 		#die();

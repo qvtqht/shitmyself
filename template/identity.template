@@ -11,10 +11,10 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <!-- current identity -->
 <form id=formCurId style="display: none">
     <fieldset style="display: inline">
-        <legend>Current Identity</legend>
+        <legend><b>Current Identity</b></legend>
         <label for=myId2>You are:</label> <span id=myId2 class=avatar></span><br>
         <label for=myFP>Fingerprint:</label> <span id=myFP></span><br>
-        <label for=myAlgo>Algorithm:</label> <span id=myAlgo></span><br>
+<!--        <label for=myAlgo>Algorithm:</label> <span id=myAlgo></span><br>-->
         <label for=myCrea>Created:</label> <span id=myCrea></span><br>
 
         <p>
@@ -22,17 +22,18 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
             <strong><b>Attention!</b></strong> Save your private key to sign in again!
         </p>
 
-        <hr>
+        <!--<hr>-->
 
-        <p>
-            <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
-            Publish your public key to the board.<br>Allows others to see your username.<br>Allows others to send you encrypted messages.
-        </p>
+        <!--<p>-->
+            <!--<input type=button value="Create Profile" onclick="window.open('/write.html#profile','_self');"><br>-->
+            <!--Create or replace your current profile.<br>If one already exists, overwrite it.<br>-->
+        <!--</p>-->
 
-        <p>
-            <input type=button value="Create Profile" onclick="window.open('/write.html#profile','_self');"><br>
-            Create or replace your current profile.<br>If one already exists, overwrite it.<br>
-        </p>
+        <!--<p>-->
+            <!--<input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>-->
+            <!--Publish your public key, including your name<br>-->
+            <!--Allow others to send you encrypted messages<br>-->
+        <!--</p>-->
 
     </fieldset>
 </form>
@@ -41,10 +42,14 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <!-- create identity -->
 <form id=formCreateId style="display: none">
 <fieldset style="display: inline;">
-<legend>Create Identity</legend>
-<input type=submit value="Create Identity" onclick="makeKeyFromInputs();return false;"><br><span id=profIframe></span><br>
+<legend><b>Create Identity</b></legend>
+<input type=submit value="Create Identity" onclick="makeKeyFromInputs();return false;"><span id=profIframe></span><br>
+    Generate an identity, also known as key pair<br>
+    Publish your public key, including your name (set below)<br>
+    Store your private key in your browser/device<br>
+    Allow others to send you encrypted messages<br><br>
 <fieldset style="display: inline;">
-<legend>Advanced Options</legend>
+<legend><b>Advanced Options</b></legend>
 <label for=name>Name:</label><input type=text size=16 maxlength=100 name=name id=name><br>
 <label for=bits>Algorithm:</label><select name=bits id=bits>
 <option value=curve25519>curve25519</option>
@@ -71,17 +76,21 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <!-- private key -->
 <form id=formprivkey style="display: none">
     <fieldset style="display: inline">
-        <legend>Private Key</legend>
+        <legend><b>Private Key</b></legend>
+        If you are signed in, copy this key to back up your identity.<br><br>
+        If you have previously created and backed up an identity,<br>
+        You can restore it using this field. (Just paste your key.)<br><br>
+        <label for=privatekey>Private Key (back this up or paste your backup here)</label>
         <textarea cols=61 rows=10 id=privatekey autocomplete=off spellcheck=false></textarea><br>
         <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
-        <input type=button id=copypriv value="Copy Private Key" onClick="copyTextToClipboard('privatekey');"><br>
+        <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br>
     </fieldset>
 </form>
 <!-- / private key -->
 
 <br>
 
-<p><u>Instructions for Users With Advanced Levels of Paranoi</u><br><br>
+<p><u>Instructions for Users With Advanced Levels of Paranoia</u><br><br>
 
 Yeah, I get it, in-browser encryption is for noobs what about <i>me</i>?<br><br>
 

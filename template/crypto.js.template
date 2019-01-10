@@ -2,10 +2,7 @@ var myFingerprint = '';
 var myUsername = '';
 
 function logOut() {
-	//if (confirm('If you want to use this identity again, please back up your private key first.\n\nRemove identity?')) {
-		removeStoredKeys();
-		//localStorage.setItem("signedout", 1);
-	//}
+	removeStoredKeys();
 }
 
 function getUserFp() {
@@ -257,14 +254,6 @@ function identityOnload() {
 		}
 	}
 
-	var signedOut = localStorage.getItem("signedout");
-	if (signedOut === null || signedOut.length === 0) {
-	} else {
-		if (!pk) {
-			makeKeyFromInputs();
-		}
-	}
-
 	showHideForms();
 
 	if (window.location.hash) {
@@ -349,7 +338,7 @@ function saveId() {
 			var myAvatar = localStorage.getItem('avatar');
 
 			if (myAvatar === null || myAvatar.length === 0) {
-				myidBox.innerHTML = '<a href="/identity.html">Sign In</a>';
+				myidBox.innerHTML = 'Welcome! Please enjoy this resource. If you want an identity, <a href="/identity.html">Sign In</a>.';
 			} else {
 				var myFp = localStorage.getItem('fingerprint');
 				myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
@@ -429,10 +418,6 @@ function makePrivateKey(username, bits) {
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
 
-			//var statusBox = document.getElementById('status');
-			var startDate = new Date();
-			//statusBox.value = statusBox.value + "\n" + "Generating key..."
-
 			openpgp.generateKey(options).then(
 				function(key) {
 					setPrivateKey(key.privateKeyArmored);
@@ -444,19 +429,7 @@ function makePrivateKey(username, bits) {
 
 					saveId();
 
-//					var cbMakeProfile = document.getElementById('pubNewProfile');
-//					if (cbMakeProfile) {
-//						if (cbMakeProfile.checked) {
-//							var a = document.createElement('iframe');
-//							a.src = "/write.html#inspubkey";
-//							a.width = "50";
-//							a.height = "50";
-//							document.getElementById('profIframe').appendChild(a)
-//						}
-//					}
-//
-
-					var endDate = new Date();
+					window.open('/write.html#inspubkey', '_self');
 				}
 			);
 		} else {
@@ -489,16 +462,16 @@ function insPubKey() {
 		if (textbox) {
 			if (pubkey) {
 				textbox.value = pubkey;
-
-				var writeIntro = document.getElementById('writeintro');
-				if (writeIntro) {
-					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>Posting your public key will allow others to see your username. You don\'t have to sign it.</font></p>';
-				}
 //
-//				var composeForm = document.getElementById('compose');
-//				if (composeForm) {
-//					composeForm.submit();
+//				var writeIntro = document.getElementById('writeintro');
+//				if (writeIntro) {
+//					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>Posting your public key will allow others to see your username. You don\'t have to sign it.</font></p>';
 //				}
+//
+				var composeForm = document.getElementById('compose');
+				if (composeForm) {
+					composeForm.submit();
+				}
 			}
 		}
 	}
@@ -517,7 +490,7 @@ function insProfileTemplate() {
 					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>This post will replace your current profile, if there is one set for you, as long as you take care to retain the header and footer.</font></p>';
 				}
 
-				textbox.value = '-----BEGIN PROFILE-----\n\n[... insert profile here ...]\n\n-----END PROFILE-----' ;
+				textbox.value = '-----BEGIN PROFILE-----\n\n[This is just a template. All information is optional to provide. Edit and format as you like.]\n\nName: \n\nSelf-summary:\n\nFavorite Books:\n\nFavorite Quotes:\n\nContact Information:\n\n-----END PROFILE-----' ;
 			}
 		}
 	}
