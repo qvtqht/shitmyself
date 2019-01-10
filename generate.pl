@@ -28,7 +28,7 @@ sub GetPageFooter {
 	my $timestamp = strftime('%F %T', localtime(time()));
 	my $myVersion = GetMyVersion();
 
-	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 10) . '..' . '</a>';
+	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
 	my $footer = $timestamp . " ; " . $myVersionPrettyLink;
 
@@ -234,7 +234,7 @@ sub GetItemTemplate {
 		$message = FormatForWeb($message);
 
 		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-		$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
+		$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
 
 		#$message =~ s/([A-F0-9]{16})/xxx/g;
 
@@ -291,7 +291,7 @@ sub GetItemTemplate {
 		if ($file{'display_full_hash'}) {
 			$itemName = $fileHash;
 		} else {
-			$itemName = substr($fileHash, 0, 10) . '..';
+			$itemName = substr($fileHash, 0, 8) . '..';
 		}
 
 		my $ballotTime = time();
@@ -551,18 +551,20 @@ sub GetVersionPage {
 	my $pageTitle = "Information page for version $version";
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
-
-	my $writeSmall = GetTemplate("write-small.template");
-
-	$htmlStart .= $writeSmall;
+#
+#	my $writeSmall = GetTemplate("write-small.template");
+#
+#	$htmlStart .= $writeSmall;
 
 	$txtPageHtml .= $htmlStart;
 
 	$txtPageHtml .= GetTemplate('maincontent.template');
 
 	my $versionInfo = GetTemplate('versioninfo.template');
+	my $shortVersion = substr($version, 0, 8);
 
-	$versionInfo = s/\$version/$version/g;
+	$versionInfo =~ s/\$version/$version/g;
+	$versionInfo =~ s/\$shortVersion/$shortVersion/g;
 
 	$txtPageHtml .= $versionInfo;
 
@@ -635,7 +637,7 @@ sub GetIndexPage {
 
 			$message = FormatForWeb($message);
 
-			$message =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
+			$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
 
 			if ($isSigned && $gpgKey eq GetAdminKey()) {
 				$isAdmin = 1;
@@ -685,7 +687,7 @@ sub GetIndexPage {
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 10) . "..";
+			my $itemName = substr($gitHash, 0, 8) . "..";
 
 			#			my $ballotTime = time();
 
@@ -907,12 +909,10 @@ sub GetReadPage {
 
 			my $itemText = FormatForWeb($message);
 
-			#$itemText =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-			$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
-			#$itemText =~ s/([a-f0-9]{10})([a-f0-9]{30})/<a href="\/$1$2.html">$1..<\/a>/g;
+			$itemText =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
 
 			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 10) . '..';
+			my $itemName = substr($gitHash, 0, 8) . '..';
 			my $ballotTime = time();
 			my $replyCount = $row->{'child_count'};
 
