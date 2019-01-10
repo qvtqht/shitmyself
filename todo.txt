@@ -1,3 +1,9 @@
+No pubkey and/or bad sig should result in big red warning on page/listing
+
+Front-end signature checks/indicators in input boxes
+
+Admin's page and version page should be generated always
+
 redir anon vote page (to where?)
 
 vote with signature button should/nt? show up if not signed in?
