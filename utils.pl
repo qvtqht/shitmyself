@@ -17,12 +17,13 @@ use Storable;
 my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
-my @dirsThatShouldExist = qw(log html html/txt spam admin key cache html/author html/action cache/message cache/gpg html/top config);
+my @dirsThatShouldExist = qw(log html html/txt spam admin key cache html/author html/action html/top config);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
+push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
 
 my $gpg;
 if (GetConfig('use_gpg2')) {
@@ -634,7 +635,7 @@ sub GpgParse {
 	my $gitHash = GetFileHash($filePath);
 
 	my $cachePath;
-	$cachePath = "./cache/gpg/$gitHash.cache";
+	$cachePath = "./cache/" . GetMyVersion() . "/gpg/$gitHash.cache";
 
 	if (-e $cachePath) {
 		WriteLog("GpgParse cache hit! $cachePath");
