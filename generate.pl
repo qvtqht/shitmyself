@@ -534,6 +534,44 @@ sub GetPageParams {
 	return %pageParams;
 }
 
+sub GetVersionPage {
+	my $version = shift;
+
+	if (!IsSha1($version)) {
+		return;
+	}
+
+	my $txtPageHtml = '';
+
+	my $pageTitle = "Information page for version $version";
+
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
+
+	my $writeSmall = GetTemplate("write-small.template");
+
+	$htmlStart .= $writeSmall;
+
+	$txtPageHtml .= $htmlStart;
+
+	$txtPageHtml .= GetTemplate('maincontent.template');
+
+	my $versionInfo = GetTemplate('versioninfo.template');
+
+	$versionInfo = s/\$version/$version/g;
+
+	$txtPageHtml .= $versionInfo;
+
+	$txtPageHtml .= GetPageFooter();
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtPageHtml =~ s/<\/body>/$scriptInject<\/body>/;
+
+	return $txtPageHtml;
+}
+
 sub GetIndexPage {
 	# Returns index#.html files given an array of files
 	# Called by a loop in generate.pl
@@ -689,7 +727,6 @@ sub GetIndexPage {
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
 	return $txtIndex;
-
 }
 
 sub GetReadPage {
@@ -1404,6 +1441,24 @@ sub MakeClonePage {
 
 
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
+}
+
+{
+	my $commits = `git log -n 25 | grep ^commit`;
+
+	WriteLog('$commits = git log -n 25 | grep ^commit');
+
+	if ($commits) {
+		foreach(split("\n", $commits)) {
+			my $commit = $_;
+			$commit =~ s/^commit //;
+			chomp($commit);
+			if (IsSha1($commit)) {
+				WriteLog("./html/$commit.html");
+				PutHtmlFile("./html/$commit.html", GetVersionPage($commit));
+			}
+		}
+	}
 }
 
 {
