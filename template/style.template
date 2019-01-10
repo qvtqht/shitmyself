@@ -50,6 +50,18 @@ hr {
 	color: $primaryColor;
 }
 
+.writeinfo {
+	background-color: orange;
+	color: black;
+	border: 5pt solid yellow;
+	padding: 5pt;
+}
+
+nobr {
+	white-space: nowrap
+}
+
+
 /* textboxes */
 .txt {
 	padding: 3pt;
@@ -59,8 +71,9 @@ hr {
 	margin: 8pt;
 }
 div.txt {
-	border-bottom: 3pt dotted $primaryColor;
-	border-radius: 8pt;
+	border-bottom: 3pt double $primaryColor;
+	border-right: 3pt double $primaryColor;
+	border-radius: 10pt;
 }
 .admin {
 	background: repeating-linear-gradient(

@@ -1,8 +1,16 @@
 <!-- identity.template -->
 <noscript>
-<p class=warning><strong>In order to use identity features without JavaScript, use GPG/PGP.</strong><br><br>
-Please <a href="/manual.html">read the Manual</a> for more information.</strong></p>
+<p class=warning><strong><b>Welcome!</b> It looks like you have JavaScript disabled in your browser.<br><br>
+You can use identity features without JavaScript if you know how to use GPG/PGP.<br><br>
+Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
+If you want to use the in-browser signing and identity features, please enable JavaScript in your browser.</p>
 </noscript>
+
+<h2>Identity</h2>
+
+<p>Welcome to the Identity page! This is where you can create a username, sign in, sign out, and review your information.</p>
+
+<p>If you have any questions, please consult the Manual, or just ask using the Write page.</p>
 
 <p id=loading style="color: green; border: 5pt green solid; border-radius: 10pt; background-color: green; color: white;">
     <br><br>Loading...<br><br><br>
@@ -43,7 +51,7 @@ Please <a href="/manual.html">read the Manual</a> for more information.</strong>
 <form id=formCreateId style="display: none">
 <fieldset style="display: inline;">
 <legend><b>Create Identity</b></legend>
-<input type=submit value="Create Identity" onclick="makeKeyFromInputs();return false;"><span id=profIframe></span><br>
+<input type=submit value="Create Identity" style="background-color: #c0ffd0" onclick="makeKeyFromInputs();return false;"><span id=profIframe></span><br>
     Generate an identity, also known as key pair<br>
     Publish your public key, including your name (set below)<br>
     Store your private key in your browser/device<br>

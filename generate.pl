@@ -28,7 +28,9 @@ sub GetPageFooter {
 	my $timestamp = strftime('%F %T', localtime(time()));
 	my $myVersion = GetMyVersion();
 
-	my $footer = $timestamp . " ; " . $myVersion;
+	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 10) . '..' . '</a>';
+
+	my $footer = $timestamp . " ; " . $myVersionPrettyLink;
 
 	$txtFooter =~ s/\$footer/$footer/;
 
@@ -295,6 +297,9 @@ sub GetItemTemplate {
 		my $ballotTime = time();
 		my $replyCount = $file{'child_count'};
 
+		my $borderColor = '#' . substr($fileHash, 0, 6);
+
+		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		$itemTemplate =~ s/\$itemName/$itemName/g;
@@ -686,6 +691,9 @@ sub GetIndexPage {
 
 			my $replyCount = $row->{'child_count'};
 
+			my $borderColor = '#' . substr($fileHash, 0, 6);
+
+			$itemTemplate =~ s/\$borderColor/$borderColor/g;
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
 			$itemTemplate =~ s/\$itemName/$itemName/g;
@@ -908,6 +916,9 @@ sub GetReadPage {
 			my $ballotTime = time();
 			my $replyCount = $row->{'child_count'};
 
+			my $borderColor = '#' . substr($fileHash, 0, 6);
+
+			$itemTemplate =~ s/\$borderColor/$borderColor/g;
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
 			$itemTemplate =~ s/\$itemName/$itemName/g;

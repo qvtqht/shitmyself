@@ -462,12 +462,12 @@ function insPubKey() {
 		if (textbox) {
 			if (pubkey) {
 				textbox.value = pubkey;
-//
-//				var writeIntro = document.getElementById('writeintro');
-//				if (writeIntro) {
-//					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>Posting your public key will allow others to see your username. You don\'t have to sign it.</font></p>';
-//				}
-//
+
+				var writeIntro = document.getElementById('writeintro');
+				if (writeIntro) {
+					writeIntro.innerHTML = '<p class=writeinfo>Your public key is now being shared with the server. Please wait a moment...</p>';
+				}
+
 				var composeForm = document.getElementById('compose');
 				if (composeForm) {
 					composeForm.submit();
@@ -487,7 +487,7 @@ function insProfileTemplate() {
 			if (pubkey) {
 				var writeIntro = document.getElementById('writeintro');
 				if (writeIntro) {
-					writeIntro.innerHTML = '<p style="border: 1pt solid orange"><font color=orange>This post will replace your current profile, if there is one set for you, as long as you take care to retain the header and footer.</font></p>';
+					writeIntro.innerHTML = '<p class=writeinfo>This post will replace your current profile, if there is one set for you, as long as you take care to retain the header and footer.</p>';
 				}
 
 				textbox.value = '-----BEGIN PROFILE-----\n\n[This is just a template. All information is optional to provide. Edit and format as you like.]\n\nName: \n\nSelf-summary:\n\nFavorite Books:\n\nFavorite Quotes:\n\nContact Information:\n\n-----END PROFILE-----' ;
@@ -507,6 +507,11 @@ function insVotes() {
 		if (textbox) {
 			textbox.value = vv;
 			localStorage.removeItem('vvvv');
+
+			var writeIntro = document.getElementById('writeintro');
+			if (writeIntro) {
+				writeIntro.innerHTML = '<p class=writeinfo><b><u>Important:</u> You must press the button to register your votes.</b><br><br>Thank you for taking the time!<br><br>You can also comment on a separate line from the commands.</p>';
+			}
 		}
 	}
 }
