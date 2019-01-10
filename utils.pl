@@ -749,21 +749,26 @@ sub GpgParse {
 		my $key_id_prefix;
 		my $key_id_suffix;
 
-		if (index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
-			$key_id_prefix = "[GNUPG:] NO_PUBKEY ";
-			$key_id_suffix = "\n";
-		}
+		if (index($gpg_result, "[GNUPG:] BADSIG") >= 0 || index($gpg_result, "[GNUPG:] ERRSIG") >= 0 || index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
+#			$key_id_prefix = 0;
+#			$key_id_suffix = 0;
+		} else {
+#			if (index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
+#				$key_id_prefix = "[GNUPG:] NO_PUBKEY ";
+#				$key_id_suffix = "\n";
+#			}
 
-		if (index($gpg_result, "[GNUPG:] GOODSIG ") >= 0) {
-			$key_id_prefix = "[GNUPG:] GOODSIG ";
-			$key_id_suffix = " ";
-		}
+			if (index($gpg_result, "[GNUPG:] GOODSIG ") >= 0) {
+				$key_id_prefix = "[GNUPG:] GOODSIG ";
+				$key_id_suffix = " ";
+			}
 
-		if (index($gpg_result, "[GNUPG:] EXPKEYSIG ") >= 0) {
-			$key_id_prefix = "[GNUPG:] EXPKEYSIG ";
-			$key_id_suffix = " ";
+			if (index($gpg_result, "[GNUPG:] EXPKEYSIG ") >= 0) {
+				$key_id_prefix = "[GNUPG:] EXPKEYSIG ";
+				$key_id_suffix = " ";
 
-			$keyExpired = 1;
+				$keyExpired = 1;
+			}
 		}
 
 		if ($key_id_prefix) {
