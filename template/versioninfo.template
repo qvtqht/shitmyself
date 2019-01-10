@@ -1,0 +1,4 @@
+<fieldset style="display: inline">
+<legend>Version $version</legend>
+Hello, World!
+</fieldset>
