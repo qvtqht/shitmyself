@@ -85,10 +85,9 @@ If you want to use the in-browser signing and identity features, please enable J
 <form id=formprivkey style="display: none">
     <fieldset style="display: inline">
         <legend><b>Private Key</b></legend>
-        If you are signed in, copy this key to back up your identity.<br><br>
-        If you have previously created and backed up an identity,<br>
-        You can restore it using this field. (Just paste your key.)<br><br>
-        <label for=privatekey>Private Key (back this up or paste your backup here)</label>
+        If you are signed in, save the key in this field to back up your identity.<br><br>
+        If you have previously created and backed up an identity, just paste to restore.<br><br>
+        <label for=privatekey>Current Private Key</label>
         <textarea cols=61 rows=10 id=privatekey autocomplete=off spellcheck=false></textarea><br>
         <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
         <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br>
