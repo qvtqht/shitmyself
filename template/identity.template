@@ -37,11 +37,11 @@ If you want to use the in-browser signing and identity features, please enable J
             <!--Create or replace your current profile.<br>If one already exists, overwrite it.<br>-->
         <!--</p>-->
 
-        <!--<p>-->
-            <!--<input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>-->
-            <!--Publish your public key, including your name<br>-->
-            <!--Allow others to send you encrypted messages<br>-->
-        <!--</p>-->
+        <p>
+            <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
+            Publish your public key, including your name<br>
+            Allow others to send you encrypted messages<br>
+        </p>
 
     </fieldset>
 </form>
