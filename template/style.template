@@ -71,9 +71,12 @@ nobr {
 	margin: 8pt;
 }
 div.txt {
-	border-bottom: 3pt double $primaryColor;
-	border-right: 3pt double $primaryColor;
+	border-top: 1pt dotted $primaryColor;
+	border-left: 1pt dotted $primaryColor;
+	border-bottom: 4pt double $primaryColor;
+	border-right: 4pt double $primaryColor;
 	border-radius: 10pt;
+	padding-left: 1em;
 }
 .admin {
 	background: repeating-linear-gradient(
