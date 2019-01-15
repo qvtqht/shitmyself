@@ -127,8 +127,10 @@
 <p>Example:</p>
 
 <p>
+<textarea style="width:100%">
 addvote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa<br>
 addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
+</textarea>
 <br>
 
 </p>
