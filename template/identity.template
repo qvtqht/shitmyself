@@ -48,15 +48,15 @@ If you want to use the in-browser signing and identity features, please enable J
 <!-- / current identity -->
 
 <!-- create identity -->
-<form id=formCreateId style="display: none">
-<fieldset style="display: inline;">
-<legend><b>Create Identity</b></legend>
-<input type=submit value="Create Identity" style="background-color: #c0ffd0" onclick="makeKeyFromInputs();return false;"><span id=profIframe></span><br>
+<form id=formCreateId style="display: none; background-color: #c0ffc0; padding: 5pt; border: 5pt solid #d0f0d0; border-radius: 5pt">
+<big><u><b>Create Identity</b></u></big>
+<br><br>
+<input type=submit value="Create Identity Now" style="background-color: orange" onclick="makeKeyFromInputs();return false;"><span id=profIframe></span><br>
     Generate an identity, also known as key pair<br>
     Publish your public key, including your name (set below)<br>
     Store your private key in your browser/device<br>
     Allow others to send you encrypted messages<br><br>
-<fieldset style="display: inline;">
+<fieldset style="display: inline; background-color: #ffd0a0">
 <legend><b>Advanced Options</b></legend>
 <label for=name>Name:</label><input type=text size=16 maxlength=100 name=name id=name><br>
 <label for=bits>Algorithm:</label><select name=bits id=bits>
@@ -73,11 +73,11 @@ If you want to use the in-browser signing and identity features, please enable J
 <option value=1024>rsa1024</option>
 <option value=2048>rsa2048</option>
 <option value=4096>rsa4096</option>
-</select>
+</select><br>
+<input type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
 <!--<input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>-->
 <br></fieldset>
 <!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
-</fieldset>
 </form>
 <!-- / create identity -->
 

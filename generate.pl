@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+
+#todo add "account" and "sign up" and "register" links
+
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -105,7 +108,7 @@ sub GetPageHeader {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/", 'Read');
+	$menuTemplate .= GetMenuItem("/", 'Home');
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
@@ -309,9 +312,11 @@ sub GetItemTemplate {
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
 		if ($replyCount) {
-			$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+			my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+			$itemTemplate =~ s/\$replyCount/$discussLink/g;
 		} else {
-			$itemTemplate =~ s/\$replyCount//g;
+			my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+			$itemTemplate =~ s/\$replyCount/$discussLink/g;
 		}
 
 		WriteLog("Call to GetVoterTemplate() :309");
@@ -368,7 +373,6 @@ sub GetItemPage {
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
 	if ($file{'child_count'}) {
-		WriteLog($file{'child_count'} . " REPLIES!!!");
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
 		WriteLog('@itemReplies = ' . @itemReplies);
@@ -386,7 +390,11 @@ sub GetItemPage {
 			WriteLog('$replyTemplate');
 			WriteLog($replyTemplate);
 
-			$txtIndex .= $replyTemplate;
+			if ($replyTemplate) {
+				$txtIndex .= $replyTemplate;
+			} else {
+				WriteLog('Warning:  replyTemplate is missing for some reason!');
+			}
 		}
 	}
 
@@ -705,11 +713,19 @@ sub GetIndexPage {
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
 			$itemTemplate =~ s/\$by/$byString/g;
 
+#			if ($replyCount) {
+#				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+#			} else {
+#				$itemTemplate =~ s/\$replyCount//g;
+#			}
 			if ($replyCount) {
-				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+				my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+				$itemTemplate =~ s/\$replyCount/$discussLink/g;
 			} else {
-				$itemTemplate =~ s/\$replyCount//g;
+				my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+				$itemTemplate =~ s/\$replyCount/$discussLink/g;
 			}
+
 
 			#my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			#$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
@@ -928,9 +944,11 @@ sub GetReadPage {
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
 			if ($replyCount) {
-				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
+				my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+				$itemTemplate =~ s/\$replyCount/$discussLink/g;
 			} else {
-				$itemTemplate =~ s/\$replyCount//g;
+				my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+				$itemTemplate =~ s/\$replyCount/$discussLink/g;
 			}
 
 			WriteLog("Call to GetVoterTemplate() :881");
@@ -1261,6 +1279,9 @@ sub MakeStaticPages {
 
 	# Ok page
 	my $okPage = GetTemplate('actionvote.template');
+
+	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+
 	#$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
