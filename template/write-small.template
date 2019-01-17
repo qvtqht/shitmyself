@@ -4,7 +4,7 @@
 
 	<p><input autocomplete=off id=comment name=comment size=80 style="max-width: 100%; background-color: #ffffc0" maxlength=6000> <input type=submit id=submit value="Send Unsigned" onClick=""></p>
 
-	<p align=right style="display: inline; float: right;"><a href="/write.html">More Writing Options</a></p>
+	<p align=right style="font-variant: small-caps; font-family: cursive; font-size: large;"><a href="/write.html">To sign your message, and for other fun options, click, tap, point, wink, or peck at this link.</a></p>
 </form>
 
 <!-- / write-small.template -->
