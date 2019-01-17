@@ -12,7 +12,6 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 use Storable;
 
-
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
@@ -24,6 +23,7 @@ push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
+
 
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
@@ -85,6 +85,22 @@ sub CacheExists {
     } else {
         return 0;
     }
+}
+
+sub GetGpgMajorVersion {
+    state $gpgVersion;
+
+    if ($gpgVersion) {
+        return $gpgVersion;
+    }
+
+    $gpgVersion = `gpg --version`;
+
+    $gpgVersion =~ s/\n.+//g;
+    $gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
+    $gpgVersion =~ s/[^0-9]//g;
+
+    return $gpgVersion;
 }
 
 sub GetMyVersion {
@@ -865,7 +881,7 @@ sub FormatForWeb {
 
 	$text = HtmlEscape($text);
 	$text =~ s/\n /<br>&nbsp;/g;
-	$text =~ s/^ /&nbsp;/gd;
+	$text =~ s/^ /&nbsp;/g;
 	$text =~ s/  / &nbsp;/g;
 	$text =~ s/\n/<br>\n/g;
 
@@ -891,7 +907,7 @@ sub WriteLog {
 
 	AppendFile("log/log.log", $timestamp . " " . $text);
 
-	if (GetConfig("debug") == 1) {
+	if (GetConfig("debug") && GetConfig("debug") == 1) {
 		print $timestamp . " " . $text . "\n";
 	}
 }
