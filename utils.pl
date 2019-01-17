@@ -34,13 +34,18 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
-my $gpg;
+my $gpgCommand;
 if (GetConfig('use_gpg2')) {
-	$gpg = 'gpg2';
+	$gpgCommand = 'gpg2';
 } else {
-	$gpg = 'gpg';
+    if (GetGpgMajorVersion() eq '2') {
+        $gpgCommand = 'gpg2';
+    } else {
+	    $gpgCommand = 'gpg';
+    }
+    #what a mess
 }
-WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpg = $gpg");
+WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
 sub GetCache {
 	my $cacheName = shift;
@@ -95,6 +100,7 @@ sub GetGpgMajorVersion {
     }
 
     $gpgVersion = `gpg --version`;
+    WriteLog('GetGpgMajorVersion: gpgVersion = ' . $gpgVersion);
 
     $gpgVersion =~ s/\n.+//g;
     $gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
@@ -677,8 +683,8 @@ sub GpgParse {
 
 	# If there is an encrypted message header...
 	if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
-		WriteLog("$gpg --batch --list-only --status-fd 1 \"$filePath\"");
-		my $gpg_result = `$gpg --batch --list-only --status-fd 1 "$filePath"`;
+		WriteLog("$gpgCommand --batch --list-only --status-fd 1 \"$filePath\"");
+		my $gpg_result = `$gpgCommand --batch --list-only --status-fd 1 "$filePath"`;
 		WriteLog($gpg_result);
 
 		foreach (split ("\n", $gpg_result)) {
@@ -707,12 +713,12 @@ sub GpgParse {
 
 	# If there is a GPG pubkey header...
 	if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
-		WriteLog( "$gpg --keyid-format LONG \"$filePath\"");
-		my $gpg_result = `$gpg --keyid-format LONG "$filePath"`;
+		WriteLog( "$gpgCommand --keyid-format LONG \"$filePath\"");
+		my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath"`;
 		WriteLog($gpg_result);
 
-		WriteLog("$gpg --import \"$filePath\"");
-		my $gpgImportKeyResult = `$gpg --import "$filePath"`;
+		WriteLog("$gpgCommand --import \"$filePath\"");
+		my $gpgImportKeyResult = `$gpgCommand --import "$filePath"`;
 		WriteLog($gpgImportKeyResult);
 
 #		WriteLog( "gpg --with-colons --with-fingerprint \"$file\"\n");
@@ -755,8 +761,8 @@ sub GpgParse {
 	if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 		# Verify the file by using command-line gpg
 		# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
-		WriteLog( "$gpg --verify --status-fd 1 \"$filePath\"\n");
-		my $gpg_result = `$gpg --verify --status-fd 1 "$filePath"`;
+		WriteLog( "$gpgCommand --verify --status-fd 1 \"$filePath\"\n");
+		my $gpg_result = `$gpgCommand --verify --status-fd 1 "$filePath"`;
 		WriteLog($gpg_result);
 
 		#WriteLog($gpg_result);
@@ -792,8 +798,8 @@ sub GpgParse {
 			$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 			$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
 
-			WriteLog( "gpg --decrypt \"$filePath\"\n");
-			$message = `gpg --decrypt "$filePath"`;
+			WriteLog( "$gpgCommand --decrypt \"$filePath\"\n");
+			$message = `$gpgCommand --decrypt "$filePath"`;
 
 			#$message = trim($message);
 
@@ -905,9 +911,8 @@ sub WriteLog {
 
 	my $timestamp = time();
 
-	AppendFile("log/log.log", $timestamp . " " . $text);
-
 	if (GetConfig("debug") && GetConfig("debug") == 1) {
+		AppendFile("log/log.log", $timestamp . " " . $text);
 		print $timestamp . " " . $text . "\n";
 	}
 }
