@@ -25,15 +25,6 @@ push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
 
-my $gpg;
-if (GetConfig('use_gpg2')) {
-	$gpg = 'gpg2';
-} else {
-	$gpg = 'gpg';
-}
-WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpg = $gpg");
-
-
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
 		mkdir $_;
@@ -42,6 +33,14 @@ foreach(@dirsThatShouldExist) {
 		die("$_ should exist, but it doesn't. aborting.");
 	}
 }
+
+my $gpg;
+if (GetConfig('use_gpg2')) {
+	$gpg = 'gpg2';
+} else {
+	$gpg = 'gpg';
+}
+WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpg = $gpg");
 
 sub GetCache {
 	my $cacheName = shift;
@@ -304,6 +303,7 @@ sub GetFile {
 }
 
 sub GetConfig {
+
 	my $configName = shift;
 
 	state %configLookup;
