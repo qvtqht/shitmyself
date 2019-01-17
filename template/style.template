@@ -88,6 +88,9 @@ div.txt {
    );
    border-radius: 8pt;
 }
+.signed {
+	background-color: #fafdff;
+}
 .admin a .avatar {
 	color: green;
 }
