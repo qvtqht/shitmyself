@@ -149,6 +149,12 @@ sub IndexFile {
 			AppendFile('./log/added.log', $logLine);
 		}
 
+		if (!GetAdminKey() && GetConfig('admin_imprint') && $gpgKey && $alias) {
+			PutFile('./admin.key', $txt);
+
+			PutFile('./html/txt/' . time() . '_admin.txt', 'There was no admin, and ' . $gpgKey . ' came passing through, so I made them admin.');
+		}
+
 		if ($isSigned && $gpgKey eq GetAdminKey()) {
 			$isAdmin = 1;
 		}
