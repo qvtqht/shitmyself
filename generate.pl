@@ -30,10 +30,11 @@ sub GetPageFooter {
 
 	my $timestamp = strftime('%F %T', localtime(time()));
 	my $myVersion = GetMyVersion();
+	#my $gpgVersion = GetGpgMajorVersion();
 
 	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
-	my $footer = $timestamp . " ; " . $myVersionPrettyLink;
+	my $footer = $timestamp . " ; running " . $myVersionPrettyLink;
 
 	$txtFooter =~ s/\$footer/$footer/;
 
@@ -116,7 +117,7 @@ sub GetPageHeader {
 
 	my $adminKey = GetAdminKey();
 	if ($adminKey) {
-		$menuTemplate .= GetMenuItem('/author/' . $adminKey, 'Admin');
+		$menuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
 	}
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
