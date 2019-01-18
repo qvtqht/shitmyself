@@ -737,24 +737,53 @@ sub GpgParse {
 
 		foreach (split ("\n", $gpg_result)) {
 			chomp;
-			if (substr($_, 0, 4) eq 'pub ') {
-				my @split = split(" ", $_, 4);
-				$alias = $split[3];
-				$gpg_key = $split[1];
+			WriteLog('$gpgCommand is "' . $gpgCommand . '"');
+			if ($gpgCommand eq 'gpg') {
+				WriteLog('$gpgCommand is gpg');
+                if (substr($_, 0, 4) eq 'pub ') {
+                    my @split = split(" ", $_, 4);
+                    $alias = $split[3];
+                    $gpg_key = $split[1];
 
-				@split = split("/", $gpg_key);
-				$gpg_key = $split[1];
+                    @split = split("/", $gpg_key);
+                    $gpg_key = $split[1];
 
-				$alias =~ s|<.+?>||g;
-				$alias =~ s/^\s+//;
-				$alias =~ s/\s+$//;
+                    $alias =~ s|<.+?>||g;
+                    $alias =~ s/^\s+//;
+                    $alias =~ s/\s+$//;
+                }
+            } elsif ($gpgCommand eq 'gpg2') {
+				WriteLog('$gpgCommand is gpg2');
+				WriteLog('@@' . $_);
+                if (substr($_, 0, 4) eq 'uid ') {
+					WriteLog('gpg2 ; uid hit');
+                    my @split = split(" ", $_, 4);
+                    $alias = $split[1];
 
-				$message = "Welcome, $alias\nFingerprint: $gpg_key";
-				#$message = "The key fingerprint $gpg_key has been aliased to \"$alias\"";
+                    $alias =~ s|<.+?>||g;
+                    $alias =~ s/^\s+//;
+                    $alias =~ s/\s+$//;
 
-				$isSigned = 1;
-			}
+					WriteLog('$alias = ' . $alias);
+                }
+                if (substr($_, 0, 4) eq 'pub ') {
+					WriteLog('gpg2 ; pub hit');
+                    my @split = split(" ", $_, 4);
+                    $gpg_key = $split[1];
+
+                    @split = split("/", $gpg_key);
+                    $gpg_key = $split[1];
+
+					WriteLog('$gpg_key = ' . $gpg_key);
+                }
+            }
 		}
+
+		if ($alias && $gpg_key) {
+			$message = "Welcome, $alias\nFingerprint: $gpg_key";
+		}
+
+        $isSigned = 1;
 	}
 
 	# If there is a GPG signed message header...
