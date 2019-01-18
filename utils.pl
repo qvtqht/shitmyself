@@ -947,4 +947,15 @@ sub WriteLog {
 }
 
 
+my $lastVersion = GetConfig('current_version');
+my $currVersion = GetMyVersion();
+
+if ($lastVersion ne $currVersion) {
+	my $changeLogFilename = 'changelog_' . time() . '.txt';
+	my $changeLogMessage = 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
+	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
+
+	PutConfig('current_version', $currVersion);
+}
+
 1;
