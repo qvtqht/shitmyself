@@ -1,3 +1,7 @@
+config/require_username
+    config/username_mask
+        All just client-side js, since we can't control what people do with their own gpg
+
 Function to add file to index and update affected pages
 
 Home page = all tagged posts
