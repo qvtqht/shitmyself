@@ -338,7 +338,7 @@ function saveId() {
 			var myAvatar = localStorage.getItem('avatar');
 
 			if (myAvatar === null || myAvatar.length === 0) {
-				myidBox.innerHTML = 'Welcome! Please enjoy this resource. If you want an identity, <a href="/identity.html">Sign In</a>.';
+				myidBox.innerHTML = 'Welcome! Please enjoy this informational resource.<br>If you like, you can <a href="/identity.html">Sign In</a> or <a href="/identity.html">Register</a>.';
 			} else {
 				var myFp = localStorage.getItem('fingerprint');
 				myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
@@ -527,6 +527,13 @@ function writeOnload() {
 		if (window.location.hash == '#profile') {
 			insProfileTemplate();
 		}
+	}
+	if (localStorage.getItem('writesmall')) {
+	    var writebox = document.getElementById('comment');
+	    if (writebox) {
+	        writebox.value = localStorage.getItem('writesmall');
+	        localStorage.removeItem('writesmall');
+	    }
 	}
 }
 
