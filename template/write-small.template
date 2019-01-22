@@ -1,10 +1,21 @@
 <!-- write-small.template -->
 <form action="./gracias.html" class=submit name=submit style="background-color: #e0e0e0; border: 5pt solid #d0d0d0; border-radius: 5pt;">
-	<p>Hello! Would you like to say something <u>right away</u>? Use this orange textbox!</p>
+	<p>Hello! Would you like to say something <u>right away</u>? Use this!</p>
 
 	<p><input autocomplete=off id=comment name=comment size=80 style="max-width: 100%; background-color: #ffffc0" maxlength=6000> <input type=submit id=submit value="Send Unsigned" onClick=""></p>
 
-	<p align=right style="font-variant: small-caps; font-family: cursive; font-size: large;"><a href="/write.html">To sign your message, and for other fun options, click, tap, point, wink, or peck at this link.</a></p>
+	<p align=right"><a href="/write.html" onclick="pushmessage();">To sign your message, and for other fun options,<br>click, tap, point, wink, or peck at this link.</a></p>
 </form>
+
+<script language=javascript>
+<!--
+function pushmessage() {
+    var comment = document.getElementById('comment');
+    if (comment) {
+        window.localStorage.setitem('writesmall', comment.value);
+    }
+}
+// -->
+</script>
 
 <!-- / write-small.template -->
