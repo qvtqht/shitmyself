@@ -250,7 +250,7 @@ function identityOnload() {
 	var nametext = document.getElementById("name");
 	if (nametext) {
 		if (nametext.value == '') {
-			nametext.value = "Anonymous";
+			nametext.value = "$prefillUsername";
 		}
 	}
 
@@ -400,13 +400,13 @@ function makePrivateKey(username, bits) {
 				options = {
 					userIds: [{ name: username }],
 					numBits: bits,
-					passphrase: ''
+					passphrase: 'hunter2'
 				};
 			} else {
 				options = {
 					userIds: [{ name: username }],
 					curve: bits,
-					passphrase: ''
+					passphrase: 'hunter2'
 				};
 			}
 
@@ -429,7 +429,7 @@ function makePrivateKey(username, bits) {
 
 					saveId();
 
-					window.open('/write.html#inspubkey', '_self');
+					//window.open('/write.html#inspubkey', '_self');
 				}
 			);
 		} else {
@@ -611,6 +611,8 @@ function signForm(formId) {
 //}
 
 function signMessage() {
+    var passPhrase = 'hunter2';
+
 	var privkey = getPrivateKey();
 
 	if (privkey) {
@@ -634,6 +636,8 @@ function signMessage() {
 			}
 
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+
+			privateKey.decrypt(passPhrase);
 
 			options = {
 				data: message,                             // input as String (or Uint8Array)

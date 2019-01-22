@@ -1325,7 +1325,11 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('openpgp.worker.js.template'));
 
 	# Write form javasript
-	PutHtmlFile("$HTMLDIR/crypto.js", GetTemplate('crypto.js.template'));
+	my $cryptoJsTemplate = GetTemplate('crypto.js.template');
+	my $prefillUsername = GetConfig('prefill_username') || '';
+	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
+
+	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
 	# Write form javasript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('avatar.js.template'));
