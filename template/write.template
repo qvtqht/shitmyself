@@ -1,4 +1,4 @@
-<!-- write.template -->
+<!--# write.template #-->
 
 <form action="./gracias.html" id=compose class=submit name=submit>
     <span id=writeintro>
@@ -8,7 +8,7 @@
     <label for="comment">Type something here. Limited to about 6,000 characters, including signature.</label>
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=6000 autofocus>$prefillText</textarea><br>
     <span id=signAndPost></span>
-    <input type=submit value="Post Without Signing" onclick="" id=addtext>
+    <input type=submit value="Post Without Signing" id=addtext>
     $extraFields
         <p>Instructions for command-line GPG users</p>
         <ul>
@@ -19,6 +19,5 @@
         <tt>gpg --armor --export [john]</tt></li>
         <li><a href="/manual.html#cli">See manual for details.</a></li>
         </ul>
-        <!-- <input type=button onclick="zalgo_textarea('comment');"> -->
 </form>
-<!-- / write.template -->
+<!--# / write.template #-->
