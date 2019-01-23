@@ -38,14 +38,27 @@ my $gpgCommand;
 if (GetConfig('use_gpg2')) {
 	$gpgCommand = 'gpg2';
 } else {
-    if (GetGpgMajorVersion() eq '2') {
-        $gpgCommand = 'gpg2';
-    } else {
-	    $gpgCommand = 'gpg';
-    }
-    #what a mess
+	if (GetGpgMajorVersion() eq '2') {
+		$gpgCommand = 'gpg2';
+	} else {
+		$gpgCommand = 'gpg';
+	}
+	#what a mess
 }
 WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
+
+# my $gpgCommand;
+# if (GetConfig('use_gpg2')) {
+# 	$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
+# } else {
+# 	if (GetGpgMajorVersion() eq '2') {
+# 		$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
+# 	} else {
+# 		$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
+# 	}
+# 	#what a mess
+# }
+# WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
 sub GetCache {
 	my $cacheName = shift;
