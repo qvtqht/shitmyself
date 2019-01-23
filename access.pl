@@ -140,7 +140,7 @@ sub ProcessAccessLog {
 	my $newItemCount = 0;
 
 	#If processed.log exists, we load it into %prevLines
-	#This is how we will know if we've already looked at a line in the log fil
+	#This is how we will know if we've already looked at a line in the log file
 	if (-e "./log/processed.log") {
 		open (LOGFILELOG, "./log/processed.log");
 		foreach my $procLine (<LOGFILELOG>) {
@@ -173,7 +173,7 @@ sub ProcessAccessLog {
 			next;
 		} else {
 			# Otherwise add the hash to processed.log
-			AppendFile("./log/processed.log", $lineHash);
+			#AppendFile("./log/processed.log", $lineHash);
 			$prevLines{$lineHash} = 2;
 		}
 
