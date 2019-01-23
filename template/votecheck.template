@@ -1,1 +1,1 @@
-<nobr><input type=checkbox name="addvote/$fileHash/$ballotTime/$voteValue/$checksum" id=$fileHash_$voteValue><label for=$fileHash_$voteValue>$voteValue</label></nobr>
+<label for=$fileHash_$voteValue><nobr class=votecheck><input type=checkbox name="addvote/$fileHash/$ballotTime/$voteValue/$checksum" id=$fileHash_$voteValue>$voteValue</nobr></label>
