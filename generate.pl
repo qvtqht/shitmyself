@@ -910,66 +910,74 @@ sub GetReadPage {
 
 			WriteLog('GetTemplate("item.template") 2');
 			my $itemTemplate = '';
-			if (length($message) > GetConfig('item_long_threshold')) {
-				$itemTemplate = GetTemplate("itemlong.template");
+			if ($message) {
+				if (length($message) > GetConfig('item_long_threshold')) {
+					$itemTemplate = GetTemplate("itemlong.template");
+				}
+				else {
+					$itemTemplate = GetTemplate("item.template");
+				}
+
+				my $itemClass = "txt $signedCss";
+
+				my $authorUrl;
+				my $authorAvatar;
+				my $authorLink;
+
+				if ($gpgKey) {
+					$authorUrl = "/author/$gpgKey/";
+					$authorAvatar = GetAvatar($gpgKey);
+
+					$authorLink = GetTemplate('authorlink.template');
+
+					$authorLink =~ s/\$authorUrl/$authorUrl/g;
+					$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+				}
+				else {
+					$authorLink = "";
+				}
+				my $permalinkTxt = $file;
+				$permalinkTxt =~ s/^\.//;
+				$permalinkTxt =~ s/html\///;
+
+				my $permalinkHtml = "/" . $gitHash . ".html";
+
+				my $itemText = FormatForWeb($message);
+
+				$itemText =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
+
+				my $fileHash = GetFileHash($file);
+				my $itemName = substr($gitHash, 0, 8) . '..';
+				my $ballotTime = time();
+				my $replyCount = $row->{'child_count'};
+
+				my $borderColor = '#' . substr($fileHash, 0, 6);
+
+				$itemTemplate =~ s/\$borderColor/$borderColor/g;
+				$itemTemplate =~ s/\$itemClass/$itemClass/g;
+				$itemTemplate =~ s/\$authorLink/$authorLink/g;
+				$itemTemplate =~ s/\$itemName/$itemName/g;
+				$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+				$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+				$itemTemplate =~ s/\$itemText/$itemText/g;
+				$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+				if ($replyCount) {
+					my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+					$itemTemplate =~ s/\$replyCount/$discussLink/g;
+				}
+				else {
+					my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+					$itemTemplate =~ s/\$replyCount/$discussLink/g;
+				}
+
+				WriteLog("Call to GetVoterTemplate() :881");
+				my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+				$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 			} else {
-				$itemTemplate = GetTemplate("item.template");
+				$itemTemplate = '<hr>Problem decoding message</hr>';
+				WriteLog('Something happened and there is no $message where I expected it... Oh well, moving on.');
 			}
-
-			my $itemClass = "txt $signedCss";
-
-			my $authorUrl;
-			my $authorAvatar;
-			my $authorLink;
-
-			if ($gpgKey) {
-				$authorUrl = "/author/$gpgKey/";
-				$authorAvatar = GetAvatar($gpgKey);
-
-				$authorLink = GetTemplate('authorlink.template');
-
-				$authorLink =~ s/\$authorUrl/$authorUrl/g;
-				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-			} else {
-				$authorLink = "";
-			}
-			my $permalinkTxt = $file;
-			$permalinkTxt =~ s/^\.//;
-			$permalinkTxt =~ s/html\///;
-
-			my $permalinkHtml = "/" . $gitHash . ".html";
-
-			my $itemText = FormatForWeb($message);
-
-			$itemText =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
-
-			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 8) . '..';
-			my $ballotTime = time();
-			my $replyCount = $row->{'child_count'};
-
-			my $borderColor = '#' . substr($fileHash, 0, 6);
-
-			$itemTemplate =~ s/\$borderColor/$borderColor/g;
-			$itemTemplate =~ s/\$itemClass/$itemClass/g;
-			$itemTemplate =~ s/\$authorLink/$authorLink/g;
-			$itemTemplate =~ s/\$itemName/$itemName/g;
-			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-			$itemTemplate =~ s/\$itemText/$itemText/g;
-			$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-			if ($replyCount) {
-				my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
-				$itemTemplate =~ s/\$replyCount/$discussLink/g;
-			} else {
-				my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
-				$itemTemplate =~ s/\$replyCount/$discussLink/g;
-			}
-
-			WriteLog("Call to GetVoterTemplate() :881");
-			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 			$txtIndex .= $itemTemplate;
 		}
