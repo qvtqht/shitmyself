@@ -5,7 +5,7 @@ To vote, check one or more of the boxes, then push the button.<br>
 <b>Voting with signature?</b> You're not done yet. Be sure to <u>sign and post</u> on the next page.<br>
 <small>A better design is planned...</small>
 </p>$voterButtons
-    <br>
+    <br><br>
     <span id=voteAsUser></span>
     <input type=submit value="Vote Anonymously">
 </fieldset>

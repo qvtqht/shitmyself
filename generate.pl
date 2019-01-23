@@ -113,6 +113,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+	$menuTemplate .= GetMenuItem("/identity.html", 'Account');
 #	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 	my $adminKey = GetAdminKey();
@@ -251,12 +252,16 @@ sub GetItemTemplate {
 		}
 
 		$alias = HtmlEscape($alias);
-		my $itemTemplate = '';
 
-		if ($file{'vote_buttons'}) {
-			$itemTemplate = $itemTemplate = GetTemplate("item.template") . GetTemplate("itemvote.template");
+		my $itemTemplate = '';
+		if (length($message) > GetConfig('item_long_threshold')) {
+			$itemTemplate = GetTemplate("itemlong.template");
 		} else {
 			$itemTemplate = GetTemplate("item.template");
+		}
+
+		if ($file{'vote_buttons'}) {
+			$itemTemplate = $itemTemplate . GetTemplate("itemvote.template");
 		}
 
 		my $itemClass = "txt";
@@ -667,7 +672,12 @@ sub GetIndexPage {
 
 			WriteLog('GetTemplate("item.template") 1');
 
-			my $itemTemplate = GetTemplate("item.template");
+			my $itemTemplate = '';
+			if (length($message) > GetConfig('item_long_threshold')) {
+				$itemTemplate = GetTemplate("itemlong.template");
+			} else {
+				$itemTemplate = GetTemplate("item.template");
+			}
 			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 
 			my $itemClass = "txt $signedCss";
@@ -899,7 +909,12 @@ sub GetReadPage {
 			$alias = HtmlEscape($alias);
 
 			WriteLog('GetTemplate("item.template") 2');
-			my $itemTemplate = GetTemplate("item.template");
+			my $itemTemplate = '';
+			if (length($message) > GetConfig('item_long_threshold')) {
+				$itemTemplate = GetTemplate("itemlong.template");
+			} else {
+				$itemTemplate = GetTemplate("item.template");
+			}
 
 			my $itemClass = "txt $signedCss";
 
