@@ -400,13 +400,15 @@ function makePrivateKey(username, bits) {
 				options = {
 					userIds: [{ name: username }],
 					numBits: bits,
-					passphrase: 'hunter2'
+					//passphrase: 'hunter2'
+					passphrase: ''
 				};
 			} else {
 				options = {
 					userIds: [{ name: username }],
 					curve: bits,
-					passphrase: 'hunter2'
+					//passphrase: 'hunter2'
+					passphrase: ''
 				};
 			}
 
@@ -611,7 +613,7 @@ function signForm(formId) {
 //}
 
 function signMessage() {
-    var passPhrase = 'hunter2';
+    //var passPhrase = 'hunter2';
 
 	var privkey = getPrivateKey();
 
@@ -637,7 +639,7 @@ function signMessage() {
 
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
-			privateKey.decrypt(passPhrase);
+			//privateKey.decrypt(passPhrase);
 
 			options = {
 				data: message,                             // input as String (or Uint8Array)
