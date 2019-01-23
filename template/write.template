@@ -19,5 +19,6 @@
         <tt>gpg --armor --export [john]</tt></li>
         <li><a href="/manual.html#cli">See manual for details.</a></li>
         </ul>
+        <!-- <input type=button onclick="zalgo_textarea('comment');"> -->
 </form>
 <!-- / write.template -->
