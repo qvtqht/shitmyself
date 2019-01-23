@@ -271,9 +271,13 @@ sub IndexFile {
 			$itemType = 'pubkey';
 		}
 
-		my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
-		WriteLog( "\n====\n"  . $messageCacheName . "\n====\n" . $message .  "\n====\n" . $txt .  "\n====\n" );
-		PutFile($messageCacheName, $message);
+		if ($message) {
+			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
+			PutFile($messageCacheName, $message);
+		} else {
+			WriteLog('I was going to save $messageCacheName, but $message is blank!');
+		}
 
 		if ($isSigned) {
 			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemType);
