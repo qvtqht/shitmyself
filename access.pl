@@ -289,33 +289,33 @@ sub ProcessAccessLog {
 						}
 					}
 
-				 	# Only if the "replies" config is enabled
-					if (GetConfig('replies')) {
-						my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
-
-						if (@replyLines) {
-							while(@replyLines) {
-								my $parentHash = shift @replyLines;
-
-								if (IsSha1($parentHash)) {
-									#Fallback mentioned above is not necessary in this case
-									if ($parentHash eq $parentMessage) {
-										$parentMessage = 0;
-									}
-
-									WriteLog("Found a parent comment, removing caches for $parentHash");
-									UnlinkCache("/file/$parentHash");
-									UnlinkCache("message/$parentHash.message");
-#									UnlinkCache("gpg/$parentHash.cache");
-
-								}
-							}
-
-							if ($parentMessage) {
-								$message = ">>$parentMessage" . "\n\n" . $message;
-							}
-						}
-					}
+# 				 	# Only if the "replies" config is enabled
+# 					if (GetConfig('replies')) {
+# 						my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
+#
+# 						if (@replyLines) {
+# 							while(@replyLines) {
+# 								my $parentHash = shift @replyLines;
+#
+# 								if (IsSha1($parentHash)) {
+# 									#Fallback mentioned above is not necessary in this case
+# 									if ($parentHash eq $parentMessage) {
+# 										$parentMessage = 0;
+# 									}
+#
+# 									WriteLog("Found a parent comment, removing caches for $parentHash");
+# 									UnlinkCache("/file/$parentHash");
+# 									UnlinkCache("message/$parentHash.message");
+# #									UnlinkCache("gpg/$parentHash.cache");
+#
+# 								}
+# 							}
+#
+# 							if ($parentMessage) {
+# 								$message = ">>$parentMessage" . "\n\n" . $message;
+# 							}
+# 						}
+# 					}
 
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {
