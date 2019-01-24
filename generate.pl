@@ -113,7 +113,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
-	$menuTemplate .= GetMenuItem("/identity.html", 'Account');
+	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
 #	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 	my $adminKey = GetAdminKey();
