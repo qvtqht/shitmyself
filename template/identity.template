@@ -1,9 +1,12 @@
 <!-- identity.template -->
 <noscript>
-<p class=warning><strong><b>Welcome!</b> It looks like you have JavaScript disabled in your browser.<br><br>
-You can use identity features without JavaScript if you know how to use GPG/PGP.<br><br>
-Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
-If you want to use the in-browser signing and identity features, please enable JavaScript in your browser.</p>
+<p class=warning><strong><b>Great news! You're browsing without JavaScript!</b><br><br>
+
+You can use identity features without JavaScript <i>if</i> you know how to use GPG/PGP.<br><br>
+
+Please <a href="/manual.html">read the Manual</a> for more information.
+
+You can also continue to use the site without changing anything.
 </noscript>
 
 <h2>Identity</h2>
@@ -22,7 +25,6 @@ If you want to use the in-browser signing and identity features, please enable J
         <legend><b>Current Identity</b></legend>
         <label for=myId2>You are:</label> <span id=myId2 class=avatar></span><br>
         <label for=myFP>Fingerprint:</label> <span id=myFP></span><br>
-<!--        <label for=myAlgo>Algorithm:</label> <span id=myAlgo></span><br>-->
         <label for=myCrea>Created:</label> <span id=myCrea></span><br>
 
         <p>
