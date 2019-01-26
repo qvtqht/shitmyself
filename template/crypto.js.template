@@ -388,31 +388,33 @@ function saveId() {
 		if (myidBox) {
 			var myAvatar = localStorage.getItem('avatar');
 
-			if (myAvatar === null || myAvatar.length === 0) {
-				myidBox.innerHTML = 'Welcome! Please enjoy this informational resource.<br>If you like, you can <a href="/identity.html">Sign In</a> or <a href="/identity.html">Register</a>.';
-			} else {
-				var myFp = localStorage.getItem('fingerprint');
-				myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
-			}
-		}
+            if (myAvatar == null || myAvatar.length == 0) {
+                signinBox.innerHTML = '<a href="/identity.html">Sign In</a> <a href="/identity.html">Register</a>';
+            } else {
+                signinBox.innerHTML = '<a href="/identity.html">Settings</a> <a href="/identity.html#logout">Log Out</a>';
 
-		var myId2 = document.getElementById('myId2');
-		if (myId2) {
-			myId2.innerHTML = getAvatar();
-		}
+                var myFp = localStorage.getItem('fingerprint');
+                myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
 
-		var myCrea = document.getElementById('myCrea');
-		if (myCrea) {
-			myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
-		}
+                var myId2 = document.getElementById('myId2');
+                if (myId2) {
+                    myId2.innerHTML = getAvatar();
+                }
 
-		var myFinger = document.getElementById('myFP');
-		if (myFinger) {
-			myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-		}
+                var myCrea = document.getElementById('myCrea');
+                if (myCrea) {
+                    myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+                }
 
-		showHideForms();
-	}
+                var myFinger = document.getElementById('myFP');
+                if (myFinger) {
+                    myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+                }
+            }
+
+            showHideForms();
+	    }
+    }
 }
 
 function setPrivateKey(privateKey) {
@@ -477,7 +479,7 @@ function makePrivateKey(username, bits) {
 
 					saveId();
 
-					//window.open('/write.html#inspubkey', '_self');
+					window.open('/write.html#inspubkey', '_self');
 				}
 			);
 		} else {
