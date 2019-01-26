@@ -1,14 +1,15 @@
 // just the avatar, please
 
-
 if (window.localStorage) {
 	var myidBox = document.getElementById('myid');
 	if (myidBox) {
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			myidBox.innerHTML = 'Welcome! Please enjoy this informational resource.<br>If you like, you can <a href="/identity.html">Sign In</a> or <a href="/identity.html">Register</a>.';
+			signinBox.innerHTML = '<a href="/identity.html">Sign In</a> <a href="/identity.html">Register</a>';
 		} else {
+		    signinBox.innerHTML = '<a href="/identity.html">Settings</a> <a href="/identity.html#logout">Log Out</a>';
+
 			var myFp = localStorage.getItem('fingerprint');
 			myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
 

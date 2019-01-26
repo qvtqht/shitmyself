@@ -108,6 +108,10 @@ sub IndexFile {
 	my $isAdmin = 0;
 	my $itemType = 'text';
 
+	my $verifyError = 0;
+
+	my $itemTypeMask = 0;
+
 	#my $isAction = 0;
 
 	if (substr($file, length($file) -4, 4) eq ".txt") {
@@ -121,14 +125,17 @@ sub IndexFile {
 		$gitHash = $gpgResults{'gitHash'};
 		$fingerprint = $gpgResults{'fingerprint'};
 		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
+		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
 		WriteLog('IndexFile: $file = ' . $file . ', $gitHash = ' . $gitHash);
 
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $gitHash) {
+			#if the file is present in deleted.log, it has no business being around
+			#delete it immediately and return, logging the action
 			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
 
 			unlink($file);
-			unlink($file . ".html");
+			unlink($gitHash . ".html");
 
 			return;
 		}
@@ -278,6 +285,8 @@ sub IndexFile {
 		} else {
 			WriteLog('I was going to save $messageCacheName, but $message is blank!');
 		}
+
+
 
 		if ($isSigned) {
 			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemType);

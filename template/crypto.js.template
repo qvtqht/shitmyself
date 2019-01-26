@@ -255,6 +255,10 @@ function identityOnload() {
    			logOut();
    			// refresh the pk variable (should be null now)
    			pk = getPrivateKey();
+
+            // refresh the page to update the menubar
+            // #todo make this happen without refreshing the page
+   			location.reload();
    	    } else {
    	        // otherwise just make sure the private key textbox is populated
 			var textbox = document.getElementById("privatekey");
@@ -391,7 +395,7 @@ function saveId() {
             if (myAvatar == null || myAvatar.length == 0) {
                 signinBox.innerHTML = '<a href="/identity.html">Sign In</a> <a href="/identity.html">Register</a>';
             } else {
-                signinBox.innerHTML = '<a href="/identity.html">Settings</a> <a href="/identity.html#logout">Log Out</a>';
+                signinBox.innerHTML = '<a href="/identity.html">Settings</a> <a href="/identity.html#logout" onclick="logOut();location.reload();">Log Out</a>';
 
                 var myFp = localStorage.getItem('fingerprint');
                 myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
@@ -448,14 +452,12 @@ function makePrivateKey(username, bits) {
 				options = {
 					userIds: [{ name: username }],
 					numBits: bits,
-					//passphrase: 'hunter2'
 					passphrase: ''
 				};
 			} else {
 				options = {
 					userIds: [{ name: username }],
 					curve: bits,
-					//passphrase: 'hunter2'
 					passphrase: ''
 				};
 			}

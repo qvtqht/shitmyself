@@ -1,16 +1,13 @@
 <!-- reply.template -->
 <a name=reply></a>
 <form class=reply action="gracias.html" id=compose style="border: 5pt solid #e8d0ea; border-radius: 5pt; background-color: #f0e0f8">
-    <fieldset style="display: inline">
-    <legend><b><i><u>The Reply Box</u></i></b></legend>
-    <p>This is how you reply to what you see above.<br>
-    Take care to not upset the >>reply tag, or it won't be a reply anymore...</p>
-    <textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
-    <span id=replySignedContainer></span>
-    <input type=submit value="Reply Unsigned">
-    <input type=hidden name=replyto value="$replyTo">
-    <p><b>To reply using standalone GPG,</b> ensure that you include
-    the line beginning with <tt>&gt;&gt;</tt> inside your signed message, by itself.</p>
-</fieldset>
+<big><b><i><u>The Reply Box</u></i></b></big>
+<p>This is how you reply to what you see above.<br>
+Take care to not upset the >>reply tag, or it won't be a reply anymore...</p>
+<textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
+<span id=replySignedContainer></span>
+<input type=submit value="Reply Unsigned">
+<input type=hidden name=replyto value="$replyTo">
+<p><b>Advanced Users:</b> To reply using standalone GPG, ensure that you include the reply reference line beginning with <tt>&gt;&gt;</tt> inside your signed message, by itself.</p>
 </form>
 <!-- / reply.template -->

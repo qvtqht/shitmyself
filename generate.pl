@@ -1452,10 +1452,12 @@ foreach my $key (@authors) {
 MakeStaticPages();
 
 sub MakeClonePage {
+	WriteLog('MakeClonePage() called');
+
 	#This makes the zip file as well as the clone.html page that lists its size
 
 	my $zipInterval = 3600;
-	my $lastZip = GetConfig('last_zip');
+	my $lastZip = GetCache('last_zip');
 
 	if (!$lastZip || (time() - $lastZip) > $zipInterval) {
 		WriteLog("Making zip file...");
@@ -1468,7 +1470,7 @@ sub MakeClonePage {
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 
-		PutConfig('last_zip', time());
+		PutCache('last_zip', time());
 	} else {
 		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
 	}

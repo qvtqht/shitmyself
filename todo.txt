@@ -1,3 +1,9 @@
+Add roles directory
+    Add roles/admin and roles/moderator
+        Add support for having multiple public keys in here as text file
+
+
+
 Add client-side handling of HTTP 431 messages when submitting something new
 
 
