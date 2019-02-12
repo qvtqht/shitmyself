@@ -9,6 +9,6 @@ $styleSheet
 -->
 </style>
 </head>
-<body link="$primaryColor" vlink="#806080" text=black bgcolor=white><font face=courier>
-<span class=topbar><a href="#maincontent" style="float: right">Skip to main content</a> <h2 class=menu>$menuItems</h2><span class="myid" id=myid></span></span>
+<body link="$primaryColor" vlink="#806080" text="$textColor" bgcolor="$secondaryColor"><font face=courier>
+<span class=topbar><a href="#maincontent" style="float: right; color: $secondaryColor;">Skip to main content</a> <h2 class=menu>$menuItems<span id="signin"></span></h2><span class="myid" id=myid></span></span>
 <hr size=5>

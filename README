@@ -68,6 +68,10 @@ perl-Digest-SHA
 perl-HTML-Parser
 perl-DBD-SQLite
 perl-URI-Encode
+sqlite3
+lighttpd
+gnupg
+gnupg2
 
 known issues
 ============

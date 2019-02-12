@@ -140,7 +140,7 @@ sub ProcessAccessLog {
 	my $newItemCount = 0;
 
 	#If processed.log exists, we load it into %prevLines
-	#This is how we will know if we've already looked at a line in the log fil
+	#This is how we will know if we've already looked at a line in the log file
 	if (-e "./log/processed.log") {
 		open (LOGFILELOG, "./log/processed.log");
 		foreach my $procLine (<LOGFILELOG>) {
@@ -173,7 +173,7 @@ sub ProcessAccessLog {
 			next;
 		} else {
 			# Otherwise add the hash to processed.log
-			AppendFile("./log/processed.log", $lineHash);
+			#AppendFile("./log/processed.log", $lineHash);
 			$prevLines{$lineHash} = 2;
 		}
 
@@ -289,33 +289,33 @@ sub ProcessAccessLog {
 						}
 					}
 
-				 	# Only if the "replies" config is enabled
-					if (GetConfig('replies')) {
-						my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
-
-						if (@replyLines) {
-							while(@replyLines) {
-								my $parentHash = shift @replyLines;
-
-								if (IsSha1($parentHash)) {
-									#Fallback mentioned above is not necessary in this case
-									if ($parentHash eq $parentMessage) {
-										$parentMessage = 0;
-									}
-
-									WriteLog("Found a parent comment, removing caches for $parentHash");
-									UnlinkCache("/file/$parentHash");
-									UnlinkCache("message/$parentHash.message");
-#									UnlinkCache("gpg/$parentHash.cache");
-
-								}
-							}
-
-							if ($parentMessage) {
-								$message = ">>$parentMessage" . "\n\n" . $message;
-							}
-						}
-					}
+# 				 	# Only if the "replies" config is enabled
+# 					if (GetConfig('replies')) {
+# 						my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
+#
+# 						if (@replyLines) {
+# 							while(@replyLines) {
+# 								my $parentHash = shift @replyLines;
+#
+# 								if (IsSha1($parentHash)) {
+# 									#Fallback mentioned above is not necessary in this case
+# 									if ($parentHash eq $parentMessage) {
+# 										$parentMessage = 0;
+# 									}
+#
+# 									WriteLog("Found a parent comment, removing caches for $parentHash");
+# 									UnlinkCache("/file/$parentHash");
+# 									UnlinkCache("message/$parentHash.message");
+# #									UnlinkCache("gpg/$parentHash.cache");
+#
+# 								}
+# 							}
+#
+# 							if ($parentMessage) {
+# 								$message = ">>$parentMessage" . "\n\n" . $message;
+# 							}
+# 						}
+# 					}
 
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {

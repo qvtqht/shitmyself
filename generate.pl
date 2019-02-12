@@ -30,10 +30,11 @@ sub GetPageFooter {
 
 	my $timestamp = strftime('%F %T', localtime(time()));
 	my $myVersion = GetMyVersion();
+	#my $gpgVersion = GetGpgMajorVersion();
 
 	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
-	my $footer = $timestamp . " ; " . $myVersionPrettyLink;
+	my $footer = $timestamp . " ; running " . $myVersionPrettyLink;
 
 	$txtFooter =~ s/\$footer/$footer/;
 
@@ -112,11 +113,12 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
 #	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 	my $adminKey = GetAdminKey();
 	if ($adminKey) {
-		$menuTemplate .= GetMenuItem('/author/' . $adminKey, 'Admin');
+		$menuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
 	}
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
@@ -250,12 +252,16 @@ sub GetItemTemplate {
 		}
 
 		$alias = HtmlEscape($alias);
-		my $itemTemplate = '';
 
-		if ($file{'vote_buttons'}) {
-			$itemTemplate = $itemTemplate = GetTemplate("item.template") . GetTemplate("itemvote.template");
+		my $itemTemplate = '';
+		if (length($message) > GetConfig('item_long_threshold')) {
+			$itemTemplate = GetTemplate("itemlong.template");
 		} else {
 			$itemTemplate = GetTemplate("item.template");
+		}
+
+		if ($file{'vote_buttons'}) {
+			$itemTemplate = $itemTemplate . GetTemplate("itemvote.template");
 		}
 
 		my $itemClass = "txt";
@@ -666,7 +672,12 @@ sub GetIndexPage {
 
 			WriteLog('GetTemplate("item.template") 1');
 
-			my $itemTemplate = GetTemplate("item.template");
+			my $itemTemplate = '';
+			if (length($message) > GetConfig('item_long_threshold')) {
+				$itemTemplate = GetTemplate("itemlong.template");
+			} else {
+				$itemTemplate = GetTemplate("item.template");
+			}
 			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 
 			my $itemClass = "txt $signedCss";
@@ -898,62 +909,75 @@ sub GetReadPage {
 			$alias = HtmlEscape($alias);
 
 			WriteLog('GetTemplate("item.template") 2');
-			my $itemTemplate = GetTemplate("item.template");
+			my $itemTemplate = '';
+			if ($message) {
+				if (length($message) > GetConfig('item_long_threshold')) {
+					$itemTemplate = GetTemplate("itemlong.template");
+				}
+				else {
+					$itemTemplate = GetTemplate("item.template");
+				}
 
-			my $itemClass = "txt $signedCss";
+				my $itemClass = "txt $signedCss";
 
-			my $authorUrl;
-			my $authorAvatar;
-			my $authorLink;
+				my $authorUrl;
+				my $authorAvatar;
+				my $authorLink;
 
-			if ($gpgKey) {
-				$authorUrl = "/author/$gpgKey/";
-				$authorAvatar = GetAvatar($gpgKey);
+				if ($gpgKey) {
+					$authorUrl = "/author/$gpgKey/";
+					$authorAvatar = GetAvatar($gpgKey);
 
-				$authorLink = GetTemplate('authorlink.template');
+					$authorLink = GetTemplate('authorlink.template');
 
-				$authorLink =~ s/\$authorUrl/$authorUrl/g;
-				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+					$authorLink =~ s/\$authorUrl/$authorUrl/g;
+					$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+				}
+				else {
+					$authorLink = "";
+				}
+				my $permalinkTxt = $file;
+				$permalinkTxt =~ s/^\.//;
+				$permalinkTxt =~ s/html\///;
+
+				my $permalinkHtml = "/" . $gitHash . ".html";
+
+				my $itemText = FormatForWeb($message);
+
+				$itemText =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
+
+				my $fileHash = GetFileHash($file);
+				my $itemName = substr($gitHash, 0, 8) . '..';
+				my $ballotTime = time();
+				my $replyCount = $row->{'child_count'};
+
+				my $borderColor = '#' . substr($fileHash, 0, 6);
+
+				$itemTemplate =~ s/\$borderColor/$borderColor/g;
+				$itemTemplate =~ s/\$itemClass/$itemClass/g;
+				$itemTemplate =~ s/\$authorLink/$authorLink/g;
+				$itemTemplate =~ s/\$itemName/$itemName/g;
+				$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+				$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+				$itemTemplate =~ s/\$itemText/$itemText/g;
+				$itemTemplate =~ s/\$fileHash/$fileHash/g;
+
+				if ($replyCount) {
+					my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+					$itemTemplate =~ s/\$replyCount/$discussLink/g;
+				}
+				else {
+					my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+					$itemTemplate =~ s/\$replyCount/$discussLink/g;
+				}
+
+				WriteLog("Call to GetVoterTemplate() :881");
+				my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+				$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 			} else {
-				$authorLink = "";
+				$itemTemplate = '<hr>Problem decoding message</hr>';
+				WriteLog('Something happened and there is no $message where I expected it... Oh well, moving on.');
 			}
-			my $permalinkTxt = $file;
-			$permalinkTxt =~ s/^\.//;
-			$permalinkTxt =~ s/html\///;
-
-			my $permalinkHtml = "/" . $gitHash . ".html";
-
-			my $itemText = FormatForWeb($message);
-
-			$itemText =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
-
-			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 8) . '..';
-			my $ballotTime = time();
-			my $replyCount = $row->{'child_count'};
-
-			my $borderColor = '#' . substr($fileHash, 0, 6);
-
-			$itemTemplate =~ s/\$borderColor/$borderColor/g;
-			$itemTemplate =~ s/\$itemClass/$itemClass/g;
-			$itemTemplate =~ s/\$authorLink/$authorLink/g;
-			$itemTemplate =~ s/\$itemName/$itemName/g;
-			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-			$itemTemplate =~ s/\$itemText/$itemText/g;
-			$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-			if ($replyCount) {
-				my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
-				$itemTemplate =~ s/\$replyCount/$discussLink/g;
-			} else {
-				my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
-				$itemTemplate =~ s/\$replyCount/$discussLink/g;
-			}
-
-			WriteLog("Call to GetVoterTemplate() :881");
-			my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-			$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 			$txtIndex .= $itemTemplate;
 		}
@@ -1324,7 +1348,11 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('openpgp.worker.js.template'));
 
 	# Write form javasript
-	PutHtmlFile("$HTMLDIR/crypto.js", GetTemplate('crypto.js.template'));
+	my $cryptoJsTemplate = GetTemplate('crypto.js.template');
+	my $prefillUsername = GetConfig('prefill_username') || '';
+	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
+
+	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
 	# Write form javasript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('avatar.js.template'));
@@ -1424,10 +1452,12 @@ foreach my $key (@authors) {
 MakeStaticPages();
 
 sub MakeClonePage {
+	WriteLog('MakeClonePage() called');
+
 	#This makes the zip file as well as the clone.html page that lists its size
 
 	my $zipInterval = 3600;
-	my $lastZip = GetConfig('last_zip');
+	my $lastZip = GetCache('last_zip');
 
 	if (!$lastZip || (time() - $lastZip) > $zipInterval) {
 		WriteLog("Making zip file...");
@@ -1440,7 +1470,7 @@ sub MakeClonePage {
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 
-		PutConfig('last_zip', time());
+		PutCache('last_zip', time());
 	} else {
 		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
 	}

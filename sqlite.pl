@@ -69,6 +69,14 @@ sub SqliteMakeTables() {
 			parent_hash
 	");
 
+	SqliteQuery2("CREATE TABLE item_type(type_mask, type_name)");
+
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(1, 'text');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(2, 'reply');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(4, 'vote');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(8, 'pubkey');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(16, 'decode_error');");
+
 	SqliteQuery2("
 		CREATE VIEW parent_count AS
 		SELECT

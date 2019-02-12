@@ -1,3 +1,17 @@
+Add roles directory
+    Add roles/admin and roles/moderator
+        Add support for having multiple public keys in here as text file
+
+
+
+Add client-side handling of HTTP 431 messages when submitting something new
+
+
+config/require_username
+    config/username_mask
+        All just client-side js, since we can't control what people do with their own gpg
+
+Function to add file to index and update affected pages
 
 Home page = all tagged posts
 
@@ -10,19 +24,13 @@ cookie-based prefs
 
 $fileHash <span class=nonessential>posted by</span> $avatar <span class=nonessential>at</span> 1500000000
 
-Fix pgp2 compatibility
-
 Maybe try Perl PGP modules?
 
 No pubkey and/or bad sig should result in big red warning on page/listing
 
 Front-end signature checks/indicators in input boxes
 
-Admin's page and version page should be generated always
-
-redir anon vote page (to where?)
-
-vote with signature button should/nt? show up if not signed in?
+Admin's page should be generated always
 
 site ui elements/forms/areas should be a different color than all the user-entered text content
 

@@ -1,10 +1,14 @@
+
+// these are used to globally store the user's fingerprint and username
 var myFingerprint = '';
 var myUsername = '';
 
+// performs logout by removing stored private key
 function logOut() {
 	removeStoredKeys();
 }
 
+// retrieve stored user fingerprint from localstorage
 function getUserFp() {
 	var fingerprint = localStorage.getItem("fingerprint");
 	if (fingerprint === null || fingerprint.length === 0) {
@@ -14,6 +18,8 @@ function getUserFp() {
 	}
 }
 
+// retrieve previously built avatar from localstore
+// this is already in html form
 function getAvatar() {
 	var myAvatar = localStorage.getItem("avatar");
 	if (myAvatar === null || myAvatar.length === 0) {
@@ -23,6 +29,9 @@ function getAvatar() {
 	}
 }
 
+// if there's a user fingerprint,
+// this checks for a place to put a "post as" or "reply as" button
+// and if it exists, puts the button there
 if (getUserFp()) {
 	var sp = document.getElementById('signAndPost');
 	var actName = 'Post as ';
@@ -35,121 +44,136 @@ if (getUserFp()) {
 	}
 }
 
+// this is for the identity page
+// it shows and hides the register and logged in forms
+// depending on the currently logged in status
+// logged in =  create id is hidden, current id is displayed
+// logged out = create id is shown, current id is hidden
+// this will also enable/disable the restore/copy buttons in the private key form
 function showHideForms() {
 	// the private key form should always be visible, except while the page is loading
 	var formPrivKey = document.getElementById('formprivkey');
 
+    // there should be a private key form, display it if it exists
 	if (formPrivKey) {
 		formPrivKey.style.display = 'block';
 	} else {
+	    // something is wrong, maybe we're on the wrong page
+	    // just give up
 		return;
 	}
 
+    // if user fingerprint exists
 	if (getUserFp()) {
+	    //current id form, show it
 		var formCur = document.getElementById('formCurId');
-
 		if (formCur) {
 			formCur.style.display = 'block';
 		}
 
+        //create id form, hide it
 		var formCreate = document.getElementById('formCreateId');
-
 		if (formCreate) {
 			formCreate.style.display = 'none';
 		}
 
+        // enable the restore id button
 		var restoreIdButton = document.getElementById('restoreid');
-
 		if (restoreIdButton) {
 			restoreIdButton.disabled = true;
 		}
 
+        // disable the private key button
 		var copyPrivButton = document.getElementById('copypriv');
-
 		if (copyPrivButton) {
 			copyPrivButton.disabled = false;
 		}
-
-		//todo for both key textboxes
-		//document.getElementById("myTextarea").readOnly = true;
 	} else {
-		var formCur = document.getElementById('formCurId');
+	// else means user is not logged in
 
+	    // current id form, hide it
+		var formCur = document.getElementById('formCurId');
 		if (formCur) {
 			formCur.style.display = 'none';
 		}
 
+        // create form, show it
 		var formCreate = document.getElementById('formCreateId');
-
 		if (formCreate) {
 			formCreate.style.display = 'block';
 		}
 
+        // restore button, enable it
 		var restoreIdButton = document.getElementById('restoreid');
-
 		if (restoreIdButton) {
 			restoreIdButton.disabled = false;
 		}
 
+        // copy private key button, disable it
 		var copyPrivButton = document.getElementById('copypriv');
-
 		if (copyPrivButton) {
 			copyPrivButton.disabled = true;
 		}
 	}
 
+    // hide the loading screen if it can be found
 	var loading = document.getElementById('loading');
 	if (loading) {
 		loading.style.display = 'none';
 	}
 }
 
+// call showHideForms()
 showHideForms();
 
+// remove login-related stored keys
 function removeStoredKeys() {
+    // remove the keys
 	window.localStorage.removeItem("privatekey");
 	window.localStorage.removeItem("publickey");
 	window.localStorage.removeItem("fingerprint");
 	window.localStorage.removeItem("avatar");
 
+    // clear the private key textbox if it can be found
 	var textbox = document.getElementById("privatekey");
-
 	if (textbox) {
 		textbox.value = '';
 	}
 
+    // clear the public key textbox if it can be found
 	textbox = document.getElementById("publickey");
-
 	if (textbox) {
 		textbox.value = '';
 	}
 
+    // remove displayed avatar at the top of the page
 	var avatar = document.getElementById("myid");
-
 	if (avatar) {
 		avatar.innerHTML = '';
 	}
 
+    // remove the displayed avatar on the page
 	avatar = document.getElementById("myAvatar");
-
 	if (avatar) {
 		avatar.innerHTML = '';
 	}
 
+    // show and hide the correct forms on the page, if applicable
 	showHideForms();
 }
 
+// this is a hack i found on stacko for escaping html
 var escapeTA = document.createElement('textarea');
 function escapeHTML(html) {
 	escapeTA.textContent = html;
 	return escapeTA.innerHTML;
 }
-
 function unescapeHTML(html) {
 	escapeTA.innerHTML = html;
 	return escapeTA.textContent;
 }
 
+// copy to clipboard i found, doesn't work on iphone
 function fallbackCopyTextToClipboard(textareaId) {
   var textArea = document.getElementById(textareaId);
   textArea.focus();
@@ -164,6 +188,7 @@ function fallbackCopyTextToClipboard(textareaId) {
   }
 }
 
+// copy to clipboard i found, doesn't work on iphone
 function copyTextToClipboard(textareaId) {
   var textbox = document.getElementById(textareaId);
   var text = textbox.value;
@@ -179,7 +204,11 @@ function copyTextToClipboard(textareaId) {
   });
 }
 
+
+// gets the private key from local storage
+// returns null otherwise
 function getPrivateKey() {
+
 	var privateKey = localStorage.getItem("privatekey");
 
 	if (privateKey === null || privateKey.length === 0) {
@@ -189,6 +218,9 @@ function getPrivateKey() {
 	}
 }
 
+
+// called from write.html#inspubkey
+// used for sharing the stored public key automatically
 function insertPubKey() {
 	var comment = document.getElementById("comment");
 	if (comment) {
@@ -200,6 +232,7 @@ function insertPubKey() {
 	}
 }
 
+// gets current user's cached public key from localstorage
 function getPublicKey() {
 	var publicKey = localStorage.getItem("publickey");
 	if (publicKey === null || publicKey.length === 0) {
@@ -209,31 +242,35 @@ function getPublicKey() {
 	}
 }
 
+// onload function for identity page
 function identityOnload() {
 	var pk = getPrivateKey();
 
+    // is there a private key?
 	if (pk) {
-		if (
-			window.location.hash
-			&&
-			(
-				window.location.hash == '#logout'
-				||
-				window.location.hash == '#signout'
-			)
-		)
-		{
+	    // if there's a private key, see if the user wants to log out
+	    // by looking for #logout or #signout in the url
+		if (window.location.hash &&	(window.location.hash == '#logout' || window.location.hash == '#signout')) {
+		    // log out
    			logOut();
+   			// refresh the pk variable (should be null now)
    			pk = getPrivateKey();
-   	} else {
+
+            // refresh the page to update the menubar
+            // #todo make this happen without refreshing the page
+   			location.reload();
+   	    } else {
+   	        // otherwise just make sure the private key textbox is populated
 			var textbox = document.getElementById("privatekey");
 
+            // if it exists
 			if (textbox) {
 				textbox.value = pk;
 			}
 		}
 	}
 
+    // if there's a public key, and a public key textbox, populate it
 	var pubk = getPublicKey();
 	if (pubk) {
 		var textboxPub = document.getElementById("publickey");
@@ -243,19 +280,25 @@ function identityOnload() {
 		}
 	}
 
+    // if there's a pk, do a saveId(); just for the heck of it? dunno
 	if (pk) {
 		saveId();
 	}
 
-	var nametext = document.getElementById("name");
+    // if there's a textbox for a name, populate it with the default
+    // the default is set in config/prefill_user_name
+    // and then templated in where $prefillUsername is
+    var nametext = document.getElementById("name");
 	if (nametext) {
 		if (nametext.value == '') {
-			nametext.value = "Anonymous";
+			nametext.value = "$prefillUsername";
 		}
 	}
 
+    // show and hide identity page forms as necessary
 	showHideForms();
 
+    // here we do the same thing we did above, checking for #logout and #signout? #strange #todo
 	if (window.location.hash) {
 		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
 			if (getPrivateKey()) {
@@ -265,20 +308,29 @@ function identityOnload() {
 	}
 }
 
+// puts generated html avatar into localstorage
 function setAvatar(avatar) {
 	window.localStorage.setItem("avatar", avatar);
 }
 
+// converts hex characters to symbols for the now unused
+// avatars that included different symbols instead of just
+// two asterisks
 function hexToChar(string) {
 	return string.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+');
 }
 
+// if there's a private key textbox,
+// set the current private key and refresh the pubkey, fingerprint, and avatar too
+// not much validation currently #todo
 function saveId() {
+    // look for textbox
 	var textbox = document.getElementById("privatekey");
 
 	if (textbox) {
 		var privkey = textbox.value;
 
+        // store it to localstorage
 		setPrivateKey(privkey);
 
 		var openpgp = window.openpgp;
@@ -286,19 +338,21 @@ function saveId() {
 		openpgp.config.show_version = false;
 		openpgp.config.show_comment = false;
 
+        // read it into pgp object
 		var privKeyObj = openpgp.key.readArmored(privkey);;
 
+        // get the public key out of it
 		var pubKeyObj = privKeyObj.keys[0].toPublic();
 
+        // store the armored version into localstorage
 		var pubkey = pubKeyObj.armor();
-
 		setPublicKey(pubkey);
 
+        // get the fingerprint as uppercase hex and store it
 		myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-
-		window.localStorage.setItem("avatar", avatar);
 		window.localStorage.setItem("fingerprint", myFingerprint);
 
+        // get username out of key
 		myUsername = pubKeyObj.users[0].userId.userid;
 
 		var color1 = myFingerprint.substr(0, 6);
@@ -333,40 +387,38 @@ function saveId() {
 
 		setAvatar(avatar);
 
+        // if there is a myid box, populate it appropriately
 		var myidBox = document.getElementById('myid');
 		if (myidBox) {
 			var myAvatar = localStorage.getItem('avatar');
 
-			if (myAvatar === null || myAvatar.length === 0) {
-				myidBox.innerHTML = 'Welcome! Please enjoy this resource. If you want an identity, <a href="/identity.html">Sign In</a>.';
-			} else {
-				var myFp = localStorage.getItem('fingerprint');
-				myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
-			}
-		}
+            if (myAvatar == null || myAvatar.length == 0) {
+                signinBox.innerHTML = '<a href="/identity.html">Sign In</a> <a href="/identity.html">Register</a>';
+            } else {
+                signinBox.innerHTML = '<a href="/identity.html">Settings</a> <a href="/identity.html#logout" onclick="logOut();location.reload();">Log Out</a>';
 
-		var myId2 = document.getElementById('myId2');
-		if (myId2) {
-			myId2.innerHTML = getAvatar();
-		}
+                var myFp = localStorage.getItem('fingerprint');
+                myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
 
-		var myAlgo = document.getElementById('myAlgo');
-		if (myAlgo) {
-			myAlgo.innerHTML = pubKeyObj.primaryKey.algorithm.toString();
-		}
+                var myId2 = document.getElementById('myId2');
+                if (myId2) {
+                    myId2.innerHTML = getAvatar();
+                }
 
-		var myCrea = document.getElementById('myCrea');
-		if (myCrea) {
-			myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
-		}
+                var myCrea = document.getElementById('myCrea');
+                if (myCrea) {
+                    myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+                }
 
-		var myFinger = document.getElementById('myFP');
-		if (myFinger) {
-			myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-		}
+                var myFinger = document.getElementById('myFP');
+                if (myFinger) {
+                    myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+                }
+            }
 
-		showHideForms();
-	}
+            showHideForms();
+	    }
+    }
 }
 
 function setPrivateKey(privateKey) {
@@ -528,6 +580,13 @@ function writeOnload() {
 			insProfileTemplate();
 		}
 	}
+	if (localStorage.getItem('writesmall')) {
+	    var writebox = document.getElementById('comment');
+	    if (writebox) {
+	        writebox.value = localStorage.getItem('writesmall');
+	        localStorage.removeItem('writesmall');
+	    }
+	}
 }
 
 function signForm(formId) {
@@ -604,6 +663,8 @@ function signForm(formId) {
 //}
 
 function signMessage() {
+    //var passPhrase = 'hunter2';
+
 	var privkey = getPrivateKey();
 
 	if (privkey) {
@@ -627,6 +688,8 @@ function signMessage() {
 			}
 
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+
+			//privateKey.decrypt(passPhrase);
 
 			options = {
 				data: message,                             // input as String (or Uint8Array)

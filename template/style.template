@@ -3,7 +3,7 @@ body {
 	font-family: courier, monospace;
 	font-size: large;
 	background-color: $secondaryColor;
-	color: #$textColor;
+	color: $textColor;
 }
 a {
 	color: $primaryColor;
@@ -71,8 +71,8 @@ nobr {
 	margin: 8pt;
 }
 div.txt {
-	border-top: 1pt dotted $primaryColor;
-	border-left: 1pt dotted $primaryColor;
+	border-top: 2pt dotted $primaryColor;
+	border-left: 2pt dotted $primaryColor;
 	border-bottom: 4pt double $primaryColor;
 	border-right: 4pt double $primaryColor;
 	border-radius: 10pt;
@@ -81,12 +81,15 @@ div.txt {
 .admin {
 	background: repeating-linear-gradient(
 		135deg,
-		#ffffe0,
-		#ffffe0 10px,
+		#ffffd0,
+		#ffffd0 10px,
 		#fffff0 10px,
 		#fffff0 20px
    );
    border-radius: 8pt;
+}
+.signed {
+	background-color: #fafdff;
 }
 .admin a .avatar {
 	color: green;
@@ -190,7 +193,9 @@ textarea {
 	max-width: 60em;
 }
 .warning {
-	background-color: #c08000;
+    background-color: #ffd0a0;
+	border: #c08000 solid 2pt;
+	padding: 5pt;
 }
 
 /* pagination */
@@ -209,4 +214,15 @@ textarea {
 /* summary styling */
 summary {
 	cursor: pointer;
+}
+
+
+label {
+    line-height: 2;
+    color: black;
+}
+.votecheck {
+    border: 1pt $primaryColor solid;
+    border-radius: 5pt;
+    padding: 5pt;
 }

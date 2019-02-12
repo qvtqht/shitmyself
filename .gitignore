@@ -1,5 +1,4 @@
 config/*
-html/*
 cache/*
 .idea/*
 log/*

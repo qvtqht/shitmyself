@@ -7,4 +7,6 @@ if (!-e './log') {
 	mkdir('./log');
 }
 
-system('lighttpd -D -f lighttpd.conf');
+if (system('lighttpd -D -f lighttpd.conf')) {
+	system('/usr/sbin/lighttpd -D -f lighttpd.conf');
+}
