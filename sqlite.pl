@@ -21,7 +21,11 @@ sub SqliteConnect {
 SqliteConnect();
 
 sub SqliteUnlinkDb {
+	if ($dbh) {
+		$dbh->disconnect();
+	}
 	rename($SqliteDbName, "$SqliteDbName.prev");
+	SqliteConnect();
 }
 
 #schema
@@ -310,7 +314,7 @@ sub DBGetItemReplies {
 
 	my %queryParams;
 	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash')";
-	$queryParams{'order_clause'} = "ORDER BY item_name"; #todo this should be by timestamp
+	$queryParams{'order_clause'} = "ORDER BY add_timestamp"; #todo this should be by timestamp
 
 	return DBGetItemList(\%queryParams);
 }
@@ -370,7 +374,7 @@ sub DBAddAuthor {
 		return;
 	}
 
-	if ($query && length($query) > 10240) {
+	if ($query && (length($query) > 2048 || scalar(@queryParams) > 50)) {
 		DBAddAuthor('flush');
 		$query = '';
 		@queryParams = ();
@@ -869,8 +873,6 @@ sub DBGetItemVoteTotals {
 		return;
 	}
 
-	my $fileHashSql = SqliteEscape($fileHash);
-
 	my $query = "
 		SELECT
 			vote_value,
@@ -878,14 +880,27 @@ sub DBGetItemVoteTotals {
 		FROM
 			vote_weighed
 		WHERE
-			file_hash = '$fileHashSql'
+			file_hash = ?
 		GROUP BY
 			vote_value
 		ORDER BY
 			vote_weight DESC;
 	";
 
-	my %voteTotals = SqliteGetHash($query);
+	my @queryParams;
+	push @queryParams, $fileHash;
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
+
+	my %voteTotals;
+
+	my $tagTotal;
+	while ($tagTotal = $sth->fetchrow_arrayref()) {
+		$voteTotals{@$tagTotal[0]} = @$tagTotal[1];
+	}
+
+	$sth->finish();
 
 	return %voteTotals;
 }
