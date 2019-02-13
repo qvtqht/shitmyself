@@ -445,6 +445,7 @@ sub GetItemPage {
 
 #	$txtIndex .= $file{'file_hash'};
 
+	#todo templatize this
 	my $votesSummary = '';
 	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 
@@ -847,18 +848,18 @@ sub GetReadPage {
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	if ($pageType eq 'author') {
-		my $userInfo = GetTemplate('userinfo.template');
+		my $authorInfo = GetTemplate('authorinfo.template');
 
 		my $authorAliasHtml = GetAlias($authorKey);
 		my $authorAvatarHtml = GetAvatar($authorKey);
 		my $authorImportance = 1337;
 
-		$userInfo =~ s/\$avatar/$authorAvatarHtml/;
-		$userInfo =~ s/\$alias/$authorAliasHtml/;
-		$userInfo =~ s/\$fingerprint/$authorKey/;
-		$userInfo =~ s/\$importance/$authorImportance/;
+		$authorInfo =~ s/\$avatar/$authorAvatarHtml/;
+		$authorInfo =~ s/\$alias/$authorAliasHtml/;
+		$authorInfo =~ s/\$fingerprint/$authorKey/;
+		$authorInfo =~ s/\$importance/$authorImportance/;
 
-		$txtIndex .= $userInfo;
+		$txtIndex .= $authorInfo;
 	}
 
 	foreach my $row (@files) {
@@ -1371,7 +1372,7 @@ WriteLog ("GetReadPage()...");
 
 #PutHtmlFile("$HTMLDIR/index.html", $indexText);
 
-WriteLog ("Authors...");
+WriteLog ("Author pages...");
 
 my @authors = DBGetAuthorList();
 
@@ -1403,6 +1404,18 @@ foreach my $key (@authors) {
 	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
 
 	PutCache("key/$key", time());
+}
+
+{
+	my $authorsListPage = GetPageHeader('Authors', 'Authors');
+
+	$authorsListPage .= GetPageFooter();
+
+	PutFile('./html/author/index.html', $authorsListPage);
+
+#	foreach my $key (@authors) {
+#
+#	}
 }
 
 {
@@ -1527,7 +1540,7 @@ sub MakeClonePage {
 	#my $itemCount = DBGetItemCount("item_type = 'text'");
 	my $itemCount = DBGetItemCount();
 
-	#if ($itemCount > 0) {
+	if ($itemCount > 0) {
 		my $i;
 
 		WriteLog("\$itemCount = $itemCount");
@@ -1551,7 +1564,15 @@ sub MakeClonePage {
 				PutHtmlFile("./html/index.html", $indexPage);
 			}
 		}
-	#}
+	} else {
+		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'));
+
+		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
+
+		$indexPage .= GetPageFooter();
+
+		PutHtmlFile('./html/index.html', $indexPage);
+	}
 }
 
 my $votesPage = GetVotesPage();
