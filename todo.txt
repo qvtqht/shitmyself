@@ -1,3 +1,7 @@
+Author pages should list all received tags at the top
+(sums of all received tags)
+interesting (55 [total]) spam (90000)
+
 Add roles directory
     Add roles/admin and roles/moderator
         Add support for having multiple public keys in here as text file
