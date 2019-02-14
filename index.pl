@@ -156,10 +156,14 @@ sub IndexFile {
 			AppendFile('./log/added.log', $logLine);
 		}
 
+		# if there is no admin set, and config/admin_imprint is true
+		# and if this item is a public key
+		# go ahead and make this user admin
+		# and announce it via a new .txt file
 		if (!GetAdminKey() && GetConfig('admin_imprint') && $gpgKey && $alias) {
 			PutFile('./admin.key', $txt);
 
-			PutFile('./html/txt/' . time() . '_admin.txt', 'There was no admin, and ' . $gpgKey . ' came passing through, so I made them admin.');
+			PutFile('./html/txt/' . time() . '_admin.txt', "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin_imprint is true and there is no admin set.)\n\n" . time());
 		}
 
 		if ($isSigned && $gpgKey && $gpgKey eq GetAdminKey()) {
