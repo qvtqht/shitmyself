@@ -325,6 +325,22 @@ sub GetItemTemplate {
 			$itemTemplate =~ s/\$replyCount/$discussLink/g;
 		}
 
+		#todo templatize this
+		#this displays the vote summary (tags applied and counts)
+		my $votesSummary = '';
+		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+
+		foreach my $voteTag (keys %voteTotals) {
+			$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+		}
+		if ($votesSummary) {
+			$votesSummary = '<p>' . $votesSummary . '</p>';
+		}
+		$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
+		#
+		#end of tag summary display
+
+
 		WriteLog("Call to GetVoterTemplate() :309");
 		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
@@ -444,15 +460,6 @@ sub GetItemPage {
 #	$txtIndex .= $recentVotesData;
 
 #	$txtIndex .= $file{'file_hash'};
-
-	#todo templatize this
-	my $votesSummary = '';
-	my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-
-	foreach my $voteTag (keys %voteTotals) {
-		$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
-	}
-	$txtIndex .= $votesSummary;
 
 #	if (defined($recentVotesTable) && $recentVotesTable) {
 #		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
@@ -739,6 +746,22 @@ sub GetIndexPage {
 			}
 
 
+			#todo templatize this
+			#this displays the vote summary (tags applied and counts)
+			my $votesSummary = '';
+			my %voteTotals = DBGetItemVoteTotals($fileHash);
+
+			foreach my $voteTag (keys %voteTotals) {
+				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+			}
+			if ($votesSummary) {
+				$votesSummary = '<p>' . $votesSummary . '</p>';
+			}
+			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
+			#
+			#end of tag summary display
+
+
 			#my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			#$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
@@ -971,6 +994,23 @@ sub GetReadPage {
 					my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
 					$itemTemplate =~ s/\$replyCount/$discussLink/g;
 				}
+
+
+				#todo templatize this
+				#this displays the vote summary (tags applied and counts)
+				my $votesSummary = '';
+				my %voteTotals = DBGetItemVoteTotals($fileHash);
+
+				foreach my $voteTag (keys %voteTotals) {
+					$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+				}
+				if ($votesSummary) {
+					$votesSummary = '<p>' . $votesSummary . '</p>';
+				}
+				$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
+				#
+				#end of tag summary display
+
 
 				WriteLog("Call to GetVoterTemplate() :881");
 				my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
