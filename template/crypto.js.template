@@ -562,7 +562,7 @@ function insVotes() {
 
 			var writeIntro = document.getElementById('writeintro');
 			if (writeIntro) {
-				writeIntro.innerHTML = '<p class=writeinfo><b><u>Important:</u> You must press the button to register your votes.</b><br><br>Thank you for taking the time!<br><br>You can also comment on a separate line from the commands.</p>';
+				writeIntro.innerHTML = '<p class=writeinfo><b><u>Important:</u> You must press the button to register your votes.</b><br><br>Thank you for taking the time!<br><br>You can also comment on a separate line from the command(s).</p>';
 			}
 		}
 	}

@@ -146,9 +146,16 @@ sub GetMenuItem {
 sub GetVoterTemplate {
 	my $fileHash = shift;
 	my $ballotTime = shift;
+	my $tagsListName = shift;
 
 	chomp $fileHash;
 	chomp $ballotTime;
+
+	if (!$tagsListName) {
+		$tagsListName = 'tags';
+	} else {
+		chomp $tagsListName;
+	}
 
 	#todo move this to GetConfig()
 	if (!-e "config/secret") {
@@ -161,7 +168,8 @@ sub GetVoterTemplate {
 	state $voteButtonsTemplate;
 
 	if (!defined($voteButtonsTemplate)) {
-		my $tagsList = GetConfig('tags');
+		#my $tagsList = GetConfig('tags');
+		my $tagsList = GetConfig($tagsListName);
 		my $flagsList = GetConfig('flags');
 
 		chomp $tagsList;
@@ -1217,11 +1225,7 @@ sub GetPageLink {
 	my $pageLink = $pageLinkTemplate;
 	$pageLink =~ s/\$pageName/$pageNumber/;
 
-	if ($pageNumber > 0) {
-		$pageLink =~ s/\$pageNumber/$pageNumber/;
-	} else {
-		$pageLink =~ s/\$pageNumber//;
-	}
+	$pageLink =~ s/\$pageNumber/$pageNumber/;
 
 	return $pageLink;
 }
@@ -1267,7 +1271,7 @@ sub GetPageLinks {
 #	}
 
 	if ($itemCount > $PAGE_LIMIT) {
-		for (my $i = 0; $i < $lastPageNum; $i++) {
+		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
 			my $pageLinkTemplate;
 #			if ($i == $currentPageNumber) {
 #				$pageLinkTemplate = "<b>" . $i . "</b>";
@@ -1598,10 +1602,11 @@ sub MakeClonePage {
 			my @ft = DBGetItemList(\%queryParams);
 			my $indexPage = GetIndexPage(\@ft, $i);
 
-			if ($i > 0) {
+			if ($i < $lastPage-1) {
 				PutHtmlFile("./html/index$i.html", $indexPage);
 			} else {
 				PutHtmlFile("./html/index.html", $indexPage);
+				PutHtmlFile("./html/index$i.html", $indexPage);
 			}
 		}
 	} else {
@@ -1635,7 +1640,25 @@ if ($voteCounts) {
 	}
 
 }
-
+#
+#sub MakePage {
+#	if (!$force) {
+#		if ($myCounter < $myCounterMax) {
+#			return;
+#		}
+#	}
+#
+#	my $page = shift;
+#
+#
+#
+#	my $currentPageContent = GetCache("page/$page");
+#
+#	if ($newPageContent == $currentPageContent) {
+#		#PutHtmlFile('./html/' . $page, $pageContent);
+#
+#}
+#
 
 # This is a special call which gathers up last run's written html files
 # that were not updated on this run and removes them
