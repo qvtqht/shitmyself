@@ -28,13 +28,15 @@ my $PAGE_LIMIT = GetConfig('page_limit');
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
 
-	my $timestamp = strftime('%F %T', localtime(time()));
+	my $timeBuilt = time();
+
+	my $timestamp = strftime('%F %T', localtime($timeBuilt));
 	my $myVersion = GetMyVersion();
 	#my $gpgVersion = GetGpgMajorVersion();
 
 	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
-	my $footer = $timestamp . " ; running " . $myVersionPrettyLink;
+	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</a>";
 
 	$txtFooter =~ s/\$footer/$footer/;
 
@@ -632,6 +634,8 @@ sub GetIndexPage {
 	$htmlStart .= $writeSmall;
 
 	$txtIndex .= $htmlStart;
+
+	$txtIndex .= "<a name=toppage>"; #todo template this
 
 	$txtIndex .= GetPageLinks($currentPageNumber);
 

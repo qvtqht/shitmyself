@@ -1,1 +1,1 @@
-<a href="index$pageNumber.html">$pageName</a>
+<a href="index$pageNumber.html#toppage">$pageName</a>

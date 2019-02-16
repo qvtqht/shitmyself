@@ -180,6 +180,7 @@ form.reply .txtarea {
 }
 button, input, input[type=submit], select {
 	font-size: x-large;
+	border-radius: 2pt;
 }
 textarea {
 	font-family: monospace;
@@ -198,16 +199,25 @@ textarea {
 	padding: 5pt;
 }
 
-/* pagination */
+/* pagination pages */
 .pagination {
 	font-family: sans-serif;
 	font-size: x-large;
 	spacing: 5pt;
+	padding: 5pt;
+	border: $primaryColor inset 5pt;
+	border-radius: 50%;
+	background-color: $minorColor;
+	text-align: center;
+
+}
+.pagination a {
+	padding: 5pt;
 }
 .pagination b {
 	padding: 5pt;
-	border: 1pt solid $primaryColor;
-	border-radius: 5pt;
+	border: 5pt outset $primaryColor;
+	border-radius: 15pt;
 	background-color: white;
 }
 
