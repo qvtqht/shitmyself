@@ -31,7 +31,7 @@ sub SqliteUnlinkDb {
 #schema
 sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp);");
-	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
+	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, touch)");
 	SqliteQuery2("CREATE TABLE author_alias(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		key UNIQUE,
@@ -46,16 +46,19 @@ sub SqliteMakeTables() {
 		item_name,
 		author_key,
 		file_hash UNIQUE,
-		item_type
+		item_type,
+		touch
 	)");
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
-	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
+	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, touch)");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, touch)");
+	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_id)");
 
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 	SqliteQuery2("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
+	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_id)");
 
 
 	SqliteQuery2("
@@ -70,7 +73,7 @@ sub SqliteMakeTables() {
 	");
 
 	SqliteQuery2("CREATE TABLE item_type(type_mask, type_name)");
-
+	#todo currently unpopulated
 	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(1, 'text');");
 	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(2, 'reply');");
 	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(4, 'vote');");
@@ -399,6 +402,33 @@ sub DBAddAuthor {
 
 }
 
+sub TouchItem {
+	my $itemType = shift;
+	my $itemId = shift;
+
+	my $touchTime = time();
+
+	WriteLog('TouchItem(' . $itemType . ',' . $itemId . ',' . $touchTime . ')');
+
+	if ($itemType eq 'item') {
+		my $query = "UPDATE item SET touch = ? WHERE file_hash = ?";
+		SqliteQuery2($query, $touchTime, $itemId);
+	}
+
+	if ($itemType eq 'author') {
+		my $query = "UPDATE author SET touch = ? WHERE key = ?";
+		SqliteQuery2($query, $touchTime, $itemId);
+	}
+
+	if ($itemType eq 'tag') {
+		my $query = "UPDATE vote SET touch = ? WHERE vote_value = ?";
+		SqliteQuery2($query, $touchTime, $itemId);
+
+		$query = "UPDATE tag SET touch = ? WHERE vote_value = ?";
+		SqliteQuery2($query, $touchTime, $itemId);
+	}
+}
+
 sub DBGetVoteCounts {
 	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
 
@@ -648,7 +678,6 @@ sub DBAddVoteRecord {
 sub DBAddAddedTimeRecord {
 # Adds a new record to added_time, typically from log/added.log
 # This records the time that the file was first submitted or picked up by the indexer
-#	$filePath = path to file
 #	$fileHash = file's hash
 #	$addedTime = time it was added
 #

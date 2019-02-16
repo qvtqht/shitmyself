@@ -336,8 +336,11 @@ sub ProcessAccessLog {
 						my $fileHash = GetFileHash('./html/txt/' . $filename);
 
 						#Add a line to the added.log that records the timestamp
-						my $logLine = $fileHash . '|' . time();
+						my $addedTime = time();
+						my $logLine = $fileHash . '|' . $addedTime;
 						AppendFile('./log/added.log', $logLine);
+
+						DBAddAddedTimeRecord($fileHash, $addedTime);
 
 #						#If we're doing replies, and there is a parent message specified...
 #						if (GetConfig('replies') && $parentMessage) {
@@ -345,13 +348,6 @@ sub ProcessAccessLog {
 #							my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
 #							AppendFile('./log/parent.log', $parentLogLine);
 #						}
-
-						#If we're doing instant updates, index the file right away
-						if (GetConfig('access_update')) {
-							IndexFile('./html/txt/' . $filename, 1);
-
-							IndexFile('flush');
-						}
 
 						# Add the file to git
 						#system("git add \"$filenameDir$filename\"");
@@ -476,14 +472,6 @@ sub ProcessAccessLog {
 					AppendFile("log/votes.log", $voteEntry);
 
 					$newItemCount++;
-
-					if (GetConfig('access_update')) {
-						DBAddVoteRecord($voteFile, $ballotTime, $voteValue);
-
-						UnlinkCache("file/$voteFile");
-
-						#todo IndexFile
-					}
 				}
 			}
 		}

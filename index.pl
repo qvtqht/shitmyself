@@ -88,13 +88,6 @@ sub IndexFile {
 		return;
 	}
 
-	my $newFile = shift;
-	if ($newFile) {
-		$newFile = 1;
-	} else {
-		$newFile = 0;
-	}
-
 	my $txt = "";
 	my $message = "";
 	my $isSigned = 0;
@@ -172,17 +165,10 @@ sub IndexFile {
 
 		if ($isSigned && $gpgKey) {
 			DBAddAuthor($gpgKey);
-			if ($newFile) {
-				UnlinkCache("key/$gpgKey");
-			}
 		}
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
-
-			if ($newFile) {
-				UnlinkCache("key/$gpgKey");
-			}
 		}
 
 		my $itemName = TrimPath($file);

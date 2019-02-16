@@ -746,10 +746,10 @@ sub GetIndexPage {
 #				$itemTemplate =~ s/\$replyCount//g;
 #			}
 			if ($replyCount) {
-				my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+				my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss (' . $replyCount . ')</a>';
 				$itemTemplate =~ s/\$replyCount/$discussLink/g;
 			} else {
-				my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+				my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss</a>';
 				$itemTemplate =~ s/\$replyCount/$discussLink/g;
 			}
 
@@ -1460,6 +1460,29 @@ foreach my $key (@authors) {
 #	foreach my $key (@authors) {
 #
 #	}
+}
+
+sub MakeRssFile {
+	my %queryParams;
+	my @files = DBGetItemList(\%queryParams);
+
+	my $fileList = "";
+
+	foreach my $file(@files) {
+		my $fileHash = $file->{'file_hash'};
+
+		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+
+			return;
+		}
+
+		my $fileName = $file->{'file_path'};
+
+		$fileList .= $fileName . "|" . $fileHash . "\n";
+	}
+
+	PutFile("$HTMLDIR/rss.txt", $fileList);
 }
 
 {

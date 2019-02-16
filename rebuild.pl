@@ -8,12 +8,13 @@ require './access.pl';
 
 #system('git pull');
 
-my $accessLogPath = GetConfig('access_log_path');
-ProcessAccessLog($accessLogPath);
-
 SqliteUnlinkDb();
 SqliteConnect();
 SqliteMakeTables();
+
+my $accessLogPath = GetConfig('access_log_path');
+ProcessAccessLog($accessLogPath);
+
 
 if (!-e './html/txt') {
     mkdir('./html/txt');
