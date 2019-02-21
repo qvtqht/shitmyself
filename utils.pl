@@ -221,13 +221,20 @@ sub GetRandomHash {
 sub GetTemplate {
 	my $filename = shift;
 	chomp $filename;
+	$filename = "$SCRIPTDIR/template/$filename";
 
 	WriteLog("GetTemplate($filename)");
 
-	$filename = "$SCRIPTDIR/template/$filename";
+	state %templateCache;
+
+	if ($templateCache{$filename}) {
+		return $templateCache{$filename};
+	}
 
 	if (-e $filename) {
-		return GetFile($filename);
+		my $template = GetFile($filename);
+		$templateCache{$filename} = $template;
+		return $template;
 	} else {
 		WriteLog("WARNING! GetTemplate() called with non-existing file $filename. Returning empty string.");
 		return '';
