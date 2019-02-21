@@ -57,10 +57,10 @@ hr {
 	padding: 5pt;
 }
 
-nobr {
-	white-space: nowrap
-}
 
+nobr, .fckchrm {
+	white-space:nowrap;
+}
 
 /* textboxes */
 .txt {
@@ -209,7 +209,6 @@ textarea {
 	border-radius: 50%;
 	background-color: $minorColor;
 	text-align: center;
-
 }
 .pagination a {
 	padding: 5pt;
