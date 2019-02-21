@@ -328,10 +328,10 @@ sub GetItemTemplate {
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
 		if ($replyCount) {
-			my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+			my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss (' . $replyCount . ')</a>';
 			$itemTemplate =~ s/\$replyCount/$discussLink/g;
 		} else {
-			my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+			my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss</a>';
 			$itemTemplate =~ s/\$replyCount/$discussLink/g;
 		}
 
@@ -1008,11 +1008,11 @@ sub GetReadPage {
 				$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
 				if ($replyCount) {
-					my $discussLink = '<a href="' . $permalinkHtml . '#reply">' . $replyCount . ' replies</a>';
+					my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss (' . $replyCount . ')</a>';
 					$itemTemplate =~ s/\$replyCount/$discussLink/g;
 				}
 				else {
-					my $discussLink = '<a href="' . $permalinkHtml . '#reply">reply</a>';
+					my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss</a>';
 					$itemTemplate =~ s/\$replyCount/$discussLink/g;
 				}
 
