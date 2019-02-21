@@ -635,11 +635,15 @@ sub GetIndexPage {
 
 	$txtIndex .= $htmlStart;
 
-	$txtIndex .= "<a name=toppage>"; #todo template this
+	$txtIndex .= "<a name=toppage></a>"; #todo template this!
 
-	$txtIndex .= GetPageLinks($currentPageNumber);
+	if (defined($currentPageNumber)) {
+		$txtIndex .= GetPageLinks($currentPageNumber);
+	}
 
 	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $itemList = '';
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -777,13 +781,18 @@ sub GetIndexPage {
 			#my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 			#$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
-			$txtIndex .= $itemTemplate;
+			#$txtIndex .= $itemTemplate;
+			$itemList = $itemTemplate . $itemList;
 		}
 	}
 
+	$txtIndex .= $itemList;
+
 #	$txtIndex .= GetTemplate('voteframe.template');
 
-	$txtIndex .= GetPageLinks($currentPageNumber);
+	if (defined($currentPageNumber)) {
+		$txtIndex .= GetPageLinks($currentPageNumber);
+	}
 
 	# Add javascript warning to the bottom of the page
 	#$txtIndex .= GetTemplate("jswarning.template");
@@ -1132,10 +1141,11 @@ sub GetVotesPage {
 		my $voteItemTemplate = GetTemplate('vote_page_link.template');
 
 		my $tagName = $rowSplit[0];
+		my $tagCount = $rowSplit[1];
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
 		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
-		$voteItemTemplate =~ s/\$tagName/$tagName/g;
+		$voteItemTemplate =~ s/\$tagName/$tagName ($tagCount)/g;
 
 		$txtIndex .= $voteItemTemplate;
 	}
@@ -1276,6 +1286,7 @@ sub GetPageLinks {
 
 	if ($itemCount > $PAGE_LIMIT) {
 		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
+#		for (my $i = 0; $i < $lastPageNum; $i++) {
 			my $pageLinkTemplate;
 #			if ($i == $currentPageNumber) {
 #				$pageLinkTemplate = "<b>" . $i . "</b>";
@@ -1624,10 +1635,16 @@ sub MakeClonePage {
 
 			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
-			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+			$queryParams{'order_clause'} = 'ORDER BY add_timestamp';
 
 			my @ft = DBGetItemList(\%queryParams);
-			my $indexPage = GetIndexPage(\@ft, $i);
+
+			my $indexPage;
+			if ($lastPage > 1) {
+				$indexPage = GetIndexPage(\@ft, $i);
+			} else {
+				$indexPage = GetIndexPage(\@ft);
+			}
 
 			if ($i < $lastPage-1) {
 				PutHtmlFile("./html/index$i.html", $indexPage);
