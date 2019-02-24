@@ -1,3 +1,7 @@
+Somehow handle cleanup of old .html files
+
+Fix Tags page so that correct counts are displayed
+
 Author pages should list all received tags at the top
 (sums of all received tags)
 interesting (55 [total]) spam (90000)

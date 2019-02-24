@@ -270,11 +270,9 @@ sub GetIndexPage {
 #				$itemTemplate =~ s/\$replyCount//g;
 #			}
 			if ($replyCount) {
-				my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss (' . $replyCount . ')</a>';
-				$itemTemplate =~ s/\$replyCount/$discussLink/g;
+				$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
 			} else {
-				my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss</a>';
-				$itemTemplate =~ s/\$replyCount/$discussLink/g;
+				$itemTemplate =~ s/\$replyCount//g;
 			}
 
 

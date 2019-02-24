@@ -294,11 +294,9 @@ sub GetItemTemplate {
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
 		if ($replyCount) {
-			my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss (' . $replyCount . ')</a>';
-			$itemTemplate =~ s/\$replyCount/$discussLink/g;
+			$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
 		} else {
-			my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss</a>';
-			$itemTemplate =~ s/\$replyCount/$discussLink/g;
+			$itemTemplate =~ s/\$replyCount//g;
 		}
 
 		#todo templatize this
@@ -693,14 +691,10 @@ sub GetReadPage {
 				$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
 				if ($replyCount) {
-					my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss (' . $replyCount . ')</a>';
-					$itemTemplate =~ s/\$replyCount/$discussLink/g;
+					$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
+				} else {
+					$itemTemplate =~ s/\$replyCount//g;
 				}
-				else {
-					my $discussLink = '<a href="' . $permalinkHtml . '#discuss">discuss</a>';
-					$itemTemplate =~ s/\$replyCount/$discussLink/g;
-				}
-
 
 				#todo templatize this
 				#this displays the vote summary (tags applied and counts)
