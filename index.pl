@@ -145,8 +145,13 @@ sub IndexFile {
 
 			WriteLog("No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
 
-			my $logLine = $gpgResults{'gitHash'} . '|' . time();
+			my $newAddedTime = time();
+
+			my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
 			AppendFile('./log/added.log', $logLine);
+
+			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
+			DBAddAddedTimeRecord('flush');
 		}
 
 		# if there is no admin set, and config/admin_imprint is true

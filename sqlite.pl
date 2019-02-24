@@ -15,7 +15,7 @@ sub SqliteConnect {
 		"dbi:SQLite:dbname=$SqliteDbName",
 		"",
 		"",
-		{ RaiseError => 1 },
+		{ RaiseError => 1, AutoCommit => 1 },
 	) or die $DBI::errstr;
 }
 SqliteConnect();
@@ -795,6 +795,13 @@ sub DBGetItemList2 {
 	";
 }
 
+sub DBGetItemFlat {
+	my $paramHashRef = shift;
+	my %params = %$paramHashRef;
+
+
+}
+
 sub DBGetItemList {
 	my $paramHashRef = shift;
 	my %params = %$paramHashRef;
@@ -812,6 +819,8 @@ sub DBGetItemList {
 			file_hash,
 			author_key,
 			child_count,
+			parent_count,
+			item_type,
 			add_timestamp
 		FROM
 			item_flat
@@ -836,7 +845,7 @@ sub DBGetItemList {
 	foreach (@results) {
 		chomp;
 
-		my ($file_path, $item_name, $file_hash, $author_key, $child_count) = split(/\|/, $_);
+		my ($file_path, $item_name, $file_hash, $author_key, $child_count, $parent_count, $item_type, $add_timestamp) = split(/\|/, $_);
 		my $row = {};
 
 		$row->{'file_path'} = $file_path;
@@ -844,6 +853,10 @@ sub DBGetItemList {
 		$row->{'file_hash'} = $file_hash;
 		$row->{'author_key'} = $author_key;
 		$row->{'child_count'} = $child_count;
+		$row->{'parent_count'} = $parent_count;
+		$row->{'item_type'} = $item_type;
+		$row->{'add_timestamp'} = $add_timestamp;
+
 
 		push @return, $row;
 	}
