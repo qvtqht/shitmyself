@@ -161,6 +161,45 @@ leave blank to not pre-fill anything
 default: Anonymous
 
 primary_colors
-list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
+list of \n-separated hex colors (012bcd format) to be used randomly for ui color
+default: (see repo)
+
+secondary_colors
+list of \n-separated hex colors (012bcd format) to be used randomly for ui secondary color
+default: (see repo)
+
+pull_item_limit
+how many items to pull via http at a time when pulling from other nodes
+#todo work in progress, may not be necessary thanks to git
+default: 10
+
+push_item_limit
+how many items to push to other nodes via http at a time
+#todo work in progress, may not be necessary thanks to git
+default: 5
+
+replies
+whether or not to enable replying functionality
+#todo verify this works at 0, may not disable everything currently
+default: 1
+
+tags
+list of tags to provide user as voting options
+default: (see repo)
+
+text_colors
+list of colors to use randomly for page text, \n-separated
+default: (see repo)
+
+use_gpg2
+if not 0, gpg2 command is used in place of gpg when performing GPG-related tasks
+default: 0
+
+vote_limit
+#todo document this
+
+zip_interval
+how frequentlly the zip archive of the entire site is updated, in seconds
+default: 3600
 
 to be continued...
