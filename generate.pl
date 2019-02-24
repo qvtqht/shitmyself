@@ -434,9 +434,8 @@ sub GetTopPage {
 sub GetSubmitPage {
 	my $txtIndex = "";
 
-
-	my $title = "Add Text";
-	my $titleHtml = "Add Text";
+	my $title = "Write";
+	my $titleHtml = "Write";
 
 	my $itemCount = DBGetItemCount();
 	my $itemLimit = 9000;
@@ -455,7 +454,7 @@ sub GetSubmitPage {
 
 			$txtIndex .= $submitForm;
 
-			$txtIndex .= "Current Post Count: $itemCount; Current Post Limit: $itemLimit";
+			#$txtIndex .= "Current Post Count: $itemCount; Current Post Limit: $itemLimit";
 		} else {
 			$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please remove something before posting.";
 		}

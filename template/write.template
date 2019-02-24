@@ -5,19 +5,10 @@
     <p>What you write below is public... You <i>could</i> say the whole world is watching. Be nice, please.</p>
     <p>You can also submit commands, signed messages, public keys, and more! See manual and source code for details.</p>-->
     </span>
-    <label for="comment">Type something here. Limited to about 1,024 characters, including signature.</label>
+    <label for="comment">Write something, please. Limited to 1K chars. <a href="/manual.html">More info in docs.</a></label>
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=1024 autofocus>$prefillText</textarea><br>
     <span id=signAndPost></span>
     <input type=submit value="Post Without Signing" id=addtext>
     $extraFields
-        <p>Instructions for command-line GPG users</p>
-        <ul>
-        <li>If you know how to sign with GPG, you can do that:<br>
-            <tt>gpg [--default-key john] --clearsign [file.txt]</tt><br>
-            (Paste the entire signed message into textbox.)</li>
-        <li>To set username, export and submit your public key:<br>
-        <tt>gpg --armor --export [john]</tt></li>
-        <li><a href="/manual.html#cli">See manual for details.</a></li>
-        </ul>
 </form>
 <!--# / write.template #-->
