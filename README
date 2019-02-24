@@ -22,6 +22,8 @@ validate.pl
 
 gitflow.pl
 (in the future will) do what index.pl+generate.pl do, but without full rebuild
+currently only does some of index.pl's work, and a little bit of generate.pl
+requires that you first run "git init" in the html/txt/ directory
 
 installation on GNU platforms
 =============================
