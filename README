@@ -80,6 +80,8 @@ known issues
 ============
 this is just a basic prototype, and is not optimized to scale.
 
+all 40-character-long hex-looking strings are assumed to be existing items and are linked in the html-ized posts
+
 the index db is regenerated every time, which can definitely be optimized.
 
 the voter id should (debatable) be generated once per page, but is currently generated once per item.
