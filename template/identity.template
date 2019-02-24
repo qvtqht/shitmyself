@@ -9,12 +9,6 @@ Please <a href="/manual.html">read the Manual</a> for more information.
 You can also continue to use the site without changing anything.
 </noscript>
 
-<h2>Identity</h2>
-
-<p>Welcome to the Identity page! This is where you can create a username, sign in, sign out, and review your information.</p>
-
-<p>If you have any questions, please consult the Manual, or just ask using the Write page.</p>
-
 <p id=loading style="color: green; border: 5pt green solid; border-radius: 10pt; background-color: green; color: white;">
     <br><br>Loading...<br><br><br>
 </p>
@@ -30,34 +24,21 @@ You can also continue to use the site without changing anything.
         <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
         <strong><b>Attention!</b></strong> Save your private key to sign in again!
     </p>
-
-    <!--<hr>-->
-
-    <!--<p>-->
-        <!--<input type=button value="Create Profile" onclick="window.open('/write.html#profile','_self');"><br>-->
-        <!--Create or replace your current profile.<br>If one already exists, overwrite it.<br>-->
-    <!--</p>-->
-
-    <p>
-        <input type=button value="Publish Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
-        Publish your public key, including your name<br>
-        Allow others to send you encrypted messages<br>
-    </p>
 </form>
 <!-- / current identity -->
 
 <!-- create identity -->
 <form id=formCreateId style="display: none; background-color: #c0ffc0; padding: 5pt; border: 5pt solid #d0f0d0; border-radius: 5pt">
 <big><u><b>Create Identity</b></u></big>
-<br><br>
-<input type=submit value="Create Identity Now" style="background-color: orange" onclick="makeKeyFromInputs();return false;"><span id=profIframe></span><br>
-    Generate an identity, also known as key pair<br>
+<br>
+<!--    Generate an identity, also known as key pair<br>
     Publish your public key, including your name (set below)<br>
     Store your private key in your browser/device<br>
-    Allow others to send you encrypted messages<br><br>
-<fieldset style="display: inline; background-color: #ffd0a0">
-<legend><b>Advanced Options</b></legend>
-<label for=name>Name:</label><input type=text size=16 maxlength=100 name=name id=name><br>
+    Allow others to send you encrypted messages<br><br>-->
+
+<label for=name>Name:</label><input type=text size=16 maxlength=100 name=name id=name onblur="if(this.value==''){this.value='Anonymous';}" onfocus="if(this.value=='Anonymous'){this.value='';}"><br>
+<input type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
+<br><br><br>
 <label for=bits>Algorithm:</label><select name=bits id=bits>
 <option value=curve25519>curve25519</option>
 <option value=ed25519>ed25519</option>
@@ -72,21 +53,18 @@ You can also continue to use the site without changing anything.
 <option value=1024>rsa1024</option>
 <option value=2048>rsa2048</option>
 <option value=4096>rsa4096</option>
-</select><br>
-<input type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
+</select><br>(Leave this alone!)
 <!--<input type=checkbox name=pubNewProfile id=pubNewProfile checked><label for=pubNewProfile>Create Profile</label>-->
-<br></fieldset>
 <!--<span style="display:none"><label for=pass>passphrase:</label><input type=password size=40 maxlength=100 name=pass id=pass> (optional)<br></span>-->
 </form>
 <!-- / create identity -->
 
 <!-- private key -->
-<form id=formprivkey style="display: none; background-color: #ff8080; padding: 5pt; border: 5pt solid #ffa0a0; border-radius: 5pt;">
-    <big><u><b>Private Key</b></u></big><br><br>
-    If you are signed in, save the key in this field to back up your identity.<br><br>
-    If you have previously created and backed up an identity, just paste to restore.<br><br>
-    <label for=privatekey>Current Private Key</label>
-    <textarea cols=61 rows=10 id=privatekey autocomplete=off spellcheck=false></textarea><br>
+<form id=formprivkey name=formprivkey style="display: none; background-color: #ff8080; padding: 5pt; border: 5pt solid #ffa0a0; border-radius: 5pt;">
+    <big><u><b><label for=privatekey>Private Key</label></b></u></big><br><br>
+    Back this up to save your identity!<br><br>
+    To restore your identity, paste here!<br><br>
+    <textarea cols=61 rows=10 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea><br>
     <input type=button id=restoreid value="Restore Identity" onclick="saveId();">
     <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br>
 </form>
@@ -96,15 +74,6 @@ You can also continue to use the site without changing anything.
 
 <p><u>Instructions for Advanced Users With Paranoid Tendencies</u><br><br>
 
-If you are security-oriented and industrious, you can disable JS and use your own own PGP/GPG setup.<br><br>
+Please <a title="RTFM" href="/manual.html">reference the fine Manual</a> for more information.</p>
 
-Just paste GPG's "armored" output, including the PGP headers, into the <a href="/write.html">Write page</a> textbox.
-
-For example, to create a user page: <tt>gpg --armor --export [KEY ID]</tt> which yields <code>-----BEGIN PGP PUBLIC KEY-----...</code>, which you paste.<br><br>
-
-To post a message, <tt>gpg --clearsign</tt> and post away! (Which yields <code>-----BEGIN PGP SIGNED MESSAGE-----...</code>)<br><br>
-
-For more information, <a title="RTFM" href="/manual.html">reference the fine Manual</a>.</p>
-
-<p><u>Not sure what any of this means?</u> Ask around!</p>
 <!-- / identity.template -->
