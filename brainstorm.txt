@@ -1,3 +1,5 @@
+Because Chrome doesn't respect any form of nobr/no-wrap that I have found, and since it is still very important to keep checkboxes together with their labels, the voting checkboxes now appear as one vertical column in older browsers such as NN3.  We make this offering to the glorious <table>, <tr>, and <td> tags, and we do it gladly. May they live a good life, and may careless browser devs (Lord forgive them) never find a reason to meddle with their implementations. May their parsing be smooth and joyous, may their rows and columns as straight as possible under the  given circumstances, and may their borders always be beveled by default.
+
 Consider https://dkg.fifthhorseman.net/notes/inline-pgp-harmful/
 
 Work on installer; Should be easy to install.
