@@ -15,9 +15,11 @@
 <h3>These Features May Be Confusing At First</h3>
 
 <ul>
-    <li>Create your "account" aka <u>key pair</u> on your own computer, as <u>not on this website or server</u>.</li>
-    <li>This is accomplished with encryption called GPG.</li>
+    <li>Your identity lives on your device, as <u>not on this website or server</u>.</li>
+    <li>This is accomplished with encryption called PGP.</li>
     <li>Your key pair allows you to post on other forums too.</li>
+	<li>Fast page loading due to lack of bloat.</li>
+	<li>Lack of restrictions on information export.</li>
 </ul>
 
 <h3>Known Issues aka Features</h3>
