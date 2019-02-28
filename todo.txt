@@ -1,3 +1,13 @@
+How to make things easier???
+	More flow can be achieved with more one-click actions
+	Most common tags should be one-clickable for JS users
+		And possibly for non-JS users, just make them links
+		Logged in users should vote as themselves by default
+			Make sure this is very, very clear, possibly with a second confirmation 
+				[ interesting        v ] [ funny ] [ spam ] [ ... ] --> goes to /abcd.html#vote
+				| Vote as Anonymous    |
+				| Vote without signing |
+
 Somehow handle cleanup of old .html files
 
 Fix Tags page so that correct counts are displayed
