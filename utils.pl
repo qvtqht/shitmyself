@@ -972,7 +972,7 @@ sub WriteLog {
 
 	my $timestamp = time();
 
-	if (GetConfig("debug") && GetConfig("debug") == 1) {
+	if (-e "config/debug" && GetConfig("debug") && GetConfig("debug") == 1) {
 		AppendFile("log/log.log", $timestamp . " " . $text);
 		print $timestamp . " " . $text . "\n";
 	}
