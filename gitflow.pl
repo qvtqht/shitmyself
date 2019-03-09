@@ -15,43 +15,50 @@ require './index.pl';
 require './access.pl';
 require './pages.pl';
 
-WriteLog("Hello, World!");
+WriteLog('gitflow.pl begin');
 
+# get the path of access log, usually log/access.log
 my $accessLogPath = GetConfig('access_log_path');
 WriteLog("\$accessLogPath = $accessLogPath");
 
-my $newItemCount = ProcessAccessLog($accessLogPath, 0);
+# Check to see if access log exists
+if (-e $accessLogPath) {
+	#Process the access log (access.pl)
+	my $newItemCount = ProcessAccessLog($accessLogPath, 0);
 
-WriteLog("\$newItemCount = $newItemCount");
+	WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
+} else {
+	WriteLog("WARNING: Could not find $accessLogPath");
+}
 
-#my $gitChanges = `cd ./html/txt; git status --porcelain; cd ../..`;
+# Use git to find files that have changed in txt/ directory
 my $gitChanges = `cd ./html/txt; git add . ; git status --porcelain | grep "^A" | cut -c 4-; cd ../..`;
-#todo less janky
 
+# Get an array of changed files that git returned
 my @gitChangesArray = split("\n", $gitChanges);
 
+# We don't need to run generate.pl unless something has changed,
+# which we will check for below
+# use $runGeneratePl to keep track of it.
 my $runGeneratePl = 0;
 
 foreach my $file (@gitChangesArray) {
-	WriteLog('$file = ' . $file);
-
+	# Trim the file path
 	$file = trim($file);
-#	$file =~ s/^.. //;
-#	$file = trim($file);
 
-	WriteLog('$file = ' . $file);
-
+	# Add the txt/ path prefix
 	my $fileFullPath = "./html/txt/" . $file;
 
-	WriteLog('$file = ' . $file);
+	# Log it
+	WriteLog('$file = ' . $file . " ($fullFilePath)");
 
 	#todo add rss.txt addition
 
+	# If the file exists, and is not a directory, process it
 	if (-e $fileFullPath && !-d $fileFullPath) {
 		my $addedTime = time();
 
 		IndexFile($fileFullPath);
-
 		IndexFile('flush');
 
 		my $fileHash = GetFileHash($fileFullPath);
