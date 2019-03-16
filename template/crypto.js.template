@@ -250,7 +250,8 @@ function identityOnload() {
 	if (pk) {
 	    // if there's a private key, see if the user wants to log out
 	    // by looking for #logout or #signout in the url
-		if (window.location.hash &&	(window.location.hash == '#logout' || window.location.hash == '#signout')) {
+	// disabled due to us not wanting this link to work
+		if (0 && window.location.hash &&	(window.location.hash == '#logout' || window.location.hash == '#signout')) {
 		    // log out
    			logOut();
    			// refresh the pk variable (should be null now)
@@ -299,7 +300,8 @@ function identityOnload() {
 	showHideForms();
 
     // here we do the same thing we did above, checking for #logout and #signout? #strange #todo
-	if (window.location.hash) {
+	// disabled
+	if (0 && window.location.hash) {
 		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
 			if (getPrivateKey()) {
 				logOut();
