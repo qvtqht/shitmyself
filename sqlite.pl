@@ -7,8 +7,10 @@ use DBI;
 use Data::Dumper;
 use 5.010;
 
-my $SqliteDbName = "index.sqlite3";
+my $SqliteDbName = './cache/' . GetMyVersion() . '/index.sqlite3';
 my $dbh;
+
+require './utils.pl';
 
 sub SqliteConnect {
 	$dbh = DBI->connect(
@@ -31,7 +33,7 @@ sub SqliteUnlinkDb {
 #schema
 sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp);");
-	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, touch)");
+	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, published)");
 	SqliteQuery2("CREATE TABLE author_alias(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		key UNIQUE,
@@ -47,11 +49,11 @@ sub SqliteMakeTables() {
 		author_key,
 		file_hash UNIQUE,
 		item_type,
-		touch
+		published
 	)");
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
-	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, touch)");
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, touch)");
+	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, published)");
 	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_id)");
 
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
@@ -79,6 +81,10 @@ sub SqliteMakeTables() {
 	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(4, 'vote');");
 	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(8, 'pubkey');");
 	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(16, 'decode_error');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(32, 'image');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(64, 'video');");
+	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(128, 'event');");
+
 
 	SqliteQuery2("
 		CREATE VIEW parent_count AS
@@ -411,20 +417,20 @@ sub TouchItem {
 	WriteLog('TouchItem(' . $itemType . ',' . $itemId . ',' . $touchTime . ')');
 
 	if ($itemType eq 'item') {
-		my $query = "UPDATE item SET touch = ? WHERE file_hash = ?";
+		my $query = "UPDATE item SET published = ? WHERE file_hash = ?";
 		SqliteQuery2($query, $touchTime, $itemId);
 	}
 
 	if ($itemType eq 'author') {
-		my $query = "UPDATE author SET touch = ? WHERE key = ?";
+		my $query = "UPDATE author SET published = ? WHERE key = ?";
 		SqliteQuery2($query, $touchTime, $itemId);
 	}
 
 	if ($itemType eq 'tag') {
-		my $query = "UPDATE vote SET touch = ? WHERE vote_value = ?";
+		my $query = "UPDATE vote SET published = ? WHERE vote_value = ?";
 		SqliteQuery2($query, $touchTime, $itemId);
 
-		$query = "UPDATE tag SET touch = ? WHERE vote_value = ?";
+		$query = "UPDATE tag SET published = ? WHERE vote_value = ?";
 		SqliteQuery2($query, $touchTime, $itemId);
 	}
 }
