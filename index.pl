@@ -99,7 +99,6 @@ sub IndexFile {
 
 	my $gitHash;
 	my $isAdmin = 0;
-	my $itemType = 'text';
 
 	my $verifyError = 0;
 
@@ -218,7 +217,9 @@ sub IndexFile {
 
 						DBAddVoteWeight('flush');
 
-						$itemType = 'admin';
+						DBAddVoteRecord($gitHash, $addedTime, 'type:admin');
+
+						DBAddVoteRecord('flush');
 					}
 				}
 			}
@@ -252,7 +253,9 @@ sub IndexFile {
 					my $reconLine = "addevent/$descriptionHash/$eventTime/$eventDuration/$csrf";
 					$message =~ s/$reconLine/[Event: $descriptionHash at $eventTime for $eventDuration]/g; #todo flesh out message
 
-					$itemType = 'event';
+					DBAddVoteRecord ($gitHash, $addedTime, 'type:event');
+
+					DBAddVoteRecord('flush');
 
 					DBAddEventRecord('flush');
 
@@ -294,7 +297,7 @@ sub IndexFile {
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
 					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
 
-					$itemType = 'vote'
+					DBAddVoteRecord ($gitHash, $addedTime, 'type:vote');
 				}
 
 				DBAddVoteRecord('flush');
@@ -304,7 +307,9 @@ sub IndexFile {
 		}
 
 		if ($alias) {
-			$itemType = 'pubkey';
+			DBAddVoteRecord ($gitHash, $addedTime, 'type:pubkey');;
+
+			DBAddVoteRecord('flush');
 		}
 
 		if ($message) {
@@ -315,12 +320,10 @@ sub IndexFile {
 			WriteLog('I was going to save $messageCacheName, but $message is blank!');
 		}
 
-
-
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemType);
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemTypeMask);
 		} else {
-			DBAddItem ($file, $itemName, '',      $gitHash, $itemType);
+			DBAddItem ($file, $itemName, '',      $gitHash, $itemTypeMask);
 		}
 	}
 }
