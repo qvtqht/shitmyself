@@ -74,6 +74,8 @@ sub AddHost {
 }
 
 sub GenerateFilenameFromTime {
+	WriteLog('GenerateFilenameFromTime()');
+
 	# Generate filename from date and time
 	my $filename;
 	my $filenameDir;
@@ -449,7 +451,7 @@ sub ProcessAccessLog {
 
 			# If the URL begins with "/action/" run it through the processor
 		my $actionPrefix = "/action/";
-		if (substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
+		if (0 && substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
 			# Put the arguments into an array
 			my @actionArgs = split("/", $file);
 
