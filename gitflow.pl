@@ -50,7 +50,7 @@ foreach my $file (@gitChangesArray) {
 	my $fileFullPath = "./html/txt/" . $file;
 
 	# Log it
-	WriteLog('$file = ' . $file . " ($fullFilePath)");
+	WriteLog('$file = ' . $file . " ($fileFullPath)");
 
 	#todo add rss.txt addition
 
