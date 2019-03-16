@@ -227,13 +227,44 @@ sub IndexFile {
 
 		#look for votes
 		if ($message) {
-			my @voteLines = ( $message =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-zA-F]{32})/mg );
+			my @eventLines = ( $message =~ m/^addevent\/([0-9a-fA-F]{40})\/([0-9]+)\/([0-9]+)\/([0-9a-fA-F]{32})/mg );
+			#                                 prefix   /description       /time     /duration /csrf
+
+			if (@eventLines) {
+				my $lineCount = @eventLines / 4;
+				#todo assert no remainder
+
+				WriteLog("DBAddEventRecord \$lineCount = $lineCount");
+
+				while (@eventLines) {
+					my $descriptionHash = shift @eventLines;
+					my $eventTime = shift @eventLines;
+					my $eventDuration = shift @eventLines;
+					my $csrf = shift @eventLines;
+
+					if ($isSigned) {
+						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration, $gpgKey);
+					} else {
+						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration);
+					}
+
+					my $reconLine = "addevent/$descriptionHash/$eventTime/$eventDuration/$csrf";
+					$message =~ s/$reconLine/[Event created!]/g; #todo flesh out message
+
+					$itemType = 'event';
+
+					DBAddEventRecord('flush');
+				}
+			}
+
+			my @voteLines = ( $message =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-fA-F]{32})/mg );
 			#                                prefix  /file hash         /time     /tag      /csrf
 
 			#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
 			if (@voteLines) {
 				my $lineCount = @voteLines / 4;
+				#todo assert no remainder
 
 #				if ($isSigned) {
 #					$message = "$gpgKey is adding $lineCount votes:\n" . $message;
