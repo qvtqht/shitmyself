@@ -180,7 +180,7 @@ sub IndexFile {
 
 		# look for quoted message ids
 		if ($message) {
-			my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
+			my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
 
 			if (@replyLines) {
 				while(@replyLines) {
@@ -195,11 +195,11 @@ sub IndexFile {
 			}
 		}
 
-		#look for addweight, which adds a voting weight for a user
+		#look for addvouch, which adds a voting vouch for a user
 		#
-		# addweight/F82FCD75AAEF7CC8/20
+		# addvouch/F82FCD75AAEF7CC8/20
 		if ($message) {
-			my @weightLines = ( $message =~ m/^addweight\/([0-9a-fA-F]{16})\/([0-9]+)/mg );
+			my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
 			
 			if (@weightLines) {
 				my $lineCount = @weightLines / 2;
@@ -209,12 +209,11 @@ sub IndexFile {
 						while(@weightLines) {
 							my $voterId = shift @weightLines;
 							my $voterWt = shift @weightLines;
+							my $voterAvatar = GetAvatar($voterId);
 
-							DBAddVoteWeight($voterId, $voterWt);
+							my $reconLine = "addvouch/$voterId/$voterWt";
 
-							my $reconLine = "addweight/$voterId/$voterWt";
-
-							$message =~ s/$reconLine/[Voting weight for $voterId has been incremented by $voterWt voters.]/g;
+							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
 						}
 
 						DBAddVoteWeight('flush');
@@ -227,7 +226,7 @@ sub IndexFile {
 
 		#look for votes
 		if ($message) {
-			my @eventLines = ( $message =~ m/^addevent\/([0-9a-fA-F]{40})\/([0-9]+)\/([0-9]+)\/([0-9a-fA-F]{32})/mg );
+			my @eventLines = ( $message =~ m/^addevent\/([0-9a-f]{40})\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})/mg );
 			#                                 prefix   /description       /time     /duration /csrf
 
 			if (@eventLines) {
@@ -248,16 +247,20 @@ sub IndexFile {
 						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration);
 					}
 
+					DBAddItemParent($gitHash, $descriptionHash);
+
 					my $reconLine = "addevent/$descriptionHash/$eventTime/$eventDuration/$csrf";
-					$message =~ s/$reconLine/[Event created!]/g; #todo flesh out message
+					$message =~ s/$reconLine/[Event: $descriptionHash at $eventTime for $eventDuration]/g; #todo flesh out message
 
 					$itemType = 'event';
 
 					DBAddEventRecord('flush');
+
+					DBAddItemParent('flush');
 				}
 			}
 
-			my @voteLines = ( $message =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-fA-F]{32})/mg );
+			my @voteLines = ( $message =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
 			#                                prefix  /file hash         /time     /tag      /csrf
 
 			#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c

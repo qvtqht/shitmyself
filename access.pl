@@ -276,7 +276,7 @@ sub ProcessAccessLog {
 						WriteLog("Found &replyto=");
 						my $parentId = $1;
 						#todo check for valid char count too
-						if ($parentId =~ /[0-9a-fA-F]+/ && IsSha1($parentId)) {
+						if ($parentId =~ /[0-9a-f]+/ && IsSha1($parentId)) {
 							$parentMessage = $parentId;
 							UnlinkCache("file/$parentMessage");
 							UnlinkCache("message/$parentMessage.message");
@@ -291,7 +291,7 @@ sub ProcessAccessLog {
 
 # 				 	# Only if the "replies" config is enabled
 # 					if (GetConfig('replies')) {
-# 						my @replyLines = ( $message =~ m/^\>\>([0-9a-fA-F]{40})/mg );
+# 						my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
 #
 # 						if (@replyLines) {
 # 							while(@replyLines) {
@@ -412,7 +412,7 @@ sub ProcessAccessLog {
 
 				WriteLog($voteAtom);
 
-				my @voteLines = ( $voteAtom =~ m/^addvote\/([0-9a-fA-F]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-fA-F]{32})/mg );
+				my @voteLines = ( $voteAtom =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
 				if (@voteLines) {
 					my $fileHash   = shift @voteLines;
 					my $ballotTime = shift @voteLines;

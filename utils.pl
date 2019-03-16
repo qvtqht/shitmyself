@@ -10,6 +10,7 @@ use lib 'lib';
 
 use URI::Encode qw(uri_decode);
 use URI::Escape;
+use HTML::Entities qw(encode_entities);
 use Storable;
 
 # We'll use pwd for for the install root dir
@@ -616,6 +617,20 @@ sub IsSha1 {
 	}
 }
 
+sub IsItem {
+	my $string = shift;
+
+	if (!$string) {
+		return 0;
+	}
+
+	if ($string =~ m/[0-9a-f]{40}/) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 sub IsMd5 {
 	my $string = shift;
 
@@ -637,7 +652,7 @@ sub IsFingerprint {
 		return 0;
 	}
 
-	if ($string =~ m/[a-fA-F0-9]{16}/) {
+	if ($string =~ m/[A-F0-9]{16}/) {
 		return 1;
 	} else {
 		return 0;

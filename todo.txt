@@ -1,3 +1,11 @@
+Add to specifications:
+	items are always 0-9a-f{40} (lowercase)
+	authors are always 0-9A-F{16} (uppercase)
+	csrf is always 0-9a-f{32}
+	until better specifications are arrived at
+	consider an odd-numbered hash of some kind for uniqueness?
+		e.g sha1 with one char removed or added or something
+
 Move SQLite db into cache dir
 
 Write
