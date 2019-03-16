@@ -1,3 +1,14 @@
+Move SQLite db into cache dir
+
+Write
+	[x] enable longer text support
+		--> js changes form type to post
+			--> goes through php receiver
+	what are limitations and how to not lose submission??
+		maybe issue a backup get just in case?
+			only do this if text is long?
+				what else?
+
 How to make things easier???
 	More flow can be achieved with more one-click actions
 	Most common tags should be one-clickable for JS users
