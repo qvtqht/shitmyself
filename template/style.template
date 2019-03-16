@@ -220,6 +220,8 @@ textarea {
 	border: 5pt outset $primaryColor;
 	border-radius: 15pt;
 	background-color: white;
+	transform: scale(-1, 1);
+
 }
 
 /* summary styling */

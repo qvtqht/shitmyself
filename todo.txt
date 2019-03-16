@@ -16,7 +16,6 @@ Write
 		maybe issue a backup get just in case?
 			only do this if text is long?
 				what else?
-=======
 test mode: remove random characters from scripts when embedding them in page
 
 How to make things easier???

@@ -15,8 +15,6 @@ function formToText(formId) {
 						} else {
 							localStorage.setItem('vvvv', localStorage.getItem('vvvv') + "\n" + elements[i].name);
 						}
-
-						window.open('/write.html#insvotes','_self');
 					}
 				}
 			}
@@ -24,7 +22,12 @@ function formToText(formId) {
 	}
 }
 
+function gotoInsVotes() {
+	window.open('/write.html#insvotes','_self');
+}
+
 var pau = document.getElementById('voteAsUser');
 if (pau) {
-	pau.innerHTML = '<input type=button onclick="formToText(this.form.id)" value="Add Signature">'
+	pau.innerHTML = '<input type=button onclick="formToText(this.form.id); gotoInsVotes();" value="Add Signature">';
+	//'<input type=button onclick="formToText(this.form.id)" value="Enqueue">';
 }
