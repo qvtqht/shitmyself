@@ -150,7 +150,9 @@ a.avatar {
 
 /* submit forms */
 form.submit, form.reply {
-	padding: 10pt;
+	padding: 5pt;
+	border: 1pt dotted $primaryColor;
+	border-radius: 10pt;
 }
 form.submit .txtarea {
 	width: 100%;
