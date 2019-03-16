@@ -1005,4 +1005,11 @@ if ($lastVersion ne $currVersion) {
 	PutConfig('current_version', $currVersion);
 }
 
+sub DeleteFile {
+	my $fileHash = shift;
+
+	if ($fileHash) {
+	}
+}
+
 1;
