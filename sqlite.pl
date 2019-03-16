@@ -55,6 +55,7 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
 	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, published)");
 	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_id)");
+	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, description_hash, author_key, event_time, event_duration, event_location)");
 
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
@@ -626,6 +627,65 @@ sub DBAddVoteWeight {
 	push @queryParams, $key, $weight;
 }
 
+sub DBAddEventRecord {
+# DBAddEventRecord
+# $gitHash, $descriptionHash, $eventTime, $eventDuration, $signedBy
+
+	state $query;
+
+	WriteLog("DBAddEventRecord()");
+
+	my $fileHash = shift;
+
+	if ($fileHash eq 'flush') {
+		WriteLog("DBAddEventRecord(flush)");
+
+		if ($query) {
+			$query .= ';';
+
+			SqliteQuery($query);
+
+			$query = '';
+		}
+
+		return;
+	}
+
+	if ($query && length($query) > 10240) {
+		DBAddEventRecord('flush');
+		$query = '';
+	}	
+
+	my $descriptionHash = shift;
+	my $eventTime = shift;
+	my $eventDuration = shift;
+	my $signedBy = shift;
+
+	chomp $descriptionHash;
+	chomp $eventTime;
+	chomp $eventDuration;
+	chomp $signedBy;
+
+	if ($signedBy) {
+		chomp $signedBy;
+	} else {
+		$signedBy = '';
+	}
+
+	$fileHash = SqliteEscape($fileHash);
+	$descriptionHash = SqliteEscape($descriptionHash);
+	$eventTime = SqliteEscape($eventTime);
+	$eventDuration = SqliteEscape($eventDuration);
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO calendar(item_hash, description_hash, event_time, event_duration, author_key) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= "('$fileHash', '$descriptionHash', '$eventTime', '$eventDuration', '$signedBy')";
+}
+
 sub DBAddVoteRecord {
 # DBAddVoteRecord
 # $fileHash
@@ -633,6 +693,8 @@ sub DBAddVoteRecord {
 # $voteValue
 # $signedBy
 	state $query;
+
+	WriteLog("DBAddVoteRecord()");
 
 	my $fileHash = shift;
 
@@ -653,7 +715,7 @@ sub DBAddVoteRecord {
 	if ($query && length($query) > 10240) {
 		DBAddVoteRecord('flush');
 		$query = '';
-	}	
+	}
 
 	my $ballotTime = shift;
 	my $voteValue = shift;
