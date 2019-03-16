@@ -8,12 +8,12 @@ if (window.localStorage) {
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/identity.html">Sign In</a> <a href="/identity.html">Register</a>';
+			signinBox.innerHTML = '<a href="/identity.html">Identity</a>';
 		} else {
-		   signinBox.innerHTML = '<a href="/identity.html">Settings</a> <a href="/identity.html#logout">Log_Out</a>';
+		   signinBox.innerHTML = '';
 
 			var myFp = localStorage.getItem('fingerprint');
-			myidBox.innerHTML = '<p align=right>You are signed in as <a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
+			myidBox.innerHTML = '<p align=right><a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
 
 			if (window.location.pathname == '/author/' + myFp + '/') {
 				// Create a new element
