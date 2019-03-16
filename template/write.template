@@ -6,7 +6,7 @@
     <p>You can also submit commands, signed messages, public keys, and more! See manual and source code for details.</p>-->
     </span>
     <label for="comment">Write something, please. Limited to 1K chars. <a href="/manual.html">More info in docs.</a></label>
-    <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=1024 autofocus>$prefillText</textarea><br>
+    <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=4096 autofocus>$prefillText</textarea><br>
     <span id=signAndPost></span>
     <input type=submit value="Post Without Signing" id=addtext>
     $extraFields
