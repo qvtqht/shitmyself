@@ -205,7 +205,7 @@ sub SqliteQuery {
 
 	WriteLog( "$query\n");
 
-	my $results = `sqlite3 $SqliteDbName "$query"`;
+	my $results = `sqlite3 "$SqliteDbName" "$query"`;
 
 	return $results;
 }
