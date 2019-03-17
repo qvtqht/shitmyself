@@ -206,7 +206,8 @@ sub GetIndexPage {
 				}
 			}
 
-			# todo $alias = GetAlias($gpgKey);
+			#todo $alias = GetAlias($gpgKey);
+			WriteLog('@@@\@@@');
 
 			$alias = HtmlEscape($alias);
 
@@ -700,8 +701,9 @@ foreach my $key (@authors) {
 
 	my $lastTouch = GetCache("key/$key");
 	if ($lastTouch && $lastTouch + $authorInterval > time()) {
-		WriteLog("I already did $key recently, too lazy to do it again");
-		next;
+		#WriteLog("I already did $key recently, too lazy to do it again");
+		#next;
+		#todo uncomment
 	}
 
 	WriteLog("$HTMLDIR/author/$key");
@@ -777,8 +779,9 @@ sub MakeRssFile {
 
 		my $lastTouch = GetCache("file/$fileHash");
 		if ($lastTouch && $lastTouch + $fileInterval > time()) {
-			WriteLog("I already did $fileHash recently, too lazy to do it again");
-			next;
+			#WriteLog("I already did $fileHash recently, too lazy to do it again");
+			#next;
+			#todo uncomment
 		}
 
 		my $fileName = $file->{'file_hash'};

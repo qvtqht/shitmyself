@@ -175,6 +175,8 @@ sub IndexFile {
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
+
+			DBAddKeyAlias('flush');
 		}
 
 		my $itemName = TrimPath($file);
@@ -210,7 +212,8 @@ sub IndexFile {
 						while(@weightLines) {
 							my $voterId = shift @weightLines;
 							my $voterWt = shift @weightLines;
-							my $voterAvatar = GetAvatar($voterId);
+							#my $voterAvatar = GetAvatar($voterId);
+							#bug calling GetAvatar before the index is generated results in an avatar without alias
 
 							my $reconLine = "addvouch/$voterId/$voterWt";
 
@@ -230,7 +233,7 @@ sub IndexFile {
 		#look for votes
 		if ($message) {
 			my @eventLines = ( $message =~ m/^addevent\/([0-9a-f]{40})\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})/mg );
-			#                                 prefix   /description       /time     /duration /csrf
+			#                                 prefix   /description    /time     /duration /csrf
 
 			if (@eventLines) {
 				my $lineCount = @eventLines / 4;
