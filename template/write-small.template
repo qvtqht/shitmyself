@@ -1,6 +1,6 @@
 <!-- write-small.template -->
 <form action="./gracias.html" class=submit name=submit style="background-color: #e0e0e0;">
-	<p><label for=comment>Say something <u>publicly and right now:</u>
+	<p><label for=comment>Say something <b>publicly</b>, anonymously, and right now:
 	<input autocomplete=off id=comment name=comment size=80 style="max-width: 100%; background-color: #ffffc0" maxlength=6000></label> <input type=submit id=submit value="Send Unsigned"> <span id=signAndPost></span> <a href="/write.html" onclick="return pushmessage();" style="float:right">More Fun Options</a></p>
 </form>
 
