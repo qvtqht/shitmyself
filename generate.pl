@@ -445,7 +445,7 @@ sub GetSubmitPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	if (defined($itemCount) && defined($itemLimit)) {
+	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		if ($itemCount < $itemLimit) {
 			my $submitForm = GetTemplate('write.template');
 			my $prefillText = "";
@@ -888,7 +888,7 @@ sub MakeClonePage {
 	#twice. this also allows us to only update the first 5 plus all affected
 	#when a new item is added, instead of the whole catalog
 
-	if ($itemCount > 0) {
+	if (defined($itemCount) && $itemCount && $itemCount > 0) {
 		my $i;
 
 		WriteLog("\$itemCount = $itemCount");
