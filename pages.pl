@@ -213,7 +213,7 @@ sub GetItemTemplate {
 		$message = FormatForWeb($message);
 
 		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-		$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
+		$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
 
@@ -265,7 +265,7 @@ sub GetItemTemplate {
 		}
 
 		my $permalinkTxt = $file{'file_path'};
-		my $permalinkHtml = "/" . $gitHash . ".html";
+		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 
 		$permalinkTxt =~ s/^\.//;
 		$permalinkTxt =~ s/html\///;
@@ -666,11 +666,11 @@ sub GetReadPage {
 				$permalinkTxt =~ s/^\.//;
 				$permalinkTxt =~ s/html\///;
 
-				my $permalinkHtml = "/" . $gitHash . ".html";
+				my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 
 				my $itemText = FormatForWeb($message);
 
-				$itemText =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
+				$itemText =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
 				#todo verify that the items exist before turning them into links,
 				# so that we don't end up with broken links
 

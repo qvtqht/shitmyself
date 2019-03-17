@@ -79,6 +79,7 @@ foreach my $file (@gitChangesArray) {
 
 		foreach my $file (@files) {
 			my $itemPage = GetItemPage($file);
+			#todo update this to use /ab/cdefgh... convention
 
 			PutHtmlFile("./html/$fileHash.html", $itemPage);
 		}

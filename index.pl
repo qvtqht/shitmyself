@@ -127,7 +127,8 @@ sub IndexFile {
 			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
 
 			unlink($file);
-			unlink($gitHash . ".html");
+			my $filename = './html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			unlink($filename);
 
 			return;
 		}

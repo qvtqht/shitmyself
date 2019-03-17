@@ -189,7 +189,8 @@ sub GetIndexPage {
 
 			$message = FormatForWeb($message);
 
-			$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
+			#$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
+			$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
 			#todo verify that the items exist before turning them into links,
 			# so that we don't end up with broken links
 
@@ -240,7 +241,7 @@ sub GetIndexPage {
 				$authorLink = "";
 			}
 			my $permalinkTxt = $file;
-			my $permalinkHtml = "/" . $gitHash . ".html";
+			my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 
 			$permalinkTxt =~ s/^\.//;
 			$permalinkTxt =~ s/html\///;
@@ -793,7 +794,14 @@ sub MakeRssFile {
 
 		my $fileIndex = GetItemPage($file);
 
-		my $targetPath = $HTMLDIR . '/' . $fileHash . '.html';
+		my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+
+		WriteLog("Writing HTML file for item");
+		WriteLog("\$targetPath = $targetPath");
+
+		if (!-e './html/' . substr($fileHash, 0, 2)) {
+			mkdir('./html/' . substr($fileHash, 0, 2));
+		}
 
 		PutHtmlFile($targetPath, $fileIndex);
 
@@ -870,8 +878,13 @@ sub MakeClonePage {
 			$commit =~ s/^commit //;
 			chomp($commit);
 			if (IsSha1($commit)) {
+				my $htmlSubDir = './html/' . substr($commit, 0, 2);
+				my $htmlFilename = substr($commit, 2);
+				if (!-e $htmlSubDir) {
+					mkdir($htmlSubDir);
+				}
 				WriteLog("./html/$commit.html");
-				PutHtmlFile("./html/$commit.html", GetVersionPage($commit));
+				PutHtmlFile("$htmlSubDir/$htmlFilename.html", GetVersionPage($commit));
 			}
 		}
 	}
