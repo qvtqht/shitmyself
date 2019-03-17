@@ -11,7 +11,6 @@ if (window.localStorage) {
 			signinBox.innerHTML = '<a href="/identity.html">Identity</a>';
 		} else {
 		    signinBox.innerHTML = '';
-
 			var myFp = localStorage.getItem('fingerprint');
 			myidBox.innerHTML = '<p align=right><a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a></p>';
 
