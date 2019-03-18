@@ -242,7 +242,7 @@ sub GetItemTemplate {
 		if (
 			$isSigned
 				&&
-				$gpgKey eq GetAdminKey()
+			IsAdmin($gpgKey)
 		) {
 			$isAdmin = 1;
 		}
@@ -538,7 +538,7 @@ sub GetReadPage {
 			my $authorAliasHtml = GetAlias($authorKey);
 			my $authorAvatarHtml = GetAvatar($authorKey);
 
-			if ($authorKey eq GetAdminKey()) {
+			if (IsAdmin($authorKey)) {
 				$title = "Admin's Blog (Posts by or for $authorAliasHtml)";
 				$titleHtml = "Admin's Blog ($authorAvatarHtml)";
 			} else {
@@ -638,7 +638,7 @@ sub GetReadPage {
 
 			#$message = FormatForWeb($message);
 
-			if ($isSigned && $gpgKey eq GetAdminKey()) {
+			if ($isSigned && IsAdmin($gpgKey)) {
 				$isAdmin = 1;
 			}
 

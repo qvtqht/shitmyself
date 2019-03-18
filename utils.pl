@@ -544,6 +544,22 @@ sub GetFileSizeHtml {
 	return $fileSizeString;
 }
 
+sub IsAdmin {
+	my $key = shift;
+
+	if (!IsFingerprint($key)) {
+		return 0;
+	}
+
+	my $adminKey = GetAdminKey();
+
+	if ($adminKey eq $key) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 
 sub GetAdminKey {
 	#Returns admin's key sig, 0 if there is none

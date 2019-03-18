@@ -194,7 +194,7 @@ sub GetIndexPage {
 			#todo verify that the items exist before turning them into links,
 			# so that we don't end up with broken links
 
-			if ($isSigned && $gpgKey eq GetAdminKey()) {
+			if ($isSigned && IsAdmin($gpgKey)) {
 				$isAdmin = 1;
 			}
 

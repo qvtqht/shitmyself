@@ -164,7 +164,7 @@ sub IndexFile {
 			PutFile('./html/txt/' . time() . '_admin.txt', "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin_imprint is true and there is no admin set.)\n\n" . time());
 		}
 
-		if ($isSigned && $gpgKey && ($gpgKey eq GetAdminKey())) {
+		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			$isAdmin = 1;
 
 			DBAddVoteRecord($gitHash, $addedTime, 'type:admin');
@@ -211,7 +211,7 @@ sub IndexFile {
 				my $lineCount = @weightLines / 2;
 
 				if ($isSigned) {
-					if ($gpgKey = GetAdminKey()) {
+					if (IsAdmin($gpgKey)) {
 						while(@weightLines) {
 							my $voterId = shift @weightLines;
 							my $voterWt = shift @weightLines;
