@@ -1,3 +1,91 @@
+WHERE DO TEXT FILES COME FROM?
+==============================
+web server -> access.log -> access.pl -> txt/
+sftp (uploaded/added straight to filesystem)
+clipboard (?)
+git
+file editor
+irc logs
+
+txt -> index.pl -> sqlite -> static website
+        \      \
+         -> gpg -
+
+    vote -- tag
+  /     \
+item - author
+  \ item_parent
+
+
+ADMIN NOTES
+===========
+I, the Administrator and
+caretaker of this establishment,
+hereby state that:
+   * no advertising, paid affiliate, promoted, sponsored, or otherwise money-influenced content
+     has been posted here to my knowledge as of this date (1/1/1970)
+   * I have taken care to preserve a fair voting base by only appointing and empowering trustworthy voters
+======
+I hereby award a voting weight of 300 unaffiliated voters to <John> for the following reasons:
+   *
+
+   *
+======
+My affiliations and affects as voter (be as detailed as you're willing)
+Political parties:
+Cultural/family ties/associations:
+Locations I frequent:
+Favorite musicians:
+Favorite movies/books:
+Favorite beverage:
+Addictions:
+Weaknesses:
+Subversion experience:
+
+
+WHO CAN FIND THIS USEFUL
+========================
+Facebook groups
+	Scaling
+	Images
+	Videos
+Mailing lists
+	Email notifications
+Private chat groups
+	private/closed mode
+Banned subreddits
+	scaling
+	link sharing
+People who want a new community, especially hackers
+	avatars
+	profile pics
+	documentation
+	examples of use
+	ease of setup
+Writers and artists
+People who want to blog
+	formatting
+	theming
+	images
+	videos
+Street people
+	hosting
+	ease of setup
+	easy and legitimate-seeming url
+	self-hosting?
+Travelers
+	secure URL
+	pics
+	video
+Groups who want to talk off the grid, for reasons
+Families who want to privately exchange confidential information
+	self-contained
+	device and clear instructions
+	UI improvements
+	replication
+
+
+
 Because Chrome doesn't respect any form of nobr/no-wrap that I have found, and since it is still very important to keep checkboxes together with their labels, the voting checkboxes now appear as one vertical column in older browsers such as NN3.  We make this offering to the glorious <table>, <tr>, and <td> tags, and we do it gladly. May they live a good life, and may careless browser devs (Lord forgive them) never find a reason to meddle with their implementations. May their parsing be smooth and joyous, may their rows and columns as straight as possible under the  given circumstances, and may their borders always be beveled by default.
 
 Consider https://dkg.fifthhorseman.net/notes/inline-pgp-harmful/

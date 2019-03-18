@@ -1,4 +1,37 @@
 
+
+SERVER MESSAGE SIGNING
+======================
+Does server.key exist?
+   No:
+      generate gen-key-script
+      Generate key with gpg --unattended
+   Yes:
+      Sign message with it
+   
+
+Set up new domains
+Polish the install process
+Improve parsing of URLs
+Write scripts for instant updates
+
+ACCESSIBILITY FROM LIMITED DEVICES
+==================================
+1) Add PHP script for instant update triggers
+   config/generate_php_hooks
+   template/htaccess
+   template/submit.php
+   template/index.php
+2) Submit items via URL without any additional prefix
+   * e.g. http://qdb.us/text.goes.here
+   * test if spaces work in GTr
+3) Set up short URLs to accept input (for live version)
+4) Make UI smaller
+5) Make links for voting so that form submission not required
+
+Consider changing background color based on time of day?
+
+
 FEEDBACK FROM L.F.
 ==================
 it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages.
@@ -7,39 +40,39 @@ It might be somewhat counter-intuitive to have the pages going from 14-0 on the 
 Underlining 'publicly and right now' may be confused as a hyperlink, maybe can be left un-underlined. but if you want to emphasize this consider bold or italics
 Also, as a personal preference I think the ellipse around the numbers can be removed or made into a rectangle
 And consider adding a title/informative header to the page in general, to give more context to what this page is.
-	It could be something like "hike.qdb.us" on the very top, a very short description underneath it, and then tabs (home, write, tags, manual) go underneath that
+   It could be something like "hike.qdb.us" on the very top, a very short description underneath it, and then tabs (home, write, tags, manual) go underneath that
 
 
 
 Add to specifications:
-	items are always 0-9a-f{40} (lowercase)
-	authors are always 0-9A-F{16} (uppercase)
-	csrf is always 0-9a-f{32}
-	until better specifications are arrived at
-	consider an odd-numbered hash of some kind for uniqueness?
-		e.g sha1 with one char removed or added or something
+   items are always 0-9a-f{40} (lowercase)
+   authors are always 0-9A-F{16} (uppercase)
+   csrf is always 0-9a-f{32}
+   until better specifications are arrived at
+   consider an odd-numbered hash of some kind for uniqueness?
+      e.g sha1 with one char removed or added or something
 
 Move SQLite db into cache dir
 
 Write
-	[x] enable longer text support
-		--> js changes form type to post
-			--> goes through php receiver
-	what are limitations and how to not lose submission??
-		maybe issue a backup get just in case?
-			only do this if text is long?
-				what else?
+   [x] enable longer text support
+      --> js changes form type to post
+         --> goes through php receiver
+   what are limitations and how to not lose submission??
+      maybe issue a backup get just in case?
+         only do this if text is long?
+            what else?
 test mode: remove random characters from scripts when embedding them in page
 
 How to make things easier???
-	More flow can be achieved with more one-click actions
-	Most common tags should be one-clickable for JS users
-		And possibly for non-JS users, just make them links
-		Logged in users should vote as themselves by default
-			Make sure this is very, very clear, possibly with a second confirmation 
-				[ interesting        v ] [ funny ] [ spam ] [ ... ] --> goes to /abcd.html#vote
-				| Vote as Anonymous    |
-				| Vote without signing |
+   More flow can be achieved with more one-click actions
+   Most common tags should be one-clickable for JS users
+      And possibly for non-JS users, just make them links
+      Logged in users should vote as themselves by default
+         Make sure this is very, very clear, possibly with a second confirmation 
+            [ interesting        v ] [ funny ] [ spam ] [ ... ] --> goes to /abcd.html#vote
+            | Vote as Anonymous    |
+            | Vote without signing |
 
 Somehow handle cleanup of old .html files
 
@@ -93,20 +126,20 @@ js fallback for saving via "more options" link on write-small.template
 
 
 Hide voting, weight-setting, and other messages from home page
-	Add an /all page that displays a feed of everything
+   Add an /all page that displays a feed of everything
 
 In reply box, if >> line goes missing, replace it somehow without annoying the user.
 
 When private key is pasted into [restore] textarea,
-	automatically check it for presence of private key
-		restore if it validates
+   automatically check it for presence of private key
+      restore if it validates
 
 Make access.pl make a new text file instead of adding to votes.log
 
 Ensure caches are deleted when a vote occurs
 
 Merge vote and reply forms
-	With JS, make the checkboxes appear/disappear inside the textbox as addvote/ lines
+   With JS, make the checkboxes appear/disappear inside the textbox as addvote/ lines
 
 Add a message that appears the first time someone is posting something, like on HN
 
@@ -114,39 +147,39 @@ Add a message that appears the first time someone is posting something, like on 
 abc can assign a weight of up to 100 to anyone else?
 
 When listing replies, we can strip the >parenthash part from replies
-	while leaving it in the detail view for that comment
+   while leaving it in the detail view for that comment
 
 Entertaining stats page
-	top voter + top tags = top tags by voter
-	top voters
-	top used tags
-		add to profile page
-	number of voters
-	number of vote records
-	busiest days?
+   top voter + top tags = top tags by voter
+   top voters
+   top used tags
+      add to profile page
+   number of voters
+   number of vote records
+   busiest days?
 
 Read profile from user submission
-	Decide on syntax
-	Receive submission
-	Replace into /author/abc/profile.html
-	Update added_timestamp
-		How? It's in added.log
+   Decide on syntax
+   Receive submission
+   Replace into /author/abc/profile.html
+   Update added_timestamp
+      How? It's in added.log
 
 Post profile
-	Wording for instructions
-	Decide on format
-		Prefill Write
-		Or
-		Dedicated page
+   Wording for instructions
+   Decide on format
+      Prefill Write
+      Or
+      Dedicated page
 
 Profile page
-	Fingerprint:
-	Name:
-	Creation Date:
-	Posts:
-	Voted:
-	Votes Earned:
-	Most Recent Action:
+   Fingerprint:
+   Name:
+   Creation Date:
+   Posts:
+   Voted:
+   Votes Earned:
+   Most Recent Action:
 
 Add "via [sitename]" to pulled and pushed items
 
@@ -173,16 +206,16 @@ it would be nice to cut down the posting time from 1-2 minutes to instant.
 "create profile" should go to a prefilled textbox with profile template OR to a page to edit profile
 
 Some of the buttons can probably be made full width
-	To make them easier to press on mobile
+   To make them easier to press on mobile
 
 Sometimes on Android the button push is cancelled by the keyboard retract
-	Or something like that
-		Load page
-		Press Write
-		Fill in message
-		Press the "Post" button
-			Expected: Posted
-			Actual: First tab is usually ignored
+   Or something like that
+      Load page
+      Press Write
+      Fill in message
+      Press the "Post" button
+         Expected: Posted
+         Actual: First tab is usually ignored
 
 #bug on edge: tag links change colors, but flag links do not
 
@@ -191,7 +224,7 @@ Sometimes on Android the button push is cancelled by the keyboard retract
 If only one page hide pagination buttons
 
 Fix the vote/tag links
-	Js: implement
+   Js: implement
 
 Set Identity shou1d update the pub1i< key to <orrespond
 
@@ -219,16 +252,16 @@ Validate signed input on Write page
 
 
 Link target encryption key with parent id key using gpg --list-keys
-	This way "Encrypted message for ..." is linked to the correct profile
+   This way "Encrypted message for ..." is linked to the correct profile
 
 Feeds list
-	OPML
+   OPML
 
 Text::Markdown?
 
 Newly dropped text files should get their own added time.
-	Adjust the sorting to be based on added time, then filesystem path
-	Add an ./incoming dir for new textfiles that are manually copied?
+   Adjust the sorting to be based on added time, then filesystem path
+   Add an ./incoming dir for new textfiles that are manually copied?
 
 Elaborate on setting up a dev environment
     Trisquel
@@ -237,28 +270,28 @@ Elaborate on setting up a dev environment
     lighttpd
 
 Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
-	If there is only one post, automatically redirect to it
-	Otherwise, "is this one of your posts?"
-	Create IndexLogLine() in index.pl
-	Create IndexParentLine() in index.pl
+   If there is only one post, automatically redirect to it
+   Otherwise, "is this one of your posts?"
+   Create IndexLogLine() in index.pl
+   Create IndexParentLine() in index.pl
 
 Add GetHashFromFile function
-	To do what?
+   To do what?
 
 Make updates instant
-	Make access.pl write to the index
-	Hook calls to generate.pl
+   Make access.pl write to the index
+   Hook calls to generate.pl
 
 Make adding new views easier
 Add support for linking sister sites
-	Add list of sites in config(?)
-	Add page
-	List them all on page
-	Add menu item for page
+   Add list of sites in config(?)
+   Add page
+   List them all on page
+   Add menu item for page
 
 Add generation of default values to GetConfig
-	Site name
-	Site logo
+   Site name
+   Site logo
 
 
 Cookie auth via secret URL per public key, encrypted for that key
@@ -270,7 +303,7 @@ When writing new html dir, make a list of all existing files, and remove from ha
 Add CSRF token to reply form
 Remove duplicate parent= footer
 Add support for messages with multiple ENC_TOs
-	Add loop
-	Limit to 5? 10?
-	List all of them on details page
+   Add loop
+   Limit to 5? 10?
+   List all of them on details page
 Add support for public key included inside signed message
