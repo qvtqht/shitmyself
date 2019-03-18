@@ -354,7 +354,7 @@ sub GetPageFooter {
 
 	my $myVersionPrettyLink = '<a href="/' . $myVersion . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
-	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</a>";
+	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span>";
 
 	$txtFooter =~ s/\$footer/$footer/;
 
