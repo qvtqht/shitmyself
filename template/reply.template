@@ -8,6 +8,5 @@ Take care to not upset the >>reply tag, or it won't be a reply anymore...</p>
 <span id=replySignedContainer></span>
 <input type=submit value="Reply Unsigned">
 <input type=hidden name=replyto value="$replyTo">
-<p><b>Advanced Users:</b> To reply using standalone GPG, ensure that you include the reply reference line beginning with <tt>&gt;&gt;</tt> inside your signed message, by itself.</p>
 </form>
 <!-- / reply.template -->

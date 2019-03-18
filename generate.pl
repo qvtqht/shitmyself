@@ -589,6 +589,12 @@ sub GetAboutPage {
 
 	$aboutPage .= GetPageFooter();
 
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$aboutPage =~ s/<\/body>/$scriptInject<\/body>/;
+
 	return $aboutPage;
 }
 
@@ -933,6 +939,7 @@ sub MakeClonePage {
 	#we introduce an overlap on page 5, where some items are displayed
 	#twice. this also allows us to only update the first 5 plus all affected
 	#when a new item is added, instead of the whole catalog
+	#todo does not work as expected, fix it
 
 	if (defined($itemCount) && $itemCount && $itemCount > 0) {
 		my $i;

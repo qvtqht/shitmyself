@@ -202,6 +202,7 @@ sub GetFileHash {
 	my $fileName = shift;
 
 	my $gitOutput = `git hash-object -w "$fileName"`;
+	#my $gitOutput = `sha1sum "$fileName" | cut -d ' ' -f 1`;
 
 	chomp($gitOutput);
 

@@ -416,8 +416,8 @@ sub GetPageHeader {
 	# and substitute $title with the title
 	$htmlStart =~ s/\$logoText/$logoText/g;
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
-	$htmlStart =~ s/\$title/$title/;
-	$htmlStart =~ s/\$titleHtml/$titleHtml/;
+	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
+	$htmlStart =~ s/\$title/$title/g;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$textColor/$textColor/g;
