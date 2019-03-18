@@ -1,0 +1,18 @@
+<p>This site uses a modular, decentralized, free messaging system called hike.</p>
+
+<p>For more information, and to get your own, please consult the manual.</p>
+
+<table border=1>
+    <tr>
+        <td>Version:</td>
+        <td>$version</td>
+    </tr>
+    <tr>
+        <td>Administrator:</td>
+        <td>$admin</td>
+    </tr>
+    <tr>
+        <td>Items:</td>
+        <td>$itemCount</td>
+    </tr>
+</table>
