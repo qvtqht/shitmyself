@@ -349,7 +349,8 @@ sub GetIdentityPage {
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
-	$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
 
@@ -469,7 +470,8 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
-		$txtIndex =~ s/<\/body>/<script src="zalgo.js"><\/script>\<script src="openpgp.js"><\/script>\<script src="crypto.js"><\/script><\/body>/;
+		my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
@@ -543,8 +545,8 @@ sub GetPageLinks {
 #	}
 
 	if ($itemCount > $PAGE_LIMIT) {
-		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
-#		for (my $i = 0; $i < $lastPageNum; $i++) {
+#		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
+		for (my $i = 0; $i < $lastPageNum; $i++) {
 			my $pageLinkTemplate;
 #			if ($i == $currentPageNumber) {
 #				$pageLinkTemplate = "<b>" . $i . "</b>";
@@ -565,11 +567,42 @@ sub GetPageLinks {
 	return GetPageLinks($currentPageNumber);
 }
 
+sub GetAboutPage {
+	my $aboutPage;
+
+	$aboutPage = GetPageHeader('About', 'About');
+
+	my $aboutTable = GetTemplate('about.template');
+
+	my $itemCount = DBGetItemCount();
+	my $adminId = GetAdminKey();
+	if ($adminId) {
+		$aboutTable =~ s/\$admin/GetAuthorLink($adminId)/e;
+	} else {
+		$aboutTable =~ s/\$admin/(None)/;
+	}
+
+	$aboutTable =~ s/\$version/GetMyVersion()/e;
+	$aboutTable =~ s/\$itemCount/$itemCount/e;
+
+	$aboutPage .= $aboutTable;
+
+	$aboutPage .= GetPageFooter();
+
+	return $aboutPage;
+}
+
 sub MakeStaticPages {
+	WriteLog('MakeStaticPages() BEGIN');
 
 	# Submit page
 	my $submitPage = GetSubmitPage();
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
+
+
+	# About page
+	my $aboutPage = GetAboutPage();
+	PutHtmlFile("$HTMLDIR/about.html", $aboutPage);
 
 
 	# Identity page
@@ -618,7 +651,6 @@ sub MakeStaticPages {
 
 	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
 
-
 	# Ok page
 	my $okPage = GetTemplate('actionvote.template');
 
@@ -629,7 +661,6 @@ sub MakeStaticPages {
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
-
 
 	# Manual page
 	my $tfmPage = GetPageHeader("Manual", "Manual");
@@ -681,6 +712,8 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 	PutHtmlFile("$HTMLDIR/favicon.ico", '');
+
+	WriteLog('MakeStaticPages() END');
 }
 
 WriteLog ("GetReadPage()...");

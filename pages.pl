@@ -16,6 +16,25 @@ require './sqlite.pl';
 
 my $HTMLDIR = "html";
 
+sub GetAuthorLink {
+	my $gpgKey = shift;
+
+	if (!IsFingerprint($gpgKey)) {
+		WriteLog("WARNING: GetAuthorLink() called with invalid parameter!");
+		return;
+	}
+
+	my $authorUrl = "/author/$gpgKey/";
+	my $authorAvatar = GetAvatar($gpgKey);
+
+	my $authorLink = GetTemplate('authorlink.template');
+
+	$authorLink =~ s/\$authorUrl/$authorUrl/g;
+	$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+
+	return $authorLink;
+}
+
 sub GetItemPage {
 	#returns html for individual item page
 
@@ -165,7 +184,8 @@ sub GetItemPage {
 	#add to the end of the page
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
-	$txtIndex =~ s/<\/body>/<\/script>\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
+	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
 }
@@ -413,13 +433,14 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+	$menuTemplate .= GetMenuItem("/about.html", GetString('menu/about'));
 	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
 	#	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
-	my $adminKey = GetAdminKey();
-	if ($adminKey) {
-		$menuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
-	}
+#	my $adminKey = GetAdminKey();
+#	if ($adminKey) {
+#		$menuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
+#	}
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 

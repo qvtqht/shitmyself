@@ -286,6 +286,7 @@ sub ProcessAccessLog {
 							if ($message =~ m/^\>\>$parentMessage/) {
 								$message =~ s/\&replyto=([0-9a-f]{40})$//;
 							} else {
+								# >>
 								$message =~ s/\&replyto=([0-9a-f]{40})$/\n\n\>\>$1/;
 							}
 						}

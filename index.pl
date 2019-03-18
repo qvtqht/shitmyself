@@ -127,8 +127,8 @@ sub IndexFile {
 			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
 
 			unlink($file);
-			my $filename = './html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
-			unlink($filename);
+			my $htmlFilename = './html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			unlink($htmlFilename);
 
 			return;
 		}
@@ -184,6 +184,7 @@ sub IndexFile {
 
 		# look for quoted message ids
 		if ($message) {
+			# >>
 			my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
 
 			if (@replyLines) {
@@ -192,6 +193,7 @@ sub IndexFile {
 
 					if (IsSha1($parentHash)) {
 						DBAddItemParent($gitHash, $parentHash);
+						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
 					}
 				}
 

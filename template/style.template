@@ -201,27 +201,21 @@ textarea {
 	padding: 5pt;
 }
 
-/* pagination pages */
+/* pagination links */
 .pagination {
 	font-family: sans-serif;
 	font-size: x-large;
 	spacing: 5pt;
 	padding: 5pt;
-	border: $primaryColor inset 5pt;
-	border-radius: 50%;
-	background-color: $minorColor;
-	text-align: center;
 }
 .pagination a {
 	padding: 5pt;
 }
 .pagination b {
 	padding: 5pt;
-	border: 5pt outset $primaryColor;
-	border-radius: 15pt;
-	background-color: white;
-	transform: scale(-1, 1);
-
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	border-radius: 5pt;
 }
 
 /* summary styling */
