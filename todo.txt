@@ -1,4 +1,6 @@
-
+If logged in
+	Periodically check for public key on current server
+		If doesn't exist, resubmit
 
 SERVER MESSAGE SIGNING
 ======================
