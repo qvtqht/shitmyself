@@ -57,7 +57,7 @@ requirements
 * URI::Escape
 * HTML::Parser
 * Digest::MD5
-* Digest::SHA
+* Digest::SHA1
 * DBI
 * SQLite
 
@@ -67,6 +67,7 @@ uri-encode-perl
 libany-uri-escape-perl
 libhtml-parser-perl
 libdbd-sqlite3-perl
+libdigest-sha-perl
 sqlite3
 lighttpd
 gnupg
@@ -79,6 +80,7 @@ perl-Digest-SHA
 perl-HTML-Parser
 perl-DBD-SQLite
 perl-URI-Encode
+perl-Digest-SHA1
 sqlite3
 lighttpd
 gnupg
