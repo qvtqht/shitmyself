@@ -588,6 +588,26 @@ sub GetAboutPage {
 		$aboutTable =~ s/\$admin/(None)/;
 	}
 
+
+	my $currUpdateTime = time();
+	my $prevUpdateTime = GetConfig('last_update_time');
+	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
+		$prevUpdateTime = time();
+	}
+
+	my $updateInterval = $currUpdateTime - $prevUpdateTime;
+
+	PutConfig("last_update_time", $currUpdateTime);
+
+	my $nextUpdateTime = ($currUpdateTime + $updateInterval) . ' (' . EpochToHuman($currUpdateTime + $updateInterval) . ')';
+	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
+	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
+
+	$aboutTable =~ s/\$prevUpdateTime/$prevUpdateTime/;
+	$aboutTable =~ s/\$currUpdateTime/$currUpdateTime/;
+	$aboutTable =~ s/\$updateInterval/$updateInterval/;
+	$aboutTable =~ s/\$nextUpdateTime/$nextUpdateTime/;
+
 	$aboutTable =~ s/\$version/GetMyVersion()/e;
 	$aboutTable =~ s/\$itemCount/$itemCount/e;
 

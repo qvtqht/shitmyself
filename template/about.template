@@ -12,7 +12,19 @@
         <td>$admin</td>
     </tr>
     <tr>
-        <td>Items:</td>
-        <td>$itemCount</td>
+        <td>Updated:</td>
+        <td>$currUpdateTime</td>
+    </tr>
+    <tr>
+        <td>Previous Update:</td>
+        <td>$prevUpdateTime</td>
+    </tr>
+    <tr>
+        <td>Apparent Update Interval:</td>
+        <td>$updateInterval</td>
+    </tr>
+    <tr>
+        <td>Next Update:</td>
+        <td>$nextUpdateTime</td>
     </tr>
 </table>
