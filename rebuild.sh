@@ -1,3 +1,3 @@
 #!/bin/sh
 
-perl rebuild.pl
+perl ./rebuild.pl
