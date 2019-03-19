@@ -149,8 +149,6 @@ sub GetIndexPage {
 
 	$txtIndex .= $htmlStart;
 
-	$txtIndex .= "<a name=toppage></a>"; #todo template this!
-
 	if (defined($currentPageNumber)) {
 		$txtIndex .= GetPageLinks($currentPageNumber);
 	}
