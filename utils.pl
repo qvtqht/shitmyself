@@ -1069,8 +1069,8 @@ sub ServerSign {
 
 	# if public key has not been published yet, do it
 	if (!-e "./html/txt/server.key") {
-		WriteLog("gpg --armor --export $serverKeyId > ./html/txt/server.key");
-		WriteLog `gpg --armor --export $serverKeyId > ./html/txt/server.key`;
+		WriteLog("gpg --armor --export $serverKeyId > ./html/txt/server.key.txt");
+		WriteLog `gpg --armor --export $serverKeyId > ./html/txt/server.key.txt`;
 	}
 
 	if ($serverKey) {
