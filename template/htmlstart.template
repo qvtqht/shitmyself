@@ -13,3 +13,4 @@ $styleSheet
 <a href="#maincontent" style="float: right; color: $secondaryColor;">Skip to main content</a>
 <h2 class=menu>$menuItems<span id="signin"></span><span class="myid" id=myid></span></h2>
 <hr size=5>
+<main id=maincontent><a name=maincontent></a>
