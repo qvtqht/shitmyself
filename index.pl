@@ -73,6 +73,9 @@ sub MakeAddedIndex {
 }
 
 sub IndexFile {
+# Reads a given $file, parses it, and puts it into the index database
+# If ($file eq 'flush), flushes any queued queries
+
 	my $file = shift;
 	chomp($file);
 
@@ -88,26 +91,30 @@ sub IndexFile {
 		return;
 	}
 
-	my $txt = "";
-	my $message = "";
-	my $isSigned = 0;
+	# file's attributes
+	my $txt = "";           # original text inside file
+	my $message = "";       # outputted text after parsing
+	my $isSigned = 0;       # was this item signed?
 
-	my $gpgKey;
-	my $alias;
-	my $fingerprint;
-	my $addedTime;
+	my $addedTime;          # time added, epoch format
+	my $gitHash;            # git's hash of file blob, used as identifier
+	my $isAdmin = 0;        # was this posted by admin?
 
-	my $gitHash;
-	my $isAdmin = 0;
+	# author's attributes
+	my $gpgKey;             # author's gpg key, hex 16 chars
+	my $alias;              # author's alias, as reported by gpg's parsing of their public key
+	my $fingerprint;        # author's gpg key, long-ass format (not used currently)
 
-	my $verifyError = 0;
+	my $verifyError = 0;    # was there an error verifying the file with gpg?
+	my $itemTypeMask = 0;   # item type mask, currently unused
 
-	my $itemTypeMask = 0;
+#	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
+#todo add support for .md (markdown) files
 
-	#my $isAction = 0;
-
-	if (substr($file, length($file) -4, 4) eq ".txt") {
+	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
 		my %gpgResults = GpgParse($file);
+		# see what gpg says about the file.
+		# if there is no gpg content, the attributes are still populated as possible
 
 		$txt = $gpgResults{'text'};
 		$message = $gpgResults{'message'};
@@ -116,23 +123,35 @@ sub IndexFile {
 		$alias = $gpgResults{'alias'};
 		$gitHash = $gpgResults{'gitHash'};
 		$fingerprint = $gpgResults{'fingerprint'};
-		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
+		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
+		# get the file's added time.
+
+		# debug output
 		WriteLog('IndexFile: $file = ' . $file . ', $gitHash = ' . $gitHash);
 
+		# if the file is present in deleted.log, get rid of it and its page, return
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $gitHash) {
-			#if the file is present in deleted.log, it has no business being around
-			#delete it immediately and return, logging the action
+			# write to log
 			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
 
-			unlink($file);
+			# unlink the file itself
+			if (-e $file) {
+				unlink($file);
+			}
+
+			# find the html file and unlink it too
 			my $htmlFilename = './html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
-			unlink($htmlFilename);
+
+			if (-e $htmlFilename) {
+				unlink($htmlFilename);
+			}
 
 			return;
 		}
 
+		# debug output
 		WriteLog("\$addedTime = $addedTime");
 		WriteLog($gpgResults{'gitHash'});
 
@@ -145,11 +164,14 @@ sub IndexFile {
 
 			WriteLog("No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
 
+			# current time
 			my $newAddedTime = time();
 
+			# add new line to added.log
 			my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
 			AppendFile('./log/added.log', $logLine);
 
+			# store it in index, since that's what we're doing here
 			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
 			DBAddAddedTimeRecord('flush');
 		}
@@ -162,6 +184,7 @@ sub IndexFile {
 			PutFile('./admin.key', $txt);
 
 			PutFile('./html/txt/' . time() . '_admin.txt', "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin_imprint is true and there is no admin set.)\n\n" . time());
+			#todo this should be server-signed
 		}
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
