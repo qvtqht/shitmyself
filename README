@@ -88,21 +88,20 @@ gnupg2
 
 known issues
 ============
+sometimes new entries stop being picked up from access.log and/or written to the access log by web server
+	the solution is to rm or cycle the access log and restart the web server
+	the cause is still unknown to me
+
 this is just a basic prototype, and is not optimized to scale.
 
 all 40-character-long hex-looking strings are assumed to be existing items and are linked in the html-ized posts
+	even if they do not exist
 
 the index db is regenerated every time, which can definitely be optimized.
 
 the voter id should (debatable) be generated once per page, but is currently generated once per item.
 
-* The html/txt/ symlink has to be created manually
-
-* On Firefox ESR with noscript enabled the iframe doesn't appear, so vote links open in new window/tab
-
-when replying anonymously, footer shows up twice if you leave it in the textarea
-
-* When an encrypted message has multiple recipients, only the first is used.
+When an encrypted message has multiple recipients, only the first is used.
 
 terminology
 ===========
