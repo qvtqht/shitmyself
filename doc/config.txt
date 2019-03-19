@@ -1,0 +1,58 @@
+access_log_path
+this is where access.pl will look for the access log from the web server.
+default: log/access.log
+
+access_update
+if not 0, access.pl will try to fill in the index and website when new items are submitted
+#todo this is not fully built yet
+default: 0
+
+admin_imprint
+if not 0, the first public key to be posted to the board will be imprinted as the admin
+default: 0
+
+ascii_only
+if not 0, only ascii characters will be output to the website
+default: 0
+
+cron_continue
+if not 0, cron.pl will run in a loop for this many seconds, looking for new access log entries
+default: 0
+
+debug
+if 1, debug messages will be written to stdout
+default: 0
+
+flags
+values provided to users as reasons to flag a post
+one on each line
+
+git_cron_pull
+if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
+default: 0
+
+home_title
+title of home page
+default: Welcome!
+
+item_long_threshold
+how many characters an item can be before it is considered "long" and is cut off when displayed in listings
+default: 1024
+
+logo_text
+text logo, displayed next to title on pages
+default: *
+
+page_limit
+number of items to display per page in listings
+default: 100
+
+prefill_username
+username to pre-fill for people who are not signed in
+leave blank to not pre-fill anything
+default: Anonymous
+
+primary_colors
+list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
+
+
