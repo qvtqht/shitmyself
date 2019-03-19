@@ -1,3 +1,6 @@
+Ensure that maincontent tags are present at the right place on all pages
+	<main id=maincontent><a name=maincontent></a>
+
 If logged in
 	Periodically check for public key on current server
 		If doesn't exist, resubmit
