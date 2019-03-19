@@ -147,7 +147,7 @@ sub ProcessAccessLog {
 		open (LOGFILELOG, "./log/processed.log");
 		foreach my $procLine (<LOGFILELOG>) {
 			chomp $procLine;
-			$prevLines{$procLine} = 1;
+			$prevLines{$procLine} = 0;
 		}
 		close (LOGFILELOG);
 	}
@@ -176,7 +176,7 @@ sub ProcessAccessLog {
 		} else {
 			# Otherwise add the hash to processed.log
 			#AppendFile("./log/processed.log", $lineHash);
-			$prevLines{$lineHash} = 2;
+			$prevLines{$lineHash} = 1;
 		}
 
 		# These are the values we will pull out of access.log
@@ -272,53 +272,6 @@ sub ProcessAccessLog {
 					# We will use this as a fallback, in case the user has removed
 					# the >> line
 
-					my $parentMessage;
-
-					if ($message =~ /\&replyto=([0-9a-f]{40})$/) {
-						WriteLog("Found &replyto=");
-						my $parentId = $1;
-						#todo check for valid char count too
-						if ($parentId =~ /[0-9a-f]+/ && IsSha1($parentId)) {
-							$parentMessage = $parentId;
-							UnlinkCache("file/$parentMessage");
-							UnlinkCache("message/$parentMessage.message");
-
-							if ($message =~ m/^\>\>$parentMessage/) {
-								$message =~ s/\&replyto=([0-9a-f]{40})$//;
-							} else {
-								# >>
-								$message =~ s/\&replyto=([0-9a-f]{40})$/\n\n\>\>$1/;
-							}
-						}
-					}
-
-# 				 	# Only if the "replies" config is enabled
-# 					if (GetConfig('replies')) {
-# 						my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
-#
-# 						if (@replyLines) {
-# 							while(@replyLines) {
-# 								my $parentHash = shift @replyLines;
-#
-# 								if (IsSha1($parentHash)) {
-# 									#Fallback mentioned above is not necessary in this case
-# 									if ($parentHash eq $parentMessage) {
-# 										$parentMessage = 0;
-# 									}
-#
-# 									WriteLog("Found a parent comment, removing caches for $parentHash");
-# 									UnlinkCache("/file/$parentHash");
-# 									UnlinkCache("message/$parentHash.message");
-# #									UnlinkCache("gpg/$parentHash.cache");
-#
-# 								}
-# 							}
-#
-# 							if ($parentMessage) {
-# 								$message = ">>$parentMessage" . "\n\n" . $message;
-# 							}
-# 						}
-# 					}
 
 					# If we're parsing a vhost log, add the site name to the message
 					if ($vhostParse && $site) {
@@ -343,24 +296,15 @@ sub ProcessAccessLog {
 						my $logLine = $fileHash . '|' . $addedTime;
 						AppendFile('./log/added.log', $logLine);
 
-						DBAddAddedTimeRecord($fileHash, $addedTime);
-
-#						#If we're doing replies, and there is a parent message specified...
-#						if (GetConfig('replies') && $parentMessage) {
-#							#... add it to parent.log
-#							my $parentLogLine = $filename . '|' . $fileHash . '|' . $parentMessage;
-#							AppendFile('./log/parent.log', $parentLogLine);
-#						}
-
-						# Add the file to git
-						#system("git add \"$filenameDir$filename\"");
+						#DBAddAddedTimeRecord($fileHash, $addedTime);
 					} else {
-						WriteLog("WARNING: Could not open text file to write to ' . $filename");
+						WriteLog("WARNING: Could not open text file to write to: ' . $filename");
 					}
 				}
 			}
 		}
 
+		#todo review this block
 		my $rssPrefix = "/rss.txt?";
 		if (substr($file, 0, length($rssPrefix)) eq $rssPrefix) {
 			WriteLog("Found RSS line!");
@@ -380,7 +324,6 @@ sub ProcessAccessLog {
 				if ($paramKey eq 'me') {
 					AddHost($paramValue, 0);
 				}
-
 			}
 		}
 
@@ -396,26 +339,32 @@ sub ProcessAccessLog {
 			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fabuse%2F435fcd62a628d7b918e243fe97912d7b=on
 			#
 			#					everything after ?
-			#				split by &
-			#					remove =on
-			#					urldecode
+			#						split by &
+			#						remove =on
+			#						urldecode
 			#						parse as a vote record
 			#
 			WriteLog("/action/vote2.html");
-	
+
+			# everything after ?
 			my $votesQuery = substr($file, index($file, '?') + 1);
+
+			# split by &
 			my @voteAtoms = split('&', $votesQuery);
 			my $newFile = '';
 
 			foreach my $voteAtom (@voteAtoms) {
 				WriteLog($voteAtom);
 
+				# remove =on
 				$voteAtom =~ s/=on$//;
+				# url decode
 				$voteAtom = uri_decode($voteAtom);
 
 				WriteLog($voteAtom);
 
 				my @voteLines = ( $voteAtom =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
+				#                                 token   /item           /time     /tag      /csrf
 				if (@voteLines) {
 					my $fileHash   = shift @voteLines;
 					my $ballotTime = shift @voteLines;
@@ -427,9 +376,14 @@ sub ProcessAccessLog {
 					my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
 
 					my $currentTime = time();
-					if ($csrf eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
+					if (
+							($csrf eq $checksumCorrect) #checksum needs to match
+								&&
+							(($currentTime - $ballotTime) < 7200) # vote should be recent #todo remove magic number
+						) {
 						#my $voteEntry = "$fileHash|$ballotTime|$voteValue";
 						#AppendFile("log/votes.log", $voteEntry);
+						#votes.log is deprecated in favor of adding stuff to the tree
 
 						my $newLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
 						if ($newFile) {
@@ -443,14 +397,20 @@ sub ProcessAccessLog {
 			}
 
 			if ($newFile) {
+				$newFile .= "\n\n(Anonymously submitted without a signature.)";
+
 				my $filename;
 				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
-				PutFile('html/txt/' . $filename, $newFile);
+				PutFile('./html/txt/' . $filename, $newFile);
+
+				if (GetConfig('server_key')) {
+					ServerSign('./html/txt/' . $filename);
+				}
 			}
 		}
 
-			# If the URL begins with "/action/" run it through the processor
+		# If the URL begins with "/action/" run it through the processor
 		my $actionPrefix = "/action/";
 		if (0 && substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
 			# Put the arguments into an array
@@ -486,7 +446,7 @@ sub ProcessAccessLog {
 	#Clean up the access log tracker
 	my $newPrevLines = "";
 	foreach (keys %prevLines) {
-		if ($prevLines{$_} > 1) {
+		if ($prevLines{$_} > 0) {
 			$newPrevLines .= $_;
 			$newPrevLines .= "\n";
 		}
