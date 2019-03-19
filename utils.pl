@@ -1015,6 +1015,11 @@ sub FormatForWeb {
 sub WriteLog {
 	#todo sanitize?
 	my $text = shift;
+
+	if (!$text) {
+		$text = '(empty string)';
+	}
+
 	chomp $text;
 
 	my $timestamp = time();
