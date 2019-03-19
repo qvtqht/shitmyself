@@ -48,13 +48,13 @@ sub SqliteMakeTables() {
 		item_name,
 		author_key,
 		file_hash UNIQUE,
-		item_type,
 		published
 	)");
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
 	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
 	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, published)");
 	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_id)");
+	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, description_hash, author_key, event_time, event_duration, event_location)");
 
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
@@ -75,16 +75,17 @@ sub SqliteMakeTables() {
 			parent_hash
 	");
 
-	SqliteQuery2("CREATE TABLE item_type(type_mask, type_name)");
-	#todo currently unpopulated
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(1, 'text');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(2, 'reply');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(4, 'vote');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(8, 'pubkey');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(16, 'decode_error');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(32, 'image');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(64, 'video');");
-	SqliteQuery2("INSERT INTO item_type(type_mask, type_name) VALUES(128, 'event');");
+#	SqliteQuery2("CREATE TABLE type(type_mask, type_name)");
+#	#todo currently unpopulated
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(1, 'text');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(2, 'reply');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(4, 'vote');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(8, 'pubkey');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(16, 'decode_error');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(32, 'image');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(64, 'video');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(128, 'event');");
+#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(256, 'markdown');");
 
 
 	SqliteQuery2("
@@ -124,7 +125,6 @@ sub SqliteMakeTables() {
 				item.item_name AS item_name,
 				item.file_hash AS file_hash,
 				item.author_key AS author_key,
-				item.item_type AS item_type,
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp
@@ -132,7 +132,7 @@ sub SqliteMakeTables() {
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
-				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash);
+				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
 	");
 	SqliteQuery2("
 		CREATE VIEW item_vote_count AS
@@ -573,19 +573,18 @@ sub DBAddItem {
 	my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
-	my $itemType = shift;
 
-	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType);");
+	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash);");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type) VALUES ";
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType;
+	push @queryParams, $filePath, $itemName, $authorKey, $fileHash;
 
-	$query .= "(?, ?, ?, ?, ?)";
+	$query .= "(?, ?, ?, ?)";
 }
 
 sub DBAddVoteWeight {
@@ -888,7 +887,6 @@ sub DBGetItemList {
 			author_key,
 			child_count,
 			parent_count,
-			item_type,
 			add_timestamp
 		FROM
 			item_flat
@@ -913,7 +911,7 @@ sub DBGetItemList {
 	foreach (@results) {
 		chomp;
 
-		my ($file_path, $item_name, $file_hash, $author_key, $child_count, $parent_count, $item_type, $add_timestamp) = split(/\|/, $_);
+		my ($file_path, $item_name, $file_hash, $author_key, $child_count, $parent_count, $add_timestamp) = split(/\|/, $_);
 		my $row = {};
 
 		$row->{'file_path'} = $file_path;
@@ -922,9 +920,7 @@ sub DBGetItemList {
 		$row->{'author_key'} = $author_key;
 		$row->{'child_count'} = $child_count;
 		$row->{'parent_count'} = $parent_count;
-		$row->{'item_type'} = $item_type;
 		$row->{'add_timestamp'} = $add_timestamp;
-
 
 		push @return, $row;
 	}
