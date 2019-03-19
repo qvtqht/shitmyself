@@ -205,17 +205,12 @@ textarea {
 .pagination {
 	font-family: sans-serif;
 	font-size: x-large;
-	spacing: 5pt;
-	padding: 5pt;
-}
-.pagination a {
-	padding: 5pt;
 }
 .pagination b {
-	padding: 5pt;
 	background-color: $primaryColor;
 	color: $secondaryColor;
 	border-radius: 5pt;
+	padding: 5pt;
 }
 
 /* summary styling */
