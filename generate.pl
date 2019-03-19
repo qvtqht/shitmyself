@@ -509,17 +509,23 @@ sub GetPageLinks {
 
 	my $currentPageNumber = shift;
 
+	WriteLog("GetPageLinks($currentPageNumber)");
+
 	if (defined($pageLinks)) {
+		WriteLog("GetPageLinks: \$pageLinks already exists, doing a quickie");
+
 		my $currentPageTemplate = GetPageLink($currentPageNumber);
 
 		my $pageLinksFinal = $pageLinks;
-		$pageLinksFinal =~ s/$currentPageTemplate/<b>$currentPageNumber<\/b> /g;
+		$pageLinksFinal =~ s/$currentPageTemplate/<b>Page $currentPageNumber<\/b> /g;
 
 		return $pageLinksFinal;
 	}
 
 	#my $itemCount = DBGetItemCount("item_type = 'text'");
 	my $itemCount = DBGetItemCount();
+
+	WriteLog("GetPageLinks: \$itemCount = $itemCount");
 
 	$pageLinks = "";
 
