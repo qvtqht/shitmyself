@@ -1030,11 +1030,65 @@ my $lastVersion = GetConfig('current_version');
 my $currVersion = GetMyVersion();
 
 if ($lastVersion ne $currVersion) {
+	WriteLog("$lastVersion ne $currVersion, posting changelog");
+
+	my $serverKey = `gpg --list-keys hikeserver`;
+
+	WriteLog("gpg --list-keys CCEA3752");
+	WriteLog($serverKey);
+
 	my $changeLogFilename = 'changelog_' . time() . '.txt';
 	my $changeLogMessage = 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
-	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
+
+	PutFile("./html/txt/$changeLogFilename", $changeLogMessage);
+
+	ServerSign("./html/txt/$changeLogFilename");
 
 	PutConfig('current_version', $currVersion);
+}
+
+sub ServerSign {
+# Signs a given file with the server's key, if it exists
+# Replaces file with signed version
+	my $file = shift;
+
+	if (!-e $file) {
+		return;
+	}
+
+	my $serverKeyId = GetConfig('server_key');
+
+	if (!$serverKeyId) {
+		return;
+	}
+
+	# verify that key exists in gpg keychain
+	WriteLog("gpg --list-keys $serverKeyId");
+	my $serverKey = `gpg --list-keys $serverKeyId`;
+	WriteLog($serverKey);
+
+	# if public key has not been published yet, do it
+	if (!-e "./html/txt/server.key") {
+		WriteLog("gpg --armor --export $serverKeyId > ./html/txt/server.key");
+		WriteLog `gpg --armor --export $serverKeyId > ./html/txt/server.key`;
+	}
+
+	if ($serverKey) {
+		WriteLog("We have a server key, so go ahead and sign the changelog.");
+
+		WriteLog("gpg --default-key $serverKeyId --clearsign \"$file\"");
+		system("gpg --default-key $serverKeyId --clearsign \"$file\"");
+
+		if (-e "$file.asc") {
+			WriteLog("Sign appears successful, rename .asc file to .txt");
+			rename("$file.asc", "$file");
+		} else {
+			WriteLog("Tried to sign, but no .asc file. PROBLEM!!!");
+		}
+	} else {
+		#$changeLogMessage .= "\n\n(No server key found, not signing.)";
+		WriteLog("No server key found, will not sign changelog.");
+	}
 }
 
 sub DeleteFile {
