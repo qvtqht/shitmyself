@@ -170,7 +170,7 @@ sub GetItemPage {
 	my $scriptInject = GetTemplate('scriptinject.template');
 
 	#avatar.js
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 
 	#formencode.js
 	my $formEncodeJs = GetTemplate('js/formencode.js.template');
@@ -756,9 +756,9 @@ sub GetReadPage {
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs;
 	if ($pageType eq 'author') {
-		$avatarjs = GetTemplate('avatar.authorpage.js.template');
+		$avatarjs = GetTemplate('js/avatar.authorpage.js.template');
 	} else {
-		$avatarjs = GetTemplate('avatar.js.template');
+		$avatarjs = GetTemplate('js/avatar.js.template');
 	}
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 

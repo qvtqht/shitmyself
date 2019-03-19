@@ -117,7 +117,7 @@ sub GetVersionPage {
 	$txtPageHtml .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$txtPageHtml =~ s/<\/body>/$scriptInject<\/body>/;
@@ -319,7 +319,7 @@ sub GetIndexPage {
 	#$txtIndex =~ s/<\/body>/\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
@@ -344,7 +344,7 @@ sub GetIdentityPage {
 	$txtIndex .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
@@ -413,7 +413,7 @@ sub GetVotesPage {
 	$txtIndex .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
@@ -465,7 +465,7 @@ sub GetSubmitPage {
 		$txtIndex .= GetPageFooter();
 
 		my $scriptInject = GetTemplate('scriptinject.template');
-		my $avatarjs = GetTemplate('avatar.js.template');
+		my $avatarjs = GetTemplate('js/avatar.js.template');
 		$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
@@ -616,7 +616,7 @@ sub GetAboutPage {
 	$aboutPage .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$aboutPage =~ s/<\/body>/$scriptInject<\/body>/;
@@ -675,7 +675,7 @@ sub MakeStaticPages {
 	$graciasPage .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$graciasPage =~ s/<\/body>/$scriptInject<\/body>/;
@@ -708,7 +708,7 @@ sub MakeStaticPages {
 	$tfmPage .= GetPageFooter();
 
 	$scriptInject = GetTemplate('scriptinject.template');
-	$avatarjs = GetTemplate('avatar.js.template');
+	$avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$tfmPage =~ s/<\/body>/$scriptInject<\/body>/;
@@ -721,15 +721,15 @@ sub MakeStaticPages {
 
 
 	# Zalgo javascript
-	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('zalgo.js.template'));
+	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('js/zalgo.js.template'));
 
 
 	# OpenPGP javascript
-	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('openpgp.js.template'));
-	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('openpgp.worker.js.template'));
+	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/openpgp.js.template'));
+	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/openpgp.worker.js.template'));
 
 	# Write form javasript
-	my $cryptoJsTemplate = GetTemplate('crypto.js.template');
+	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
 	my $prefillUsername = GetConfig('prefill_username') || '';
 	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
 
@@ -923,7 +923,7 @@ sub MakeClonePage {
 	$clonePage .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('avatar.js.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
 	$clonePage =~ s/<\/body>/$scriptInject<\/body>/;
