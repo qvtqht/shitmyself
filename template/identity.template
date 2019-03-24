@@ -26,7 +26,7 @@ You can also continue to use the site without changing anything.
     </p>
 
     <p>
-        <input type=button value="Send Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
+        <input type=button value="Post Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
         Do this if your profile has gone missing.
     </p>
 
