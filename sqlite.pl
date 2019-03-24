@@ -56,12 +56,14 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_id)");
 	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, description_hash, author_key, event_time, event_duration, event_location)");
+	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, touch_time)");
 
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 	SqliteQuery2("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
 	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_id)");
+	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name)");
 
 
 	SqliteQuery2("
@@ -409,32 +411,32 @@ sub DBAddAuthor {
 
 }
 
-sub TouchItem {
-	my $itemType = shift;
-	my $itemId = shift;
-
-	my $touchTime = time();
-
-	WriteLog('TouchItem(' . $itemType . ',' . $itemId . ',' . $touchTime . ')');
-
-	if ($itemType eq 'item') {
-		my $query = "UPDATE item SET published = ? WHERE file_hash = ?";
-		SqliteQuery2($query, $touchTime, $itemId);
-	}
-
-	if ($itemType eq 'author') {
-		my $query = "UPDATE author SET published = ? WHERE key = ?";
-		SqliteQuery2($query, $touchTime, $itemId);
-	}
-
-	if ($itemType eq 'tag') {
-		my $query = "UPDATE vote SET published = ? WHERE vote_value = ?";
-		SqliteQuery2($query, $touchTime, $itemId);
-
-		$query = "UPDATE tag SET published = ? WHERE vote_value = ?";
-		SqliteQuery2($query, $touchTime, $itemId);
-	}
-}
+#sub TouchItem {
+#	my $itemType = shift;
+#	my $itemId = shift;
+#
+#	my $touchTime = time();
+#
+#	WriteLog('TouchItem(' . $itemType . ',' . $itemId . ',' . $touchTime . ')');
+#
+#	if ($itemType eq 'item') {
+#		my $query = "UPDATE item SET published = ? WHERE file_hash = ?";
+#		SqliteQuery2($query, $touchTime, $itemId);
+#	}
+#
+#	if ($itemType eq 'author') {
+#		my $query = "UPDATE author SET published = ? WHERE key = ?";
+#		SqliteQuery2($query, $touchTime, $itemId);
+#	}
+#
+#	if ($itemType eq 'tag') {
+#		my $query = "UPDATE vote SET published = ? WHERE vote_value = ?";
+#		SqliteQuery2($query, $touchTime, $itemId);
+#
+#		$query = "UPDATE tag SET published = ? WHERE vote_value = ?";
+#		SqliteQuery2($query, $touchTime, $itemId);
+#	}
+#}
 
 sub DBGetVoteCounts {
 	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
