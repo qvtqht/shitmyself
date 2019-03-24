@@ -215,7 +215,7 @@ sub GetItemTemplate {
 			$isSigned = 0;
 		}
 
-		my $alias;;
+		my $alias;
 
 		my $isAdmin = 0;
 
@@ -479,16 +479,22 @@ sub GetVoterTemplate {
 	if (!defined($voteButtonsTemplate)) {
 		#my $tagsList = GetConfig('tags');
 		my $tagsList = GetConfig($tagsListName);
+		my $johariList = GetConfig('johari');
 		my $flagsList = GetConfig('flags');
 
 		chomp $tagsList;
+		chomp $johariList;
 		chomp $flagsList;
 
-		my @voteValues = split("\n", $tagsList . "\n" . $flagsList);
+		my @voteValues = split("\n", $tagsList . "\n--\n" . $johariList . "\n--\n" . $flagsList);
 
 		$flagsList = "\n" . $flagsList . "\n";
 
 		foreach my $tag (@voteValues) {
+			if ($tag eq '--') {
+				$voteButtonsTemplate .= "<hr>\n";
+				next;
+			}
 			my $buttonTemplate = GetTemplate("votecheck.template");
 
 			my $class = "pos";
