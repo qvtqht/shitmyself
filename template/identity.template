@@ -24,6 +24,12 @@ You can also continue to use the site without changing anything.
         <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
         <strong><b>Attention!</b></strong> Save your private key to sign in again!
     </p>
+
+    <p>
+        <input type=button value="Send Public Key" onclick="window.open('/write.html#inspubkey','_self');"><br>
+        Do this if your profile has gone missing.
+    </p>
+
 </form>
 <!-- / current identity -->
 
