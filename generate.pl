@@ -930,6 +930,7 @@ sub MakeClonePage {
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
 
+# generate commits page
 {
 	my $commits = `git log -n 25 | grep ^commit`;
 
