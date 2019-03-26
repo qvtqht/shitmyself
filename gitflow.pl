@@ -32,7 +32,7 @@ if (-e $accessLogPath) {
 }
 
 # Use git to find files that have changed in txt/ directory
-my $gitChanges = `cd ./html/txt; git add . ; git status --porcelain | grep "^A" | cut -c 4-; cd ../..`;
+my $gitChanges = `cd html/txt; git add . ; git status --porcelain | grep "^A" | cut -c 4-; cd ../..`;
 
 # Get an array of changed files that git returned
 my @gitChangesArray = split("\n", $gitChanges);
@@ -47,7 +47,7 @@ foreach my $file (@gitChangesArray) {
 	$file = trim($file);
 
 	# Add the txt/ path prefix
-	my $fileFullPath = "./html/txt/" . $file;
+	my $fileFullPath = "html/txt/" . $file;
 
 	# Log it
 	WriteLog('$file = ' . $file . " ($fileFullPath)");
@@ -65,8 +65,8 @@ foreach my $file (@gitChangesArray) {
 
 		DBAddAddedTimeRecord($fileHash, $addedTime);
 
-		WriteLog("cd ./html/txt; git add \"$file\"; git commit -m hi \"$file\"; cd -");
-		my $gitCommit = `cd ./html/txt; git add "$file"; git commit -m hi "$file"; cd -`;
+		WriteLog("cd html/txt; git add \"$file\"; git commit -m hi \"$file\"; cd -");
+		my $gitCommit = `cd html/txt; git add "$file"; git commit -m hi "$file"; cd -`;
 
 		WriteLog($gitCommit);
 
@@ -81,7 +81,7 @@ foreach my $file (@gitChangesArray) {
 			my $itemPage = GetItemPage($file);
 			#todo update this to use /ab/cdefgh... convention
 
-			PutHtmlFile("./html/$fileHash.html", $itemPage);
+			PutHtmlFile("html/$fileHash.html", $itemPage);
 		}
 
 #		my $htmlFilename = $fileHash . ".html";

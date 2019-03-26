@@ -792,7 +792,7 @@ foreach my $key (@authors) {
 
 	$authorsListPage .= GetPageFooter();
 
-	PutFile('./html/author/index.html', $authorsListPage);
+	PutFile('html/author/index.html', $authorsListPage);
 
 #	foreach my $key (@authors) {
 #
@@ -862,8 +862,8 @@ sub MakeRssFile {
 		WriteLog("Writing HTML file for item");
 		WriteLog("\$targetPath = $targetPath");
 
-		if (!-e './html/' . substr($fileHash, 0, 2)) {
-			mkdir('./html/' . substr($fileHash, 0, 2));
+		if (!-e 'html/' . substr($fileHash, 0, 2)) {
+			mkdir('html/' . substr($fileHash, 0, 2));
 		}
 
 		PutHtmlFile($targetPath, $fileIndex);
@@ -942,12 +942,12 @@ sub MakeClonePage {
 			$commit =~ s/^commit //;
 			chomp($commit);
 			if (IsSha1($commit)) {
-				my $htmlSubDir = './html/' . substr($commit, 0, 2);
+				my $htmlSubDir = 'html/' . substr($commit, 0, 2);
 				my $htmlFilename = substr($commit, 2);
 				if (!-e $htmlSubDir) {
 					mkdir($htmlSubDir);
 				}
-				WriteLog("./html/$commit.html");
+				WriteLog("html/$commit.html");
 				PutHtmlFile("$htmlSubDir/$htmlFilename.html", GetVersionPage($commit));
 			}
 		}
@@ -995,10 +995,10 @@ sub MakeClonePage {
 			}
 
 			if ($i < $lastPage-1) {
-				PutHtmlFile("./html/index$i.html", $indexPage);
+				PutHtmlFile("html/index$i.html", $indexPage);
 			} else {
-				PutHtmlFile("./html/index.html", $indexPage);
-				PutHtmlFile("./html/index$i.html", $indexPage);
+				#PutHtmlFile("html/index.html", $indexPage);
+				PutHtmlFile("html/index$i.html", $indexPage);
 			}
 		}
 	} else {
@@ -1008,12 +1008,12 @@ sub MakeClonePage {
 
 		$indexPage .= GetPageFooter();
 
-		PutHtmlFile('./html/index.html', $indexPage);
+		PutHtmlFile('html/index.html', $indexPage);
 	}
 }
 
 my $votesPage = GetVotesPage();
-PutHtmlFile("./html/tags.html", $votesPage); #todo are they tags or votes?
+PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
 
 my $voteCounts = DBGetVoteCounts();
@@ -1028,7 +1028,7 @@ if ($voteCounts) {
 
 		my $indexPage = GetReadPage('tag', $tagName);
 
-		PutHtmlFile('./html/top/' . $tagName . '.html', $indexPage);
+		PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
 	}
 
 }
@@ -1047,7 +1047,7 @@ if ($voteCounts) {
 #	my $currentPageContent = GetCache("page/$page");
 #
 #	if ($newPageContent == $currentPageContent) {
-#		#PutHtmlFile('./html/' . $page, $pageContent);
+#		#PutHtmlFile('html/' . $page, $pageContent);
 #
 #}
 #
@@ -1058,7 +1058,7 @@ if ($voteCounts) {
 
 #my $votesInDatabase = DBGetVotesTable();
 #if ($votesInDatabase) {
-#	PutFile('./html/votes.txt', DBGetVotesTable());
+#	PutFile('html/votes.txt', DBGetVotesTable());
 #}
 
 MakeClonePage();

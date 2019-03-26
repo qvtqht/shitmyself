@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # This file parses the access logs
-# It posts messages to ./html/txt/
+# It posts messages to html/txt/
 
 use strict;
 use warnings FATAL => 'all';
@@ -41,7 +41,7 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 # Wherever there is a gracias.html and board.nfo exists
 
 
-my @submitReceivers = `find ./html/ | grep gracias.html`; #todo this is a hack
+my @submitReceivers = `find html/ | grep gracias.html`; #todo this is a hack
 
 foreach (@submitReceivers) {
 	s/^\.\/html//;
@@ -287,9 +287,9 @@ sub ProcessAccessLog {
 					WriteLog ("I'm going to put $filename\n");
 
 					# Try to write to the file, exit if we can't
-					if (PutFile('./html/txt/' . $filename, $message)) {
+					if (PutFile('html/txt/' . $filename, $message)) {
 						#Get the hash for this file
-						my $fileHash = GetFileHash('./html/txt/' . $filename);
+						my $fileHash = GetFileHash('html/txt/' . $filename);
 
 						#Add a line to the added.log that records the timestamp
 						my $addedTime = time();
@@ -402,10 +402,10 @@ sub ProcessAccessLog {
 				my $filename;
 				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
-				PutFile('./html/txt/' . $filename, $newFile);
+				PutFile('html/txt/' . $filename, $newFile);
 
 				if (GetConfig('server_key')) {
-					ServerSign('./html/txt/' . $filename);
+					ServerSign('html/txt/' . $filename);
 				}
 			}
 		}

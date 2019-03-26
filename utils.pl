@@ -446,6 +446,9 @@ sub PutHtmlFile {
 	my $file = shift;
 	my $content = shift;
 
+	WriteLog("PutHtmlFile($file), \$content)");
+	#WriteLog("===begin \$content===\n$content\n===");
+
 	state $stripNonAscii;
 	if (!defined($stripNonAscii)) {
 		$stripNonAscii = GetConfig('ascii_only');
@@ -460,6 +463,10 @@ sub PutHtmlFile {
 	if ($stripNonAscii == 1) {
 		WriteLog( '$stripNonAscii == 1');
 		$content =~ s/[^[:ascii:]]//g;
+	}
+
+	if ($file eq GetConfig('home_page')) {
+		PutFile ('html/index.html', $content);
 	}
 
 	return PutFile($file, $content);
@@ -1048,9 +1055,9 @@ if ($lastVersion ne $currVersion) {
 	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
 	$changeLogMessage .= "\n\n$changeLogList";
 
-	PutFile("./html/txt/$changeLogFilename", $changeLogMessage);
+	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
 
-	ServerSign("./html/txt/$changeLogFilename");
+	ServerSign("html/txt/$changeLogFilename");
 
 	PutConfig('current_version', $currVersion);
 }
@@ -1076,9 +1083,9 @@ sub ServerSign {
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
-	if (!-e "./html/txt/server.key") {
-		WriteLog("gpg --armor --export $serverKeyId > ./html/txt/server.key.txt");
-		WriteLog `gpg --armor --export $serverKeyId > ./html/txt/server.key.txt`;
+	if (!-e "html/txt/server.key") {
+		WriteLog("gpg --armor --export $serverKeyId > html/txt/server.key.txt");
+		WriteLog `gpg --armor --export $serverKeyId > html/txt/server.key.txt`;
 	}
 
 	if ($serverKey) {

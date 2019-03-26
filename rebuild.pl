@@ -12,12 +12,12 @@ SqliteUnlinkDb();
 SqliteConnect();
 SqliteMakeTables();
 
-if (!-e './html/txt') {
-	mkdir('./html/txt');
+if (!-e 'html/txt') {
+	mkdir('html/txt');
 }
 
-if (!glob('./html/txt')) {
-	PutFile('./html/txt/hello.txt', 'Hello, World!');
+if (!glob('html/txt')) {
+	PutFile('html/txt/hello.txt', 'Hello, World!');
 }
 
 my $accessLogPath = GetConfig('access_log_path');
@@ -25,9 +25,9 @@ ProcessAccessLog($accessLogPath);
 
 # This holds all the files we will list in the primary index
 my @filesToInclude;
-push (@filesToInclude, `find ./html/txt/ | grep \.txt\$ | sort -r`);
+push (@filesToInclude, `find html/txt/ | grep \.txt\$ | sort -r`);
 
-#push (@filesToInclude, `find ./html/txt/ | grep \.md\$ | sort -r`); #todo add support for .md (markdown) files
+#push (@filesToInclude, `find html/txt/ | grep \.md\$ | sort -r`); #todo add support for .md (markdown) files
 
 MakeAddedIndex();
 

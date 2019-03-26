@@ -142,7 +142,7 @@ sub IndexFile {
 			}
 
 			# find the html file and unlink it too
-			my $htmlFilename = './html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			my $htmlFilename = 'html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 
 			if (-e $htmlFilename) {
 				unlink($htmlFilename);
@@ -183,8 +183,9 @@ sub IndexFile {
 		if (!GetAdminKey() && GetConfig('admin_imprint') && $gpgKey && $alias) {
 			PutFile('./admin.key', $txt);
 
-			PutFile('./html/txt/' . time() . '_admin.txt', "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin_imprint is true and there is no admin set.)\n\n" . time());
-			#todo this should be server-signed
+			my $newAdminMessage = 'html/txt/' . time() . '_newadmin.txt';
+			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin_imprint is true and there is no admin set.)\n\n" . time());
+			ServerSign($newAdminMessage);
 		}
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
