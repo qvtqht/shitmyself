@@ -44,7 +44,7 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 my @submitReceivers = `find html/ | grep gracias.html`; #todo this is a hack
 
 foreach (@submitReceivers) {
-	s/^\.\/html//;
+	s/^html//;
 	s/$/\?comment=/;
 	chomp;
 }
@@ -287,7 +287,7 @@ sub ProcessAccessLog {
 					WriteLog ("I'm going to put $filename\n");
 
 					# Try to write to the file, exit if we can't
-					if (PutFile('html/txt/' . $filename, $message)) {
+					if (PutFile('./html/txt/' . $filename, $message)) {
 						#Get the hash for this file
 						my $fileHash = GetFileHash('html/txt/' . $filename);
 
