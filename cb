@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# clean build script
+
+rm -rfv cache
+rm -rfv html/*.html 
+rm -rfv html/*/*.html 
+rm -rfv html/*/*/*.html 
+rm log/log.log 
+
+time ./rebuild.sh
+
