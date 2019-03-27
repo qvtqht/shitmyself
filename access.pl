@@ -291,18 +291,23 @@ sub ProcessAccessLog {
 						#Get the hash for this file
 						my $fileHash = GetFileHash('html/txt/' . $filename);
 
-						#Add a line to the added.log that records the timestamp
-						my $addedTime = time();
-						my $logLine = $fileHash . '|' . $addedTime;
-						AppendFile('./log/added.log', $logLine);
+						{
+							#this is where the added timestamp is added both to added.log and as a new textfile
+							#todo join all the addedtime/ tokens together into one file and write it at the end
 
-						WriteLog("Seems like PutFile() worked! $addedTime");
+							#Add a line to the added.log that records the timestamp
+							my $addedTime = time();
+							my $addedLog = $fileHash . '|' . $addedTime;
+							AppendFile('./log/added.log', $addedLog);
 
-						my $addedFilename = 'html/txt/added_' . $fileHash . '.log.txt';
-						PutFile($addedFilename, 'addedtime/'.$fileHash.'/'.$addedTime);
-						ServerSign($addedFilename);
+							WriteLog("Seems like PutFile() worked! $addedTime");
 
-						#DBAddAddedTimeRecord($fileHash, $addedTime);
+							my $addedFilename = 'html/txt/added_' . $fileHash . '.log.txt';
+							PutFile($addedFilename, 'addedtime/'.$fileHash.'/'.$addedTime);
+							ServerSign($addedFilename);
+
+							#DBAddAddedTimeRecord($fileHash, $addedTime);
+						}
 					} else {
 						WriteLog("WARNING: Could not open text file to write to: ' . $filename");
 					}

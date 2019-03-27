@@ -1,3 +1,6 @@
+Add verification that default/ is consistent with repository
+	Warn otherwise (settings should be in config/)
+
 Auto-generate server key if one does not exist
 	Store its id in config/server_key_id
 

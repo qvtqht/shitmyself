@@ -475,7 +475,7 @@ sub GetSubmitPage {
 		$submitForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $submitForm;
-		$txtIndex = "Something went wrong. Could not get item count.";
+		$txtIndex .= "Something went wrong. Could not get item count.";
 	}
 
 	return $txtIndex;
