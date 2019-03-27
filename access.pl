@@ -44,7 +44,7 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 my @submitReceivers = `find html/ | grep gracias.html`; #todo this is a hack
 
 foreach (@submitReceivers) {
-	s/^html//;
+	s/^html\//\//;
 	s/$/\?comment=/;
 	chomp;
 }
@@ -295,6 +295,12 @@ sub ProcessAccessLog {
 						my $addedTime = time();
 						my $logLine = $fileHash . '|' . $addedTime;
 						AppendFile('./log/added.log', $logLine);
+
+						WriteLog("Seems like PutFile() worked! $addedTime");
+
+						my $addedFilename = 'html/txt/added_' . $fileHash . '.log.txt';
+						PutFile($addedFilename, 'added/'.$fileHash.'/'.$addedTime);
+						ServerSign($addedFilename);
 
 						#DBAddAddedTimeRecord($fileHash, $addedTime);
 					} else {
