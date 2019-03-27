@@ -9,4 +9,3 @@ rm -rfv html/*/*/*.html
 rm log/log.log 
 
 time ./rebuild.sh
-

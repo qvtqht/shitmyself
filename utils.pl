@@ -10,7 +10,7 @@ use lib 'lib';
 
 use URI::Encode qw(uri_decode);
 use URI::Escape;
-use HTML::Entities qw(encode_entities);
+#use HTML::Entities qw(encode_entities);
 use Storable;
 
 # We'll use pwd for for the install root dir
@@ -243,6 +243,22 @@ sub GetTemplate {
 	}
 }
 
+sub encode_entities2 {
+	my $string = shift;
+	if (!$string) {
+		return;
+	}
+
+	WriteLog("encode_entities2($string)");
+
+	$string =~ s/&/&amp;/g;
+	$string =~ s/\</&lt;/g;
+	$string =~ s/\>/&gt;/g;
+	$string =~ s/"/&quot;/g;
+
+	return $string;
+}
+
 sub GetAvatar {
 	state %avatarCache;
 
@@ -277,7 +293,8 @@ sub GetAvatar {
 		my $color4 = substr($gpg_key, 9, 6);
 
 		my $alias = GetAlias($gpg_key);
-		$alias = encode_entities($alias, '<>&"');
+		$alias = encode_entities2($alias);
+		#$alias = encode_entities($alias, '<>&"');
 
 		if ($alias) {
 
@@ -637,7 +654,7 @@ sub GetGpgFingerprint {
 sub HtmlEscape {
 	my $text = shift;
 
-	$text = encode_entities($text, '<>&"');
+	$text = encode_entities2($text);
 
 	return $text;
 }
@@ -1085,7 +1102,8 @@ sub ServerSign {
 	# if public key has not been published yet, do it
 	if (!-e "html/txt/server.key") {
 		WriteLog("gpg --armor --export $serverKeyId > html/txt/server.key.txt");
-		WriteLog `gpg --armor --export $serverKeyId > html/txt/server.key.txt`;
+		my $gpgOutput = `gpg --armor --export $serverKeyId > html/txt/server.key.txt`;
+		WriteLog($gpgOutput);
 	}
 
 	if ($serverKey) {

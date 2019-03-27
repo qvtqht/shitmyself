@@ -5,7 +5,7 @@ use utf8;
 use 5.010;
 
 use lib qw(lib);
-use HTML::Entities qw(encode_entities);
+#use HTML::Entities qw(encode_entities);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
@@ -287,8 +287,8 @@ sub GetItemTemplate {
 		my $permalinkTxt = $file{'file_path'};
 		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 
-		$permalinkTxt =~ s/^\.//;
-		$permalinkTxt =~ s/html\///;
+#		$permalinkTxt =~ s/^\.//;
+		$permalinkTxt =~ s/html\//\//;
 
 		my $itemText = $message;
 		my $fileHash = GetFileHash($file{'file_path'});
@@ -434,6 +434,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/about.html", GetString('menu/about'));
+	$menuTemplate .= GetMenuItem("/index0.html", GetString('Heap'));
 	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
 	#	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
@@ -690,8 +691,8 @@ sub GetReadPage {
 					$authorLink = "";
 				}
 				my $permalinkTxt = $file;
-				$permalinkTxt =~ s/^\.//;
-				$permalinkTxt =~ s/html\///;
+				#$permalinkTxt =~ s/^\.//;
+				$permalinkTxt =~ s/html\//\//g;
 
 				my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 

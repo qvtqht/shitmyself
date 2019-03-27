@@ -9,7 +9,7 @@ use utf8;
 use 5.010;
 
 use lib qw(lib);
-use HTML::Entities qw(encode_entities);
+#use HTML::Entities qw(encode_entities);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
@@ -238,11 +238,11 @@ sub GetIndexPage {
 			} else {
 				$authorLink = "";
 			}
-			my $permalinkTxt = $file;
 			my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 
-			$permalinkTxt =~ s/^\.//;
-			$permalinkTxt =~ s/html\///;
+			my $permalinkTxt = $file;
+#			$permalinkTxt =~ s/^\.//;
+			$permalinkTxt =~ s/html\//\//g;
 
 			my $itemText = $message;
 			my $fileHash = GetFileHash($file);
