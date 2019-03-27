@@ -299,7 +299,7 @@ sub ProcessAccessLog {
 						WriteLog("Seems like PutFile() worked! $addedTime");
 
 						my $addedFilename = 'html/txt/added_' . $fileHash . '.log.txt';
-						PutFile($addedFilename, 'added/'.$fileHash.'/'.$addedTime);
+						PutFile($addedFilename, 'addedtime/'.$fileHash.'/'.$addedTime);
 						ServerSign($addedFilename);
 
 						#DBAddAddedTimeRecord($fileHash, $addedTime);

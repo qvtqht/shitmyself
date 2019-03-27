@@ -434,7 +434,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/about.html", GetString('menu/about'));
-	$menuTemplate .= GetMenuItem("/index0.html", GetString('Heap'));
+	$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
 	#	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
@@ -449,6 +449,10 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$loginLink/$identityLink/g;
 
 	$txtIndex .= $htmlStart;
+
+#	my $writeSmall = GetTemplate("write-small.template");
+#	$txtIndex .= $writeSmall;
+#  #todo make this only appear on the correct pages (not write)
 
 	return $txtIndex;
 }

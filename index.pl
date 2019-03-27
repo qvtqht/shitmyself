@@ -225,12 +225,11 @@ sub IndexFile {
 			}
 		}
 
-		#look for addvouch, which adds a voting vouch for a user
-		#
+		# look for addvouch, which adds a voting vouch for a user
 		# addvouch/F82FCD75AAEF7CC8/20
 		if ($message) {
 			my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
-			
+
 			if (@weightLines) {
 				my $lineCount = @weightLines / 2;
 
@@ -257,10 +256,52 @@ sub IndexFile {
 			}
 		}
 
-		#look for votes
+		# look for addedtime, which adds an added time for an item
+		# #token
+		# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911
+
 		if ($message) {
-			my @eventLines = ( $message =~ m/^addevent\/([0-9a-f]{40})\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})/mg );
-			#                                 prefix   /description    /time     /duration /csrf
+			my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
+
+			if (@addedLines) {
+				WriteLog ("addedtime token found!");
+				my $lineCount = @addedLines / 2;
+
+				if ($isSigned) {
+					WriteLog("... isSigned");
+					if (IsServer($gpgKey)) {
+						WriteLog("... isServer");
+						while(@addedLines) {
+							WriteLog("... \@addedLines");
+							my $itemHash = shift @addedLines;
+							my $itemAddedTime = shift @addedLines;
+
+							WriteLog("... $itemHash, $itemAddedTime");
+
+							my $reconLine = "addedtime/$itemHash/$itemAddedTime";
+
+							WriteLog("... $reconLine");
+
+							$message =~ s/$reconLine/[Item $itemHash was added at $itemAddedTime.]/g;
+
+							DBAddItemParent($gitHash, $itemHash);
+						}
+
+						DBAddVoteWeight('flush');
+
+						DBAddVoteRecord($gitHash, $addedTime, 'type:timestamp');
+
+						DBAddVoteRecord('flush');
+					}
+				}
+			}
+		}
+
+		# look for addevent tokens
+		# addevent/1551234567/3600/csrf
+		if ($message) {
+			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})/mg );
+			#                                 prefix   /time     /duration /csrf
 
 			if (@eventLines) {
 				my $lineCount = @eventLines / 4;

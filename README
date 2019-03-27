@@ -152,6 +152,14 @@ git_cron_pull
 if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
 default: 0
 
+home_page
+sets the home page, uses the file path from PutHtmlFile()
+default: html/write.html
+
+home_page_auto
+overrides config/home_page and makes the home page the last page of the index pages
+default: 1
+
 home_title
 title of home page
 default: Welcome!
