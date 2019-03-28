@@ -56,3 +56,110 @@ primary_colors
 list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
 
 
+
+
+
+
+access_log_path
+this is where access.pl will look for the access log from the web server.
+default: log/access.log
+
+access_update
+if not 0, access.pl will try to fill in the index and website when new items are submitted
+#todo this is not fully built yet
+default: 0
+
+admin_imprint
+if not 0, the first public key to be posted to the board will be imprinted as the admin
+default: 0
+
+ascii_only
+if not 0, only ascii characters will be output to the website
+default: 0
+
+cron_continue
+if not 0, cron.pl will run in a loop for this many seconds, looking for new access log entries
+default: 0
+
+debug
+if 1, debug messages will be written to stdout
+default: 0
+
+flags
+values provided to users as reasons to flag a post
+one on each line
+
+git_cron_pull
+if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
+default: 0
+
+home_page
+sets the home page, uses the file path from PutHtmlFile()
+default: html/write.html
+
+home_page_auto
+overrides config/home_page and makes the home page the last page of the index pages
+default: 1
+
+home_title
+title of home page
+default: Welcome!
+
+item_long_threshold
+how many characters an item can be before it is considered "long" and is cut off when displayed in listings
+default: 1024
+
+logo_text
+text logo, displayed next to title on pages
+default: *
+
+page_limit
+number of items to display per page in listings
+default: 100
+
+prefill_username
+username to pre-fill for people who are not signed in
+leave blank to not pre-fill anything
+default: Anonymous
+
+primary_colors
+list of \n-separated hex colors (012bcd format) to be used randomly for ui color
+default: (see repo)
+
+secondary_colors
+list of \n-separated hex colors (012bcd format) to be used randomly for ui secondary color
+default: (see repo)
+
+pull_item_limit
+how many items to pull via http at a time when pulling from other nodes
+#todo work in progress, may not be necessary thanks to git
+default: 10
+
+push_item_limit
+how many items to push to other nodes via http at a time
+#todo work in progress, may not be necessary thanks to git
+default: 5
+
+replies
+whether or not to enable replying functionality
+#todo verify this works at 0, may not disable everything currently
+default: 1
+
+tags
+list of tags to provide user as voting options
+default: (see repo)
+
+text_colors
+list of colors to use randomly for page text, \n-separated
+default: (see repo)
+
+use_gpg2
+if not 0, gpg2 command is used in place of gpg when performing GPG-related tasks
+default: 0
+
+vote_limit
+#todo document this
+
+zip_interval
+how frequentlly the zip archive of the entire site is updated, in seconds
+default: 3600

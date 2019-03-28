@@ -1,3 +1,9 @@
+Add verification that default/ is consistent with repository
+	Warn otherwise (settings should be in config/)
+
+Auto-generate server key if one does not exist
+	Store its id in config/server_key_id
+
 changelog should include what's changed between the two versions
 
 Ensure that maincontent tags are present at the right place on all pages

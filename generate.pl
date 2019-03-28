@@ -23,10 +23,6 @@ require './pages.pl';
 #my $HTMLDIR = "html.tmp";
 my $HTMLDIR = "html";
 
-my $PAGE_LIMIT = GetConfig('page_limit');
-#my $PAGE_THRESHOLD = 5;
-
-
 sub GetAuthorHeader {
 	return "HI";
 }
@@ -140,12 +136,11 @@ sub GetIndexPage {
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
 
-	my $writeSmall = GetTemplate("write-small.template");
+#	my $writeSmall = GetTemplate('write-small.template');
+#	my $writeShortMessage = GetString('write_short_message');
+#	$writeSmall =~ s/\$writeShortMessage/$writeShortMessage/g;
 
-	#my $writeShortMessage = GetString('write_short_message');
-	#$writeSmall =~ s/\$writeShortMessage/$writeShortMessage/g;
-
-	$htmlStart .= $writeSmall;
+#	$htmlStart .= $writeSmall;
 
 	$txtIndex .= $htmlStart;
 
@@ -480,7 +475,7 @@ sub GetSubmitPage {
 		$submitForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $submitForm;
-		$txtIndex = "Something went wrong. Could not get item count.";
+		$txtIndex .= "Something went wrong. Could not get item count.";
 	}
 
 	return $txtIndex;
@@ -527,7 +522,9 @@ sub GetPageLinks {
 
 	$pageLinks = "";
 
-	my $lastPageNum = ceil($itemCount / $PAGE_LIMIT);
+	my $pageLimit = GetConfig('page_limit');
+
+	my $lastPageNum = ceil($itemCount / $pageLimit);
 
 #	my $beginExpando;
 #	my $endExpando;
@@ -548,7 +545,7 @@ sub GetPageLinks {
 #		}
 #	}
 
-	if ($itemCount > $PAGE_LIMIT) {
+	if ($itemCount > $pageLimit) {
 #		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
 		for (my $i = 0; $i < $lastPageNum; $i++) {
 			my $pageLinkTemplate;
@@ -955,6 +952,12 @@ sub MakeClonePage {
 }
 
 {
+	my $pageLimit = GetConfig('page_limit');
+	if (!$pageLimit) {
+		$pageLimit = 250;
+	}
+	#my $PAGE_THRESHOLD = 5;
+
 	#my $itemCount = DBGetItemCount("item_type = 'text'");
 	my $itemCount = DBGetItemCount();
 
@@ -971,18 +974,18 @@ sub MakeClonePage {
 
 		WriteLog("\$itemCount = $itemCount");
 
-		my $lastPage = ceil($itemCount / $PAGE_LIMIT);
+		my $lastPage = ceil($itemCount / $pageLimit);
 
 		for ($i = 0; $i < $lastPage; $i++) {
 			my %queryParams;
-			my $offset = $i * $PAGE_LIMIT;
+			my $offset = $i * $pageLimit;
 
 			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 
 			if ($overlapPage && $lastPage > $overlapPage && $i > $overlapPage) {
-				$offset = $offset - ($itemCount % $PAGE_LIMIT);
+				$offset = $offset - ($itemCount % $pageLimit);
 			}
-			$queryParams{'limit_clause'} = "LIMIT $PAGE_LIMIT OFFSET $offset";
+			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp';
 
 			my @ft = DBGetItemList(\%queryParams);
@@ -997,7 +1000,9 @@ sub MakeClonePage {
 			if ($i < $lastPage-1) {
 				PutHtmlFile("html/index$i.html", $indexPage);
 			} else {
-				#PutHtmlFile("html/index.html", $indexPage);
+				if (GetConfig('home_page_auto')) {
+					PutHtmlFile("html/index.html", $indexPage);
+				}
 				PutHtmlFile("html/index$i.html", $indexPage);
 			}
 		}

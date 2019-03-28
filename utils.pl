@@ -569,6 +569,28 @@ sub GetFileSizeHtml {
 	return $fileSizeString;
 }
 
+sub IsServer {
+	my $key = shift;
+
+	if (!IsFingerprint($key)) {
+		return 0;
+	}
+
+	WriteLog("IsServer($key)");
+
+	my $serverKey = GetServerKey();
+
+	WriteLog("... \$serverKey = $serverKey");
+
+	if ($serverKey eq $key) {
+		WriteLog("... 1");
+		return 1;
+	} else {
+		WriteLog("... 0");
+		return 0;
+	}
+}
+
 sub IsAdmin {
 	my $key = shift;
 
@@ -585,6 +607,37 @@ sub IsAdmin {
 	}
 }
 
+
+sub GetServerKey {
+	#Returns admin's key sig, 0 if there is none
+
+	state $adminsKey = 0;
+
+	if ($adminsKey) {
+		return $adminsKey;
+	}
+
+	if (-e "html/txt/server.key.txt") {
+
+		my %adminsInfo = GpgParse("html/txt/server.key.txt");
+
+		if ($adminsInfo{'isSigned'}) {
+			if ($adminsInfo{'key'}) {
+				$adminsKey = $adminsInfo{'key'};
+
+				return $adminsKey;
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+	} else {
+		return 0;
+	}
+
+	return 0;
+}
 
 sub GetAdminKey {
 	#Returns admin's key sig, 0 if there is none
@@ -1088,7 +1141,7 @@ sub ServerSign {
 		return;
 	}
 
-	my $serverKeyId = GetConfig('server_key');
+	my $serverKeyId = GetConfig('server_key_id');
 
 	if (!$serverKeyId) {
 		return;
