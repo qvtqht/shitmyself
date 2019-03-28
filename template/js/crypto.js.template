@@ -483,7 +483,15 @@ function makePrivateKey(username, bits) {
 
 					saveId();
 
-					window.open('/write.html#inspubkey', '_self');
+				 	var iframe = document.createElement("iframe");
+				 	iframe.src = '/write.html#inspubkey';
+				 	iframe.name = "inspubkey"
+				 	iframe.style.display = 'none';
+				 	document.body.appendChild(iframe);
+
+					//return frames["frame"].location.host;
+
+					//window.open('/write.html#inspubkey', '_self');
 				}
 			);
 		} else {
