@@ -8,6 +8,10 @@
         <td>$version</td>
     </tr>
     <tr>
+        <td>Item Count:</td>
+        <td>$itemCount</td>
+    </tr>
+    <tr>
         <td>Administrator:</td>
         <td>$admin</td>
     </tr>
