@@ -414,18 +414,18 @@ sub GetVotesPage {
 	return $txtIndex;
 }
 
-sub GetTopPage {
-	my $tag = shift;
-	chomp($tag);
-
-	my $txtIndex = '';
-
-	my $items = GetTopItemsForTag('interesting');
-
-	return $items;
-
-
-}
+#sub GetTopPage {
+#	my $tag = shift;
+#	chomp($tag);
+#
+#	my $txtIndex = '';
+#
+#	my $items = GetTopItemsForTag('interesting');
+#
+#	return $items;
+#
+#
+#}
 
 sub GetSubmitPage {
 	my $txtIndex = "";

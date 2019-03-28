@@ -204,6 +204,9 @@ sub ProcessAccessLog {
 				 $req, $file, $proto, $status, $length, $ref) = split(' ',$line);
 		}
 
+		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 11;
+		my $userAgent = substr($line, $notUseragentLength);
+
 		# Split $date into $time and $date
 		my $time = substr($date, 13);
 		$date = substr($date, 1, 11);
@@ -291,7 +294,7 @@ sub ProcessAccessLog {
 						#Get the hash for this file
 						my $fileHash = GetFileHash('html/txt/' . $filename);
 
-						{
+						if (GetConfig('record_timestamps')){
 							#this is where the added timestamp is added both to added.log and as a new textfile
 							#todo join all the addedtime/ tokens together into one file and write it at the end
 
@@ -302,8 +305,15 @@ sub ProcessAccessLog {
 
 							WriteLog("Seems like PutFile() worked! $addedTime");
 
-							my $addedFilename = 'html/txt/added_' . $fileHash . '.log.txt';
-							PutFile($addedFilename, 'addedtime/'.$fileHash.'/'.$addedTime);
+							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
+							my $addedMessage = "addedtime/$fileHash/$addedTime\n";
+
+							if (GetConfig('record_clients')) {
+								my $clientFingerprint = md5_hex($hostname.$userAgent);
+								$addedMessage .= "addedby/$fileHash/$clientFingerprint";
+							}
+							PutFile($addedFilename, $addedMessage);
+
 							ServerSign($addedFilename);
 
 							#DBAddAddedTimeRecord($fileHash, $addedTime);
@@ -415,7 +425,7 @@ sub ProcessAccessLog {
 
 				PutFile('html/txt/' . $filename, $newFile);
 
-				if (GetConfig('server_key')) {
+				if (GetConfig('server_key_id')) {
 					ServerSign('html/txt/' . $filename);
 				}
 			}

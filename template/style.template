@@ -132,7 +132,7 @@ details.txt a.header {
 	padding: 1pt;
 }
 .avatar {
-	border-radius: 1pt;
+	border-radius: 3pt;
 	color: $primaryColor;
 	padding: 2pt;
 }

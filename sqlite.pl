@@ -33,6 +33,7 @@ sub SqliteUnlinkDb {
 #schema
 sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp);");
+	SqliteQuery2("CREATE TABLE added_by(file_hash, device_fingerprint);");
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, published)");
 	SqliteQuery2("CREATE TABLE author_alias(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -164,6 +165,8 @@ sub SqliteMakeTables() {
 }
 
 sub SqliteQuery2 {
+#params: $query, @queryParams
+#returns array ref
 	my $query = shift;
 	chomp $query;
 
@@ -256,24 +259,24 @@ sub DBGetVotesForItem {
 	return $result;
 }
 
-sub SqliteGetHash {
-	my $query = shift;
-	chomp $query;
-	
-	my @results = split("\n", SqliteQuery($query));
-
-	my %hash;
-	
-	foreach (@results) {
-		chomp;
-
-		my ($key, $value) = split(/\|/, $_);
-
-		$hash{$key} = $value;
-	}
-	
-	return %hash;
-}
+#sub SqliteGetHash {
+#	my $query = shift;
+#	chomp $query;
+#
+#	my @results = split("\n", SqliteQuery($query));
+#
+#	my %hash;
+#
+#	foreach (@results) {
+#		chomp;
+#
+#		my ($key, $value) = split(/\|/, $_);
+#
+#		$hash{$key} = $value;
+#	}
+#
+#	return %hash;
+#}
 
 sub SqliteGetColumn {
 	my $query = shift;
@@ -351,18 +354,18 @@ sub SqliteEscape {
 	return $text;
 }
 
-sub SqliteAddKeyValue {
-	my $table = shift;
-	my $key = shift;
-	my $value = shift;
-
-	$table = SqliteEscape ($table);
-	$key = SqliteEscape($key);
-	$value = SqliteEscape($value);
-
-	SqliteQuery("INSERT INTO $table(key, alias) VALUES ('$key', '$value');");
-
-}
+#sub SqliteAddKeyValue {
+#	my $table = shift;
+#	my $key = shift;
+#	my $value = shift;
+#
+#	$table = SqliteEscape ($table);
+#	$key = SqliteEscape($key);
+#	$value = SqliteEscape($value);
+#
+#	SqliteQuery("INSERT INTO $table(key, alias) VALUES ('$key', '$value');");
+#
+#}
 
 sub DBGetAuthor {
 	my $query = "SELECT author_key, author_alias, vote_weight FROM author_flat";
@@ -446,21 +449,23 @@ sub DBGetVoteCounts {
 	return $voteCounts;
 }
 
-sub GetTopItemsForTag {
-	my $tag = shift;
-	chomp($tag);
-
-	my $query = "SELECT * FROM item_flat WHERE file_hash IN (
-	SELECT file_hash FROM (
-		SELECT file_hash, COUNT(vote_value) AS vote_count
-		FROM vote WHERE vote_value = '" . SqliteEscape($tag) . "'
-		GROUP BY file_hash
-		ORDER BY vote_count DESC
-	)
-	);";
-
-	return $query;
-}
+#sub GetTopItemsForTag {
+#	my $tag = shift;
+#	chomp($tag);
+#
+#	my $query = "
+#		SELECT * FROM item_flat WHERE file_hash IN (
+#			SELECT file_hash FROM (
+#				SELECT file_hash, COUNT(vote_value) AS vote_count
+#				FROM vote WHERE vote_value = '" . SqliteEscape($tag) . "'
+#				GROUP BY file_hash
+#				ORDER BY vote_count DESC
+#			)
+#		);
+#	";
+#
+#	return $query;
+#}
 
 sub DBAddKeyAlias {
 	state $query;
@@ -509,6 +514,7 @@ sub DBAddKeyAlias {
 
 sub DBAddItemParent {
 	state $query;
+	state @queryParams;
 
 	my $itemHash = shift;
 
@@ -518,23 +524,22 @@ sub DBAddItemParent {
 
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery2($query, @queryParams);
 
 			$query = '';
+			@queryParams = ();
 		}
 
 		return;
 	}
 
-	if ($query && length($query) > 10240) {
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 32)) {
 		DBAddItemParent('flush');
 		$query = '';
+		@queryParams = ();
 	}
 
 	my $parentHash = shift;
-
-	$itemHash = SqliteEscape($itemHash);
-	$parentHash = SqliteEscape($parentHash);
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO item_parent(item_hash, parent_hash) VALUES ";
@@ -542,7 +547,8 @@ sub DBAddItemParent {
 		$query .= ",";
 	}
 
-	$query .= "('$itemHash', '$parentHash')";
+	$query .= '(?, ?)';
+	push @queryParams, $itemHash, $parentHash;
 }
 
 sub DBAddItem {
@@ -610,7 +616,7 @@ sub DBAddVoteWeight {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+	if ($query && (length($query) > 1024 || scalar(@queryParams) > 100)) {
 		DBAddVoteWeight('flush');
 		$query = '';
 		@queryParams = ();
@@ -633,6 +639,7 @@ sub DBAddEventRecord {
 # $gitHash, $descriptionHash, $eventTime, $eventDuration, $signedBy
 
 	state $query;
+	state @queryParams;
 
 	WriteLog("DBAddEventRecord()");
 
@@ -644,17 +651,19 @@ sub DBAddEventRecord {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery2($query, @queryParams);
 
 			$query = '';
+			@queryParams = ();
 		}
 
 		return;
 	}
 
-	if ($query && length($query) > 10240) {
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 32)) {
 		DBAddEventRecord('flush');
 		$query = '';
+		@queryParams = ();
 	}	
 
 	my $descriptionHash = shift;
@@ -673,18 +682,14 @@ sub DBAddEventRecord {
 		$signedBy = '';
 	}
 
-	$fileHash = SqliteEscape($fileHash);
-	$descriptionHash = SqliteEscape($descriptionHash);
-	$eventTime = SqliteEscape($eventTime);
-	$eventDuration = SqliteEscape($eventDuration);
-
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO calendar(item_hash, description_hash, event_time, event_duration, author_key) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= "('$fileHash', '$descriptionHash', '$eventTime', '$eventDuration', '$signedBy')";
+	$query .= '(?, ?, ?, ?, ?)';
+	push @queryParams, $fileHash, $descriptionHash, $eventTime, $eventDuration, $signedBy;
 }
 
 sub DBAddVoteRecord {
@@ -694,6 +699,7 @@ sub DBAddVoteRecord {
 # $voteValue
 # $signedBy
 	state $query;
+	state @queryParams;
 
 	WriteLog("DBAddVoteRecord()");
 
@@ -705,15 +711,16 @@ sub DBAddVoteRecord {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery2($query, @queryParams);
 
 			$query = '';
+			@queryParams = ();
 		}
 
 		return;
 	}
 
-	if ($query && length($query) > 10240) {
+	if ($query && (length($query) > 10240 && scalar(@queryParams) > 32)) {
 		DBAddVoteRecord('flush');
 		$query = '';
 	}
@@ -725,15 +732,12 @@ sub DBAddVoteRecord {
 	chomp $fileHash;
 	chomp $ballotTime;
 	chomp $voteValue;
+
 	if ($signedBy) {
 		chomp $signedBy;
 	} else {
 		$signedBy = '';
 	}
-
-	$fileHash = SqliteEscape($fileHash);
-	$ballotTime = SqliteEscape($ballotTime);
-	$voteValue = SqliteEscape($voteValue);
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by) VALUES ";
@@ -741,16 +745,18 @@ sub DBAddVoteRecord {
 		$query .= ",";
 	}
 
-	$query .= "('$fileHash', '$ballotTime', '$voteValue', '$signedBy')";
+	$query .= '(?, ?, ?, ?)';
+	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy;
 }
 
 sub DBAddAddedTimeRecord {
-# Adds a new record to added_time, typically from log/added.log
-# This records the time that the file was first submitted or picked up by the indexer
-#	$fileHash = file's hash
-#	$addedTime = time it was added
-#
+	# Adds a new record to added_time, typically from log/added.log
+	# This records the time that the file was first submitted or picked up by the indexer
+	#	$fileHash = file's hash
+	#	$addedTime = time it was added
+	#
 	state $query;
+	state @queryParams;
 
 	my $fileHash = shift;
 	chomp $fileHash;
@@ -761,9 +767,10 @@ sub DBAddAddedTimeRecord {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query);
+			SqliteQuery2($query, @queryParams);
 
 			$query = '';
+			@queryParams = ();
 		}
 
 		return;
@@ -782,9 +789,10 @@ sub DBAddAddedTimeRecord {
 		return;
 	}
 
-	if ($query && length($query) > 10240) {
+	if ($query && length($query) > 1024 || scalar(@queryParams) > 32) {
 		DBAddAddedTimeRecord('flush');
 		$query = '';
+		@queryParams = ();
 	}
 
 	$fileHash = SqliteEscape($fileHash);
@@ -796,7 +804,67 @@ sub DBAddAddedTimeRecord {
 		$query .= ',';
 	}
 
-	$query .= "('$fileHash', '$addedTime')";
+	$query .= '(?, ?)';
+	push @queryParams, $fileHash, $addedTime;
+}
+
+sub DBAddItemClient {
+	# Adds a new record to added_time, typically from log/added.log
+	# This records the time that the file was first submitted or picked up by the indexer
+	#	$fileHash = file's hash
+	#	$addedTime = time it was added
+	#
+	state $query;
+	state @queryParams;
+
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	if ($fileHash eq 'flush') {
+		WriteLog("DBAddClientRecord(flush)");
+
+		if ($query) {
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = '';
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if (!IsSha1($fileHash)) {
+		WriteLog('DBAddClientRecord called with invalid parameter! returning');
+		return;
+	}
+
+	my $addedClient = shift;
+	chomp $addedClient;
+
+	if (!$addedClient =~ m/\[0-9a-f]{32}/) { #todo is this clean enough?
+		WriteLog('DBAddClientRecord called with invalid parameter! returning');
+		return;
+	}
+
+	if ($query && length($query) > 1024 || scalar(@queryParams) > 32) {
+		DBAddClientRecord('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	$fileHash = SqliteEscape($fileHash);
+	$addedClient = SqliteEscape($addedClient);
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO added_by(file_hash, device_fingerprint) VALUES ";
+	} else {
+		$query .= ',';
+	}
+
+	$query .= '(?, ?)';
+	push @queryParams, $fileHash, $addedClient;
 }
 
 sub DBGetAddedTime {
@@ -808,13 +876,16 @@ sub DBGetAddedTime {
 		return;
 	}
 
-	if ($fileHash ne SqliteEscape($fileHash)) {
+	if (!IsSha1($fileHash) || $fileHash ne SqliteEscape($fileHash)) {
 		die('DBGetAddedTime() this should never happen');
 	} #todo ideally this should verify it's a proper hash too
 
 	my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
 
 	my $result = SqliteQuery($query);
+
+#	WriteLog($result);
+#	die();
 
 	return $result;
 }

@@ -205,7 +205,7 @@ sub IndexFile {
 
 		# look for quoted message ids
 		if ($message) {
-			# >>
+			# >> token
 			my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
 
 			if (@replyLines) {
@@ -222,9 +222,10 @@ sub IndexFile {
 			}
 		}
 
-		# look for addvouch, which adds a voting vouch for a user
-		# addvouch/F82FCD75AAEF7CC8/20
 		if ($message) {
+			# look for addvouch, which adds a voting vouch for a user
+			# addvouch/F82FCD75AAEF7CC8/20
+
 			my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
 
 			if (@weightLines) {
@@ -253,11 +254,11 @@ sub IndexFile {
 			}
 		}
 
-		# look for addedtime, which adds an added time for an item
-		# #token
-		# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911
-
 		if ($message) {
+			# look for addedtime, which adds an added time for an item
+			# #token
+			# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911
+
 			my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
 
 			if (@addedLines) {
@@ -287,6 +288,48 @@ sub IndexFile {
 						DBAddVoteWeight('flush');
 
 						DBAddVoteRecord($gitHash, $addedTime, 'type:timestamp');
+
+						DBAddVoteRecord('flush');
+					}
+				}
+			}
+		}
+
+		if ($message) {
+			# look for addedby, which adds an added time for an item
+			# #token
+			# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
+
+			my @addedByLines = ( $message =~ m/^addedby\/([0-9a-f]{40})\/([0-9a-f]{32})/mg );
+
+			if (@addedByLines) {
+				WriteLog (". addedby token found!");
+				my $lineCount = @addedByLines / 2;
+
+				if ($isSigned) {
+					WriteLog("... isSigned");
+					if (IsServer($gpgKey)) {
+						WriteLog("... isServer");
+						while(@addedByLines) {
+							WriteLog("... \@addedByLines");
+							my $itemHash = shift @addedByLines;
+							my $itemAddedBy = shift @addedByLines;
+
+							WriteLog("... $itemHash, $itemAddedBy");
+
+							my $reconLine = "addedby/$itemHash/$itemAddedBy";
+
+							WriteLog("... $reconLine");
+
+							$message =~ s/$reconLine/[Item $itemHash was added by $itemAddedBy.]/g;
+
+							#DBAddItemParent($gitHash, $itemHash);
+							DBAddItemClient($gitHash, $itemAddedBy);
+						}
+
+						#DBAddVoteWeight('flush');
+
+						DBAddVoteRecord($gitHash, $addedTime, 'type:device');
 
 						DBAddVoteRecord('flush');
 					}
