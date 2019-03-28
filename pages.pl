@@ -485,13 +485,15 @@ sub GetVoterTemplate {
 		#my $tagsList = GetConfig('tags');
 		my $tagsList = GetConfig($tagsListName);
 		my $johariList = GetConfig('johari');
+		my $rhetoricList = GetConfig('rhetoric');
 		my $flagsList = GetConfig('flags');
 
 		chomp $tagsList;
 		chomp $johariList;
+		chomp $rhetoricList;
 		chomp $flagsList;
 
-		my @voteValues = split("\n", $tagsList . "\n--\n" . $johariList . "\n--\n" . $flagsList);
+		my @voteValues = split("\n", $tagsList . "\n--\n" . $johariList . "\n--\n" . $rhetoricList . "\n--\n" . $flagsList);
 
 		$flagsList = "\n" . $flagsList . "\n";
 
