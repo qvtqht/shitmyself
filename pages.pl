@@ -436,7 +436,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/about.html", GetString('menu/about'));
 	$menuTemplate .= GetMenuItem("/index0.html", GetString('Heap'));
 	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
-	#	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
+	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 #	my $adminKey = GetAdminKey();
 #	if ($adminKey) {
