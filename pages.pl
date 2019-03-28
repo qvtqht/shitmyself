@@ -460,16 +460,9 @@ sub GetPageHeader {
 sub GetVoterTemplate {
 	my $fileHash = shift;
 	my $ballotTime = shift;
-	my $tagsListName = shift;
 
 	chomp $fileHash;
 	chomp $ballotTime;
-
-	if (!$tagsListName) {
-		$tagsListName = 'tags';
-	} else {
-		chomp $tagsListName;
-	}
 
 	#todo move this to GetConfig()
 	if (!-e "config/secret") {
@@ -482,18 +475,19 @@ sub GetVoterTemplate {
 	state $voteButtonsTemplate;
 
 	if (!defined($voteButtonsTemplate)) {
-		#my $tagsList = GetConfig('tags');
-		my $tagsList = GetConfig($tagsListName);
+		my $tagsList = GetConfig('tags');
+		my $tags2List = GetConfig('tags2');
 		my $johariList = GetConfig('johari');
 		my $rhetoricList = GetConfig('rhetoric');
 		my $flagsList = GetConfig('flags');
 
 		chomp $tagsList;
+		chomp $tags2List;
 		chomp $johariList;
 		chomp $rhetoricList;
 		chomp $flagsList;
 
-		my @voteValues = split("\n", $tagsList . "\n--\n" . $johariList . "\n--\n" . $rhetoricList . "\n--\n" . $flagsList);
+		my @voteValues = split("\n", $tagsList . "\n--\n" . $tags2List . "\n--\n" . $johariList . "\n--\n" . $rhetoricList . "\n--\n" . $flagsList);
 
 		$flagsList = "\n" . $flagsList . "\n";
 

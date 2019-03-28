@@ -106,7 +106,6 @@ sub IndexFile {
 	my $fingerprint;        # author's gpg key, long-ass format (not used currently)
 
 	my $verifyError = 0;    # was there an error verifying the file with gpg?
-	my $itemTypeMask = 0;   # item type mask, currently unused
 
 #	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
 #todo add support for .md (markdown) files
@@ -129,12 +128,12 @@ sub IndexFile {
 		# get the file's added time.
 
 		# debug output
-		WriteLog('IndexFile: $file = ' . $file . ', $gitHash = ' . $gitHash);
+		WriteLog('... $file = ' . $file . ', $gitHash = ' . $gitHash);
 
 		# if the file is present in deleted.log, get rid of it and its page, return
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $gitHash) {
 			# write to log
-			WriteLog("IndexFile: $gitHash exists in deleted.log, removing $file");
+			WriteLog("... $gitHash exists in deleted.log, removing $file");
 
 			# unlink the file itself
 			if (-e $file) {
@@ -152,8 +151,8 @@ sub IndexFile {
 		}
 
 		# debug output
-		WriteLog("\$addedTime = $addedTime");
-		WriteLog($gpgResults{'gitHash'});
+		WriteLog("... \$addedTime = $addedTime");
+		WriteLog("... " . $gpgResults{'gitHash'});
 
 		if (!$addedTime) {
 			# This file was not added through access.pl, and has
@@ -162,7 +161,7 @@ sub IndexFile {
 			# up and put into the database on the next cycle
 			# unless we add provisions for that here #todo
 
-			WriteLog("No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
+			WriteLog("... No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
 
 			# current time
 			my $newAddedTime = time();
@@ -200,8 +199,6 @@ sub IndexFile {
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
-
-			DBAddKeyAlias('flush');
 		}
 
 		my $itemName = TrimPath($file);
@@ -264,7 +261,7 @@ sub IndexFile {
 			my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
 
 			if (@addedLines) {
-				WriteLog ("addedtime token found!");
+				WriteLog (". addedtime token found!");
 				my $lineCount = @addedLines / 2;
 
 				if ($isSigned) {
@@ -307,7 +304,7 @@ sub IndexFile {
 				my $lineCount = @eventLines / 4;
 				#todo assert no remainder
 
-				WriteLog("DBAddEventRecord \$lineCount = $lineCount");
+				WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
 
 				while (@eventLines) {
 					my $descriptionHash = shift @eventLines;
@@ -390,13 +387,13 @@ sub IndexFile {
 			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
 		} else {
-			WriteLog('I was going to save $messageCacheName, but $message is blank!');
+			WriteLog('... I was going to save $messageCacheName, but $message is blank!');
 		}
 
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, $itemTypeMask);
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash);
 		} else {
-			DBAddItem ($file, $itemName, '',      $gitHash, $itemTypeMask);
+			DBAddItem ($file, $itemName, '',      $gitHash);
 		}
 	}
 }

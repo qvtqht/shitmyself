@@ -1,3 +1,6 @@
+Review feed.pl
+	Fix rss.txt
+
 Add verification that default/ is consistent with repository
 	Warn otherwise (settings should be in config/)
 
