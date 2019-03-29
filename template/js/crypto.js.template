@@ -383,27 +383,30 @@ function saveId() {
 			var myAvatar = localStorage.getItem('avatar');
 
             if (myAvatar == null || myAvatar.length == 0) {
-                signinBox.innerHTML = '<a href="/identity.html">Identity</a>';
+            	if ( !document.getElementById("privatekey")) {
+						signinBox.innerHTML = '<a href="/identity.html">Identity</a>';
+					}
             } else {
-                signinBox.innerHTML = '';
+					signinBox.innerHTML = '';
 
-                var myFp = localStorage.getItem('fingerprint');
-                myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a>';
+					var myFp = localStorage.getItem('fingerprint');
 
-                var myId2 = document.getElementById('myId2');
-                if (myId2) {
-                    myId2.innerHTML = getAvatar();
-                }
+					myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a>';
 
-                var myCrea = document.getElementById('myCrea');
-                if (myCrea) {
-                    myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
-                }
+					var myId2 = document.getElementById('myId2');
+					if (myId2) {
+						myId2.innerHTML = getAvatar();
+					}
 
-                var myFinger = document.getElementById('myFP');
-                if (myFinger) {
-                    myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-                }
+					var myCrea = document.getElementById('myCrea');
+					if (myCrea) {
+						myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+					}
+
+					var myFinger = document.getElementById('myFP');
+					if (myFinger) {
+						myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+					}
             }
 
             showHideForms();
@@ -453,8 +456,13 @@ function makePrivateKey(username, bits) {
 			}
 
 			var textbox = document.getElementById("privatekey");
-			if (textbox) {
-				textbox.value = 'Generating key, please wait...';
+			var genStatus = document.getElementById('genStatus');
+			if (genStatus) {
+				genStatus.innerHTML = 'Working...';
+			}
+			var cSb = document.getElementById('cSb');
+			if (cSb) {
+				cSb.disabled = 1;
 			}
 
 			openpgp.config.show_version = false;
@@ -465,6 +473,12 @@ function makePrivateKey(username, bits) {
 					setPrivateKey(key.privateKeyArmored);
 					if (textbox) {
 						textbox.value = key.privateKeyArmored;
+					}
+					if (genStatus) {
+						genStatus.innerHTML = '';
+					}
+					if (cSb) {
+						cSb.disabled = 0;
 					}
 
 					setPublicKey(key.publicKeyArmored);

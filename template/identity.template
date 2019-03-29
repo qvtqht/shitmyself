@@ -86,6 +86,7 @@
 
     <p>
         <input id=cSb type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
+        <span id=genStatus></span>
     </p>
 
     <p>
