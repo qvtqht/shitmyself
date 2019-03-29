@@ -1,3 +1,10 @@
+Make the private key form more friendly
+	Disable Copy button when there is no text
+		Also, if there is a different private key in the clipboard
+	Make a Paste button
+	Disable the Restore button if there's nothing to restore?
+	Make the Restore button automatically paste if there is a private key in the clipboard
+
 Adjust avatars: number of asterisks should reflect
 	number of votes/replies/responses the author has attracted
 		* anon = 1+

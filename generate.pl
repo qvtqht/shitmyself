@@ -332,6 +332,13 @@ sub GetIdentityPage {
 
 	my $idPage = GetTemplate('identity.template');
 
+	if (GetConfig('use_gpg2')) {
+		my $gpg2Choices = GetTemplate('gpg2.choices.template');
+		$idPage =~ s/\$gpg2Algochoices/$gpg2Choices/;
+	} else {
+		$idPage =~ s/\$gpg2Algochoices//;
+	}
+
 	$txtIndex .= $idPage;
 
 	$txtIndex .= GetPageFooter();

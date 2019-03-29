@@ -821,7 +821,7 @@ sub DBAddItemClient {
 	chomp $fileHash;
 
 	if ($fileHash eq 'flush') {
-		WriteLog("DBAddClientRecord(flush)");
+		WriteLog("DBAddItemClient(flush)");
 
 		if ($query) {
 			$query .= ';';
@@ -836,7 +836,7 @@ sub DBAddItemClient {
 	}
 
 	if (!IsSha1($fileHash)) {
-		WriteLog('DBAddClientRecord called with invalid parameter! returning');
+		WriteLog('DBAddItemClient called with invalid parameter! returning');
 		return;
 	}
 
@@ -844,12 +844,12 @@ sub DBAddItemClient {
 	chomp $addedClient;
 
 	if (!$addedClient =~ m/\[0-9a-f]{32}/) { #todo is this clean enough?
-		WriteLog('DBAddClientRecord called with invalid parameter! returning');
+		WriteLog('DBAddItemClient called with invalid parameter! returning');
 		return;
 	}
 
 	if ($query && length($query) > 1024 || scalar(@queryParams) > 32) {
-		DBAddClientRecord('flush');
+		DBAddItemClient('flush');
 		$query = '';
 		@queryParams = ();
 	}

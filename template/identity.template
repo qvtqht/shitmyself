@@ -15,7 +15,8 @@
 </noscript>
 
 <p id=loading class=loading>
-Loading...
+    Loading...
+    <br><br><br>
 </p>
 
 <form id=formCurId name=formCurId style="display:none">
@@ -50,12 +51,15 @@ Loading...
         </p>
 
         <p>
-            <strong><b>Information:</b></strong><br>
-            Save your private key to use the same identity again.<br>
             <label for=privKeyC><input type=checkbox id=privKeyC onchange="document.getElementById('formprivkey').style.display=(this.checked ? 'block' : 'none');window.open('#pka','_self');">Show private key</label>
         </p>
 
         <span id=formprivkey name=formprivkey style="display:none">
+            <p>
+                &check; Your <u><b>private key</b></u> controls your identity.<br>
+                &check; Save it (copy and paste) to "sign in" again.<br>
+                &check; If you lose it, it's gone. Make a new one.
+            </p>
 
             <input type=button id=restoreid value="Restore Identity" onclick="saveId();sharePubKey();">
             <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br>
@@ -110,15 +114,22 @@ $gpg2Algochoices
 
     <p>
         &check; Generate an identity, also known as key pair<br>
-        &check; Store your private key in your browser/device<br>
-        &check; Publish your public key, including your name (set below)<br>
+        &check; Store your <u>private key</u> in your browser/device<br>
+        &check; Publish your <u>public key</u>, including your name<br>
         &check; Enable others to send you encrypted messages
     </p>
 
     <label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
 
     <span id=creaIdExp style="display:none">
-        <p>Please refer to gnupg.org and the Manual</p>
+        <p>
+            &check; Disable JavaScript<br>
+            &check; Use gpg at the command line<br>
+            &check; Write your own frontend<br>
+        </p>
+        <p>
+            Please refer to the Manual for more information.
+        </p>
     </span>
 
     </span>

@@ -5,6 +5,9 @@
 	border-radius: 10pt;
 	background-color: green;
 	color: white;
+	font-size: xx-large;
+	font-weight: bold;
+	font-family: cursive;
 }
 
 /* body and headers */
@@ -249,5 +252,11 @@ label {
 	background-color: #c0ffc0;
 	padding: 5pt;
 	border: 5pt solid #d0f0d0;
+	border-radius: 5pt;
+}
+#formCurId {
+	display: none;
+	background-color: #ffff80;
+	padding: 5pt; border: 5pt solid #c0c040;
 	border-radius: 5pt;
 }
