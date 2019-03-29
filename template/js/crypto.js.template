@@ -51,18 +51,6 @@ if (getUserFp()) {
 // logged out = create id is shown, current id is hidden
 // this will also enable/disable the restore/copy buttons in the private key form
 function showHideForms() {
-	// the private key form should always be visible, except while the page is loading
-	var formPrivKey = document.getElementById('formprivkey');
-
-    // there should be a private key form, display it if it exists
-	if (formPrivKey) {
-		formPrivKey.style.display = 'block';
-	} else {
-	    // something is wrong, maybe we're on the wrong page
-	    // just give up
-		return;
-	}
-
     // if user fingerprint exists
 	if (getUserFp()) {
 	    //current id form, show it
@@ -77,17 +65,17 @@ function showHideForms() {
 			formCreate.style.display = 'none';
 		}
 
-        // enable the restore id button
-		var restoreIdButton = document.getElementById('restoreid');
-		if (restoreIdButton) {
-			restoreIdButton.disabled = true;
-		}
-
-        // disable the private key button
-		var copyPrivButton = document.getElementById('copypriv');
-		if (copyPrivButton) {
-			copyPrivButton.disabled = false;
-		}
+//        // enable the restore id button
+//		var restoreIdButton = document.getElementById('restoreid');
+//		if (restoreIdButton) {
+//			restoreIdButton.disabled = true;
+//		}
+//
+//        // disable the private key button
+//		var copyPrivButton = document.getElementById('copypriv');
+//		if (copyPrivButton) {
+//			copyPrivButton.disabled = false;
+//		}
 	} else {
 	// else means user is not logged in
 
@@ -103,17 +91,17 @@ function showHideForms() {
 			formCreate.style.display = 'block';
 		}
 
-        // restore button, enable it
-		var restoreIdButton = document.getElementById('restoreid');
-		if (restoreIdButton) {
-			restoreIdButton.disabled = false;
-		}
-
-        // copy private key button, disable it
-		var copyPrivButton = document.getElementById('copypriv');
-		if (copyPrivButton) {
-			copyPrivButton.disabled = true;
-		}
+//        // restore button, enable it
+//		var restoreIdButton = document.getElementById('restoreid');
+//		if (restoreIdButton) {
+//			restoreIdButton.disabled = false;
+//		}
+//
+//        // copy private key button, disable it
+//		var copyPrivButton = document.getElementById('copypriv');
+//		if (copyPrivButton) {
+//			copyPrivButton.disabled = true;
+//		}
 	}
 
     // hide the loading screen if it can be found
@@ -483,11 +471,7 @@ function makePrivateKey(username, bits) {
 
 					saveId();
 
-				 	var iframe = document.createElement("iframe");
-				 	iframe.src = '/write.html#inspubkey';
-				 	iframe.name = "inspubkey"
-				 	iframe.style.display = 'none';
-				 	document.body.appendChild(iframe);
+					sharePubKey();
 
 					//return frames["frame"].location.host;
 
@@ -500,6 +484,14 @@ function makePrivateKey(username, bits) {
 	} else {
 		// sorry, your browser does not support Web Storage...
 	}
+}
+
+function sharePubKey() {
+	var iframe = document.createElement("iframe");
+	iframe.src = '/write.html#inspubkey';
+	iframe.name = "inspubkey"
+	iframe.style.display = 'none';
+	document.body.appendChild(iframe);
 }
 
 function makeKeyFromInputs() {

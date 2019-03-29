@@ -1,3 +1,12 @@
+/* loading */
+.loading {
+	color: green;
+	border: 5pt green solid;
+	border-radius: 10pt;
+	background-color: green;
+	color: white;
+}
+
 /* body and headers */
 body {
 	font-family: courier, monospace;
@@ -227,4 +236,18 @@ label {
     border: 1pt $primaryColor solid;
     border-radius: 5pt;
     padding: 5pt;
+}
+
+#formprivkey {
+	display: none;
+	background-color: #ff8080;
+	padding: 5pt;
+	border: 5pt solid #ffa0a0;
+	border-radius: 5pt;
+}
+#formCreateId {
+	background-color: #c0ffc0;
+	padding: 5pt;
+	border: 5pt solid #d0f0d0;
+	border-radius: 5pt;
 }

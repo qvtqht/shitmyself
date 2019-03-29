@@ -1,3 +1,12 @@
+Adjust avatars: number of asterisks should reflect
+	number of votes/replies/responses the author has attracted
+		* anon = 1+
+		* anon * = 16+
+		** anon * = 128+
+		** anon ** = 1024+
+
+Generate client hash in JS for added fingerprinting
+
 Review feed.pl
 	Fix rss.txt
 
