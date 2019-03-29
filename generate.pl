@@ -894,7 +894,7 @@ sub MakeClonePage {
 		system("git archive --format zip --output html/hike.tmp.zip master");
 		#system("git archive -v --format zip --output html/hike.tmp.zip master");
 
-		system("zip -qr $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log .git/");
 		#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
