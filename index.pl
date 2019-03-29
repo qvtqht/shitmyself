@@ -124,6 +124,10 @@ sub IndexFile {
 		$fingerprint = $gpgResults{'fingerprint'};
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
+		my $detokenedMessage = $message;
+		# this is used to store $message minus any tokens found
+		# in the end, we will see if it is empty, and set flags accordingly
+
 		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
 		# get the file's added time.
 
@@ -216,6 +220,13 @@ sub IndexFile {
 						DBAddItemParent($gitHash, $parentHash);
 						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
 					}
+
+					my $reconLine = '>>$parentHash';
+
+					$message =~ s/$reconLine/$reconLine/;
+					# replace with itself, no change needed
+
+					$detokenedMessage =~ s/$reconLine//;
 				}
 
 				DBAddItemParent('flush');
@@ -242,13 +253,10 @@ sub IndexFile {
 							my $reconLine = "addvouch/$voterId/$voterWt";
 
 							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
+							$detokenedMessage =~ s/$reconLine//g;
 						}
 
-						DBAddVoteWeight('flush');
-
 						DBAddVoteRecord($gitHash, $addedTime, 'type:vouch');
-
-						DBAddVoteRecord('flush');
 					}
 				}
 			}
@@ -281,15 +289,12 @@ sub IndexFile {
 							WriteLog("... $reconLine");
 
 							$message =~ s/$reconLine/[Item $itemHash was added at $itemAddedTime.]/g;
+							$detokenedMessage =~ s/$reconLine//g;
 
 							DBAddItemParent($gitHash, $itemHash);
 						}
 
-						DBAddVoteWeight('flush');
-
 						DBAddVoteRecord($gitHash, $addedTime, 'type:timestamp');
-
-						DBAddVoteRecord('flush');
 					}
 				}
 			}
@@ -322,6 +327,7 @@ sub IndexFile {
 							WriteLog("... $reconLine");
 
 							$message =~ s/$reconLine/[Item $itemHash was added by $itemAddedBy.]/g;
+							$detokenedMessage =~ s/$reconLine//g;
 
 							#DBAddItemParent($gitHash, $itemHash);
 							DBAddItemClient($gitHash, $itemAddedBy);
@@ -330,8 +336,6 @@ sub IndexFile {
 						#DBAddVoteWeight('flush');
 
 						DBAddVoteRecord($gitHash, $addedTime, 'type:device');
-
-						DBAddVoteRecord('flush');
 					}
 				}
 			}
@@ -365,14 +369,9 @@ sub IndexFile {
 
 					my $reconLine = "addevent/$descriptionHash/$eventTime/$eventDuration/$csrf";
 					$message =~ s/$reconLine/[Event: $descriptionHash at $eventTime for $eventDuration]/g; #todo flesh out message
+					$detokenedMessage =~ s/$reconLine//g;
 
 					DBAddVoteRecord ($gitHash, $addedTime, 'type:event');
-
-					DBAddVoteRecord('flush');
-
-					DBAddEventRecord('flush');
-
-					DBAddItemParent('flush');
 				}
 			}
 
@@ -410,12 +409,10 @@ sub IndexFile {
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
 					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
 
+					$detokenedMessage =~ s/$reconLine//g;
+
 					DBAddVoteRecord ($gitHash, $addedTime, 'type:vote');
 				}
-
-				DBAddVoteRecord('flush');
-
-				DBAddItemParent('flush');
 			}
 		}
 
@@ -423,9 +420,17 @@ sub IndexFile {
 			DBAddVoteRecord ($gitHash, $addedTime, 'type:pubkey');;
 
 			DBAddVoteRecord('flush');
+		} else {
+			$detokenedMessage = trim($detokenedMessage);
+			if ($detokenedMessage eq '') {
+				DBAddVoteRecord($gitHash, $addedTime, 'type:notext');
+			} else {
+				DBAddVoteRecord($gitHash, $addedTime, 'type:hastext');
+			}
+
 		}
 
-		if ($message) {
+			if ($message) {
 			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
 			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
@@ -439,6 +444,16 @@ sub IndexFile {
 			DBAddItem ($file, $itemName, '',      $gitHash);
 		}
 	}
+
+	DBAddItem('flush');
+
+	DBAddVoteRecord('flush');
+
+	DBAddEventRecord('flush');
+
+	DBAddItemParent('flush');
+
+	DBAddVoteWeight('flush');
 }
 
 sub MakeIndex {
