@@ -85,13 +85,7 @@
     </p>
 
     <p>
-        <label for=cSb>
-            Activate button<br>
-            only if you are allowed<br>
-            to legally. Thanks.
-            <br>
-            <input id=cSb type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
-        </label>
+        <input id=cSb type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
     </p>
 
     <p>
