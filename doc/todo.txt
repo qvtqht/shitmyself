@@ -1,3 +1,12 @@
+Make JS load more tolerable on slower connections
+	* minify the js (and test)
+	* https://stackoverflow.com/questions/20014933/progress-of-loading-external-js-file
+
+Define default tags for post types
+
+** Fix the bug with messages by new users not being processed correctly **
+	This happens if the message is indexed before the public key
+
 Make the private key form more friendly
 	Disable Copy button when there is no text
 		Also, if there is a different private key in the clipboard

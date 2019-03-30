@@ -466,7 +466,8 @@ sub GetSubmitPage {
 
 		my $scriptInject = GetTemplate('scriptinject.template');
 		my $avatarjs = GetTemplate('js/avatar.js.template');
-		$scriptInject =~ s/\$javascript/$avatarjs/g;
+		my $writeOnLoad = GetTemplate('js/writeonload.js.template');
+		$scriptInject =~ s/\$javascript/$avatarjs$writeOnLoad/g;
 
 		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 

@@ -15,7 +15,11 @@
 </noscript>
 
 <p id=loading class=loading>
-    Loading...
+    <br><br>
+    Loading...<br>
+    <br>
+    Writing, voting, and replying <br>
+    does not require an identity.
     <br><br><br>
 </p>
 
@@ -47,11 +51,11 @@
 
         <p>
             <input type=button value="Repost Public Key" onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
-            &check; Restore your profile if it has gone missing.
+            Restores your profile if missing.
         </p>
 
-        <p>
-            <label for=privKeyC><input type=checkbox id=privKeyC onchange="document.getElementById('formprivkey').style.display=(this.checked ? 'block' : 'none');window.open('#pka','_self');">Show private key</label>
+        <p id=def>
+            <label for=privKeyC><input type=checkbox id=privKeyC onchange="document.getElementById('formprivkey').style.display=(this.checked ? 'block' : 'none');">Show private key</label>
         </p>
 
         <span id=formprivkey name=formprivkey style="display:none">
@@ -61,10 +65,12 @@
                 &check; If you lose it, it's gone. Make a new one.
             </p>
 
-            <input type=button id=restoreid value="Restore Identity" onclick="saveId();sharePubKey();">
-            <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br>
-            <textarea cols=61 rows=16 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
-            <a name=pka id=pka></a>
+            <p>
+                <input type=button id=restoreid value="Restore Identity" onclick="saveId();sharePubKey();">
+                &amp;
+                <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br><br>
+                <textarea cols=61 rows=16 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
+            </p>
 
         </span>
 
@@ -107,7 +113,7 @@ $gpg2Algochoices
         </label>
     </p>
 
-    <p>
+    <p id=abc>
         &check; Generate an identity, also known as key pair<br>
         &check; Store your <u>private key</u> in your browser/device<br>
         &check; Publish your <u>public key</u>, including your name<br>

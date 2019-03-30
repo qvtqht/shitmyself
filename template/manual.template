@@ -31,7 +31,13 @@
 
 <a name=gpg><h3>How to use GPG</h3></a>
 
-<p>To use GPG, you will need to download a special program or app.</p>
+<p>You will need to <u>generate a key</u> and then <u>sign your messages</u>. Piece of cake.</p>
+
+<h4>Read This First</h4>
+
+<p>GnuPG<br><a href="https://www.gnupg.org/">https://www.gnupg.org/</a></p>
+
+<p>Read the GnuPG home page to familiarize yourself.</p>
 
 <h4>Android</h4>
 
@@ -48,10 +54,6 @@
 <h4>Microsoft Windows</h4>
 
 <p>Gpg4Win<br><a href="https://www.gpg4win.org/">https://www.gpg4win.org/</a></p>
-
-<h4>Linux and Command Line</h4>
-
-<p>GnuPG<br><a href="https://www.gnupg.org/">https://www.gnupg.org/</a></p>
 
 <h4>More Options</h4>
 

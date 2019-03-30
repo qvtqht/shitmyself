@@ -584,7 +584,7 @@ function insVotes() {
 	}
 }
 
-function writeOnload() {
+function writeOnload2() {
 	if (window.location.hash) {
 		if (window.location.hash == '#inspubkey') {
 			insPubKey();

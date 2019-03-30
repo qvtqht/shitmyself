@@ -1,1 +1,1 @@
-<label class=fckchrm for=$fileHash_$voteValue><table style=display:inline><tr><td><input type=checkbox name="addvote/$fileHash/$ballotTime/$voteValue/$checksum" id=$fileHash_$voteValue>$voteValue</td></tr></table></label>
+<label class=fckchrm for=$fileHash_$voteValue><input type=checkbox name="addvote/$fileHash/$ballotTime/$voteValue/$checksum" id=$fileHash_$voteValue>$voteValue</label>
