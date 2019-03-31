@@ -598,9 +598,10 @@ sub IsAdmin {
 		return 0;
 	}
 
-	my $adminKey = GetAdminKey();
-
-	if ($adminKey eq $key) {
+#	my $adminKey = GetAdminKey();
+#
+#	if ($adminKey eq $key) {
+	if ($key eq GetAdminKey() || $key eq GetServerKey()) {
 		return 1;
 	} else {
 		return 0;

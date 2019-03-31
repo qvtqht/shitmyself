@@ -270,19 +270,20 @@ sub GetIndexPage {
 				$itemTemplate =~ s/\$replyCount//g;
 			}
 
+			if (index($itemTemplate, '$votesSummary')) {
+			#only make the votes summary if the template needs it
+				#this displays the vote summary (tags applied and counts)
+				my $votesSummary = '';
+				my %voteTotals = DBGetItemVoteTotals($fileHash);
 
-			#todo templatize this
-			#this displays the vote summary (tags applied and counts)
-			my $votesSummary = '';
-			my %voteTotals = DBGetItemVoteTotals($fileHash);
-
-			foreach my $voteTag (keys %voteTotals) {
-				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+				foreach my $voteTag (keys %voteTotals) {
+					$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+				}
+				if ($votesSummary) {
+					$votesSummary = '<p>' . $votesSummary . '</p>';
+				}
+				$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 			}
-			if ($votesSummary) {
-				$votesSummary = '<p>' . $votesSummary . '</p>';
-			}
-			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 			#
 			#end of tag summary display
 
