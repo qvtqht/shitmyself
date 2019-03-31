@@ -228,6 +228,45 @@ sub IndexFile {
 
 					$detokenedMessage =~ s/$reconLine//;
 				}
+			}
+		}
+
+		# look for hash tags
+		if ($message) {
+			my @hashTags = ( $message =~ m/^\#([a-zA-Z]+)/mg );
+
+			if (@hashTags) {
+				while(@hashTags) {
+					my $hashTag = shift @hashTags;
+
+					if ($hashTag) { #todo add sanity checks here
+						DBAddVoteRecord($gitHash, $addedTime, $hashTag);
+					}
+				}
+			}
+		}
+
+		# look for quoted message ids
+		if ($message) {
+			# >> token
+			my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
+
+			if (@replyLines) {
+				while(@replyLines) {
+					my $parentHash = shift @replyLines;
+
+					if (IsSha1($parentHash)) {
+						DBAddItemParent($gitHash, $parentHash);
+						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
+					}
+
+					my $reconLine = '>>$parentHash';
+
+					$message =~ s/$reconLine/$reconLine/;
+					# replace with itself, no change needed
+
+					$detokenedMessage =~ s/$reconLine//;
+				}
 
 				DBAddItemParent('flush');
 			}
@@ -418,8 +457,6 @@ sub IndexFile {
 
 		if ($alias) {
 			DBAddVoteRecord ($gitHash, $addedTime, 'type:pubkey');;
-
-			DBAddVoteRecord('flush');
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 			if ($detokenedMessage eq '') {
