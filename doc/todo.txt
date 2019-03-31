@@ -1,3 +1,9 @@
+Fix the &replyto= getting appended to the message
+	On anon reply messages
+
+Make item IDs shorter
+	Prevent collisions
+
 Make JS load more tolerable on slower connections
 	* minify the js (and test)
 	* https://stackoverflow.com/questions/20014933/progress-of-loading-external-js-file
