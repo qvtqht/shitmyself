@@ -16,6 +16,23 @@ require './sqlite.pl';
 
 my $HTMLDIR = "html";
 
+
+sub GenerateSomeKindOfPage {
+	my $pageName = shift;
+
+	#todo is $pageName in list of allowed pages?
+
+	# home
+	# write
+	# about
+	# abyss
+	# index
+	# tags list
+	# items for tag
+	# more complicated query
+	#
+}
+
 sub GetAuthorLink {
 	my $gpgKey = shift;
 
@@ -69,8 +86,9 @@ sub GetItemPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	$file{'vote_buttons'} = 1;
+	#$file{'vote_buttons'} = 1;
 	$file{'display_full_hash'} = 1;
+	$file{'show_vote_summary'} = 1;
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
@@ -92,6 +110,9 @@ sub GetItemPage {
 			foreach my $replyVar ($replyItem) {
 				WriteLog($replyVar);
 			}
+
+			$$replyItem{'template_name'} = 'item-small.template';
+			WriteLog('$$replyItem{\'template_name\'} = ' . $$replyItem{'template_name'});
 
 			my $replyTemplate = GetItemTemplate($replyItem);
 
@@ -199,6 +220,7 @@ sub GetItemTemplate {
 	# add_timestamp = time file was added as unix_time #todo
 	# child_count = number of replies
 	# display_full_hash = display full hash for file
+	# template_name = item.template by default
 
 	my %file = %{shift @_};
 
@@ -250,14 +272,18 @@ sub GetItemTemplate {
 		$alias = HtmlEscape($alias);
 
 		my $itemTemplate = '';
-		if (length($message) > GetConfig('item_long_threshold')) {
-			$itemTemplate = GetTemplate("itemlong.template");
+		if ($file{'template_name'}) {
+			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
-			$itemTemplate = GetTemplate("item.template");
-		}
+			if (length($message) > GetConfig('item_long_threshold')) {
+				$itemTemplate = GetTemplate("itemlong.template");
+			} else {
+				$itemTemplate = GetTemplate("item.template");
+			}
 
-		if ($file{'vote_buttons'}) {
-			$itemTemplate = $itemTemplate . GetTemplate("itemvote.template");
+			if ($file{'vote_buttons'}) {
+				$itemTemplate = $itemTemplate . GetTemplate("itemvote.template");
+			}
 		}
 
 		my $itemClass = "txt";
@@ -319,20 +345,27 @@ sub GetItemTemplate {
 			$itemTemplate =~ s/\$replyCount//g;
 		}
 
-		#todo templatize this
-		#this displays the vote summary (tags applied and counts)
-		my $votesSummary = '';
-		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+		if ($file{'show_vote_summary'}) {
+			#todo templatize this
+			#this displays the vote summary (tags applied and counts)
+			my $votesSummary = '';
+			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 
-		foreach my $voteTag (keys %voteTotals) {
-			$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+			my $specialTag = 'textart';
+
+			foreach my $voteTag (keys %voteTotals) {
+				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+			}
+			if ($votesSummary) {
+				$votesSummary = '<p>' . $votesSummary . '</p>';
+			}
+			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
+			#
+			#end of tag summary display
+		} else {
+			$itemTemplate =~ s/\$votesSummary//g;
 		}
-		if ($votesSummary) {
-			$votesSummary = '<p>' . $votesSummary . '</p>';
-		}
-		$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
-		#
-		#end of tag summary display
+
 
 
 		WriteLog("Call to GetVoterTemplate() :309");
@@ -411,6 +444,8 @@ sub GetPageHeader {
 	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetTemplate("style.template");
 
+	#$styleSheet =~ s/\w\w/ /g;
+
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
@@ -475,21 +510,17 @@ sub GetVoterTemplate {
 	state $voteButtonsTemplate;
 
 	if (!defined($voteButtonsTemplate)) {
-		my $tagsList = GetConfig('tags');
-		my $tags2List = GetConfig('tags2');
-		my $johariList = GetConfig('johari');
-		my $rhetoricList = GetConfig('rhetoric');
-		my $flagsList = GetConfig('flags');
+		my @tagsListList = qw(tags tags2 johari nohari rhetoric emotions flags);
+		my @voteValues;
 
-		chomp $tagsList;
-		chomp $tags2List;
-		chomp $johariList;
-		chomp $rhetoricList;
-		chomp $flagsList;
-
-		my @voteValues = split("\n", $tagsList . "\n--\n" . $tags2List . "\n--\n" . $johariList . "\n--\n" . $rhetoricList . "\n--\n" . $flagsList);
-
-		$flagsList = "\n" . $flagsList . "\n";
+		foreach (@tagsListList) {
+			if (scalar(@voteValues)) {
+				push @voteValues, '--';
+			}
+			my $tagsList = GetConfig($_);
+			chomp $tagsList;
+			push @voteValues, split("\n", $tagsList);
+		}
 
 		foreach my $tag (@voteValues) {
 			if ($tag eq '--') {
@@ -665,84 +696,86 @@ sub GetReadPage {
 			WriteLog('GetTemplate("item.template") 2');
 			my $itemTemplate = '';
 			if ($message) {
-				if (length($message) > GetConfig('item_long_threshold')) {
-					$itemTemplate = GetTemplate("itemlong.template");
-				}
-				else {
-					$itemTemplate = GetTemplate("item.template");
-				}
+				$itemTemplate = GetItemTemplate($row);
 
-				my $itemClass = "txt $signedCss";
-
-				my $authorUrl;
-				my $authorAvatar;
-				my $authorLink;
-
-				if ($gpgKey) {
-					$authorUrl = "/author/$gpgKey/";
-					$authorAvatar = GetAvatar($gpgKey);
-
-					$authorLink = GetTemplate('authorlink.template');
-
-					$authorLink =~ s/\$authorUrl/$authorUrl/g;
-					$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-				}
-				else {
-					$authorLink = "";
-				}
-				my $permalinkTxt = $file;
-				#$permalinkTxt =~ s/^\.//;
-				$permalinkTxt =~ s/html\//\//g;
-
-				my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
-
-				my $itemText = FormatForWeb($message);
-
-				$itemText =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
-				#todo verify that the items exist before turning them into links,
-				# so that we don't end up with broken links
-
-				my $fileHash = GetFileHash($file);
-				my $itemName = substr($gitHash, 0, 8) . '..';
-				my $ballotTime = time();
-				my $replyCount = $row->{'child_count'};
-
-				my $borderColor = '#' . substr($fileHash, 0, 6);
-
-				$itemTemplate =~ s/\$borderColor/$borderColor/g;
-				$itemTemplate =~ s/\$itemClass/$itemClass/g;
-				$itemTemplate =~ s/\$authorLink/$authorLink/g;
-				$itemTemplate =~ s/\$itemName/$itemName/g;
-				$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-				$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-				$itemTemplate =~ s/\$itemText/$itemText/g;
-				$itemTemplate =~ s/\$fileHash/$fileHash/g;
-
-				if ($replyCount) {
-					$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
-				} else {
-					$itemTemplate =~ s/\$replyCount//g;
-				}
-
-				#todo templatize this
-				#this displays the vote summary (tags applied and counts)
-				my $votesSummary = '';
-				my %voteTotals = DBGetItemVoteTotals($fileHash);
-
-				foreach my $voteTag (keys %voteTotals) {
-					$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
-				}
-				if ($votesSummary) {
-					$votesSummary = '<p>' . $votesSummary . '</p>';
-				}
-				$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
-				#
-				#end of tag summary display
-
-
-				WriteLog("Call to GetVoterTemplate() :881");
-				my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-				$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
+#				if (length($message) > GetConfig('item_long_threshold')) {
+#					$itemTemplate = GetTemplate("itemlong.template");
+#				}
+#				else {
+#					$itemTemplate = GetTemplate("item.template");
+#				}
+#
+#				my $itemClass = "txt $signedCss";
+#
+#				my $authorUrl;
+#				my $authorAvatar;
+#				my $authorLink;
+#
+#				if ($gpgKey) {
+#					$authorUrl = "/author/$gpgKey/";
+#					$authorAvatar = GetAvatar($gpgKey);
+#
+#					$authorLink = GetTemplate('authorlink.template');
+#
+#					$authorLink =~ s/\$authorUrl/$authorUrl/g;
+#					$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+#				}
+#				else {
+#					$authorLink = "";
+#				}
+#				my $permalinkTxt = $file;
+#				#$permalinkTxt =~ s/^\.//;
+#				$permalinkTxt =~ s/html\//\//g;
+#
+#				my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+#
+#				my $itemText = FormatForWeb($message);
+#
+#				$itemText =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
+#				#todo verify that the items exist before turning them into links,
+#				# so that we don't end up with broken links
+#
+#				my $fileHash = GetFileHash($file);
+#				my $itemName = substr($gitHash, 0, 8) . '..';
+#				my $ballotTime = time();
+#				my $replyCount = $row->{'child_count'};
+#
+#				my $borderColor = '#' . substr($fileHash, 0, 6);
+#
+#				$itemTemplate =~ s/\$borderColor/$borderColor/g;
+#				$itemTemplate =~ s/\$itemClass/$itemClass/g;
+#				$itemTemplate =~ s/\$authorLink/$authorLink/g;
+#				$itemTemplate =~ s/\$itemName/$itemName/g;
+#				$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
+#				$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+#				$itemTemplate =~ s/\$itemText/$itemText/g;
+#				$itemTemplate =~ s/\$fileHash/$fileHash/g;
+#
+#				if ($replyCount) {
+#					$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
+#				} else {
+#					$itemTemplate =~ s/\$replyCount//g;
+#				}
+#
+#				#todo templatize this
+#				#this displays the vote summary (tags applied and counts)
+#				my $votesSummary = '';
+#				my %voteTotals = DBGetItemVoteTotals($fileHash);
+#
+#				foreach my $voteTag (keys %voteTotals) {
+#					$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+#				}
+#				if ($votesSummary) {
+#					$votesSummary = '<p>' . $votesSummary . '</p>';
+#				}
+#				$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
+#				#
+#				#end of tag summary display
+#
+#
+#				WriteLog("Call to GetVoterTemplate() :881");
+#				my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+#				$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 			} else {
 				$itemTemplate = '<hr>Problem decoding message</hr>';
 				WriteLog('Something happened and there is no $message where I expected it... Oh well, moving on.');

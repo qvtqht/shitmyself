@@ -85,6 +85,13 @@ div.txt {
 	border-radius: 10pt;
 	padding-left: 1em;
 }
+div.reply {
+	border-top: 3px dotted $primaryColor;
+	border-left: 3px dotted $primaryColor;
+	margin-left: 5%;
+	padding-left: 1em; width: 85%;
+	border-radius: 10pt;
+}
 .admin {
 	background: repeating-linear-gradient(
 		135deg,
