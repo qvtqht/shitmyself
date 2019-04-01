@@ -501,11 +501,12 @@ function makePrivateKey(username, bits) {
 }
 
 function sharePubKey() {
-	var iframe = document.createElement("iframe");
-	iframe.src = '/write.html#inspubkey';
-	iframe.name = "inspubkey"
-	iframe.style.display = 'none';
-	document.body.appendChild(iframe);
+//	var iframe = document.createElement("iframe");
+//	iframe.src = '/write.html#inspubkey';
+//	iframe.name = "inspubkey"
+//	iframe.style.display = 'none';
+//	document.body.appendChild(iframe);
+	window.open('/write.html#inspubkey', '_self');
 }
 
 function makeKeyFromInputs() {
