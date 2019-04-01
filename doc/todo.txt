@@ -1,3 +1,15 @@
+Current Priorities
+==================
+Instant updates
+	PHP shim to trigger the scripts
+	gitflow.pl working including page updates
+	Client-side DOM fill-in
+Nicer-looking threading
+	Two-level thread nesting
+	"Reply" buttons on the item page and the child items
+
+
+
 Fix the &replyto= getting appended to the message
 	On anon reply messages
 
