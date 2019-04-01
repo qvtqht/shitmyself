@@ -89,6 +89,7 @@ sub GetItemPage {
 	#$file{'vote_buttons'} = 1;
 	$file{'display_full_hash'} = 1;
 	$file{'show_vote_summary'} = 1;
+	$file{'vote_buttons'} = 1;
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
@@ -158,33 +159,14 @@ sub GetItemPage {
 		$txtIndex .= $replyForm;
 	}
 
-	#	# Get votes in the database for the current file
-	#	my @itemVotes = DBGetVotesForItem($file{'file_hash'});
+	if ($file{'vote_buttons'}) {
+		my $ballotTime = time();
+		$txtIndex .= GetTemplate("itemvote.template");
 
-	#	my $recentVotesTable = DBGetVotesTable($file{'file_hash'});
-	#	my $signedVotesTable = '';
+		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+		$txtIndex =~ s/\$voterButtons/$voterButtons/g;
+	}
 
-	#	my $recentVotesData = Data::Dumper->Dump($recentVotesTable);
-	#
-	#	$txtIndex .= $recentVotesData;
-
-	#	$txtIndex .= $file{'file_hash'};
-
-	#	if (defined($recentVotesTable) && $recentVotesTable) {
-	#		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-	#		my $votesSummary = "";
-	#		foreach my $voteValue (keys %voteTotals) {
-	#			$votesSummary .= "$voteValue (" . $voteTotals{$voteValue} . ")\n";
-	#		}
-	#		my $voteRetention = GetConfig('vote_limit');
-	#		$voteRetention = ($voteRetention / 86400) . " days";
-	#
-	#		my $recentVotesTemplate = GetTemplate('item/recent_votes.template');
-	#		$recentVotesTemplate =~ s/\$votesSummary/$votesSummary/;
-	#		$recentVotesTemplate =~ s/\$recentVotesTable/$recentVotesTable/;
-	#		$recentVotesTemplate =~ s/\$voteRetention/$voteRetention/;
-	#		$txtIndex .= $recentVotesTemplate;
-	#	}
 
 	# end page with footer
 	$txtIndex .= GetPageFooter();
@@ -290,10 +272,6 @@ sub GetItemTemplate {
 			} else {
 				$itemTemplate = GetTemplate("item.template");
 			}
-
-			if ($file{'vote_buttons'}) {
-				$itemTemplate = $itemTemplate . GetTemplate("itemvote.template");
-			}
 		}
 
 		my $itemClass = "txt";
@@ -335,7 +313,6 @@ sub GetItemTemplate {
 			$itemName = substr($fileHash, 0, 8) . '..';
 		}
 
-		my $ballotTime = time();
 		my $replyCount = $file{'child_count'};
 
 		my $borderColor = '#' . substr($fileHash, 0, 6);
@@ -375,10 +352,6 @@ sub GetItemTemplate {
 		} else {
 			$itemTemplate =~ s/\$votesSummary//g;
 		}
-
-		WriteLog("Call to GetVoterTemplate() :309");
-		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-		$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
 
 		return $itemTemplate;
 	}
