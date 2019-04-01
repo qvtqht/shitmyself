@@ -1,0 +1,6 @@
+<!-- item-small.template -->
+<div style="border-color: $borderColor" class=reply>
+<p>$itemText</p>
+<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink $replyCount</p>
+</div>
+<!-- / item-small.template -->
