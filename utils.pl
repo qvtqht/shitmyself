@@ -822,14 +822,17 @@ sub GpgParse {
 		# Encrypted messages begin with this header
 		my $gpg_encrypted_header = "-----BEGIN PGP MESSAGE-----";
 
-		# This is where we check for a GPG signed message and sort it accordingly
-		#########################################################################
+		###########################################################################
+		## Below where we check for a GPG signed message and sort it accordingly ##
+		###########################################################################
 
 		my $trimmedTxt = trim($txt);
 
 		my $verifyError = 0;
 
-		# If there is an encrypted message header...
+		######################
+		## ENCRYPTED MESSAGE
+		##
 		if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
 			WriteLog("$gpgCommand --batch --list-only --status-fd 1 \"$filePath\"");
 			my $gpg_result = `$gpgCommand --batch --list-only --status-fd 1 "$filePath"`;
@@ -859,7 +862,9 @@ sub GpgParse {
 			}
 		}
 
-		# If there is a GPG pubkey header...
+		###############
+		## PUBLIC KEY
+		##
 		if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
 			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\"");
 			my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath"`;
@@ -886,6 +891,8 @@ sub GpgParse {
 			foreach (split("\n", $gpg_result)) {
 				chomp;
 				WriteLog('$gpgCommand is "' . $gpgCommand . '"');
+
+				# gpg 1
 				if ($gpgCommand eq 'gpg') {
 					WriteLog('$gpgCommand is gpg');
 					if (substr($_, 0, 4) eq 'pub ') {
@@ -901,6 +908,8 @@ sub GpgParse {
 						$alias =~ s/\s+$//;
 					}
 				}
+
+				# gpg 2
 				elsif ($gpgCommand eq 'gpg2') {
 					WriteLog('$gpgCommand is gpg2');
 					WriteLog('@@' . $_);
@@ -928,6 +937,7 @@ sub GpgParse {
 				}
 			}
 
+			# Public key confirmed, tell 'em
 			if ($alias && $gpg_key) {
 				$message = "Welcome, $alias\nFingerprint: $gpg_key";
 			}
@@ -935,16 +945,15 @@ sub GpgParse {
 			$isSigned = 1;
 		}
 
-		# If there is a GPG signed message header...
+		#######################
+		## GPG SIGNED MESSAGE
+		##
 		if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 			# Verify the file by using command-line gpg
 			# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
 			WriteLog("$gpgCommand --verify --status-fd 1 \"$filePath\"\n");
 			my $gpg_result = `$gpgCommand --verify --status-fd 1 "$filePath"`;
 			WriteLog($gpg_result);
-
-			#WriteLog($gpg_result);
-			#die();
 
 			my $key_id_prefix;
 			my $key_id_suffix;
@@ -984,8 +993,6 @@ sub GpgParse {
 				WriteLog("$gpgCommand --decrypt \"$filePath\"\n");
 				$message = `$gpgCommand --decrypt "$filePath"`;
 
-				#$message = trim($message);
-
 				$isSigned = 1;
 
 				#$fingerprint = GetGpgFingerprint($filePath); #todo
@@ -1022,14 +1029,7 @@ sub EncryptMessage {
 	# file path
 	chomp($targetKey);
 
-
-
-#	For example:
-#
-#	gpg --primary-keyring temporary.gpg --import key.asc
-#		gpg --primary-keyring temporary.gpg --recipient 0xDEADBEEF --encrypt
-#		rm ~/.gnupg/temporary.gpg # can be omitted, not loaded by default
-
+	#todo
 }
 
 sub AddItemToConfigList {
