@@ -103,7 +103,7 @@ sub GetItemPage {
 
 		WriteLog('@itemReplies = ' . @itemReplies);
 
-		$txtIndex .= "<hr>";
+		#$txtIndex .= "<hr>";
 
 		foreach my $replyItem (@itemReplies) {
 			WriteLog('$replyItem: ' . $replyItem);
@@ -112,6 +112,8 @@ sub GetItemPage {
 			}
 
 			$$replyItem{'template_name'} = 'item-small.template';
+			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
+
 			WriteLog('$$replyItem{\'template_name\'} = ' . $$replyItem{'template_name'});
 
 			my $replyTemplate = GetItemTemplate($replyItem);
@@ -221,6 +223,7 @@ sub GetItemTemplate {
 	# child_count = number of replies
 	# display_full_hash = display full hash for file
 	# template_name = item.template by default
+	# remove_token = token to remove (for reply tokens)
 
 	my %file = %{shift @_};
 
@@ -250,6 +253,13 @@ sub GetItemTemplate {
 			$message = GetFile($messageCacheName);
 		} else {
 			$message = GetFile($file{'file_path'});
+		}
+
+		if ($file{'remove_token'}) {
+			$message =~ s/$file{'remove_token'}//g;
+			$message = trim($message);
+			#todo there is a bug here, but it is less significant than the majority of cases
+			#todo make it so that post does not need to be trimmed, but extra \n\n after the token is removed
 		}
 
 		$message = FormatForWeb($message);
@@ -365,8 +375,6 @@ sub GetItemTemplate {
 		} else {
 			$itemTemplate =~ s/\$votesSummary//g;
 		}
-
-
 
 		WriteLog("Call to GetVoterTemplate() :309");
 		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
