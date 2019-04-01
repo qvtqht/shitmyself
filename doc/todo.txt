@@ -9,6 +9,7 @@ Nicer-looking threading
 	"Reply" buttons on the item page and the child items
 
 
+Bug: When there are 0 items, top menu is not populated with avatar
 
 Fix the &replyto= getting appended to the message
 	On anon reply messages

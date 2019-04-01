@@ -260,6 +260,21 @@ sub ProcessAccessLog {
 
 				# If there is a message...
 				if ($message) {
+#					my $replyUrlToken = ( $message=~ m/&replyto=(0-9a-f){40}/ );
+#					my $newReplyToken = '';
+#
+#					if ($replyUrlToken) {
+#						$newReplyToken =~ s/^&replyto=/>>/;
+#					}
+					my $replyToPos = index($message, '&replyto=');
+					my $replyToId;
+					if ($replyToPos) {
+						if (length($message) == ($replyToPos + length('&replyto=') + 40)) {
+							$replyToId = substr($message, ($replyToPos + length('&replyto=')));
+							my $replaceText = "&replyto=$replyToId";
+							$message =~ s/$replaceText//;
+						}
+					}
 
 					# Unpack from URL encoding, probably exploitable :(
 					$message =~ s/\+/ /g;
@@ -269,6 +284,19 @@ sub ProcessAccessLog {
 					$message =~ s/\&(.+)=on/\n-- \n$1/g;
 					$message =~ s/=on\&/\n/g;
 					#is this dangerous?
+
+					if ($replyToId) {
+						if (!($message =~ /\>\>$replyToId/)) {
+							$message .= "\n\n>>$replyToId";
+						}
+					}
+
+#					if ($replyUrlToken) {
+#						$message = s/$replyUrlToken//;
+##						if (index($message, $newReplyToken) >= 0) {
+#							$message = $newReplyToken . "\n\n" . $message;
+##						}
+#					}
 
 					# Look for a reference to a parent message in the footer
 					# This would come from the hidden variable on the reply form
