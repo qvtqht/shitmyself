@@ -1,0 +1,9 @@
+Known Issues
+============
+
+I don't know how to package libs correctly so that they are part of the repo, but do not conflict with the installed system libs.
+
+	I think it has something to do with some kind of binary attachments that come with the .pm files 
+	and/or version conflicts
+
+
