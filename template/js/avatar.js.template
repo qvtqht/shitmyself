@@ -1,7 +1,7 @@
 
 // just the avatar, please
 
-if (window.localStorage) {
+function setAva() {
 	var myidBox = document.getElementById('myid');
 	var signinBox = document.getElementById('signin');
 
@@ -9,11 +9,11 @@ if (window.localStorage) {
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/identity.html">Identity</a>';
+			signinBox.innerHTML = '<a href="/identity.html">Login</a>';
 		} else {
 		    signinBox.innerHTML = '';
 			var myFp = localStorage.getItem('fingerprint');
-			myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a>';
+			myidBox.innerHTML = '<a href="/identity.html" class=avatar>' + myAvatar + '</a>';
 
 //            var script = document.createElement('script');
 //            script.src = '/openpgp.js';
@@ -27,4 +27,7 @@ if (window.localStorage) {
 
 		}
 	}
+}
+if (window.localStorage && document.getElementById) {
+	setAva();
 }

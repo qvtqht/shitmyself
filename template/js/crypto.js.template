@@ -381,35 +381,36 @@ function saveId() {
 		var myidBox = document.getElementById('myid');
 		if (myidBox) {
 			var myAvatar = localStorage.getItem('avatar');
+			var signinBox = document.getElementById('signin');
 
-            if (myAvatar == null || myAvatar.length == 0) {
-            	if ( !document.getElementById("privatekey")) {
-						signinBox.innerHTML = '<a href="/identity.html">Identity</a>';
-					}
-            } else {
-					signinBox.innerHTML = '';
+			if (myAvatar == null || myAvatar.length == 0) {
+				if ( !document.getElementById("privatekey")) {
+					signinBox.innerHTML = '<a href="/identity.html">Login</a>';
+				}
+			} else {
+				signinBox.innerHTML = '';
 
-					var myFp = localStorage.getItem('fingerprint');
+				var myFp = localStorage.getItem('fingerprint');
 
-					myidBox.innerHTML = '<a class=avatar href="/author/' + myFp + '/">' + myAvatar + '</a>' +	' <a href="/identity.html">Settings</a>';
+				myidBox.innerHTML = '<a href="/identity.html" class=avatar>' + myAvatar + '</a>';
 
-					var myId2 = document.getElementById('myId2');
-					if (myId2) {
-						myId2.innerHTML = getAvatar();
-					}
+				var myId2 = document.getElementById('myId2');
+				if (myId2) {
+					myId2.innerHTML = getAvatar();
+				}
 
-					var myCrea = document.getElementById('myCrea');
-					if (myCrea) {
-						myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
-					}
+				var myCrea = document.getElementById('myCrea');
+				if (myCrea) {
+					myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+				}
 
-					var myFinger = document.getElementById('myFP');
-					if (myFinger) {
-						myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-					}
-            }
+				var myFinger = document.getElementById('myFP');
+				if (myFinger) {
+					myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+				}
+			}
 
-            showHideForms();
+			showHideForms();
 	    }
     }
 }
