@@ -1,5 +1,11 @@
 #!/usr/bin/perl
 
+# the purpose of this script is to
+#   find new items in html/txt
+#   run IndexFile() on them
+#   re-generate affected pages
+#		via the page_touch table
+
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -17,37 +23,79 @@ require './pages.pl';
 
 WriteLog('gitflow.pl begin');
 
+# store the last time we did this from config/gitflow_last
+my $lastFlow = GetConfig('gitflow_last');
+
+WriteLog('$lastFlow = ' . $lastFlow);
+
 # get the path of access log, usually log/access.log
 my $accessLogPath = GetConfig('access_log_path');
 WriteLog("\$accessLogPath = $accessLogPath");
 
+# this will store the new item count we get from access.log
+my $newItemCount;
+
+# time limit
+my $timeLimit = GetConfig('gitflow_time_limit');
+my $startTime = time();
+#todo validation
+
 # Check to see if access log exists
 if (-e $accessLogPath) {
 	#Process the access log (access.pl)
-	my $newItemCount = ProcessAccessLog($accessLogPath, 0);
+	$newItemCount += ProcessAccessLog($accessLogPath, 0);
 
 	WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
 } else {
 	WriteLog("WARNING: Could not find $accessLogPath");
 }
 
+# check if html/txt/ has its own git repository
+# init a new repo in html/txt/ if html/txt/.git/ is missing
+if (!-e 'html/txt/.git') {
+	my $pwd = `pwd`;
+
+	WriteLog("cd html/txt; git init; cd $pwd");
+
+	my $gitOutput = `cd html/txt; git init; cd $pwd`;
+
+	WriteLog($gitOutput);
+}
+
 # Use git to find files that have changed in txt/ directory
 my $gitChanges = `cd html/txt; git add . ; git status --porcelain | grep "^A" | cut -c 4-; cd ../..`;
+
+WriteLog('$gitChanges = ' . $gitChanges);
 
 # Get an array of changed files that git returned
 my @gitChangesArray = split("\n", $gitChanges);
 
-# We don't need to run generate.pl unless something has changed,
-# which we will check for below
-# use $runGeneratePl to keep track of it.
-my $runGeneratePl = 0;
+WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
+
+my $filesLimit = GetConfig('gitflow_file_limit');
+if (!$filesLimit) {
+	WriteLog("WARNING: config/gitflow_file_limit missing!");
+	$filesLimit = 100;
+}
+my $filesProcessed = 0;
 
 foreach my $file (@gitChangesArray) {
+	$filesProcessed++;
+	if ($filesProcessed > $filesLimit) {
+		WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+		last;
+	}
+
+	if ((time() - $startTime) > $timeLimit) {
+		WriteLog("Time limit reached, exiting loop");
+		last;
+	}
+
 	# Trim the file path
 	$file = trim($file);
 
 	# Add the txt/ path prefix
-	my $fileFullPath = "html/txt/" . $file;
+	my $fileFullPath = 'html/txt/' . $file;
 
 	# Log it
 	WriteLog('$file = ' . $file . " ($fileFullPath)");
@@ -58,48 +106,174 @@ foreach my $file (@gitChangesArray) {
 	if (-e $fileFullPath && !-d $fileFullPath) {
 		my $addedTime = time();
 
-		IndexFile($fileFullPath);
-		IndexFile('flush');
-
+		# get file's hash from git
 		my $fileHash = GetFileHash($fileFullPath);
 
-		DBAddAddedTimeRecord($fileHash, $addedTime);
-
-		WriteLog("cd html/txt; git add \"$file\"; git commit -m hi \"$file\"; cd -");
-		my $gitCommit = `cd html/txt; git add "$file"; git commit -m hi "$file"; cd -`;
-
-		WriteLog($gitCommit);
-
-		my %queryParams;
-		$queryParams{'where_clause'} = "WHERE file_hash = '$fileHash'";
-
-		my @files = DBGetItemList(\%queryParams);
-
-		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
-
-		foreach my $file (@files) {
-			my $itemPage = GetItemPage($file);
-			#todo update this to use /ab/cdefgh... convention
-
-			PutHtmlFile("html/$fileHash.html", $itemPage);
-		}
-
-#		my $htmlFilename = $fileHash . ".html";
-#		my $filePage = GetItemPage($fileHash);
-
+		# if deletion of this file has been requested, skip
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+			unlink($fileFullPath);
 			WriteLog("gitflow.pl: $fileHash exists in deleted.log, skipping");
 			next;
 		}
 
-		#my $newFile = DBGetItemList()
+		# index file, flush immediately (why? #todo)
+		IndexFile($fileFullPath);
+		IndexFile('flush');
 
-		$runGeneratePl = 1;
+		# add a time_added record
+		DBAddAddedTimeRecord($fileHash, $addedTime);
+
+		# remember pwd (current working directory);
+		my $pwd = `pwd`;
+
+		# run commands to
+		#	  add changed file to git repo
+		#    commit the change with message 'hi' #todo
+		#    cd back to pwd
+		WriteLog("cd html/txt; git add \"$file\"; git commit -m hi \"$file\"; cd $pwd");
+		my $gitCommit = `cd html/txt; git add "$file"; git commit -m hi "$file"; cd $pwd`;
+
+		# write git's output to log
+		WriteLog($gitCommit);
+
+#		# below is for debugging purposes
+#
+#		my %queryParams;
+#		$queryParams{'where_clause'} = "WHERE file_hash = '$fileHash'";
+#
+#		my @files = DBGetItemList(\%queryParams);
+#
+#		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
 	} else {
-		WriteLog("Strange... $file doesn't exist? Oh well...");
+		# this should not happen
+		WriteLog("Error! $fileFullPath doesn't exist!");
 	}
 }
 
-if ($runGeneratePl) {
-	#system('perl generate.pl');
+# get a list of pages that have been touched since the last git_flow
+# this is from the page_touch table
+my $touchedPages = DBGetTouchedPages($lastFlow);
+
+# de-reference array of touched pages
+my @touchedPagesArray = @$touchedPages;
+
+# write number of touched pages to log
+WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
+
+my $pagesLimit = GetConfig('gitflow_page_limit');
+if (!$pagesLimit) {
+	WriteLog("WARNING: config/gitflow_page_limit missing!");
+	$pagesLimit = 100;
 }
+my $pagesProcessed = 0;
+
+# this part will refresh any pages that have been "touched"
+# in this case, 'touch' means when an item that affects the page
+# is updated or added
+foreach my $page (@touchedPagesArray) {
+#	$pagesProcessed++;
+#	if ($pagesProcessed > $pagesLimit) {
+#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
+#		last;
+#	}
+#	if ((time() - $startTime) > $timeLimit) {
+#		WriteLog("Time limit reached, exiting loop");
+#		last;
+#	}
+
+	# dereference @pageArray
+	my @pageArray = @$page;
+
+	# get the 3 items in it
+	my $pageType = shift @pageArray;
+	my $pageParam = shift @pageArray;
+	my $touchTime = shift @pageArray;
+
+	# output to log
+	WriteLog("\$pageType = $pageType");
+	WriteLog("\$pageParam = $pageParam");
+	WriteLog("\$touchTime = $touchTime");
+
+	# tag page, get the tag name from $pageParam
+	if ($pageType eq 'tag') {
+		my $tagName = $pageParam;
+
+		WriteLog("gitflow.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
+
+		my $tagPage = GetReadPage('tag', $tagName);
+		PutHtmlFile('html/top/' . $tagName . '.html', $tagPage);
+	}
+	#
+	# author page, get author's id from $pageParam
+	elsif ($pageType eq 'author') {
+		my $authorKey = $pageParam;
+
+		my $authorPage = GetReadPage('author', $authorKey);
+
+		if (!-e 'html/author/' . $authorKey) {
+			mkdir ('html/author/' . $authorKey);
+		}
+
+		PutHtmlFile('html/author/' . $authorKey . '/index.html', $authorPage);
+	}
+   #
+	# if $pageType eq item, generate that item's page
+	elsif ($pageType eq 'item') {
+		# get the item's hash from the param field
+		my $fileHash = $pageParam;
+
+		# get item list using DBGetItemList()
+		# #todo clean this up a little, perhaps crete DBGetItem()
+		my @files = DBGetItemList({'where_clause' => "WHERE file_hash = '$fileHash'"});
+		if (scalar(@files)) {
+			my $file = $files[0];
+
+			# get item page's path #todo refactor this into a function
+			my $targetPath = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+
+			# create a subdir for the first 2 characters of its hash if it doesn't exist already
+			if (!-e 'html/' . substr($fileHash, 0, 2)) {
+				mkdir('html/' . substr($fileHash, 0, 2));
+			}
+
+			# get the page for this item and write it
+			my $filePage = GetItemPage($file);
+			PutHtmlFile($targetPath, $filePage);
+		} else {
+			WriteLog("gitflow.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
+		}
+	}
+   #
+	# tags page
+	elsif ($pageType eq 'tags') {
+		my $votesPage = GetVotesPage();
+		PutHtmlFile("html/tags.html", $votesPage);
+	}
+}
+
+# if anything has changed, redo the abyss index pages
+#if ($newItemCount) {
+	#WriteIndexPages();
+#}
+
+#rebuild abyss pages no more than once an hour
+my $lastAbyssRebuild = GetConfig('last_abyss');
+my $abyssRebuildInterval = GetConfig('abyss_rebuild_interval');
+my $curTime = time();
+
+WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
+if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
+	$lastAbyssRebuild = 0;
+}
+if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
+	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
+	WriteIndexPages();
+	PutConfig('last_abyss', $curTime);
+}
+
+# save current time in config/gitflow_last
+my $newLastFlow = time();
+WriteLog($newLastFlow);
+PutConfig('gitflow_last', $newLastFlow);
+
+1;

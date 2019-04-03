@@ -1,5 +1,5 @@
 <!-- reply.template -->
-<a name=discuss></a>
+<a name=reply></a>
 <form class=reply action="/gracias.html" id=compose style="border: 5pt solid #e8d0ea; border-radius: 5pt; background-color: #f0e0f8">
 <big><b><i><u>The Reply Box</u></i></b></big>
 <p>This is how you reply to what you see above.<br>

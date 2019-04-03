@@ -797,7 +797,7 @@ sub GpgParse {
 
 	my $fingerprint = '';
 
-	my $alias;
+	my $alias = '';
 
 	my $keyExpired = 0;
 

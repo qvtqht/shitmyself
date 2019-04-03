@@ -3,6 +3,8 @@
 # clean build script
 
 rm -rfv cache
+rm -rfv html/*.html html/*/*.html html/*/*/*.html
+touch html/gracias.html
 rm log/log.log 
 
 time ./rebuild.sh

@@ -87,6 +87,11 @@ sub IndexFile {
 		DBAddAuthor('flush');
 		DBAddKeyAlias('flush');
 		DBAddItem('flush');
+		DBAddVoteRecord('flush');
+		DBAddEventRecord('flush');
+		DBAddItemParent('flush');
+		DBAddVoteWeight('flush');
+		DBAddPageTouch('flush');
 
 		return;
 	}
@@ -195,14 +200,20 @@ sub IndexFile {
 			$isAdmin = 1;
 
 			DBAddVoteRecord($gitHash, $addedTime, 'type:admin');
+
+			DBAddPageTouch('tag', 'type:admin');
 		}
 
 		if ($isSigned && $gpgKey) {
 			DBAddAuthor($gpgKey);
+
+			DBAddPageTouch('author', $gpgKey);
 		}
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
+
+			DBAddPageTouch('author', $gpgKey);
 		}
 
 		my $itemName = TrimPath($file);
@@ -221,26 +232,33 @@ sub IndexFile {
 						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
 					}
 
-					my $reconLine = '>>$parentHash';
+					my $reconLine = ">>$parentHash";
 
 					$message =~ s/$reconLine/$reconLine/;
 					# replace with itself, no change needed
 
 					$detokenedMessage =~ s/$reconLine//;
+
+					DBAddPageTouch('item', $parentHash);
 				}
 			}
 		}
 
 		# look for hash tags
 		if ($message) {
-			my @hashTags = ( $message =~ m/^\#([a-zA-Z]+)/mg );
+			WriteLog("... check for hashtags");
+			my @hashTags = ( $message =~ m/\#([a-zA-Z]+)/mg );
 
 			if (@hashTags) {
+				WriteLog("... hashtag(s) found");
+
 				while(@hashTags) {
 					my $hashTag = shift @hashTags;
 
 					if ($hashTag) { #todo add sanity checks here
 						DBAddVoteRecord($gitHash, $addedTime, $hashTag);
+
+						DBAddPageTouch('tag', $hashTag);
 					}
 				}
 			}
@@ -260,12 +278,14 @@ sub IndexFile {
 						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
 					}
 
-					my $reconLine = '>>$parentHash';
+					my $reconLine = ">>$parentHash";
 
 					$message =~ s/$reconLine/$reconLine/;
 					# replace with itself, no change needed
 
 					$detokenedMessage =~ s/$reconLine//;
+
+					DBAddPageTouch('item', $parentHash);
 				}
 
 				DBAddItemParent('flush');
@@ -293,9 +313,13 @@ sub IndexFile {
 
 							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
+
+							DBAddPageTouch('author', $voterId);
 						}
 
 						DBAddVoteRecord($gitHash, $addedTime, 'type:vouch');
+
+						DBAddPageTouch('tag', 'type:vouch');
 					}
 				}
 			}
@@ -331,9 +355,13 @@ sub IndexFile {
 							$detokenedMessage =~ s/$reconLine//g;
 
 							DBAddItemParent($gitHash, $itemHash);
+
+							DBAddPageTouch('item', $itemHash);
 						}
 
 						DBAddVoteRecord($gitHash, $addedTime, 'type:timestamp');
+
+						DBAddPageTouch('tag', 'type:timestamp');
 					}
 				}
 			}
@@ -375,6 +403,8 @@ sub IndexFile {
 						#DBAddVoteWeight('flush');
 
 						DBAddVoteRecord($gitHash, $addedTime, 'type:device');
+
+						DBAddPageTouch('tag', 'type:device');
 					}
 				}
 			}
@@ -411,6 +441,8 @@ sub IndexFile {
 					$detokenedMessage =~ s/$reconLine//g;
 
 					DBAddVoteRecord ($gitHash, $addedTime, 'type:event');
+
+					DBAddPageTouch('tag', 'type:event');
 				}
 			}
 
@@ -450,24 +482,36 @@ sub IndexFile {
 
 					$detokenedMessage =~ s/$reconLine//g;
 
+					DBAddPageTouch('item', $fileHash);
+
 					DBAddVoteRecord ($gitHash, $addedTime, 'type:vote');
+
+					DBAddPageTouch('tag', 'type:vote');
 				}
 			}
 		}
 
 		if ($alias) {
 			DBAddVoteRecord ($gitHash, $addedTime, 'type:pubkey');;
+
+			DBAddPageTouch('tag', 'type:pubkey');
+
+			DBAddPageTouch('author', $gpgKey);
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 			if ($detokenedMessage eq '') {
 				DBAddVoteRecord($gitHash, $addedTime, 'type:notext');
+
+				DBAddPageTouch('tag', 'type:notext');
 			} else {
 				DBAddVoteRecord($gitHash, $addedTime, 'type:hastext');
+
+				DBAddPageTouch('tag', 'type:hastext');
 			}
 
 		}
 
-			if ($message) {
+		if ($message) {
 			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
 			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
@@ -480,17 +524,11 @@ sub IndexFile {
 		} else {
 			DBAddItem ($file, $itemName, '',      $gitHash);
 		}
+
+		DBAddPageTouch('item', $gitHash);
 	}
 
-	DBAddItem('flush');
-
-	DBAddVoteRecord('flush');
-
-	DBAddEventRecord('flush');
-
-	DBAddItemParent('flush');
-
-	DBAddVoteWeight('flush');
+	IndexFile('flush')
 }
 
 sub MakeIndex {

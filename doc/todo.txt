@@ -8,6 +8,8 @@ Nicer-looking threading
 	Two-level thread nesting
 	"Reply" buttons on the item page and the child items
 
+Bug: Why does gitflow.pl do a bunch of stuff right after a rebuild?
+	Items need to be added to the sub-repo whenever rebuilding
 
 Bug: When there are 0 items, top menu is not populated with avatar
 

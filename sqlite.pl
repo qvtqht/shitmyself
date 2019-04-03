@@ -32,9 +32,18 @@ sub SqliteUnlinkDb {
 
 #schema
 sub SqliteMakeTables() {
-	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp);");
+
+	# added_time
+	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp INTEGER);");
+	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
+
+	# added_by (client)
 	SqliteQuery2("CREATE TABLE added_by(file_hash, device_fingerprint);");
+
+	# author
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, published)");
+
+	# author_alias
 	SqliteQuery2("CREATE TABLE author_alias(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		key UNIQUE,
@@ -42,7 +51,11 @@ sub SqliteMakeTables() {
 		is_admin,
 		fingerprint
 	)");
+
+	# vote_weight
 	SqliteQuery2("CREATE TABLE vote_weight(key, vote_weight)");
+
+	# item
 	SqliteQuery2("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,
@@ -51,20 +64,32 @@ sub SqliteMakeTables() {
 		file_hash UNIQUE,
 		published
 	)");
-	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
-	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, published)");
-	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_id)");
-	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
-	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, description_hash, author_key, event_time, event_duration, event_location)");
-	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, touch_time)");
 
-	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
-	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
-	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
+	# item_parent
+	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
 	SqliteQuery2("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
-	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_id)");
-	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name)");
+
+	# tag
+	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
+	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
+
+	# vote
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, published)");
+	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
+
+	# item_page
+	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_param)");
+	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_param)");
+
+	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
+
+	# calendar
+	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, description_hash, author_key, event_time, event_duration, event_location)");
+
+	# page_touch
+	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER)");
+	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param)");
+
 
 
 	SqliteQuery2("
@@ -184,7 +209,6 @@ sub SqliteQuery2 {
 	}
 }
 
-
 sub EscapeShellChars {
 	my $string = shift;
 	chomp $string;
@@ -214,30 +238,30 @@ sub SqliteQuery {
 
 	return $results;
 }
-
-sub DBGetVotesTable {
-	my $fileHash = shift;
-
-	if (!IsSha1($fileHash) && $fileHash) {
-		WriteLog("DBGetVotesTable called with invalid parameter! returning");
-		WriteLog("$fileHash");
-		return '';
-	}
-
-	my $query;
-	my @queryParams = ();
-
-	if ($fileHash) {
-		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = ?;";
-		@queryParams = ($fileHash);
-	} else {
-		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed;";
-	}
-
-	my $result = SqliteQuery2($query, @queryParams);
-
-	return $result;
-}
+#
+#sub DBGetVotesTable {
+#	my $fileHash = shift;
+#
+#	if (!IsSha1($fileHash) && $fileHash) {
+#		WriteLog("DBGetVotesTable called with invalid parameter! returning");
+#		WriteLog("$fileHash");
+#		return '';
+#	}
+#
+#	my $query;
+#	my @queryParams = ();
+#
+#	if ($fileHash) {
+#		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = ?;";
+#		@queryParams = ($fileHash);
+#	} else {
+#		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed;";
+#	}
+#
+#	my $result = SqliteQuery2($query, @queryParams);
+#
+#	return $result;
+#}
 
 sub DBGetVotesForItem {
 	my $fileHash = shift;
@@ -411,35 +435,127 @@ sub DBAddAuthor {
 
 	$query .= '(?)';
 	push @queryParams, $key;
-
 }
 
-#sub TouchItem {
-#	my $itemType = shift;
-#	my $itemId = shift;
-#
-#	my $touchTime = time();
-#
-#	WriteLog('TouchItem(' . $itemType . ',' . $itemId . ',' . $touchTime . ')');
-#
-#	if ($itemType eq 'item') {
-#		my $query = "UPDATE item SET published = ? WHERE file_hash = ?";
-#		SqliteQuery2($query, $touchTime, $itemId);
-#	}
-#
-#	if ($itemType eq 'author') {
-#		my $query = "UPDATE author SET published = ? WHERE key = ?";
-#		SqliteQuery2($query, $touchTime, $itemId);
-#	}
-#
-#	if ($itemType eq 'tag') {
-#		my $query = "UPDATE vote SET published = ? WHERE vote_value = ?";
-#		SqliteQuery2($query, $touchTime, $itemId);
-#
-#		$query = "UPDATE tag SET published = ? WHERE vote_value = ?";
-#		SqliteQuery2($query, $touchTime, $itemId);
-#	}
-#}
+sub DBGetTouchedPages {
+	my $lastTouch = shift;
+
+	WriteLog("DBGetTouchedPages($lastTouch)");
+
+	my $query = "
+		SELECT page_name, page_param, touch_time
+		FROM page_touch
+		WHERE touch_time >= ?
+		ORDER BY touch_time
+	";
+
+	my @params;
+	push @params, $lastTouch;
+
+	my $results = SqliteQuery2($query, @params);
+
+	return $results;
+}
+
+# adds to item_page table
+# purpose of table is to track which items are on which pages
+sub DBAddItemPage {
+	state $query;
+	state @queryParams;
+
+	my $itemHash = shift;
+
+	if ($itemHash eq 'flush') {
+		if ($query) {
+			WriteLog("DBAddItemPage(flush)");
+
+			if (!$query) {
+				WriteLog('Aborting, no query');
+				return;
+			}
+
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = "";
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+		DBAddItemPage('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	my $pageType = shift;
+	my $pageParam = shift;
+
+	WriteLog("DBAddItemPage($itemHash, $pageType, $pageParam)");
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO item_page(item_hash, page_type, page_param) VALUES ";
+	} else {
+		$query .= ',';
+	}
+
+	$query .= '(?, ?, ?)';
+	push @queryParams, $itemHash, $pageType, $pageParam;
+}
+
+sub DBAddPageTouch {
+	state $query;
+	state @queryParams;
+
+	my $pageName = shift;
+
+	if ($pageName eq 'tag') {
+		DBAddPageTouch('tags', '0');
+	}
+
+	if ($pageName eq 'flush') {
+		if ($query) {
+			WriteLog("DBAddPageTouch(flush)");
+
+			if (!$query) {
+				WriteLog('Aborting, no query');
+				return;
+			}
+
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = "";
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+		DBAddPageTouch('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	my $pageParam = shift;
+	my $touchTime = time();
+
+	WriteLog("DBAddPageTouch($pageName, $pageParam)");
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time) VALUES ";
+	} else {
+		$query .= ',';
+	}
+
+	$query .= '(?, ?, ?)';
+	push @queryParams, $pageName, $pageParam, $touchTime;
+}
 
 sub DBGetVoteCounts {
 	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
@@ -906,9 +1022,8 @@ sub DBGetItemsForTag {
 				vote_value = '$tag'
 			GROUP BY file_hash
 			ORDER BY vote_count DESC
-			LIMIT 32
 		) AS item_tag
-	";
+	"; #todo rewrite this query
 
 	my $result = SqliteQuery($query);
 
@@ -954,13 +1069,13 @@ sub DBGetItemList {
 	my $query;
 	$query = "
 		SELECT
-			file_path,
-			item_name,
-			file_hash,
-			author_key,
-			child_count,
-			parent_count,
-			add_timestamp
+			item_flat.file_path,
+			item_flat.item_name,
+			item_flat.file_hash,
+			item_flat.author_key,
+			item_flat.child_count,
+			item_flat.parent_count,
+			item_flat.add_timestamp
 		FROM
 			item_flat
 	";
@@ -976,6 +1091,7 @@ sub DBGetItemList {
 	}
 
 	WriteLog("DBGetItemList()");
+	WriteLog($query);
 
 	my @results = split("\n", SqliteQuery($query));
 
@@ -1091,6 +1207,5 @@ sub DBGetItemVoteTotals {
 
 	return %voteTotals;
 }
-
 
 1;
