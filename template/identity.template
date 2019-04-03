@@ -30,6 +30,10 @@
     </p>
 
     <p>
+        <span id=myIdProfile></span>
+    </p>
+
+    <p>
         <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
     </p>
 

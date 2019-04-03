@@ -399,6 +399,11 @@ function saveId() {
 					myId2.innerHTML = getAvatar();
 				}
 
+				var myIdProfile = document.getElementById('myIdProfile');
+				if (myIdProfile) {
+					myIdProfile.innerHTML = '<a href="/author/' + myFingerprint + '">Profile page</a>';
+				}
+
 				var myCrea = document.getElementById('myCrea');
 				if (myCrea) {
 					myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
