@@ -564,7 +564,7 @@ sub GetPageHeader {
 #	my $patternName = $availablePatterns[$randomNumber];
 #	$patternName =~ s/^template\///;
 
-	my $patternName = 'pattern/arrows.template';
+	my $patternName = 'pattern/bokeh.template';
 
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
