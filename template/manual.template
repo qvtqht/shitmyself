@@ -7,7 +7,7 @@
 <h3>Features You May Recognize</h3>
 
 <ul>
-    <li>Write messages anonymously and under an identity</li>
+    <li>Write messages anonymously and under a profile</li>
     <li>Read messages others have already posted</li>
     <li>Vote on posted messages to improve quality</li>
 </ul>
@@ -15,7 +15,7 @@
 <h3>These Features May Be Confusing At First</h3>
 
 <ul>
-    <li>Your identity lives on your device, as <u>not on this website or server</u>.</li>
+    <li>Your profile key lives on your device, not on this website or server.</li>
     <li>This is accomplished with encryption called PGP.</li>
     <li>Your key pair allows you to post on other forums too.</li>
 	<li>Fast page loading due to lack of bloat.</li>
@@ -59,9 +59,9 @@
 
 <p>OpenPGP Software<br><a href="https://www.openpgp.org/software/">https://www.openpgp.org/software/</a></p>
 
-<a name=keypair><h3>Creating Your Identity, AKA Key Pair</h3></a>
+<a name=keypair><h3>Creating Your Profile, AKA Key Pair</h3></a>
 
-<p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating an identity?</p>
+<p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating a profile?</p>
 
 <ul>
     <li>All your posts will appear on your author page.</li>
@@ -81,7 +81,7 @@
 
 <a name=sign><h3>Writing As Yourself</h3></a>
 
-<p>To write something under your new identity, you will need to sign your text.</p>
+<p>To write something under your new profile, you will need to sign your text.</p>
 
 <p>First, write the text that you want to post. Once you have finished writing it, save it to a .txt file.</p>
 

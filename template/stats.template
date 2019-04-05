@@ -1,0 +1,7 @@
+<p>Version: $version</p>
+<p>Item Count: $itemCount</p>
+<p>Administrator: $admin</p>
+<p>Updated: $currUpdateTime</p>
+<p>Previous Update: $prevUpdateTime</p>
+<p>Apparent Update Interval: $updateInterval</p>
+<p>Next Update: $nextUpdateTime</p>

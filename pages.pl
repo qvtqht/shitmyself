@@ -577,9 +577,9 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
-	$menuTemplate .= GetMenuItem("/about.html", GetString('menu/about'));
+	$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
 	$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
-	#$menuTemplate .= GetMenuItem("/identity.html", 'Account');
+	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
 #	my $adminKey = GetAdminKey();
@@ -589,7 +589,7 @@ sub GetPageHeader {
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
-	my $identityLink = GetMenuItem("/identity.html", GetString('menu/sign_in'));
+	my $identityLink = GetMenuItem("/profile.html", GetString('menu/sign_in'));
 	$htmlStart =~ s/\$loginLink/$identityLink/g;
 
 	$txtIndex .= $htmlStart;

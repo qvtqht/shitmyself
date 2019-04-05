@@ -124,8 +124,8 @@ sub GetVersionPage {
 sub GetIdentityPage {
 	my $txtIndex = "";
 
-	my $title = "Identity Management";
-	my $titleHtml = "Identity Management";
+	my $title = "Profile";
+	my $titleHtml = "Profile";
 
 	$txtIndex = GetPageHeader($title, $titleHtml);
 
@@ -231,7 +231,7 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
-		my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
 		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
@@ -249,19 +249,19 @@ sub GetSubmitPage {
 	return $txtIndex;
 }
 
-sub GetAboutPage {
-	my $aboutPage;
+sub GetStatsPage {
+	my $statsPage;
 
-	$aboutPage = GetPageHeader('About', 'About');
+	$statsPage = GetPageHeader('Stats', 'Stats');
 
-	my $aboutTable = GetTemplate('about.template');
+	my $statsTable = GetTemplate('stats.template');
 
 	my $itemCount = DBGetItemCount();
 	my $adminId = GetAdminKey();
 	if ($adminId) {
-		$aboutTable =~ s/\$admin/GetAuthorLink($adminId)/e;
+		$statsTable =~ s/\$admin/GetAuthorLink($adminId)/e;
 	} else {
-		$aboutTable =~ s/\$admin/(None)/;
+		$statsTable =~ s/\$admin/(None)/;
 	}
 
 
@@ -279,25 +279,25 @@ sub GetAboutPage {
 	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
 	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
 
-	$aboutTable =~ s/\$prevUpdateTime/$prevUpdateTime/;
-	$aboutTable =~ s/\$currUpdateTime/$currUpdateTime/;
-	$aboutTable =~ s/\$updateInterval/$updateInterval/;
-	$aboutTable =~ s/\$nextUpdateTime/$nextUpdateTime/;
+	$statsTable =~ s/\$prevUpdateTime/$prevUpdateTime/;
+	$statsTable =~ s/\$currUpdateTime/$currUpdateTime/;
+	$statsTable =~ s/\$updateInterval/$updateInterval/;
+	$statsTable =~ s/\$nextUpdateTime/$nextUpdateTime/;
 
-	$aboutTable =~ s/\$version/GetMyVersion()/e;
-	$aboutTable =~ s/\$itemCount/$itemCount/e;
+	$statsTable =~ s/\$version/GetMyVersion()/e;
+	$statsTable =~ s/\$itemCount/$itemCount/e;
 
-	$aboutPage .= $aboutTable;
+	$statsPage .= $statsTable;
 
-	$aboutPage .= GetPageFooter();
+	$statsPage .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs/g;
 
-	$aboutPage =~ s/<\/body>/$scriptInject<\/body>/;
+	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
 
-	return $aboutPage;
+	return $statsPage;
 }
 
 sub MakeStaticPages {
@@ -308,14 +308,14 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
 
 
-	# About page
-	my $aboutPage = GetAboutPage();
-	PutHtmlFile("$HTMLDIR/about.html", $aboutPage);
+	# Stats page
+	my $statsPage = GetStatsPage();
+	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
 
 
-	# Identity page
+	# Profile Management page
 	my $identityPage = GetIdentityPage();
-	PutHtmlFile("$HTMLDIR/identity.html", $identityPage);
+	PutHtmlFile("$HTMLDIR/profile.html", $identityPage);
 
 
 	# Target page for the submit page
@@ -326,36 +326,18 @@ sub MakeStaticPages {
 
 	my $graciasTemplate = GetTemplate('gracias.template');
 
-	my $currUpdateTime = time();
-	my $prevUpdateTime = GetConfig('last_update_time');
-	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
-		$prevUpdateTime = time();
-	}
-
-	my $updateInterval = $currUpdateTime - $prevUpdateTime;
-
-	PutConfig("last_update_time", $currUpdateTime);
-
-	my $nextUpdateTime = EpochToHuman($currUpdateTime + $updateInterval);
-
-	$prevUpdateTime = EpochToHuman($prevUpdateTime);
-	$currUpdateTime = EpochToHuman($currUpdateTime);
-
-	$graciasTemplate =~ s/\$prevUpdateTime/$prevUpdateTime/;
-	$graciasTemplate =~ s/\$currUpdateTime/$currUpdateTime/;
-	$graciasTemplate =~ s/\$updateInterval/$updateInterval/;
-	$graciasTemplate =~ s/\$nextUpdateTime/$nextUpdateTime/;
-
 	$graciasPage .= $graciasTemplate;
 
 	$graciasPage .= GetPageFooter();
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $graciasjs = GetTemplate('js/gracias.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs$graciasjs/g;
 
 	$graciasPage =~ s/<\/body>/$scriptInject<\/body>/;
 
+	$graciasPage =~ s/<body /<body onload="makeRefLink();" /;
 
 	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
 

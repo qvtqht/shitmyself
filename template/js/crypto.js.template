@@ -8,6 +8,12 @@ function logOut() {
 	removeStoredKeys();
 }
 
+var loading = document.getElementById('loading');
+if (loading) {
+	loading.style.display = 'none';
+}
+
+
 // retrieve stored user fingerprint from localstorage
 function getUserFp() {
 	var fingerprint = localStorage.getItem("fingerprint");
@@ -385,14 +391,14 @@ function saveId() {
 
 			if (myAvatar == null || myAvatar.length == 0) {
 				if ( !document.getElementById("privatekey")) {
-					signinBox.innerHTML = '<a href="/identity.html">Login</a>';
+					signinBox.innerHTML = '<a href="/profile.html">Login</a>';
 				}
 			} else {
 				signinBox.innerHTML = '';
 
 				var myFp = localStorage.getItem('fingerprint');
 
-				myidBox.innerHTML = '<a href="/identity.html" class=avatar>' + myAvatar + '</a>';
+				myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {
