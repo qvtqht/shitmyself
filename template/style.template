@@ -12,8 +12,9 @@
 body {
 	font-size: large;
 	font-family: monospace;
-	background-color: $secondaryColor;
+
 	color: $textColor;
+	padding: 0; margin: 0;
 }
 a {
 	color: $primaryColor;
@@ -28,13 +29,13 @@ h2.menu {
 h2.menu a {
 	font-size: 18pt;
 }
-#logo {
+#logo, .logo {
 	text-decoration: none;
 	margin-right: 10pt;
 	vertical-align: middle;
 	font-size: 36pt;
 	color: $secondaryColor;
-	background-color: $primaryColor;
+	text-align: right;
 }
 .topmessage {
 	font-family: sans-serif;
@@ -135,7 +136,7 @@ details.txt a.header {
 }
 
 /* voting buttons */
-/*
+
 
 /* avatars */
 .avatar .icon {
@@ -149,7 +150,7 @@ details.txt a.header {
 	color: $primaryColor;
 	padding: 2pt;
 }
-.avatar .username {
+.avatar .username, #logo {
 	color: #e0e0e0;
 	text-shadow:
 	-1pt -1pt 0 #404040,
@@ -266,3 +267,6 @@ label {
 	border-radius: 5pt;
 }
 
+#amain {
+	$headerBackgroundPattern
+}
