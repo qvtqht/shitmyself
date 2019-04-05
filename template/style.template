@@ -22,12 +22,9 @@ a {
 a:visited {
 	color: #806080;
 }
-h2.menu {
-	border-style: 5pt solid $primaryColor;
-	border-radius: 0pt 0pt 5pt 5pt;
-}
 h2.menu a {
 	font-size: 18pt;
+	text-decoration: none;
 }
 #logo {
 	text-decoration: none;
@@ -154,7 +151,7 @@ details.txt a.header {
 	color: $primaryColor;
 	padding: 2pt;
 }
-.avatar .username {
+.avatar .username, h2.menu a {
 	color: #e0e0e0;
 	text-shadow:
 	-1pt -1pt 0 #404040,
@@ -163,7 +160,6 @@ details.txt a.header {
 	1pt 1pt 0 #404040;
 }
 #logo {
-	font-family: cursive;
 	font-weight: bold;
 	color: $secondaryColor;
 	text-shadow:
@@ -171,6 +167,7 @@ details.txt a.header {
 	3pt -3pt 0 $primaryColor,
 	-3pt 3pt 0 $primaryColor,
 	3pt 3pt 0 $primaryColor;
+	font-family: cursive;
 }
 a.avatar {
 	text-decoration: none;
@@ -284,5 +281,4 @@ label {
 
 #amain {
 $headerBackgroundPattern
-	padding: 10pt;
 }
