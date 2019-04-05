@@ -1,9 +1,4 @@
 <!-- gracias.template -->
-<script><!--
-if (window.location.href.toString().match(/\/gracias.html\?comment=\-\-\-\-\-BEGIN\+PGP\+PUBLIC\+KEY\+BLOCK\-\-\-\-\-.+\-\-\-\-\-END\+PGP\+PUBLIC\+KEY\+BLOCK\-\-\-\-\-/g)) {
-    window.open('/identity.html', '_self');
-}
-// --></script>
 <p>Thank you!</p>
 <p>Posted content may not appear immediately.</p>
 <pre>
@@ -13,11 +8,5 @@ if (window.location.href.toString().match(/\/gracias.html\?comment=\-\-\-\-\-BEG
    | |_| | | | (_| | | | |   <
     \__|_| |_|\__,_|_| |_|_|\_\
 </pre>
-<!--
-<p>Thank you. Your submission will be processed according to schedule.</p>
-<p>The last two updates occurred <b>$updateInterval seconds</b> apart, <br><br>at $prevUpdateTime and $currUpdateTime.</p>
-<p>If this trend continues, the next update is due at: <br><br> $nextUpdateTime.</p>
-<p></p>
--->
-<p><a href="./">Continue</a></p>
+<p><span id=retRef></span><a href="./">Continue to Home Page</a></p>
 <!-- / gracias.template -->
