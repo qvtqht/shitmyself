@@ -34,6 +34,17 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
+if (!-e 'html/txt/.git') {
+	my $pwd = `pwd`;
+	system("cd html/txt/ ; git init ; cd $pwd");
+}
+
+#if (-s 'log/log.log' > 102400) {
+#	unlink ('log/log.log');
+#	die('yay');
+#}
+
+
 my $gpgCommand;
 if (GetConfig('use_gpg2')) {
 	$gpgCommand = 'gpg2';
