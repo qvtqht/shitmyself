@@ -533,7 +533,7 @@ sub GetPageHeader {
 			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
 			$logoText = "*"
 		}
-		$logoText = HtmlEscape($logoText);
+		#$logoText = HtmlEscape($logoText);
 	}
 
 	my $txtIndex = "";
@@ -558,11 +558,13 @@ sub GetPageHeader {
 	my $orangeColor = '#f08000';
 	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetTemplate("style.template");
+#
+#	my @availablePatterns = glob('template/pattern/*.template');
+#	my $randomNumber = int(rand(@availablePatterns));
+#	my $patternName = $availablePatterns[$randomNumber];
+#	$patternName =~ s/^template\///;
 
-	my @availablePatterns = glob('template/pattern/*.template');
-	my $randomNumber = int(rand(@availablePatterns));
-	my $patternName = $availablePatterns[$randomNumber];
-	$patternName =~ s/^template\///;
+	my $patternName = 'pattern/arrows.template';
 
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
@@ -574,7 +576,7 @@ sub GetPageHeader {
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
-	#$htmlStart =~ s/\$logoText/$logoText/g;
+	$htmlStart =~ s/\$logoText/$logoText/g;
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;

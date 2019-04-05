@@ -232,6 +232,7 @@ textarea {
 .pagination {
 	font-family: sans-serif;
 	font-size: x-large;
+	text-align: center;
 }
 .pagination b {
 	background-color: $primaryColor;
