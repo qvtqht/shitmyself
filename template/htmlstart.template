@@ -10,7 +10,7 @@ $styleSheet
 </style>
 </head>
 <body link="$primaryColor" vlink="#806080" text="$textColor" bgcolor="$secondaryColor">
-<div id=amain><a href="#maincontent">Skip to main content</a><a title="Home" href="/" class=logo><h1 id=logo class=logo><small>s</small><big>H</big><small>i</small><big>TM</big><small>yse</small><big>L</big><small>f</small></h1></a></div>
+<div id=amain><a href="#maincontent">Skip to main content</a><h1 id=logo class=logo><a title="Home" href="/"><small>s</small><big>H</big><small>i</small><big>TM</big><small>yse</small><big>L</big><small>f</small></a></h1></div>
 <font face=courier>
 <h2 class=menu>$menuItems<span id="signin"></span><span class="myid" id=myid></span></h2>
 <hr size=5>

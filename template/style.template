@@ -29,13 +29,17 @@ h2.menu {
 h2.menu a {
 	font-size: 18pt;
 }
-#logo, .logo {
+#logo {
 	text-decoration: none;
 	margin-right: 10pt;
 	vertical-align: middle;
 	font-size: 36pt;
 	color: $secondaryColor;
-	text-align: right;
+	text-align: center;
+}
+#logo a {
+	text-decoration: none;
+	color: $secondaryColor;
 }
 .topmessage {
 	font-family: sans-serif;
@@ -150,13 +154,23 @@ details.txt a.header {
 	color: $primaryColor;
 	padding: 2pt;
 }
-.avatar .username, #logo {
+.avatar .username {
 	color: #e0e0e0;
 	text-shadow:
 	-1pt -1pt 0 #404040,
 	1pt -1pt 0 #404040,
 	-1pt 1pt 0 #404040,
 	1pt 1pt 0 #404040;
+}
+#logo {
+	font-family: cursive;
+	font-weight: bold;
+	color: $secondaryColor;
+	text-shadow:
+	-3pt -3pt 0 $primaryColor,
+	3pt -3pt 0 $primaryColor,
+	-3pt 3pt 0 $primaryColor,
+	3pt 3pt 0 $primaryColor;
 }
 a.avatar {
 	text-decoration: none;
@@ -268,5 +282,6 @@ label {
 }
 
 #amain {
-	$headerBackgroundPattern
+$headerBackgroundPattern
+	padding: 10pt;
 }
