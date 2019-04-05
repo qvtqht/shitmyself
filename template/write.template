@@ -9,6 +9,6 @@
     <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment maxlength=4096 autofocus>$prefillText</textarea><br>
     <span id=signAndPost></span>
     <input type=submit value="Post Without Signing" id=addtext>
-    <label for=writeAdv><input type=checkbox id=writeAdv> Show advanced options</label>
+    $extraFields
 </form>
 <!--# / write.template #-->
