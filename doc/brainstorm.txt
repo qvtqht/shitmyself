@@ -1,6 +1,30 @@
 Image support
 =============
 
+=======
+default/badwords
+config/badwords
+
+Notes from user survey with Anonymous
+	Thank you, Anonymous
+	> Make it easy to "get into"
+	> Votes
+		Autofill?
+		Scrolling is a pia
+		Wheel?
+		Pos/negative?
+	> Mobile tap areas for the item id
+		Too small and not obvious
+		Possibly make entire item tappable?
+	> Idea: "done" button to exit textarea+keyboard?
+		Currently, when textarea is selected, there isn't much to tap on to make it go away
+		The txtarea and the keyboard take up most of the screen
+		Done button in top right corner of textarea (overlaid) could be solution
+	> Group replies together when displaying them on one page
+
+Automatically add expiration date to newly created keys
+	One week? month? year? day?
+	Advanced settings to change
 
 WHERE DO TEXT FILES COME FROM?
 ==============================
