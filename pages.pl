@@ -496,7 +496,13 @@ sub GetPageFooter {
 
 	my $myVersionPrettyLink = '<a href="/' . substr($myVersion, 0, 2) . '/' . substr($myVersion, 2) . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
-	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span>";
+	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span> ; ";
+
+	my $menuTemplate = "";
+
+	$menuTemplate .= GetMenuItem("/stats.html", 'advanced');
+
+	$footer .= $menuTemplate;
 
 	$txtFooter =~ s/\$footer/$footer/;
 
@@ -553,12 +559,22 @@ sub GetPageHeader {
 	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetTemplate("style.template");
 
+	my @availablePatterns = glob('template/pattern/*.template');
+	my $randomNumber = int(rand(@availablePatterns));
+	my $patternName = $availablePatterns[$randomNumber];
+	$patternName =~ s/^template\///;
+
+	my $headerBackgroundPattern = GetTemplate($patternName);
+	WriteLog("$headerBackgroundPattern");
+	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
+	WriteLog($styleSheet);
+
 	#$styleSheet =~ s/\w\w/ /g;
 
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
-	$htmlStart =~ s/\$logoText/$logoText/g;
+	#$htmlStart =~ s/\$logoText/$logoText/g;
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
@@ -577,7 +593,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
-	$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
+	#$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
 	$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
