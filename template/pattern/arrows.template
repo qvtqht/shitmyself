@@ -4,3 +4,4 @@ linear-gradient(45deg, $primaryColor 45pt, transparent 45pt,transparent 91pt, $s
 linear-gradient(-45deg, $primaryColor 23pt, transparent 23pt, transparent 68pt,$primaryColor 68pt,$primaryColor 113pt,transparent 113pt,transparent 158pt,$primaryColor 158pt);
 background-color:$secondaryColor;
 background-size: 128pt 128pt;
+/* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */

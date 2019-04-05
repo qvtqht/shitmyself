@@ -4,3 +4,4 @@ linear-gradient(-45deg, $secondaryColor 25%, transparent 25%, transparent 75%, $
 linear-gradient(45deg, $secondaryColor 17%, transparent 17%, transparent 25%, $secondaryColor 25%, $secondaryColor 36%, transparent 36%, transparent 64%, $secondaryColor 64%, $secondaryColor 75%, transparent 75%, transparent 83%, $secondaryColor 83%) 1em 1em;
 background-color: $primaryColor;
 background-size: 2em 2em;
+/* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */

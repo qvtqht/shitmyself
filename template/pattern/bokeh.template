@@ -8,3 +8,4 @@
     linear-gradient(45deg, #343702 0%, #184500 20%, #187546 30%, #006782 40%, #0b1284 50%, #760ea1 60%, #83096e 70%, #840b2a 80%, #b13e12 90%, #e27412 100%);
     background-size: 470pt 470pt, 970pt 970pt, 410pt 410pt, 610pt 610pt, 530pt 530pt, 730pt 730pt, 100% 100%;
     background-color: #840b2a;
+    /* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */

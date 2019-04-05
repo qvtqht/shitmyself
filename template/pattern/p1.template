@@ -5,4 +5,4 @@
 	linear-gradient(135deg, transparent 75%, rgba(255,255,255,.8) 75%) 7pt -5pt,
 	linear-gradient(180deg, transparent 75%, rgba(255,255,255,.8) 75%) 7pt -5pt,
 	$primaryColor;
-
+	/* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */
