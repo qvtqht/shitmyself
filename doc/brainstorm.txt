@@ -1,3 +1,7 @@
+Image support
+=============
+
+
 WHERE DO TEXT FILES COME FROM?
 ==============================
 web server -> access.log -> access.pl -> txt/
