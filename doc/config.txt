@@ -11,6 +11,17 @@ admin_imprint
 if not 0, the first public key to be posted to the board will be imprinted as the admin
 default: 0
 
+allow_broken_signatures
+If an item contains a signed message header, but the signature checks fail. The item will be tagged type:error
+0
+	Do not display item's contents, do not process any tokens, nor add any other tags.
+	Item will only be visible on the type:error listing page
+1
+	Item will be displayed in its entirety on listings.
+	Item will have type:hastext tag
+	Any other tokens in the item will still be processed
+default: 0
+
 ascii_only
 if not 0, only ascii characters will be output to the website
 default: 0

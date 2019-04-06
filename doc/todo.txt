@@ -11,6 +11,15 @@ Use shortened hashes to identify posts
 	Make checkbox names shorter
 	Make HTML files names shorter
 
+
+
+
+#todo
+# if we need to read from the db, like to generate.pl
+# and there is no database, we can fall back on whatever
+# version is available
+
+
 Make it possible to restore from private key without creating new ID first.
 
 Bug: Why does gitflow.pl do a bunch of stuff right after a rebuild?

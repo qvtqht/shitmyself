@@ -1,0 +1,10 @@
+User Study 4/5 1
+================
+Thank you, user.
+
+Conclusions: The reply and vote ballot should be combined
+	Same set of buttons under the reply form and the vote ballot
+Add Signature button is confusing
+	Should be changed to the same as the reply buttons
+	Possibly an "add comments" button?
+		But may be unnecessary if there is a reply box at the top

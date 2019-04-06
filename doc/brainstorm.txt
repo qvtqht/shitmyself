@@ -1,3 +1,28 @@
+Calculate items that are trusted
+	Display some kind of checkmark
+
+The tokens for the votes could stand to be more readable
+A format like this could work better
+This also allows for multiple tags in one token
+Should be flexible
+	please is optional
+	tags are comma-separated, ignore whitespace
+	is checksum necessary?
+
+--
+add vote, please
+item: 6fa641a277f32c6aae170488ef55b8d7950fefdb
+time: 1554491612
+tags: surprise, agree,
+--
+
+Of course, this also means that tokens are not a neat one line.
+Should both be allowed?
+Templates?
+Internationalization?
+
+
+checksum: 428264a8fdf7fa9d7f8b7bb7e426d019
 
 
 
