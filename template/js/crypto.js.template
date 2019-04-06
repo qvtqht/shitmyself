@@ -407,7 +407,11 @@ function saveId() {
 
 				var myIdProfile = document.getElementById('myIdProfile');
 				if (myIdProfile) {
-					myIdProfile.innerHTML = '<a href="/author/' + myFingerprint + '">Profile page</a>';
+					if (UrlExists('/author/' + myFingerprint + '/')) {
+						myIdProfile.innerHTML = '<a href="/author/' + myFingerprint + '">Profile page</a>';
+					} else {
+						myIdProfile.innerHTML = '';
+					}
 				}
 
 				var myCrea = document.getElementById('myCrea');
@@ -597,6 +601,13 @@ function insVotes() {
 	}
 }
 
+function UrlExists(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status==200;
+}
+
 function writeOnload2() {
 	if (window.location.hash) {
 		if (window.location.hash == '#inspubkey') {
@@ -615,6 +626,12 @@ function writeOnload2() {
 	        writebox.value = localStorage.getItem('writesmall');
 	        localStorage.removeItem('writesmall');
 	    }
+	}
+	if (document.getElementById) {
+		var writeAdvL = document.getElementById('writeAdvL');
+		if (writeAdvL) {
+			writeAdvL.style.display = 'inline';
+		}
 	}
 }
 

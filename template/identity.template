@@ -48,7 +48,8 @@
         </p>
 
         <p>
-            <input type=button value="Restore Profile" onclick="sharePubKey();this.disabled=1;this.value='Thanks!';">
+            <input type=button value="Repost Public Key" onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
+            Press if public profile missing.
         </p>
 
         <p id=def>
