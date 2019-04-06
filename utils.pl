@@ -1008,6 +1008,11 @@ sub GpgParse {
 
 				#$fingerprint = GetGpgFingerprint($filePath); #todo
 			}
+
+			if (!$isSigned) {
+				WriteLog("Decoding signed message fallthrough!!!1 Setting \$verifyError = 1");
+				$verifyError = 1;
+			}
 		}
 
 		if (!$isSigned) {
