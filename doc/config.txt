@@ -1,11 +1,10 @@
+abyss_rebuild_interval
+how frequently the Abyss (all items) pages are rebuilt, in seconds
+default: 86400 (1 day)
+
 access_log_path
 this is where access.pl will look for the access log from the web server.
 default: log/access.log
-
-access_update
-if not 0, access.pl will try to fill in the index and website when new items are submitted
-#todo this is not fully built yet
-default: 0
 
 admin_imprint
 if not 0, the first public key to be posted to the board will be imprinted as the admin
@@ -33,6 +32,9 @@ default: 0
 debug
 if 1, debug messages will be written to stdout
 default: 0
+
+emotions
+list of emotions to include on voting pages
 
 flags
 values provided to users as reasons to flag a post
