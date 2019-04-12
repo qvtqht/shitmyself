@@ -500,7 +500,7 @@ sub GetPageFooter {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/stats.html", 'advanced');
+	$menuTemplate .= GetMenuItem("/stats.html", 'stats');
 
 	$footer .= $menuTemplate;
 
@@ -784,6 +784,7 @@ sub GetReadPage {
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
+		WriteLog("DBAddItemPage (1)");
 		DBAddItemPage($pageType, $pageParam, $row->{'file_hash'});
 
 		if (-e $file) {
@@ -994,7 +995,8 @@ sub GetIndexPage {
 		if (-e $file) {
 			my $gitHash = $row->{'file_hash'};
 
-			DBAddItemPage('index', $currentPageNumber, $gitHash);
+			WriteLog('DBAddItemPage (2)');
+			#DBAddItemPage('index', $currentPageNumber, $gitHash);
 
 			my $gpgKey = $row->{'author_key'};
 
