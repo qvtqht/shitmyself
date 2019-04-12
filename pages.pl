@@ -500,7 +500,7 @@ sub GetPageFooter {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/stats.html", 'advanced');
+	$menuTemplate .= GetMenuItem("/stats.html", 'stats');
 
 	$footer .= $menuTemplate;
 
