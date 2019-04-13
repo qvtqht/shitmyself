@@ -152,15 +152,14 @@ sub GetVotesPage {
 
 	my $voteCounts = DBGetVoteCounts();
 
-	my @voteCountsArray = split("\n", $voteCounts);
+	my @voteCountsArray = @{$voteCounts};
 
 	foreach my $row (@voteCountsArray) {
-		my @rowSplit = split(/\|/, $row);
-
 		my $voteItemTemplate = GetTemplate('vote_page_link.template');
 
-		my $tagName = $rowSplit[0];
-		my $tagCount = $rowSplit[1];
+		my $tagName = $row->{'vote_value'};
+		my $tagCount = $row->{'vote_count'};
+
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
 		$voteItemTemplate =~ s/\$link/$voteItemLink/g;

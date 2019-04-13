@@ -26,60 +26,62 @@ my $HTMLDIR = "html";
 sub GetAuthorHeader {
 	return "HI";
 }
-
-sub GetPageParams {
-	# Used for getting the title and query for a page given its type and parameters
-	my $pageType = shift;
-
-	my %pageParams;
-	my %queryParams;
-
-	if (defined($pageType)) {
-		# If there is a page type specified
-		if ($pageType eq 'author') {
-			# Author, get the author key
-			my $authorKey = shift;
-			chomp($authorKey);
-
-			# Get the pretty versions of the alias and the avatar
-			# for the title
-			my $authorAliasHtml = GetAlias($authorKey);
-			my $authorAvatarHtml = GetAvatar($authorKey);
-
-			# Set title params
-			$pageParams{'title'} = "Posts by (or for) $authorAliasHtml";
-			$pageParams{'title_html'} = "$authorAvatarHtml";
-
-			# Set the WHERE clause for the query
-			my $whereClause = "author_key='$authorKey'";
-			$queryParams{'where_clause'} = $whereClause;
-		}
-		if ($pageType eq 'tag') {
-			my $tagKey = shift;
-			chomp($tagKey);
-
-			$pageParams{'title'} = $tagKey;
-			$pageParams{'title_html'} = $tagKey;
-
-			my @items = DBGetItemsForTag($tagKey);
-			my $itemsList = "'" . join ("','", @items) . "'";
-
-			$queryParams{'where_clause'} = "WHERE file_hash IN (" . $itemsList . ")";
-			$queryParams{'limit_clause'} = "LIMIT 1024";
-		}
-	} else {
-		# Default = main home page title
-		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
-		$pageParams{'title_html'} = GetConfig('home_title');
-		#$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
-	}
-
-	# Add the query parameters to the page parameters
-	$pageParams{'query_params'} = %queryParams;
-
-	# Return the page parameters
-	return %pageParams;
-}
+#
+# sub GetPageParams {
+# 	# Used for getting the title and query for a page given its type and parameters
+# 	my $pageType = shift;
+#
+# 	my %pageParams;
+# 	my %queryParams;
+#
+# 	if (defined($pageType)) {
+# 		# If there is a page type specified
+# 		if ($pageType eq 'author') {
+# 			# Author, get the author key
+# 			my $authorKey = shift;
+# 			chomp($authorKey);
+#
+# 			# Get the pretty versions of the alias and the avatar
+# 			# for the title
+# 			my $authorAliasHtml = GetAlias($authorKey);
+# 			my $authorAvatarHtml = GetAvatar($authorKey);
+#
+# 			# Set title params
+# 			$pageParams{'title'} = "Posts by (or for) $authorAliasHtml";
+# 			$pageParams{'title_html'} = "$authorAvatarHtml";
+#
+# 			# Set the WHERE clause for the query
+# 			my $whereClause = "author_key='$authorKey'";
+# 			$queryParams{'where_clause'} = $whereClause;
+# 		}
+# 		if ($pageType eq 'tag') {
+# 			my $tagKey = shift;
+# 			chomp($tagKey);
+#
+# 			$pageParams{'title'} = $tagKey;
+# 			$pageParams{'title_html'} = $tagKey;
+#
+# 			my @items = DBGetItemsForTag($tagKey);
+# 			my $itemsList = "'" . join ("','", @items) . "'";
+# 			#todo do this right
+# 			#fixme
+#
+# 			$queryParams{'where_clause'} = "WHERE file_hash IN (" . $itemsList . ")";
+# 			$queryParams{'limit_clause'} = "LIMIT 1024";
+# 		}
+# 	} else {
+# 		# Default = main home page title
+# 		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
+# 		$pageParams{'title_html'} = GetConfig('home_title');
+# 		#$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
+# 	}
+#
+# 	# Add the query parameters to the page parameters
+# 	$pageParams{'query_params'} = %queryParams;
+#
+# 	# Return the page parameters
+# 	return %pageParams;
+# }
 
 sub GetVersionPage {
 	my $version = shift;
@@ -621,14 +623,11 @@ PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
 
 my $voteCounts = DBGetVoteCounts();
-if ($voteCounts) {
-	my @voteCountsArray = split("\n", $voteCounts);
+my @voteCountsArray = @{$voteCounts};
 
+if (@voteCountsArray) {
 	foreach my $row (@voteCountsArray) {
-		WriteLog($row);
-
-		my @rowSplit = split(/\|/, $row);
-		my $tagName = $rowSplit[0];
+		my $tagName = $row-{'vote_value'};
 
 		my $indexPage = GetReadPage('tag', $tagName);
 

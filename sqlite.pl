@@ -219,25 +219,26 @@ sub EscapeShellChars {
 	return $string;
 }
 
-sub SqliteQuery {
-	my $query = shift;
+# sub SqliteQuery {
+# 	my $query = shift;
+#
+# 	if (!$query) {
+# 		WriteLog("SqliteQuery called without query");
+#
+# 		return;
+# 	}
+#
+# 	chomp $query;
+#
+# 	$query = EscapeShellChars($query);
+#
+# 	WriteLog( "$query\n");
+#
+# 	my $results = `sqlite3 "$SqliteDbName" "$query"`;
+#
+# 	return $results;
+# }
 
-	if (!$query) {
-		WriteLog("SqliteQuery called without query");
-
-		return;
-	}
-
-	chomp $query;
-
-	$query = EscapeShellChars($query);
-
-	WriteLog( "$query\n");
-
-	my $results = `sqlite3 "$SqliteDbName" "$query"`;
-
-	return $results;
-}
 #
 #sub DBGetVotesTable {
 #	my $fileHash = shift;
@@ -302,24 +303,18 @@ sub DBGetVotesForItem {
 #	return %hash;
 #}
 
-sub SqliteGetColumn {
-	my $query = shift;
-	chomp $query;
-
-	my @results = split("\n", SqliteQuery($query));
-
-	return @results;
-}
-
 sub SqliteGetValue {
 	my $query = shift;
 	chomp $query;
 
-	my $result;
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
 
-	$result = SqliteQuery($query);
+	my @aref = $sth->fetchrow_array();
 
-	return $result;
+	$sth->finish();
+
+	return $aref[0];
 }
 
 sub DBGetItemCount {
@@ -391,13 +386,13 @@ sub SqliteEscape {
 #
 #}
 
-sub DBGetAuthor {
-	my $query = "SELECT author_key, author_alias, vote_weight FROM author_flat";
-
-	my $authorInfo = SqliteQuery($query);
-
-	return $authorInfo;
-}
+# sub DBGetAuthor {
+# 	my $query = "SELECT author_key, author_alias, vote_weight FROM author_flat";
+#
+# 	my $authorInfo = SqliteQuery2($query);
+#
+# 	return $authorInfo;
+# }
 
 
 sub DBAddAuthor {
@@ -560,7 +555,7 @@ sub DBAddPageTouch {
 sub DBGetVoteCounts {
 	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
 
-	my $voteCounts = SqliteQuery($query);
+	my $voteCounts = SqliteQuery2($query);
 
 	return $voteCounts;
 }
@@ -723,7 +718,7 @@ sub DBAddVoteWeight {
 		if ($query) {
 			$query .= ';';
 
-			SqliteQuery($query, @queryParams);
+			SqliteQuery2($query, @queryParams);
 
 			$query = '';
 			@queryParams = ();
@@ -998,64 +993,44 @@ sub DBGetAddedTime {
 
 	my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
 
-	my $result = SqliteQuery($query);
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
 
-#	WriteLog($result);
-#	die();
+	my @aref = $sth->fetchrow_array();
 
-	return $result;
+	$sth->finish();
+
+	my $resultUnHacked = $aref[0];
+	#todo do this properly
+
+	return $resultUnHacked;
 }
 
-sub DBGetItemsForTag {
-	my $tag = shift;
-	chomp($tag);
-
-	$tag = SqliteEscape($tag);
-
-	my $query = "
-		SELECT file_hash FROM (
-			SELECT
-				file_hash,
-				COUNT(file_hash) AS vote_count
-			FROM vote
-			WHERE
-				vote_value = '$tag'
-			GROUP BY file_hash
-			ORDER BY vote_count DESC
-		) AS item_tag
-	"; #todo rewrite this query
-
-	my $result = SqliteQuery($query);
-
-	my @itemsArray = split("\n", $result);
-
-	return @itemsArray;
-}
-
-sub DBGetItemList2 {
-	my $paramHashRef = shift;
-	my %params = %$paramHashRef;
-
-	my $query;
-	$query = "
-		SELECT
-			file_path,
-			item_name,
-			file_hash,
-			author_key,
-			child_count,
-			add_timestamp
-		FROM
-			item_flat
-	";
-}
-
-sub DBGetItemFlat {
-	my $paramHashRef = shift;
-	my %params = %$paramHashRef;
-
-
-}
+# sub DBGetItemsForTag {
+# 	my $tag = shift;
+# 	chomp($tag);
+#
+# 	$tag = SqliteEscape($tag);
+#
+# 	my $query = "
+# 		SELECT file_hash FROM (
+# 			SELECT
+# 				file_hash,
+# 				COUNT(file_hash) AS vote_count
+# 			FROM vote
+# 			WHERE
+# 				vote_value = '$tag'
+# 			GROUP BY file_hash
+# 			ORDER BY vote_count DESC
+# 		) AS item_tag
+# 	"; #todo rewrite this query
+#
+# 	my $result = SqliteQuery($query);
+#
+# 	my @itemsArray = split("\n", $result);
+#
+# 	return @itemsArray;
+# }
 
 sub DBGetItemList {
 	my $paramHashRef = shift;
@@ -1069,13 +1044,14 @@ sub DBGetItemList {
 	my $query;
 	$query = "
 		SELECT
-			item_flat.file_path,
-			item_flat.item_name,
-			item_flat.file_hash,
-			item_flat.author_key,
-			item_flat.child_count,
-			item_flat.parent_count,
-			item_flat.add_timestamp
+			item_flat.file_hash hash_key,
+			item_flat.file_path file_path,
+			item_flat.item_name item_name,
+			item_flat.file_hash file_hash,
+			item_flat.author_key author_key,
+			item_flat.child_count child_count,
+			item_flat.parent_count parent_count,
+			item_flat.add_timestamp add_timestamp
 		FROM
 			item_flat
 	";
@@ -1090,31 +1066,14 @@ sub DBGetItemList {
 		$query .= " " . $params{'limit_clause'};
 	}
 
-	WriteLog("DBGetItemList()");
-	WriteLog($query);
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
 
-	my @results = split("\n", SqliteQuery($query));
+	my $aref = $sth->fetchall_hashref('hash_key');
 
-	my @return;
+	$sth->finish();
 
-	foreach (@results) {
-		chomp;
-
-		my ($file_path, $item_name, $file_hash, $author_key, $child_count, $parent_count, $add_timestamp) = split(/\|/, $_);
-		my $row = {};
-
-		$row->{'file_path'} = $file_path;
-		$row->{'item_name'} = $item_name;
-		$row->{'file_hash'} = $file_hash;
-		$row->{'author_key'} = $author_key;
-		$row->{'child_count'} = $child_count;
-		$row->{'parent_count'} = $parent_count;
-		$row->{'add_timestamp'} = $add_timestamp;
-
-		push @return, $row;
-	}
-
-	return @return;
+	return $aref;
 }
 
 sub DBGetItemListForAuthor {
@@ -1137,7 +1096,17 @@ sub DBGetItemListForAuthor {
 sub DBGetAuthorList {
 	my $query = "SELECT key FROM author";
 
-	my @results = SqliteGetColumn($query);
+    my $sth = $dbh->prepare($query);
+
+    my $aref = $sth->fetchall_arrayref();
+
+    $sth->finish();
+
+	my @results;
+
+	foreach (@{$aref}) {
+		push @results, $_{'key'};
+	}
 
 	return @results;
 }
