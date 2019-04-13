@@ -160,8 +160,12 @@ sub IndexFile {
 		}
 
 		# debug output
-		WriteLog("... \$addedTime = $addedTime");
 		WriteLog("... " . $gpgResults{'gitHash'});
+		if ($addedTime) {
+			WriteLog("... \$addedTime = $addedTime");
+		} else {
+			WriteLog("... \$addedTime is not set");
+		}
 
 		if (!$addedTime) {
 			# This file was not added through access.pl, and has

@@ -497,6 +497,11 @@ sub MakeRssFile {
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
+		if (!$fileHash) {
+			WriteLog("Problem! No \$fileHash in \$file");
+			next;
+		}
+
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
 

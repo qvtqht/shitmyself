@@ -831,6 +831,10 @@ sub DBAddVoteRecord {
 		return;
 	}
 
+	if (!$fileHash) {
+		WriteLog("DBAddVoteRecord() called without \$fileHash! Returning.");
+	}
+
 	if ($query && (length($query) > 10240 && scalar(@queryParams) > 32)) {
 		DBAddVoteRecord('flush');
 		$query = '';
@@ -839,6 +843,14 @@ sub DBAddVoteRecord {
 	my $ballotTime = shift;
 	my $voteValue = shift;
 	my $signedBy = shift;
+
+	if (!$ballotTime) {
+		WriteLog("DBAddVoteRecord() called without \$ballotTime! Returning.");
+	}
+
+	if (!$signedBy) {
+		WriteLog("DBAddVoteRecord() called without \$signedBy! Returning.");
+	}
 
 	chomp $fileHash;
 	chomp $ballotTime;
