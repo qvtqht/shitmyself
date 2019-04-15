@@ -46,15 +46,21 @@ if (!-e 'html/txt/.git') {
 
 
 my $gpgCommand;
-if (GetConfig('use_gpg2')) {
-	$gpgCommand = 'gpg2';
+if (GetConfig('gpg_command')) {
+	$gpgCommand = GetConfig('gpg_command');
 } else {
-	if (GetGpgMajorVersion() eq '2') {
+	if (GetConfig('use_gpg2')) {
 		$gpgCommand = 'gpg2';
-	} else {
-		$gpgCommand = 'gpg';
 	}
-	#what a mess
+	else {
+		if (GetGpgMajorVersion() eq '2') {
+			$gpgCommand = 'gpg2';
+		}
+		else {
+			$gpgCommand = 'gpg';
+		}
+		#what a mess
+	}
 }
 WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
