@@ -1061,7 +1061,6 @@ sub DBGetItemList {
 	my $query;
 	$query = "
 		SELECT
-			item_flat.file_hash hash_key,
 			item_flat.file_path file_path,
 			item_flat.item_name item_name,
 			item_flat.file_hash file_hash,
@@ -1095,7 +1094,7 @@ sub DBGetItemList {
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
 
-	my $aref = $sth->fetchall_hashref('hash_key');
+	my $aref = $sth->fetchall_arrayref();
 
 	$sth->finish();
 
