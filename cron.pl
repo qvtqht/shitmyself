@@ -45,8 +45,6 @@ while (!$touch || time() < $startTime + $interval) {
 		system('perl rebuild.pl');
 		#WriteLog('Skipping rebuild');
 	}
-	
-	sleep(1);
 }
 
 WriteLog( "Finished!");

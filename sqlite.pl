@@ -1098,11 +1098,13 @@ sub DBGetItemList {
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
 
-	my $aref = $sth->fetchall_arrayref();
+	my @resultsArray = ();
 
-	$sth->finish();
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
+	}
 
-	return $aref;
+	return @resultsArray;
 }
 
 sub DBGetItemListForAuthor {
@@ -1127,17 +1129,15 @@ sub DBGetAuthorList {
 
     my $sth = $dbh->prepare($query);
 
-    my $aref = $sth->fetchall_arrayref();
+    $sth->execute();
 
-    $sth->finish();
+	my @resultsArray = ();
 
-	my @results;
-
-	foreach (@{$aref}) {
-		push @results, $_{'key'};
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
 	}
 
-	return @results;
+	return @resultsArray;
 }
 
 sub DBGetAuthorAlias {

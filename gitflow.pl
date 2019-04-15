@@ -232,6 +232,7 @@ foreach my $page (@touchedPagesArray) {
 		# get item list using DBGetItemList()
 		# #todo clean this up a little, perhaps crete DBGetItem()
 		my @files = DBGetItemList({'where_clause' => "WHERE file_hash = '$fileHash'"});
+
 		if (scalar(@files)) {
 			my $file = $files[0];
 

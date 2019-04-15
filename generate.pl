@@ -422,8 +422,8 @@ WriteLog('@authors: ' . scalar(@authors));
 
 my $authorInterval = 3600;
 
-foreach my $key (@authors) {
-	WriteLog ("$key");
+foreach my $hashRef (@authors) {
+	my $key = $hashRef->{'key'};
 
 	my $lastTouch = GetCache("key/$key");
 	if ($lastTouch && $lastTouch + $authorInterval > time()) {
@@ -460,32 +460,33 @@ foreach my $key (@authors) {
 #
 #	}
 }
+#
+# sub MakeRssFile {
+# 	my %queryParams;
+# 	my @files = DBGetItemList(\%queryParams);
+#
+# 	my $fileList = "";
+#
+# 	foreach my $file(@files) {
+# 		my $fileHash = $file->{'file_hash'};
+#
+# 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+# 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+#
+# 			return;
+# 		}
+#
+# 		my $fileName = $file->{'file_path'};
+#
+# 		$fileList .= $fileName . "|" . $fileHash . "\n";
+# 	}
+#
+# 	PutFile("$HTMLDIR/rss.txt", $fileList);
+# }
 
-sub MakeRssFile {
-	my %queryParams;
-	my @files = DBGetItemList(\%queryParams);
-
-	my $fileList = "";
-
-	foreach my $file(@files) {
-		my $fileHash = $file->{'file_hash'};
-
-		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
-
-			return;
-		}
-
-		my $fileName = $file->{'file_path'};
-
-		$fileList .= $fileName . "|" . $fileHash . "\n";
-	}
-
-	PutFile("$HTMLDIR/rss.txt", $fileList);
-}
-
+# this should create a page for each item
 {
-	my %queryParams;
+	my %queryParams = ();
 	my @files = DBGetItemList(\%queryParams);
 
 	WriteLog("DBGetItemList() returned " . scalar(@files) . " items");
@@ -508,14 +509,7 @@ sub MakeRssFile {
 			return;
 		}
 
-		my $lastTouch = GetCache("file/$fileHash");
-		if ($lastTouch && $lastTouch + $fileInterval > time()) {
-			#WriteLog("I already did $fileHash recently, too lazy to do it again");
-			#next;
-			#todo uncomment
-		}
-
-		my $fileName = $file->{'file_hash'};
+		my $fileName = $fileHash;
 
 		$fileName =~ s/^\.//;
 		$fileName =~ s/\/html//;
