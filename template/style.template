@@ -80,11 +80,8 @@ nobr, .fckchrm {
 	margin: 8pt;
 }
 div.txt {
-	border-top: 2pt dotted $primaryColor;
-	border-left: 2pt dotted $primaryColor;
-	border-bottom: 4pt double $primaryColor;
-	border-right: 4pt double $primaryColor;
-	border-radius: 10pt;
+	border-left: 2pt solid $primaryColor;
+	border-radius: 10pt 0pt 0pt 0pt;
 	padding-left: 1em;
 }
 div.reply {
