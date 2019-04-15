@@ -414,6 +414,8 @@ function saveId() {
 					}
 //					var profileUrl = '/author/' + myFingerprint;
 //					myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
+					var profileUrl = '/author/' + myFingerprint;
+					myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
 				}
 
 				var myCrea = document.getElementById('myCrea');
@@ -764,3 +766,4 @@ function signMessage() {
 //if (statusBox) {
 //	statusBox.value = statusBox.value + '\nReady!';
 //}
+
