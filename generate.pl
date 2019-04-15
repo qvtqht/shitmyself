@@ -630,15 +630,15 @@ PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};
 
-if (@voteCountsArray) {
-	foreach my $row (@voteCountsArray) {
-		my $tagName = $row-{'vote_value'};
+while (@voteCountsArray) {
+	my $tag = pop @voteCountsArray;
 
-		my $indexPage = GetReadPage('tag', $tagName);
+	my $tagName = @{$tag}[0];
+	#my $tagCount = @{$tag}[1];
 
-		PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
-	}
+	my $indexPage = GetReadPage('tag', $tagName);
 
+	PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
 }
 #
 #sub MakePage {

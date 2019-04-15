@@ -555,9 +555,14 @@ sub DBAddPageTouch {
 sub DBGetVoteCounts {
 	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
 
-	my $voteCounts = SqliteQuery2($query);
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
 
-	return $voteCounts;
+	my $ref = $sth->fetchall_arrayref();
+
+	$sth->finish();
+
+	return $ref;
 }
 
 #sub GetTopItemsForTag {
@@ -1068,8 +1073,14 @@ sub DBGetItemList {
 			item_flat
 	";
 
+	if (defined ($params{'join_clause'})) {
+		$query .= " " . $params{'join_clause'};
+	}
 	if (defined ($params{'where_clause'})) {
 		$query .= " " . $params{'where_clause'};
+	}
+	if (defined ($params{'group_by_clause'})) {
+		$query .= " " . $params{'group_by_clause'};
 	}
 	if (defined ($params{'order_clause'})) {
 		$query .= " " . $params{'order_clause'};
@@ -1077,6 +1088,9 @@ sub DBGetItemList {
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
 	}
+
+	WriteLog("DBGetItemList");
+	WriteLog("$query");
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();

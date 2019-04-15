@@ -154,11 +154,13 @@ sub GetVotesPage {
 
 	my @voteCountsArray = @{$voteCounts};
 
-	foreach my $row (@voteCountsArray) {
+	while (@voteCountsArray) {
 		my $voteItemTemplate = GetTemplate('vote_page_link.template');
 
-		my $tagName = $row->{'vote_value'};
-		my $tagCount = $row->{'vote_count'};
+		my $tag = pop @voteCountsArray;
+
+		my $tagName = @{$tag}[0];
+		my $tagCount = @{$tag}[1];
 
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
@@ -727,12 +729,10 @@ sub GetReadPage {
 			$titleHtml = $title;
 
 			my %queryParams;
-			$queryParams{'where_clause'} = "
-				JOIN vote ON (item_flat.file_hash = vote.file_hash)
-				WHERE vote.vote_value = '$tagName'
-				GROUP BY vote.file_hash
-				ORDER BY item_flat.add_timestamp DESC
-			"; #todo this is abuse of the where_clause parameter
+			$queryParams{'join_clause'} = "JOIN vote ON (item_flat.file_hash = vote.file_hash)";
+			$queryParams{'group_by_clause'} = "GROUP BY vote.file_hash";
+			$queryParams{'where_clause'} = "WHERE vote.vote_value = '$tagName'";
+			$queryParams{'order_clause'} = "ORDER BY item_flat.add_timestamp DESC";
 			$queryParams{'limit_clause'} = "LIMIT 100"; #todo fix hardcoded limit
 
 			@files = DBGetItemList(\%queryParams);

@@ -70,16 +70,23 @@ WriteLog('$gitChanges = ' . $gitChanges);
 # Get an array of changed files that git returned
 my @gitChangesArray = split("\n", $gitChanges);
 
+# Log number of changes
 WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
 
+# See if gitflow_file_limit setting exists
+# This limits the number of files to process per launch of gitflow.pl
 my $filesLimit = GetConfig('gitflow_file_limit');
 if (!$filesLimit) {
 	WriteLog("WARNING: config/gitflow_file_limit missing!");
 	$filesLimit = 100;
 }
+
+# Keep track of how many files we've processed
 my $filesProcessed = 0;
 
+# Go through all the changed files
 foreach my $file (@gitChangesArray) {
+	# Add to counter
 	$filesProcessed++;
 	if ($filesProcessed > $filesLimit) {
 		WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
@@ -256,7 +263,7 @@ foreach my $page (@touchedPagesArray) {
 	#WriteIndexPages();
 #}
 
-#rebuild abyss pages no more than once an hour
+# rebuild abyss pages no more than once an hour (defualt/abyss_rebuild_interval)
 my $lastAbyssRebuild = GetConfig('last_abyss');
 my $abyssRebuildInterval = GetConfig('abyss_rebuild_interval');
 my $curTime = time();
