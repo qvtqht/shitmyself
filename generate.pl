@@ -26,60 +26,62 @@ my $HTMLDIR = "html";
 sub GetAuthorHeader {
 	return "HI";
 }
-
-sub GetPageParams {
-	# Used for getting the title and query for a page given its type and parameters
-	my $pageType = shift;
-
-	my %pageParams;
-	my %queryParams;
-
-	if (defined($pageType)) {
-		# If there is a page type specified
-		if ($pageType eq 'author') {
-			# Author, get the author key
-			my $authorKey = shift;
-			chomp($authorKey);
-
-			# Get the pretty versions of the alias and the avatar
-			# for the title
-			my $authorAliasHtml = GetAlias($authorKey);
-			my $authorAvatarHtml = GetAvatar($authorKey);
-
-			# Set title params
-			$pageParams{'title'} = "Posts by (or for) $authorAliasHtml";
-			$pageParams{'title_html'} = "$authorAvatarHtml";
-
-			# Set the WHERE clause for the query
-			my $whereClause = "author_key='$authorKey'";
-			$queryParams{'where_clause'} = $whereClause;
-		}
-		if ($pageType eq 'tag') {
-			my $tagKey = shift;
-			chomp($tagKey);
-
-			$pageParams{'title'} = $tagKey;
-			$pageParams{'title_html'} = $tagKey;
-
-			my @items = DBGetItemsForTag($tagKey);
-			my $itemsList = "'" . join ("','", @items) . "'";
-
-			$queryParams{'where_clause'} = "WHERE file_hash IN (" . $itemsList . ")";
-			$queryParams{'limit_clause'} = "LIMIT 1024";
-		}
-	} else {
-		# Default = main home page title
-		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
-		$pageParams{'title_html'} = GetConfig('home_title');
-		#$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
-	}
-
-	# Add the query parameters to the page parameters
-	$pageParams{'query_params'} = %queryParams;
-
-	# Return the page parameters
-	return %pageParams;
-}
+#
+# sub GetPageParams {
+# 	# Used for getting the title and query for a page given its type and parameters
+# 	my $pageType = shift;
+#
+# 	my %pageParams;
+# 	my %queryParams;
+#
+# 	if (defined($pageType)) {
+# 		# If there is a page type specified
+# 		if ($pageType eq 'author') {
+# 			# Author, get the author key
+# 			my $authorKey = shift;
+# 			chomp($authorKey);
+#
+# 			# Get the pretty versions of the alias and the avatar
+# 			# for the title
+# 			my $authorAliasHtml = GetAlias($authorKey);
+# 			my $authorAvatarHtml = GetAvatar($authorKey);
+#
+# 			# Set title params
+# 			$pageParams{'title'} = "Posts by (or for) $authorAliasHtml";
+# 			$pageParams{'title_html'} = "$authorAvatarHtml";
+#
+# 			# Set the WHERE clause for the query
+# 			my $whereClause = "author_key='$authorKey'";
+# 			$queryParams{'where_clause'} = $whereClause;
+# 		}
+# 		if ($pageType eq 'tag') {
+# 			my $tagKey = shift;
+# 			chomp($tagKey);
+#
+# 			$pageParams{'title'} = $tagKey;
+# 			$pageParams{'title_html'} = $tagKey;
+#
+# 			my @items = DBGetItemsForTag($tagKey);
+# 			my $itemsList = "'" . join ("','", @items) . "'";
+# 			#todo do this right
+# 			#fixme
+#
+# 			$queryParams{'where_clause'} = "WHERE file_hash IN (" . $itemsList . ")";
+# 			$queryParams{'limit_clause'} = "LIMIT 1024";
+# 		}
+# 	} else {
+# 		# Default = main home page title
+# 		$pageParams{'title'} = GetConfig('home_title') . GetConfig('logo_text');
+# 		$pageParams{'title_html'} = GetConfig('home_title');
+# 		#$queryParams{'where_clause'} = "item_type = 'text' AND IFNULL(parent_count, 0) = 0";
+# 	}
+#
+# 	# Add the query parameters to the page parameters
+# 	$pageParams{'query_params'} = %queryParams;
+#
+# 	# Return the page parameters
+# 	return %pageParams;
+# }
 
 sub GetVersionPage {
 	my $version = shift;
@@ -420,8 +422,8 @@ WriteLog('@authors: ' . scalar(@authors));
 
 my $authorInterval = 3600;
 
-foreach my $key (@authors) {
-	WriteLog ("$key");
+foreach my $hashRef (@authors) {
+	my $key = $hashRef->{'key'};
 
 	my $lastTouch = GetCache("key/$key");
 	if ($lastTouch && $lastTouch + $authorInterval > time()) {
@@ -458,32 +460,33 @@ foreach my $key (@authors) {
 #
 #	}
 }
+#
+# sub MakeRssFile {
+# 	my %queryParams;
+# 	my @files = DBGetItemList(\%queryParams);
+#
+# 	my $fileList = "";
+#
+# 	foreach my $file(@files) {
+# 		my $fileHash = $file->{'file_hash'};
+#
+# 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+# 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+#
+# 			return;
+# 		}
+#
+# 		my $fileName = $file->{'file_path'};
+#
+# 		$fileList .= $fileName . "|" . $fileHash . "\n";
+# 	}
+#
+# 	PutFile("$HTMLDIR/rss.txt", $fileList);
+# }
 
-sub MakeRssFile {
-	my %queryParams;
-	my @files = DBGetItemList(\%queryParams);
-
-	my $fileList = "";
-
-	foreach my $file(@files) {
-		my $fileHash = $file->{'file_hash'};
-
-		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
-
-			return;
-		}
-
-		my $fileName = $file->{'file_path'};
-
-		$fileList .= $fileName . "|" . $fileHash . "\n";
-	}
-
-	PutFile("$HTMLDIR/rss.txt", $fileList);
-}
-
+# this should create a page for each item
 {
-	my %queryParams;
+	my %queryParams = ();
 	my @files = DBGetItemList(\%queryParams);
 
 	WriteLog("DBGetItemList() returned " . scalar(@files) . " items");
@@ -495,20 +498,18 @@ sub MakeRssFile {
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
+		if (!$fileHash) {
+			WriteLog("Problem! No \$fileHash in \$file");
+			next;
+		}
+
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
 
 			return;
 		}
 
-		my $lastTouch = GetCache("file/$fileHash");
-		if ($lastTouch && $lastTouch + $fileInterval > time()) {
-			#WriteLog("I already did $fileHash recently, too lazy to do it again");
-			#next;
-			#todo uncomment
-		}
-
-		my $fileName = $file->{'file_hash'};
+		my $fileName = $fileHash;
 
 		$fileName =~ s/^\.//;
 		$fileName =~ s/\/html//;
@@ -621,20 +622,17 @@ PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
 
 my $voteCounts = DBGetVoteCounts();
-if ($voteCounts) {
-	my @voteCountsArray = split("\n", $voteCounts);
+my @voteCountsArray = @{$voteCounts};
 
-	foreach my $row (@voteCountsArray) {
-		WriteLog($row);
+while (@voteCountsArray) {
+	my $tag = pop @voteCountsArray;
 
-		my @rowSplit = split(/\|/, $row);
-		my $tagName = $rowSplit[0];
+	my $tagName = @{$tag}[0];
+	#my $tagCount = @{$tag}[1];
 
-		my $indexPage = GetReadPage('tag', $tagName);
+	my $indexPage = GetReadPage('tag', $tagName);
 
-		PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
-	}
-
+	PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
 }
 #
 #sub MakePage {

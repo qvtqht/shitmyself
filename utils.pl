@@ -46,15 +46,21 @@ if (!-e 'html/txt/.git') {
 
 
 my $gpgCommand;
-if (GetConfig('use_gpg2')) {
-	$gpgCommand = 'gpg2';
+if (GetConfig('gpg_command')) {
+	$gpgCommand = GetConfig('gpg_command');
 } else {
-	if (GetGpgMajorVersion() eq '2') {
+	if (GetConfig('use_gpg2')) {
 		$gpgCommand = 'gpg2';
-	} else {
-		$gpgCommand = 'gpg';
 	}
-	#what a mess
+	else {
+		if (GetGpgMajorVersion() eq '2') {
+			$gpgCommand = 'gpg2';
+		}
+		else {
+			$gpgCommand = 'gpg';
+		}
+		#what a mess
+	}
 }
 WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
@@ -876,7 +882,12 @@ sub GpgParse {
 		###############
 		## PUBLIC KEY
 		##
+
+		WriteLog("Looking for public key header...");
+
 		if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
+			WriteLog("Found public key header!");
+
 			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\"");
 			my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath"`;
 			WriteLog($gpg_result);
@@ -900,12 +911,14 @@ sub GpgParse {
 			#		return;
 
 			foreach (split("\n", $gpg_result)) {
+
 				chomp;
-				WriteLog('$gpgCommand is "' . $gpgCommand . '"');
+				WriteLog("Looking for returned alias in $_");
 
 				# gpg 1
-				if ($gpgCommand eq 'gpg') {
+				if ($gpgCommand eq 'gpg' || !GetConfig('use_gpg2')) {
 					WriteLog('$gpgCommand is gpg');
+
 					if (substr($_, 0, 4) eq 'pub ') {
 						my @split = split(" ", $_, 4);
 						$alias = $split[3];
@@ -921,7 +934,7 @@ sub GpgParse {
 				}
 
 				# gpg 2
-				elsif ($gpgCommand eq 'gpg2') {
+				elsif ($gpgCommand eq 'gpg2' || GetConfig('use_gpg2')) {
 					WriteLog('$gpgCommand is gpg2');
 					WriteLog('@@' . $_);
 					if (substr($_, 0, 4) eq 'uid ') {

@@ -129,6 +129,8 @@ sub IndexFile {
 		$fingerprint = $gpgResults{'fingerprint'};
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
+		WriteLog("\$alias = $alias");
+
 		my $detokenedMessage = $message;
 		# this is used to store $message minus any tokens found
 		# in the end, we will see if it is empty, and set flags accordingly
@@ -160,8 +162,12 @@ sub IndexFile {
 		}
 
 		# debug output
-		WriteLog("... \$addedTime = $addedTime");
 		WriteLog("... " . $gpgResults{'gitHash'});
+		if ($addedTime) {
+			WriteLog("... \$addedTime = $addedTime");
+		} else {
+			WriteLog("... \$addedTime is not set");
+		}
 
 		if (!$addedTime) {
 			# This file was not added through access.pl, and has
@@ -537,6 +543,8 @@ sub MakeIndex {
 	my @filesToInclude = @{$_[0]};
 
 	foreach my $file (@filesToInclude) {
+		WriteLog("MakeIndex: $file");
+
 		IndexFile($file);
 	}
 

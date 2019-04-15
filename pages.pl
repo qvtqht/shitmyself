@@ -152,15 +152,16 @@ sub GetVotesPage {
 
 	my $voteCounts = DBGetVoteCounts();
 
-	my @voteCountsArray = split("\n", $voteCounts);
+	my @voteCountsArray = @{$voteCounts};
 
-	foreach my $row (@voteCountsArray) {
-		my @rowSplit = split(/\|/, $row);
-
+	while (@voteCountsArray) {
 		my $voteItemTemplate = GetTemplate('vote_page_link.template');
 
-		my $tagName = $rowSplit[0];
-		my $tagCount = $rowSplit[1];
+		my $tag = pop @voteCountsArray;
+
+		my $tagName = @{$tag}[0];
+		my $tagCount = @{$tag}[1];
+
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
 		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
@@ -500,7 +501,7 @@ sub GetPageFooter {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/stats.html", 'advanced');
+	$menuTemplate .= GetMenuItem("/stats.html", 'stats');
 
 	$footer .= $menuTemplate;
 
@@ -728,12 +729,10 @@ sub GetReadPage {
 			$titleHtml = $title;
 
 			my %queryParams;
-			$queryParams{'where_clause'} = "
-				JOIN vote ON (item_flat.file_hash = vote.file_hash)
-				WHERE vote.vote_value = '$tagName'
-				GROUP BY vote.file_hash
-				ORDER BY item_flat.add_timestamp DESC
-			"; #todo this is abuse of the where_clause parameter
+			$queryParams{'join_clause'} = "JOIN vote ON (item_flat.file_hash = vote.file_hash)";
+			$queryParams{'group_by_clause'} = "GROUP BY vote.file_hash";
+			$queryParams{'where_clause'} = "WHERE vote.vote_value = '$tagName'";
+			$queryParams{'order_clause'} = "ORDER BY item_flat.add_timestamp DESC";
 			$queryParams{'limit_clause'} = "LIMIT 100"; #todo fix hardcoded limit
 
 			@files = DBGetItemList(\%queryParams);
@@ -784,9 +783,10 @@ sub GetReadPage {
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
+		WriteLog("DBAddItemPage (1)");
 		DBAddItemPage($pageType, $pageParam, $row->{'file_hash'});
 
-		if (-e $file) {
+		if ($file && -e $file) {
 			my $gitHash = $row->{'file_hash'};
 
 			my $gpgKey = $row->{'author_key'};
@@ -991,10 +991,11 @@ sub GetIndexPage {
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
-		if (-e $file) {
+		if ($file && -e $file) {
 			my $gitHash = $row->{'file_hash'};
 
-			DBAddItemPage('index', $currentPageNumber, $gitHash);
+			WriteLog('DBAddItemPage (2)');
+			#DBAddItemPage('index', $currentPageNumber, $gitHash);
 
 			my $gpgKey = $row->{'author_key'};
 

@@ -25,7 +25,7 @@ ProcessAccessLog($accessLogPath);
 
 # This holds all the files we will list in the primary index
 my @filesToInclude;
-push (@filesToInclude, `find html/txt/ | grep \.txt\$ | sort -r`);
+push (@filesToInclude, `find html/txt | grep \.txt\$ | sort -r`);
 
 #push (@filesToInclude, `find html/txt/ | grep \.md\$ | sort -r`); #todo add support for .md (markdown) files
 
