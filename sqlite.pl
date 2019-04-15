@@ -921,7 +921,7 @@ sub DBAddAddedTimeRecord {
 		return;
 	}
 
-	if ($query && length($query) > 1024 || scalar(@queryParams) > 32) {
+	if ($query && length($query) > 1024 || scalar(@queryParams) > 64) {
 		DBAddAddedTimeRecord('flush');
 		$query = '';
 		@queryParams = ();
