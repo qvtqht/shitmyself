@@ -1,0 +1,9 @@
+<?php
+header('Location: /', true, 301);
+ob_flush();
+//include('gracias.html');
+
+system('cd /home/qdbhike/hike ; time ./gitflow.sh &');
+
+
+
