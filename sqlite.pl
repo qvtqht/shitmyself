@@ -489,6 +489,10 @@ sub DBAddItemPage {
 	my $pageType = shift;
 	my $pageParam = shift;
 
+	if (!$pageParam) {
+		$pageParam = '';
+	}
+
 	WriteLog("DBAddItemPage($itemHash, $pageType, $pageParam)");
 
 	if (!$query) {

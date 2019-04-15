@@ -786,7 +786,7 @@ sub GetReadPage {
 		WriteLog("DBAddItemPage (1)");
 		DBAddItemPage($pageType, $pageParam, $row->{'file_hash'});
 
-		if (-e $file) {
+		if ($file && -e $file) {
 			my $gitHash = $row->{'file_hash'};
 
 			my $gpgKey = $row->{'author_key'};
@@ -991,7 +991,7 @@ sub GetIndexPage {
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
-		if (-e $file) {
+		if ($file && -e $file) {
 			my $gitHash = $row->{'file_hash'};
 
 			WriteLog('DBAddItemPage (2)');
