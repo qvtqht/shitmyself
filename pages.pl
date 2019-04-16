@@ -567,6 +567,8 @@ sub GetPageHeader {
 
 	my $patternName = 'pattern/bokeh.template';
 
+	$patternName = GetConfig('header_pattern');
+
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
 	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
