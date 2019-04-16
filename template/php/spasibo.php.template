@@ -2,7 +2,5 @@
 ob_flush();
 include('gracias.html');
 
-system('cd /home/qdbhike/hike ; time ./gitflow.sh &');
-
-
+exec('cd /home/qdbhike/hike ; time ./gitflow.sh &');
 
