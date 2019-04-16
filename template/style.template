@@ -80,16 +80,15 @@ nobr, .fckchrm {
 	margin: 8pt;
 }
 div.txt {
-	border-left: 2pt solid $primaryColor;
+	border-left: 3pt solid $primaryColor;
 	border-radius: 10pt 0pt 0pt 0pt;
 	padding-left: 1em;
 }
 div.reply {
-	border-top: 3px dotted $primaryColor;
-	border-left: 3px dotted $primaryColor;
+	border-left: 3pt dotted $primaryColor;
 	margin-left: 5%;
 	padding-left: 1em; width: 85%;
-	border-radius: 10pt;
+	border-radius: 10pt 0pt 0pt 0pt;
 }
 .admin {
 	background: repeating-linear-gradient(
