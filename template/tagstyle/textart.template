@@ -2,4 +2,4 @@ font-family: monospace;
 font-size: smaller;
 color: #00c000;
 background-color: #404040;
-
+border: 2pt $primaryColor inset;
