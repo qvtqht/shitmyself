@@ -406,14 +406,14 @@ sub GetConfig {
 
 	if (-e "config/$configName") {
 		my $configValue = GetFile("config/$configName");
-		$configValue = trim($configValue);
+		#$configValue = trim($configValue);
 		$configLookup{$configValue} = $configValue;
 
 		return $configValue;
 	} else {
 		if (-e "default/$configName") {
 			my $configValue = GetFile("default/$configName");
-			$configValue = trim($configValue);
+			#$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 			PutConfig ($configName, $configValue);
 
@@ -1171,7 +1171,7 @@ sub ServerSign {
 		return;
 	}
 
-	my $serverKeyId = GetConfig('server_key_id');
+	my $serverKeyId = trim(GetConfig('server_key_id'));
 
 	if (!$serverKeyId) {
 		return;
@@ -1184,16 +1184,16 @@ sub ServerSign {
 
 	# if public key has not been published yet, do it
 	if (!-e "html/txt/server.key") {
-		WriteLog("gpg --armor --export $serverKeyId > html/txt/server.key.txt");
-		my $gpgOutput = `gpg --armor --export $serverKeyId > html/txt/server.key.txt`;
+		WriteLog("gpg --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt");
+		my $gpgOutput = `gpg --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt`;
 		WriteLog($gpgOutput);
 	}
 
 	if ($serverKey) {
 		WriteLog("We have a server key, so go ahead and sign the changelog.");
 
-		WriteLog("gpg --default-key $serverKeyId --clearsign \"$file\"");
-		system("gpg --default-key $serverKeyId --clearsign \"$file\"");
+		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
+		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 
 		if (-e "$file.asc") {
 			WriteLog("Sign appears successful, rename .asc file to .txt");
