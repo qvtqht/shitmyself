@@ -15,6 +15,7 @@ use 5.010;
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
 
+
 require './utils.pl';
 require './sqlite.pl';
 require './index.pl';
@@ -22,6 +23,20 @@ require './access.pl';
 require './pages.pl';
 
 WriteLog('gitflow.pl begin');
+
+my $lockTime = GetFile('cron.lock');
+my $currentTime = time();
+
+if ($lockTime) {
+	if ($currentTime - 1800 < $lockTime) {
+		WriteLog('Quitting due to lock file');
+		die();
+	} else {
+		WriteLog('Lock file exists, but old. Continuing.');
+	}
+}
+PutFile('cron.lock', $currentTime);
+$lockTime = $currentTime;
 
 # store the last time we did this from config/gitflow_last
 my $lastFlow = GetConfig('gitflow_last');
@@ -283,5 +298,7 @@ foreach my $page (@touchedPagesArray) {
 my $newLastFlow = time();
 WriteLog($newLastFlow);
 PutConfig('gitflow_last', $newLastFlow);
+
+unlink('cron.lock');
 
 1;
