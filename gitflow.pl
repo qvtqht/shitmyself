@@ -264,20 +264,20 @@ foreach my $page (@touchedPagesArray) {
 	#WriteIndexPages();
 #}
 
-# rebuild abyss pages no more than once an hour (defualt/abyss_rebuild_interval)
-my $lastAbyssRebuild = GetConfig('last_abyss');
-my $abyssRebuildInterval = GetConfig('abyss_rebuild_interval');
-my $curTime = time();
-
-WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
-if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
-	$lastAbyssRebuild = 0;
-}
-if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
-	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
-	WriteIndexPages();
-	PutConfig('last_abyss', $curTime);
-}
+## rebuild abyss pages no more than once an hour (defualt/abyss_rebuild_interval)
+#my $lastAbyssRebuild = GetConfig('last_abyss');
+#my $abyssRebuildInterval = GetConfig('abyss_rebuild_interval');
+#my $curTime = time();
+#
+#WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
+#if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
+#	$lastAbyssRebuild = 0;
+#}
+#if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
+#	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
+#	WriteIndexPages();
+#	PutConfig('last_abyss', $curTime);
+#}
 
 # save current time in config/gitflow_last
 my $newLastFlow = time();
