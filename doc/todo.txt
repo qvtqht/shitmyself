@@ -6,18 +6,29 @@ Instant updates
 Nicer-looking threading
 	Two-level thread nesting
 	"Reply" buttons on the item page and the child items
+One-click voting buttons
+	config for different tags based on existing tags
+Generate one page for each thread
+	Crawl the thread tree and build a graph
+
 
 Use shortened hashes to identify posts
 	Make checkbox names shorter
 	Make HTML files names shorter
 
 
+Check for, download, and install dependencies
+	gpg
+	mongoose?
+	lighttpd
+	perl modules
 
 
 #todo
 # if we need to read from the db, like to generate.pl
 # and there is no database, we can fall back on whatever
 # version is available
+
 
 
 Make it possible to restore from private key without creating new ID first.
