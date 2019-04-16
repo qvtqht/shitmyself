@@ -407,15 +407,13 @@ function saveId() {
 
 				var myIdProfile = document.getElementById('myIdProfile');
 				if (myIdProfile) {
-					if (UrlExists('/author/' + myFingerprint + '/')) {
-						myIdProfile.innerHTML = '<a href="/author/' + myFingerprint + '">Profile page</a>';
+					var profileUrl = '/author/' + myFingerprint + '/';
+
+					if (UrlExists(profileUrl)) {
+						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
 					} else {
 						myIdProfile.innerHTML = '';
 					}
-//					var profileUrl = '/author/' + myFingerprint;
-//					myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
-					var profileUrl = '/author/' + myFingerprint;
-					myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
 				}
 
 				var myCrea = document.getElementById('myCrea');
