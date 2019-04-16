@@ -322,7 +322,7 @@ sub MakeStaticPages {
 
 	# Target page for the submit page
 	my $graciasPage = GetPageHeader("Thank You", "Thank You");
-	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="2; url=\/"><\/head>/;
 
 	$graciasPage .= GetTemplate('maincontent.template');
 
@@ -401,6 +401,11 @@ sub MakeStaticPages {
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
+	if (GetConfig('enable_php_support')) {
+		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess.for.php.template')."\n";
+		PutFile("$HTMLDIR/spasibo.php", GetTemplate('php/spasibo.php.template'));
+		PutFile("$HTMLDIR/spasibo2.php", GetTemplate('php/spasibo2.php.template'));
+	}
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 	PutHtmlFile("$HTMLDIR/favicon.ico", '');

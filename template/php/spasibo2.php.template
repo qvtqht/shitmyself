@@ -1,0 +1,6 @@
+<?php
+ob_flush();
+include('gracias.html');
+
+exec('cd /home/qdbhike/hike ; time ./gitflow.sh &');
+
