@@ -403,8 +403,13 @@ sub MakeStaticPages {
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
 	if (GetConfig('enable_php_support')) {
 		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess.for.php.template')."\n";
+
 		PutFile("$HTMLDIR/spasibo.php", GetTemplate('php/spasibo.php.template'));
-		PutFile("$HTMLDIR/spasibo2.php", GetTemplate('php/spasibo2.php.template'));
+
+		my $spasibo2Template = GetTemplate('php/spasibo2.php.template');
+		my $myPath = `pwd`;
+		$spasibo2Template =~ s/\$myPath/$myPath/g;
+		PutFile("$HTMLDIR/spasibo2.php", $spasibo2Template);
 	}
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
