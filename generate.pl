@@ -408,6 +408,7 @@ sub MakeStaticPages {
 
 		my $spasibo2Template = GetTemplate('php/spasibo2.php.template');
 		my $myPath = `pwd`;
+		chomp $myPath;
 		$spasibo2Template =~ s/\$myPath/$myPath/g;
 		PutFile("$HTMLDIR/spasibo2.php", $spasibo2Template);
 	}
