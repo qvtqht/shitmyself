@@ -8,6 +8,10 @@ function logOut() {
 	removeStoredKeys();
 }
 
+function makePaste() {
+	alert();
+}
+
 var loading = document.getElementById('loading');
 if (loading) {
 	loading.style.display = 'none';
