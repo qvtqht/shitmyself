@@ -235,7 +235,7 @@ sub IndexFile {
 
 					if (IsSha1($parentHash)) {
 						DBAddItemParent($gitHash, $parentHash);
-						DBAddVoteRecord($gitHash, $addedTime, 'isreply');
+						DBAddVoteRecord($gitHash, $addedTime, 'reply');
 					}
 
 					my $reconLine = ">>$parentHash";
@@ -281,7 +281,7 @@ sub IndexFile {
 
 					if (IsSha1($parentHash)) {
 						DBAddItemParent($gitHash, $parentHash);
-						DBAddVoteRecord($gitHash, $addedTime, 'isreply');
+						DBAddVoteRecord($gitHash, $addedTime, 'reply');
 					}
 
 					my $reconLine = ">>$parentHash";
