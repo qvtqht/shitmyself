@@ -446,7 +446,7 @@ sub ProcessAccessLog {
 			}
 
 			if ($newFile) {
-				$newFile .= "\n\n(Anonymously submitted without a signature.)";
+				#$newFile .= "\n\n(Anonymously submitted without a signature.)";
 
 				my $filename;
 				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
