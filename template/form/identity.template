@@ -79,7 +79,7 @@
 <form id=formCreateId name=formCreateId style="display:none">
 
     <p>
-        <big><b>Create Profile</b>/big>
+        <big><b>Create Profile</b></big>
     </p>
 
     <p>

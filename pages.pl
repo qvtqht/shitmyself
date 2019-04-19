@@ -156,6 +156,7 @@ sub GetVotesPage {
 
 	while (@voteCountsArray) {
 		my $voteItemTemplate = GetTemplate('vote_page_link.template');
+		#todo don't need to do this every time
 
 		my $tag = shift @voteCountsArray;
 
