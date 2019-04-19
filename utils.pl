@@ -406,7 +406,7 @@ sub GetConfig {
 
 	if (-e "config/$configName") {
 		my $configValue = GetFile("config/$configName");
-		#$configValue = trim($configValue);
+		$configValue = trim($configValue);
 		$configLookup{$configValue} = $configValue;
 
 		return $configValue;

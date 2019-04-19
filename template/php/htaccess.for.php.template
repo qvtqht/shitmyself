@@ -1,2 +1,3 @@
 RewriteEngine On
 RewriteRule ^gracias\.html /spasibo.php
+RewriteRule ^gracias2\.html /spasibo2.php

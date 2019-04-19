@@ -157,7 +157,7 @@ sub GetVotesPage {
 	while (@voteCountsArray) {
 		my $voteItemTemplate = GetTemplate('vote_page_link.template');
 
-		my $tag = pop @voteCountsArray;
+		my $tag = shift @voteCountsArray;
 
 		my $tagName = @{$tag}[0];
 		my $tagCount = @{$tag}[1];
@@ -567,6 +567,8 @@ sub GetPageHeader {
 
 	my $patternName = 'pattern/bokeh.template';
 
+	$patternName = GetConfig('header_pattern');
+
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
 	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
@@ -762,6 +764,8 @@ sub GetReadPage {
 
 	#<span class="replies">last reply at [unixtime]</span>
 	#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
+	
+	$txtIndex .= GetTemplate('write-small.template');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 

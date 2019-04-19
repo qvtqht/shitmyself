@@ -1,3 +1,10 @@
+#todo writing should be typing + click, just like search
+
+from every page
+
+public search?
+
+
 Calculate items that are trusted
 	Display some kind of checkmark
 

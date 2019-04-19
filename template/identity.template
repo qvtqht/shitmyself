@@ -64,8 +64,6 @@
             </p>
 
             <p>
-                <input type=button id=restoreid value="Restore Profile" onclick="saveId();sharePubKey();">
-                &amp;
                 <input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');"><br><br>
                 <textarea cols=61 rows=16 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
             </p>
@@ -120,6 +118,21 @@ $gpg2Algochoices
 
     <label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
 
+        <span id=restorefromkey name=restorefromkey>
+            <p>
+		Use this field to restore your profile from the private key you saved earlier.
+            </p>
+
+            <p>
+                <input type=button id=paste onclick="makePaste();" value="Paste From Clipboard">
+		<input type=button id=restoreid value="Restore Profile" onclick="saveId();sharePubKey();">
+                <textarea cols=61 rows=16 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
+            </p>
+
+        </span>
+
+    <label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
+
     <span id=creaIdExp style="display:none">
         <p>
             &check; Disable JavaScript<br>
@@ -129,6 +142,8 @@ $gpg2Algochoices
         <p>
             Please refer to the Manual for more information.
         </p>
+    </span>
+
     </span>
 
     </span>
