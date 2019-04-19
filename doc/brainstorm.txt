@@ -1,3 +1,8 @@
+Alternative private key management ideas
+* One-time token that validates user-generated key
+* Store private keys on server, passworded, for insecure uses
+
+
 Collab dictionary?
 
 One page per thread
