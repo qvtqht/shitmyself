@@ -45,10 +45,8 @@ if (!-e 'html/txt/.git') {
 #}
 
 
-my $gpgCommand;
-if (GetConfig('gpg_command')) {
-	$gpgCommand = GetConfig('gpg_command');
-} else {
+my $gpgCommand = trim(GetConfig('gpg_command'));
+if (!$gpgCommand) {
 	if (GetConfig('use_gpg2')) {
 		$gpgCommand = 'gpg2';
 	}
@@ -500,6 +498,8 @@ sub PutHtmlFile {
 	}
 
 	if ($file eq GetConfig('home_page')) {
+		my $homePageTitle = GetConfig('home_title');
+		my $homePage =~ s/\<title\>.+\<\/title\>/<title>$homePageTitle<\/title>/;
 		PutFile ('html/index.html', $content);
 	}
 

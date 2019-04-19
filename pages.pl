@@ -467,14 +467,45 @@ sub GetItemTemplate {
 			my $votesSummary = '';
 			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 
-			my $specialTag = 'textart';
+			my @quickVotesList;
+			push @quickVotesList, 'flag';
 
 			foreach my $voteTag (keys %voteTotals) {
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+
+				my $quickVotesForTags = GetConfig('tagset/' . $voteTag);
+				if ($quickVotesForTags) {
+					push @quickVotesList, split("\n", $quickVotesForTags);
+				}
 			}
 			if ($votesSummary) {
 				$votesSummary = '<p>' . $votesSummary . '</p>';
 			}
+
+			my $quickVoteTemplate = GetTemplate('votequick.template');
+			my $tagButtons = '';
+			foreach my $quickTagValue (@quickVotesList) {
+				my $ballotTime = time();
+				if ($fileHash && $ballotTime) {
+					my $mySecret = GetConfig('secret');
+					my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
+
+					my $tagButton = GetTemplate('vote2button.template');
+
+					$tagButton =~ s/\$fileHash/$fileHash/g;
+					$tagButton =~ s/\$ballotTime/$ballotTime/g;
+					$tagButton =~ s/\$voteValue/$quickTagValue/g;
+					$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
+					$tagButton =~ s/\$checksum/$checksum/g;
+
+					$tagButtons .= $tagButton;
+				}
+			}
+
+			$quickVoteTemplate =~ s/\$quickVoteButtons/$tagButtons/;
+
+			$votesSummary .= $quickVoteTemplate;
+
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 			#
 			#end of tag summary display
@@ -534,6 +565,7 @@ sub GetPageHeader {
 			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
 			$logoText = "*"
 		}
+		#$logoText = FormatForWeb($logoText);
 		#$logoText = HtmlEscape($logoText);
 	}
 
@@ -565,7 +597,8 @@ sub GetPageHeader {
 #	my $patternName = $availablePatterns[$randomNumber];
 #	$patternName =~ s/^template\///;
 
-	my $patternName = 'pattern/bokeh.template';
+	#my $patternName = 'pattern/bokeh.template';
+	my $patternName = trim(GetConfig('header_pattern'));
 
 	$patternName = GetConfig('header_pattern');
 
@@ -647,7 +680,7 @@ sub GetVoterTemplate {
 			if (scalar(@voteValues)) {
 				push @voteValues, '--';
 			}
-			my $tagsList = GetConfig($_);
+			my $tagsList = GetConfig("$_");
 			chomp $tagsList;
 			push @voteValues, split("\n", $tagsList);
 		}

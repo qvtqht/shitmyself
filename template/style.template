@@ -133,6 +133,13 @@ details.txt a.header {
 }
 
 /* voting buttons */
+.vb {
+	padding: 1pt;
+	font-family: sans-serif;
+	font-weight: bold;
+	color: #808080;
+	text-decoration: none;
+}
 
 
 /* avatars */
@@ -270,9 +277,12 @@ label {
 }
 #formCurId {
 	display: none;
-	background-color: #ffff80;
-	padding: 5pt; border: 5pt solid #c0c040;
-	border-radius: 5pt;
+	background-color: #80ff80;
+	padding: 5pt;
+}
+
+.tag-flag {
+	color: red
 }
 
 #amain {

@@ -205,9 +205,9 @@ sub IndexFile {
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			$isAdmin = 1;
 
-			DBAddVoteRecord($gitHash, $addedTime, 'type:admin');
+			DBAddVoteRecord($gitHash, $addedTime, 'byadmin');
 
-			DBAddPageTouch('tag', 'type:admin');
+			DBAddPageTouch('tag', 'byadmin');
 		}
 
 		if ($isSigned && $gpgKey) {
@@ -235,7 +235,7 @@ sub IndexFile {
 
 					if (IsSha1($parentHash)) {
 						DBAddItemParent($gitHash, $parentHash);
-						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
+						DBAddVoteRecord($gitHash, $addedTime, 'isreply');
 					}
 
 					my $reconLine = ">>$parentHash";
@@ -281,7 +281,7 @@ sub IndexFile {
 
 					if (IsSha1($parentHash)) {
 						DBAddItemParent($gitHash, $parentHash);
-						DBAddVoteRecord($gitHash, $addedTime, 'type:reply');
+						DBAddVoteRecord($gitHash, $addedTime, 'isreply');
 					}
 
 					my $reconLine = ">>$parentHash";
@@ -323,9 +323,9 @@ sub IndexFile {
 							DBAddPageTouch('author', $voterId);
 						}
 
-						DBAddVoteRecord($gitHash, $addedTime, 'type:vouch');
+						DBAddVoteRecord($gitHash, $addedTime, 'vouch');
 
-						DBAddPageTouch('tag', 'type:vouch');
+						DBAddPageTouch('tag', 'vouch');
 					}
 				}
 			}
@@ -365,9 +365,9 @@ sub IndexFile {
 							DBAddPageTouch('item', $itemHash);
 						}
 
-						DBAddVoteRecord($gitHash, $addedTime, 'type:timestamp');
+						DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
 
-						DBAddPageTouch('tag', 'type:timestamp');
+						DBAddPageTouch('tag', 'timestamp');
 					}
 				}
 			}
@@ -408,9 +408,9 @@ sub IndexFile {
 
 						#DBAddVoteWeight('flush');
 
-						DBAddVoteRecord($gitHash, $addedTime, 'type:device');
+						DBAddVoteRecord($gitHash, $addedTime, 'device');
 
-						DBAddPageTouch('tag', 'type:device');
+						DBAddPageTouch('tag', 'device');
 					}
 				}
 			}
@@ -446,9 +446,9 @@ sub IndexFile {
 					$message =~ s/$reconLine/[Event: $descriptionHash at $eventTime for $eventDuration]/g; #todo flesh out message
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddVoteRecord ($gitHash, $addedTime, 'type:event');
+					DBAddVoteRecord ($gitHash, $addedTime, 'event');
 
-					DBAddPageTouch('tag', 'type:event');
+					DBAddPageTouch('tag', 'event');
 				}
 			}
 
@@ -490,29 +490,29 @@ sub IndexFile {
 
 					DBAddPageTouch('item', $fileHash);
 
-					DBAddVoteRecord ($gitHash, $addedTime, 'type:vote');
+					DBAddVoteRecord ($gitHash, $addedTime, 'vote');
 
-					DBAddPageTouch('tag', 'type:vote');
+					DBAddPageTouch('tag', 'vote');
 				}
 			}
 		}
 
 		if ($alias) {
-			DBAddVoteRecord ($gitHash, $addedTime, 'type:pubkey');;
+			DBAddVoteRecord ($gitHash, $addedTime, 'pubkey');;
 
-			DBAddPageTouch('tag', 'type:pubkey');
+			DBAddPageTouch('tag', 'pubkey');
 
 			DBAddPageTouch('author', $gpgKey);
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 			if ($detokenedMessage eq '') {
-				DBAddVoteRecord($gitHash, $addedTime, 'type:notext');
+				DBAddVoteRecord($gitHash, $addedTime, 'notext');
 
-				DBAddPageTouch('tag', 'type:notext');
+				DBAddPageTouch('tag', 'notext');
 			} else {
-				DBAddVoteRecord($gitHash, $addedTime, 'type:hastext');
+				DBAddVoteRecord($gitHash, $addedTime, 'hastext');
 
-				DBAddPageTouch('tag', 'type:hastext');
+				DBAddPageTouch('tag', 'hastext');
 			}
 
 		}
