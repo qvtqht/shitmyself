@@ -19,7 +19,7 @@
 
 <form id=formCurId name=formCurId style="display:none">
     <p>
-        <big><u><b>Current Profile</b></u></big>
+        <big><b>Current Profile</u></big>
     </p>
 
     <p>
@@ -58,7 +58,7 @@
 
         <span id=formprivkey name=formprivkey style="display:none">
             <p>
-                &check; Your <u><b>private key</b></u> controls your profile.<br>
+                &check; Your <b>private key</b> controls your profile.<br>
                 &check; Save it (copy and paste) to "sign in" again.<br>
                 &check; If you lose it, it's gone. Make a new one.
             </p>
@@ -77,7 +77,7 @@
 <form id=formCreateId name=formCreateId style="display:none">
 
     <p>
-        <big><u><b>Create Profile</b></u></big>
+        <big><b>Create Profile</b></big>
     </p>
 
     <p>
@@ -89,6 +89,10 @@
     <p>
         <input id=cSb type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
         <span id=genStatus></span>
+    </p>
+
+    <p>
+        <label for=restoreIdC><input type=checkbox id=restoreIdC> Expand this to restore from private key</label>
     </p>
 
     <p>
@@ -111,8 +115,8 @@ $gpg2Algochoices
 
     <p id=abc>
         &check; Generate a profile, also known as key pair<br>
-        &check; Store your <u>private key</u> in your browser/device<br>
-        &check; Publish your <u>public key</u>, including your name<br>
+        &check; Store your <b>private key</b> in your browser/device<br>
+        &check; Publish your <b>public key</b>, including your name<br>
         &check; Enable others to send you encrypted messages
     </p>
 

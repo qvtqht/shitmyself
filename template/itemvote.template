@@ -1,5 +1,5 @@
 <form class=reply method=GET action="/action/vote2.html" name=voteon$fileHash id=voteon$fileHash style="border: 5pt solid #f0f0e0; background-color: #f0f0e0; border-radius: 5pt;">
-<big><b><u><i>Voting Ballot</i></u></b> (aka The Sea of Checkboxes)</big><br>
+<big><b><i>Voting Ballot</i></b> (aka The Sea of Checkboxes)</big><br>
 </p>$voterButtons
     <br><br>
     <span id=voteAsUser></span>

@@ -31,7 +31,7 @@
 
 <a name=gpg><h3>How to use GPG</h3></a>
 
-<p>You will need to <u>generate a key</u> and then <u>sign your messages</u>. Piece of cake.</p>
+<p>You will need to <b>generate a key</b> and then <b>sign your messages</b>. Piece of cake.</p>
 
 <h4>Read This First</h4>
 
@@ -114,7 +114,7 @@
 
 <h4>Adding a Vote</h4>
 
-<p>Voting is the process of applying a <u>tag</u> to an <u>item</u>.</p>
+<p>Voting is the process of applying a <b>tag</b> to an <b>item</b>.</p>
 
 <p style="font-size: larger">item + tag = vote</p>
 
