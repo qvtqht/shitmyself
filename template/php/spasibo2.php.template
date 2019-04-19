@@ -2,5 +2,7 @@
 ob_flush();
 include('gracias.html');
 
+fastcgi_finish_request();
+
 exec('cd $myPath ; time ./gitflow.sh &');
 
