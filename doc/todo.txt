@@ -1,4 +1,17 @@
+<<<<<<< Updated upstream
 
+=======
+Add titles to items
+	If title token present, use that
+		If not, use first X of title
+
+Make sure links work when pages are viewed locally
+	They currently do not, because they're /-prefixed
+
+
+If homepage is not built by the end of generate.pl,
+	do some default action
+>>>>>>> Stashed changes
 
 <bump> button --> "bump"+sign --> submit
 
@@ -108,6 +121,25 @@ Does server.key exist?
    Yes:
       Sign message with it
    
+
+FILE TYPE SUPPORT
+=================
+Files should be eventually uploadable...
+	Somehow
+		For trusted users
+
+Image support
+	embed in html or <img> tag, etc.
+
+Other filetypes that can be supported
+
+latex
+pdf
+txt
+doc
+xls
+and so on
+
 
 Set up new domains
 Polish the install process
