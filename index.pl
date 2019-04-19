@@ -205,9 +205,9 @@ sub IndexFile {
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			$isAdmin = 1;
 
-			DBAddVoteRecord($gitHash, $addedTime, 'byadmin');
+			DBAddVoteRecord($gitHash, $addedTime, 'admin');
 
-			DBAddPageTouch('tag', 'byadmin');
+			DBAddPageTouch('tag', ' admin');
 		}
 
 		if ($isSigned && $gpgKey) {
