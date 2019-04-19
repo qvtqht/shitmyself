@@ -1,8 +1,8 @@
 <?php
 ob_flush();
-include('gracias.html');
+//include('gracias.html');
 
 fastcgi_finish_request();
 
-exec('cd $myPath ; time ./gitflow.sh &');
+exec("cd $myPath ; ./gitflow.sh");
 
