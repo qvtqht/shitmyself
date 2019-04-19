@@ -1,5 +1,3 @@
-fingerprint-based sessions
-
 <bump> button --> "bump"+sign --> submit
 
 re-add write-small to home page
@@ -122,6 +120,19 @@ ACCESSIBILITY FROM LIMITED DEVICES
    template/htaccess
    template/submit.php
    template/index.php
+2) Submit items via URL without any additional prefix
+   * e.g. http://qdb.us/text.goes.here
+   * test if spaces work in GTr
+3) Set up short URLs to accept input (for live version)
+4) Make UI smaller
+5) Make links for voting so that form submission not required
+
+Consider changing background color based on time of day?
+
+
+FEEDBACK FROM L.F.
+==================
+it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages.
 2) Submit items via URL without any additional prefix
    * e.g. http://qdb.us/text.goes.here
    * test if spaces work in GTr
@@ -356,19 +367,6 @@ Link target encryption key with parent id key using gpg --list-keys
 
 Feeds list
    OPML
-
-Text::Markdown?
-
-Newly dropped text files should get their own added time.
-   Adjust the sorting to be based on added time, then filesystem path
-   Add an ./incoming dir for new textfiles that are manually copied?
-
-Elaborate on setting up a dev environment
-    Trisquel
-    IntelliJ
-    sqlite3
-    lighttpd
-
 Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
    If there is only one post, automatically redirect to it
    Otherwise, "is this one of your posts?"
