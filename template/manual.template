@@ -16,17 +16,17 @@
 
 <ul>
     <li>Your profile key lives on your device, not on this website or server.</li>
-    <li>This is accomplished with encryption called PGP.</li>
-    <li>Your key pair allows you to post on other forums too.</li>
-	<li>Fast page loading due to lack of bloat.</li>
-	<li>Lack of restrictions on information export.</li>
+    <li>This means that you own your profile, not this website or server.</li>
+    <li>This entire forum can be exported, migrated, cloned, and forked, without restriction.</li>
+    <li>Your profile stays on your device, and you can use it between any other forums.</li>
+	<li>Using the same profile on multiple devices and/or backing it up requires copying and pasting of a large blob of text.</li>
 </ul>
 
 <h3>Known Issues aka Features</h3>
 
 <ul>
-    <li>Actions do not take effect immediately.</li>
-    <li>New profiles will 404 until something is posted.</li>
+    <li>Actions sometimes do not take effect immediately.</li>
+    <li>Confusing interface.</li>
 </ul>
 
 <a name=gpg><h3>How to use GPG</h3></a>
