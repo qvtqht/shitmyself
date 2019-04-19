@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-
-=======
 Add titles to items
 	If title token present, use that
 		If not, use first X of title
@@ -11,7 +8,6 @@ Make sure links work when pages are viewed locally
 
 If homepage is not built by the end of generate.pl,
 	do some default action
->>>>>>> Stashed changes
 
 <bump> button --> "bump"+sign --> submit
 

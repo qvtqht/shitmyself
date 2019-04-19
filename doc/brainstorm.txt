@@ -1,12 +1,10 @@
-<<<<<<< Updated upstream
 Collab dictionary?
-=======
+
 One page per thread
 ===================
 Build index based on top-most comment
 	How to account for multiple top-most comments due to replies with multiple reply tokens?
 
->>>>>>> Stashed changes
 
 #todo writing should be typing + click, just like search
 
