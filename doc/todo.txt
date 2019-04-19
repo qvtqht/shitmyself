@@ -1,7 +1,6 @@
 Current Priorities
 ==================
 Instant updates
-	PHP shim to trigger the scripts
 	Client-side DOM fill-in
 Nicer-looking threading
 	Two-level thread nesting
