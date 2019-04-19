@@ -1,3 +1,7 @@
+From openpgp.js docs:
+	The dist/compat/openpgp.min.js bundle also works with Internet Explorer 11 and old versions of Safari.
+Ensure that this (and the non-min version) is the version that is in the templates
+
 Add titles to items
 	If title token present, use that
 		If not, use first X of title
