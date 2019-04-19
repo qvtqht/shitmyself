@@ -264,9 +264,9 @@ label {
 
 #formprivkey {
 	display: none;
-	background-color: #ff8080;
-	padding: 5pt;
+	background-color: #c0c0c0;
 	border: 5pt solid #ffa0a0;
+	padding: 5pt;
 	border-radius: 5pt;
 }
 #formCreateId {

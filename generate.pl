@@ -95,10 +95,6 @@ sub GetVersionPage {
 	my $pageTitle = "Information page for version $version";
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
-#
-#	my $writeSmall = GetTemplate("write-small.template");
-#
-#	$htmlStart .= $writeSmall;
 
 	$txtPageHtml .= $htmlStart;
 
@@ -133,7 +129,7 @@ sub GetIdentityPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $idPage = GetTemplate('identity.template');
+	my $idPage = GetTemplate('form/identity.template');
 
 	if (GetConfig('use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
@@ -211,7 +207,7 @@ sub GetSubmitPage {
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		if ($itemCount < $itemLimit) {
-			my $submitForm = GetTemplate('write.template');
+			my $submitForm = GetTemplate('form/write.template');
 			my $prefillText = "";
 
 			$submitForm =~ s/\$extraFields//g;
@@ -238,7 +234,7 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
-		my $submitForm = GetTemplate('write.template');
+		my $submitForm = GetTemplate('form/write.template');
 		my $prefillText = "";
 
 		$submitForm =~ s/\$extraFields//g;

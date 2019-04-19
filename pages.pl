@@ -269,7 +269,7 @@ sub GetItemPage {
 
 		$fileContents = GetFile($file{'file_path'});
 
-		$replyForm = GetTemplate('reply.template');
+		$replyForm = GetTemplate('form/reply.template');
 		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
 		$replyTo = $file{'file_hash'};
 
@@ -290,7 +290,7 @@ sub GetItemPage {
 
 	if ($file{'vote_buttons'}) {
 		my $ballotTime = time();
-		$txtIndex .= GetTemplate("itemvote.template");
+		$txtIndex .= GetTemplate("form/itemvote.template");
 
 		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
 		$txtIndex =~ s/\$voterButtons/$voterButtons/g;
@@ -648,10 +648,6 @@ sub GetPageHeader {
 
 	$txtIndex .= $htmlStart;
 
-#	my $writeSmall = GetTemplate("write-small.template");
-#	$txtIndex .= $writeSmall;
-#  #todo make this only appear on the correct pages (not write)
-
 	return $txtIndex;
 }
 
@@ -798,7 +794,7 @@ sub GetReadPage {
 	#<span class="replies">last reply at [unixtime]</span>
 	#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
 	
-	$txtIndex .= GetTemplate('write-small.template');
+	$txtIndex .= GetTemplate('form/write-small.template');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -1008,12 +1004,6 @@ sub GetIndexPage {
 	my $pageTitle = GetConfig('home_title');
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
-
-	#	my $writeSmall = GetTemplate('write-small.template');
-	#	my $writeShortMessage = GetString('write_short_message');
-	#	$writeSmall =~ s/\$writeShortMessage/$writeShortMessage/g;
-
-	#	$htmlStart .= $writeSmall;
 
 	$txtIndex .= $htmlStart;
 
