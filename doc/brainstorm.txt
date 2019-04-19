@@ -1,3 +1,5 @@
+Collab dictionary?
+
 #todo writing should be typing + click, just like search
 
 from every page
