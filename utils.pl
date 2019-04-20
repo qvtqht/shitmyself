@@ -497,13 +497,13 @@ sub PutHtmlFile {
 		$content =~ s/[^[:ascii:]]//g;
 	}
 
+	PutFile($file, $content);
+
 	if ($file eq GetConfig('home_page')) {
 		my $homePageTitle = GetConfig('home_title');
-		my $homePage =~ s/\<title\>.+\<\/title\>/<title>$homePageTitle<\/title>/;
+		$content =~ s/\<title\>.+\<\/title\>/<title>$homePageTitle<\/title>/;
 		PutFile ('html/index.html', $content);
 	}
-
-	return PutFile($file, $content);
 }
 
 sub GetFileAsHashKeys {
