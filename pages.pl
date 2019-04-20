@@ -469,7 +469,11 @@ sub GetItemTemplate {
 			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 
 			my @quickVotesList;
-			push @quickVotesList, 'flag';
+
+			my $quickVotesForTags = GetConfig('tagset/' . 'all');
+			if ($quickVotesForTags) {
+				push @quickVotesList, split("\n", $quickVotesForTags);
+			}
 
 			foreach my $voteTag (keys %voteTotals) {
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
@@ -482,36 +486,39 @@ sub GetItemTemplate {
 			if ($votesSummary) {
 				$votesSummary = '<p>' . $votesSummary . '</p>';
 			}
+			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 
-			my $quickVoteTemplate = GetTemplate('votequick.template');
-			my $tagButtons = '';
-			foreach my $quickTagValue (@quickVotesList) {
-				my $ballotTime = time();
-				if ($fileHash && $ballotTime) {
-					my $mySecret = GetConfig('secret');
-					my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
+			{
+				my $quickVoteTemplate = GetTemplate('votequick.template');
+				my $tagButtons = '';
+				foreach my $quickTagValue (@quickVotesList) {
+					my $ballotTime = time();
+					if ($fileHash && $ballotTime) {
+						my $mySecret = GetConfig('secret');
+						my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
 
-					my $tagButton = GetTemplate('vote2button.template');
+						my $tagButton = GetTemplate('vote2button.template');
 
-					$tagButton =~ s/\$fileHash/$fileHash/g;
-					$tagButton =~ s/\$ballotTime/$ballotTime/g;
-					$tagButton =~ s/\$voteValue/$quickTagValue/g;
-					$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
-					$tagButton =~ s/\$checksum/$checksum/g;
+						$tagButton =~ s/\$fileHash/$fileHash/g;
+						$tagButton =~ s/\$ballotTime/$ballotTime/g;
+						$tagButton =~ s/\$voteValue/$quickTagValue/g;
+						$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
+						$tagButton =~ s/\$checksum/$checksum/g;
 
-					$tagButtons .= $tagButton;
+						$tagButtons .= $tagButton;
+					}
 				}
+
+				$quickVoteTemplate =~ s/\$quickVoteButtons/$tagButtons/;
+
+				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteTemplate/;
 			}
 
-			$quickVoteTemplate =~ s/\$quickVoteButtons/$tagButtons/;
-
-			$votesSummary .= $quickVoteTemplate;
-
-			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 			#
 			#end of tag summary display
 		} else {
 			$itemTemplate =~ s/\$votesSummary//g;
+			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
 
 		return $itemTemplate;
