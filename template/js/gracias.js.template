@@ -4,6 +4,7 @@ function makeRefLink() {
 		var retRef = document.getElementById('retRef');
 		if (retRef) {
 			retRef.innerHTML = '<a href=\"' + document.referrer + '\">Return to Previous Page</a> ';
+			window.open(document.referrer, '_self');
 		}
 	}
 }
