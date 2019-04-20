@@ -57,7 +57,7 @@ if (getUserFp()) {
 		actName = 'Reply as ';
 	}
 	if (sp) {
-		sp.innerHTML = '<button onclick="valReplyTag();signMessage();">' + actName + getAvatar() + '</button>';
+		sp.innerHTML = '<button onclick="signMessage();">' + actName + getAvatar() + '</button>';
 	}
 }
 
