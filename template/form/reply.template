@@ -1,9 +1,7 @@
 <!-- reply.template -->
 <a name=reply></a>
 <form class=reply action="/gracias.html" id=compose style="border: 5pt solid #e8d0ea; border-radius: 5pt; background-color: #f0e0f8">
-<big><b><i>The Reply Box</i></b></big>
-<p>This is how you reply to what you see above.<br>
-Take care to not upset the >>reply tag, or it won't be a reply anymore...</p>
+<big><b><i>The Reply Box</i></b></big><br>
 <textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
 <span id=replySignedContainer></span>
 <input type=submit value="Reply Unsigned">
