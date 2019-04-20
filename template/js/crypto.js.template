@@ -39,6 +39,13 @@ function getAvatar() {
 	}
 }
 
+function valReplyToken() {
+// before we sign the message, we need to ensure that
+// there is a reply token if it is a reply form
+
+	sp = document.getElementById('replySignedContainer');
+}
+
 // if there's a user fingerprint,
 // this checks for a place to put a "post as" or "reply as" button
 // and if it exists, puts the button there
@@ -50,7 +57,7 @@ if (getUserFp()) {
 		actName = 'Reply as ';
 	}
 	if (sp) {
-		sp.innerHTML = '<button onclick="signMessage();">' + actName + getAvatar() + '</button>';
+		sp.innerHTML = '<button onclick="valReplyTag();signMessage();">' + actName + getAvatar() + '</button>';
 	}
 }
 
