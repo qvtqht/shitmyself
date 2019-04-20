@@ -4,5 +4,7 @@ ob_flush();
 
 //fastcgi_finish_request();
 
+// #todo there should be a cron.lock check here first
+
 exec("cd $myPath ; ./gitflow.sh");
 
