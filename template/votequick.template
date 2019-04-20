@@ -1,1 +1,3 @@
-<p>$quickVoteButtons</p>
+<!-- votequick.template -->
+    <big title="Quick Vote"><b><i>QV:</i></b></big>$quickVoteButtons
+<!-- / votequick.template -->

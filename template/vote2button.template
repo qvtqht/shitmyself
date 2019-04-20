@@ -1,1 +1,1 @@
-<a href="/action/vote2.html?addvote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on" class="$class">&check;$voteValue</a>
+<a href="/action/vote2.html?addvote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on" class="$class">$voteValue</a>

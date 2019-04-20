@@ -84,6 +84,9 @@ div.txt {
 	border-radius: 10pt 0pt 0pt 0pt;
 	padding-left: 1em;
 }
+.quickvote {
+	background-color: red;
+}
 div.reply {
 	border-left: 3pt dotted $primaryColor;
 	margin-left: 5%;
@@ -139,6 +142,9 @@ details.txt a.header {
 	font-weight: bold;
 	color: #808080;
 	text-decoration: none;
+}
+.vb::before {
+	content: "✓";
 }
 
 
@@ -282,7 +288,10 @@ label {
 }
 
 .tag-flag {
-	color: red
+	color: #c08080;
+}
+.tag-accept {
+	color: #80c080;
 }
 
 #amain {
