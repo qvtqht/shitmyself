@@ -517,8 +517,8 @@ sub GetItemTemplate {
 			#
 			#end of tag summary display
 		} else {
-			$itemTemplate =~ s/\$votesSummary//g;
 			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
+			$itemTemplate =~ s/\$votesSummary//g;
 		}
 
 		return $itemTemplate;
