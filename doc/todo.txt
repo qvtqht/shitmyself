@@ -1,4 +1,25 @@
+make it easier to choose common tags (in progress)
 
+reset avatar cache for author if key is found by access.pl
+
+when replying with hash tags, add them to parent too
+
+identity page: disable username textbox while generating new id
+
+#bug get rid of long words/urls in manual, as it makes android chrome sad
+
+fix the remaining duplicate tags (?)
+
+abyss pages should be updated
+	and or not have tags on them
+
+#bug iframe should not have a border on gracias page
+
+javascripted one-click vote buttons that reflect status on-page
+
+#bug submitting write-small form from author pages
+
+#bug abyss page has token on it still
 
 
 From openpgp.js docs:

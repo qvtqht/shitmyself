@@ -1,3 +1,14 @@
+
+
+when tags have many overlap make them related
+
+E-mail and/or fingerprint-verified IDs with more weight
+
+submissions via search field
+
+maybe there should be some kind of quick benchmark to determine the key size?
+
+
 New users should be engaged somehow, both by the system and existing users
 
 
