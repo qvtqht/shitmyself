@@ -1,3 +1,8 @@
+publish rss for notification apps
+
+user page should show all replies
+	local client should log visited time and highlight new replies
+
 make it easier to choose common tags (in progress)
 
 reset avatar cache for author if key is found by access.pl
