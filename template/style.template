@@ -220,6 +220,7 @@ button, input, input[type=submit], select {
 }
 textarea {
 	font-size: large;
+	font-family: monospace;
 }
 
 /* misc */
