@@ -3,7 +3,6 @@
 	<label for=comment>Say something <b>to everyone</b>, anonymously*:<br>
 	<input autocomplete=off id=comment name=comment size=80 style="max-width: 75%; background-color: #ffffc0" maxlength=6000></label><br>
 	<input type=submit id=submit value="Send Unsigned"> <span id=signAndPost></span>
-	<p>* anonymous does not mean untraceable. No shitposting of any kind, please. We have enough shit already.</p>
 </form>
 
 <script language=javascript>
