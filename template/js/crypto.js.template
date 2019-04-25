@@ -8,9 +8,9 @@ function logOut() {
 	removeStoredKeys();
 }
 
-function makePaste() {
-	alert();
-}
+//function makePaste() {
+//	alert();
+//}
 
 var loading = document.getElementById('loading');
 if (loading) {
@@ -44,6 +44,8 @@ function valReplyToken() {
 // there is a reply token if it is a reply form
 
 	sp = document.getElementById('replySignedContainer');
+
+//	alert();
 }
 
 // if there's a user fingerprint,
@@ -423,7 +425,8 @@ function saveId() {
 					if (UrlExists(profileUrl)) {
 						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
 					} else {
-						myIdProfile.innerHTML = '';
+						sharePubKey();
+						myIdProfile.innerHTML = 'Profile page not yet exist.';
 					}
 				}
 
