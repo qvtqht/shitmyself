@@ -1,5 +1,3 @@
-
-
 when tags have many overlap make them related
 
 E-mail and/or fingerprint-verified IDs with more weight
@@ -15,6 +13,14 @@ New users should be engaged somehow, both by the system and existing users
 Alternative private key management ideas
 * One-time token that validates user-generated key
 * Store private keys on server, passworded, for insecure uses
+
+=======
+CLEANUP
+=======
+15 messages have been tagged for removal. There are 30 days left to rescue them.
+	Any messages that are untagged and old, basically
+		Helpfully-tagged messages get to stay
+			Tagged with negative are removed more quickly
 
 
 Collab dictionary?
