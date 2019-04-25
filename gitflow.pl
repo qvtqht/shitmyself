@@ -252,7 +252,8 @@ foreach my $page (@touchedPagesArray) {
 			my $file = $files[0];
 
 			# get item page's path #todo refactor this into a function
-			my $targetPath = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+			#my $targetPath = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+			my $targetPath = 'html/' .GetHtmlFilename($fileHash);
 
 			# create a subdir for the first 2 characters of its hash if it doesn't exist already
 			if (!-e 'html/' . substr($fileHash, 0, 2)) {

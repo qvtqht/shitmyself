@@ -32,9 +32,9 @@ for devs to check out/play around
 =================================
 1. install pre-requisites
 2. clone repository
-3. ./rebuild.sh
+3. ./build.sh
 4. ./lighttpd.sh
-5. ./rebuild.sh as necessary to update the site
+5. ./build.sh as necessary to update the site
 
 for local testing
 =================

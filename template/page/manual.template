@@ -1,0 +1,199 @@
+<!-- manual.template -->
+
+<h1>Manual</h1>
+
+<p>This is a message board where you can write things for others to read.</p>
+
+<h3>Features You May Recognize</h3>
+
+<ul>
+    <li>Write messages anonymously and under a profile</li>
+    <li>Read messages others have already posted</li>
+    <li>Vote on posted messages to improve quality</li>
+</ul>
+
+<h3>These Features May Be Confusing At First</h3>
+
+<ul>
+    <li>Your profile key lives on your device, not on this website or server.</li>
+    <li>This means that you own your profile, not this website or server.</li>
+    <li>This entire forum can be exported, migrated, cloned, and forked, without restriction.</li>
+    <li>Your profile stays on your device, and you can use it between any other forums.</li>
+	<li>Using the same profile on multiple devices and/or backing it up requires copying and pasting of a large blob of text.</li>
+</ul>
+
+<h3>Known Issues aka Features</h3>
+
+<ul>
+    <li>Actions sometimes do not take effect immediately.</li>
+    <li>Confusing interface.</li>
+    <li>Post public key first, or signed messages not recognized.</li>
+</ul>
+
+<h3>Stack</h3>
+
+<ul>
+    <li>ASCII (.txt)</li>
+    <li>Perl</li>
+    <li>Bash</li>
+    <li>access.log</li>
+    <li>SQLite</li>
+    <li>PHP</li>
+</ul>
+
+<a name=gpg><h3>How to use GPG</h3></a>
+
+<p>You will need to <b>generate a key</b> and then <b>sign your messages</b>. Piece of cake.</p>
+
+<h4>Read This First</h4>
+
+<p>GnuPG<br><a href="https://www.gnupg.org/">https://www.gnupg.org/</a></p>
+
+<p>Read the GnuPG home page to familiarize yourself.</p>
+
+<h4>Android</h4>
+
+<p>OpenKeychain<br><a href="https://www.openkeychain.org/about/">https://www.openkeychain.org/about/</a></p>
+
+<h4>Apple iOS, iPhone, iPad</h4>
+
+<p>PGP Everywhere<br><a href="http://pgpeverywhere.com/">http://pgpeverywhere.com/</a></p>
+
+<h4>Apple macOS</h4>
+
+<p>GPG Suite<br><a href="https://gpgtools.org/">https://gpgtools.org/</a></p>
+
+<h4>Microsoft Windows</h4>
+
+<p>Gpg4Win<br><a href="https://www.gpg4win.org/">https://www.gpg4win.org/</a></p>
+
+<h4>More Options</h4>
+
+<p>OpenPGP Software<br><a href="https://www.openpgp.org/software/">https://www.openpgp.org/software/</a></p>
+
+<a name=keypair><h3>Creating Your Profile, AKA Key Pair</h3></a>
+
+<p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating a profile?</p>
+
+<ul>
+    <li>All your posts will appear on your author page.</li>
+    <li>You can sign your posts with your name.</li>
+    <li>You can edit or delete your posts later.</li>
+    <li>You will get a colorful avatar that will appear with all your posts.</li>
+    <!--<li>If you sign your moderation votes, they will be given more weight.</li>-->
+</ul>
+
+<p>You will need to create a key pair. Look for this option in your software and use it. (More detailed guides to come.)</p>
+
+<p>GPG is traditionally used for email, but <b>you do not have to provide your address</b> for this forum.
+    In fact, we recommend that you either leave the field blank or add gibberish to it.
+    Otherwise, your email address will be accessible by anyone, including spambots.</p>
+
+<p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
+
+<a name=sign><h3>Writing As Yourself</h3></a>
+
+<p>To write something under your new profile, you will need to sign your text.</p>
+
+<p>First, write the text that you want to post. Once you have finished writing it, save it to a .txt file.</p>
+
+<p>Look for the command to "Sign" (not encrypt) your text in your GPG software.</p>
+
+<p>Some software has no such option. In this case, you should use the "Encrypt" command, but ensure that the "To:" field is blank.</p>
+
+<p>You should end up with a big block of text that begins with "<tt>-----BEGIN PGP SIGNED MESSAGE-----</tt>"</p>
+
+<p>Copy this entire block of text, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
+
+<p>That's it!</p>
+
+
+<a name=uploadkey><h3>Uploading Your Public Key</h3></a>
+
+<p>Look for the option to export your public key in your software.</p>
+
+<p>You should end up with a block of text that starts with "<tt>-----BEGIN PGP PUBLIC KEY BLOCK-----</tt>".
+
+<p>Copy the whole thing, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
+
+<p>You have now aliased your name to your key fingerprint.</p>
+
+<a name=commands><h3>Commands</h3></a>
+
+<h4>Introduction</h4>
+
+<p>Commands are in the form of simple tokens, length-constricted, ASCII only.</p>
+
+<h4>Adding a Vote</h4>
+
+<p>Voting is the process of applying a <b>tag</b> to an <b>item</b>.</p>
+
+<p style="font-size: larger">item + tag = vote</p>
+
+<p>A voting token has the following parameters</p>
+
+<p><code>addvote/hash/time/tag/checksum</code></p>
+
+<p>The checksum is generated on the server, using the following formula:</p>
+
+<code>MD5( concat(file hash, ballot creation time, secret) )</code>
+
+<p>The secret string is stored in config/secret, and a random one is automatically generated if the config is empty.</p>
+
+<p>Example:</p>
+
+<p>
+<textarea style="width:100%">
+addvote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa<br>
+addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
+</textarea>
+<br>
+
+</p>
+
+<a name=gpgcli><h3>Signing With Command-Line GPG</h3></a>
+
+<h4>Check GPG Version</h4>
+
+<p><tt>gpg --version</tt></p>
+
+<p>If you don't have GnuPG installed, go here: <a href="https://www.opengpg.org/">https://www.opengpg.org/</a></p>
+
+<h4>Generate Key Pair</h4>
+
+<p><tt>gpg --gen-key</tt></p>
+
+<h4>Export Public Key</h4>
+
+<p><tt>gpg --armor --export</tt></p>
+
+<h4>Sign Message in Text File</h4>
+
+<p><tt>gpg --clearsign example.txt</tt></p>
+
+<h4>Sign Message After Typing It</h4>
+
+<p><tt>gpg --clearsign</tt></p>
+
+<p>Start typing your message. When you're finished, press Enter, then ^D (Ctrl+D).</p>
+
+
+<a name=clone><h3>Cloning</h3></a>
+
+<p>You can easily clone this message board.</p>
+
+<p>There are no "secrets" stored here (e.g. passwords, private keys, password hashes), except the anti-CSRF salt.</p>
+
+<p>Any signing accounts are controlled by the users' private keys.</p>
+
+<p>An hourly zip of the entire site can be downloaded here: <a href="/hike.zip">/hike.zip</a>, including the git repo.</p>
+
+<p>The scripts are on GitHub here: <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
+
+<a name=other><h3>Other Questions</h3>
+
+<a href="write.html">Please ask them using the Write page</a>.
+
+<p></p><p></p><p></p>
+
+<!-- / manual.template -->

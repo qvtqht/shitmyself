@@ -7,4 +7,9 @@ rm -rfv html/*.html html/*/*.html html/*/*/*.html
 touch html/gracias.html
 rm log/log.log 
 
+cd html/txt
+git init
+git add *
+git commit -m "rebuild"
+cd -
 time ./rebuild.sh

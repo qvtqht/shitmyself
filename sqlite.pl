@@ -90,6 +90,13 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER)");
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param)");
 
+	# config
+	SqliteQuery2("CREATE TABLE config(key, value, timestamp)");
+	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp)");
+	SqliteQuery2("
+		CREATE VIEW config_latest(key, value, timestamp) AS
+		SELECT key, value, MAX(timestamp) timestamp_max FROM config GROUP BY key ORDER BY timestamp DESC
+	");
 
 
 	SqliteQuery2("
@@ -344,6 +351,23 @@ sub DBGetReplyCount {
 	return $itemCount;
 }
 
+sub DBGetItemParents {
+	my $itemHash = shift;
+
+	if (!IsSha1($itemHash)) {
+		WriteLog('DBGetItemParents called with invalid parameter! returning');
+		return '';
+	}
+
+	$itemHash = SqliteEscape($itemHash);
+
+	my %queryParams;
+	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_child WHERE item_hash = '$itemHash')";
+	$queryParams{'order_clause'} = "ORDER BY add_timestamp"; #todo this should be by timestamp
+
+	return DBGetItemList(\%queryParams);
+}
+
 sub DBGetItemReplies {
 	my $itemHash = shift;
 
@@ -395,6 +419,51 @@ sub SqliteEscape {
 # }
 
 
+sub DBAddConfigValue {
+	state $query;
+	state @queryParams;
+
+	my $key = shift;
+
+	if ($key eq 'flush') {
+		WriteLog("DBAddConfigValue(flush)");
+
+		if ($query) {
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = '';
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if ($query && (length($query) > 2048 || scalar(@queryParams) > 50)) {
+		DBAddAuthor('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	#todo sanity checks
+	#todo technically, this should not override newer config
+
+	my $value = shift;
+	my $timestamp = shift;
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO config(key, value, timestamp) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= '(?, ?, ?)';
+	push @queryParams, $key, $value, $timestamp;
+
+	return;
+}
+
 sub DBAddAuthor {
 	state $query;
 	state @queryParams;
@@ -421,6 +490,8 @@ sub DBAddAuthor {
 		$query = '';
 		@queryParams = ();
 	}
+
+	#todo sanity checks
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO author(key) VALUES ";

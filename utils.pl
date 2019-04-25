@@ -159,13 +159,17 @@ sub GetMyVersion {
 ####################################################################################
 #
 
+sub WriteConfigFromDatabase {
+	#todo
+}
+
 sub GetString {
 	my $stringKey = shift;
 
 	state %strings;
 
 	if (!defined($strings{$stringKey})) {
-		my $string = GetFile('string/en/'.$stringKey);
+		my $string = GetConfig('string/en/'.$stringKey);
 
 		if ($string) {
     		chomp ($string);
@@ -393,9 +397,16 @@ sub GetFile {
 }
 
 sub GetConfig {
-
 	my $configName = shift;
+	chomp $configName;
 
+#	if ($configName =~ /^[a-z0-9_]{1,32}$/) {
+#		print("WARNING! GetConfig() sanity check failed!");
+#		print("\$configName = $configName");
+#		die();
+#		return;
+#	}
+#
 	state %configLookup;
 
 	if ($configLookup{$configName}) {
@@ -419,12 +430,47 @@ sub GetConfig {
 		}
 	}
 
-	return 0;
+	return;
+}
+
+sub ConfigKeyValid {
+	my $configName = shift;
+
+	if ($configName =~ /^[a-z0-9_]{1,32}$/) {
+		WriteLog("WARNING! ConfigKeyValid() sanity check failed!");
+	}
+
+	if (-e "default/$configName") {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+sub GetHtmlFilename {
+	my $hash = shift;
+
+	WriteLog("GetHtmlFilename()");
+
+	if (!IsSha1($hash)) {
+		WriteLog("Warning! GetHtmlFilename() called with parameter that isn't a SHA-1. Returning.");
+		return;
+	}
+
+	my $htmlFilename =
+		substr($hash, 0, 2) .
+		'/' .
+		substr($hash, 2, 8) .
+		'.html';
+
+	return $htmlFilename;
 }
 
 sub PutConfig {
 	my $configName = shift;
 	my $configValue = shift;
+
+	chomp $configValue;
 
 	return PutFile("config/$configName", $configValue);
 }
@@ -476,6 +522,15 @@ sub EpochToHuman {
 
 sub PutHtmlFile {
 	my $file = shift;
+
+	state $homePageWritten;
+	if (!defined($homePageWritten)) {
+		$homePageWritten = 0;
+	}
+	if ($file eq 'check_homepage') {
+		return $homePageWritten;
+	}
+
 	my $content = shift;
 
 	WriteLog("PutHtmlFile($file), \$content)");
@@ -503,6 +558,7 @@ sub PutHtmlFile {
 		my $homePageTitle = GetConfig('home_title');
 		$content =~ s/\<title\>.+\<\/title\>/<title>$homePageTitle<\/title>/;
 		PutFile ('html/index.html', $content);
+		$homePageWritten = 1;
 	}
 }
 
@@ -850,34 +906,39 @@ sub GpgParse {
 		######################
 		## ENCRYPTED MESSAGE
 		##
-		if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
-			WriteLog("$gpgCommand --batch --list-only --status-fd 1 \"$filePath\"");
-			my $gpg_result = `$gpgCommand --batch --list-only --status-fd 1 "$filePath"`;
-			WriteLog($gpg_result);
 
-			foreach (split("\n", $gpg_result)) {
-				chomp;
-
-				my $key_id_prefix;
-				my $key_id_suffix;
-
-				if (index($gpg_result, "[GNUPG:] ENC_TO ") >= 0) {
-					$key_id_prefix = "[GNUPG:] ENC_TO ";
-					$key_id_suffix = " ";
-
-					if ($key_id_prefix) {
-						# Extract the key fingerprint from GPG's output.
-						$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
-						$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
-
-						$message = "Encrypted message for $gpg_key\n";
-
-						$isSigned = 1;
-
-					}
-				}
-			}
+		if (index($txt, $gpg_encrypted_header) != -1) {
+			$message = "This is an encrypted message. Decryption is not yet supported by the web interface.";
 		}
+
+#		if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
+#			WriteLog("$gpgCommand --batch --list-only --status-fd 1 \"$filePath\"");
+#			my $gpg_result = `$gpgCommand --batch --list-only --status-fd 1 "$filePath"`;
+#			WriteLog($gpg_result);
+#
+#			foreach (split("\n", $gpg_result)) {
+#				chomp;
+#
+#				my $key_id_prefix;
+#				my $key_id_suffix;
+#
+#				if (index($gpg_result, "[GNUPG:] ENC_TO ") >= 0) {
+#					$key_id_prefix = "[GNUPG:] ENC_TO ";
+#					$key_id_suffix = " ";
+#
+#					if ($key_id_prefix) {
+#						# Extract the key fingerprint from GPG's output.
+#						$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
+#						$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
+#
+#						$message = "Encrypted message for $gpg_key\n";
+#
+#						$isSigned = 1;
+#
+#					}
+#				}
+#			}
+#		}
 
 		###############
 		## PUBLIC KEY

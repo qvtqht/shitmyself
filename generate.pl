@@ -247,6 +247,12 @@ sub GetSubmitPage {
 	return $txtIndex;
 }
 
+sub GetHomePage {
+	my $homePage;
+
+	#my $homePage = GetTemplate('page/home.template');
+}
+
 sub GetStatsPage {
 	my $statsPage;
 
@@ -322,7 +328,7 @@ sub MakeStaticPages {
 
 	$graciasPage .= GetTemplate('maincontent.template');
 
-	my $graciasTemplate = GetTemplate('gracias.template');
+	my $graciasTemplate = GetTemplate('page/gracias.template');
 
 	$graciasPage .= $graciasTemplate;
 
@@ -355,7 +361,7 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetTemplate('maincontent.template');
 
-	my $tfmPageTemplate = GetTemplate('manual.template');
+	my $tfmPageTemplate = GetTemplate('page/manual.template');
 
 	$tfmPage .= $tfmPageTemplate;
 
@@ -513,7 +519,7 @@ foreach my $hashRef (@authors) {
 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
 
-			return;
+			next;
 		}
 
 		my $fileName = $fileHash;
@@ -525,7 +531,8 @@ foreach my $hashRef (@authors) {
 
 		my $fileIndex = GetItemPage($file);
 
-		my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+		#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+		my $targetPath = 'html/' . GetHtmlFilename($fileHash);
 
 		WriteLog("Writing HTML file for item");
 		WriteLog("\$targetPath = $targetPath");
@@ -671,5 +678,13 @@ while (@voteCountsArray) {
 #}
 
 MakeClonePage();
+
+my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
+if ($homePageHasBeenWritten) {
+	WriteLog("Home Page has bee written! Yay!");
+} else {
+	WriteLog("Warning! Home Page has bee written! Fixing that");
+	PutHtmlFile('html/write.html', GetHomePage());
+}
 
 1;

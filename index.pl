@@ -92,6 +92,7 @@ sub IndexFile {
 		DBAddItemParent('flush');
 		DBAddVoteWeight('flush');
 		DBAddPageTouch('flush');
+		DBAddConfigValue('flush');
 
 		return;
 	}
@@ -111,6 +112,14 @@ sub IndexFile {
 	my $fingerprint;        # author's gpg key, long-ass format (not used currently)
 
 	my $verifyError = 0;    # was there an error verifying the file with gpg?
+
+	if (IsServer($gpgKey)) { #todo
+		#push @allowedactions addedtime
+	}
+	if (IsAdmin($gpgKey)) { #todo
+		#push @allowedactions addvouch
+		#push @allowedactions setconfig
+	}
 
 #	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
 #todo add support for .md (markdown) files
@@ -152,7 +161,8 @@ sub IndexFile {
 			}
 
 			# find the html file and unlink it too
-			my $htmlFilename = 'html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			#my $htmlFilename = 'html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			my $htmlFilename = 'html/' .GetHtmlFilename($gitHash);
 
 			if (-e $htmlFilename) {
 				unlink($htmlFilename);
@@ -180,6 +190,7 @@ sub IndexFile {
 
 			# current time
 			my $newAddedTime = time();
+			$addedTime = $newAddedTime; #todo is this right? confirm
 
 			# add new line to added.log
 			my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
@@ -270,45 +281,62 @@ sub IndexFile {
 			}
 		}
 
-		# look for quoted message ids
+#		if ($message) {
+#			if (IsAdmin($gpgKey)) {
+#				if (trim($message) eq 'upgrade_now') {
+#					PutConfig('upgrade_now', time());
+#					AppendFile('log/deleted.log', $gitHash);
+#				}
+#			}
+#		}
+#
 		if ($message) {
-			# >> token
-			my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
+			#look for setconfig
+			if (IsAdmin($gpgKey)) {
+				#must be admin
 
-			if (@replyLines) {
-				while(@replyLines) {
-					my $parentHash = shift @replyLines;
+				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_]+)\/(.+)/mg );
 
-					if (IsSha1($parentHash)) {
-						DBAddItemParent($gitHash, $parentHash);
-						DBAddVoteRecord($gitHash, $addedTime, 'reply');
+				if (@setConfigLines) {
+					my $lineCount = @setConfigLines / 2;
+
+					if ($isSigned) {
+						while (@setConfigLines) {
+							my $configKey = shift @setConfigLines;
+							my $configValue = shift @setConfigLines;
+
+							if (ConfigKeyValid($configKey)) {
+								my $reconLine = "setconfig/$configKey/$configValue";
+
+								$message =~ s/$reconLine/[Config changed at $addedTime: $configKey = $configValue]/g;
+								$detokenedMessage =~ s/$reconLine//g;
+
+								DBAddConfigValue($configKey, $configValue, $addedTime);
+
+								#todo factor this out? maybe?
+
+								chomp $configValue;
+
+								PutConfig($configKey, $configValue);
+							}
+						}
 					}
-
-					my $reconLine = ">>$parentHash";
-
-					$message =~ s/$reconLine/$reconLine/;
-					# replace with itself, no change needed
-
-					$detokenedMessage =~ s/$reconLine//;
-
-					DBAddPageTouch('item', $parentHash);
 				}
-
-				DBAddItemParent('flush');
 			}
 		}
 
+		#look for addvouch
 		if ($message) {
 			# look for addvouch, which adds a voting vouch for a user
 			# addvouch/F82FCD75AAEF7CC8/20
 
-			my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
+			if (IsAdmin($gpgKey)) {
+				my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
 
-			if (@weightLines) {
-				my $lineCount = @weightLines / 2;
+				if (@weightLines) {
+					my $lineCount = @weightLines / 2;
 
-				if ($isSigned) {
-					if (IsAdmin($gpgKey)) {
+					if ($isSigned) {
 						while(@weightLines) {
 							my $voterId = shift @weightLines;
 							my $voterWt = shift @weightLines;
@@ -368,6 +396,8 @@ sub IndexFile {
 						DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
 
 						DBAddPageTouch('tag', 'timestamp');
+					} else {
+						#todo
 					}
 				}
 			}
@@ -437,6 +467,7 @@ sub IndexFile {
 					if ($isSigned) {
 						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration, $gpgKey);
 					} else {
+						#todo csrf check
 						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration);
 					}
 
@@ -493,6 +524,21 @@ sub IndexFile {
 					DBAddVoteRecord ($gitHash, $addedTime, 'vote');
 
 					DBAddPageTouch('tag', 'vote');
+
+					if (IsAdmin($gpgKey) || IsServer($gpgKey)) {
+						if ($voteValue eq 'remove') {
+							AppendFile('log/deleted.log', $fileHash);
+							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+							my $htmlFilename = 'html/' . GetHtmlFilename($fileHash);
+							if (-e $htmlFilename) {
+								unlink ($htmlFilename);
+							}
+							if (-e $file) {
+								unlink ($file);
+							}
+							#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
+						}
+					}
 				}
 			}
 		}

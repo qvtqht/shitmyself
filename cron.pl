@@ -42,8 +42,8 @@ while (!$touch || time() < $startTime + $interval) {
 	my $newItemCount = ProcessAccessLog($accessLogPath, 0);
 
 	if ($newItemCount > 0) {
-		system('perl rebuild.pl');
-		#WriteLog('Skipping rebuild');
+		system('perl build.pl');
+		#WriteLog('Skipping build');
 	}
 }
 

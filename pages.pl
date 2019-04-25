@@ -377,7 +377,9 @@ sub GetItemTemplate {
 		$message = FormatForWeb($message);
 
 		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-		$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
+		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
+		$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
+		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
 
@@ -429,7 +431,8 @@ sub GetItemTemplate {
 		}
 
 		my $permalinkTxt = $file{'file_path'};
-		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+#		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+		my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
 
 #		$permalinkTxt =~ s/^\.//;
 		$permalinkTxt =~ s/html\//\//;
@@ -635,12 +638,15 @@ sub GetPageHeader {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/", 'Home');
+	#todo replace with config/menu/*
+
+	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	#$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
-	$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
+	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
 	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
 
@@ -1057,7 +1063,8 @@ sub GetIndexPage {
 			$message = FormatForWeb($message);
 
 			#$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
-			$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
+			$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
+			#hint GetHtmlFilename
 			#todo verify that the items exist before turning them into links,
 			# so that we don't end up with broken links
 
@@ -1075,7 +1082,6 @@ sub GetIndexPage {
 			}
 
 			#todo $alias = GetAlias($gpgKey);
-			WriteLog('@@@\@@@');
 
 			$alias = HtmlEscape($alias);
 
@@ -1107,7 +1113,8 @@ sub GetIndexPage {
 			} else {
 				$authorLink = "";
 			}
-			my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			#my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
 
 			my $permalinkTxt = $file;
 			#			$permalinkTxt =~ s/^\.//;
@@ -1142,6 +1149,10 @@ sub GetIndexPage {
 				$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
 			} else {
 				$itemTemplate =~ s/\$replyCount//g;
+			}
+
+			if (index($itemTemplate, '$quickVoteButtonGroup')) {
+				$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 			}
 
 			if (index($itemTemplate, '$votesSummary')) {
