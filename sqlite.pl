@@ -94,8 +94,8 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE config(key, value, timestamp)");
 	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp)");
 	SqliteQuery2("
-		CREATE VIEW config_latest(key, value, timestamp) AS
-		SELECT key, value, MAX(timestamp) timestamp_max FROM config GROUP BY key ORDER BY timestamp DESC
+		CREATE VIEW config_latest AS
+		SELECT key, value, MAX(timestamp) config_timestamp FROM config GROUP BY key ORDER BY timestamp DESC
 	");
 
 
