@@ -28,6 +28,18 @@ function getUserFp() {
 	}
 }
 
+// this will fire when textarea to restore from private key is changed
+function privKeyRestoreChg() {
+	var pkR = document.getElementById('privatekeyRestore');
+	if (pkR) {
+		var privKeyHeaderString = "-----BEGIN PGP PRIVATE KEY BLOCK-----\n";
+		//#todo add footer and more validation too
+		if (pkR.value.substr(0, privKeyHeaderString.length) == privKeyHeaderString) {
+			saveId();
+		}
+	}
+}
+
 // retrieve previously built avatar from localstore
 // this is already in html form
 function getAvatar() {
@@ -71,7 +83,7 @@ if (getUserFp()) {
 // this will also enable/disable the restore/copy buttons in the private key form
 function showHideForms() {
     // if user fingerprint exists
-	if (getUserFp()) {
+	if (getPrivateKey()) {
 	    //current id form, show it
 		var formCur = document.getElementById('formCurId');
 		if (formCur) {
@@ -143,6 +155,11 @@ function removeStoredKeys() {
 
     // clear the private key textbox if it can be found
 	var textbox = document.getElementById("privatekey");
+	if (textbox) {
+		textbox.value = '';
+	}
+
+	textbox = document.getElementById("privatekeyRestore");
 	if (textbox) {
 		textbox.value = '';
 	}
@@ -242,9 +259,11 @@ function insertPubKey() {
 // gets current user's cached public key from localstorage
 function getPublicKey() {
 	var publicKey = localStorage.getItem("publickey");
-	if (publicKey === null || publicKey.length === 0) {
-		return null;
+
+	if (publicKey === null || publicKey.length === 0 || publicKey == undefined) {
+
 	} else {
+
 		return publicKey;
 	}
 }
@@ -253,33 +272,26 @@ function getPublicKey() {
 function identityOnload() {
 	var pk = getPrivateKey();
 
-    // is there a private key?
+   // is there a private key?
 	if (pk) {
-	    // if there's a private key, see if the user wants to log out
-	    // by looking for #logout or #signout in the url
-	// disabled due to us not wanting this link to work
-		if (0 && window.location.hash &&	(window.location.hash == '#logout' || window.location.hash == '#signout')) {
-		    // log out
-   			logOut();
-   			// refresh the pk variable (should be null now)
-   			pk = getPrivateKey();
-
-            // refresh the page to update the menubar
-            // #todo make this happen without refreshing the page
-   			location.reload();
-   	    } else {
-   	        // otherwise just make sure the private key textbox is populated
-			var textbox = document.getElementById("privatekey");
-
-            // if it exists
-			if (textbox) {
-				textbox.value = pk;
-			}
+		var textbox = document.getElementById("privatekey");
+		if (textbox) {
+			textbox.value = pk;
+		}
+		var textbox2 = document.getElementById('privatekeyR');
+		if (textbox2) {
+			textbox2.value = pk;
 		}
 	}
 
     // if there's a public key, and a public key textbox, populate it
 	var pubk = getPublicKey();
+
+	if (pk && !pubk) {
+		var pubk = getPublicKeyFromPrivateKey(pk);
+		setPublicKey(pubk);
+	}
+
 	if (pubk) {
 		var textboxPub = document.getElementById("publickey");
 
@@ -288,33 +300,22 @@ function identityOnload() {
 		}
 	}
 
-    // if there's a pk, do a saveId(); just for the heck of it? dunno
-	if (pk) {
-		saveId();
-	}
-
-    // if there's a textbox for a name, populate it with the default
-    // the default is set in config/prefill_user_name
-    // and then templated in where $prefillUsername is
-    var nametext = document.getElementById("name");
+	// if there's a textbox for a name, populate it with the default
+	// the default is set in config/prefill_user_name
+	// and then templated in where $prefillUsername is
+ 	var nametext = document.getElementById("name");
 	if (nametext) {
 		if (nametext.value == '') {
 			nametext.value = "$prefillUsername";
 		}
 	}
 
-    // show and hide identity page forms as necessary
-	showHideForms();
+	updateVarsFromPrivateKey();
 
-    // here we do the same thing we did above, checking for #logout and #signout? #strange #todo
-	// disabled
-	if (0 && window.location.hash) {
-		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
-			if (getPrivateKey()) {
-				logOut();
-			}
-		}
-	}
+	updateCurrentIdForm();
+
+   // show and hide identity page forms as necessary
+	showHideForms();
 }
 
 // puts generated html avatar into localstorage
@@ -329,99 +330,88 @@ function hexToChar(string) {
 	return string.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+');
 }
 
-// if there's a private key textbox,
-// set the current private key and refresh the pubkey, fingerprint, and avatar too
-// not much validation currently #todo
-function saveId() {
-    // look for textbox
-	var textbox = document.getElementById("privatekey");
+function updateVarsFromPrivateKey(privkey) {
+	var openpgp = window.openpgp;
 
-	if (textbox) {
-		var privkey = textbox.value;
-
-        // store it to localstorage
-		setPrivateKey(privkey);
-
-		var openpgp = window.openpgp;
-
+	if (openpgp) {
 		openpgp.config.show_version = false;
 		openpgp.config.show_comment = false;
 
-        // read it into pgp object
-		var privKeyObj = openpgp.key.readArmored(privkey);;
+      // read it into pgp object
+		var privKeyObj = openpgp.key.readArmored(privkey);
 
-        // get the public key out of it
-		var pubKeyObj = privKeyObj.keys[0].toPublic();
+		if (privKeyObj) {
 
-        // store the armored version into localstorage
-		var pubkey = pubKeyObj.armor();
-		setPublicKey(pubkey);
+			// get the public key out of it
+			var pubKeyObj = privKeyObj.keys[0].toPublic();
 
-        // get the fingerprint as uppercase hex and store it
-		myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-		window.localStorage.setItem("fingerprint", myFingerprint);
+			// store the armored version into localstorage
+			var pubkey = pubKeyObj.armor();
+			setPublicKey(pubkey);
 
-        // get username out of key
-		myUsername = pubKeyObj.users[0].userId.userid;
+			// store it to localstorage
+			setPrivateKey(privkey);
 
-		var color1 = myFingerprint.substr(0, 6);
-		var color2 = myFingerprint.substr(3, 6);
-		var color3 = myFingerprint.substr(6, 6);
-		var color4 = myFingerprint.substr(9, 6);
+			// get the fingerprint as uppercase hex and store it
+			myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+			//alert('myFingerprint = ' + myFingerprint);
+			window.localStorage.setItem("fingerprint", myFingerprint);
 
-		var avatar = '';
+			  // get username out of key
+			myUsername = pubKeyObj.users[0].userId.userid;
 
-//		var char1 = myFingerprint.substr(12, 1);
-//		var char2 = myFingerprint.substr(13, 1);
-//		var char3 = myFingerprint.substr(14, 1);
+			var color1 = myFingerprint.substr(0, 6);
+			var color2 = myFingerprint.substr(3, 6);
+			var color3 = myFingerprint.substr(6, 6);
+			var color4 = myFingerprint.substr(9, 6);
 
-		//char1 = hexToChar(char1);
-		//char2 = hexToChar(char2);
-		//char3 = hexToChar(char3);
-		//char4 = hexToChar(char4);
+			var avatar = '';
 
-		var char1 = '*';
-		var char2 = '*';
+			var char1 = '*';
+			var char2 = '*';
 
-		avatar = ''
+			avatar = ''
 
-			+ '<span class=avatar style="background-color: #' + color1 + '">'
-			+ '<span class=icon>'
-			+ '<font color="#' + color2 + '">' + char1 + '</font>'
-			+ '<font color="#' + color3 + '">' + char2 + '</font>'
-			//+ '<font color="#' + color4 + '">' + char3 + '</font>'
-			+ '</span>'
-			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
-			+ '</span>';
+				+ '<span class=avatar style="background-color: #' + color1 + '">'
+				+ '<span class=icon>'
+				+ '<font color="#' + color2 + '">' + char1 + '</font>'
+				+ '<font color="#' + color3 + '">' + char2 + '</font>'
+				//+ '<font color="#' + color4 + '">' + char3 + '</font>'
+				+ '</span>'
+				+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
+				+ '</span>';
 
-		setAvatar(avatar);
+			setAvatar(avatar);
+		}
+	}
+}
 
-        // if there is a myid box, populate it appropriately
-		var myidBox = document.getElementById('myid');
-		if (myidBox) {
-			var myAvatar = localStorage.getItem('avatar');
-			var signinBox = document.getElementById('signin');
+function updateCurrentIdForm() {
+  // if there is a myid box, populate it appropriately
+	var myidBox = document.getElementById('myid');
 
-			if (myAvatar == null || myAvatar.length == 0) {
-				if ( !document.getElementById("privatekey")) {
-					signinBox.innerHTML = '<a href="/profile.html">Login</a>';
-				}
-			} else {
-				signinBox.innerHTML = '';
+	if (myidBox) {
 
-				var myFp = localStorage.getItem('fingerprint');
+		var myAvatar = window.localStorage.getItem('avatar');
+		var signinBox = document.getElementById('signin');
 
-				myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+		if (myAvatar == null || myAvatar.length == 0) {
 
-				var myId2 = document.getElementById('myId2');
-				if (myId2) {
-					myId2.innerHTML = getAvatar();
-				}
+		} else {
+			signinBox.innerHTML = '';
 
-				var myIdProfile = document.getElementById('myIdProfile');
-				if (myIdProfile) {
-					var profileUrl = '/author/' + myFingerprint + '/';
+			var myFp = localStorage.getItem('fingerprint');
 
+			myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+
+			var myId2 = document.getElementById('myId2');
+			if (myId2) {
+				myId2.innerHTML = getAvatar();
+			}
+
+			var myIdProfile = document.getElementById('myIdProfile');
+			if (myIdProfile) {
+				var profileUrl = '/author/' + myFp + '/';
 					if (UrlExists(profileUrl)) {
 						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
 					} else {
@@ -429,20 +419,36 @@ function saveId() {
 						myIdProfile.innerHTML = 'Profile page not yet exist.';
 					}
 				}
-
-				var myCrea = document.getElementById('myCrea');
-				if (myCrea) {
-					myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
-				}
-
-				var myFinger = document.getElementById('myFP');
-				if (myFinger) {
-					myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-				}
 			}
 
-			showHideForms();
-	    }
+			var myCrea = document.getElementById('myCrea');
+			if (myCrea) {
+				myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+			}
+
+			var myFinger = document.getElementById('myFP');
+			if (myFinger) {
+				myFinger.innerHTML = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+			}
+		}
+	}
+}
+
+// if there's a private key textbox,
+// set the current private key and refresh the pubkey, fingerprint, and avatar too
+// not much validation currently #todo
+function saveId() {
+    // look for textbox
+	var textbox = document.getElementById("privatekeyRestore");
+
+	if (textbox) {
+		var privkey = textbox.value;
+
+		updateVarsFromPrivateKey(privkey);
+
+		updateCurrentIdForm();
+
+		showHideForms();
     }
 }
 
@@ -465,11 +471,16 @@ function makePrivateKey(username, bits) {
 	if (typeof(Storage) !== "undefined") {
 		var privateKey = getPrivateKey();
 
+		//#only do this if there is no existing private key
 		if (privateKey === null || privateKey.length === 0) {
 			var privkey;
 			var pubkey;
 
 			var openpgp = window.openpgp;
+
+			openpgp.config.show_version = false;
+			openpgp.config.show_comment = false;
+
 			openpgp.initWorker({path:'openpgp.worker.js'});
 
 			var options;
@@ -487,41 +498,16 @@ function makePrivateKey(username, bits) {
 				};
 			}
 
-			var textbox = document.getElementById("privatekey");
-			var genStatus = document.getElementById('genStatus');
-			if (genStatus) {
-				genStatus.innerHTML = 'Working...';
-			}
-			var cSb = document.getElementById('cSb');
-			if (cSb) {
-				cSb.disabled = 1;
-			}
-
-			openpgp.config.show_version = false;
-			openpgp.config.show_comment = false;
-
 			openpgp.generateKey(options).then(
 				function(key) {
 					setPrivateKey(key.privateKeyArmored);
-					if (textbox) {
-						textbox.value = key.privateKeyArmored;
-					}
+
 					if (genStatus) {
 						genStatus.innerHTML = '';
 					}
 					if (cSb) {
 						cSb.disabled = 0;
 					}
-
-					setPublicKey(key.publicKeyArmored);
-
-					saveId();
-
-					sharePubKey();
-
-					//return frames["frame"].location.host;
-
-					//window.open('/write.html#inspubkey', '_self');
 				}
 			);
 		} else {
@@ -542,16 +528,29 @@ function sharePubKey() {
 }
 
 function makeKeyFromInputs() {
-	var privkey = getPrivateKey();
-
-	if (privkey) {
-		removeStoredKeys();
-	}
+//	var privkey = getPrivateKey();
+//
+//	if (privkey) {
+//		removeStoredKeys();
+//	}
 
 	var user = document.getElementById('name').value;
 	var bits = document.getElementById('bits').value;
 
+	var genStatus = document.getElementById('genStatus');
+	if (genStatus) {
+		genStatus.innerHTML = 'Working...';
+	}
+	var cSb = document.getElementById('cSb');
+	if (cSb) {
+		cSb.disabled = 1;
+	}
+
 	makePrivateKey(user, bits);
+
+	updateVarsFromPrivateKey();
+
+	showHideForms();
 }
 
 function insPubKey() {
@@ -685,6 +684,11 @@ function signForm(formId) {
 	} else {
 		return null;
 	}
+}
+
+function restoreIdCclick(ischecked) {
+	document.getElementById('restorefromkey').style.display=(ischecked ? 'block' : 'none');
+	if (ischecked) { document.getElementById('privatekeyRestore').focus() }
 }
 
 //signForm('compose');
