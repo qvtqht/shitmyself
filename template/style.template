@@ -230,8 +230,8 @@ textarea {
 	max-width: 60em;
 }
 .warning {
-    background-color: #ffd0a0;
-	border: #c08000 solid 2pt;
+    background-color: #ffe080;
+	border: #ff8000 solid 2pt;
 	padding: 5pt;
 }
 
