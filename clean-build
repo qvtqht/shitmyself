@@ -12,4 +12,4 @@ git init
 git add *
 git commit -m "rebuild"
 cd -
-time ./rebuild.sh
+time ./build.sh
