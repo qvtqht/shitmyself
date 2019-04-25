@@ -14,7 +14,6 @@ Alternative private key management ideas
 * One-time token that validates user-generated key
 * Store private keys on server, passworded, for insecure uses
 
-=======
 CLEANUP
 =======
 15 messages have been tagged for removal. There are 30 days left to rescue them.

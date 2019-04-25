@@ -30,7 +30,6 @@ javascripted one-click vote buttons that reflect status on-page
 From openpgp.js docs:
 	The dist/compat/openpgp.min.js bundle also works with Internet Explorer 11 and old versions of Safari.
 Ensure that this (and the non-min version) is the version that is in the templates
-=======
 
 
 Add titles to items
