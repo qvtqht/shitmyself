@@ -133,20 +133,6 @@ $gpg2Algochoices
 
     </span>
 
-    <p>
-        <label for=restoreIdC>
-            <input type=checkbox id=restoreIdC onchange="restoreIdCclick(this.checked);">
-            <b><u>Restore profile</u></b> using private key
-        </label>
-    </p>
-
-    <span id=restorefromkey name=restorefromkey style="display: none">
-        <p>
-            <input type=button id=restoreid value="Restore Profile" onclick="saveId();sharePubKey();"><br>
-            <textarea cols=61 rows=16 id=privatekeyRestore autocomplete=off spellcheck=false onchange="privKeyRestoreChg()" onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
-        </p>
-
-    </span>
 </form>
 
 
