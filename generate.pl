@@ -131,6 +131,12 @@ sub GetIdentityPage {
 
 	my $idPage = GetTemplate('form/identity.template');
 
+	my $idCreateForm = GetTemplate('form/id_create.template');
+	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
+
+	my $idCurrentForm = GetTemplate('form/id_current.template');
+	$idPage =~ s/\$formIdCurrent/$idCurrentForm/g;
+
 	if (GetConfig('use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
 		$idPage =~ s/\$gpg2Algochoices/$gpg2Choices/;
@@ -207,7 +213,7 @@ sub GetSubmitPage {
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		if ($itemCount < $itemLimit) {
-			my $submitForm = GetTemplate('form/write.template');
+			my $submitForm = GetTemplate('form/write2.template');
 			my $prefillText = "";
 
 			$submitForm =~ s/\$extraFields//g;
@@ -234,7 +240,7 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
-		my $submitForm = GetTemplate('form/write.template');
+		my $submitForm = GetTemplate('form/write2.template');
 		my $prefillText = "";
 
 		$submitForm =~ s/\$extraFields//g;

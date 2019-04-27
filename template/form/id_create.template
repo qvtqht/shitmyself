@@ -1,0 +1,59 @@
+<form id=formCreateId name=formCreateId style="display:none">
+
+    <p>
+        <big><b>Create Profile</b></big>
+    </p>
+
+    <p>
+        <label for=name>Name:
+            <input type=text size=16 maxlength=16 name=name id=name onblur="if(this.value==''){this.value='Anonymous';}" onfocus="if(this.value=='Anonymous'){this.value='';}">
+        </label>
+    </p>
+
+    <p>
+        <input id=cSb type=submit value="Create" style="background-color: orange" onclick="makeKeyFromInputs();return false;">
+        <span id=genStatus></span>
+    </p>
+
+    <p>
+        <label for=creaIdAdvC><input type=checkbox id=creaIdAdvC onchange="document.getElementById('creaIdAdv').style.display=(this.checked ? 'block' : 'none')"> Show advanced options</label>
+    </p>
+
+    <span id=creaIdAdv style="display:none">
+
+    <p>
+        <label for=bits>Algorithm:
+            <select name=bits id=bits>
+                <option value=512 selected>rsa512</option>
+                <option value=1024>rsa1024</option>
+                <option value=2048>rsa2048</option>
+                <option value=4096>rsa4096</option>
+$gpg2Algochoices
+            </select>
+        </label>
+    </p>
+
+    <p id=abc>
+        &check; Generate a profile, also known as key pair<br>
+        &check; Store your <b>private key</b> in your browser/device<br>
+        &check; Publish your <b>public key</b>, including your name<br>
+        &check; Enable others to send you encrypted messages
+    </p>
+
+    <label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
+
+    <span id=creaIdExp style="display:none">
+        <p>
+            &check; Disable JavaScript<br>
+            &check; Use gpg at the command line<br>
+            &check; Write your own frontend<br>
+        </p>
+        <p>
+            Please refer to the Manual for more information.
+        </p>
+    </span>
+
+    </span>
+
+</form>
+
