@@ -192,6 +192,7 @@ sub ProcessAccessLog {
 		my $status;
 		my $length;
 		my $ref;
+		my $userAgent;
 
 		# Parse mode select
 		if ($vhostParse) {
@@ -204,8 +205,10 @@ sub ProcessAccessLog {
 				 $req, $file, $proto, $status, $length, $ref) = split(' ',$line);
 		}
 
+		# useragent is last. everything that is not the values we have pulled out so far
+		# is the useragent.
 		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 11;
-		my $userAgent = substr($line, $notUseragentLength);
+		$userAgent = substr($line, $notUseragentLength);
 
 		# Split $date into $time and $date
 		my $time = substr($date, 13);
