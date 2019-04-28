@@ -6,7 +6,7 @@
 
     <p>
         <label for=name>Name:
-            <input type=text size=16 maxlength=16 name=name id=name onblur="if(this.value==''){this.value='Anonymous';}" onfocus="if(this.value=='Anonymous'){this.value='';}">
+            <input type=text size=16 maxlength=16 name=name id=name onblur="if(this.value==''){this.value='$prefillUsername';}" onfocus="if(this.value=='$prefillUsername'){this.value='';}">
         </label>
     </p>
 
@@ -34,19 +34,18 @@ $gpg2Algochoices
     </p>
 
     <p id=abc>
-        &check; Generate a profile, also known as key pair<br>
-        &check; Store your <b>private key</b> in your browser/device<br>
-        &check; Publish your <b>public key</b>, including your name<br>
-        &check; Enable others to send you encrypted messages
+        * Generate a profile, also known as key pair<br>
+        * Store your <b>private key</b> in your browser/device<br>
+        * Publish your <b>public key</b>, including your name<br>
     </p>
 
     <label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
 
     <span id=creaIdExp style="display:none">
         <p>
-            &check; Disable JavaScript<br>
-            &check; Use gpg at the command line<br>
-            &check; Write your own frontend<br>
+            * Disable JavaScript<br>
+            * Use gpg at the command line<br>
+            * Write your own frontend<br>
         </p>
         <p>
             Please refer to the Manual for more information.
