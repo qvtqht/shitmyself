@@ -3,4 +3,5 @@
 <p>$itemText</p>
 <p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink $replyCount</p>
 </div>
+<hr style="display:none">
 <!-- / item-small.template -->
