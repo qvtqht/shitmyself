@@ -229,8 +229,15 @@ textarea {
 	padding: 5pt;
 	max-width: 60em;
 }
+.disclaimer {
+	background-color: #ffffff;
+	border: #c08040 solid 2pt;
+	color: #400000;
+	padding: 5pt;
+}
+
 .warning {
-    background-color: #ffe080;
+	background-color: #ffe080;
 	border: #ff8000 solid 2pt;
 	padding: 5pt;
 }
@@ -274,6 +281,12 @@ label {
 	background-color: #c0c0c0;
 	border: 5pt solid #ffa0a0;
 	padding: 5pt;
+	border-radius: 5pt;
+}
+#formAdminId {
+	background-color: #ffe080;
+	padding: 5pt;
+	border: 5pt solid #c08000;
 	border-radius: 5pt;
 }
 #formCreateId {

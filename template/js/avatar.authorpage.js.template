@@ -8,12 +8,13 @@ if (window.localStorage) {
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/profile.html">Login</a>';
+			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 		} else {
 		   signinBox.innerHTML = '';
 
 			var myFp = localStorage.getItem('fingerprint');
-			myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+			//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 
 			if (window.location.pathname == '/author/' + myFp + '/') {
 				// Create a new element

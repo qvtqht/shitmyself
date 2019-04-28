@@ -82,17 +82,12 @@ function showHideForms() {
 			formCreate.style.display = 'none';
 		}
 
-//        // enable the restore id button
-//		var restoreIdButton = document.getElementById('restoreid');
-//		if (restoreIdButton) {
-//			restoreIdButton.disabled = true;
-//		}
-//
-//        // disable the private key button
-//		var copyPrivButton = document.getElementById('copypriv');
-//		if (copyPrivButton) {
-//			copyPrivButton.disabled = false;
-//		}
+		var formAdmin = document.getElementById('formAdminId');
+		if (formAdmin) {
+			if (getUserFp() == '$currentAdminId') {
+				formAdmin.style.display = 'block';
+			}
+		}
 	} else {
 	// else means user is not logged in
 
@@ -108,17 +103,10 @@ function showHideForms() {
 			formCreate.style.display = 'block';
 		}
 
-//        // restore button, enable it
-//		var restoreIdButton = document.getElementById('restoreid');
-//		if (restoreIdButton) {
-//			restoreIdButton.disabled = false;
-//		}
-//
-//        // copy private key button, disable it
-//		var copyPrivButton = document.getElementById('copypriv');
-//		if (copyPrivButton) {
-//			copyPrivButton.disabled = true;
-//		}
+		var formAdmin = document.getElementById('formAdminId');
+		if (formAdmin) {
+			formAdmin.style.display = 'none';
+		}
 	}
 
     // hide the loading screen if it can be found
@@ -409,7 +397,8 @@ function saveId() {
 
 				var myFp = localStorage.getItem('fingerprint');
 
-				myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+				//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+				myidBox.innerHTML = '<a href="/profile.html">Profile</a>';
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {
@@ -633,7 +622,7 @@ function writeOnload2() {
 			insProfileTemplate();
 		}
 	}
-	if (localStorage.getItem('writesmall')) {
+	if (window.localStorage && window.localStorage.getItem('writesmall')) {
 	    var writebox = document.getElementById('comment');
 	    if (writebox) {
 	        writebox.value = localStorage.getItem('writesmall');
@@ -644,6 +633,19 @@ function writeOnload2() {
 		var writeAdvL = document.getElementById('writeAdvL');
 		if (writeAdvL) {
 			writeAdvL.style.display = 'inline';
+		}
+		var userRadio = document.getElementById('userRadio');
+//		alert(userRadio);
+		if (userRadio) {
+			//if (window.getAvatar) {
+			userRadio.innerHTML = '<label for=asign><input id=asign type=radio name=a value=sign> Sign as ' + getAvatar() + '</label>';
+			//}
+			var asign = document.getElementById('asign');
+			if (asign) {
+				asign.checked = 1;
+				asign.checked = true;
+			}
+			//userRadio.innerHTML = '...';
 		}
 	}
 }
@@ -722,8 +724,6 @@ function signForm(formId) {
 //}
 
 function signMessage() {
-    //var passPhrase = 'hunter2';
-
 	var privkey = getPrivateKey();
 
 	if (privkey) {
