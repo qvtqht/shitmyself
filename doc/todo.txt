@@ -1,3 +1,7 @@
+claim_admin token
+  if older than 30 days and/or approved by admin
+  	make admin
+
 publish rss for notification apps
 
 user page should show all replies
