@@ -132,10 +132,15 @@ sub GetIdentityPage {
 	my $idPage = GetTemplate('form/identity.template');
 
 	my $idCreateForm = GetTemplate('form/id_create.template');
+	my $prefillUsername = GetConfig('prefill_username');
+	$idCreateForm =~ s/\$prefillUsername/$prefillUsername/g;
 	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
 
 	my $idCurrentForm = GetTemplate('form/id_current.template');
 	$idPage =~ s/\$formIdCurrent/$idCurrentForm/g;
+
+	my $idAdminForm = GetTemplate('form/id_admin.template');
+	$idPage =~ s/\$formIdAdmin/$idAdminForm/g;
 
 	if (GetConfig('use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
@@ -213,7 +218,13 @@ sub GetSubmitPage {
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		if ($itemCount < $itemLimit) {
-			my $submitForm = GetTemplate('form/write2.template');
+			#my $submitForm = GetTemplate('form/write2.template');
+			my $submitForm = GetTemplate('form/write.template');
+
+			if (GetConfig('enable_php_support')) {
+				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/gracias2.php'; }" /;
+			}
+
 			my $prefillText = "";
 
 			$submitForm =~ s/\$extraFields//g;
@@ -240,7 +251,8 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
-		my $submitForm = GetTemplate('form/write2.template');
+		#my $submitForm = GetTemplate('form/write2.template');
+		my $submitForm = GetTemplate('form/write.template');
 		my $prefillText = "";
 
 		$submitForm =~ s/\$extraFields//g;
@@ -404,7 +416,7 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
 	# Write form javasript
-	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('avatar.js.template'));
+	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
 
 
 	# .htaccess file for Apache
@@ -527,13 +539,6 @@ foreach my $hashRef (@authors) {
 
 			next;
 		}
-
-		my $fileName = $fileHash;
-
-		$fileName =~ s/^\.//;
-		$fileName =~ s/\/html//;
-
-		$fileList .= $fileName . "|" . $fileHash . "\n";
 
 		my $fileIndex = GetItemPage($file);
 
