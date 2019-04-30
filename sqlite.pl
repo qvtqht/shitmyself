@@ -65,9 +65,27 @@ sub SqliteMakeTables() {
 		published
 	)");
 
+	# item_title
+	SqliteQuery2("CREATE TABLE item_title(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		file_hash UNIQUE,
+		title
+	)");
+
 	# item_parent
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
 	SqliteQuery2("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
+
+	SqliteQuery2("
+		CREATE VIEW child_count AS
+		SELECT
+			parent_hash AS parent_hash,
+			COUNT(*) AS child_count
+		FROM
+			item_parent
+		GROUP BY
+			parent_hash
+	");
 
 	# tag
 	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
@@ -98,17 +116,6 @@ sub SqliteMakeTables() {
 		SELECT key, value, MAX(timestamp) config_timestamp FROM config GROUP BY key ORDER BY timestamp DESC
 	");
 
-
-	SqliteQuery2("
-		CREATE VIEW child_count AS
-		SELECT
-			parent_hash AS parent_hash,
-			COUNT(*) AS child_count
-		FROM
-			item_parent
-		GROUP BY
-			parent_hash
-	");
 
 #	SqliteQuery2("CREATE TABLE type(type_mask, type_name)");
 #	#todo currently unpopulated
@@ -162,12 +169,14 @@ sub SqliteMakeTables() {
 				item.author_key AS author_key,
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
-				added_time.add_timestamp AS add_timestamp
+				added_time.add_timestamp AS add_timestamp,
+				IFNULL(item_title.title, '') AS item_title
 			FROM
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
+				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
 	");
 	SqliteQuery2("
 		CREATE VIEW item_vote_count AS
@@ -464,6 +473,45 @@ sub DBAddConfigValue {
 	return;
 }
 
+sub DBAddTitle {
+	state $query;
+	state @queryParams;
+
+	my $hash = shift;
+	if ($hash eq 'flush') {
+		WriteLog('DBAddTitle(flush)');
+
+		if ($query) {
+			$query .= ';';
+			SqliteQuery2($query, @queryParams);
+
+			$query = '';
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	my $title = shift;
+
+	if ($query && (length($query) > 2048 || scalar(@queryParams) > 50)) {
+		DBAddTitle('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	#todo sanity checks
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO item_title(file_hash, title) VALUES ";
+	} else {
+		$query .= ',';
+	}
+
+	$query .= '(?, ?)';
+	push @queryParams, $hash, $title;
+}
+
 sub DBAddAuthor {
 	state $query;
 	state @queryParams;
@@ -496,7 +544,7 @@ sub DBAddAuthor {
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO author(key) VALUES ";
 	} else {
-		$query .= ",";
+		$query .= ',';
 	}
 
 	$query .= '(?)';
