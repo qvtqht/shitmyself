@@ -559,7 +559,7 @@ sub GetPageFooter {
 
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
-	$menuTemplate .= GetMenuItem("/top/clone.html", 'Clone');
+	$menuTemplate .= GetMenuItem("/clone.html", 'Clone');
 	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 
