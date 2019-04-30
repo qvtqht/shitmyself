@@ -72,6 +72,8 @@ sub MakeAddedIndex {
 	}
 }
 
+
+
 sub IndexFile {
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush), flushes any queued queries
@@ -93,6 +95,7 @@ sub IndexFile {
 		DBAddVoteWeight('flush');
 		DBAddPageTouch('flush');
 		DBAddConfigValue('flush');
+		DBAddTitle('flush');
 
 		return;
 	}
@@ -281,21 +284,27 @@ sub IndexFile {
 			}
 		}
 
-#		if ($message) {
-#			if (IsAdmin($gpgKey)) {
-#				if (trim($message) eq 'upgrade_now') {
+		if ($message) {
+			if (IsAdmin($gpgKey)) {
+				if (trim($message) eq 'upgrade_now') {
+					my $time = time();
+
+					my $upgradeNow = system('perl ./upgrade.pl');
+
+					PutFile('html/txt/upgrade_' . $time . '.txt', $upgradeNow);
+
 #					PutConfig('upgrade_now', time());
-#					AppendFile('log/deleted.log', $gitHash);
-#				}
-#			}
-#		}
-#
+					AppendFile('log/deleted.log', $gitHash);
+				}
+			}
+		}
+
 		if ($message) {
 			#look for setconfig
 			if (IsAdmin($gpgKey)) {
 				#must be admin
 
-				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_]+)\/(.+)/mg );
+				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_\/]+)=(.+)/mg );
 
 				if (@setConfigLines) {
 					my $lineCount = @setConfigLines / 2;
@@ -306,7 +315,7 @@ sub IndexFile {
 							my $configValue = shift @setConfigLines;
 
 							if (ConfigKeyValid($configKey)) {
-								my $reconLine = "setconfig/$configKey/$configValue";
+								my $reconLine = "setconfig/$configKey=$configValue";
 
 								$message =~ s/$reconLine/[Config changed at $addedTime: $configKey = $configValue]/g;
 								$detokenedMessage =~ s/$reconLine//g;
@@ -556,6 +565,15 @@ sub IndexFile {
 
 				DBAddPageTouch('tag', 'notext');
 			} else {
+				if ($detokenedMessage) {
+					my $firstEol = index($detokenedMessage, "\n");
+					if ($firstEol <= 80 && $firstEol > 0) {
+						my $title = substr($detokenedMessage, 0, $firstEol);
+
+						DBAddTitle($gitHash, $title);
+					}
+				}
+
 				DBAddVoteRecord($gitHash, $addedTime, 'hastext');
 
 				DBAddPageTouch('tag', 'hastext');
