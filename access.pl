@@ -207,7 +207,7 @@ sub ProcessAccessLog {
 
 		# useragent is last. everything that is not the values we have pulled out so far
 		# is the useragent.
-		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 11;
+		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 10;
 		$userAgent = substr($line, $notUseragentLength);
 
 		# Split $date into $time and $date
