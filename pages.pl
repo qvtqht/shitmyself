@@ -242,7 +242,7 @@ sub GetItemPage {
 				WriteLog($replyVar);
 			}
 
-			$$replyItem{'template_name'} = 'item-small.template';
+			$$replyItem{'template_name'} = 'item/item-small.template';
 			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
 
 			WriteLog('$$replyItem{\'template_name\'} = ' . $$replyItem{'template_name'});
@@ -325,6 +325,15 @@ sub GetItemPage {
 	return $txtIndex;
 }
 
+sub GetHtmlLink {
+	my $hash = shift;
+
+	#todo sanity check
+
+	#todo templatize this
+	return '<a href="/' . GetHtmlFilename($hash) . '">' . substr($hash, 0, 8) . '..</a>';
+}
+
 sub GetItemTemplate {
 	# Returns HTML template for outputting one item
 	# %file(array for each file)
@@ -334,7 +343,7 @@ sub GetItemTemplate {
 	# add_timestamp = time file was added as unix_time #todo
 	# child_count = number of replies
 	# display_full_hash = display full hash for file
-	# template_name = item.template by default
+	# template_name = item/item.template by default
 	# remove_token = token to remove (for reply tokens)
 
 	my %file = %{shift @_};
@@ -378,7 +387,8 @@ sub GetItemTemplate {
 
 		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
 		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
-		$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
+		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
+		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
@@ -400,9 +410,9 @@ sub GetItemTemplate {
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
 			if (length($message) > GetConfig('item_long_threshold')) {
-				$itemTemplate = GetTemplate("itemlong.template");
+				$itemTemplate = GetTemplate("item/itemlong.template");
 			} else {
-				$itemTemplate = GetTemplate("item.template");
+				$itemTemplate = GetTemplate("item/item.template");
 			}
 		}
 
@@ -531,6 +541,10 @@ sub GetItemTemplate {
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
 
+	my $disclaimer = GetConfig('disclaimer');
+
+	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
+
 	my $timeBuilt = time();
 
 	my $timestamp = strftime('%F %T', localtime($timeBuilt));
@@ -543,7 +557,11 @@ sub GetPageFooter {
 
 	my $menuTemplate = "";
 
-	$menuTemplate .= GetMenuItem("/stats.html", 'stats');
+	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
+	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
+	$menuTemplate .= GetMenuItem("/top/clone.html", 'Clone');
+	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
+	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 
 	$footer .= $menuTemplate;
 
@@ -640,15 +658,16 @@ sub GetPageHeader {
 
 	#todo replace with config/menu/*
 
-	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
-	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
+	#$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+	$menuTemplate .= GetMenuItem("/top/pubkey.html", 'Authors');
+	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	#$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
-	$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
+	#$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
+	#$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
 
 #	my $adminKey = GetAdminKey();
 #	if ($adminKey) {
@@ -877,16 +896,16 @@ sub GetReadPage {
 
 			$alias = HtmlEscape($alias);
 
-			WriteLog('GetTemplate("item.template") 2');
+			WriteLog('GetTemplate("item/item.template") 2');
 			my $itemTemplate = '';
 			if ($message) {
 				$itemTemplate = GetItemTemplate($row);
 
 #				if (length($message) > GetConfig('item_long_threshold')) {
-#					$itemTemplate = GetTemplate("itemlong.template");
+#					$itemTemplate = GetTemplate("item/itemlong.template");
 #				}
 #				else {
-#					$itemTemplate = GetTemplate("item.template");
+#					$itemTemplate = GetTemplate("item/item.template");
 #				}
 #
 #				my $itemClass = "txt $signedCss";
@@ -972,7 +991,7 @@ sub GetReadPage {
 	#	$txtIndex .= GetTemplate('voteframe.template');
 
 	# Add javascript warning to the bottom of the page
-	#$txtIndex .= GetTemplate("jswarning.template");
+	$txtIndex .= GetTemplate("jswarning.template");
 
 	# Close html
 	$txtIndex .= GetPageFooter();
@@ -1063,7 +1082,8 @@ sub GetIndexPage {
 			$message = FormatForWeb($message);
 
 			#$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
-			$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
+			#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
+			$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 			#hint GetHtmlFilename
 			#todo verify that the items exist before turning them into links,
 			# so that we don't end up with broken links
@@ -1085,13 +1105,13 @@ sub GetIndexPage {
 
 			$alias = HtmlEscape($alias);
 
-			WriteLog('GetTemplate("item.template") 1');
+			WriteLog('GetTemplate("item/item.template") 1');
 
 			my $itemTemplate = '';
 			if (length($message) > GetConfig('item_long_threshold')) {
-				$itemTemplate = GetTemplate("itemlong.template");
+				$itemTemplate = GetTemplate("item/itemlong.template");
 			} else {
-				$itemTemplate = GetTemplate("item.template");
+				$itemTemplate = GetTemplate("item/item.template");
 			}
 			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
 
@@ -1190,7 +1210,7 @@ sub GetIndexPage {
 	}
 
 	# Add javascript warning to the bottom of the page
-	#$txtIndex .= GetTemplate("jswarning.template");
+	$txtIndex .= GetTemplate("jswarning.template");
 
 	# Close html
 	$txtIndex .= GetPageFooter();
