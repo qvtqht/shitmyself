@@ -5,6 +5,11 @@ use warnings;
 use utf8;
 use 5.010;
 use POSIX;
+use Data::Dumper;
+
+use File::Basename qw( fileparse );
+use File::Path qw( make_path );
+use File::Spec;
 
 use lib 'lib';
 
@@ -84,6 +89,20 @@ sub GetCache {
 	return GetFile($cacheName);
 }
 
+sub EnsureSubdirs {
+	my $fullPath = shift;
+
+	my ( $file, $dirs ) = fileparse $fullPath;
+	if ( !$file ) {
+		return;
+		$fullPath = File::Spec->catfile( $fullPath, $file );
+	}
+
+	if ( !-d $dirs ) {
+		make_path $dirs or die "Failed to create path: $dirs";
+	}
+}
+
 sub PutCache {
 	my $cacheName = shift;
 	chomp($cacheName);
@@ -160,7 +179,37 @@ sub GetMyVersion {
 #
 
 sub WriteConfigFromDatabase {
-	#todo
+#	print("1");
+#	my $query = "SELECT * FROM config_latest";
+#
+#	my $configSet = SqliteQuery2($query);
+#
+#	my @configSetArray = @{$configSet};
+#
+#	while (@configSetArray) {
+#		my $configLineRef = shift @configSetArray;
+#		my @configLine = @{$configLineRef};
+#		WriteLog(Data::Dumper->Dump(@configLine));
+##
+##		my $configKey = shift @configSetArray;
+##		my $configValue = shift @configSetArray;
+##		my $configTimestamp = shift @configSetArray;
+#
+##		PutConfig($configKey, $configValue);
+#	}
+#
+#	#print(Data::Dumper->Dump($configSet));
+##
+##	for my $config (@{$configSet}) {
+##		WriteLog(Data::Dumper->Dump($config));
+##	}
+#	#die();
+#
+#	#todo finish this
+#
+#	#get
+#
+#	#write to config/
 }
 
 sub GetString {
@@ -457,13 +506,30 @@ sub GetHtmlFilename {
 		return;
 	}
 
-	my $htmlFilename =
-		substr($hash, 0, 2) .
-		'/' .
-		substr($hash, 2, 8) .
-		'.html';
+	#	my $htmlFilename =
+	#		substr($hash, 0, 2) .
+	#		'/' .
+	#		substr($hash, 2, 8) .
+	#		'.html';
+	#
+		my $htmlFilename =
+			substr($hash, 0, 2) .
+				'/' .
+				substr($hash, 2, 2) .
+				'/' .
+				$hash .
+				'.html';
 
 	return $htmlFilename;
+}
+
+sub GetTitle {
+	my $text = shift;
+
+	if (!$text) {
+		return;
+	}
+
 }
 
 sub PutConfig {
@@ -485,7 +551,11 @@ sub PutFile {
 		return;
 	}
 
+	EnsureSubdirs($file);
+
 	WriteLog("PutFile($file, ...");
+
+
 
 	my $content = shift;
 	my $binMode = shift;
@@ -556,7 +626,7 @@ sub PutHtmlFile {
 
 	if ($file eq GetConfig('home_page')) {
 		my $homePageTitle = GetConfig('home_title');
-		$content =~ s/\<title\>.+\<\/title\>/<title>$homePageTitle<\/title>/;
+		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle ($1)<\/title>/;
 		PutFile ('html/index.html', $content);
 		$homePageWritten = 1;
 	}
@@ -1222,6 +1292,10 @@ if ($lastVersion ne $currVersion) {
 
 	PutConfig('current_version', $currVersion);
 }
+#
+#{
+#	#todo if admin changes post message
+#}
 
 sub ServerSign {
 # Signs a given file with the server's key, if it exists
