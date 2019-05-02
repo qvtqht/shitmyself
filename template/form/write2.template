@@ -1,0 +1,23 @@
+<!--# write2.template #-->
+
+<form action="./gracias.html" id=compose class=submit name=submit>
+    <span id=writeintro></span>
+
+    <label for="comment">Write something, please. Limited to 1K chars. <a href="/manual.html">More info in docs.</a></label><br>
+    <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
+    <p>
+        <input type=submit onclick="return writeSubmit();" value="Send Message" id=addtext>
+    </p>
+
+    <p>
+        <label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
+        <span id=userRadio></span>
+    </p>
+
+    <p>
+        <label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
+        <label for=rectime><input type=checkbox id=rectime name=rectime> Record timestamp</label>
+    </p>
+
+</form>
+<!--# / write2.template #-->
