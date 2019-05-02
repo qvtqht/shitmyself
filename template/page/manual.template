@@ -30,18 +30,61 @@
     <li>Post public key first, or signed messages not recognized.</li>
 </ul>
 
+<h3>Clients/Browsers</h3>
+
+<p>An attempt is made to support every browser. If there is a problem, please report it.</p>
+
+<p>The basic features of the website, including reading, posting, replying, and voting, has been tested in the following browsers:</p>
+
+<ul>
+    <li>Netscape Navigator Gold 3.04</li>
+    <li>Lynx 2.8.9rel.1</li>
+    <li>Links 2.17</li>
+    <li>qutebrowser 1.6.0</li>
+    <li>SeaMonkey 2.49.4</li>
+    <li>Firefox 52.7.2</li>
+    <li>Waterfox 56.2.9</li>
+</ul>
+
 <h3>Stack</h3>
 
 <ul>
     <li>ASCII (.txt)</li>
     <li>Perl</li>
+    <li>HTML</li>
+    <li>JavaScript</li>
+    <li>CSS</li>
+    <li>Unicode</li>
+    <li>GnuPG</li>
     <li>Bash</li>
     <li>access.log</li>
     <li>SQLite</li>
     <li>PHP</li>
+    <li>(GNU)</li>
 </ul>
 
 <a name=gpg><h3>How to use GPG</h3></a>
+
+<h4>Summary for Experts</h4>
+
+<p>Creating a profile: Generate a PGP key, post public key.</p>
+
+<p>Posting stuff as your profile: sign with GPG, paste into textbox.</p>
+
+<p>Tokens: Replying, voting, etc. is done with text-based tokens.</p>
+
+<p><b>Remember to include tokens in your signed message, or they will not be parsed.</b></p>
+
+<p>Example token: >>0123456789abcdef</p>
+
+<p>On a line by itself, this will reference message with that ID (git's "SHA-1")</p>
+
+<p>Another example: addvote/0123456789abcdef/legit/1550000000/2753939054945</p>
+
+<p>This will add a vote of "legit" to the same item, with a timestamp of 15500... The last bit is the anti-CSRF checksum, which
+is currently ignored if the message is signed, but verified by the server (and signed) at the time of reading from access.log</p>
+
+<h4>More descriptive version</h4>
 
 <p>You will need to <b>generate a key</b> and then <b>sign your messages</b>. Piece of cake.</p>
 
@@ -177,6 +220,37 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 
 <p>Start typing your message. When you're finished, press Enter, then ^D (Ctrl+D).</p>
 
+<a name=admin><h3>Admin Stuff</h3></a>
+
+<p>There is planned support in the near future for roles, multiple admins, etc. in the near future.</p>
+
+<p>That said, this software currently supports two roles: Admin, and Server. Both are optional.</p>
+
+<h4>Admin User</h4>
+
+<p>The Admin key is set by putting the admin's public key, ASCII-armored, into <code>hike/admin.key</code>.
+
+<p>This user currently holds the following special powers:</p>
+
+<p>The <code>addvouch</code> token can only be used by the admin.</p>
+
+<p>The <code>remove</code> tag, when applied by the admin user, will cause an item to be removed at the nearest opportunity.</p>
+
+<h4>
+
+<p>The Server key is set by first generating or importing the whole key into the server's keychain.</p>
+
+<p>The Server key is used for signing (and in the process also timestamping) various events that happen on the server.</p>
+
+<p>This ensures that the items were not posted by a random.</p>
+
+<p>The following actions are currently server-signed:</p>
+
+<p>Admin user changes. Server-signed notice is posted.</p>
+
+<p>Version changed. Server-signed "changelog" is posted, which includes the comment from the current version's commit, as well as all the previous commits that came before it, up to the most recent commit included in a changelog.</p>
+
+<p>Client fingerprint and timestamp for items that are posted where the user requests this.</p>
 
 <a name=clone><h3>Cloning</h3></a>
 
@@ -193,7 +267,5 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 <a name=other><h3>Other Questions</h3>
 
 <a href="write.html">Please ask them using the Write page</a>.
-
-<p></p><p></p><p></p>
 
 <!-- / manual.template -->
