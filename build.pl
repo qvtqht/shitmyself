@@ -43,6 +43,8 @@ MakeVoteIndex();
 
 MakeAddedIndex();
 
+WriteConfigFromDatabase();
+
 system('perl generate.pl');
 
 WriteLog( "Finished!");
