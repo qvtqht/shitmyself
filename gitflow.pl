@@ -45,6 +45,7 @@ if ($lastFlow) {
 	WriteLog('$lastFlow = ' . $lastFlow);
 } else {
 	WriteLog('$lastFlow undefined');
+	$lastFlow = 0;
 }
 
 # get the path of access log, usually log/access.log
