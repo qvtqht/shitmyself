@@ -218,8 +218,8 @@ sub GetSubmitPage {
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		if ($itemCount < $itemLimit) {
-			#my $submitForm = GetTemplate('form/write2.template');
-			my $submitForm = GetTemplate('form/write.template');
+			my $submitForm = GetTemplate('form/write2.template');
+			#my $submitForm = GetTemplate('form/write.template');
 
 			if (GetConfig('enable_php_support')) {
 				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/gracias2.php'; }" /;
@@ -251,8 +251,8 @@ sub GetSubmitPage {
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
-		#my $submitForm = GetTemplate('form/write2.template');
-		my $submitForm = GetTemplate('form/write.template');
+		my $submitForm = GetTemplate('form/write2.template');
+		#my $submitForm = GetTemplate('form/write.template');
 		my $prefillText = "";
 
 		$submitForm =~ s/\$extraFields//g;
@@ -692,7 +692,7 @@ MakeClonePage();
 
 my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
 if ($homePageHasBeenWritten) {
-	WriteLog("Home Page has bee written! Yay!");
+	WriteLog("Home Page has been written! Yay!");
 } else {
 	WriteLog("Warning! Home Page has bee written! Fixing that");
 	PutHtmlFile('html/write.html', GetHomePage());

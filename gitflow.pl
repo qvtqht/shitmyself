@@ -41,7 +41,11 @@ $lockTime = $currentTime;
 # store the last time we did this from config/gitflow_last
 my $lastFlow = GetConfig('gitflow_last');
 
-WriteLog('$lastFlow = ' . $lastFlow);
+if ($lastFlow) {
+	WriteLog('$lastFlow = ' . $lastFlow);
+} else {
+	WriteLog('$lastFlow undefined');
+}
 
 # get the path of access log, usually log/access.log
 my $accessLogPath = GetConfig('access_log_path');

@@ -252,6 +252,10 @@ sub GetItemPage {
 			WriteLog('$replyTemplate');
 			WriteLog($replyTemplate);
 
+			if ($$replyItem{'child_count'}) {
+				$replyTemplate .= "<p><font color=red>more replies here!</font></p>";
+			}
+
 			if ($replyTemplate) {
 				$txtIndex .= $replyTemplate;
 			} else {
@@ -290,11 +294,11 @@ sub GetItemPage {
 	}
 
 	if ($file{'vote_buttons'}) {
-		my $ballotTime = time();
-		$txtIndex .= GetTemplate("form/itemvote.template");
-
-		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-		$txtIndex =~ s/\$voterButtons/$voterButtons/g;
+#		my $ballotTime = time();
+#		$txtIndex .= GetTemplate("form/itemvote.template");
+#
+#		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+#		$txtIndex =~ s/\$voterButtons/$voterButtons/g;
 	}
 
 
@@ -389,6 +393,11 @@ sub GetItemTemplate {
 		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
 		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+
+		if ($file{'format_avatars'}) {
+			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
+		}
+
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
@@ -512,9 +521,12 @@ sub GetItemTemplate {
 
 						my $tagButton = GetTemplate('vote2button.template');
 
+						my $quickTagCaption = GetString($quickTagValue);
+
 						$tagButton =~ s/\$fileHash/$fileHash/g;
 						$tagButton =~ s/\$ballotTime/$ballotTime/g;
 						$tagButton =~ s/\$voteValue/$quickTagValue/g;
+						$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
 						$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
 						$tagButton =~ s/\$checksum/$checksum/g;
 
@@ -541,7 +553,7 @@ sub GetItemTemplate {
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
 
-	my $disclaimer = GetConfig('disclaimer');
+	my $disclaimer = GetConfig('string/en/disclaimer') . "\n" . GetConfig('string/ru/disclaimer');
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
 
@@ -562,6 +574,7 @@ sub GetPageFooter {
 	$menuTemplate .= GetMenuItem("/clone.html", 'Clone');
 	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
 	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
+	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 
 	$footer .= $menuTemplate;
 
@@ -660,10 +673,11 @@ sub GetPageHeader {
 
 	#$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+#	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/top/pubkey.html", 'Authors');
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	#$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
+	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
 	#$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
@@ -826,8 +840,6 @@ sub GetReadPage {
 
 	#<span class="replies">last reply at [unixtime]</span>
 	#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
-	
-	$txtIndex .= GetTemplate('form/write-small.template');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -1084,6 +1096,7 @@ sub GetIndexPage {
 			#$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
 			#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
 			$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+			#$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
 			#hint GetHtmlFilename
 			#todo verify that the items exist before turning them into links,
 			# so that we don't end up with broken links

@@ -285,7 +285,8 @@ sub ProcessAccessLog {
 					$message = decode_entities($message);
 					#$message = trim($message);
 					$message =~ s/\&(.+)=on/\n-- \n$1/g;
-					$message =~ s/=on\&/\n/g;
+					$message =~ s/=on\&/\n&/g;
+					$message =~ s/\&/\n&/g;
 					#is this dangerous?
 
 					if ($replyToId) {

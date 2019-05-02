@@ -327,6 +327,26 @@ sub encode_entities2 {
 	return $string;
 }
 
+sub GetHtmlAvatar {
+# returns avatar suitable for comments
+	my $key = shift;
+	if (!$key) {
+		return;
+	}
+
+	if (!IsFingerprint($key)) {
+		return;
+	}
+
+	my $avatar = GetAvatar($key);
+	if ($avatar) {
+		if (-e 'html/author/' . $key) {
+			my $avatarLink = GetAuthorLink($key);
+			return $avatarLink;
+		}
+	}
+}
+
 sub GetAvatar {
 	state %avatarCache;
 
@@ -624,9 +644,12 @@ sub PutHtmlFile {
 
 	PutFile($file, $content);
 
+	# this is a special hook for generating index.html, aka the home page
+	# if the current file matches config/home_page, write index.html
+	# change the title to home_title while at it
 	if ($file eq GetConfig('home_page')) {
 		my $homePageTitle = GetConfig('home_title');
-		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle ($1)<\/title>/;
+		$content =~ s/\<title\>(.+)\<\/title\>/<title>poo $homePageTitle ($1)<\/title>/;
 		PutFile ('html/index.html', $content);
 		$homePageWritten = 1;
 	}
@@ -1275,10 +1298,10 @@ my $currVersion = GetMyVersion();
 if ($lastVersion ne $currVersion) {
 	WriteLog("$lastVersion ne $currVersion, posting changelog");
 
-	my $serverKey = `gpg --list-keys hikeserver`;
+	#my $serverKey = `gpg --list-keys hikeserver`;
 
-	WriteLog("gpg --list-keys CCEA3752");
-	WriteLog($serverKey);
+	#WriteLog("gpg --list-keys CCEA3752");
+	#WriteLog($serverKey);
 
 	my $changeLogFilename = 'changelog_' . time() . '.txt';
 	my $changeLogMessage = 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
@@ -1292,10 +1315,22 @@ if ($lastVersion ne $currVersion) {
 
 	PutConfig('current_version', $currVersion);
 }
-#
-#{
-#	#todo if admin changes post message
-#}
+
+my $lastAdmin = GetConfig('current_admin');
+my $currAdmin = GetAdminKey();
+
+if ($lastAdmin ne $currAdmin) {
+	WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
+
+	my $changeAdminFilename = 'changeadmin_' . time() . '.txt';
+	my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
+
+	PutFile("html/txt/$changeAdminFilename", $changeAdminMessage);
+
+	ServerSign("html/txt/$changeAdminFilename");
+
+	PutConfig("current_admin", $currAdmin);
+}
 
 sub ServerSign {
 # Signs a given file with the server's key, if it exists

@@ -143,9 +143,9 @@ details.txt a.header {
 	color: #808080;
 	text-decoration: none;
 }
-.vb::before {
-	content: "✓";
-}
+<!--.vb::before {-->
+	<!--content: "✓";-->
+<!--}-->
 
 
 /* avatars */

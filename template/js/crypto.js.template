@@ -650,6 +650,15 @@ function writeOnload2() {
 	}
 }
 
+function writeSubmit() {
+	if (document.forms['compose'].aanon.checked) {
+		return true;
+	} else {
+		signMessage();
+		return false;
+	}
+}
+
 function signForm(formId) {
 	var form = document.getElementById(formId);
 	if (form) {
@@ -723,6 +732,42 @@ function signForm(formId) {
 //
 //}
 
+function signVote(t, token) {
+	var privkey = getPrivateKey();
+
+	if (!privkey) {
+		if (UrlExists(t.href)) {
+			t.enabled = false;
+			t.style.backgroundColor = '#408040'; //#todo
+			t.style.borderRadius = '5pt'; //#todo
+		}
+	} else {
+		var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+
+		options = {
+			data: token,                             // input as String (or Uint8Array)
+			privateKeys: [privKeyObj]                  // for signing
+		};
+
+		openpgp.config.show_version = false;
+
+		openpgp.config.show_comment = false;
+
+		openpgp.sign(options).then(function(signed) {
+			var url = '/gracias.html?comment=' + encodeURIComponent(signed.data);
+
+			if (UrlExists(url)) {
+				t.enabled = false;
+				t.style.backgroundColor = '#8080c0'; //#todo
+				t.style.color = '#f0f0f0';
+				t.style.borderRadius = '5pt'; //#todo
+			}
+		});
+	}
+
+	return false;
+}
+
 function signMessage() {
 	var privkey = getPrivateKey();
 
@@ -731,8 +776,8 @@ function signMessage() {
 		var composeForm = document.getElementById('compose');
 
 		if (textbox && composeForm) {
-			textbox.style.color = '#00ff00';
-			textbox.style.backgroundColor = '#c0c000';
+//			textbox.style.color = '#00ff00';
+//			textbox.style.backgroundColor = '#c0c000';
 
 			var message = textbox.value;
 

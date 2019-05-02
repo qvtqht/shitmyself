@@ -76,6 +76,7 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
 	SqliteQuery2("CREATE UNIQUE INDEX item_parent_unique ON item_parent(item_hash, parent_hash)");
 
+	# child_count view
 	SqliteQuery2("
 		CREATE VIEW child_count AS
 		SELECT
@@ -130,6 +131,7 @@ sub SqliteMakeTables() {
 #	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(256, 'markdown');");
 
 
+	# parent_count view
 	SqliteQuery2("
 		CREATE VIEW parent_count AS
 		SELECT
