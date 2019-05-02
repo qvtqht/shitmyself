@@ -1,3 +1,8 @@
+whenever a new pubkey is posted
+	messages that have "begin signed" header
+		and are not attached to an existing pubkey
+			should be re-checked
+
 claim_admin token
   if older than 30 days and/or approved by admin
   	make admin
@@ -463,8 +468,10 @@ Cookie auth via secret URL per public key, encrypted for that key
 Tag hooks for the admin (via cookie auth?)
 Tag ratings and enable/disable page
 Integrate Perl taint
-Use the full fingerprint for avatars for more colors
+
 When writing new html dir, make a list of all existing files, and remove from hash when written to, then delete all others remaining in hash
+	I think this is made unnecessary by clean-build
+
 Add CSRF token to reply form
 Remove duplicate parent= footer
 Add support for messages with multiple ENC_TOs
