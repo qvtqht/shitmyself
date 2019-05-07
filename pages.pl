@@ -182,6 +182,8 @@ sub GetVotesPage {
 	return $txtIndex;
 }
 
+
+
 sub GetItemPage {
 	#returns html for individual item page
 
@@ -223,10 +225,6 @@ sub GetItemPage {
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
-	if ($itemTemplate) {
-		$txtIndex .= $itemTemplate;
-	}
-
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
 	if ($file{'child_count'}) {
@@ -235,6 +233,7 @@ sub GetItemPage {
 		WriteLog('@itemReplies = ' . @itemReplies);
 
 		#$txtIndex .= "<hr>";
+		my $allReplies = '';
 
 		foreach my $replyItem (@itemReplies) {
 			WriteLog('$replyItem: ' . $replyItem);
@@ -253,15 +252,35 @@ sub GetItemPage {
 			WriteLog($replyTemplate);
 
 			if ($$replyItem{'child_count'}) {
-				$replyTemplate .= "<p><font color=red>more replies here!</font></p>";
+				my $subReplies = '';
+
+				#$replyTemplate .= "<p><font color=red>more replies here!</font></p>";
+				my @subReplies = DBGetItemReplies($file{'file_hash'});
+				foreach my $subReplyItem (@subReplies) {
+					$$subReplyItem{'template_name'} = 'item/item-small.template';
+					$$subReplyItem{'remove_token'} = '>>' . $file{'file_hash'};
+
+					my $subReplyTemplate = GetItemTemplate($subReplyItem);
+
+					$subReplies .= $subReplyTemplate;
+				}
+				$replyTemplate =~ s/<replies><\/replies>/$subReplies/;
+			} else {
+				$replyTemplate =~ s/<replies><\/replies>//;
 			}
 
 			if ($replyTemplate) {
-				$txtIndex .= $replyTemplate;
+				$allReplies .= $replyTemplate;
 			} else {
 				WriteLog('Warning:  replyTemplate is missing for some reason!');
 			}
 		}
+
+		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
+	}
+
+	if ($itemTemplate) {
+		$txtIndex .= $itemTemplate;
 	}
 
 	if (GetConfig('replies') == 1) {

@@ -3,5 +3,6 @@
 <p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink $replyCount</p>
 $votesSummary
 $quickVoteButtonGroup
+<replies></replies>
 </div>
 <hr style="display:none">

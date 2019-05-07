@@ -2,6 +2,7 @@
 <div style="border-color: $borderColor" class=reply>
 <p>$itemText</p>
 <p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink $replyCount</p>
+<replies></replies>
 </div>
 <hr style="display:none">
 <!-- / item-small.template -->
