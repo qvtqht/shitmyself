@@ -660,7 +660,7 @@ sub GetPageHeader {
 
 	#my $patternName = 'pattern/bokeh.template';
 	my $patternName = trim(GetConfig('header_pattern'));
-
+	my $introText = trim(GetConfig('intro_text'));
 	$patternName = GetConfig('header_pattern');
 
 	my $headerBackgroundPattern = GetTemplate($patternName);
@@ -685,6 +685,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
+	$htmlStart =~ s/\$introText/$introText/g;
 
 	my $menuTemplate = "";
 
@@ -1115,7 +1116,7 @@ sub GetIndexPage {
 			#$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
 			#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
 			$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
-			#$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
+			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
 			#hint GetHtmlFilename
 			#todo verify that the items exist before turning them into links,
 			# so that we don't end up with broken links

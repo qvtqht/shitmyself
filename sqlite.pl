@@ -335,6 +335,21 @@ sub SqliteGetValue {
 	return $aref[0];
 }
 
+sub DBGetAuthorCount {
+	my $whereClause = shift;
+
+	my $authorCount;
+	if ($whereClause) {
+		$authorCount = SqliteGetValue("SELECT COUNT(*) FROM author_flat WHERE $whereClause");
+	} else {
+		$authorCount = SqliteGetValue("SELECT COUNT(*) FROM author_flat");
+	}
+	chomp($authorCount);
+
+	return $authorCount;
+
+}
+
 sub DBGetItemCount {
 	my $whereClause = shift;
 

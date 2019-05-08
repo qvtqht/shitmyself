@@ -344,7 +344,11 @@ sub GetHtmlAvatar {
 			my $avatarLink = GetAuthorLink($key);
 			return $avatarLink;
 		}
+	} else {
+		return $key;
 	}
+
+	return $key;
 }
 
 sub GetAvatar {

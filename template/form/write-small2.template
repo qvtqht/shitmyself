@@ -1,0 +1,29 @@
+<!-- write-small.template -->
+<form action="/gracias.html" class=submit name=writesmall>
+	<label for=comment>Say something <b>to everyone</b>, anonymously*:<br>
+	<input autocomplete=off id=comment name=comment size=80 style="max-width: 75%; background-color: #ffffc0" maxlength=6000></label><br>
+	<input type=submit id=submit value="Send Unsigned"> <span id=signAndPost></span>
+</form>
+
+<script language=javascript>
+<!--
+function pushmessage() {
+    var comment = document.getElementById('comment');
+    if (comment) {
+        window.localStorage.setItem('writesmall', comment.value);
+
+        if (window.localStorage.getItem('writesmall') == comment.value) {
+            return true;
+        }
+
+        alert("Something went wrong! Could not save your entered text in local storage.\n\nPlease copy it manually and paste it on the Write page.");
+        return false; // don't follow the link if we're gonna lose the comment
+
+    } else {
+        return true;
+    }
+}
+// -->
+</script>
+
+<!-- / write-small.template -->
