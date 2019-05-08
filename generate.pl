@@ -279,6 +279,8 @@ sub GetStatsPage {
 	my $statsTable = GetTemplate('stats.template');
 
 	my $itemCount = DBGetItemCount();
+	my $authorCount = DBGetAuthorCount();
+
 	my $adminId = GetAdminKey();
 	if ($adminId) {
 		$statsTable =~ s/\$admin/GetAuthorLink($adminId)/e;
@@ -308,6 +310,7 @@ sub GetStatsPage {
 
 	$statsTable =~ s/\$version/GetMyVersion()/e;
 	$statsTable =~ s/\$itemCount/$itemCount/e;
+	$statsTable =~ s/\$authorCount/$authorCount/e;
 
 	$statsPage .= $statsTable;
 

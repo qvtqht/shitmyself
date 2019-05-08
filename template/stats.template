@@ -1,5 +1,6 @@
 <p>Version: $version</p>
 <p>Item Count: $itemCount</p>
+<p>Profile Count: $authorCount</p>
 <p>Administrator: $admin</p>
 <p>Updated: $currUpdateTime</p>
 <p>Previous Update: $prevUpdateTime</p>
