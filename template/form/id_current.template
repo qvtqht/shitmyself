@@ -12,7 +12,7 @@
     </p>
 
     <p>
-        <input type=button class=rmid value="Sign Out" onclick="logOut();"><br>
+        <input type=button class=rmid value="Sign Out" onclick="logOut();" style="float:right"><br>
     </p>
 
     <label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="document.getElementById('curIdAdv').style.display=(this.checked ? 'block' : 'none')"> Show advanced options</label>
