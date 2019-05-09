@@ -1,7 +1,7 @@
 <!-- item-small.template -->
 <div style="border-color: $borderColor" class=reply>
 <p>$itemText</p>
-<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink</p>
+<p><b><a href="$permalinkHtml">$itemName</a></b></p>
 <replies></replies>
 </div>
 <hr style="display:none">
