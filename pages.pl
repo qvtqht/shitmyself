@@ -484,7 +484,7 @@ sub GetItemTemplate {
 			$itemName = substr($fileHash, 0, 8) . '..';
 		}
 
-		my $replyCount = $file{'child_count'};
+		#my $replyCount = $file{'child_count'};
 
 		my $borderColor = '#' . substr($fileHash, 0, 6);
 
@@ -497,12 +497,12 @@ sub GetItemTemplate {
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 
-		if ($replyCount) {
-			$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
-		} else {
-			$itemTemplate =~ s/\$replyCount//g;
-		}
-
+#		if ($replyCount) {
+#			$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
+#		} else {
+#			$itemTemplate =~ s/\$replyCount//g;
+#		}
+#
 		if ($file{'show_vote_summary'}) {
 			#todo templatize this
 			#this displays the vote summary (tags applied and counts)
@@ -1179,7 +1179,7 @@ sub GetIndexPage {
 
 			#			my $ballotTime = time();
 
-			my $replyCount = $row->{'child_count'};
+#			my $replyCount = $row->{'child_count'};
 
 			my $borderColor = '#' . substr($fileHash, 0, 6);
 
@@ -1198,11 +1198,11 @@ sub GetIndexPage {
 			#			} else {
 			#				$itemTemplate =~ s/\$replyCount//g;
 			#			}
-			if ($replyCount) {
-				$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
-			} else {
-				$itemTemplate =~ s/\$replyCount//g;
-			}
+#			if ($replyCount) {
+#				$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
+#			} else {
+#				$itemTemplate =~ s/\$replyCount//g;
+#			}
 
 			if (index($itemTemplate, '$quickVoteButtonGroup')) {
 				$itemTemplate =~ s/\$quickVoteButtonGroup//g;
