@@ -116,6 +116,8 @@ sub IndexFile {
 
 	my $verifyError = 0;    # was there an error verifying the file with gpg?
 
+	my $hasParent = 0;
+
 	if (IsServer($gpgKey)) { #todo
 		#push @allowedactions addedtime
 	}
@@ -255,6 +257,7 @@ sub IndexFile {
 					my $reconLine = ">>$parentHash";
 
 					$message =~ s/$reconLine/$reconLine/;
+					#$message =~ s/$reconLine/[In response to message $parentHash]/;
 					# replace with itself, no change needed
 
 					$detokenedMessage =~ s/$reconLine//;
@@ -262,6 +265,8 @@ sub IndexFile {
 					DBAddPageTouch('item', $parentHash);
 				}
 			}
+
+			$hasParent = 1;
 		}
 
 		# look for hash tags
@@ -410,6 +415,8 @@ sub IndexFile {
 					}
 				}
 			}
+
+			$hasParent = 1;
 		}
 
 		if ($message) {
@@ -549,6 +556,8 @@ sub IndexFile {
 						}
 					}
 				}
+
+				$hasParent = 1;
 			}
 		}
 
@@ -593,6 +602,12 @@ sub IndexFile {
 			DBAddItem ($file, $itemName, $gpgKey, $gitHash);
 		} else {
 			DBAddItem ($file, $itemName, '',      $gitHash);
+		}
+
+		if ($hasParent == 1) {
+#			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
+#		} else {
+			DBAddVoteRecord($gitHash, $addedTime, 'topic');
 		}
 
 		DBAddPageTouch('item', $gitHash);
