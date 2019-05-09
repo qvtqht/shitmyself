@@ -252,19 +252,19 @@ sub GetItemPage {
 			WriteLog($replyTemplate);
 
 			if ($$replyItem{'child_count'}) {
-				my $subReplies = '';
+				my $subRepliesTemplate = '';
 
-				#$replyTemplate .= "<p><font color=red>more replies here!</font></p>";
-				my @subReplies = DBGetItemReplies($file{'file_hash'});
+				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
 				foreach my $subReplyItem (@subReplies) {
+					#$subRepliesTemplate .= $$subReplyItem{'file_hash'};
 					$$subReplyItem{'template_name'} = 'item/item-small.template';
-					$$subReplyItem{'remove_token'} = '>>' . $file{'file_hash'};
+					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
 
 					my $subReplyTemplate = GetItemTemplate($subReplyItem);
 
-					$subReplies .= $subReplyTemplate;
+					$subRepliesTemplate .= $subReplyTemplate;
 				}
-				$replyTemplate =~ s/<replies><\/replies>/$subReplies/;
+				$replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
 			} else {
 				$replyTemplate =~ s/<replies><\/replies>//;
 			}
