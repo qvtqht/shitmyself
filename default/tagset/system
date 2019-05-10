@@ -5,7 +5,4 @@ admin
 pubkey
 reply
 vouch
-hasparent
-noparent
-haschild
-nochild
+topic
