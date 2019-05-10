@@ -604,7 +604,7 @@ sub IndexFile {
 			DBAddItem ($file, $itemName, '',      $gitHash);
 		}
 
-		if ($hasParent == 1) {
+		if ($hasParent == 0) {
 #			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
 #		} else {
 			DBAddVoteRecord($gitHash, $addedTime, 'topic');
