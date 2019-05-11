@@ -258,7 +258,7 @@ sub GetItemPage {
 				foreach my $subReplyItem (@subReplies) {
 					#$subRepliesTemplate .= $$subReplyItem{'file_hash'};
 					$$subReplyItem{'template_name'} = 'item/item-small.template';
-					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
+					$$subReplyItem{'remove_token'} = '>>' . $$subReplyItem{'file_hash'};
 
 					my $subReplyTemplate = GetItemTemplate($subReplyItem);
 
