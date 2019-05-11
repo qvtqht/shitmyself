@@ -30,6 +30,27 @@
     <li>Post public key first, or signed messages not recognized.</li>
 </ul>
 
+<h3>Terminology and Notation</h3>
+
+<p><b>item</b></p>
+
+<p>An item is one "something" that has been added to the message board. Items are the most basic elements, on which everything else is built.</p>
+
+<p>Everything that happens on the message board is an item. For example, a text that someone has posted is an item, and so is a user profile, a vote, a reply, etc.</p>
+
+<p>Items are stored as plain text files (.txt), one of the most common and supported file formats, so that they can be easily inspected.</p>
+
+<p>Items are identified with a 40-digit "hash", which looks like this: <code><a href="/6b/50/a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a8112fde3a6276cb0c5b9cd8c949bc1625d0</a></code>. Sometimes you may see it shortened, like this: <code><a href="/6b/50/a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a811..</a></code></p>
+
+<p>(more to come)</p>
+
+<p><b>epoch time</b></p>
+
+<p>This system currently uses the epoch time notation for most timestamps. This is the number of seconds since the
+beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit number, beginning with 15. Example: 1557587720.</p>
+
+<p>In the future, this will be somehow made more readable.</p>
+
 <h3>Clients/Browsers</h3>
 
 <p>An attempt is made to support every browser. If there is a problem, please report it.</p>
