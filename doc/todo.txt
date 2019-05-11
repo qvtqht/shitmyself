@@ -1,3 +1,14 @@
+make signing out less painful and accident-prone
+	move button to the other side of the form (done)
+	give "sign out" button more space
+	create "undo" button with 10-second countdown
+		similar to arcades "insert coin"
+		countdown can be cleared
+		works via window.foo variable
+			ensure it is cleared if page is closed
+	second press to confirm
+		a good start
+
 whenever a new pubkey is posted
 	messages that have "begin signed" header
 		and are not attached to an existing pubkey
