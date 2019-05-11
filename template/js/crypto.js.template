@@ -8,25 +8,67 @@ function logOut(t) {
 	if (t) {
 		disarmSignoutButton(t);
 	}
-	removeStoredKeys();
+	logOut2();
 }
 
 function buttonSignOut(t) {
 	if (window.iii) {
 		logOut(t);
 	} else {
+		window.privKeyTrash = getPrivateKey();
+
+		removeStoredKeys();
+
 		document.getElementById('locm').style.display='inline';
 		t.style.backgroundColor='red';
 		t.style.color='white';window.iii=1
 
+		window.confct = 9;
+		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
+
+//		setTimeout(function(){
+//			disarmSignoutButton(t);
+//		}, 10000);
+
 		setTimeout(function(){
-			disarmSignoutButton(t);
-		}, 10000);
+			signoutCounterDecrement();
+		}, 1000);
 	}
 }
 
 function undoSignout() {
-	alert('test');
+	setPrivateKey(window.privKeyTrash);
+	saveId();
+
+	t = document.getElementById('rmid');
+	disarmSignoutButton(t);
+}
+
+function signoutCounterDecrement() {
+	var ct = window.confct;
+
+	if (ct) {
+		if (isNaN(ct)) {
+			// nothing
+		} else {
+			if (ct > 0) {
+				window.confct = (ct - 1);
+				bu = document.getElementById('btnUndo');
+				bu.value = "Undo? " + ct;
+
+				setTimeout(function(){
+					signoutCounterDecrement();
+				}, 1000);
+			}
+		}
+	} else if (ct == 0) {
+		//var rmid = document.getElementById('rmid');
+		//buttonSignOut(rmid);
+		//disarmSignoutButton(t);
+		//logOut2();
+		window.privKeyTrash = '';
+		showHideForms();
+	}
 }
 
 function disarmSignoutButton(t) {
@@ -147,13 +189,8 @@ function showHideForms() {
 // call showHideForms()
 showHideForms();
 
-// remove login-related stored keys
-function removeStoredKeys() {
-    // remove the keys
-	window.localStorage.removeItem("privatekey");
-	window.localStorage.removeItem("publickey");
-	window.localStorage.removeItem("fingerprint");
-	window.localStorage.removeItem("avatar");
+function logOut2() {
+	removeStoredKeys();
 
     // clear the private key textbox if it can be found
 	var textbox = document.getElementById("privatekey");
@@ -181,6 +218,15 @@ function removeStoredKeys() {
 
     // show and hide the correct forms on the page, if applicable
 	showHideForms();
+}
+
+// remove login-related stored keys
+function removeStoredKeys() {
+    // remove the keys
+	window.localStorage.removeItem("privatekey");
+	window.localStorage.removeItem("publickey");
+	window.localStorage.removeItem("fingerprint");
+	window.localStorage.removeItem("avatar");
 }
 
 // this is a hack i found on stacko for escaping html
@@ -559,7 +605,7 @@ function makeKeyFromInputs() {
 	var privkey = getPrivateKey();
 
 	if (privkey) {
-		removeStoredKeys();
+		logOut2();
 	}
 
 	var user = document.getElementById('name').value;
