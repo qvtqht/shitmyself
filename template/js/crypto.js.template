@@ -4,8 +4,36 @@ var myFingerprint = '';
 var myUsername = '';
 
 // performs logout by removing stored private key
-function logOut() {
+function logOut(t) {
+	if (t) {
+		disarmSignoutButton(t);
+	}
 	removeStoredKeys();
+}
+
+function buttonSignOut(t) {
+	if (window.iii) {
+		logOut(t);
+	} else {
+		document.getElementById('locm').style.display='inline';
+		t.style.backgroundColor='red';
+		t.style.color='white';window.iii=1
+
+		setTimeout(function(){
+			disarmSignoutButton(t);
+		}, 10000);
+	}
+}
+
+function undoSignout() {
+	alert('test');
+}
+
+function disarmSignoutButton(t) {
+	t.style.backgroundColor = '#c0c0c0';
+	t.style.color = 'red';
+	window.iii = 0;
+	document.getElementById('locm').style.display='none';
 }
 
 function makePaste() {

@@ -12,7 +12,11 @@
     </p>
 
     <p>
-        <input type=button class=rmid value="Sign Out" onclick="logOut();" style="float:right"><br>
+        <input type=button class=rmid value="Sign Out" onclick="buttonSignOut(this)">
+        <span id=locm style="display:none; font-family: sans-serif;">
+            <b onclick="buttonSignOut()" style="background-color:#c00000; border: 2pt solid #c00000; color: yellow; border-radius: 5pt; font-size: default;">Confirm</b><br>
+            <br>Save your private key<br>if you want to later use<br>same identity.
+        </span>
     </p>
 
     <label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="document.getElementById('curIdAdv').style.display=(this.checked ? 'block' : 'none')"> Show advanced options</label>
