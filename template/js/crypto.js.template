@@ -23,7 +23,7 @@ function buttonSignOut(t) {
 		t.style.backgroundColor='red';
 		t.style.color='white';window.iii=1
 
-		window.confct = 9;
+		window.confct = 11;
 		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
 
 //		setTimeout(function(){
@@ -47,6 +47,10 @@ function undoSignout() {
 function signoutCounterDecrement() {
 	var ct = window.confct;
 
+	if (!window.privKeyTrash) {
+		return;
+	}
+
 	if (ct) {
 		if (isNaN(ct)) {
 			// nothing
@@ -62,10 +66,10 @@ function signoutCounterDecrement() {
 			}
 		}
 	} else if (ct == 0) {
-		//var rmid = document.getElementById('rmid');
-		//buttonSignOut(rmid);
-		//disarmSignoutButton(t);
-		//logOut2();
+		var rmid = document.getElementById('rmid');
+		buttonSignOut(rmid);
+		logOut2();
+		disarmSignoutButton(rmid);
 		window.privKeyTrash = '';
 		showHideForms();
 	}
@@ -75,6 +79,7 @@ function disarmSignoutButton(t) {
 	t.style.backgroundColor = '#c0c0c0';
 	t.style.color = 'red';
 	window.iii = 0;
+	window.privKeyTrash = '';
 	document.getElementById('locm').style.display='none';
 }
 
