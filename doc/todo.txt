@@ -1,3 +1,6 @@
+record referring sites
+	generate registry
+
 make signing out less painful and accident-prone
 	move button to the other side of the form (done)
 	give "sign out" button more space
