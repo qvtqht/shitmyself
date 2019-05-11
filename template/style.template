@@ -178,6 +178,15 @@ details.txt a.header {
 	3pt 3pt 0 $primaryColor;
 	font-family: cursive;
 }
+#logo big {
+	color: $primaryColor;
+	text-shadow:
+	-3pt -3pt 0 $secondaryColor,
+	3pt -3pt 0 $secondaryColor,
+	-3pt 3pt 0 $secondaryColor,
+	3pt 3pt 0 $secondaryColor;
+	font-family: cursive;
+}
 a.avatar {
 	text-decoration: none;
 }
