@@ -716,15 +716,20 @@ function writeOnload2() {
 		var userRadio = document.getElementById('userRadio');
 //		alert(userRadio);
 		if (userRadio) {
-			//if (window.getAvatar) {
-			userRadio.innerHTML = '<label for=asign><input id=asign type=radio name=a value=sign> Sign as ' + getAvatar() + '</label>';
-			//}
-			var asign = document.getElementById('asign');
-			if (asign) {
-				asign.checked = 1;
-				asign.checked = true;
+			if (window.getAvatar) {
+				if (getAvatar()) {
+					userRadio.innerHTML = '<label for=asign><input id=asign type=radio name=a value=sign> Sign as ' + getAvatar() + '</label>';
+					//}
+					var asign = document.getElementById('asign');
+					if (asign) {
+						asign.checked = 1;
+						asign.checked = true;
+					}
+					//userRadio.innerHTML = '...';
+				} else {
+					userRadio.innerHTML = 'Sign in to post under identity.';
+				}
 			}
-			//userRadio.innerHTML = '...';
 		}
 	}
 }
