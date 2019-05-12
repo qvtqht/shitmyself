@@ -1323,17 +1323,23 @@ if ($lastVersion ne $currVersion) {
 my $lastAdmin = GetConfig('current_admin');
 my $currAdmin = GetAdminKey();
 
-if ($lastAdmin ne $currAdmin) {
-	WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
+if (!$lastAdmin) {
+	$lastAdmin = 0;
+}
 
-	my $changeAdminFilename = 'changeadmin_' . time() . '.txt';
-	my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
+if ($currAdmin) {
+	if ($lastAdmin ne $currAdmin) {
+		WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
 
-	PutFile("html/txt/$changeAdminFilename", $changeAdminMessage);
+		my $changeAdminFilename = 'changeadmin_' . time() . '.txt';
+		my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
 
-	ServerSign("html/txt/$changeAdminFilename");
+		PutFile("html/txt/$changeAdminFilename", $changeAdminMessage);
 
-	PutConfig("current_admin", $currAdmin);
+		ServerSign("html/txt/$changeAdminFilename");
+
+		PutConfig("current_admin", $currAdmin);
+	}
 }
 
 sub ServerSign {
