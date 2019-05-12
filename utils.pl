@@ -653,7 +653,7 @@ sub PutHtmlFile {
 	# change the title to home_title while at it
 	if ($file eq GetConfig('home_page')) {
 		my $homePageTitle = GetConfig('home_title');
-		$content =~ s/\<title\>(.+)\<\/title\>/<title>poo $homePageTitle ($1)<\/title>/;
+		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle ($1)<\/title>/;
 		PutFile ('html/index.html', $content);
 		$homePageWritten = 1;
 	}
