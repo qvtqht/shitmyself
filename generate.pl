@@ -631,8 +631,8 @@ sub MakeClonePage {
 			$commit =~ s/^commit //;
 			chomp($commit);
 			if (IsSha1($commit)) {
-				my $htmlSubDir = 'html/' . substr($commit, 0, 2);
-				my $htmlFilename = substr($commit, 2);
+				my $htmlSubDir = 'html/' . substr($commit, 0, 2) . '/' . substr($commit, 2, 2);
+				my $htmlFilename = $commit;
 				if (!-e $htmlSubDir) {
 					mkdir($htmlSubDir);
 				}
