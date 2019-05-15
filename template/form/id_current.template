@@ -16,9 +16,9 @@
         <span id=locm style="display:none; font-family: sans-serif;">
             <input type=button value="Undo" style="background-color: #c08000; color: white;" onclick="undoSignout();" id="btnUndo">
             <br>
-            <br><b>You have been signed out.</b><br>Forever, unless you saved.<br>Last chance to <a href=# onclick="undoSignout();">undo</a>.<br>
-            <br>Save your private key<br>if you want to later use<br>same identity.
+            <br><b>You have been signed out.</b><br>Forever, unless you saved.<br>Last chance to <a href=# onclick="undoSignout();">undo</a>.
         </span>
+        <br><br>Save your private key<br>if you want to later use<br>same identity.
     </p>
 
     <label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="document.getElementById('curIdAdv').style.display=(this.checked ? 'block' : 'none')"> Show advanced options</label>
