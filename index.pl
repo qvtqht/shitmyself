@@ -569,6 +569,7 @@ sub IndexFile {
 			DBAddPageTouch('author', $gpgKey);
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
+
 			if ($detokenedMessage eq '') {
 				DBAddVoteRecord($gitHash, $addedTime, 'notext');
 
@@ -576,10 +577,15 @@ sub IndexFile {
 			} else {
 				if ($detokenedMessage) {
 					my $firstEol = index($detokenedMessage, "\n");
-					if ($firstEol <= 80 && $firstEol > 0) {
+
+					my $itemLengthCutoff = GetConfig('title_length_cutoff'); #default = 140
+
+					if ($firstEol <= $itemLengthCutoff && $firstEol >= 0) {
 						my $title = substr($detokenedMessage, 0, $firstEol);
 
 						DBAddTitle($gitHash, $title);
+
+						DBAddTitle('flush'); #todo refactor this out
 					}
 				}
 
