@@ -12,6 +12,8 @@
     <li>Vote on posted messages to improve quality</li>
 </ul>
 
+<!-- -->
+
 <h3>These Features May Be Confusing At First</h3>
 
 <ul>
@@ -22,6 +24,8 @@
 	<li>Using the same profile on multiple devices and/or backing it up requires copying and pasting of a large blob of text.</li>
 </ul>
 
+<!-- -->
+
 <h3>Known Issues aka Features</h3>
 
 <ul>
@@ -29,6 +33,8 @@
     <li>Confusing interface.</li>
     <li>Post public key first, or signed messages not recognized.</li>
 </ul>
+
+<!-- -->
 
 <h3>Terminology and Notation</h3>
 
@@ -44,12 +50,14 @@
 
 <p>(more to come)</p>
 
+<!-- -->
+
 <p><b>epoch time</b></p>
 
-<p>This system currently uses the epoch time notation for most timestamps. This is the number of seconds since the
-beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit number, beginning with 15. Example: 1557587720.</p>
+<p>Most timestamps are currently in epoch time. This is the number of seconds since the
+beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit number, beginning with 15. Example: <code>1557587720</code>.</p>
 
-<p>In the future, this will be somehow made more readable.</p>
+<!-- -->
 
 <h3>Clients/Browsers</h3>
 
@@ -58,7 +66,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>The basic features of the website, including reading, posting, replying, and voting, has been tested in the following browsers:</p>
 
 <ul>
-    <li>Netscape Navigator Gold 3.04</li>
+    <li>Netscape Navigator Gold 3.04*</li>
+    <li>Netscape Communicator 4.8*</li>
     <li>Lynx 2.8.9rel.1</li>
     <li>Links 2.17</li>
     <li>qutebrowser 1.6.0</li>
@@ -66,6 +75,10 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>Firefox 52.7.2</li>
     <li>Waterfox 56.2.9</li>
 </ul>
+
+<p>* Older Netscape products may work better when JavaScript and/or CSS are disabled.</p>
+
+<!-- -->
 
 <h3>Stack</h3>
 
@@ -83,6 +96,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>PHP</li>
     <li>(GNU)</li>
 </ul>
+
+<!-- -->
 
 <a name=gpg><h3>How to use GPG</h3></a>
 
@@ -104,6 +119,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <p>This will add a vote of "legit" to the same item, with a timestamp of 15500... The last bit is the anti-CSRF checksum, which
 is currently ignored if the message is signed, but verified by the server (and signed) at the time of reading from access.log</p>
+
+<!-- -->
 
 <h4>More descriptive version</h4>
 
@@ -155,6 +172,8 @@ is currently ignored if the message is signed, but verified by the server (and s
 
 <p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
 
+<!-- -->
+
 <a name=sign><h3>Writing As Yourself</h3></a>
 
 <p>To write something under your new profile, you will need to sign your text.</p>
@@ -171,6 +190,7 @@ is currently ignored if the message is signed, but verified by the server (and s
 
 <p>That's it!</p>
 
+<!-- -->
 
 <a name=uploadkey><h3>Uploading Your Public Key</h3></a>
 
@@ -183,6 +203,8 @@ is currently ignored if the message is signed, but verified by the server (and s
 <p>You have now aliased your name to your key fingerprint.</p>
 
 <a name=commands><h3>Commands</h3></a>
+
+<!-- -->
 
 <h4>Introduction</h4>
 
@@ -214,6 +236,16 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 <br>
 
 </p>
+
+<!-- -->
+
+<h3>Profile Menu Link</h3>
+
+<p>The "Profile" item in the top menu is italicized when you are signed in through the Web UI.</p>
+
+<p>This is done as a subtle signed in status indicator without disclosing the user's information to shoulder surfers.</p>
+
+<!-- -->
 
 <a name=gpgcli><h3>Signing With Command-Line GPG</h3></a>
 
@@ -257,7 +289,9 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 
 <p>The <code>remove</code> tag, when applied by the admin user, will cause an item to be removed at the nearest opportunity.</p>
 
-<h4>
+<!-- -->
+
+<h4>Server Key</h4>
 
 <p>The Server key is set by first generating or importing the whole key into the server's keychain.</p>
 
@@ -272,6 +306,8 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 <p>Version changed. Server-signed "changelog" is posted, which includes the comment from the current version's commit, as well as all the previous commits that came before it, up to the most recent commit included in a changelog.</p>
 
 <p>Client fingerprint and timestamp for items that are posted where the user requests this.</p>
+
+<!-- -->
 
 <a name=clone><h3>Cloning</h3></a>
 
