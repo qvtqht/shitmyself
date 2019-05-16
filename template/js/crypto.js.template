@@ -30,6 +30,9 @@ function buttonSignOut(t) {
 //			disarmSignoutButton(t);
 //		}, 10000);
 
+		var signinBox = document.getElementById('signin');
+		signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+
 		setTimeout(function(){
 			signoutCounterDecrement();
 		}, 1000);
@@ -42,6 +45,10 @@ function undoSignout() {
 
 	t = document.getElementById('rmid');
 	disarmSignoutButton(t);
+
+	var signinBox = document.getElementById('signin');
+	signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
+
 }
 
 function signoutCounterDecrement() {
@@ -163,6 +170,10 @@ function showHideForms() {
 				formAdmin.style.display = 'block';
 			}
 		}
+
+		var signinBox = document.getElementById('signin');
+
+		signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
 	} else {
 	// else means user is not logged in
 
@@ -182,6 +193,10 @@ function showHideForms() {
 		if (formAdmin) {
 			formAdmin.style.display = 'none';
 		}
+
+		var signinBox = document.getElementById('signin');
+
+		signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 	}
 
     // hide the loading screen if it can be found
@@ -472,12 +487,12 @@ function saveId() {
 					signinBox.innerHTML = '<a href="/profile.html">Login</a>';
 				}
 			} else {
-				signinBox.innerHTML = '';
+				//signinBox.innerHTML = '';
 
 				var myFp = localStorage.getItem('fingerprint');
 
 				//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-				myidBox.innerHTML = '<a href="/profile.html">Profile</a>';
+				signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {
@@ -491,7 +506,7 @@ function saveId() {
 					if (UrlExists(profileUrl)) {
 						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
 					} else {
-						myIdProfile.innerHTML = '';
+						myIdProfile.innerHTML = 'Here will be a link <br>pointing to your profile page <br>Once it has been made';
 					}
 				}
 
@@ -686,7 +701,7 @@ function UrlExists(url) {
     var http = new XMLHttpRequest();
     http.open('HEAD', url, false);
     http.send();
-    return http.status==200;
+    return (http.status==200);
 }
 
 function writeOnload2() {
@@ -737,9 +752,13 @@ function writeOnload2() {
 function writeSubmit() {
 	if (document.forms['compose'].aanon.checked) {
 		return true;
-	} else {
+	} else if (document.forms['compose'].asign.checked) {
 		signMessage();
 		return false;
+	} else {
+		console.log('neither anonymous nor signed option is checked. this should not happen under normal circumstances. submitting anyway!');
+		return true;
+		// this should not happen
 	}
 }
 

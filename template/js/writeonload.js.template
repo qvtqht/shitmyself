@@ -1,8 +1,9 @@
 
+// #todo this template should be renamed write.js.template or slt
+
 function writeOnload() {
 // this is a handler for browsers who don't know how to download .js files but support javascript
 	if (window.writeOnload2) {
 		writeOnload2();
 	}
 }
-
