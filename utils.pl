@@ -1074,7 +1074,7 @@ sub GpgParse {
 				WriteLog("Looking for returned alias in $_");
 
 				# gpg 1
-				if ($gpgCommand eq 'gpg' || !GetConfig('use_gpg2')) {
+				if ($gpgCommand eq 'gpg' && !GetConfig('use_gpg2')) {
 					WriteLog('$gpgCommand is gpg');
 
 					if (substr($_, 0, 4) eq 'pub ') {
