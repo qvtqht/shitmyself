@@ -582,7 +582,9 @@ sub GetPageFooter {
 	my $myVersion = GetMyVersion();
 	#my $gpgVersion = GetGpgMajorVersion();
 
-	my $myVersionPrettyLink = '<a href="/' . substr($myVersion, 0, 2) . '/' . substr($myVersion, 2) . '.html">' . substr($myVersion, 0, 8) . '..' . '</a>';
+	my $versionPageUrl = '/' . substr($myVersion, 0, 2) . '/' . substr($myVersion, 2, 2) . '/' . $myVersion . '.html';
+
+	my $myVersionPrettyLink = '<a href="' . $versionPageUrl . '">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
 	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span> ; ";
 
