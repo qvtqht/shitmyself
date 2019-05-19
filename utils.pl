@@ -44,12 +44,6 @@ if (!-e 'html/txt/.git') {
 	system("cd html/txt/ ; git init ; cd $pwd");
 }
 
-#if (-s 'log/log.log' > 102400) {
-#	unlink ('log/log.log');
-#	die('yay');
-#}
-
-
 my $gpgCommand = trim(GetConfig('gpg_command'));
 if (!$gpgCommand) {
 	if (GetConfig('use_gpg2')) {
@@ -351,6 +345,85 @@ sub GetHtmlAvatar {
 	return $key;
 }
 
+## to replace GetAvatar()
+#sub GetAvatar2 {
+#	state %avatarCache;
+#
+#	my $gpgKey = shift;
+#
+#	if (!$gpgKey) {
+#		return;
+#	}
+#
+#	chomp $gpgKey;
+#
+##	if (!IsFingerprint($gpgKey)) {
+##		return;
+##	}
+##
+#	WriteLog("GetAvatar2($gpgKey)");
+#
+#	if ($avatarCache{$gpgKey}) {
+#		WriteLog("GetAvatar2: found in hash");
+#		return $avatarCache{$gpgKey};
+#	}
+#
+#	WriteLog("GetAvatar2: continuing with cache lookup");
+#
+#	#todo this may need to get refreshed if pubkey has been posted
+#	#should be refreshed when pubkey is posted
+#	#and also #todo reprocess all(some?) signed but previously unparsable messages
+#
+#	my $avCacheFile = GetCache("avatar/$gpgKey");
+#	if ($avCacheFile) {
+#		return $avCacheFile;
+#	}
+#
+#	my $avatar = GetTemplate('avatar2.template');
+#
+#	if ($gpgKey) {
+#		my $alias = GetAlias($gpgKey);
+#		$alias = encode_entities2($alias);
+#		#$alias = encode_entities($alias, '<>&"');
+#
+#		if ($alias) {
+#
+#			#		my $char1 = substr($gpg_key, 12, 1);
+#			#		my $char2 = substr($gpg_key, 13, 1);
+#			#		my $char3 = substr($gpg_key, 14, 1);
+#			#
+#			#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+#			#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+#			#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+##
+##			my $char1 = '*';
+##			my $char2 = '*';
+##
+##			$avatar =~ s/\$color1/$color1/g;
+##			$avatar =~ s/\$color2/$color2/g;
+##			$avatar =~ s/\$color3/$color3/g;
+##			#$avatar =~ s/\$color4/$color4/g;
+#			$avatar =~ s/\$alias/$alias/g;
+##			$avatar =~ s/\$char1/$char1/g;
+##			$avatar =~ s/\$char2/$char2/g;
+##			#$avatar =~ s/\$char3/$char3/g;
+#		} else {
+#			$avatar = '($gpgKey)';
+#		}
+#	} else {
+#		$avatar = "(bug_detected)";
+#		WriteLog("GetAvatar2: problem detected... \$gpgKey is missing where it shouldn't be");
+#	}
+#
+#	$avatarCache{$gpgKey} = $avatar;
+#
+#	if ($avatar) {
+#		PutCache("avatar/$gpgKey", $avatar);
+#	}
+#
+#	return $avatar;
+#}
+
 sub GetAvatar {
 	state %avatarCache;
 
@@ -390,13 +463,13 @@ sub GetAvatar {
 
 		if ($alias) {
 
-	#		my $char1 = substr($gpg_key, 12, 1);
-	#		my $char2 = substr($gpg_key, 13, 1);
-	#		my $char3 = substr($gpg_key, 14, 1);
-	#
-	#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-	#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-	#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+			#		my $char1 = substr($gpg_key, 12, 1);
+			#		my $char2 = substr($gpg_key, 13, 1);
+			#		my $char3 = substr($gpg_key, 14, 1);
+			#
+			#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+			#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+			#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
 
 			my $char1 = '*';
 			my $char2 = '*';
@@ -982,6 +1055,7 @@ sub GpgParse {
 		WriteLog("GpgParse cache hit! $cachePath");
 
 		%returnValues = %{retrieve($cachePath)};
+
 	} else {
 		# Signed messages begin with this header
 		my $gpg_message_header = "-----BEGIN PGP SIGNED MESSAGE-----";
@@ -1043,7 +1117,9 @@ sub GpgParse {
 
 		WriteLog("Looking for public key header...");
 
+		# find pubkey header in message
 		if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
+
 			WriteLog("Found public key header!");
 
 			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\"");
@@ -1054,22 +1130,7 @@ sub GpgParse {
 			my $gpgImportKeyResult = `$gpgCommand --import "$filePath"`;
 			WriteLog($gpgImportKeyResult);
 
-			#		WriteLog( "gpg --with-colons --with-fingerprint \"$file\"\n");
-			#		my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint "$file"`);
-			#
-			#		foreach my $line (@gpgResults) {
-			#			if (substr($line, 0, 3) eq "fpr") {
-			#				my $fingerprint = substr($line, 3);
-			#				$fingerprint =~ s/://g;
-			#
-			#				return $fingerprint;
-			#			}
-			#		}
-			#
-			#		return;
-
 			foreach (split("\n", $gpg_result)) {
-
 				chomp;
 				WriteLog("Looking for returned alias in $_");
 
@@ -1093,23 +1154,12 @@ sub GpgParse {
 
 				# gpg 2
 				elsif ($gpgCommand eq 'gpg2' || GetConfig('use_gpg2')) {
-					WriteLog('$gpgCommand is gpg2');
-					WriteLog('@@' . $_);
-					if (substr($_, 0, 4) eq 'uid ') {
-						WriteLog('gpg2 ; uid hit');
-						my @split = split(" ", $_, 4);
-						$alias = $split[1];
-
-						$alias =~ s|<.+?>||g;
-						$alias =~ s/^\s+//;
-						$alias =~ s/\s+$//;
-
-						WriteLog('$alias = ' . $alias);
-					}
 					if (substr($_, 0, 4) eq 'pub ') {
 						WriteLog('gpg2 ; pub hit');
 						my @split = split(" ", $_, 4);
 						$gpg_key = $split[1];
+
+						$alias = $split[3];
 
 						@split = split("/", $gpg_key);
 						$gpg_key = $split[1];
@@ -1122,8 +1172,9 @@ sub GpgParse {
 			# Public key confirmed, tell 'em
 			if ($alias && $gpg_key) {
 				$message = "Welcome, $alias\nFingerprint: $gpg_key";
+			} else {
+				$message = "Problem! Public key item did not parse correctly.";
 			}
-
 			$isSigned = 1;
 		}
 
