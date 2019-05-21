@@ -1159,12 +1159,19 @@ sub GpgParse {
 						my @split = split(" ", $_, 4);
 						$gpg_key = $split[1];
 
-						$alias = $split[3];
+						#$alias = $split[3];
 
 						@split = split("/", $gpg_key);
 						$gpg_key = $split[1];
 
 						WriteLog('$gpg_key = ' . $gpg_key);
+					}
+					if (substr($_, 0, 3) eq 'uid') {
+						WriteLog('gpg2: uid hit');
+
+						my @split = split(' ', $_, 2);
+						$alias = $split[1];
+						$alias = trim($alias);
 					}
 				}
 			}
