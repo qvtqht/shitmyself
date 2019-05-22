@@ -68,11 +68,6 @@ default: Anonymous
 primary_colors
 list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
 
-
-
-
-
-
 access_log_path
 this is where access.pl will look for the access log from the web server.
 default: log/access.log
@@ -176,3 +171,9 @@ vote_limit
 zip_interval
 how frequentlly the zip archive of the entire site is updated, in seconds
 default: 3600
+
+color_avatars
+1 or 0
+if 1, generates pretty multicolor avatars for aliases/fingerprints
+if 0, leaves avatars as just alias
+default: 1
