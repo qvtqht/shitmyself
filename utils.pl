@@ -1374,6 +1374,8 @@ if ($lastVersion ne $currVersion) {
 	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
 	$changeLogMessage .= "\n\n$changeLogList";
 
+	$changeLogMessage .= "\n\n#changelog";
+
 	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
 
 	ServerSign("html/txt/$changeLogFilename");
