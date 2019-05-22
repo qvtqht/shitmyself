@@ -347,7 +347,7 @@ sub MakeStaticPages {
 
 	# Target page for the submit page
 	my $graciasPage = GetPageHeader("Thank You", "Thank You");
-	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="2; url=\/"><\/head>/;
+	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
 	$graciasPage .= GetTemplate('maincontent.template');
 
