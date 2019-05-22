@@ -1372,6 +1372,7 @@ if ($lastVersion ne $currVersion) {
 	my $changeLogMessage = 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
 
 	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
+	$changeLogList = trim($changeLogList);
 	$changeLogMessage .= "\n\n$changeLogList";
 
 	$changeLogMessage .= "\n\n#changelog";
