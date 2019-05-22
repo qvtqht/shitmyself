@@ -1,3 +1,11 @@
+todo events page should have link to add to
+	google calendar
+	outlook
+	apple
+	yahoo
+	yandex?
+	what others?
+
 record referring sites
 	generate registry
 
