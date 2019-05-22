@@ -112,7 +112,9 @@ sub GetVersionPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $freshjs = GetTemplate('js/fresh.js.template');
+	my $injectJs = $avatarjs . "\n\n" . $freshjs;
+	$scriptInject =~ s/\$javascript/$injectJs/g;
 
 	$txtPageHtml =~ s/<\/body>/$scriptInject<\/body>/;
 
