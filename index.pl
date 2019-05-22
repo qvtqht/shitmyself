@@ -106,6 +106,7 @@ sub IndexFile {
 	my $isSigned = 0;       # was this item signed?
 
 	my $addedTime;          # time added, epoch format
+	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
 	my $gitHash;            # git's hash of file blob, used as identifier
 	my $isAdmin = 0;        # was this posted by admin?
 
@@ -204,6 +205,8 @@ sub IndexFile {
 			# store it in index, since that's what we're doing here
 			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
 			DBAddAddedTimeRecord('flush');
+
+			$addedTimeIsNew = 1;
 		}
 
 		# if there is no admin set, and config/admin_imprint is true
@@ -234,6 +237,8 @@ sub IndexFile {
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
+
+			DBAddKeyAlias('flush');
 
 			DBAddPageTouch('author', $gpgKey);
 		}
@@ -561,12 +566,23 @@ sub IndexFile {
 			}
 		}
 
+		# if $alias is set, means this is a pubkey
 		if ($alias) {
 			DBAddVoteRecord ($gitHash, $addedTime, 'pubkey');;
+			# add the "pubkey" tag
 
 			DBAddPageTouch('tag', 'pubkey');
+			# add a touch to the pubkey tag page
 
 			DBAddPageTouch('author', $gpgKey);
+			# add a touch to the author page
+
+			# $addedTimeIsNew indicates that this is a freshly added file
+			if ($addedTimeIsNew) {
+				# delete any caches for this fingerprint's avatar
+				UnlinkCache("avatar/$gpgKey");
+				UnlinkCache("avatar.color/$gpgKey");
+			}
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 
