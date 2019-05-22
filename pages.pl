@@ -312,12 +312,14 @@ sub GetItemPage {
 		$txtIndex .= $replyForm;
 	}
 
-	if ($file{'vote_buttons'}) {
-#		my $ballotTime = time();
-#		$txtIndex .= GetTemplate("form/itemvote.template");
-#
-#		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-#		$txtIndex =~ s/\$voterButtons/$voterButtons/g;
+	if ($file{'vote_buttons'} && GetConfig('enable_voting_sea_of_checkboxes')) {
+		my $ballotTime = time();
+		my $voterTemplate .= GetTemplate("form/itemvote.template");
+
+		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
+		$voterTemplate =~ s/\$voterButtons/$voterButtons/g;
+
+		$txtIndex .= $voterTemplate;
 	}
 
 
