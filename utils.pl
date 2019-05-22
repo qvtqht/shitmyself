@@ -345,86 +345,89 @@ sub GetHtmlAvatar {
 	return $key;
 }
 
-## to replace GetAvatar()
-#sub GetAvatar2 {
-#	state %avatarCache;
-#
-#	my $gpgKey = shift;
-#
-#	if (!$gpgKey) {
+sub GetPlainAvatar {
+	state %avatarCache;
+
+	my $gpgKey = shift;
+
+	if (!$gpgKey) {
+		return;
+	}
+
+	chomp $gpgKey;
+
+#	if (!IsFingerprint($gpgKey)) {
 #		return;
 #	}
 #
-#	chomp $gpgKey;
+	WriteLog("GetPlainAvatar($gpgKey)");
+
+	if ($avatarCache{$gpgKey}) {
+		WriteLog("GetPlainAvatar: found in hash");
+		return $avatarCache{$gpgKey};
+	}
+
+	WriteLog("GetPlainAvatar: continuing with cache lookup");
+
+	#todo this may need to get refreshed if pubkey has been posted
+	#should be refreshed when pubkey is posted
+	#and also #todo reprocess all(some?) signed but previously unparsable messages
+
+	my $avCacheFile = GetCache("avatar/$gpgKey");
+	if ($avCacheFile) {
+		return $avCacheFile;
+	}
+
+	my $avatar = GetTemplate('avatar2.template');
+
+	if ($gpgKey) {
+		my $alias = GetAlias($gpgKey);
+		$alias = encode_entities2($alias);
+		#$alias = encode_entities($alias, '<>&"');
+
+		if ($alias) {
+
+			#		my $char1 = substr($gpg_key, 12, 1);
+			#		my $char2 = substr($gpg_key, 13, 1);
+			#		my $char3 = substr($gpg_key, 14, 1);
+			#
+			#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+			#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+			#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
 #
-##	if (!IsFingerprint($gpgKey)) {
-##		return;
-##	}
-##
-#	WriteLog("GetAvatar2($gpgKey)");
+#			my $char1 = '*';
+#			my $char2 = '*';
 #
-#	if ($avatarCache{$gpgKey}) {
-#		WriteLog("GetAvatar2: found in hash");
-#		return $avatarCache{$gpgKey};
-#	}
-#
-#	WriteLog("GetAvatar2: continuing with cache lookup");
-#
-#	#todo this may need to get refreshed if pubkey has been posted
-#	#should be refreshed when pubkey is posted
-#	#and also #todo reprocess all(some?) signed but previously unparsable messages
-#
-#	my $avCacheFile = GetCache("avatar/$gpgKey");
-#	if ($avCacheFile) {
-#		return $avCacheFile;
-#	}
-#
-#	my $avatar = GetTemplate('avatar2.template');
-#
-#	if ($gpgKey) {
-#		my $alias = GetAlias($gpgKey);
-#		$alias = encode_entities2($alias);
-#		#$alias = encode_entities($alias, '<>&"');
-#
-#		if ($alias) {
-#
-#			#		my $char1 = substr($gpg_key, 12, 1);
-#			#		my $char2 = substr($gpg_key, 13, 1);
-#			#		my $char3 = substr($gpg_key, 14, 1);
-#			#
-#			#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-#			#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-#			#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-##
-##			my $char1 = '*';
-##			my $char2 = '*';
-##
-##			$avatar =~ s/\$color1/$color1/g;
-##			$avatar =~ s/\$color2/$color2/g;
-##			$avatar =~ s/\$color3/$color3/g;
-##			#$avatar =~ s/\$color4/$color4/g;
-#			$avatar =~ s/\$alias/$alias/g;
-##			$avatar =~ s/\$char1/$char1/g;
-##			$avatar =~ s/\$char2/$char2/g;
-##			#$avatar =~ s/\$char3/$char3/g;
-#		} else {
-#			$avatar = '($gpgKey)';
-#		}
-#	} else {
-#		$avatar = "(bug_detected)";
-#		WriteLog("GetAvatar2: problem detected... \$gpgKey is missing where it shouldn't be");
-#	}
-#
-#	$avatarCache{$gpgKey} = $avatar;
-#
-#	if ($avatar) {
-#		PutCache("avatar/$gpgKey", $avatar);
-#	}
-#
-#	return $avatar;
-#}
+#			$avatar =~ s/\$color1/$color1/g;
+#			$avatar =~ s/\$color2/$color2/g;
+#			$avatar =~ s/\$color3/$color3/g;
+#			#$avatar =~ s/\$color4/$color4/g;
+			$avatar =~ s/\$alias/$alias/g;
+#			$avatar =~ s/\$char1/$char1/g;
+#			$avatar =~ s/\$char2/$char2/g;
+#			#$avatar =~ s/\$char3/$char3/g;
+		} else {
+			$avatar = '($gpgKey)';
+		}
+	} else {
+		$avatar = "(bug_detected)";
+		WriteLog("GetPlainAvatar: problem detected... \$gpgKey is missing where it shouldn't be");
+	}
+
+	$avatarCache{$gpgKey} = $avatar;
+
+	if ($avatar) {
+		PutCache("avatar/$gpgKey", $avatar);
+	}
+
+	return $avatar;
+}
 
 sub GetAvatar {
+	if (!GetConfig('color_avatars')) {
+		return GetPlainAvatar(@_);
+	}
+
 	state %avatarCache;
 
 	my $gpg_key = shift;
@@ -444,7 +447,7 @@ sub GetAvatar {
 
 	WriteLog("GetAvatar: continuing with cache lookup");
 
-	my $avCacheFile = GetCache("avatar/$gpg_key");
+	my $avCacheFile = GetCache("avatar.color/$gpg_key");
 	if ($avCacheFile) {
 		return $avCacheFile;
 	}
@@ -492,7 +495,7 @@ sub GetAvatar {
 	$avatarCache{$gpg_key} = $avatar;
 
 	if ($avatar) {
-		PutCache("avatar/$gpg_key", $avatar);
+		PutCache("avatar.color/$gpg_key", $avatar);
 	}
 
 	return $avatar;
