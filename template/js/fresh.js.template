@@ -1,0 +1,40 @@
+function AmIFresh() {
+	var mypath = window.location;
+
+	var client = new XMLHttpRequest();
+	client.open("HEAD", mypath, true);
+
+	client.onreadystatechange = function() {
+	  if(this.readyState == this.HEADERS_RECEIVED) {
+		 var eTag = client.getResponseHeader("ETag");
+		 if (eTag) {
+		 	if (window.lastEtag) {
+		 		if (eTag == window.lastEtag) {
+		 			//unchanged
+		 		} else {
+		 			location.reload();
+//
+//		 			var client2 = new XMLHttpRequest();
+//		 			client2.open("GET", window.location);
+//
+//		 			client2.onreadystagechange = function() {
+//		 				if (this.readyState == 4) {
+//			 				document.replaceChild(client2.responseText, document.documentElement);
+//		 				}
+//		 			}
+		 		}
+		 	} else {
+		 		window.lastEtag = eTag;
+			}
+		 }
+	  }
+	}
+
+	client.send();
+
+	setTimeout(AmIFresh, 3000);
+}
+
+AmIFresh();
+
+
