@@ -309,5 +309,9 @@ label {
 }
 
 #amain {
-$headerBackgroundPattern
+    $headerBackgroundPattern
+}
+
+.quickvote {
+    background-color: #e0e0e0;
 }
