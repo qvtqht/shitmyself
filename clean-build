@@ -4,6 +4,11 @@
 
 rm -rfv cache
 rm -rfv html/*.html html/*/*.html html/*/*/*.html
+rm -rfv html/*.js html/*/*.js html/*/*/*.js
+rm -rfv html/*.php html/*/*.php html/*/*/*.php
+rm -rfv html/.htaccess
+rm -rfv html/*.zip
+
 touch html/gracias.html
 rm log/log.log 
 
