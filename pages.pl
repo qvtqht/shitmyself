@@ -221,6 +221,7 @@ sub GetItemPage {
 	#$file{'vote_buttons'} = 1;
 	$file{'display_full_hash'} = 1;
 	$file{'show_vote_summary'} = 1;
+	$file{'show_quick_vote'} = 1;
 	$file{'vote_buttons'} = 1;
 
 	my $itemTemplate = GetItemTemplate(\%file);
@@ -504,32 +505,49 @@ sub GetItemTemplate {
 #		} else {
 #			$itemTemplate =~ s/\$replyCount//g;
 #		}
-#
+
+		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+		#todo this call is only needed if show_vote_summary or show_qiuck_vote
+
+		# if show_vote_summary is set, show a count of all the tags the item has
 		if ($file{'show_vote_summary'}) {
 			#todo templatize this
 			#this displays the vote summary (tags applied and counts)
 			my $votesSummary = '';
-			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-
-			my @quickVotesList;
-
-			my $quickVotesForTags = GetConfig('tagset/' . 'all');
-			if ($quickVotesForTags) {
-				push @quickVotesList, split("\n", $quickVotesForTags);
-			}
 
 			foreach my $voteTag (keys %voteTotals) {
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
-
-				my $quickVotesForTags = GetConfig('tagset/' . $voteTag);
-				if ($quickVotesForTags) {
-					push @quickVotesList, split("\n", $quickVotesForTags);
-				}
 			}
 			if ($votesSummary) {
 				$votesSummary = '<p>' . $votesSummary . '</p>';
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
+
+			#
+			#end of tag summary display
+		} else {
+			$itemTemplate =~ s/\$votesSummary//g;
+		}
+
+		if ($file{'show_quick_vote'}) {
+			my @quickVotesList;
+
+			my $quickVotesForTags;
+
+			foreach my $voteTag (keys %voteTotals) {
+				$quickVotesForTags = GetConfig('tagset/' . $voteTag);
+				if ($quickVotesForTags) {
+					push @quickVotesList, split("\n", $quickVotesForTags);
+				}
+			}
+
+			my %dedupe = map { $_, 1 } @quickVotesList;
+			@quickVotesList = keys %dedupe;
+
+			$quickVotesForTags = GetConfig('tagset/' . 'all');
+			if ($quickVotesForTags) {
+				unshift @quickVotesList, split("\n", $quickVotesForTags);
+			}
 
 			{
 				my $quickVoteTemplate = GetTemplate('votequick.template');
@@ -559,12 +577,8 @@ sub GetItemTemplate {
 
 				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteTemplate/;
 			}
-
-			#
-			#end of tag summary display
 		} else {
 			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
-			$itemTemplate =~ s/\$votesSummary//g;
 		}
 
 		return $itemTemplate;
