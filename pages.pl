@@ -371,6 +371,8 @@ sub GetItemTemplate {
 	# display_full_hash = display full hash for file
 	# template_name = item/item.template by default
 	# remove_token = token to remove (for reply tokens)
+	# show_vote_summary = shows item's list and count of tags
+	# show_quick_vote = displays quick vote buttons
 
 	my %file = %{shift @_};
 
