@@ -979,7 +979,7 @@ sub GetReadPage {
 			WriteLog('GetTemplate("item/item.template") 2');
 			my $itemTemplate = '';
 			if ($message) {
-				$row->{'show_quick_vote'} = 1;
+#				$row->{'show_quick_vote'} = 1;
 				$itemTemplate = GetItemTemplate($row);
 
 #				if (length($message) > GetConfig('item_long_threshold')) {
