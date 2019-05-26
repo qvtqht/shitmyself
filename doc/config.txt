@@ -1,16 +1,16 @@
-abyss_rebuild_interval
+admin/abyss_rebuild_interval
 how frequently the Abyss (all items) pages are rebuilt, in seconds
 default: 86400 (1 day)
 
-access_log_path
+admin/access_log_path
 this is where access.pl will look for the access log from the web server.
 default: log/access.log
 
-admin_imprint
+admin/admin_imprint
 if not 0, the first public key to be posted to the board will be imprinted as the admin
 default: 0
 
-allow_broken_signatures
+admin/allow_broken_signatures #todo
 If an item contains a signed message header, but the signature checks fail. The item will be tagged type:error
 0
 	Do not display item's contents, do not process any tokens, nor add any other tags.
@@ -21,11 +21,14 @@ If an item contains a signed message header, but the signature checks fail. The 
 	Any other tokens in the item will still be processed
 default: 0
 
-ascii_only
+admin/clean_house_window #todo
+I suppose this would determine how frequently the house is cleaned
+
+admin/html/ascii_only
 if not 0, only ascii characters will be output to the website
 default: 0
 
-cron_continue
+admin/cron_continue
 if not 0, cron.pl will run in a loop for this many seconds, looking for new access log entries
 default: 0
 
@@ -40,7 +43,7 @@ flags
 values provided to users as reasons to flag a post
 one on each line
 
-git_cron_pull
+admin/git_cron_pull
 if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
 default: 0
 
@@ -68,7 +71,7 @@ default: Anonymous
 primary_colors
 list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
 
-access_log_path
+admin/access_log_path
 this is where access.pl will look for the access log from the web server.
 default: log/access.log
 
@@ -77,15 +80,15 @@ if not 0, access.pl will try to fill in the index and website when new items are
 #todo this is not fully built yet
 default: 0
 
-admin_imprint
+admin/admin_imprint
 if not 0, the first public key to be posted to the board will be imprinted as the admin
 default: 0
 
-ascii_only
+admin/html/ascii_only
 if not 0, only ascii characters will be output to the website
 default: 0
 
-cron_continue
+admin/cron_continue
 if not 0, cron.pl will run in a loop for this many seconds, looking for new access log entries
 default: 0
 
@@ -97,9 +100,17 @@ flags
 values provided to users as reasons to flag a post
 one on each line
 
-git_cron_pull
+admin/git_cron_pull
 if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
 default: 0
+
+admin/server_sign_anon_votes #todo
+not built, but would turn this off even if server key is set
+default: 1
+
+admin/sha_length #todo
+length to which sha hashes are shortened
+#todo maybe think of a better name for this
 
 home_page
 sets the home page, uses the file path from PutHtmlFile()
@@ -138,12 +149,12 @@ secondary_colors
 list of \n-separated hex colors (012bcd format) to be used randomly for ui secondary color
 default: (see repo)
 
-pull_item_limit
+admin/pull_item_limit
 how many items to pull via http at a time when pulling from other nodes
 #todo work in progress, may not be necessary thanks to git
 default: 10
 
-push_item_limit
+admin/push_item_limit
 how many items to push to other nodes via http at a time
 #todo work in progress, may not be necessary thanks to git
 default: 5
@@ -161,7 +172,7 @@ text_colors
 list of colors to use randomly for page text, \n-separated
 default: (see repo)
 
-use_gpg2
+admin/gpg/use_gpg2
 if not 0, gpg2 command is used in place of gpg when performing GPG-related tasks
 default: 0
 
@@ -172,7 +183,7 @@ zip_interval
 how frequentlly the zip archive of the entire site is updated, in seconds
 default: 3600
 
-color_avatars
+html/color_avatars
 1 or 0
 if 1, generates pretty multicolor avatars for aliases/fingerprints
 if 0, leaves avatars as just alias
