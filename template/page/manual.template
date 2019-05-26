@@ -93,8 +93,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>Bash</li>
     <li>access.log</li>
     <li>SQLite</li>
-    <li>PHP</li>
-    <li>(GNU)</li>
+    <li>PHP (optional)</li>
+    <li>GNU/POSIX</li>
 </ul>
 
 <!-- -->
@@ -106,21 +106,6 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>Creating a profile: Generate a PGP key, post public key.</p>
 
 <p>Posting stuff as your profile: sign with GPG, paste into textbox.</p>
-
-<p>Tokens: Replying, voting, etc. is done with text-based tokens.</p>
-
-<p><b>Remember to include tokens in your signed message, or they will not be parsed.</b></p>
-
-<p>Example token: >>0123456789abcdef</p>
-
-<p>On a line by itself, this will reference message with that ID (git's "SHA-1")</p>
-
-<p>Another example: addvote/0123456789abcdef/legit/1550000000/2753939054945</p>
-
-<p>This will add a vote of "legit" to the same item, with a timestamp of 15500... The last bit is the anti-CSRF checksum, which
-is currently ignored if the message is signed, but verified by the server (and signed) at the time of reading from access.log</p>
-
-<!-- -->
 
 <h4>More descriptive version</h4>
 
@@ -171,6 +156,65 @@ is currently ignored if the message is signed, but verified by the server (and s
     Otherwise, your email address will be accessible by anyone, including spambots.</p>
 
 <p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
+
+<!-- -->
+
+<a name=tokens><h3>Tokens</h3></a>
+
+<p>Actions like replying, voting, configuring, etc. is done with text-based tokens.</p>
+
+<p><b>Remember to include tokens in your signed message.</b></p>
+
+<h4>Replies</h4>
+
+<p>Example token: >>0123456789abcdef</p>
+
+<p>On a line by itself, this will reference message with that ID (git's "SHA-1")</p>
+
+<h4>Voting</h4>
+
+<p>Example: addvote/0123456789abcdef/legit/1550000000/2753939054945</p>
+
+<p>This will add a vote of "legit" to the same item, with a timestamp of 15500... The last bit is the anti-CSRF checksum, which
+    is currently ignored if the message is signed, but verified by the server (and signed) at the time of reading from access.log</p>
+
+<h4>Configuration</h4>
+
+<p>Example: setconfig/key=value</p>
+
+<p>Restricted to admin.</p>
+
+<h4>Hashtags</h4>
+
+<p>#example</p>
+
+<p>Translates to a tag-item vote being added.</p>
+
+<h4>Vouching</h4>
+
+<p>Example: addvouch/F82FCD75AAEF7CC8/20</p>
+
+<p>Adds 20 vouch points to fingerprint F82FCD75AAEF7CC8.</p>
+
+<p>Requires signing.</p>
+
+<h4>Timestamp and Client Fingerprint</h4>
+
+<p>Example: addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911</p>
+
+<p>Example: addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6</p>
+
+<p>Records item as having been added at that time and/or by that client ID.</p>
+
+<h4>Event</h4>
+
+<p>Schedules an event.</p>
+
+<p>Example: addevent/1551234567/3600/csrf</p>
+
+<p>Params: start time (epoch), duration (seconds)</p>
+
+
 
 <!-- -->
 
