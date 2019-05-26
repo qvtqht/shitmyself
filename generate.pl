@@ -223,7 +223,7 @@ sub GetSubmitPage {
 			my $submitForm = GetTemplate('form/write2.template');
 			#my $submitForm = GetTemplate('form/write.template');
 
-			if (GetConfig('enable_php_support')) {
+			if (GetConfig('module/php/enable')) {
 				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/gracias2.php'; }" /;
 			}
 
@@ -426,7 +426,7 @@ sub MakeStaticPages {
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
-	if (GetConfig('enable_php_support')) {
+	if (GetConfig('module/php/enable')) {
 		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess.for.php.template')."\n";
 
 		PutFile("$HTMLDIR/spasibo.php", GetTemplate('php/spasibo.php.template'));
