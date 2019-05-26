@@ -1029,7 +1029,6 @@ sub GpgParse {
 	# $returnValues{'fingerprint'} = full fingerprint of gpg key
 
 	WriteLog("===BEGIN GPG PARSE===");
-	WriteLog("===BEGIN GPG PARSE===");
 
 	my $filePath = shift;
 
@@ -1266,7 +1265,6 @@ sub GpgParse {
 
 	WriteLog("GpgParse success! $cachePath");
 
-	WriteLog("===END GPG PARSE===");
 	WriteLog("===END GPG PARSE===");
 
 	return %returnValues;
