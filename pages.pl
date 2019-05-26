@@ -361,29 +361,29 @@ sub GetHtmlLink {
 }
 
 sub GetItemTemplateFromHash {
-#	my $itemHash = shift;
-#	my $insetPrefix = shift;
-#
-#	if (IsSha1($itemHash)) {
-#		my $itemTemplate;
-#		if ($insetPrefix && $insetPrefix eq '>>') {
-#			my %queryParams;
-#			$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
-#
-#			my @files = DBGetItemList(\%queryParams);
-#
-#			$itemTemplate = GetItemTemplate($files[0]);
-#		} else {
-#			$itemTemplate = GetHtmlLink($itemHash);
-#		}
-#		return $itemTemplate;
-#	} else {
-#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
-#		return '[item could not be displayed]';
-#	}
-#
-#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
-#	return '[aaaaahhhh!!!]';
+	#	my $itemHash = shift;
+	#	my $insetPrefix = shift;
+	#
+	#	if (IsSha1($itemHash)) {
+	#		my $itemTemplate;
+	#		if ($insetPrefix && $insetPrefix eq '>>') {
+	#			my %queryParams;
+	#			$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
+	#
+	#			my @files = DBGetItemList(\%queryParams);
+	#
+	#			$itemTemplate = GetItemTemplate($files[0]);
+	#		} else {
+	#			$itemTemplate = GetHtmlLink($itemHash);
+	#		}
+	#		return $itemTemplate;
+	#	} else {
+	#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
+	#		return '[item could not be displayed]';
+	#	}
+	#
+	#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
+	#	return '[aaaaahhhh!!!]';
 }
 
 sub GetItemTemplate {
@@ -774,7 +774,7 @@ sub GetVoterTemplate {
 	chomp $ballotTime;
 
 	#todo move this to GetConfig()
-	if (!-e "config/secret") {
+	if (!-e "config/admin/secret") {
 		my $randomHash = GetRandomHash();
 
 		PutConfig("admin/secret", $randomHash);

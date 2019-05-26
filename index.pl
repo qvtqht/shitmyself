@@ -209,15 +209,15 @@ sub IndexFile {
 			$addedTimeIsNew = 1;
 		}
 
-		# if there is no admin set, and config/admin_imprint is true
+		# if there is no admin set, and config/admin/admin_imprint is true
 		# and if this item is a public key
 		# go ahead and make this user admin
 		# and announce it via a new .txt file
-		if (!GetAdminKey() && GetConfig('admin_imprint') && $gpgKey && $alias) {
+		if (!GetAdminKey() && GetConfig('admin/admin_imprint') && $gpgKey && $alias) {
 			PutFile('./admin.key', $txt);
 
 			my $newAdminMessage = 'html/txt/' . time() . '_newadmin.txt';
-			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin_imprint is true and there is no admin set.)\n\n" . time());
+			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n" . time());
 			ServerSign($newAdminMessage);
 		}
 
@@ -310,58 +310,99 @@ sub IndexFile {
 		}
 
 		if ($message) {
-			#look for setconfig
+			#look for setconfig and resetconfig
 			if (IsAdmin($gpgKey) || GetConfig('admin/anyone_can_config') || GetConfig('admin/signed_can_config')) {
 				# preliminary conditions
 
-				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_\/]+)=(.+)$/mg );
+				my @setConfigLines = ( $message =~ m/^(setconfig)\/([a-z0-9\/_]+)=(.+?)$/mg );
+
+				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
+
+				my @resetConfigLines = ( $message =~ m/^(resetconfig)\/([a-z0-9\/_]+)/mg );
+
+				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
+
+				push @setConfigLines, @resetConfigLines;
+
+				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 
 				if (@setConfigLines) {
-					my $lineCount = @setConfigLines / 2;
+					#my $lineCount = @setConfigLines / 3;
 
 					if ($isSigned) {
 						while (@setConfigLines) {
+							my $configAction = shift @setConfigLines;
 							my $configKey = shift @setConfigLines;
-							my $configValue = shift @setConfigLines;
+							my $configValue;
+							if ($configAction eq 'setconfig') {
+								$configValue = shift @setConfigLines;
+							} else {
+								$configValue = 'reset';
+							}
+
+							my $reconLine;
+							if ($configAction eq 'setconfig') {
+								$reconLine = "setconfig/$configKey=$configValue";
+							} else {
+								$reconLine = "resetconfig/$configKey";
+							}
 
 							if (ConfigKeyValid($configKey)) {
-								my $reconLine = "setconfig/$configKey=$configValue";
 
-								$message =~ s/$reconLine/[Config changed at $addedTime: $configKey = $configValue]/g;
-								$detokenedMessage =~ s/$reconLine//g;
+								WriteLog(
+									'ConfigKeyValid() passed! ' .
+									$reconLine .
+									'; IsAdmin() = ' . IsAdmin($gpgKey) .
+									'; isSigned = ' . $isSigned .
+									'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
+									'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
+									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
+								);
 
-								if (
-										( # either user is admin ...
-											IsAdmin($gpgKey)
+								if
+								(
+									( # either user is admin ...
+										IsAdmin($gpgKey)
+									)
+										||
+									( # ... or it can't be under admin/
+										substr(lc($configKey), 0, 5) ne 'admin'
+									)
+										&&
+									( # not admin, but may be allowed to edit key ...
+										( # if signed and signed editing allowed
+											$isSigned
+												&&
+											GetConfig('admin/signed_can_config')
 										)
 											||
-										( # ... or it can't be under admin/
-											substr(lc($configKey), 0, 5) != 'admin'
-										)
-											&&
-										( # not admin, but may be allowed to edit key ...
-											( # if signed and signed editing allowed
-												$isSigned
-													&&
-												GetConfig('signed_can_config')
-											)
-												||
-											( # ... or if anyone is allowed to edit
-												GetConfig('anyone_can_config')
-											)
+										( # ... or if anyone is allowed to edit
+											GetConfig('admin/anyone_can_config')
 										)
 									)
+								)
 								{
-									DBAddConfigValue($configKey, $configValue, $addedTime);
+									DBAddVoteRecord($gitHash, $addedTime, 'config');
 
-									#todo factor this out? maybe?
+									if ($configAction eq 'resetconfig') {
+										DBAddConfigValue($configKey, $configValue, $addedTime, 1);
+										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
+									} else {
+										DBAddConfigValue($configKey, $configValue, $addedTime, 0);
+										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue.]/g;
+									}
 
-									chomp $configValue;
-									$configValue = trim($configValue);
+									$detokenedMessage =~ s/$reconLine//g;
 
-									PutConfig($configKey, $configValue);
-									#todo this should be done separately and later, using the config_latest view
+								} else {
+
+									$message =~ s/$reconLine/[Attempted change to $configKey ignored.]/g;
+									$detokenedMessage =~ s/$reconLine//g;
+
 								}
+							} else {
+								$message =~ s/$reconLine/[Attempted change to $configKey ignored.]/g;
+								$detokenedMessage =~ s/$reconLine//g;
 							}
 						}
 					}
@@ -529,8 +570,8 @@ sub IndexFile {
 				}
 			}
 
-			my @voteLines = ( $message =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
-			#                                prefix  /file hash         /time     /tag      /csrf
+			my @voteLines = ( $message =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
+			#                                prefix  /file hash      /time     /tag      /csrf
 
 			#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
@@ -663,6 +704,35 @@ sub IndexFile {
 	IndexFile('flush')
 }
 
+sub WriteIndexedConfig {
+	my @indexedConfig = DBGetLatestConfig();
+
+	foreach my $configLine(@indexedConfig) {
+		my $configKey = $configLine->{'key'};
+		my $configValue = $configLine->{'value'};
+
+		chomp $configValue;
+		$configValue = trim($configValue);
+
+		if (IsSha1($configValue)) {
+			WriteLog("It's a hash, try to look it up...");
+
+			if (-e 'cache/' . GetMyVersion() . "/message/$configValue") {
+				WriteLog("Lookup of $configValue successful");
+				$configValue = GetCache("message/$configValue");
+			} else {
+				WriteLog("Lookup of $configValue UNsuccessful");
+			}
+		}
+
+		if ($configLine->{'reset_flag'}) {
+			ResetConfig($configKey);
+		} else {
+			PutConfig($configKey, $configValue);
+		}
+	}
+}
+
 sub MakeIndex {
 	WriteLog( "MakeIndex()...\n");
 
@@ -675,7 +745,10 @@ sub MakeIndex {
 	}
 
 	IndexFile('flush');
+
+	WriteIndexedConfig();
 }
+
 
 
 #MakeTagIndex();
