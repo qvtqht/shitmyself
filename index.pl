@@ -314,7 +314,7 @@ sub IndexFile {
 			if (IsAdmin($gpgKey)) {
 				#must be admin
 
-				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_\/]+)=(.+)/mg );
+				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_\/]+)=(.+)$/mg );
 
 				if (@setConfigLines) {
 					my $lineCount = @setConfigLines / 2;
@@ -335,6 +335,7 @@ sub IndexFile {
 								#todo factor this out? maybe?
 
 								chomp $configValue;
+								$configValue = trim($configValue);
 
 								PutConfig($configKey, $configValue);
 							}
