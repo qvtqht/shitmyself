@@ -38,8 +38,8 @@ if ($lockTime) {
 PutFile('cron.lock', $currentTime);
 $lockTime = $currentTime;
 
-# store the last time we did this from config/gitflow_last
-my $lastFlow = GetConfig('gitflow_last');
+# store the last time we did this from config/admin/gitflow_last
+my $lastFlow = GetConfig('admin/gitflow_last');
 
 if ($lastFlow) {
 	WriteLog('$lastFlow = ' . $lastFlow);
@@ -49,14 +49,14 @@ if ($lastFlow) {
 }
 
 # get the path of access log, usually log/access.log
-my $accessLogPath = GetConfig('access_log_path');
+my $accessLogPath = GetConfig('admin/access_log_path');
 WriteLog("\$accessLogPath = $accessLogPath");
 
 # this will store the new item count we get from access.log
 my $newItemCount;
 
 # time limit
-my $timeLimit = GetConfig('gitflow_time_limit');
+my $timeLimit = GetConfig('admin/gitflow_time_limit');
 my $startTime = time();
 #todo validation
 
@@ -95,9 +95,9 @@ WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
 
 # See if gitflow_file_limit setting exists
 # This limits the number of files to process per launch of gitflow.pl
-my $filesLimit = GetConfig('gitflow_file_limit');
+my $filesLimit = GetConfig('admin/gitflow_file_limit');
 if (!$filesLimit) {
-	WriteLog("WARNING: config/gitflow_file_limit missing!");
+	WriteLog("WARNING: config/admin/gitflow_file_limit missing!");
 	$filesLimit = 100;
 }
 
@@ -187,9 +187,9 @@ my @touchedPagesArray = @$touchedPages;
 # write number of touched pages to log
 WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
 
-my $pagesLimit = GetConfig('gitflow_page_limit');
+my $pagesLimit = GetConfig('admin/gitflow_page_limit');
 if (!$pagesLimit) {
-	WriteLog("WARNING: config/gitflow_page_limit missing!");
+	WriteLog("WARNING: config/admin/gitflow_page_limit missing!");
 	$pagesLimit = 100;
 }
 my $pagesProcessed = 0;
@@ -285,9 +285,9 @@ foreach my $page (@touchedPagesArray) {
 	#WriteIndexPages();
 #}
 
-## rebuild abyss pages no more than once an hour (defualt/abyss_rebuild_interval)
+## rebuild abyss pages no more than once an hour (default/admin/abyss_rebuild_interval)
 #my $lastAbyssRebuild = GetConfig('last_abyss');
-#my $abyssRebuildInterval = GetConfig('abyss_rebuild_interval');
+#my $abyssRebuildInterval = GetConfig('admin/abyss_rebuild_interval');
 #my $curTime = time();
 #
 #WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
@@ -300,10 +300,10 @@ foreach my $page (@touchedPagesArray) {
 #	PutConfig('last_abyss', $curTime);
 #}
 
-# save current time in config/gitflow_last
+# save current time in config/admin/gitflow_last
 my $newLastFlow = time();
 WriteLog($newLastFlow);
-PutConfig('gitflow_last', $newLastFlow);
+PutConfig('admin/gitflow_last', $newLastFlow);
 
 unlink('cron.lock');
 

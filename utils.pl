@@ -44,9 +44,9 @@ if (!-e 'html/txt/.git') {
 	system("cd html/txt/ ; git init ; cd $pwd");
 }
 
-my $gpgCommand = trim(GetConfig('gpg_command'));
+my $gpgCommand = trim(GetConfig('admin/gpg/gpg_command'));
 if (!$gpgCommand) {
-	if (GetConfig('use_gpg2')) {
+	if (GetConfig('admin/gpg/use_gpg2')) {
 		$gpgCommand = 'gpg2';
 	}
 	else {
@@ -59,10 +59,10 @@ if (!$gpgCommand) {
 		#what a mess
 	}
 }
-WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
+WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
 # my $gpgCommand;
-# if (GetConfig('use_gpg2')) {
+# if (GetConfig('admin/gpg/use_gpg2')) {
 # 	$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
 # } else {
 # 	if (GetGpgMajorVersion() eq '2') {
@@ -72,7 +72,7 @@ WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand")
 # 	}
 # 	#what a mess
 # }
-# WriteLog("use_gpg2 = " . GetConfig('use_gpg2') . "; \$gpgCommand = $gpgCommand");
+# WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
 sub GetCache {
 	my $cacheName = shift;
@@ -424,7 +424,7 @@ sub GetPlainAvatar {
 }
 
 sub GetAvatar {
-	if (!GetConfig('color_avatars')) {
+	if (!GetConfig('html/color_avatars')) {
 		return GetPlainAvatar(@_);
 	}
 
@@ -549,6 +549,8 @@ sub GetConfig {
 	my $configName = shift;
 	chomp $configName;
 
+	WriteLog("GetConfig($configName)");
+
 #	if ($configName =~ /^[a-z0-9_]{1,32}$/) {
 #		print("WARNING! GetConfig() sanity check failed!");
 #		print("\$configName = $configName");
@@ -559,23 +561,38 @@ sub GetConfig {
 	state %configLookup;
 
 	if ($configLookup{$configName}) {
+		WriteLog('$configLookup already contains value, returning that...');
+		WriteLog('$configLookup{$configName} is ' . $configLookup{$configName});
+
 		return $configLookup{$configName};
 	}
 
+	WriteLog("Looking for config value in config/$configName ...");
+
 	if (-e "config/$configName") {
+		WriteLog("-e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
+
 		my $configValue = GetFile("config/$configName");
 		$configValue = trim($configValue);
 		$configLookup{$configValue} = $configValue;
 
 		return $configValue;
 	} else {
+		WriteLog("-e config/$configName returned false, looking in defaults...");
+
 		if (-e "default/$configName") {
+			WriteLog("-e default/$configName returned true, proceeding to GetFile(), etc...");
+
 			my $configValue = GetFile("default/$configName");
 			#$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 			PutConfig ($configName, $configValue);
 
 			return $configValue;
+		} else {
+			WriteLog("WARNING! Tried to get value of config with no default value!");
+			#WriteLog("-e default/$configName returned false");
+			#die();
 		}
 	}
 
@@ -632,11 +649,24 @@ sub GetTitle {
 
 }
 
+sub ResetConfig {
+	my $configName = shift;
+
+	if (ConfigKeyValid($configName)) {
+		unlink("config/$configName");
+	}
+}
+
 sub PutConfig {
 	my $configName = shift;
 	my $configValue = shift;
 
 	chomp $configValue;
+
+	if ($configName eq 'intro_text') {
+		WriteLog(GetFile($configValue));
+		sleep 5;
+	}
 
 	return PutFile("config/$configName", $configValue);
 }
@@ -708,7 +738,7 @@ sub PutHtmlFile {
 
 	state $stripNonAscii;
 	if (!defined($stripNonAscii)) {
-		$stripNonAscii = GetConfig('ascii_only');
+		$stripNonAscii = GetConfig('admin/html/ascii_only');
 		if (!defined($stripNonAscii)) {
 			$stripNonAscii = 0;
 		}
@@ -1137,7 +1167,7 @@ sub GpgParse {
 				WriteLog("Looking for returned alias in $_");
 
 				# gpg 1
-				if ($gpgCommand eq 'gpg' && !GetConfig('use_gpg2')) {
+				if ($gpgCommand eq 'gpg' && !GetConfig('admin/gpg/use_gpg2')) {
 					WriteLog('$gpgCommand is gpg');
 
 					if (substr($_, 0, 4) eq 'pub ') {
@@ -1155,7 +1185,7 @@ sub GpgParse {
 				}
 
 				# gpg 2
-				elsif ($gpgCommand eq 'gpg2' || GetConfig('use_gpg2')) {
+				elsif ($gpgCommand eq 'gpg2' || GetConfig('admin/gpg/use_gpg2')) {
 					if (substr($_, 0, 4) eq 'pub ') {
 						WriteLog('gpg2 ; pub hit');
 						my @split = split(" ", $_, 4);
@@ -1348,12 +1378,15 @@ sub WriteLog {
 
 	my $timestamp = time();
 
-	if (-e "config/debug" && GetConfig("debug") && GetConfig("debug") == 1) {
+	if (1 || -e "config/admin/debug" && GetConfig('admin/debug') && GetConfig('admin/debug') == 1) {
 		AppendFile("log/log.log", $timestamp . " " . $text);
 		print $timestamp . " " . $text . "\n";
-	}
-}
 
+		return 1;
+	}
+
+	return 0;
+}
 
 my $lastVersion = GetConfig('current_version');
 my $currVersion = GetMyVersion();
@@ -1413,7 +1446,7 @@ sub ServerSign {
 		return;
 	}
 
-	my $serverKeyId = trim(GetConfig('server_key_id'));
+	my $serverKeyId = trim(GetConfig('admin/server_key_id'));
 
 	if (!$serverKeyId) {
 		return;

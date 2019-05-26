@@ -19,7 +19,7 @@ access.pl
 reads access log from the web server and parses actions submitted by clients.
 	apache-style access log should be symlinked to log/access.log
 	-or-
-	change it in config/access_log_path
+	change it in config/admin/access_log_path
 
 index.pl
 generates sqlite database called index.sqlite3

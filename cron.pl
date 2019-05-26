@@ -18,17 +18,17 @@ if ($lockTime) {
 PutFile('cron.lock', $currentTime);
 $lockTime = $currentTime;
 
-if (GetConfig('git_cron_pull') == 1) {
+if (GetConfig('admin/git_cron_pull') == 1) {
 	system('git stash');
 	system('git pull');
 }
 # Read access.log using the path in the config
 
-my $accessLogPath = GetConfig('access_log_path');
+my $accessLogPath = GetConfig('admin/access_log_path');
 WriteLog("\$accessLogPath = $accessLogPath");
 
 my $startTime = time();
-my $interval = GetConfig('cron_continue');
+my $interval = GetConfig('admin/cron_continue');
 my $touch = 0;
 
 while (!$touch || time() < $startTime + $interval) {

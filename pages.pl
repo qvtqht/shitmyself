@@ -360,6 +360,32 @@ sub GetHtmlLink {
 	return '<a href="/' . GetHtmlFilename($hash) . '">' . substr($hash, 0, 8) . '..</a>';
 }
 
+sub GetItemTemplateFromHash {
+#	my $itemHash = shift;
+#	my $insetPrefix = shift;
+#
+#	if (IsSha1($itemHash)) {
+#		my $itemTemplate;
+#		if ($insetPrefix && $insetPrefix eq '>>') {
+#			my %queryParams;
+#			$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
+#
+#			my @files = DBGetItemList(\%queryParams);
+#
+#			$itemTemplate = GetItemTemplate($files[0]);
+#		} else {
+#			$itemTemplate = GetHtmlLink($itemHash);
+#		}
+#		return $itemTemplate;
+#	} else {
+#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
+#		return '[item could not be displayed]';
+#	}
+#
+#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
+#	return '[aaaaahhhh!!!]';
+}
+
 sub GetItemTemplate {
 	# Returns HTML template for outputting one item
 	# %file(array for each file)
@@ -413,6 +439,8 @@ sub GetItemTemplate {
 		}
 
 		$message = FormatForWeb($message);
+
+		#$message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
 
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 
@@ -555,7 +583,7 @@ sub GetItemTemplate {
 				foreach my $quickTagValue (@quickVotesList) {
 					my $ballotTime = time();
 					if ($fileHash && $ballotTime) {
-						my $mySecret = GetConfig('secret');
+						my $mySecret = GetConfig('admin/secret');
 						my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
 
 						my $tagButton = GetTemplate('vote2button.template');
@@ -749,9 +777,9 @@ sub GetVoterTemplate {
 	if (!-e "config/secret") {
 		my $randomHash = GetRandomHash();
 
-		PutConfig("secret", $randomHash);
+		PutConfig("admin/secret", $randomHash);
 	}
-	my $mySecret = GetConfig("secret");
+	my $mySecret = GetConfig("admin/secret");
 
 	state $voteButtonsTemplate;
 
@@ -763,7 +791,7 @@ sub GetVoterTemplate {
 			if (scalar(@voteValues)) {
 				push @voteValues, '--';
 			}
-			my $tagsList = GetConfig("$_");
+			my $tagsList = GetConfig("list/$_");
 			chomp $tagsList;
 			push @voteValues, split("\n", $tagsList);
 		}
@@ -951,6 +979,7 @@ sub GetReadPage {
 			WriteLog('GetTemplate("item/item.template") 2');
 			my $itemTemplate = '';
 			if ($message) {
+				$row->{'show_quick_vote'} = 1;
 				$itemTemplate = GetItemTemplate($row);
 
 #				if (length($message) > GetConfig('item_long_threshold')) {

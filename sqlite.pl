@@ -110,11 +110,11 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param)");
 
 	# config
-	SqliteQuery2("CREATE TABLE config(key, value, timestamp)");
-	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp)");
+	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag)");
+	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp, reset_flag)");
 	SqliteQuery2("
 		CREATE VIEW config_latest AS
-		SELECT key, value, MAX(timestamp) config_timestamp FROM config GROUP BY key ORDER BY timestamp DESC
+		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag FROM config GROUP BY key ORDER BY timestamp DESC
 	");
 
 
@@ -302,6 +302,23 @@ sub DBGetVotesForItem {
 	return $result;
 }
 
+sub DBGetLatestConfig {
+	my $query = "SELECT * FROM config_latest";
+	#todo write out the fields
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
+
+	my @resultsArray = ();
+
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
+	}
+
+	return @resultsArray;
+}
+
+
 #sub SqliteGetHash {
 #	my $query = shift;
 #	chomp $query;
@@ -477,15 +494,16 @@ sub DBAddConfigValue {
 
 	my $value = shift;
 	my $timestamp = shift;
+	my $resetFlag = shift;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO config(key, value, timestamp) VALUES ";
+		$query = "INSERT OR REPLACE INTO config(key, value, timestamp, reset_flag) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= '(?, ?, ?)';
-	push @queryParams, $key, $value, $timestamp;
+	$query .= '(?, ?, ?, ?)';
+	push @queryParams, $key, $value, $timestamp, $resetFlag;
 
 	return;
 }

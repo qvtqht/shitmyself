@@ -26,7 +26,7 @@ if (!glob('html/txt')) {
 	PutFile('html/txt/hello.txt', 'Hello, World!');
 }
 
-my $accessLogPath = GetConfig('access_log_path');
+my $accessLogPath = GetConfig('admin/access_log_path');
 ProcessAccessLog($accessLogPath);
 
 # This holds all the files we will list in the primary index

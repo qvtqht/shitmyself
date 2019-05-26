@@ -144,7 +144,7 @@ sub GetIdentityPage {
 	my $idAdminForm = GetTemplate('form/id_admin.template');
 	$idPage =~ s/\$formIdAdmin/$idAdminForm/g;
 
-	if (GetConfig('use_gpg2')) {
+	if (GetConfig('admin/gpg/use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
 		$idPage =~ s/\$gpg2Algochoices/$gpg2Choices/;
 	} else {
@@ -223,7 +223,7 @@ sub GetSubmitPage {
 			my $submitForm = GetTemplate('form/write2.template');
 			#my $submitForm = GetTemplate('form/write.template');
 
-			if (GetConfig('module/php/enable')) {
+			if (GetConfig('admin/php/enable')) {
 				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/gracias2.php'; }" /;
 			}
 
@@ -426,7 +426,7 @@ sub MakeStaticPages {
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
-	if (GetConfig('module/php/enable')) {
+	if (GetConfig('admin/php/enable')) {
 		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess.for.php.template')."\n";
 
 		PutFile("$HTMLDIR/spasibo.php", GetTemplate('php/spasibo.php.template'));

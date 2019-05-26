@@ -161,7 +161,7 @@ sub ProcessAccessLog {
 	}
 
 	# anti-CSRF secret salt
-	my $mySecret = GetConfig("secret");
+	my $mySecret = GetConfig("admin/secret");
 
 	# The following section parses the access log
 	# Thank you, StackOverflow
@@ -335,7 +335,7 @@ sub ProcessAccessLog {
 						#Get the hash for this file
 						my $fileHash = GetFileHash('html/txt/' . $filename);
 
-						if (GetConfig('record_timestamps')){
+						if (GetConfig('admin/logging/record_timestamps')){
 							#this is where the added timestamp is added both to added.log and as a new textfile
 							#todo join all the addedtime/ tokens together into one file and write it at the end
 
@@ -349,7 +349,7 @@ sub ProcessAccessLog {
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = "addedtime/$fileHash/$addedTime\n";
 
-							if (GetConfig('record_clients')) {
+							if (GetConfig('admin/logging/record_clients')) {
 								my $clientFingerprint = md5_hex($hostname.$userAgent);
 								$addedMessage .= "addedby/$fileHash/$clientFingerprint";
 							}
@@ -466,7 +466,7 @@ sub ProcessAccessLog {
 
 				PutFile('html/txt/' . $filename, $newFile);
 
-				if (GetConfig('server_key_id')) {
+				if (GetConfig('admin/server_key_id')) {
 					ServerSign('html/txt/' . $filename);
 				}
 			}

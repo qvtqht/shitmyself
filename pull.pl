@@ -53,7 +53,7 @@ sub PullFeedFromHost {
 
 		WriteLog("Items found: " . scalar @items);
 
-		my $pullItemLimit = GetConfig('pull_item_limit');
+		my $pullItemLimit = GetConfig('admin/pull_item_limit');
 		my $itemsPulledCounter = 0;
 
 		foreach my $item (@items) {
@@ -195,7 +195,7 @@ sub PushItemsToHost {
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
 
-	my $pushItemLimit = GetConfig('push_item_limit');
+	my $pushItemLimit = GetConfig('admin/push_item_limit');
 	my $itemsPushedCounter = 0;
 
 	foreach my $file(@files) {
