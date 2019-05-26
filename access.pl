@@ -274,8 +274,12 @@ sub ProcessAccessLog {
 					if ($replyToPos) {
 						if (length($message) == ($replyToPos + length('&replyto=') + 40)) {
 							$replyToId = substr($message, ($replyToPos + length('&replyto=')));
-							my $replaceText = "&replyto=$replyToId";
-							$message =~ s/$replaceText//;
+							if (IsItem($replyToId)) {
+								my $replaceText = "&replyto=$replyToId";
+								$message =~ s/$replaceText//;
+							} else {
+								$replyToId = 0;
+							}
 						}
 					}
 
@@ -291,6 +295,8 @@ sub ProcessAccessLog {
 #					$message =~ s/=on\&/\n&/g;
 #					$message =~ s/\&/\n&/g;
 					#is this dangerous?
+
+
 
 					if ($replyToId) {
 						if (!($message =~ /\>\>$replyToId/)) {
