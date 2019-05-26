@@ -374,12 +374,13 @@ sub GetItemTemplate {
 	# show_vote_summary = shows item's list and count of tags
 	# show_quick_vote = displays quick vote buttons
 
+
+	# get %file hash from supplied parameters
 	my %file = %{shift @_};
 
+	# verify that referenced file path exists
 	if (-e $file{'file_path'}) {
-
 		my $gitHash = $file{'file_hash'};
-
 		my $gpgKey = $file{'author_key'};
 
 		my $isSigned;
@@ -390,13 +391,11 @@ sub GetItemTemplate {
 		}
 
 		my $alias;
-
 		my $isAdmin = 0;
 
 		my $message;
 		my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
 		WriteLog('$messageCacheName (2) = ' . $messageCacheName);
-
 
 		if (-e $messageCacheName) {
 			$message = GetFile($messageCacheName);
@@ -408,14 +407,13 @@ sub GetItemTemplate {
 			$message =~ s/$file{'remove_token'}//g;
 			$message = trim($message);
 			#todo there is a bug here, but it is less significant than the majority of cases
+			#  the bug is that it removes the token even if it is not by itself on a single line
+			#  this could potentially be mis-used to join together two pieces of a forbidden string
 			#todo make it so that post does not need to be trimmed, but extra \n\n after the token is removed
 		}
 
 		$message = FormatForWeb($message);
 
-		#$message =~ s/([a-f0-9]{40})/<a href="\/$1.html">$1<\/a>/g;
-		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2$3.html">$1$2..<\/a>/g;
-		#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 
 		if ($file{'format_avatars'}) {
@@ -584,6 +582,8 @@ sub GetItemTemplate {
 		}
 
 		return $itemTemplate;
+	} else {
+		return '';
 	}
 }
 
