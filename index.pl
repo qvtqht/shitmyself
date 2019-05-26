@@ -311,8 +311,8 @@ sub IndexFile {
 
 		if ($message) {
 			#look for setconfig
-			if (IsAdmin($gpgKey)) {
-				#must be admin
+			if (IsAdmin($gpgKey) || GetConfig('admin/anyone_can_config') || GetConfig('admin/signed_can_config')) {
+				# preliminary conditions
 
 				my @setConfigLines = ( $message =~ m/^setconfig\/([a-z0-9_\/]+)=(.+)$/mg );
 
@@ -330,14 +330,38 @@ sub IndexFile {
 								$message =~ s/$reconLine/[Config changed at $addedTime: $configKey = $configValue]/g;
 								$detokenedMessage =~ s/$reconLine//g;
 
-								DBAddConfigValue($configKey, $configValue, $addedTime);
+								if (
+										( # either user is admin ...
+											IsAdmin($gpgKey)
+										)
+											||
+										( # ... or it can't be under admin/
+											substr(lc($configKey), 0, 5) != 'admin'
+										)
+											&&
+										( # not admin, but may be allowed to edit key ...
+											( # if signed and signed editing allowed
+												$isSigned
+													&&
+												GetConfig('signed_can_config')
+											)
+												||
+											( # ... or if anyone is allowed to edit
+												GetConfig('anyone_can_config')
+											)
+										)
+									)
+								{
+									DBAddConfigValue($configKey, $configValue, $addedTime);
 
-								#todo factor this out? maybe?
+									#todo factor this out? maybe?
 
-								chomp $configValue;
-								$configValue = trim($configValue);
+									chomp $configValue;
+									$configValue = trim($configValue);
 
-								PutConfig($configKey, $configValue);
+									PutConfig($configKey, $configValue);
+									#todo this should be done separately and later, using the config_latest view
+								}
 							}
 						}
 					}
