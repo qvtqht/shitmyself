@@ -1212,7 +1212,7 @@ sub GpgParse {
 			if ($alias && $gpg_key) {
 				$message = "Welcome, $alias\nFingerprint: $gpg_key";
 			} else {
-				$message = "Problem! Public key item did not parse correctly.";
+				$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
 			}
 			$isSigned = 1;
 		}
