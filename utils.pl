@@ -1440,14 +1440,21 @@ if ($currAdmin) {
 sub ServerSign {
 # Signs a given file with the server's key, if it exists
 # Replaces file with signed version
-	my $file = shift;
+#
+# Server key should be stored in gpg keychain
+# Key ID should be stored in config/admin/server_key_id
+#
 
+	# get filename from parameters and ensure it exists
+	my $file = shift;
 	if (!-e $file) {
 		return;
 	}
 
+	# see if config/admin/server_key_id is set
 	my $serverKeyId = trim(GetConfig('admin/server_key_id'));
 
+	# return if it is not
 	if (!$serverKeyId) {
 		return;
 	}
@@ -1462,10 +1469,11 @@ sub ServerSign {
 		WriteLog("gpg --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt");
 		my $gpgOutput = `gpg --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt`;
 		WriteLog($gpgOutput);
-	}
+	} #todo here we should also verify that server.key matches server_key_id
 
+	# if everything is ok, proceed to sign
 	if ($serverKey) {
-		WriteLog("We have a server key, so go ahead and sign the changelog.");
+		WriteLog("We have a server key, so go ahead and sign the file.");
 
 		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
