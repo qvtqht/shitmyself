@@ -389,7 +389,7 @@ sub IndexFile {
 										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
 									} else {
 										DBAddConfigValue($configKey, $configValue, $addedTime, 0);
-										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue.]/g;
+										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
 									}
 
 									$detokenedMessage =~ s/$reconLine//g;
