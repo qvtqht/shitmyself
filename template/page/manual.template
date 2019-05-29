@@ -182,7 +182,13 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <p>Example: setconfig/key=value</p>
 
-<p>Restricted to admin.</p>
+<p>Restricted to admin, unless config/anyone_can_config=1 and/or config/signed_can_config=1.</p>
+
+<p>Settings under the admin/ tree are always restricted to admin.</p>
+
+<p>Value is a string. If value looks like an item identifier (40-character-long lowercase hex string = [a-f0-9]{40}), a lookup will be attempted.</p>
+
+<p>If lookup succeeds, the config will be set to that item's contents, after signature parsing. Otherwise, the value will be treated as a string.</p>
 
 <h4>Hashtags</h4>
 
