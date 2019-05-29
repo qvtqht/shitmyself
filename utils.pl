@@ -663,10 +663,11 @@ sub PutConfig {
 
 	chomp $configValue;
 
-	if ($configName eq 'intro_text') {
-		WriteLog(GetFile($configValue));
-		sleep 5;
-	}
+	#todo there's a bug here, which this code is supposed to help clarify
+#	if ($configName eq 'intro_text') {
+#		WriteLog(GetFile($configValue));
+#		sleep 5;
+#	}
 
 	return PutFile("config/$configName", $configValue);
 }
