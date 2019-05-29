@@ -1,3 +1,6 @@
+Add quick way to transition cache to new version without clean-build
+	Or possibly fallback to old cache if new cache is missing
+
 todo events page should have link to add to
 	google calendar
 	outlook
