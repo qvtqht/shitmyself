@@ -268,7 +268,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <code>MD5( concat(file hash, ballot creation time, secret) )</code>
 
-<p>The secret string is stored in config/secret, and a random one is automatically generated if the config is empty.</p>
+<p>The secret string is stored in config/admin/secret, and a random one is automatically generated if the config is empty.</p>
 
 <p>Example:</p>
 
