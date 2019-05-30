@@ -198,9 +198,11 @@ sub IndexFile {
 			my $newAddedTime = time();
 			$addedTime = $newAddedTime; #todo is this right? confirm
 
-			# add new line to added.log
-			my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
-			AppendFile('./log/added.log', $logLine);
+			if (GetConfig('admin/use_added_log')) {
+				# add new line to added.log
+				my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
+				AppendFile('./log/added.log', $logLine);
+			}
 
 			# store it in index, since that's what we're doing here
 			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
@@ -385,10 +387,10 @@ sub IndexFile {
 									DBAddVoteRecord($gitHash, $addedTime, 'config');
 
 									if ($configAction eq 'resetconfig') {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 1);
+										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $gitHash);
 										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
 									} else {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 0);
+										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $gitHash);
 										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
 									}
 
@@ -519,7 +521,7 @@ sub IndexFile {
 							$message =~ s/$reconLine/[Item $itemHash was added by $itemAddedBy.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
-							#DBAddItemParent($gitHash, $itemHash);
+							DBAddItemParent($gitHash, $itemHash);
 							DBAddItemClient($gitHash, $itemAddedBy);
 						}
 

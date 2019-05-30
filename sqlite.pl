@@ -110,11 +110,11 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param)");
 
 	# config
-	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag)");
+	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, source_item)");
 	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp, reset_flag)");
 	SqliteQuery2("
 		CREATE VIEW config_latest AS
-		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag FROM config GROUP BY key ORDER BY timestamp DESC
+		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag, source_item FROM config GROUP BY key ORDER BY timestamp DESC
 	");
 
 
@@ -495,15 +495,16 @@ sub DBAddConfigValue {
 	my $value = shift;
 	my $timestamp = shift;
 	my $resetFlag = shift;
+	my $sourceItem = shift;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO config(key, value, timestamp, reset_flag) VALUES ";
+		$query = "INSERT OR REPLACE INTO config(key, value, timestamp, reset_flag, source_item) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= '(?, ?, ?, ?)';
-	push @queryParams, $key, $value, $timestamp, $resetFlag;
+	$query .= '(?, ?, ?, ?, ?)';
+	push @queryParams, $key, $value, $timestamp, $resetFlag, $sourceItem;
 
 	return;
 }
