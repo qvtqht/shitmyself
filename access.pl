@@ -263,25 +263,19 @@ sub ProcessAccessLog {
 
 				# If there is a message...
 				if ($message) {
+					#todo the message= currently needs to come first, it doesn't have to be this way
+					my @messageItems = split('&', $message);
+
+					if (scalar(@messageItems) > 1) {
+						$message = shift @messageItems;
+					}
+
 #					my $replyUrlToken = ( $message=~ m/&replyto=(0-9a-f){40}/ );
 #					my $newReplyToken = '';
 #
 #					if ($replyUrlToken) {
 #						$newReplyToken =~ s/^&replyto=/>>/;
 #					}
-					my $replyToPos = index($message, '&replyto=');
-					my $replyToId;
-					if ($replyToPos) {
-						if (length($message) == ($replyToPos + length('&replyto=') + 40)) {
-							$replyToId = substr($message, ($replyToPos + length('&replyto=')));
-							if (IsItem($replyToId)) {
-								my $replaceText = "&replyto=$replyToId";
-								$message =~ s/$replaceText//;
-							} else {
-								$replyToId = 0;
-							}
-						}
-					}
 
 					# Unpack from URL encoding, probably exploitable :(
 					$message =~ s/\+/ /g;
@@ -296,13 +290,41 @@ sub ProcessAccessLog {
 #					$message =~ s/\&/\n&/g;
 					#is this dangerous?
 
+					my $recordTimestamp = 0;
+					my $recordFingerprint = 0;
 
+					foreach my $urlParam (@messageItems) {
+						my ($paramName, $paramValue) = split('=', $urlParam);
 
-					if ($replyToId) {
-						if (!($message =~ /\>\>$replyToId/)) {
-							$message .= "\n\n>>$replyToId";
+						if ($paramName eq 'replyto') {
+							if (IsItem($urlParam)) {
+								my $replyToId = $urlParam;
+
+								if (!($message =~ /\>\>$replyToId/)) {
+									$message .= "\n\n>>$replyToId";
+								}
+							}
+						}
+
+						if ($paramName eq 'a') {
+							if ($paramValue eq 'anon') {
+
+							}
+						}
+
+						if ($paramName eq 'rectime') {
+							if ($paramValue eq 'on') {
+								$recordTimestamp = 1;
+							}
+						}
+
+						if ($paramName eq 'recfing') {
+							if ($paramValue eq 'on') {
+								$recordFingerprint = 1;
+							}
 						}
 					}
+
 
 #					if ($replyUrlToken) {
 #						$message = s/$replyUrlToken//;
@@ -317,11 +339,11 @@ sub ProcessAccessLog {
 					# the >> line
 
 
-					# If we're parsing a vhost log, add the site name to the message
-					if ($vhostParse && $site) {
-						$message .= "\n" . $site;
-					}
-					#todo remove this unnecessary part
+#					# If we're parsing a vhost log, add the site name to the message
+#					if ($vhostParse && $site) {
+#						$message .= "\n" . $site;
+#					}
+#					#todo remove this unnecessary part
 
 					# Generate filename from date and time
 					my $filename;
@@ -335,11 +357,11 @@ sub ProcessAccessLog {
 						#Get the hash for this file
 						my $fileHash = GetFileHash('html/txt/' . $filename);
 
-						if (GetConfig('admin/logging/record_timestamps')){
+						if (GetConfig('admin/logging/record_timestamps') || GetConfig('admin/logging/record_clients')) {
 							#this is where the added timestamp is added both to added.log and as a new textfile
 							#todo join all the addedtime/ tokens together into one file and write it at the end
 
-							#Add a line to the added.log that records the timestamp
+#							#Add a line to the added.log that records the timestamp internally
 							my $addedTime = time();
 							my $addedLog = $fileHash . '|' . $addedTime;
 							AppendFile('./log/added.log', $addedLog);
@@ -347,15 +369,22 @@ sub ProcessAccessLog {
 							WriteLog("Seems like PutFile() worked! $addedTime");
 
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
-							my $addedMessage = "addedtime/$fileHash/$addedTime\n";
+							my $addedMessage = '';
 
-							if (GetConfig('admin/logging/record_clients')) {
-								my $clientFingerprint = md5_hex($hostname.$userAgent);
-								$addedMessage .= "addedby/$fileHash/$clientFingerprint";
+							if (GetConfig('admin/logging/record_timestamps') && $recordTimestamp) {
+								$addedMessage .= "addedtime/$fileHash/$addedTime\n";
 							}
-							PutFile($addedFilename, $addedMessage);
 
-							ServerSign($addedFilename);
+							if (GetConfig('admin/logging/record_clients') && $recordFingerprint) {
+								my $clientFingerprint = md5_hex($hostname.$userAgent);
+								$addedMessage .= "addedby/$fileHash/$clientFingerprint\n";
+							}
+
+							if ($addedMessage) {
+								PutFile($addedFilename, $addedMessage);
+
+								ServerSign($addedFilename);
+							}
 
 							#DBAddAddedTimeRecord($fileHash, $addedTime);
 						}
