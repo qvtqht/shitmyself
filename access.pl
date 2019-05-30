@@ -357,14 +357,14 @@ sub ProcessAccessLog {
 						#Get the hash for this file
 						my $fileHash = GetFileHash('html/txt/' . $filename);
 
+						# #Add a line to the added.log that records the timestamp internally
+						my $addedTime = time();
+						my $addedLog = $fileHash . '|' . $addedTime;
+						AppendFile('./log/added.log', $addedLog);
+
 						if (GetConfig('admin/logging/record_timestamps') || GetConfig('admin/logging/record_clients')) {
 							#this is where the added timestamp is added both to added.log and as a new textfile
 							#todo join all the addedtime/ tokens together into one file and write it at the end
-
-#							#Add a line to the added.log that records the timestamp internally
-							my $addedTime = time();
-							my $addedLog = $fileHash . '|' . $addedTime;
-							AppendFile('./log/added.log', $addedLog);
 
 							WriteLog("Seems like PutFile() worked! $addedTime");
 
