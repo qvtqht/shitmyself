@@ -1,6 +1,5 @@
 <fieldset style="display: inline">
 <legend>Version $version</legend>
-Hello, World!<br><br>
-This version exists, and there should be information about it here:<br><br>
-<a href="https://www.github.com/gulkily/hike/commit/$version/">github.com/gulkily/hike/$shortVersion..</a>
+<p>This version exists, and there should be information about it here:</p>
+<p><a href="https://www.github.com/gulkily/hike/commit/$version/">github.com/gulkily/hike/$shortVersion..</a></p>
 </fieldset>
