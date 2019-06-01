@@ -1,3 +1,7 @@
+
+
+Re-enable hashtag links
+
 Try to do a clean install from git clone again
 	Current problems:
 		./clean-build does not run build.sh for some reason
