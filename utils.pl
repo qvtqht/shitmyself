@@ -1445,7 +1445,6 @@ sub ServerSign {
 # Server key should be stored in gpg keychain
 # Key ID should be stored in config/admin/server_key_id
 #
-
 	# get filename from parameters and ensure it exists
 	my $file = shift;
 	if (!-e $file) {
@@ -1462,13 +1461,15 @@ sub ServerSign {
 
 	# verify that key exists in gpg keychain
 	WriteLog("gpg --list-keys $serverKeyId");
-	my $serverKey = `gpg --list-keys $serverKeyId`;
+	my $gpgCommand = GetConfig('admin/gpg/gpg_command');
+
+	my $serverKey = `$gpgCommand --list-keys $serverKeyId`;
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
 	if (!-e "html/txt/server.key") {
-		WriteLog("gpg --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt");
-		my $gpgOutput = `gpg --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt`;
+		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt");
+		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt`;
 		WriteLog($gpgOutput);
 	} #todo here we should also verify that server.key matches server_key_id
 
@@ -1476,8 +1477,8 @@ sub ServerSign {
 	if ($serverKey) {
 		WriteLog("We have a server key, so go ahead and sign the file.");
 
-		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
+		WriteLog("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
+		system("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 
 		if (-e "$file.asc") {
 			WriteLog("Sign appears successful, rename .asc file to .txt");
