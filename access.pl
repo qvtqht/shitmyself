@@ -352,10 +352,12 @@ sub ProcessAccessLog {
 
 					WriteLog ("I'm going to put $filename\n");
 
+					my $pathedFilename = './html/txt/' . $filename;
+
 					# Try to write to the file, exit if we can't
-					if (PutFile('./html/txt/' . $filename, $message)) {
+					if (PutFile($pathedFilename, $message)) {
 						#Get the hash for this file
-						my $fileHash = GetFileHash('html/txt/' . $filename);
+						my $fileHash = GetFileHash($pathedFilename);
 
 						my $addedTime = time();
 
@@ -365,7 +367,13 @@ sub ProcessAccessLog {
 							AppendFile('./log/added.log', $addedLog);
 						}
 
-						if (GetConfig('admin/logging/record_timestamps') || GetConfig('admin/logging/record_clients')) {
+						if (
+							GetConfig('admin/logging/record_timestamps')
+								||
+							GetConfig('admin/logging/record_clients')
+								||
+							GetConfig('admin/logging/record_sha512')
+						) {
 							#todo join all the addedtime/ tokens together into one file and write it at the end
 
 							WriteLog("Seems like PutFile() worked! $addedTime");
@@ -382,8 +390,16 @@ sub ProcessAccessLog {
 								$addedMessage .= "addedby/$fileHash/$clientFingerprint\n";
 							}
 
+							if (GetConfig('admin/logging/record_sha512')) {
+								my $fileSha512 = 'sha512goeshere'; #todo
+
+								$addedMessage .= "sha512/$fileHash/$fileSha512\n";
+							}
+
 							if ($addedMessage) {
 								PutFile($addedFilename, $addedMessage);
+
+								WriteLog('$addedMessage = ' . $addedMessage);
 
 								ServerSign($addedFilename);
 							}
