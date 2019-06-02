@@ -1,4 +1,4 @@
-<fieldset style="display: inline">
+<fieldset>
 <legend>Version $version</legend>
 <p>This version exists, and there should be information about it here:</p>
 <p><a href="https://www.github.com/gulkily/hike/commit/$version/">github.com/gulkily/hike/$shortVersion..</a></p>
