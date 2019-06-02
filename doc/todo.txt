@@ -1,4 +1,4 @@
-
+When >> token is removed from reply box /and/ message is client-signed, the >> isn't replaced, and reply doesn't get attached to parent
 
 Re-enable hashtag links
 
