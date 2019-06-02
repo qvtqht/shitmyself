@@ -4,7 +4,6 @@ function formToText(formId) {
 	if (form) {
 		var elements = form.elements;
 
-
 		if (elements) {
 			for (var i = 0; i < elements.length; i++) {
 				if (elements[i].type == 'checkbox') {
