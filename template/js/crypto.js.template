@@ -47,7 +47,7 @@ function undoSignout() {
 	disarmSignoutButton(t);
 
 	var signinBox = document.getElementById('signin');
-	signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
+	signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 
 }
 
@@ -173,7 +173,7 @@ function showHideForms() {
 
 		var signinBox = document.getElementById('signin');
 
-		signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
+		signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 	} else {
 	// else means user is not logged in
 
@@ -492,7 +492,7 @@ function saveId() {
 				var myFp = localStorage.getItem('fingerprint');
 
 				//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-				signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
+				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {

@@ -14,7 +14,7 @@ function setAva() {
 		    signinBox.innerHTML = '';
 			var myFp = localStorage.getItem('fingerprint');
 			//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-			signinBox.innerHTML = '<a href="/profile.html" style="font-style: italic">Profile</a>';
+			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 
 			var script = document.createElement('script');
 			script.src = '/openpgp.js';
