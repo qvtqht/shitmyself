@@ -313,7 +313,7 @@ sub GetItemPage {
 		$txtIndex .= $replyForm;
 	}
 
-	if ($file{'vote_buttons'} && GetConfig('enable_voting_sea_of_checkboxes')) {
+	if ($file{'vote_buttons'} && GetConfig('enable_checkboxes')) {
 		my $ballotTime = time();
 		my $voterTemplate .= GetTemplate("form/itemvote.template");
 
@@ -519,6 +519,8 @@ sub GetItemTemplate {
 
 		my $borderColor = '#' . substr($fileHash, 0, 6);
 
+		my $addedTime = ''; #todo
+
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -527,6 +529,7 @@ sub GetItemTemplate {
 		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
+		$itemTemplate =~ s/\$addedTime/$addedTime/g;
 
 #		if ($replyCount) {
 #			$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
@@ -618,7 +621,8 @@ sub GetItemTemplate {
 sub GetPageFooter {
 	my $txtFooter = GetTemplate('htmlend.template');
 
-	my $disclaimer = GetConfig('string/en/disclaimer') . "\n" . GetConfig('string/ru/disclaimer');
+#	my $disclaimer = GetConfig('string/en/disclaimer') . "\n" . GetConfig('string/ru/disclaimer');
+	my $disclaimer = GetConfig('string/en/disclaimer');
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
 
@@ -634,7 +638,7 @@ sub GetPageFooter {
 
 	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span> ; ";
 
-	my $menuTemplate = "";
+	my $menuTemplate = '';
 
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
@@ -1232,6 +1236,8 @@ sub GetIndexPage {
 
 			my $borderColor = '#' . substr($fileHash, 0, 6);
 
+			my $addedTime = ''; #todo
+
 			$itemTemplate =~ s/\$borderColor/$borderColor/g;
 			$itemTemplate =~ s/\$itemClass/$itemClass/g;
 			$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -1241,6 +1247,8 @@ sub GetIndexPage {
 			$itemTemplate =~ s/\$itemText/$itemText/g;
 			$itemTemplate =~ s/\$fileHash/$fileHash/g;
 			$itemTemplate =~ s/\$by/$byString/g;
+			$itemTemplate =~ s/\$addedTime/$addedTime/g;
+
 
 			#			if ($replyCount) {
 			#				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
