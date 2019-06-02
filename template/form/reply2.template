@@ -1,0 +1,17 @@
+<!-- reply2.template -->
+<a name=reply></a>
+<form class=reply action="/gracias.html" id=compose>
+    <big><b><i>The Reply Box</i></b></big><br>
+    <textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
+
+    <p>
+        <input type=submit onclick="return writeSubmit();" value="Send Message" id=addtext>
+    </p>
+
+    <p>
+        <label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
+        <span id=userRadio></span>
+    </p>
+
+</form>
+<!-- / reply2.template -->
