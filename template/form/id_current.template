@@ -4,11 +4,16 @@
     </p>
 
     <p>
-        <span id=myId2 class=avatar></span>
+        <span id=myId2 class=avatar>Loading...</span>
     </p>
 
     <p>
-        <span id=myIdProfile></span>
+        <span id=myIdProfile>Loading...</span>
+    </p>
+
+    <p>
+        <input type=button value="Share Public Key" onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
+        Press this if profile is missing.
     </p>
 
     <p>
@@ -32,11 +37,6 @@
         <p>
             <label for=myCrea>Created:</label><br>
             <span id=myCrea></span>
-        </p>
-
-        <p>
-            <input type=button value="Repost Public Key" onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
-            Press if public profile missing.
         </p>
 
         <p id=def>
