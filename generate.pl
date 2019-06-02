@@ -388,7 +388,7 @@ sub MakeStaticPages {
 
 	$tfmPage .= $tfmPageTemplate;
 
-	$tfmPage .= GetTemplate('netnow3.template');
+	$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
 
 	$tfmPage .= GetPageFooter();
 
