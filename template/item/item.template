@@ -1,6 +1,6 @@
 <div class="$itemClass" style="border-color: $borderColor">
 <p>$itemText</p>
-<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink</p>
+<p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink $addedTime</p>
 $votesSummary
 $quickVoteButtonGroup
 <replies></replies>
