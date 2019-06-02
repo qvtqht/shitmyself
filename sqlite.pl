@@ -103,7 +103,7 @@ sub SqliteMakeTables() {
 	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 
 	# calendar
-	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, description_hash, author_key, event_time, event_duration, event_location)");
+	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration, event_location)");
 
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER)");
@@ -911,7 +911,7 @@ sub DBAddVoteWeight {
 
 sub DBAddEventRecord {
 # DBAddEventRecord
-# $gitHash, $descriptionHash, $eventTime, $eventDuration, $signedBy
+# $gitHash, $eventTime, $eventDuration, $signedBy
 
 	state $query;
 	state @queryParams;
@@ -941,12 +941,10 @@ sub DBAddEventRecord {
 		@queryParams = ();
 	}	
 
-	my $descriptionHash = shift;
 	my $eventTime = shift;
 	my $eventDuration = shift;
 	my $signedBy = shift;
 
-	chomp $descriptionHash;
 	chomp $eventTime;
 	chomp $eventDuration;
 	chomp $signedBy;
@@ -958,13 +956,13 @@ sub DBAddEventRecord {
 	}
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO calendar(item_hash, description_hash, event_time, event_duration, author_key) VALUES ";
+		$query = "INSERT OR REPLACE INTO calendar(item_hash, event_time, event_duration, author_key) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= '(?, ?, ?, ?, ?)';
-	push @queryParams, $fileHash, $descriptionHash, $eventTime, $eventDuration, $signedBy;
+	$query .= '(?, ?, ?, ?)';
+	push @queryParams, $fileHash, $eventTime, $eventDuration, $signedBy;
 }
 
 sub DBAddVoteRecord {

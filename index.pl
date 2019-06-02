@@ -538,32 +538,29 @@ sub IndexFile {
 		# look for addevent tokens
 		# addevent/1551234567/3600/csrf
 		if ($message) {
-			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})/mg );
+			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})$/mg );
 			#                                 prefix   /time     /duration /csrf
 
 			if (@eventLines) {
-				my $lineCount = @eventLines / 4;
+				my $lineCount = @eventLines / 3;
 				#todo assert no remainder
 
 				WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
 
 				while (@eventLines) {
-					my $descriptionHash = shift @eventLines;
 					my $eventTime = shift @eventLines;
 					my $eventDuration = shift @eventLines;
 					my $csrf = shift @eventLines;
 
 					if ($isSigned) {
-						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration, $gpgKey);
+						DBAddEventRecord($gitHash, $eventTime, $eventDuration, $gpgKey);
 					} else {
 						#todo csrf check
-						DBAddEventRecord($gitHash, $descriptionHash, $eventTime, $eventDuration);
+						DBAddEventRecord($gitHash, $eventTime, $eventDuration);
 					}
 
-					DBAddItemParent($gitHash, $descriptionHash);
-
-					my $reconLine = "addevent/$descriptionHash/$eventTime/$eventDuration/$csrf";
-					$message =~ s/$reconLine/[Event: $descriptionHash at $eventTime for $eventDuration]/g; #todo flesh out message
+					my $reconLine = "addevent/$eventTime/$eventDuration/$csrf";
+					$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
 					$detokenedMessage =~ s/$reconLine//g;
 
 					DBAddVoteRecord ($gitHash, $addedTime, 'event');
@@ -571,6 +568,9 @@ sub IndexFile {
 					DBAddPageTouch('tag', 'event');
 				}
 			}
+		}
+
+		if ($message) {
 
 			my @voteLines = ( $message =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
 			#                                prefix  /file hash      /time     /tag      /csrf
@@ -636,7 +636,7 @@ sub IndexFile {
 
 		# if $alias is set, means this is a pubkey
 		if ($alias) {
-			DBAddVoteRecord ($gitHash, $addedTime, 'pubkey');;
+			DBAddVoteRecord ($gitHash, $addedTime, 'pubkey');
 			# add the "pubkey" tag
 
 			DBAddPageTouch('tag', 'pubkey');
