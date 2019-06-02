@@ -73,9 +73,11 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>SeaMonkey 2.49.4</li>
     <li>Firefox 52.7.2</li>
     <li>Waterfox 56.2.9</li>
+    <li>Dillo 3.0.5</li>
+    <li>NetSurf 2.9</li>
 </ul>
 
-<p>* Older Netscape products may work better when JavaScript and/or CSS are disabled.</p>
+<p>* Some browsers may work better with JavaScript and/or CSS disabled.</p>
 
 <!-- -->
 
@@ -201,7 +203,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <p>Adds 20 vouch points to fingerprint F82FCD75AAEF7CC8.</p>
 
-<p>Requires signing.</p>
+<p>Requires signing by admin user.</p>
 
 <h4>Timestamp and Client Fingerprint</h4>
 
@@ -334,9 +336,21 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 
 <p>This user currently holds the following special powers:</p>
 
+<h5>Vouch</h5>
+
 <p>The <code>addvouch</code> token can only be used by the admin.</p>
 
+<h5>Remove</h5>
+
 <p>The <code>remove</code> tag, when applied by the admin user, will cause an item to be removed at the nearest opportunity.</p>
+
+<p>All of the tokens in the removed item are undone at the next rebuild.</p>
+
+<h5>SetConfig</h5>
+
+<p>The <code>setconfig</code> token can always be applied by the admin.</p>
+
+<p>Settings under the <code>config/admin/</code> directory can only be set by the admin user.</p>
 
 <!-- -->
 
