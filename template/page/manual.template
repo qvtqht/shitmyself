@@ -75,6 +75,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>Waterfox 56.2.9</li>
     <li>Dillo 3.0.5</li>
     <li>NetSurf 2.9</li>
+    <li>GNOME Web 3.28.5</li>
+    <li>Chromium 71.x</li>
 </ul>
 
 <p>* Some browsers may work better with JavaScript and/or CSS disabled.</p>
