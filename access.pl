@@ -367,6 +367,8 @@ sub ProcessAccessLog {
 							AppendFile('./log/added.log', $addedLog);
 						}
 
+						WriteLog("Seems like PutFile() worked! $addedTime");
+
 						if (
 							GetConfig('admin/logging/record_timestamps')
 								||
@@ -374,10 +376,6 @@ sub ProcessAccessLog {
 								||
 							GetConfig('admin/logging/record_sha512')
 						) {
-							#todo join all the addedtime/ tokens together into one file and write it at the end
-
-							WriteLog("Seems like PutFile() worked! $addedTime");
-
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = '';
 
