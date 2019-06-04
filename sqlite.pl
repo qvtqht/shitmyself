@@ -102,8 +102,8 @@ sub SqliteMakeTables() {
 
 	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 
-	# calendar
-	SqliteQuery2("CREATE TABLE calendar(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration, event_location)");
+	# event
+	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration, event_location)");
 
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER)");
@@ -956,7 +956,7 @@ sub DBAddEventRecord {
 	}
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO calendar(item_hash, event_time, event_duration, author_key) VALUES ";
+		$query = "INSERT OR REPLACE INTO event(item_hash, event_time, event_duration, author_key) VALUES ";
 	} else {
 		$query .= ",";
 	}
