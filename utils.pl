@@ -584,8 +584,9 @@ sub GetConfig {
 			WriteLog("-e default/$configName returned true, proceeding to GetFile(), etc...");
 
 			my $configValue = GetFile("default/$configName");
-			#$configValue = trim($configValue);
+			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
+
 			PutConfig ($configName, $configValue);
 
 			return $configValue;
@@ -662,12 +663,6 @@ sub PutConfig {
 	my $configValue = shift;
 
 	chomp $configValue;
-
-	#todo there's a bug here, which this code is supposed to help clarify
-#	if ($configName eq 'intro_text') {
-#		WriteLog(GetFile($configValue));
-#		sleep 5;
-#	}
 
 	return PutFile("config/$configName", $configValue);
 }
