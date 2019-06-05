@@ -13,6 +13,7 @@ use lib qw(lib);
 use Digest::MD5 qw(md5_hex);
 use HTML::Entities qw(decode_entities);
 use URI::Encode qw(uri_decode);
+use Digest::SHA qw(sha512_hex);
 
 ## CONFIG AND SANITY CHECKS ##
 
@@ -389,7 +390,7 @@ sub ProcessAccessLog {
 							}
 
 							if (GetConfig('admin/logging/record_sha512')) {
-								my $fileSha512 = 'sha512goeshere'; #todo
+								my $fileSha512 = sha512_hex($message);
 
 								$addedMessage .= "sha512/$fileHash/$fileSha512\n";
 							}
