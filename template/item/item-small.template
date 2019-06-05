@@ -4,5 +4,5 @@
 <p><b><a href="$permalinkHtml">$itemName</a></b> $authorLink</p>
 <replies></replies>
 </div>
-<hr style="display:none">
+<hr>
 <!-- / item-small.template -->
