@@ -492,11 +492,9 @@ sub IndexFile {
 			$hasParent = 1;
 		}
 
+		# look for addedby, which adds an added time for an item token
+		# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
 		if ($message) {
-			# look for addedby, which adds an added time for an item
-			# #token
-			# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
-
 			my @addedByLines = ( $message =~ m/^addedby\/([0-9a-f]{40})\/([0-9a-f]{32})/mg );
 
 			if (@addedByLines) {
@@ -530,6 +528,49 @@ sub IndexFile {
 						DBAddVoteRecord($gitHash, $addedTime, 'device');
 
 						DBAddPageTouch('tag', 'device');
+					}
+				}
+			}
+		}
+
+		# look for sha512 tokens, which adds a sha512 hash for an item token
+		# sha512/766053fcfb4e835c4dc2770e34fd8f644f276305/07a1fdc887e71547178dc45b115eac83bc86c4a4a34f8fc468dc3bda0738a47a49bd27a3428b28a0419a5bd2bf926f1ac43964c7614e1cce9438265c008c4cd3
+		if ($message) {
+			my @sha512Lines = ( $message =~ m/^sha512\/([0-9a-f]{40})\/([0-9a-f]{128})/mg );
+
+			if (@sha512Lines) {
+				WriteLog (". sha512 token found!");
+				my $lineCount = @sha512Lines / 2;
+
+				if ($isSigned) {
+					WriteLog("... isSigned");
+					if (IsServer($gpgKey)) {
+						WriteLog("... isServer");
+						while(@sha512Lines) {
+							WriteLog("... \@sha512Lines");
+							my $itemHash = shift @sha512Lines;
+							my $itemSha512 = shift @sha512Lines;
+
+							WriteLog("... $itemHash, $itemSha512");
+
+							my $reconLine = "sha512/$itemHash/$itemSha512";
+
+							WriteLog("... $reconLine");
+
+							my $itemSha512Shortened = substr($itemSha512, 0, 16) . '...';
+
+							$message =~ s/$reconLine/[Item $itemHash was added with SHA512 hash $itemSha512Shortened.]/g;
+							$detokenedMessage =~ s/$reconLine//g;
+
+							DBAddItemParent($gitHash, $itemHash);
+							DBAddItemClient($gitHash, $itemSha512);
+						}
+
+						#DBAddVoteWeight('flush');
+
+						DBAddVoteRecord($gitHash, $addedTime, 'sha');
+
+						DBAddPageTouch('tag', 'sha');
 					}
 				}
 			}
