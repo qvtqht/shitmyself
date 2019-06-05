@@ -4,4 +4,4 @@
 <p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink</p>
 $votesSummary
 </div>
-<hr style="display:none">
+<hr>
