@@ -713,7 +713,7 @@ sub GetPageHeader {
 	#my $patternName = 'pattern/bokeh.template';
 	my $patternName = trim(GetConfig('header_pattern'));
 	my $introText = trim(GetConfig('intro_text'));
-	$patternName = GetConfig('header_pattern');
+	#$patternName = GetConfig('header_pattern');
 
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
@@ -750,6 +750,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	#$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
 	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
+	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
 	#$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
