@@ -103,7 +103,7 @@ sub SqliteMakeTables() {
 	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 
 	# event
-	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration, event_location)");
+	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration)");
 
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER)");
@@ -179,6 +179,17 @@ sub SqliteMakeTables() {
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
 				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
+	");
+	SqliteQuery2("
+		CREATE VIEW event_future AS
+			SELECT
+				event.item_hash AS item_hash,
+				event.event_time AS event_time,
+				event.event_duration AS event_duration
+			FROM
+				event
+			WHERE
+				event.event_time > strftime('%s','now');
 	");
 	SqliteQuery2("
 		CREATE VIEW item_vote_count AS
