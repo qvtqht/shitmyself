@@ -1,5 +1,5 @@
 <!-- votequick.template -->
-<p class=quickvote><b>Moderate:</b>
+<p class=quickvote><b>Your Opinion:</b>
     $quickVoteButtons
 </p>
 <!-- / votequick.template -->
