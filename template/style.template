@@ -1,11 +1,8 @@
-.tag-flag {
+.tag-flag, .tag-troll, .tag-spam {
     color: #c08080;
 }
-.tag-accept {
+.tag-accept, .tag-friend, .tag-attend {
     color: #80c080;
-}
-.tag-textart, .tag-poetry {
-    font-family: monospace;
 }
 div.reply {
     border-left: 3pt dotted #c08000;
@@ -24,4 +21,71 @@ body {
 .txt {
     font-family: tahoma;
     size: default;
+}
+.admin {
+    background: repeating-linear-gradient(
+        135deg,
+        #ffffd0,
+        #ffffd0 10px,
+        #fffff0 10px,
+        #fffff0 20px
+    );
+    border-radius: 8pt;
+}
+
+#logo {
+    font-weight: bold;
+    color: $primaryColor;
+    text-shadow:
+        -3pt -3pt 0 red,
+        3pt -3pt 0 green,
+        -3pt 3pt 0 blue,
+        3pt 3pt 0 violet;
+    font-family: cursive;
+}
+form#compose {
+    border: 5pt solid #e8d0ea;
+    border-radius: 5pt;
+    background-color: #f0e0f8
+}
+
+
+
+/* loading */
+.loading {
+    text-align: center;
+    background-color: green;
+    color: gold;
+    font-size: xx-large;
+    font-weight: bold;
+    font-family: cursive;
+}
+
+#curIdAdv {
+    padding: 5pt;
+}
+
+#formprivkey {
+    display: none;
+    background-color: #c0c0c0;
+    border: 5pt solid #ffa0a0;
+    padding: 5pt;
+    border-radius: 5pt;
+}
+#formAdminId {
+    background-color: #ffe080;
+    padding: 5pt;
+    border: 5pt solid #c08000;
+    border-radius: 5pt;
+}
+#formCreateId {
+    background-color: #c0ffc0;
+    padding: 5pt;
+    border: 5pt solid #d0f0d0;
+    border-radius: 5pt;
+}
+#formCurId {
+    display: none;
+    background-color: #80ff80;
+    padding: 5pt;
 }
