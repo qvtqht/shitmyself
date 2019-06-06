@@ -5,9 +5,13 @@
 
         You can use profile features without JavaScript <i>if</i> you know how to use GPG/PGP.<br><br>
 
-        Please <a href="/manual.html">read the Manual</a> for more information.
+        Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
 
-        You can also continue to use the site without changing anything.
+        You can also continue to use the site without changing anything.<br><br>
+
+        <a href="/write.html">Write something on this site (tap/click this link)</a><br><br>
+
+        <a href="/top/hastext.html">Read what others have written (tap/click this link)</a>
     </p>
 </noscript>
 
