@@ -3,6 +3,8 @@
 use strict;
 use warnings FATAL => 'all';
 use utf8;
+use POSIX qw(strftime);
+
 
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
@@ -279,7 +281,7 @@ sub IndexFile {
 		# look for hash tags
 		if ($message) {
 			WriteLog("... check for hashtags");
-			my @hashTags = ( $message =~ m/\#([a-zA-Z]+)/mg );
+			my @hashTags = ( $message =~ m/\#([a-zA-Z0-9]+)/mg );
 
 			if (@hashTags) {
 				WriteLog("... hashtag(s) found");
@@ -577,13 +579,15 @@ sub IndexFile {
 		}
 
 		# look for addevent tokens
-		# addevent/1551234567/3600/csrf
+		# addevent/1551234567/3600
+
 		if ($message) {
-			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)\/([0-9a-f]{32})$/mg );
-			#                                 prefix   /time     /duration /csrf
+			# get any matching token lines
+			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)/mg );
+			#                                 prefix   /time     /duration
 
 			if (@eventLines) {
-				my $lineCount = @eventLines / 3;
+				my $lineCount = @eventLines / 2;
 				#todo assert no remainder
 
 				WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
@@ -591,17 +595,43 @@ sub IndexFile {
 				while (@eventLines) {
 					my $eventTime = shift @eventLines;
 					my $eventDuration = shift @eventLines;
-					my $csrf = shift @eventLines;
 
 					if ($isSigned) {
 						DBAddEventRecord($gitHash, $eventTime, $eventDuration, $gpgKey);
 					} else {
-						#todo csrf check
 						DBAddEventRecord($gitHash, $eventTime, $eventDuration);
 					}
 
-					my $reconLine = "addevent/$eventTime/$eventDuration/$csrf";
-					$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
+					my $reconLine = "addevent/$eventTime/$eventDuration";
+
+					#$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
+
+					my ($seconds, $minutes, $hours, $day_of_month, $month, $year, $wday, $yday, $isdst) = localtime($eventTime);
+					$year = $year + 1900;
+					$month = $month + 1;
+
+					my $eventDurationText = $eventDuration;
+					if ($eventDurationText >= 60) {
+						$eventDurationText = $eventDurationText / 60;
+						if ($eventDurationText >= 60) {
+							$eventDurationText = $eventDurationText / 60;
+							if ($eventDurationText >= 24) {
+								$eventDurationText = $eventDurationText / 24;
+								$eventDurationText = $eventDurationText . " days";
+							} else {
+								$eventDurationText = $eventDurationText . " hours";
+							}
+						} else {
+							$eventDurationText = $eventDurationText . " minutes";
+						}
+					} else {
+						$eventDurationText = $eventDurationText . " seconds";
+					}
+
+					my $dateText = "$year/$month/$day_of_month $hours:$minutes:$seconds";
+
+					$message =~ s/$reconLine/[Event: $dateText for $eventDurationText]/g; #todo flesh out message
+
 					$detokenedMessage =~ s/$reconLine//g;
 
 					DBAddVoteRecord ($gitHash, $addedTime, 'event');
