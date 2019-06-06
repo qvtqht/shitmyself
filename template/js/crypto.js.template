@@ -504,9 +504,9 @@ function saveId() {
 					var profileUrl = '/author/' + myFingerprint + '/';
 
 					if (UrlExists(profileUrl)) {
-						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Profile page</a>';
+						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Go to your profile page</a>';
 					} else {
-						myIdProfile.innerHTML = 'Here will be a link <br>pointing to your profile page <br>Once it has been made';
+						myIdProfile.innerHTML = 'Your profile page is missing. If you just registered, it should appear soon.';
 					}
 				}
 
