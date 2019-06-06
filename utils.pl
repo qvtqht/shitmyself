@@ -716,6 +716,15 @@ sub EpochToHuman {
 	return strftime('%F %T', localtime($time));
 }
 
+sub EpochToHuman2 {
+	my $time = shift;
+
+	my ($seconds, $minutes, $hours, $day_of_month, $month, $year, $wday, $yday, $isdst) = localtime($time);
+	$year = $year + 1900;
+	$month = $month + 1;
+
+}
+
 sub PutHtmlFile {
 	my $file = shift;
 
