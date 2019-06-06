@@ -267,7 +267,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <p>Voting is the process of applying a <b>tag</b> to an <b>item</b>.</p>
 
-<p style="font-size: larger">item + tag = vote</p>
+<p style="font-size: larger">item + tag [+ author] = vote</p>
 
 <p>A voting token has the following parameters</p>
 
