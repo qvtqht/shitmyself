@@ -1,3 +1,5 @@
+#bug When 0 text files, there is no Profile link
+
 Colorize item hashes
 	Possibly make "short" hashes 12 chars (6+6 for fg/bg color0
 
