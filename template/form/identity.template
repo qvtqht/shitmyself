@@ -3,21 +3,23 @@
 <noscript>
     <p class=warning><strong><b>Great news! You're browsing without JavaScript!</b></strong><br><br>
 
-        You can use profile features without JavaScript <i>if</i> you know how to use GPG/PGP.<br><br>
+        You can also continue to use the site without changing anything.<br><br>
+
+        Using profile features without JavaScript <i>if</i> requires GPG/PGP.<br><br>
 
         Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
 
-        You can also continue to use the site without changing anything.<br><br>
+        <hr>
 
-        <a href="/write.html">Write something on this site (tap/click this link)</a><br><br>
+        <a href="/write.html">Write something on this site</a><br><br>
 
-        <a href="/top/hastext.html">Read what others have written (tap/click this link)</a>
+        <a href="/top/hastext.html">Read what others have written</a>
     </p>
 </noscript>
 
 <p id=loading class=loading>
     <br><br>
-    Loading<span id=ldots>...</span>
+    Loading...
     <br><br><br>
 </p>
 
