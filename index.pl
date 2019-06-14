@@ -74,7 +74,19 @@ sub MakeAddedIndex {
 	}
 }
 
+sub GetFileHashPath {
+	my $file = shift;
 
+	if ($file) {
+		my $fileHash = GetFileHash($file);
+
+		if ($fileHash) {
+			my $fileHashPath = 'html/txt/' . $fileHash . '.txt';
+
+			return $fileHashPath;
+		}
+	}
+}
 
 sub IndexFile {
 # Reads a given $file, parses it, and puts it into the index database
@@ -101,6 +113,27 @@ sub IndexFile {
 
 		return;
 	}
+
+	# admin/organize_files
+	# renames files to their hashes
+	if (GetConfig('admin/organize_files')) {
+		WriteLog('IndexFile: admin/organize_files is set, do we need to organize?');
+		my $fileHashPath = GetFileHashPath($file);
+		if ($file eq $fileHashPath) {
+			WriteLog('IndexFile: hash path matches, no action needed');
+		}
+		elsif ($file ne $fileHashPath) {
+			WriteLog('IndexFile: hash path does not match, organize');
+			WriteLog($file);
+			WriteLog($fileHashPath);
+			rename ($file, $fileHashPath);
+			$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+		}
+		else {
+			WriteLog('IndexFile: WTF?');
+		}
+	}
+
 
 	# file's attributes
 	my $txt = "";           # original text inside file
@@ -293,6 +326,10 @@ sub IndexFile {
 						DBAddVoteRecord($gitHash, $addedTime, $hashTag);
 
 						DBAddPageTouch('tag', $hashTag);
+
+						my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
+
+						#todo
 					}
 				}
 			}
