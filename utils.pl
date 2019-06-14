@@ -17,6 +17,8 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 #use HTML::Entities qw(encode_entities);
 use Storable;
+use Time::Piece;
+
 
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`; #hardcode #todo
@@ -81,6 +83,26 @@ sub GetCache {
 	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
 
 	return GetFile($cacheName);
+}
+
+sub LookForDate {
+	my @formats = ( '%Y/%m/%d %H:%M:%S', '%d %b %y');
+
+	my $dateString = shift;
+	chomp $dateString;
+
+	my $timestamp;
+	foreach my $format (@formats) {
+		if ( not defined $timestamp
+			and $timestamp =
+			eval {
+				localtime->strptime( $dateString, $format )
+			}
+		)
+		{
+			WriteLog("LookForDate: $dateString converted to $timestamp using $format");
+		}
+	}
 }
 
 sub EnsureSubdirs {
@@ -1215,7 +1237,12 @@ sub GpgParse {
 
 			# Public key confirmed, tell 'em
 			if ($alias && $gpg_key) {
-				$message = "Welcome, $alias\nFingerprint: $gpg_key";
+				#$message = "Welcome, $alias\nFingerprint: $gpg_key";
+				$message = GetTemplate('message/user_reg.template');
+
+				$message =~ s/\$name/$alias/g;
+				$message =~ s/\$fingerprint/$gpg_key/g;
+
 			} else {
 				$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
 			}
