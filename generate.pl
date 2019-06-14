@@ -623,9 +623,9 @@ sub MakeClonePage {
 
 # generate commits page
 {
-	my $commits = `git log -n 25 | grep ^commit`;
+	my $commits = `git log -n 250 | grep ^commit`;
 
-	WriteLog('$commits = git log -n 25 | grep ^commit');
+	WriteLog('$commits = git log -n 250 | grep ^commit');
 
 	if ($commits) {
 		foreach(split("\n", $commits)) {
