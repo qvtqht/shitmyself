@@ -1,3 +1,14 @@
+Connect users
+	Using >> replies for user registration posts
+	And/or usernames??
+		Any user mentioned can vote to remove the post.
+
+user expiration
+
+link pub-key txt and post from profile
+
+#bug for sub-replies, >> token to be stripped is not set correctly
+
 #bug When 0 text files, there is no Profile link
 
 Colorize item hashes
