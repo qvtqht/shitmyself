@@ -250,6 +250,14 @@ sub ProcessAccessLog {
 			}
 		}
 
+		if (!defined($submitPrefix)) {
+		# If there is no $submitPrefix found
+			if (GetConfig('admin/accept_url_text')) {
+			# Just add the whole URL text as an item, as long as admin_accept_url_text is on
+				$submitPrefix = '/';
+			}
+		}
+
 		# If a submission prefix was found
 		if ($submitPrefix) {
 			# Look for it in the beginning of the requested URL
