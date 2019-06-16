@@ -623,6 +623,7 @@ sub MakeClonePage {
 
 # generate commits page
 {
+	#todo only do this for versions mentioned in changelogs
 	my $commits = `git log -n 250 | grep ^commit`;
 
 	WriteLog('$commits = git log -n 250 | grep ^commit');
