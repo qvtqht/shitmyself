@@ -20,5 +20,9 @@
         <label for=rectime><input type=checkbox id=rectime name=rectime> Record timestamp</label>
     </p>
 
+    <p>
+        <label for=addevent><input type=text size=32 maxlength=64 name=addevent id=addevent></label>
+    </p>
+
 </form>
 <!--# / write2.template #-->

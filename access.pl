@@ -252,7 +252,7 @@ sub ProcessAccessLog {
 
 		if (!defined($submitPrefix)) {
 		# If there is no $submitPrefix found
-			if (GetConfig('admin/accept_url_text')) {
+			if (GetConfig('admin/accept_url_text') && (!-e ('html/' . $file))) {
 			# Just add the whole URL text as an item, as long as admin_accept_url_text is on
 				$submitPrefix = '/';
 			}
