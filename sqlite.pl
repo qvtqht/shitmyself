@@ -37,6 +37,7 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp INTEGER);");
 	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 
+
 	# added_by (client)
 	SqliteQuery2("CREATE TABLE added_by(file_hash, device_fingerprint);");
 
@@ -144,6 +145,15 @@ sub SqliteMakeTables() {
 	");
 
 	SqliteQuery2("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
+
+
+#	SqliteQuery2("
+#		CREATE VIEW added_time2 AS
+#			SELECT
+#
+#
+#	;");
+
 	SqliteQuery2("
 		CREATE VIEW vote_weighed AS
 			SELECT
@@ -311,6 +321,25 @@ sub DBGetVotesForItem {
 	my $result = SqliteQuery2($query, @queryParams);
 
 	return $result;
+}
+
+sub DBGetEventsAfter {
+	my $time = shift;
+
+	if (!$time) {
+		$time = time();
+	}
+
+	my $query;
+	my @queryParams;
+
+	$query = "SELECT * FROM event WHERE (event_time + event_duration) > ?";
+	@queryParams = ($time);
+
+	my $result = SqliteQuery2($query, @queryParams);
+
+	return $result;
+
 }
 
 sub DBGetLatestConfig {
