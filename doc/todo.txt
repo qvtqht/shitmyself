@@ -1,3 +1,19 @@
+Current Top UI priorities
+	Titles
+		Already stored in database
+		Should replace $hash at the top of items
+		Short listing style with titles and attributes only (no text)
+	Event listing
+		Chronological
+		Clear dates
+		Grouped by month
+		All future/current events
+	Author listing
+		More friendly table-like listing of authors
+			Action counts with sort
+
+Does addvote still need timestamp?
+
 Connect users
 	Using >> replies for user registration posts
 	And/or usernames??
