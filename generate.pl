@@ -700,8 +700,8 @@ my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
 if ($homePageHasBeenWritten) {
 	WriteLog("Home Page has been written! Yay!");
 } else {
-	WriteLog("Warning! Home Page has bee written! Fixing that");
-	PutHtmlFile('html/write.html', GetHomePage());
+	WriteLog("Warning! Home Page has not been written! Fixing that");
+	PutHtmlFile('html/index.html', GetFile('html/write.html'));
 }
 
 1;

@@ -250,11 +250,23 @@ sub ProcessAccessLog {
 			}
 		}
 
-		if (!defined($submitPrefix)) {
 		# If there is no $submitPrefix found
-			if (GetConfig('admin/accept_url_text') && (!-e ('html/' . $file))) {
-			# Just add the whole URL text as an item, as long as admin_accept_url_text is on
-				$submitPrefix = '/';
+		if (!defined($submitPrefix)) {
+			WriteLog("No submitPrefix found...");
+
+			if (!-e "html/$file") {
+				WriteLog("html/$file  doesn't exist, proceeding to treat it as submission");
+
+				WriteLog("Check admin/accept_url_text...");
+				if (GetConfig('admin/accept_url_text')) {
+				# Just add the whole URL text as an item, as long as admin_accept_url_text is on
+					$submitPrefix = '/';
+					WriteLog('$submitPrefix = /');
+				}
+			} else {
+				WriteLog("html/$file exists... ignoring this hit");
+
+				#todo make this optional also, and perhaps that's how visitor counting can be done
 			}
 		}
 
