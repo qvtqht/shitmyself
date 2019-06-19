@@ -290,6 +290,13 @@ sub GetStatsPage {
 		$statsTable =~ s/\$admin/(None)/;
 	}
 
+	my $serverId = GetServerKey();
+	if ($serverId) {
+		$statsTable =~ s/\$server/GetAuthorLink($serverId)/e;
+	} else {
+		$statsTable =~ s/\$server/(None)/;
+	}
+
 
 	my $currUpdateTime = time();
 	my $prevUpdateTime = GetConfig('last_update_time');
