@@ -125,6 +125,8 @@ sub GenerateFilenameFromTime {
 #		1 = vhost log
 # )
 sub ProcessAccessLog {
+	Writelog("ProcessAccessLog() begin");
+
 	# Processes the specified access.log file
 	# Returns the number of new items and/or actions found
 
