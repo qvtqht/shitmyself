@@ -355,7 +355,7 @@ sub IndexFile {
 			if (IsAdmin($gpgKey) || GetConfig('admin/anyone_can_config') || GetConfig('admin/signed_can_config')) {
 				# preliminary conditions
 
-				my @setConfigLines = ( $message =~ m/^(setconfig)\/([a-z0-9\/_]+)=(.+?)$/mg );
+				my @setConfigLines = ( $message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg );
 
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 
