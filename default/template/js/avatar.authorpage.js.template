@@ -8,7 +8,7 @@ if (window.localStorage) {
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+			signinBox.innerHTML = '<a href="/profile.html"></a>';
 		} else {
 		   signinBox.innerHTML = '';
 

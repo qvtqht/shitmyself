@@ -307,7 +307,7 @@ sub GetRandomHash {
 sub GetTemplate {
 	my $filename = shift;
 	chomp $filename;
-	$filename = "$SCRIPTDIR/template/$filename";
+#	$filename = "$SCRIPTDIR/template/$filename";
 
 	WriteLog("GetTemplate($filename)");
 
@@ -317,12 +317,13 @@ sub GetTemplate {
 		return $templateCache{$filename};
 	}
 
-	if (-e $filename) {
-		my $template = GetFile($filename);
+	my $template = GetConfig('template/' . $filename);
+
+	if ($template) {
 		$templateCache{$filename} = $template;
 		return $template;
 	} else {
-		WriteLog("WARNING! GetTemplate() called with non-existing file $filename. Returning empty string.");
+		WriteLog("WARNING! GetTemplate() returning empty string for $filename.");
 		return '';
 	}
 }
@@ -595,7 +596,13 @@ sub GetConfig {
 		WriteLog("-e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
 
 		my $configValue = GetFile("config/$configName");
-		$configValue = trim($configValue);
+
+		if (substr($configName, 0, 9) eq 'template/') {
+			# don't trim
+		} else {
+			$configValue = trim($configValue);
+		}
+
 		$configLookup{$configValue} = $configValue;
 
 		return $configValue;
@@ -875,9 +882,13 @@ sub GetFileSizeHtml {
 sub IsServer {
 	my $key = shift;
 
-	if (!IsFingerprint($key)) {
-		return 0;
-	}
+	WriteLog("IsServer($key)");
+#
+#	if (!IsFingerprint($key)) {
+#		WriteLog("IsServer() failed due to IsFingerprint() returning falsee!");
+#
+#		return 0;
+#	}
 
 	WriteLog("IsServer($key)");
 
@@ -915,7 +926,7 @@ sub IsAdmin {
 sub GetServerKey {
 	#Returns admin's key sig, 0 if there is none
 
-	state $adminsKey = 0;
+	state $adminsKey;
 
 	if ($adminsKey) {
 		return $adminsKey;
@@ -1476,14 +1487,21 @@ sub ServerSign {
 # Server key should be stored in gpg keychain
 # Key ID should be stored in config/admin/server_key_id
 #
+
+	WriteLog('ServerSign()');
+
 	# get filename from parameters and ensure it exists
 	my $file = shift;
 	if (!-e $file) {
 		return;
 	}
 
+	WriteLog('ServerSign(' . $file . ')');
+
 	# see if config/admin/server_key_id is set
 	my $serverKeyId = trim(GetConfig('admin/server_key_id'));
+
+	WriteLog('$serverKeyId = ' . $serverKeyId);
 
 	# return if it is not
 	if (!$serverKeyId) {
@@ -1491,18 +1509,21 @@ sub ServerSign {
 	}
 
 	# verify that key exists in gpg keychain
-	WriteLog("gpg --list-keys $serverKeyId");
-	my $gpgCommand = GetConfig('admin/gpg/gpg_command');
+	WriteLog("$gpgCommand --list-keys $serverKeyId");
+	#my $gpgCommand = GetConfig('admin/gpg/gpg_command');
 
 	my $serverKey = `$gpgCommand --list-keys $serverKeyId`;
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
-	if (!-e "html/txt/server.key") {
-		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt");
-		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId > html/txt/server.key.txt`;
+	if (!-e "html/txt/server.key.txt") {
+		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId");
+		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId`;
+
+		PutFile('html/txt/server.key.txt', $gpgOutput);
+
 		WriteLog($gpgOutput);
-	} #todo here we should also verify that server.key matches server_key_id
+	} #todo here we should also verify that server.key.txt matches server_key_id
 
 	# if everything is ok, proceed to sign
 	if ($serverKey) {

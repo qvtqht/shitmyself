@@ -5,5 +5,5 @@
 <p>Server: $server</p>
 <p>Updated: $currUpdateTime</p>
 <p>Previous Update: $prevUpdateTime</p>
-<p>Apparent Update Interval: $updateInterval</p>
+<p>Apparent Update Interval: $updateInterval seconds</p>
 <p>Next Update: $nextUpdateTime</p>
