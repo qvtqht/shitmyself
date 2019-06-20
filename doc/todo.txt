@@ -1,3 +1,5 @@
+If file is submitted via plain URL, make (optionally) a token noting that
+
 Current Top UI priorities
 	Titles
 		Already stored in database
@@ -214,7 +216,7 @@ If logged in
 
 SERVER MESSAGE SIGNING
 ======================
-Does server.key exist?
+Does server.key.txt exist?
    No:
       generate gen-key-script
       Generate key with gpg --unattended
