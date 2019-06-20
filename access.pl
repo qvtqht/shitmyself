@@ -252,19 +252,14 @@ sub ProcessAccessLog {
 			}
 		}
 
-		# If there is no $submitPrefix found
-		if (!defined($submitPrefix)) {
-			WriteLog("No submitPrefix found...");
-
-			if (!-e "html$file") {
-				WriteLog("html$file  doesn't exist, proceeding to treat it as submission");
-
-				WriteLog("Check admin/accept_url_text...");
-				if (GetConfig('admin/accept_url_text')) {
+		if (GetConfig('admin/accept_url_text')) {
+		WriteLog("Check admin/accept_url_text...");
+			# If there is no $submitPrefix found
+			if (!defined($submitPrefix)) {
+				WriteLog("No submitPrefix found...");
 				# Just add the whole URL text as an item, as long as admin_accept_url_text is on
-					$submitPrefix = '/';
-					WriteLog('$submitPrefix = /');
-				}
+				$submitPrefix = '/';
+				WriteLog('$submitPrefix = /');
 			} else {
 				WriteLog("html/$file exists... ignoring this hit");
 
