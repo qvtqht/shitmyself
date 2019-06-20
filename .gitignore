@@ -3,3 +3,5 @@ cache/*
 .idea/*
 log/*
 html
+admin.key
+cron.lock
