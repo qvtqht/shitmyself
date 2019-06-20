@@ -88,17 +88,17 @@ sub GetFileHashPath {
 	}
 }
 
-sub IndexFile {
+sub IndexTextFile {
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush), flushes any queued queries
 
 	my $file = shift;
 	chomp($file);
 
-	WriteLog("IndexFile($file)");
+	WriteLog("IndexTextFile($file)");
 
 	if ($file eq 'flush') {
-		WriteLog("IndexFile(flush)");
+		WriteLog("IndexTextFile(flush)");
 
 		DBAddAuthor('flush');
 		DBAddKeyAlias('flush');
@@ -117,20 +117,22 @@ sub IndexFile {
 	# admin/organize_files
 	# renames files to their hashes
 	if (GetConfig('admin/organize_files')) {
-		WriteLog('IndexFile: admin/organize_files is set, do we need to organize?');
-		my $fileHashPath = GetFileHashPath($file);
-		if ($file eq $fileHashPath) {
-			WriteLog('IndexFile: hash path matches, no action needed');
-		}
-		elsif ($file ne $fileHashPath) {
-			WriteLog('IndexFile: hash path does not match, organize');
-			WriteLog($file);
-			WriteLog($fileHashPath);
-			rename ($file, $fileHashPath);
-			$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+		if ($file ne 'html/txt/server.key.txt') {
+			WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
+			my $fileHashPath = GetFileHashPath($file);
+			if ($file eq $fileHashPath) {
+				WriteLog('IndexTextFile: hash path matches, no action needed');
+			}
+			elsif ($file ne $fileHashPath) {
+				WriteLog('IndexTextFile: hash path does not match, organize');
+				WriteLog($file);
+				WriteLog($fileHashPath);
+				rename ($file, $fileHashPath);
+				$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+			}
 		}
 		else {
-			WriteLog('IndexFile: WTF?');
+			WriteLog('IndexTextFile: WTF?');
 		}
 	}
 
@@ -811,7 +813,7 @@ sub IndexFile {
 		DBAddPageTouch('item', $gitHash);
 	}
 
-	IndexFile('flush')
+	IndexTextFile('flush')
 }
 
 sub WriteIndexedConfig {
@@ -851,10 +853,10 @@ sub MakeIndex {
 	foreach my $file (@filesToInclude) {
 		WriteLog("MakeIndex: $file");
 
-		IndexFile($file);
+		IndexTextFile($file);
 	}
 
-	IndexFile('flush');
+	IndexTextFile('flush');
 
 	WriteIndexedConfig();
 }

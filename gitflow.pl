@@ -144,8 +144,8 @@ foreach my $file (@gitChangesArray) {
 		}
 
 		# index file, flush immediately (why? #todo)
-		IndexFile($fileFullPath);
-		IndexFile('flush');
+		IndexTextFile($fileFullPath);
+		IndexTextFile('flush');
 
 		# add a time_added record
 		DBAddAddedTimeRecord($fileHash, $addedTime);
