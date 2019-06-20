@@ -8,3 +8,23 @@ Add Signature button is confusing
 	Should be changed to the same as the reply buttons
 	Possibly an "add comments" button?
 		But may be unnecessary if there is a reply box at the top
+
+
+
+Scott's feedback 6/20
+=====================
+Different channels with assigning users
+channels / groups
+restrict users to separate groups
+
+	Discord
+	=======
+	tag people
+	give access to diff channels
+	conversations
+		divide up
+
+	hierarchy
+		democratic within level
+		division of people into groups
+			topical
