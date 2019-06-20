@@ -261,6 +261,9 @@ sub GetItemPage {
 					$$subReplyItem{'template_name'} = 'item/item-small.template';
 					$$subReplyItem{'remove_token'} = '>>' . $$subReplyItem{'file_hash'};
 
+					WriteLog('$$subReplyItem{\'remove_token\'} = \'>>\' . $$subReplyItem{\'file_hash\'}');
+					WriteLog($$subReplyItem{'remove_token'} . ',' . $$subReplyItem{'file_hash'});
+
 					my $subReplyTemplate = GetItemTemplate($subReplyItem);
 
 					$subRepliesTemplate .= $subReplyTemplate;
@@ -387,6 +390,8 @@ sub GetItemTemplateFromHash {
 }
 
 sub GetItemTemplate {
+	WriteLog("GetItemTemplate");
+
 	# Returns HTML template for outputting one item
 	# %file(array for each file)
 	# file_path = file path including filename
@@ -430,12 +435,17 @@ sub GetItemTemplate {
 		}
 
 		if ($file{'remove_token'}) {
+			WriteLog('$file{\'remove_token\'} = ' . $file{'remove_token'});
+
+
 			$message =~ s/$file{'remove_token'}//g;
 			$message = trim($message);
 			#todo there is a bug here, but it is less significant than the majority of cases
 			#  the bug is that it removes the token even if it is not by itself on a single line
 			#  this could potentially be mis-used to join together two pieces of a forbidden string
 			#todo make it so that post does not need to be trimmed, but extra \n\n after the token is removed
+		} else {
+			WriteLog('$file{\'remove_token\'} is not set');
 		}
 
 		$message = FormatForWeb($message);
