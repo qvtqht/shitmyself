@@ -181,13 +181,15 @@ sub SqliteMakeTables() {
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp,
-				IFNULL(item_title.title, '') AS item_title
+				IFNULL(item_title.title, '') AS item_title,
+				IFNULL(item_score.item_score, 0) AS item_score
 			FROM
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
 				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
+				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
 	");
 	SqliteQuery2("
 		CREATE VIEW event_future AS
@@ -218,13 +220,16 @@ sub SqliteMakeTables() {
 		SELECT 
 			author.key AS author_key, 
 			SUM(vote_weight.vote_weight) AS vote_weight, 
-			author_alias.alias AS author_alias
-		FROM 
+			author_alias.alias AS author_alias,
+			IFNULL(author_score.author_score, 0) AS author_score
+		FROM
 			author 
 			LEFT JOIN vote_weight
 				ON (author.key = vote_weight.key)
 			LEFT JOIN author_alias
 				ON (author.key = author_alias.key)
+			LEFT JOIN author_score
+				ON (author.key = author_score.author_key)
 		GROUP BY
 			author.key, author_alias.alias
 	");
@@ -253,16 +258,12 @@ sub SqliteMakeTables() {
 			author_score
 		AS
 			SELECT
-				item.author_key AS author_key,
-				COUNT(vote.vote_value) AS author_score
+				item_flat.author_key AS author_key,
+				SUM(item_flat.item_score) AS author_score
 			FROM
-				vote
-				LEFT JOIN item
-					ON (vote.file_hash = item.file_hash)
-			WHERE
-				author_key
+				item_flat
 			GROUP BY
-				item.author_key
+				item_flat.author_key
 
 	");
 }
@@ -1393,6 +1394,31 @@ sub DBGetAuthorAlias {
 		my $query = "SELECT alias FROM author_alias WHERE key = '$key'";
 		$aliasCache{$key} = SqliteGetValue($query);
 		return $aliasCache{$key};
+	} else {
+		return "";
+	}
+}
+
+sub DBGetAuthorScore {
+	my $key = shift;
+	chomp ($key);
+
+	if (!IsFingerprint($key)) {
+		WriteLog('DBGetAuthorScore called with invalid parameter! returning');
+		return;
+	}
+
+	state %scoreCache;
+	if (exists($scoreCache{$key})) {
+		return $scoreCache{$key};
+	}
+
+	$key = SqliteEscape($key);
+
+	if ($key) {
+		my $query = "SELECT author_score FROM author_score WHERE author_key = '$key'";
+		$scoreCache{$key} = SqliteGetValue($query);
+		return $scoreCache{$key};
 	} else {
 		return "";
 	}
