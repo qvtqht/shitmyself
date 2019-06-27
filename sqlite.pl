@@ -62,8 +62,7 @@ sub SqliteMakeTables() {
 		file_path UNIQUE,
 		item_name,
 		author_key,
-		file_hash UNIQUE,
-		published
+		file_hash UNIQUE
 	)");
 
 	# item_title
@@ -89,12 +88,12 @@ sub SqliteMakeTables() {
 			parent_hash
 	");
 
-	# tag
-	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value, published)");
-	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
+#	# tag
+#	SqliteQuery2("CREATE TABLE tag(id INTEGER PRIMARY KEY AUTOINCREMENT, vote_value)");
+#	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 
 	# vote
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, published)");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 
 	# item_page
@@ -222,9 +221,30 @@ sub SqliteMakeTables() {
 			author_alias.alias AS author_alias
 		FROM 
 			author 
-			LEFT JOIN vote_weight ON (author.key = vote_weight.key) 
-			LEFT JOIN author_alias ON (author.key = author_alias.key)
-			GROUP BY author.key, author_alias.alias
+			LEFT JOIN vote_weight
+				ON (author.key = vote_weight.key)
+			LEFT JOIN author_alias
+				ON (author.key = author_alias.key)
+		GROUP BY
+			author.key, author_alias.alias
+	");
+
+	SqliteQuery2("
+		CREATE VIEW
+			author_score
+		AS
+			SELECT
+				item.author_key AS author_key,
+				COUNT(vote.vote_value) AS received_vote_count
+			FROM
+				vote
+				LEFT JOIN item
+					ON (vote.file_hash = item.file_hash)
+			WHERE
+				author_key
+			GROUP BY
+				item.author_key
+
 	");
 }
 
@@ -1264,7 +1284,8 @@ sub DBGetItemList {
 			item_flat.author_key author_key,
 			item_flat.child_count child_count,
 			item_flat.parent_count parent_count,
-			item_flat.add_timestamp add_timestamp
+			item_flat.add_timestamp add_timestamp,
+			item_flat.item_title item_title
 		FROM
 			item_flat
 	";

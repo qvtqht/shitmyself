@@ -204,7 +204,7 @@ sub GetItemPage {
 		my $alias = GetAlias($file{'author_key'});
 		$alias = HtmlEscape($alias);
 
-		$title = TrimPath($filePath) . ".txt by $alias";
+		$title = $file{'item_title'} . ' (' . TrimPath($filePath) . ".txt) by $alias";
 		$titleHtml = TrimPath($filePath) . ".txt";
 	} else {
 		$title = TrimPath($filePath) . ".txt";
@@ -404,6 +404,7 @@ sub GetItemTemplate {
 	# remove_token = token to remove (for reply tokens)
 	# show_vote_summary = shows item's list and count of tags
 	# show_quick_vote = displays quick vote buttons
+	# item_title = title
 
 
 	# get %file hash from supplied parameters
@@ -531,6 +532,19 @@ sub GetItemTemplate {
 
 		my $addedTime = ''; #todo
 
+		if ($file{'item_title'}) {
+			my $itemTitleTemplate = GetTemplate('itemtitlelink.template');
+
+			my $itemTitle = $file{'item_title'};
+
+			$itemTitleTemplate =~ s/\$itemTitle/$itemTitle/g;
+			$itemTitleTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+
+			$itemTemplate =~ s/\$itemTitleTemplate/$itemTitleTemplate/g;
+		} else {
+			$itemTemplate =~ s/\$itemTitleTemplate//g;
+		}
+
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -560,7 +574,7 @@ sub GetItemTemplate {
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
 			}
 			if ($votesSummary) {
-				$votesSummary = '<p>' . $votesSummary . '</p>';
+				$votesSummary = '<p><b>Existing Labels:</b><br>' . $votesSummary . '</p>';
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 
