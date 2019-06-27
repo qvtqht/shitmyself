@@ -941,18 +941,20 @@ sub GetReadPage {
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	if ($pageType eq 'author') {
-		my $authorInfo = GetTemplate('authorinfo.template');
+		my $authorInfoTemplate = GetTemplate('authorinfo.template');
 
 		my $authorAliasHtml = GetAlias($authorKey);
 		my $authorAvatarHtml = GetAvatar($authorKey);
 		my $authorImportance = 1337;
+		my $authorScore = DBGetAuthorScore($authorKey);
 
-		$authorInfo =~ s/\$avatar/$authorAvatarHtml/;
-		$authorInfo =~ s/\$alias/$authorAliasHtml/;
-		$authorInfo =~ s/\$fingerprint/$authorKey/;
-		$authorInfo =~ s/\$importance/$authorImportance/;
+		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
+		$authorInfoTemplate =~ s/\$alias/$authorAliasHtml/;
+		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
+		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
+		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
 
-		$txtIndex .= $authorInfo;
+		$txtIndex .= $authorInfoTemplate;
 	}
 
 	foreach my $row (@files) {
