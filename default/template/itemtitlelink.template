@@ -1,0 +1,3 @@
+<!-- itemtitlelink.template -->
+<h5><a href="$permalinkHtml">$itemTitle</a></h5>
+<!-- / itemtitlelink.template -->
