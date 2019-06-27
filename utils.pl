@@ -319,6 +319,8 @@ sub GetTemplate {
 
 	my $template = GetConfig('template/' . $filename);
 
+	$template .= "\n";
+
 	if ($template) {
 		$templateCache{$filename} = $template;
 		return $template;
