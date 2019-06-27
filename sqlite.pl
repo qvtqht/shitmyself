@@ -229,13 +229,32 @@ sub SqliteMakeTables() {
 			author.key, author_alias.alias
 	");
 
+
+
+	SqliteQuery2("
+		CREATE VIEW
+			item_score
+		AS
+			SELECT
+				item.file_hash AS file_hash,
+				COUNT(vote.vote_value) AS item_score
+			FROM
+				vote
+				LEFT JOIN item
+					ON (vote.file_hash = item.file_hash)
+			GROUP BY
+				item.file_hash
+
+	");
+
+
 	SqliteQuery2("
 		CREATE VIEW
 			author_score
 		AS
 			SELECT
 				item.author_key AS author_key,
-				COUNT(vote.vote_value) AS received_vote_count
+				COUNT(vote.vote_value) AS author_score
 			FROM
 				vote
 				LEFT JOIN item
