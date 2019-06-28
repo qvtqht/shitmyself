@@ -252,18 +252,17 @@ sub ProcessAccessLog {
 			}
 		}
 
-		if (GetConfig('admin/accept_url_text')) {
-		WriteLog("Check admin/accept_url_text...");
-			# If there is no $submitPrefix found
-			if (!defined($submitPrefix)) {
-				WriteLog("No submitPrefix found...");
-				# Just add the whole URL text as an item, as long as admin_accept_url_text is on
-				$submitPrefix = '/';
-				WriteLog('$submitPrefix = /');
-			} else {
-				WriteLog("html/$file exists... ignoring this hit");
-
-				#todo make this optional also, and perhaps that's how visitor counting can be done
+		WriteLog("Check admin/accept_404_url_text...");
+		if (GetConfig('admin/accept_404_url_text')) {
+			#If the request was met with a 404
+			if ($status eq '404') {
+				# If there is no $submitPrefix found
+				if (!defined($submitPrefix)) {
+					WriteLog("No submitPrefix found...");
+					# Just add the whole URL text as an item, as long as admin_accept_url_text is on
+					$submitPrefix = '/';
+					WriteLog('$submitPrefix = /');
+				}
 			}
 		}
 
