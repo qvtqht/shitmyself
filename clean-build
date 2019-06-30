@@ -8,6 +8,7 @@ rm -rfv html/*.js html/*/*.js html/*/*/*.js
 rm -rfv html/*.php html/*/*.php html/*/*/*.php
 rm -rfv html/.htaccess
 rm -rfv html/*.zip
+rm -rfv config/template/*
 
 touch html/gracias.html
 rm log/log.log 
