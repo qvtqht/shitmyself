@@ -873,7 +873,9 @@ sub GetScoreboardPage {
 
 	my @topAuthorsArray = @{$topAuthors};
 
-	$txtIndex .= '<table><tr><th>Name</th><th>Score</th></tr>';
+	my $authorListingWrapper = GetTemplate('author_listing_wrapper.template');
+
+	my $authorListings = '';
 
 	while (@topAuthorsArray) {
 		my $authorItemTemplate = GetTemplate('author_listing.template');
@@ -893,10 +895,12 @@ sub GetScoreboardPage {
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
 
-		$txtIndex .= $authorItemTemplate;
+		$authorListings .= $authorItemTemplate;
 	}
 
-	$txtIndex .= '</table>';
+	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
+
+	$txtIndex .= $authorListingWrapper;
 
 	$txtIndex .= GetPageFooter();
 
