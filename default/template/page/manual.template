@@ -65,8 +65,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>The basic features of the website, including reading, posting, replying, and voting, has been tested in the following browsers:</p>
 
 <ul>
-    <li>Netscape Navigator Gold 3.04*</li>
-    <li>Netscape Communicator 4.8*</li>
+    <li>Netscape Navigator Gold 3.04</li>
+    <li>Netscape Communicator 4.8</li>
     <li>Lynx 2.8.9rel.1</li>
     <li>Links 2.17</li>
     <li>qutebrowser 1.6.0</li>
@@ -78,8 +78,6 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>GNOME Web 3.28.5</li>
     <li>Chromium 71.x</li>
 </ul>
-
-<p>* Some browsers may work better with JavaScript and/or CSS disabled.</p>
 
 <!-- -->
 
