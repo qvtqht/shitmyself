@@ -75,13 +75,34 @@ sub MakeAddedIndex {
 }
 
 sub GetFileHashPath {
+# Returns the path a text file should reside at based on its hash
+# e.g. /01/23/0123abcdef0123456789abcdef0123456789a.txt
 	my $file = shift;
+
+	WriteLog("GetFileHashPath(\$file = $file)");
+
+	if (!-e $file || -d $file) {
+		WriteLog("GetFileHashPath(): Validation failed for $file");
+		return;
+	}
 
 	if ($file) {
 		my $fileHash = GetFileHash($file);
 
+		if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
+			system('mkdir html/txt/' . substr($fileHash, 0, 2));
+		}
+
+		if (!-e 'html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
+			system('mkdir html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
+		}
+
+		my $fileHashSubDir = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2);
+
 		if ($fileHash) {
-			my $fileHashPath = 'html/txt/' . $fileHash . '.txt';
+			my $fileHashPath = 'html/txt/' . $fileHashSubDir . '/' . $fileHash . '.txt';
+
+			WriteLog("\$fileHashPath = $fileHashPath");
 
 			return $fileHashPath;
 		}
@@ -117,18 +138,34 @@ sub IndexTextFile {
 	# admin/organize_files
 	# renames files to their hashes
 	if (GetConfig('admin/organize_files')) {
-		if ($file ne 'html/txt/server.key.txt') {
+		# don't touch server.key.txt or html/txt directory or directories in general
+		if ($file ne 'html/txt/server.key.txt' && $file ne 'html/txt' && !-d $file) {
 			WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
+
+			# Figure out what the file's path should be
 			my $fileHashPath = GetFileHashPath($file);
+
+			# Does it match?
 			if ($file eq $fileHashPath) {
+				# No action needed
 				WriteLog('IndexTextFile: hash path matches, no action needed');
 			}
+			# It doesn't match, fix it
 			elsif ($file ne $fileHashPath) {
 				WriteLog('IndexTextFile: hash path does not match, organize');
-				WriteLog($file);
-				WriteLog($fileHashPath);
+				WriteLog('Before: ' . $file);
+				WriteLog('After: ' . $fileHashPath);
+
+				if (-e $fileHashPath) {
+					WriteLog("Warning: $fileHashPath already exists!");
+				}
+
 				rename ($file, $fileHashPath);
-				$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+
+				# if new file exists
+				if (-e $fileHashPath) {
+					$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+				}
 			}
 		}
 		else {
@@ -168,7 +205,8 @@ sub IndexTextFile {
 #todo add support for .md (markdown) files
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
-		my %gpgResults = GpgParse($file);
+		my %gpgResults =  GpgParse($file);
+
 		# see what gpg says about the file.
 		# if there is no gpg content, the attributes are still populated as possible
 
@@ -182,6 +220,12 @@ sub IndexTextFile {
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
 		WriteLog("\$alias = $alias");
+
+		if ($gpgKey) {
+			WriteLog("\$gpgKey = $gpgKey");
+		} else {
+			WriteLog("\$gpgKey = false");
+		}
 
 		my $detokenedMessage = $message;
 		# this is used to store $message minus any tokens found
@@ -205,7 +249,10 @@ sub IndexTextFile {
 
 			# find the html file and unlink it too
 			#my $htmlFilename = 'html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
-			my $htmlFilename = 'html/' .GetHtmlFilename($gitHash);
+
+			WriteLog('$gitHash = ' . $gitHash);
+
+			my $htmlFilename = 'html/' . GetHtmlFilename($gitHash);
 
 			if (-e $htmlFilename) {
 				unlink($htmlFilename);
@@ -453,7 +500,7 @@ sub IndexTextFile {
 			}
 		}
 
-		#look for addvouch
+		#look for addvouch #todo deprecate this
 		if ($message) {
 			# look for addvouch, which adds a voting vouch for a user
 			# addvouch/F82FCD75AAEF7CC8/20
@@ -787,7 +834,6 @@ sub IndexTextFile {
 
 				DBAddPageTouch('tag', 'hastext');
 			}
-
 		}
 
 		if ($message) {

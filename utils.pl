@@ -7,6 +7,8 @@ use 5.010;
 use POSIX;
 use Data::Dumper;
 
+use Devel::StackTrace;
+
 use File::Basename qw( fileparse );
 use File::Path qw( make_path );
 use File::Spec;
@@ -648,10 +650,15 @@ sub ConfigKeyValid {
 sub GetHtmlFilename {
 	my $hash = shift;
 
-	WriteLog("GetHtmlFilename()");
+	WriteLog("GetHtmlFilename(\$hash = $hash)");
 
 	if (!IsSha1($hash)) {
 		WriteLog("Warning! GetHtmlFilename() called with parameter that isn't a SHA-1. Returning.");
+		WriteLog("$hash");
+
+		my $trace = Devel::StackTrace->new;
+		print $trace->as_string; # like carp
+
 		return;
 	}
 
@@ -661,13 +668,13 @@ sub GetHtmlFilename {
 	#		substr($hash, 2, 8) .
 	#		'.html';
 	#
-		my $htmlFilename =
-			substr($hash, 0, 2) .
-				'/' .
-				substr($hash, 2, 2) .
-				'/' .
-				$hash .
-				'.html';
+	my $htmlFilename =
+		substr($hash, 0, 2) .
+			'/' .
+			substr($hash, 2, 2) .
+			'/' .
+			$hash .
+			'.html';
 
 	return $htmlFilename;
 }
@@ -883,6 +890,11 @@ sub GetFileSizeHtml {
 
 sub IsServer {
 	my $key = shift;
+
+	if (!$key) {
+		WriteLog("IsServer() called without key!");
+		return 0;
+	}
 
 	WriteLog("IsServer($key)");
 #
@@ -1248,7 +1260,7 @@ sub GpgParse {
 				}
 			}
 
-			# Public key confirmed, tell 'em
+			# Public key confirmed, update $message
 			if ($alias && $gpg_key) {
 				#$message = "Welcome, $alias\nFingerprint: $gpg_key";
 				$message = GetTemplate('message/user_reg.template');
@@ -1259,6 +1271,7 @@ sub GpgParse {
 			} else {
 				$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
 			}
+
 			$isSigned = 1;
 		}
 
