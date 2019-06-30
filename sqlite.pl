@@ -194,14 +194,23 @@ sub SqliteMakeTables() {
 	SqliteQuery2("
 		CREATE VIEW event_future AS
 			SELECT
-				event.item_hash AS item_hash,
-				event.event_time AS event_time,
-				event.event_duration AS event_duration
+				*
 			FROM
 				event
 			WHERE
 				event.event_time > strftime('%s','now');
 	");
+#	SqliteQuery2("
+#		CREATE VIEW event_future AS
+#			SELECT
+#				event.item_hash AS item_hash,
+#				event.event_time AS event_time,
+#				event.event_duration AS event_duration
+#			FROM
+#				event
+#			WHERE
+#				event.event_time > strftime('%s','now');
+#	");
 	SqliteQuery2("
 		CREATE VIEW item_vote_count AS
 			SELECT
@@ -1422,6 +1431,29 @@ sub DBGetAuthorScore {
 	} else {
 		return "";
 	}
+}
+
+sub DBGetTopAuthors {
+	my $query = "
+		SELECT
+			author_key,
+			author_alias,
+			author_score
+		FROM author_flat
+		ORDER BY author_score DESC
+		LIMIT 50;
+	";
+
+	my @queryParams;
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
+
+	my $ref = $sth->fetchall_arrayref();
+
+	$sth->finish();
+
+	return $ref;
 }
 
 sub DBGetItemVoteTotals {

@@ -664,6 +664,7 @@ sub GetPageFooter {
 
 	my $menuTemplate = '';
 
+	#footer menu
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
 	$menuTemplate .= GetMenuItem("/clone.html", 'Clone');
@@ -767,12 +768,15 @@ sub GetPageHeader {
 
 	#todo replace with config/menu/*
 
+	#header menu
+	#
 	#$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 #	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/top/pubkey.html", 'Authors');
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	$menuTemplate .= GetMenuItem("/tags.html", 'Tags');
+	$menuTemplate .= GetMenuItem("/scores.html", 'Scoreboard');
 	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
@@ -852,6 +856,57 @@ sub GetVoterTemplate {
 
 		return $voteButtons;
 	}
+}
+
+sub GetScoreboardPage {
+	#todo rewrite this more pretty
+	my $txtIndex = "";
+
+	my $title = 'Top Scores';
+	my $titleHtml = 'Top Scores';
+
+	$txtIndex = GetPageHeader($title, $titleHtml);
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $topAuthors = DBGetTopAuthors();
+
+	my @topAuthorsArray = @{$topAuthors};
+
+	$txtIndex .= '<table><tr><th>Name</th><th>Score</th></tr>';
+
+	while (@topAuthorsArray) {
+		my $authorItemTemplate = GetTemplate('author_listing.template');
+		#todo don't need to do this every time
+
+		my $author = shift @topAuthorsArray;
+
+		my $authorKey = @{$author}[0];
+		my $authorAlias = @{$author}[1];
+		my $authorScore = @{$author}[2];
+		my $authorAvatar = GetHtmlAvatar($authorKey);
+
+		my $authorLink = "/author/" . $authorKey . ".html";
+
+		$authorItemTemplate =~ s/\$link/$authorLink/g;
+		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
+		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
+		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
+
+		$txtIndex .= $authorItemTemplate;
+	}
+
+	$txtIndex .= '</table>';
+
+	$txtIndex .= GetPageFooter();
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+
+	return $txtIndex;
 }
 
 sub GetReadPage {

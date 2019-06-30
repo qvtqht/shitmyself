@@ -658,6 +658,8 @@ WriteIndexPages();
 my $votesPage = GetVotesPage();
 PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
+my $scoreboardPage = GetScoreboardPage();
+PutHtmlFile('html/scores.html', $scoreboardPage);
 
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};
