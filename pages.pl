@@ -772,7 +772,7 @@ sub GetPageHeader {
 #	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	$menuTemplate .= GetMenuItem("/top/pubkey.html", 'Authors');
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
-	#$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
+	$menuTemplate .= GetMenuItem("/stats.html", GetString('menu/stats'));
 	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
