@@ -845,6 +845,9 @@ function signVote(t, token) {
 			t.style.borderRadius = '5pt'; //#todo
 		}
 	} else {
+		t.style.backgroundColor = '#c0c0c0';
+		t.enabled = false;
+
 		var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
 		options = {
