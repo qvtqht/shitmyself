@@ -62,7 +62,8 @@ sub SqliteMakeTables() {
 		file_path UNIQUE,
 		item_name,
 		author_key,
-		file_hash UNIQUE
+		file_hash UNIQUE,
+		item_type
 	)");
 
 	# item_title
@@ -182,7 +183,8 @@ sub SqliteMakeTables() {
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp,
 				IFNULL(item_title.title, '') AS item_title,
-				IFNULL(item_score.item_score, 0) AS item_score
+				IFNULL(item_score.item_score, 0) AS item_score,
+				item.item_type AS item_type
 			FROM
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
@@ -945,18 +947,19 @@ sub DBAddItem {
 	my $itemName = shift;
 	my $authorKey = shift;
 	my $fileHash = shift;
+	my $itemType = shift;
 
-	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash);");
+	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType);");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash) VALUES ";
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	push @queryParams, $filePath, $itemName, $authorKey, $fileHash;
+	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType;
 
-	$query .= "(?, ?, ?, ?)";
+	$query .= "(?, ?, ?, ?, ?)";
 }
 
 sub DBAddVoteWeight {
