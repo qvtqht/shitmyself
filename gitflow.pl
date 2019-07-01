@@ -280,6 +280,12 @@ foreach my $page (@touchedPagesArray) {
 		my $votesPage = GetVotesPage();
 		PutHtmlFile("html/tags.html", $votesPage);
 	}
+	#
+	# scores page
+	elsif ($pageType eq 'scores') {
+		my $scoresPage = GetScoreboardPage();
+		PutHtmlFile('html/scores.htl', $scoresPage);
+	}
 }
 
 # if anything has changed, redo the abyss index pages
