@@ -414,14 +414,14 @@ sub GetPlainAvatar {
 
 		if ($alias) {
 
-			#		my $char1 = substr($gpg_key, 12, 1);
-			#		my $char2 = substr($gpg_key, 13, 1);
-			#		my $char3 = substr($gpg_key, 14, 1);
-			#
-			#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-			#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-			#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-#
+#			my $char1 = substr($gpgKey, 12, 1);
+#			my $char2 = substr($gpgKey, 13, 1);
+#			my $char3 = substr($gpgKey, 14, 1);
+##
+#			$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+#			$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+#			$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+##
 #			my $char1 = '*';
 #			my $char2 = '*';
 #
@@ -432,7 +432,7 @@ sub GetPlainAvatar {
 			$avatar =~ s/\$alias/$alias/g;
 #			$avatar =~ s/\$char1/$char1/g;
 #			$avatar =~ s/\$char2/$char2/g;
-#			#$avatar =~ s/\$char3/$char3/g;
+#			$avatar =~ s/\$char3/$char3/g;
 		} else {
 			$avatar = '($gpgKey)';
 		}
