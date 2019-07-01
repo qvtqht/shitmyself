@@ -1316,6 +1316,21 @@ sub GetIndexPage {
 			my $fileHash = GetFileHash($file);
 			my $itemName = substr($gitHash, 0, 8) . "..";
 
+			if ($row->{'item_title'}) {
+				my $itemTitleTemplate = GetTemplate('itemtitlelink.template');
+
+				my $itemTitle = $row->{'item_title'};
+
+				$itemTitleTemplate =~ s/\$itemTitle/$itemTitle/g;
+				$itemTitleTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
+
+				$itemTemplate =~ s/\$itemTitleTemplate/$itemTitleTemplate/g;
+			} else {
+				$itemTemplate =~ s/\$itemTitleTemplate//g;
+			}
+
+
+
 			#			my $ballotTime = time();
 
 #			my $replyCount = $row->{'child_count'};
