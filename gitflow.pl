@@ -298,6 +298,11 @@ foreach my $page (@touchedPagesArray) {
 		my $statsPage = GetStatsPage();
 		PutHtmlFile('html/stats.html', $statsPage);
 	}
+	#
+	# index pages (abyss)
+	elsif ($pageType eq 'index') {
+		WriteIndexPages();
+	}
 }
 
 # if anything has changed, redo the abyss index pages

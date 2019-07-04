@@ -864,6 +864,8 @@ sub IndexTextFile {
 
 		DBAddPageTouch('topitems', 'foo');
 
+		DBAddPageTouch('index', 'foo');
+
 		if ($hasParent == 0) {
 #			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
 #		} else {
