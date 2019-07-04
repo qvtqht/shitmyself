@@ -1478,6 +1478,8 @@ sub DBGetTopItems {
 			$itemFields
 		FROM
 			item_flat
+		WHERE
+			item_title != ''
 		ORDER BY
 			item_score DESC
 		LIMIT 50;
