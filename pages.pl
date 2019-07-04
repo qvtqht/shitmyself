@@ -17,6 +17,7 @@ require './sqlite.pl';
 my $HTMLDIR = "html";
 
 
+
 sub GenerateSomeKindOfPage {
 	my $pageName = shift;
 
@@ -777,6 +778,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	$menuTemplate .= GetMenuItem("/tags.html", 'Tags');
 	$menuTemplate .= GetMenuItem("/scores.html", 'Authors');
+	$menuTemplate .= GetMenuItem("/topitems.html", 'Top');
 	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
@@ -858,6 +860,125 @@ sub GetVoterTemplate {
 	}
 }
 
+sub GetTopItemsPage {
+	WriteLog("GetTopItemsPage()");
+
+	my $txtIndex = '';
+
+	my $title = 'Top Items';
+	my $titleHtml = 'Top Items';
+
+	$txtIndex = GetPageHeader($title, $titleHtml);
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $topItems = DBGetTopItems();
+
+	my @topItemsArray = @{$topItems};
+
+	my $itemListingWrapper = GetTemplate('item_listing_wrapper.template');
+
+	my $itemListings = '';
+
+	while (@topItemsArray) {
+		my $itemTemplate = GetTemplate('item_listing.template');
+		#todo don't need to do this every time
+
+		my $item = shift @topItemsArray;
+
+		my $itemKey = @{$item}[2];
+		my $itemTitle = @{$item}[7];
+		my $itemScore = @{$item}[8];
+
+		if (trim($itemTitle) eq '') {
+			$itemTitle = '(' . $itemKey . ')';
+		}
+
+		my $itemLink = GetHtmlFilename($itemKey);
+
+		$itemTemplate =~ s/\$link/$itemLink/g;
+		$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
+		$itemTemplate =~ s/\$itemScore/$itemScore/g;
+
+		$itemListings .= $itemTemplate;
+	}
+
+	$itemListingWrapper =~ s/\$itemListings/$itemListings/;
+
+	$txtIndex .= $itemListingWrapper;
+
+	$txtIndex .= GetPageFooter();
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+
+	return $txtIndex;
+}
+
+sub GetStatsPage {
+	my $statsPage;
+
+	$statsPage = GetPageHeader('Stats', 'Stats');
+
+	my $statsTable = GetTemplate('stats.template');
+
+	my $itemCount = DBGetItemCount();
+	my $authorCount = DBGetAuthorCount();
+
+	my $adminId = GetAdminKey();
+	if ($adminId) {
+		$statsTable =~ s/\$admin/GetAuthorLink($adminId)/e;
+	} else {
+		$statsTable =~ s/\$admin/(None)/;
+	}
+
+	my $serverId = GetServerKey();
+	if ($serverId) {
+		$statsTable =~ s/\$server/GetAuthorLink($serverId)/e;
+	} else {
+		$statsTable =~ s/\$server/(None)/;
+	}
+
+
+	my $currUpdateTime = time();
+	my $prevUpdateTime = GetConfig('last_update_time');
+	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
+		$prevUpdateTime = time();
+	}
+
+	my $updateInterval = $currUpdateTime - $prevUpdateTime;
+
+	PutConfig("last_update_time", $currUpdateTime);
+
+	my $nextUpdateTime = ($currUpdateTime + $updateInterval) . ' (' . EpochToHuman($currUpdateTime + $updateInterval) . ')';
+	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
+	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
+
+	$statsTable =~ s/\$prevUpdateTime/$prevUpdateTime/;
+	$statsTable =~ s/\$currUpdateTime/$currUpdateTime/;
+	$statsTable =~ s/\$updateInterval/$updateInterval/;
+	$statsTable =~ s/\$nextUpdateTime/$nextUpdateTime/;
+
+	$statsTable =~ s/\$version/GetMyVersion()/e;
+	$statsTable =~ s/\$itemCount/$itemCount/e;
+	$statsTable =~ s/\$authorCount/$authorCount/e;
+
+	$statsPage .= $statsTable;
+
+	$statsPage .= GetPageFooter();
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
+
+	return $statsPage;
+}
+
 sub GetScoreboardPage {
 	#todo rewrite this more pretty
 	my $txtIndex = "";
@@ -901,6 +1022,7 @@ sub GetScoreboardPage {
 	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
 
 	$txtIndex .= $authorListingWrapper;
+
 
 	$txtIndex .= GetPageFooter();
 

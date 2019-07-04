@@ -273,67 +273,6 @@ sub GetHomePage {
 	#my $homePage = GetTemplate('page/home.template');
 }
 
-sub GetStatsPage {
-	my $statsPage;
-
-	$statsPage = GetPageHeader('Stats', 'Stats');
-
-	my $statsTable = GetTemplate('stats.template');
-
-	my $itemCount = DBGetItemCount();
-	my $authorCount = DBGetAuthorCount();
-
-	my $adminId = GetAdminKey();
-	if ($adminId) {
-		$statsTable =~ s/\$admin/GetAuthorLink($adminId)/e;
-	} else {
-		$statsTable =~ s/\$admin/(None)/;
-	}
-
-	my $serverId = GetServerKey();
-	if ($serverId) {
-		$statsTable =~ s/\$server/GetAuthorLink($serverId)/e;
-	} else {
-		$statsTable =~ s/\$server/(None)/;
-	}
-
-
-	my $currUpdateTime = time();
-	my $prevUpdateTime = GetConfig('last_update_time');
-	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
-		$prevUpdateTime = time();
-	}
-
-	my $updateInterval = $currUpdateTime - $prevUpdateTime;
-
-	PutConfig("last_update_time", $currUpdateTime);
-
-	my $nextUpdateTime = ($currUpdateTime + $updateInterval) . ' (' . EpochToHuman($currUpdateTime + $updateInterval) . ')';
-	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
-	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
-
-	$statsTable =~ s/\$prevUpdateTime/$prevUpdateTime/;
-	$statsTable =~ s/\$currUpdateTime/$currUpdateTime/;
-	$statsTable =~ s/\$updateInterval/$updateInterval/;
-	$statsTable =~ s/\$nextUpdateTime/$nextUpdateTime/;
-
-	$statsTable =~ s/\$version/GetMyVersion()/e;
-	$statsTable =~ s/\$itemCount/$itemCount/e;
-	$statsTable =~ s/\$authorCount/$authorCount/e;
-
-	$statsPage .= $statsTable;
-
-	$statsPage .= GetPageFooter();
-
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
-
-	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
-
-	return $statsPage;
-}
-
 sub MakeStaticPages {
 	WriteLog('MakeStaticPages() BEGIN');
 
@@ -660,6 +599,9 @@ PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
 my $scoreboardPage = GetScoreboardPage();
 PutHtmlFile('html/scores.html', $scoreboardPage);
+
+my $topItemsPage = GetTopItemsPage();
+PutHtmlFile('html/topitems.html', $topItemsPage);
 
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};

@@ -284,7 +284,19 @@ foreach my $page (@touchedPagesArray) {
 	# scores page
 	elsif ($pageType eq 'scores') {
 		my $scoresPage = GetScoreboardPage();
-		PutHtmlFile('html/scores.htl', $scoresPage);
+		PutHtmlFile('html/scores.html', $scoresPage);
+	}
+	#
+	# topitems page
+	elsif ($pageType eq 'topitems') {
+		my $topItemsPage = GetTopItemsPage();
+		PutHtmlFile('html/topitems.html', $topItemsPage);
+	}
+	#
+	# stats page
+	elsif ($pageType eq 'stats') {
+		my $statsPage = GetStatsPage();
+		PutHtmlFile('html/stats.html', $statsPage);
 	}
 }
 

@@ -1308,16 +1308,10 @@ sub DBGetItemList {
 	#limit_clause
 
 	my $query;
+	my $itemFields = DBGetItemFields();
 	$query = "
 		SELECT
-			item_flat.file_path file_path,
-			item_flat.item_name item_name,
-			item_flat.file_hash file_hash,
-			item_flat.author_key author_key,
-			item_flat.child_count child_count,
-			item_flat.parent_count parent_count,
-			item_flat.add_timestamp add_timestamp,
-			item_flat.item_title item_title
+			$itemFields
 		FROM
 			item_flat
 	";
@@ -1436,6 +1430,23 @@ sub DBGetAuthorScore {
 	}
 }
 
+
+sub DBGetItemFields {
+	my $itemFields = "
+		item_flat.file_path file_path,
+		item_flat.item_name item_name,
+		item_flat.file_hash file_hash,
+		item_flat.author_key author_key,
+		item_flat.child_count child_count,
+		item_flat.parent_count parent_count,
+		item_flat.add_timestamp add_timestamp,
+		item_flat.item_title item_title,
+		item_flat.item_score item_score
+	";
+
+	return $itemFields;
+}
+
 sub DBGetTopAuthors {
 	my $query = "
 		SELECT
@@ -1444,6 +1455,31 @@ sub DBGetTopAuthors {
 			author_score
 		FROM author_flat
 		ORDER BY author_score DESC
+		LIMIT 50;
+	";
+
+	my @queryParams;
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
+
+	my $ref = $sth->fetchall_arrayref();
+
+	$sth->finish();
+
+	return $ref;
+}
+
+sub DBGetTopItems {
+	my $itemFields = DBGetItemFields();
+
+	my $query = "
+		SELECT
+			$itemFields
+		FROM
+			item_flat
+		ORDER BY
+			item_score DESC
 		LIMIT 50;
 	";
 

@@ -315,6 +315,8 @@ sub IndexTextFile {
 			DBAddPageTouch('tag', ' admin');
 
 			DBAddPageTouch('scores', 'foo');
+
+			DBAddPageTouch('stats', 'foo');
 		}
 
 		if ($isSigned && $gpgKey) {
@@ -323,6 +325,8 @@ sub IndexTextFile {
 			DBAddPageTouch('author', $gpgKey);
 
 			DBAddPageTouch('scores', 'foo');
+
+			DBAddPageTouch('stats', 'foo');
 		}
 
 		if ($alias) {
@@ -333,6 +337,8 @@ sub IndexTextFile {
 			DBAddPageTouch('author', $gpgKey);
 
 			DBAddPageTouch('scores', 'foo');
+
+			DBAddPageTouch('stats', 'foo');
 		}
 
 		my $itemName = TrimPath($file);
@@ -855,6 +861,8 @@ sub IndexTextFile {
 		} else {
 			DBAddItem ($file, $itemName, '',      $gitHash, 'txt');
 		}
+
+		DBAddPageTouch('topitems', 'foo');
 
 		if ($hasParent == 0) {
 #			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
