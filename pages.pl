@@ -781,6 +781,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/topitems.html", 'Top');
 	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
+	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
 	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
 	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
 	#$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
