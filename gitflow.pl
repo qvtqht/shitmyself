@@ -15,12 +15,15 @@ use 5.010;
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
 
+print time() . " Begin requires\n";
 
 require './utils.pl';
 require './sqlite.pl';
 require './index.pl';
 require './access.pl';
 require './pages.pl';
+
+print time() . " End requires\n";
 
 WriteLog('gitflow.pl begin');
 
@@ -288,9 +291,9 @@ foreach my $page (@touchedPagesArray) {
 	}
 	#
 	# topitems page
-	elsif ($pageType eq 'topitems') {
+	elsif ($pageType eq 'top') {
 		my $topItemsPage = GetTopItemsPage();
-		PutHtmlFile('html/topitems.html', $topItemsPage);
+		PutHtmlFile('html/top.html', $topItemsPage);
 	}
 	#
 	# stats page

@@ -94,7 +94,7 @@ sub GetVersionPage {
 
 	my $pageTitle = "Information page for version $version";
 
-	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'version');
 
 	$txtPageHtml .= $htmlStart;
 
@@ -127,7 +127,7 @@ sub GetIdentityPage {
 	my $title = "Profile";
 	my $titleHtml = "Profile";
 
-	$txtIndex = GetPageHeader($title, $titleHtml);
+	$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -205,7 +205,7 @@ sub GetIdentityPage {
 #
 #}
 
-sub GetSubmitPage {
+sub GetWritePage {
 	my $txtIndex = "";
 
 	my $title = "Write";
@@ -214,7 +214,7 @@ sub GetSubmitPage {
 	my $itemCount = DBGetItemCount();
 	my $itemLimit = 9000;
 
-	$txtIndex = GetPageHeader($title, $titleHtml);
+	$txtIndex = GetPageHeader($title, $titleHtml, 'write');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -277,7 +277,7 @@ sub MakeStaticPages {
 	WriteLog('MakeStaticPages() BEGIN');
 
 	# Submit page
-	my $submitPage = GetSubmitPage();
+	my $submitPage = GetWritePage();
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
 
 
@@ -292,7 +292,7 @@ sub MakeStaticPages {
 
 
 	# Target page for the submit page
-	my $graciasPage = GetPageHeader("Thank You", "Thank You");
+	my $graciasPage = GetPageHeader("Thank You", "Thank You", 'gracias');
 	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
 	$graciasPage .= GetTemplate('maincontent.template');
@@ -326,7 +326,7 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 
 	# Manual page
-	my $tfmPage = GetPageHeader("Manual", "Manual");
+	my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
 
 	$tfmPage .= GetTemplate('maincontent.template');
 
@@ -432,7 +432,7 @@ foreach my $hashRef (@authors) {
 }
 
 {
-	my $authorsListPage = GetPageHeader('Authors', 'Authors');
+	my $authorsListPage = GetPageHeader('Authors', 'Authors', 'authors');
 
 	$authorsListPage .= GetPageFooter();
 
@@ -538,7 +538,7 @@ sub MakeClonePage {
 	}
 
 
-	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site");
+	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site", 'clone');
 
 	$clonePage .= GetTemplate('maincontent.template');
 
@@ -601,7 +601,7 @@ my $scoreboardPage = GetScoreboardPage();
 PutHtmlFile('html/scores.html', $scoreboardPage);
 
 my $topItemsPage = GetTopItemsPage();
-PutHtmlFile('html/topitems.html', $topItemsPage);
+PutHtmlFile('html/top.html', $topItemsPage);
 
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};

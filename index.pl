@@ -862,7 +862,7 @@ sub IndexTextFile {
 			DBAddItem ($file, $itemName, '',      $gitHash, 'txt');
 		}
 
-		DBAddPageTouch('topitems', 'foo');
+		DBAddPageTouch('top', 'foo');
 
 		DBAddPageTouch('index', 'foo');
 

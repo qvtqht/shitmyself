@@ -147,7 +147,7 @@ sub GetVotesPage {
 	my $title = 'Tags';
 	my $titleHtml = 'Tags';
 
-	$txtIndex = GetPageHeader($title, $titleHtml);
+	$txtIndex = GetPageHeader($title, $titleHtml, 'tags');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -213,7 +213,7 @@ sub GetItemPage {
 	}
 
 	# Get the HTML page template
-	my $htmlStart = GetPageHeader($title, $titleHtml);
+	my $htmlStart = GetPageHeader($title, $titleHtml, 'item');
 
 	$txtIndex .= $htmlStart;
 
@@ -687,6 +687,11 @@ my $textColor;
 sub GetPageHeader {
 	my $title = shift;
 	my $titleHtml = shift;
+	my $pageType = shift;
+
+	if (!$pageType) {
+		$pageType = 'default';
+	}
 
 	if (defined($title) && defined($titleHtml)) {
 		chomp $title;
@@ -738,7 +743,10 @@ sub GetPageHeader {
 
 	#my $patternName = 'pattern/bokeh.template';
 	my $patternName = trim(GetConfig('header_pattern'));
-	my $introText = trim(GetConfig('intro_text'));
+	my $introText = trim(GetConfig('page_intro/' . $pageType));
+	if (!$introText) {
+		$introText = trim(GetConfig('page_intro/default'));
+	}
 	#$patternName = GetConfig('header_pattern');
 
 	my $headerBackgroundPattern = GetTemplate($patternName);
@@ -763,6 +771,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
+
 	$htmlStart =~ s/\$introText/$introText/g;
 
 	my $menuTemplate = "";
@@ -778,7 +787,7 @@ sub GetPageHeader {
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	$menuTemplate .= GetMenuItem("/tags.html", 'Tags');
 	$menuTemplate .= GetMenuItem("/scores.html", 'Authors');
-	$menuTemplate .= GetMenuItem("/topitems.html", 'Top');
+	$menuTemplate .= GetMenuItem("/top.html", 'Top');
 	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
 	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
@@ -869,7 +878,7 @@ sub GetTopItemsPage {
 	my $title = 'Top Items';
 	my $titleHtml = 'Top Items';
 
-	$txtIndex = GetPageHeader($title, $titleHtml);
+	$txtIndex = GetPageHeader($title, $titleHtml, 'top');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -922,7 +931,7 @@ sub GetTopItemsPage {
 sub GetStatsPage {
 	my $statsPage;
 
-	$statsPage = GetPageHeader('Stats', 'Stats');
+	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
 
 	my $statsTable = GetTemplate('stats.template');
 
@@ -987,7 +996,7 @@ sub GetScoreboardPage {
 	my $title = 'Top Scores';
 	my $titleHtml = 'Top Scores';
 
-	$txtIndex = GetPageHeader($title, $titleHtml);
+	$txtIndex = GetPageHeader($title, $titleHtml, 'scoreboard');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -1113,7 +1122,7 @@ sub GetReadPage {
 	chomp $title;
 	$title = HtmlEscape($title);
 
-	my $htmlStart = GetPageHeader($title, $titleHtml);
+	my $htmlStart = GetPageHeader($title, $titleHtml, 'read_' . $pageType);
 
 	$txtIndex .= $htmlStart;
 
@@ -1596,7 +1605,7 @@ sub WriteIndexPages {
 			}
 		}
 	} else {
-		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'));
+		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'), 'home_empty');
 
 		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
 

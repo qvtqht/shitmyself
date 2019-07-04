@@ -1473,13 +1473,22 @@ sub DBGetTopAuthors {
 sub DBGetTopItems {
 	my $itemFields = DBGetItemFields();
 
+	my $whereClause;
+
+	$whereClause = "WHERE item_title != ''";
+
+	my $additionalWhereClause = shift;
+
+	if ($additionalWhereClause) {
+		$whereClause .= ' AND ' . $additionalWhereClause;
+	}
+
 	my $query = "
 		SELECT
 			$itemFields
 		FROM
 			item_flat
-		WHERE
-			item_title != ''
+		$whereClause
 		ORDER BY
 			item_score DESC
 		LIMIT 50;
