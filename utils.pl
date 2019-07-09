@@ -795,6 +795,16 @@ sub PutHtmlFile {
 		$content =~ s/[^[:ascii:]]//g;
 	}
 
+#	if (GetConfig('admin/debug')) {
+#		WriteLog("PutHtmlFile: $file ; comparing new content to old");
+#		my $oldContent = GetFile($file);
+#		if ($oldContent eq $content) {
+#			WriteLog('$oldContent matches $content');
+#		} else {
+#			WriteLog('$oldContent doesn\'t match $content');
+#		}
+#	}
+
 	PutFile($file, $content);
 
 	# this is a special hook for generating index.html, aka the home page
@@ -1436,7 +1446,7 @@ sub WriteLog {
 
 	my $timestamp = time();
 
-	if (1 || -e "config/admin/debug" && GetConfig('admin/debug') && GetConfig('admin/debug') == 1) {
+	if (-e 'config/admin/debug') {
 		AppendFile("log/log.log", $timestamp . " " . $text);
 		print $timestamp . " " . $text . "\n";
 
@@ -1444,6 +1454,15 @@ sub WriteLog {
 	}
 
 	return 0;
+}
+
+sub WriteMessage {
+	my $text = shift;
+	chomp $text;
+
+	my $timestamp = time();
+
+	print $timestamp . ' ' . $text . "\n";
 }
 
 my $lastVersion = GetConfig('current_version');
@@ -1544,6 +1563,10 @@ sub ServerSign {
 	if ($serverKey) {
 		WriteLog("We have a server key, so go ahead and sign the file.");
 
+		#todo this is broken with gpg2
+		# should start with $gpgCommand
+#		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
+#		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 		WriteLog("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 		system("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 
