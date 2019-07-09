@@ -2,6 +2,6 @@ config/*
 cache/*
 .idea/*
 log/*
-html
+./html
 admin.key
 cron.lock
