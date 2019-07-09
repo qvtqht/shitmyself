@@ -197,19 +197,22 @@ sub GetItemPage {
 
 	my $filePath = $file{'file_path'};
 
-	my $title = "";
-	my $titleHtml = "";
+	my $title = '';
+	my $titleHtml = '';
+
+	if (defined($file{'item_title'})) {
+		$title = HtmlEscape($file{'item_title'});
+		$titleHtml = HtmlEscape($file{'item_title'});
+
+		$title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
+	}
 
 	if (defined($file{'author_key'}) && $file{'author_key'}) {
 		# todo the .txt extension should not be hard-coded
 		my $alias = GetAlias($file{'author_key'});
 		$alias = HtmlEscape($alias);
 
-		$title = $file{'item_title'} . ' (' . TrimPath($filePath) . ".txt) by $alias";
-		$titleHtml = TrimPath($filePath) . ".txt";
-	} else {
-		$title = TrimPath($filePath) . ".txt";
-		$titleHtml = $title;
+		$title .= " by $alias";
 	}
 
 	# Get the HTML page template
@@ -236,6 +239,8 @@ sub GetItemPage {
 
 		#$txtIndex .= "<hr>";
 		my $allReplies = '';
+
+		$allReplies = '<hr>' . $allReplies;
 
 		my $replyComma = '';
 
@@ -552,7 +557,7 @@ sub GetItemTemplate {
 		if ($file{'item_title'}) {
 			my $itemTitleTemplate = GetTemplate('itemtitlelink.template');
 
-			my $itemTitle = $file{'item_title'};
+			my $itemTitle = HtmlEscape($file{'item_title'});
 
 			$itemTitleTemplate =~ s/\$itemTitle/$itemTitle/g;
 			$itemTitleTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
@@ -1158,12 +1163,28 @@ sub GetReadPage {
 		my $authorAvatarHtml = GetAvatar($authorKey);
 		my $authorImportance = 1337;
 		my $authorScore = DBGetAuthorScore($authorKey);
+		my $authorDescription = '';
+
+		if (IsServer($authorKey)) {
+			if ($authorDescription) {
+				$authorDescription .= '<br>';
+			}
+			$authorDescription .= '<b>Server signing key.</b>';
+		}
+
+		if (IsAdmin($authorKey)) {
+			if ($authorDescription) {
+				$authorDescription .= '<br>';
+			}
+			$authorDescription .= '<b>Admin. Do not taunt.</b>';
+		}
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$alias/$authorAliasHtml/;
 		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
 		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
 		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
+		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 
 		$txtIndex .= $authorInfoTemplate;
 	}
@@ -1300,6 +1321,8 @@ sub GetIndexPage {
 
 	my $itemList = '';
 
+	my $itemComma = '';
+
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
@@ -1331,144 +1354,18 @@ sub GetIndexPage {
 				$message = GetFile($file);
 			}
 
-			$message = FormatForWeb($message);
+			$row->{'show_quick_vote'} = 1;
+			$row->{'vote_buttons'} = 1;
 
-			#$message =~ s/([a-f0-9]{8})([a-f0-9]{32})/<a href="\/$1$2.html">$1..<\/a>/g;
-			#$message =~ s/([a-f0-9]{2})([a-f0-9]{6})([a-f0-9]{32})/<a href="\/$1\/$2.html">$1$2..<\/a>/g;
-			$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
-			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
-			#hint GetHtmlFilename
-			#todo verify that the items exist before turning them into links,
-			# so that we don't end up with broken links
+			my $itemTemplate;
+			$itemTemplate = GetItemTemplate($row);
 
-			if ($isSigned && IsAdmin($gpgKey)) {
-				$isAdmin = 1;
-			}
-
-			my $signedCss = "";
-			if ($isSigned) {
-				if ($isAdmin) {
-					$signedCss = "signed admin";
-				} else {
-					$signedCss = "signed";
-				}
-			}
-
-			#todo $alias = GetAlias($gpgKey);
-
-			$alias = HtmlEscape($alias);
-
-			WriteLog('GetTemplate("item/item.template") 1');
-
-			my $itemTemplate = '';
-			if (length($message) > GetConfig('item_long_threshold')) {
-				$itemTemplate = GetTemplate("item/itemlong.template");
+			if ($itemComma eq '') {
+				$itemComma = '<hr>';
 			} else {
-				$itemTemplate = GetTemplate("item/item.template");
-			}
-			#$itemTemplate = s/\$primaryColor/$primaryColor/g;
-
-			my $itemClass = "txt $signedCss";
-
-			my $authorUrl;
-			my $authorAvatar;
-			my $authorLink;
-			my $byString = GetString('by');
-
-			if ($gpgKey) {
-				$authorUrl = "/author/$gpgKey/";
-				$authorAvatar = GetAvatar($gpgKey);
-
-				$authorLink = GetTemplate('authorlink.template');
-
-				$authorLink =~ s/\$authorUrl/$authorUrl/g;
-				$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
-			} else {
-				$authorLink = "";
-			}
-			#my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
-			my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
-
-			my $permalinkTxt = $file;
-			#			$permalinkTxt =~ s/^\.//;
-			$permalinkTxt =~ s/html\//\//g;
-
-			my $itemText = $message;
-			my $fileHash = GetFileHash($file);
-			my $itemName = substr($gitHash, 0, 8) . "..";
-
-			if ($row->{'item_title'}) {
-				my $itemTitleTemplate = GetTemplate('itemtitlelink.template');
-
-				my $itemTitle = $row->{'item_title'};
-
-				$itemTitleTemplate =~ s/\$itemTitle/$itemTitle/g;
-				$itemTitleTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-
-				$itemTemplate =~ s/\$itemTitleTemplate/$itemTitleTemplate/g;
-			} else {
-				$itemTemplate =~ s/\$itemTitleTemplate//g;
+				$itemTemplate = $itemComma . $itemTemplate;
 			}
 
-
-
-			#			my $ballotTime = time();
-
-#			my $replyCount = $row->{'child_count'};
-
-			my $borderColor = '#' . substr($fileHash, 0, 6);
-
-			my $addedTime = ''; #todo
-
-			$itemTemplate =~ s/\$borderColor/$borderColor/g;
-			$itemTemplate =~ s/\$itemClass/$itemClass/g;
-			$itemTemplate =~ s/\$authorLink/$authorLink/g;
-			$itemTemplate =~ s/\$itemName/$itemName/g;
-			$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
-			$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-			$itemTemplate =~ s/\$itemText/$itemText/g;
-			$itemTemplate =~ s/\$fileHash/$fileHash/g;
-			$itemTemplate =~ s/\$by/$byString/g;
-			$itemTemplate =~ s/\$addedTime/$addedTime/g;
-
-
-			#			if ($replyCount) {
-			#				$itemTemplate =~ s/\$replyCount/$replyCount replies/g;
-			#			} else {
-			#				$itemTemplate =~ s/\$replyCount//g;
-			#			}
-#			if ($replyCount) {
-#				$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
-#			} else {
-#				$itemTemplate =~ s/\$replyCount//g;
-#			}
-
-			if (index($itemTemplate, '$quickVoteButtonGroup')) {
-				$itemTemplate =~ s/\$quickVoteButtonGroup//g;
-			}
-
-			if (index($itemTemplate, '$votesSummary')) {
-				#only make the votes summary if the template needs it
-				#this displays the vote summary (tags applied and counts)
-				my $votesSummary = '';
-				my %voteTotals = DBGetItemVoteTotals($fileHash);
-
-				foreach my $voteTag (keys %voteTotals) {
-					$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
-				}
-				if ($votesSummary) {
-					$votesSummary = '<p>' . $votesSummary . '</p>';
-				}
-				$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
-			}
-			#
-			#end of tag summary display
-
-
-			#my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-			#$itemTemplate =~ s/\$voterButtons/$voterButtons/g;
-
-			#$txtIndex .= $itemTemplate;
 			$itemList = $itemTemplate . $itemList;
 		}
 	}
