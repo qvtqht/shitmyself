@@ -1,0 +1,21 @@
+
+
+function GetPrefs(prefKey) {
+	var json = localStorage.getItem('preferencesJson');
+
+
+}
+
+function SetPrefs(prefKey, prefValue) {
+	var json = localStorage.getItem('preferencesJson');
+
+	var objJson;
+
+	if (json) {
+		objJson = JSON.parse($json);
+	} else {
+		objJson = Object();
+	}
+
+	localStorage.setItem('preferencesJson', prefsJson);
+}
