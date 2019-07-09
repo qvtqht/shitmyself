@@ -13,7 +13,7 @@ $styleSheet
 <div id=amain><a href="#maincontent">Skip to main content</a>
 <h2 class=menu><a id=logo class=logo title="Home" href="/">
 $logoText</a><br>
-$menuItems<span id="signin"></span><span class="myid" id=myid></span></h2>
+$menuItems</h2>
 $introText
 <hr size=5>
 </div>
