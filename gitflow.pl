@@ -27,6 +27,10 @@ print time() . " End requires\n";
 
 WriteLog('gitflow.pl begin');
 
+my %counter;
+$counter{'access_log'} = 0;
+$counter{'indexed_file'} = 0;
+
 my $lockTime = GetFile('cron.lock');
 my $currentTime = time();
 
@@ -69,18 +73,37 @@ if (-e $accessLogPath) {
 	$newItemCount += ProcessAccessLog($accessLogPath, 0);
 
 	WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
+
+	$counter{'access_log'} += $newItemCount;
 } else {
 	WriteLog("WARNING: Could not find $accessLogPath");
 }
 
 # check if html/txt/ has its own git repository
 # init a new repo in html/txt/ if html/txt/.git/ is missing
+
+if (!-e 'html') {
+	system('mkdir html');
+}
+
+if (!-d 'html') {
+	WriteLog('Problem!!! html is not a directory!');
+}
+
+if (!-e 'html/txt') {
+	system('mkdir html/txt');
+}
+
+if (!-d 'html/txt') {
+	WriteLog('Problem!!! html/txt is not a directory!');
+}
+
 if (!-e 'html/txt/.git') {
 	my $pwd = `pwd`;
 
 	WriteLog("cd html/txt; git init; cd $pwd");
 
-	my $gitOutput = `cd html/txt; git init; cd $pwd`;
+	my $gitOutput = `cd html/txt; git init; git add *; git commit -m first commit; cd $pwd`;
 
 	WriteLog($gitOutput);
 }
@@ -146,9 +169,24 @@ foreach my $file (@gitChangesArray) {
 			next;
 		}
 
+		my $fileHashPath;
+		# may need to check if file has been renamed
+		if (GetConfig('admin/organize_files')) {
+			$fileHashPath = GetFileHashPath($fileFullPath);
+		}
+
 		# index file, flush immediately (why? #todo)
 		IndexTextFile($fileFullPath);
 		IndexTextFile('flush');
+
+		# check if file has been renamed
+		if (GetConfig('admin/organize_files') && $fileHashPath) {
+			if (!-e $fileFullPath) {
+				if (-e $fileHashPath) {
+					$fileFullPath = $fileHashPath;
+				}
+			}
+		}
 
 		# add a time_added record
 		DBAddAddedTimeRecord($fileHash, $addedTime);
