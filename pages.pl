@@ -205,6 +205,9 @@ sub GetItemPage {
 		$titleHtml = HtmlEscape($file{'item_title'});
 
 		$title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
+	} else {
+		$title = $file{'file_hash'};
+		$titleHtml = $file{'file_hash'};
 	}
 
 	if (defined($file{'author_key'}) && $file{'author_key'}) {
