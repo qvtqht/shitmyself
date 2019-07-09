@@ -6,4 +6,6 @@ I don't know how to package libs correctly so that they are part of the repo, bu
 	I think it has something to do with some kind of binary attachments that come with the .pm files 
 	and/or version conflicts
 
-
+config/admin/server_key_id
+	The key specified here must have been generated with the same version of GPG as in use.
+		Otherwise, GPG2 will revert to default key

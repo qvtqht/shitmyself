@@ -1,3 +1,6 @@
+config/enable_blockchain
+	builds a "blockchain" of message ids
+
 when tags have many overlap make them related
 
 E-mail and/or fingerprint-verified IDs with more weight
