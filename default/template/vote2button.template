@@ -1,1 +1,1 @@
-<a href="/action/vote2.html?addvote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on" class="$class" onclick="return signVote(this, 'addvote/$fileHash/$ballotTime/$voteValue/$checksum');">$voteCaption</a>
+<a href="/action/vote2.html?addvote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on" class="$class" onclick="return signVote(this, 'addvote/$fileHash/$ballotTime/$voteValue/$checksum');" target=_blank>$voteCaption</a>
