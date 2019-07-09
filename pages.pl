@@ -929,6 +929,7 @@ sub GetTopItemsPage {
 		}
 
 		my $itemLink = GetHtmlFilename($itemKey);
+		$itemTitle = HtmlEscape($itemTitle);
 
 		$itemTemplate =~ s/\$link/$itemLink/g;
 		$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
@@ -1356,6 +1357,7 @@ sub GetIndexPage {
 
 			$row->{'show_quick_vote'} = 1;
 			$row->{'vote_buttons'} = 1;
+			$row->{'show_vote_summary'} = 1;
 
 			my $itemTemplate;
 			$itemTemplate = GetItemTemplate($row);
