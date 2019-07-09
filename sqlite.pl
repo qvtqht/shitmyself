@@ -22,6 +22,14 @@ sub SqliteConnect {
 }
 SqliteConnect();
 
+sub DBMaxQueryLength {
+	return 10240;
+}
+
+sub DBMaxQueryParams {
+	return 128;
+}
+
 sub SqliteUnlinkDb {
 	if ($dbh) {
 		$dbh->disconnect();
@@ -574,7 +582,7 @@ sub DBAddConfigValue {
 		return;
 	}
 
-	if ($query && (length($query) > 2048 || scalar(@queryParams) > 50)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddAuthor('flush');
 		$query = '';
 		@queryParams = ();
@@ -621,7 +629,7 @@ sub DBAddTitle {
 
 	my $title = shift;
 
-	if ($query && (length($query) > 2048 || scalar(@queryParams) > 50)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddTitle('flush');
 		$query = '';
 		@queryParams = ();
@@ -660,7 +668,7 @@ sub DBAddAuthor {
 		return;
 	}
 
-	if ($query && (length($query) > 2048 || scalar(@queryParams) > 50)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddAuthor('flush');
 		$query = '';
 		@queryParams = ();
@@ -726,7 +734,7 @@ sub DBAddItemPage {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddItemPage('flush');
 		$query = '';
 		@queryParams = ();
@@ -781,7 +789,7 @@ sub DBAddPageTouch {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddPageTouch('flush');
 		$query = '';
 		@queryParams = ();
@@ -859,7 +867,7 @@ sub DBAddKeyAlias {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddKeyAlias('flush');
 		$query = '';
 		@queryParams = ();
@@ -899,7 +907,7 @@ sub DBAddItemParent {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 32)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddItemParent('flush');
 		$query = '';
 		@queryParams = ();
@@ -938,7 +946,7 @@ sub DBAddItem {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 100)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddItem('flush');
 		$query = '';
 		@queryParams = ();
@@ -983,7 +991,7 @@ sub DBAddVoteWeight {
 		return;
 	}
 
-	if ($query && (length($query) > 1024 || scalar(@queryParams) > 100)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddVoteWeight('flush');
 		$query = '';
 		@queryParams = ();
@@ -1027,7 +1035,7 @@ sub DBAddEventRecord {
 		return;
 	}
 
-	if ($query && (length($query) > 10240 || scalar(@queryParams) > 32)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddEventRecord('flush');
 		$query = '';
 		@queryParams = ();
@@ -1089,7 +1097,7 @@ sub DBAddVoteRecord {
 		WriteLog("DBAddVoteRecord() called without \$fileHash! Returning.");
 	}
 
-	if ($query && (length($query) > 10240 && scalar(@queryParams) > 32)) {
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddVoteRecord('flush');
 		$query = '';
 	}
@@ -1102,9 +1110,9 @@ sub DBAddVoteRecord {
 		WriteLog("DBAddVoteRecord() called without \$ballotTime! Returning.");
 	}
 
-	if (!$signedBy) {
-		WriteLog("DBAddVoteRecord() called without \$signedBy! Returning.");
-	}
+#	if (!$signedBy) {
+#		WriteLog("DBAddVoteRecord() called without \$signedBy! Returning.");
+#	}
 
 	chomp $fileHash;
 	chomp $ballotTime;
@@ -1166,7 +1174,7 @@ sub DBAddAddedTimeRecord {
 		return;
 	}
 
-	if ($query && length($query) > 1024 || scalar(@queryParams) > 64) {
+	if ($query && length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams()) {
 		DBAddAddedTimeRecord('flush');
 		$query = '';
 		@queryParams = ();
@@ -1194,8 +1202,12 @@ sub DBAddItemClient {
 	state $query;
 	state @queryParams;
 
+	WriteLog('DBAddItemClient()');
+
 	my $fileHash = shift;
 	chomp $fileHash;
+
+	WriteLog('DBAddItemClient(' . $fileHash . ')');
 
 	if ($fileHash eq 'flush') {
 		WriteLog("DBAddItemClient(flush)");
@@ -1212,27 +1224,33 @@ sub DBAddItemClient {
 		return;
 	}
 
-	if (!IsSha1($fileHash)) {
-		WriteLog('DBAddItemClient called with invalid parameter! returning');
-		return;
-	}
+#	if (!IsSha1($fileHash)) {
+#		WriteLog('DBAddItemClient called with invalid parameter! returning');
+#		return;
+#	}
 
 	my $addedClient = shift;
 	chomp $addedClient;
 
-	if (!$addedClient =~ m/\[0-9a-f]{32}/) { #todo is this clean enough?
-		WriteLog('DBAddItemClient called with invalid parameter! returning');
-		return;
-	}
 
-	if ($query && length($query) > 1024 || scalar(@queryParams) > 32) {
+
+	WriteLog("DBAddItemClient($fileHash, $addedClient)");
+#
+#	if (!($addedClient =~ m/\[0-9a-f]{32}/)) { #todo is this clean enough?
+#		WriteLog('DBAddItemClient() called with invalid parameter! returning');
+#		return;
+#	}
+
+	if ($query && length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams()) {
 		DBAddItemClient('flush');
+
 		$query = '';
 		@queryParams = ();
 	}
 
-	$fileHash = SqliteEscape($fileHash);
-	$addedClient = SqliteEscape($addedClient);
+	#todo is this redundant?
+#	$fileHash = SqliteEscape($fileHash);
+#	$addedClient = SqliteEscape($addedClient);
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO added_by(file_hash, device_fingerprint) VALUES ";
@@ -1242,6 +1260,8 @@ sub DBAddItemClient {
 
 	$query .= '(?, ?)';
 	push @queryParams, $fileHash, $addedClient;
+
+	WriteLog($query);
 }
 
 sub DBGetAddedTime {
