@@ -1,3 +1,4 @@
+<!-- itemlong.template -->
 <div class="$itemClass" style="border-color: $borderColor">
 <p><b><a href="$permalinkHtml">$itemName</a></b> <a href="$permalinkTxt">.txt</a> $authorLink</p>
 $itemTitleTemplate
@@ -6,4 +7,4 @@ $itemTitleTemplate
 $votesSummary
 $quickVoteButtonGroup
 </div>
-<hr>
+<!-- / itemlong.template -->

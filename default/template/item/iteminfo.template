@@ -1,4 +1,6 @@
+<!-- iteminfo.template -->
 <div class="plain">
 <h2>SHA1 Hash:</h2>
 <p>$fileHash</p>
 </div>
+<!-- / iteminfo.template -->

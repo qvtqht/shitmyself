@@ -1,3 +1,4 @@
+<!-- item.template -->
 <div class="$itemClass" style="border-color: $borderColor">
 $itemTitleTemplate
 <p>$itemText</p>
@@ -6,4 +7,4 @@ $votesSummary
 $quickVoteButtonGroup
 <replies></replies>
 </div>
-<hr>
+<!-- / item.template -->

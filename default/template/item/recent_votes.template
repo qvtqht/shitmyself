@@ -1,5 +1,7 @@
+<!-- recent_votes.template -->
 <div class="plain">
 <h2>Recent Votes:</h2>
 <p>$votesSummary</p>
 <pre>$recentVotesTable</pre>
 </div>
+<!-- / recent_votes.template -->

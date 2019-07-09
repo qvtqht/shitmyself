@@ -1,5 +1,7 @@
+<!-- signed_votes.template -->
 <div class="plain">
 <h2>Signed Votes:</h2>
 <p>$signedVotesTable</p>
 <p>Confirmation takes place one cycle after verification of ballot.</p>
 </div>
+<!-- / signed_votes.template -->
