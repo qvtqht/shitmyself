@@ -1,3 +1,7 @@
+Build threads page
+	select * from item_flat where parent_count = 0
+		find all children recursively
+
 Fix bug with anonymous (server-side) replying
 	Where extra &replyto= gets appended at the end
 
