@@ -167,6 +167,8 @@ sub IndexTextFile {
 				# if new file exists
 				if (-e $fileHashPath) {
 					$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+				} else {
+					WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
 				}
 			}
 		}
@@ -911,8 +913,15 @@ sub MakeIndex {
 
 	my @filesToInclude = @{$_[0]};
 
+	my $filesCount = scalar(@filesToInclude);
+	my $currentFile = 0;
+
 	foreach my $file (@filesToInclude) {
-		WriteLog("MakeIndex: $file");
+		$currentFile++;
+
+		my $percent = $currentFile / $filesCount * 100;
+
+		WriteMessage("*** MakeIndex: $currentFile/$filesCount ($percent %) $file");
 
 		IndexTextFile($file);
 	}
