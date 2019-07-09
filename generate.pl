@@ -366,8 +366,11 @@ sub MakeStaticPages {
 
 	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
-	# Write form javasript
+	# Write avatar javasript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
+
+	# Write prefs javasript
+	PutHtmlFile("$HTMLDIR/prefs.js", GetTemplate('js/prefs.js.template'));
 
 
 	# .htaccess file for Apache
@@ -436,7 +439,7 @@ foreach my $hashRef (@authors) {
 
 	$authorsListPage .= GetPageFooter();
 
-	PutFile('html/author/index.html', $authorsListPage);
+	#PutFile('html/author/index.html', $authorsListPage);
 
 #	foreach my $key (@authors) {
 #
@@ -599,6 +602,7 @@ PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
 my $scoreboardPage = GetScoreboardPage();
 PutHtmlFile('html/scores.html', $scoreboardPage);
+PutHtmlFile('html/author/index.html', $scoreboardPage);
 
 my $topItemsPage = GetTopItemsPage();
 PutHtmlFile('html/top.html', $topItemsPage);
