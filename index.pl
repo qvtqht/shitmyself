@@ -121,6 +121,7 @@ sub IndexTextFile {
 	if ($file eq 'flush') {
 		WriteLog("IndexTextFile(flush)");
 
+		DBAddAddedTimeRecord('flush');
 		DBAddAuthor('flush');
 		DBAddKeyAlias('flush');
 		DBAddItem('flush');
@@ -131,6 +132,7 @@ sub IndexTextFile {
 		DBAddPageTouch('flush');
 		DBAddConfigValue('flush');
 		DBAddTitle('flush');
+		DBAddItemClient('flush');
 
 		return;
 	}
@@ -290,7 +292,6 @@ sub IndexTextFile {
 
 			# store it in index, since that's what we're doing here
 			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
-			DBAddAddedTimeRecord('flush');
 
 			$addedTimeIsNew = 1;
 		}
@@ -482,7 +483,7 @@ sub IndexTextFile {
 											GetConfig('admin/anyone_can_config')
 										)
 									)
-								)
+								) # condition 1
 								{
 									DBAddVoteRecord($gitHash, $addedTime, 'config');
 
@@ -498,12 +499,12 @@ sub IndexTextFile {
 
 								} else {
 
-									$message =~ s/$reconLine/[Attempted change to $configKey ignored.]/g;
+									$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not allowed.]/g;
 									$detokenedMessage =~ s/$reconLine//g;
 
 								}
 							} else {
-								$message =~ s/$reconLine/[Attempted change to $configKey ignored.]/g;
+								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
 								$detokenedMessage =~ s/$reconLine//g;
 							}
 						}
@@ -517,7 +518,7 @@ sub IndexTextFile {
 			# look for addvouch, which adds a voting vouch for a user
 			# addvouch/F82FCD75AAEF7CC8/20
 
-			if (IsAdmin($gpgKey)) {
+			if (IsAdmin($gpgKey) || $isSigned) {
 				my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
 
 				if (@weightLines) {
@@ -620,6 +621,7 @@ sub IndexTextFile {
 							$detokenedMessage =~ s/$reconLine//g;
 
 							DBAddItemParent($gitHash, $itemHash);
+
 							DBAddItemClient($gitHash, $itemAddedBy);
 						}
 
@@ -663,7 +665,6 @@ sub IndexTextFile {
 							$detokenedMessage =~ s/$reconLine//g;
 
 							DBAddItemParent($gitHash, $itemHash);
-							DBAddItemClient($gitHash, $itemSha512);
 						}
 
 						#DBAddVoteWeight('flush');
@@ -874,8 +875,6 @@ sub IndexTextFile {
 
 		DBAddPageTouch('item', $gitHash);
 	}
-
-	IndexTextFile('flush')
 }
 
 sub WriteIndexedConfig {
