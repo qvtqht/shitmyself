@@ -1,5 +1,10 @@
 function AmIFresh() {
-	var mypath = window.location;
+	var mypath = window.mypath;
+
+	if (!mypath) {
+		mypath = window.location;
+		window.mypath = mypath;
+	}
 
 	var client = new XMLHttpRequest();
 	client.open("HEAD", mypath, true);
@@ -10,9 +15,11 @@ function AmIFresh() {
 		 if (eTag) {
 		 	if (window.lastEtag) {
 		 		if (eTag == window.lastEtag) {
-		 			//unchanged
+		 			// still fresh, no change
 		 		} else {
-		 			location.reload();
+		 			// change has happened
+
+	 				location.reload();
 //
 //		 			var client2 = new XMLHttpRequest();
 //		 			client2.open("GET", window.location);
@@ -23,6 +30,7 @@ function AmIFresh() {
 //		 				}
 //		 			}
 		 		}
+		 		window.lastEtag = eTag;
 		 	} else {
 		 		window.lastEtag = eTag;
 			}
