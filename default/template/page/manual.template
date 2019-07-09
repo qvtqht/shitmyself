@@ -69,13 +69,19 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>Netscape Communicator 4.8</li>
     <li>Lynx 2.8.9rel.1</li>
     <li>Links 2.17</li>
+    <li>Dillo 3.0.5</li>
+    <li>NetSurf 2.9</li>
+    <li>Wine IE 8.0</li>
+</ul>
+
+<p>Client-side JS signing works in modern browsers, tested in:</p>
+
+<ul>
+    <li>GNOME Web 3.28.5</li>
     <li>qutebrowser 1.6.0</li>
     <li>SeaMonkey 2.49.4</li>
     <li>Firefox 52.7.2</li>
     <li>Waterfox 56.2.9</li>
-    <li>Dillo 3.0.5</li>
-    <li>NetSurf 2.9</li>
-    <li>GNOME Web 3.28.5</li>
     <li>Chromium 71.x</li>
 </ul>
 
