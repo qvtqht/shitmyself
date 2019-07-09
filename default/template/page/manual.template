@@ -29,8 +29,9 @@
 <h3>Known Issues aka Features</h3>
 
 <ul>
-    <li>Actions sometimes do not take effect immediately.</li>
-    <li>Confusing interface.</li>
+    <li>Actions sometimes do not take effect immediately.</li> <!-- encourage patience and restraint -->
+    <li>Noisy, multi-step update process.</li> <!-- aid researchers and sleuths -->
+    <li>Confusing interface.</li> <!-- create barrier to entry for fools -->
 </ul>
 
 <!-- -->
