@@ -743,9 +743,9 @@ sub GetPageHeader {
 
 	#my $patternName = 'pattern/bokeh.template';
 	my $patternName = trim(GetConfig('header_pattern'));
-	my $introText = trim(GetConfig('page_intro/' . $pageType));
+	my $introText = trim(GetConfig('string/page_intro/' . $pageType));
 	if (!$introText) {
-		$introText = trim(GetConfig('page_intro/default'));
+		$introText = trim(GetConfig('string/page_intro/default'));
 	}
 	#$patternName = GetConfig('header_pattern');
 
@@ -780,9 +780,15 @@ sub GetPageHeader {
 
 	#header menu
 	#
-	#$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
+
+	#my $identityLink = GetMenuItem("/profile.html", GetString('menu/sign_in'));
+	my $identityLink = '<span id="signin"></span><span class="myid" id=myid></span> ';
+	$menuTemplate .= $identityLink;
+
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-#	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+
+	#	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 	#$menuTemplate .= GetMenuItem("/top/pubkey.html", 'Authors');
 	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	$menuTemplate .= GetMenuItem("/tags.html", 'Tags');
@@ -802,9 +808,6 @@ sub GetPageHeader {
 #	}
 
 	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
-
-	my $identityLink = GetMenuItem("/profile.html", GetString('menu/sign_in'));
-	$htmlStart =~ s/\$loginLink/$identityLink/g;
 
 	$txtIndex .= $htmlStart;
 
@@ -982,7 +985,8 @@ sub GetStatsPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $freshjs = GetTemplate('js/fresh.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n$freshjs/g;
 
 	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
 
