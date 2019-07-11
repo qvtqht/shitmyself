@@ -220,6 +220,10 @@ foreach my $file (@gitChangesArray) {
 
 WriteIndexedConfig();
 
+if ($filesProcessed > 0) {
+	WriteIndexPages();
+}
+
 # get a list of pages that have been touched since the last git_flow
 # this is from the page_touch table
 my $touchedPages = DBGetTouchedPages($lastFlow);
