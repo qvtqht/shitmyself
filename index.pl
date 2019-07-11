@@ -538,6 +538,8 @@ sub IndexTextFile {
 							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
+							DBAddVoteWeight($voterId, $voterWt);
+
 							DBAddPageTouch('author', $voterId);
 						}
 
