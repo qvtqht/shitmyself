@@ -1046,6 +1046,7 @@ sub GetScoreboardPage {
 		my $authorKey = @{$author}[0];
 		my $authorAlias = @{$author}[1];
 		my $authorScore = @{$author}[2];
+		my $authorWeight = @{$author}[3];
 		my $authorAvatar = GetHtmlAvatar($authorKey);
 
 		my $authorLink = "/author/" . $authorKey . ".html";
@@ -1053,6 +1054,7 @@ sub GetScoreboardPage {
 		$authorItemTemplate =~ s/\$link/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
+		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
 
 		$authorListings .= $authorItemTemplate;

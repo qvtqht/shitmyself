@@ -241,7 +241,7 @@ sub SqliteMakeTables() {
 		AS 
 		SELECT 
 			author.key AS author_key, 
-			SUM(vote_weight.vote_weight) AS vote_weight, 
+			SUM(vote_weight.vote_weight) AS author_weight,
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score
 		FROM
@@ -1501,7 +1501,8 @@ sub DBGetTopAuthors {
 		SELECT
 			author_key,
 			author_alias,
-			author_score
+			author_score,
+			author_weight
 		FROM author_flat
 		ORDER BY author_score DESC
 		LIMIT 50;
