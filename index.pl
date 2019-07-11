@@ -541,6 +541,8 @@ sub IndexTextFile {
 							DBAddVoteWeight($voterId, $voterWt);
 
 							DBAddPageTouch('author', $voterId);
+
+							DBAddPageTouch('scores', 'foo');
 						}
 
 						DBAddVoteRecord($gitHash, $addedTime, 'vouch');
@@ -680,6 +682,37 @@ sub IndexTextFile {
 				}
 			}
 		}
+#
+#		# look for latlong tokens
+#		# 40.6905529,-73.9406216
+#		# -40.6905529,73.9406216
+#		# 40,-73
+#		# -73,40
+#		# 40/-73
+#
+#		if ($message) {
+#			# get any matching token lines
+#			my @latLongLines = ( $message =~ m/^latlong\/(-?[0-9]+\.?[0-9]+?)[\/,](-?[0-9]+\.?[0-9]+?)/mg );
+#			#
+#
+#			if (@latLongLines) {
+#				my $lineCount = @latLongLines / 2;
+#				#todo assert no remainder
+#
+#				WriteLog("... DBAddLatLong \$lineCount = $lineCount");
+#
+#				while (@latLongLines) {
+#					my $lat = shift @latLongLines;
+#					my $long = shift @latLongLines;
+#
+#					if ($isSigned) {
+#						DBAddLatLongRecord($gitHash, $lat, $long, $gpgKey);
+#					} else {
+#						DBAddLatLongRecord($gitHash, $lat, $long);
+#					}
+#				}
+#			}
+#		}
 
 		# look for addevent tokens
 		# addevent/1551234567/3600
@@ -869,8 +902,6 @@ sub IndexTextFile {
 
 		DBAddPageTouch('top', 'foo');
 
-		DBAddPageTouch('index', 'foo');
-
 		if ($hasParent == 0) {
 #			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
 #		} else {
@@ -878,6 +909,8 @@ sub IndexTextFile {
 		}
 
 		DBAddPageTouch('item', $gitHash);
+
+		DBAddPageTouch('index', 'foo'); #todo verify this works
 	}
 }
 
