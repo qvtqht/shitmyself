@@ -1168,6 +1168,7 @@ sub GetReadPage {
 		my $authorImportance = 1337;
 		my $authorScore = DBGetAuthorScore($authorKey);
 		my $authorDescription = '';
+		my $authorWeight = DBGetAuthorWeight($authorKey);
 
 		if (IsServer($authorKey)) {
 			if ($authorDescription) {
@@ -1188,6 +1189,7 @@ sub GetReadPage {
 		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
 		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
 		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
+		$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
 		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 
 		$txtIndex .= $authorInfoTemplate;
