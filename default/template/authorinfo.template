@@ -5,6 +5,7 @@
 <tr><td>importance:</td><td>$importance</td></tr>
 <tr><td>score:</td><td>$authorScore</td></tr>
 <tr><td>description:</td><td>$authorDescription</td></tr>
+<tr><td>weight:</td><td>$authorWeight</td></tr>
 <!--<tr><td>post count:</td><td>$postcount</td></tr>
 <tr><td>vote count:</td><td>$votecount</td></tr>-->
 </table>
