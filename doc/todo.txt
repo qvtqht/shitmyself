@@ -1,3 +1,8 @@
+Web server handler for potential 404:
+	sha(url string)
+		check for item
+			return or redirect to item's page
+
 Log each script's runtime and output in timestamped logs
 
 Decouple util page generation from index page generation
