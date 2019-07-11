@@ -45,9 +45,9 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp INTEGER);");
 	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
 
-
 	# added_by (client)
 	SqliteQuery2("CREATE TABLE added_by(file_hash, device_fingerprint);");
+	SqliteQuery2("CREATE UNIQUE INDEX added_by_unique ON added_by(file_hash)");
 
 	# author
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, published)");
@@ -77,9 +77,10 @@ sub SqliteMakeTables() {
 	# item_title
 	SqliteQuery2("CREATE TABLE item_title(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		file_hash UNIQUE,
+		file_hash,
 		title
 	)");
+	SqliteQuery2("CREATE UNIQUE INDEX item_title_unique ON item_title(file_hash)");
 
 	# item_parent
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
@@ -192,7 +193,8 @@ sub SqliteMakeTables() {
 				added_time.add_timestamp AS add_timestamp,
 				IFNULL(item_title.title, '') AS item_title,
 				IFNULL(item_score.item_score, 0) AS item_score,
-				item.item_type AS item_type
+				item.item_type AS item_type,
+				added_by.device_fingerprint AS added_by
 			FROM
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
@@ -200,6 +202,7 @@ sub SqliteMakeTables() {
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
 				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
 				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
+				LEFT JOIN added_by ON ( item.file_hash = added_by.file_hash)
 	");
 	SqliteQuery2("
 		CREATE VIEW event_future AS
@@ -1430,7 +1433,7 @@ sub DBGetAuthorScore {
 	chomp ($key);
 
 	if (!IsFingerprint($key)) {
-		WriteLog('DBGetAuthorScore called with invalid parameter! returning');
+		WriteLog('Problem! DBGetAuthorScore called with invalid parameter! returning');
 		return;
 	}
 
@@ -1441,10 +1444,36 @@ sub DBGetAuthorScore {
 
 	$key = SqliteEscape($key);
 
-	if ($key) {
+	if ($key) { #todo fix non-param sql
 		my $query = "SELECT author_score FROM author_score WHERE author_key = '$key'";
 		$scoreCache{$key} = SqliteGetValue($query);
 		return $scoreCache{$key};
+	} else {
+		return "";
+	}
+}
+
+
+sub DBGetAuthorWeight {
+	my $key = shift;
+	chomp ($key);
+
+	if (!IsFingerprint($key)) {
+		WriteLog('Problem! DBGetAuthorWeight called with invalid parameter! returning');
+		return;
+	}
+
+	state %weightCache;
+	if (exists($weightCache{$key})) {
+		return $weightCache{$key};
+	}
+
+	$key = SqliteEscape($key);
+
+	if ($key) { #todo fix non-param sql
+		my $query = "SELECT SUM(vote_weight) FROM vote_weight WHERE key = '$key'";
+		$weightCache{$key} = SqliteGetValue($query);
+		return $weightCache{$key};
 	} else {
 		return "";
 	}
