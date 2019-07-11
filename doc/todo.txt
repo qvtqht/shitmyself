@@ -1,3 +1,9 @@
+Log each script's runtime and output in timestamped logs
+
+Decouple util page generation from index page generation
+	Generate util pages immediately after clean
+		Status note
+
 In Abyss index pages, votes/replies should include parent message in a box
 
 With SSI calculate user's fingerprint and direct them to /fp/abcdef
