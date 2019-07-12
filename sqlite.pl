@@ -194,7 +194,8 @@ sub SqliteMakeTables() {
 				IFNULL(item_title.title, '') AS item_title,
 				IFNULL(item_score.item_score, 0) AS item_score,
 				item.item_type AS item_type,
-				added_by.device_fingerprint AS added_by
+				added_by.device_fingerprint AS added_by,
+				tags_list AS tags_list
 			FROM
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
@@ -203,6 +204,7 @@ sub SqliteMakeTables() {
 				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
 				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
 				LEFT JOIN added_by ON ( item.file_hash = added_by.file_hash)
+				LEFT JOIN item_tags_list ON ( item.file_hash = item_tags_list.file_hash )
 	");
 	SqliteQuery2("
 		CREATE VIEW event_future AS
@@ -233,6 +235,17 @@ sub SqliteMakeTables() {
 			FROM vote
 			GROUP BY file_hash, vote_value
 			ORDER BY vote_count DESC
+	");
+
+	SqliteQuery2("
+		CREATE VIEW
+			item_tags_list
+		AS
+		SELECT
+			file_hash,
+			GROUP_CONCAT(DISTINCT vote_value) AS tags_list
+		FROM vote
+		GROUP BY file_hash
 	");
 
 	SqliteQuery2("
@@ -765,6 +778,13 @@ sub DBAddItemPage {
 	push @queryParams, $itemHash, $pageType, $pageParam;
 }
 
+sub DBResetPageTouch {
+	my $query = "DELETE FROM page_touch WHERE 1";
+	my @queryParams = ();
+
+	SqliteQuery2($query, @queryParams);
+}
+
 sub DBAddPageTouch {
 	state $query;
 	state @queryParams;
@@ -817,7 +837,17 @@ sub DBAddPageTouch {
 }
 
 sub DBGetVoteCounts {
-	my $query = "SELECT vote_value, COUNT(vote_value) AS vote_count FROM vote GROUP BY vote_value ORDER BY vote_count DESC;";
+	my $query = "
+		SELECT
+			vote_value,
+			COUNT(vote_value) AS vote_count
+		FROM
+			voteuuuu
+		GROUP BY
+			vote_value
+		ORDER BY
+			vote_count DESC;
+	";
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
@@ -1457,6 +1487,31 @@ sub DBGetAuthorScore {
 	}
 }
 
+sub DBGetAuthorLastSeen {
+	my $key = shift;
+	chomp ($key);
+
+	if (!IsFingerprint($key)) {
+		WriteLog('Problem! DBGetAuthorLastSeen called with invalid parameter! returning');
+		return;
+	}
+
+	state %lastSeenCache;
+	if (exists($lastSeenCache{$key})) {
+		return $lastSeenCache{$key};
+	}
+
+	$key = SqliteEscape($key);
+
+	if ($key) { #todo fix non-param sql
+		my $query = "SELECT MAX(item_flat.add_timestamp) AS last_seen FROM item_flat WHERE author_key = '$key'";
+		$lastSeenCache{$key} = SqliteGetValue($query);
+		return $lastSeenCache{$key};
+	} else {
+		return "";
+	}
+}
+
 
 sub DBGetAuthorWeight {
 	my $key = shift;
@@ -1494,7 +1549,8 @@ sub DBGetItemFields {
 		item_flat.parent_count parent_count,
 		item_flat.add_timestamp add_timestamp,
 		item_flat.item_title item_title,
-		item_flat.item_score item_score
+		item_flat.item_score item_score,
+		item_flat.tags_list tags_list
 	";
 
 	return $itemFields;
