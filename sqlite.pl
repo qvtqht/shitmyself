@@ -1532,6 +1532,11 @@ sub DBGetAuthorWeight {
 	if ($key) { #todo fix non-param sql
 		my $query = "SELECT SUM(vote_weight) FROM vote_weight WHERE key = '$key'";
 		$weightCache{$key} = SqliteGetValue($query);
+
+		if ($weightCache{$key} < 1) {
+			$weightCache{$key} = 1;
+		}
+
 		return $weightCache{$key};
 	} else {
 		return "";
