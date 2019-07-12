@@ -333,7 +333,7 @@ sub IndexTextFile {
 		}
 
 		if ($alias) {
-			DBAddKeyAlias ($gpgKey, $alias, $fingerprint);
+			DBAddKeyAlias ($gpgKey, $alias, $fingerprint, $gpgKey);
 
 			DBAddKeyAlias('flush');
 
