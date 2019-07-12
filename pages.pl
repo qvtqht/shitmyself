@@ -388,32 +388,6 @@ sub GetHtmlLink {
 	return '<a href="/' . GetHtmlFilename($hash) . '">' . substr($hash, 0, 8) . '..</a>';
 }
 
-sub GetItemTemplateFromHash {
-	#	my $itemHash = shift;
-	#	my $insetPrefix = shift;
-	#
-	#	if (IsSha1($itemHash)) {
-	#		my $itemTemplate;
-	#		if ($insetPrefix && $insetPrefix eq '>>') {
-	#			my %queryParams;
-	#			$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
-	#
-	#			my @files = DBGetItemList(\%queryParams);
-	#
-	#			$itemTemplate = GetItemTemplate($files[0]);
-	#		} else {
-	#			$itemTemplate = GetHtmlLink($itemHash);
-	#		}
-	#		return $itemTemplate;
-	#	} else {
-	#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
-	#		return '[item could not be displayed]';
-	#	}
-	#
-	#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
-	#	return '[aaaaahhhh!!!]';
-}
-
 sub GetItemTemplate {
 	WriteLog("GetItemTemplate");
 
@@ -517,6 +491,17 @@ sub GetItemTemplate {
 		}
 		if ($isAdmin) {
 			$itemClass .= ' admin';
+		}
+
+		if ($file{'tags_list'}) {
+			my @itemTags = split(',', $file{'tags_list'});
+
+			while (scalar(@itemTags)) {
+				my $thisTag = pop @itemTags;
+				if ($thisTag eq 'poetry' || $thisTag eq 'textart') {
+					$itemClass .= ' item-textart';
+				}
+			}
 		}
 
 		my $authorUrl;
@@ -1025,6 +1010,8 @@ sub GetScoreboardPage {
 	my $title = 'Top Scores';
 	my $titleHtml = 'Top Scores';
 
+	my $currentTime = time();
+
 	$txtIndex = GetPageHeader($title, $titleHtml, 'scoreboard');
 
 	$txtIndex .= GetTemplate('maincontent.template');
@@ -1047,14 +1034,18 @@ sub GetScoreboardPage {
 		my $authorAlias = @{$author}[1];
 		my $authorScore = @{$author}[2];
 		my $authorWeight = @{$author}[3];
+		my $authorLastSeen = @{$author}[4];
 		my $authorAvatar = GetHtmlAvatar($authorKey);
 
 		my $authorLink = "/author/" . $authorKey . ".html";
+
+#		$authorLastSeen = GetSecondsHtml(time() - $authorLastSeen) . ' ago';
 
 		$authorItemTemplate =~ s/\$link/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
+		$authorItemTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
 
 		$authorListings .= $authorItemTemplate;
@@ -1171,6 +1162,7 @@ sub GetReadPage {
 		my $authorScore = DBGetAuthorScore($authorKey);
 		my $authorDescription = '';
 		my $authorWeight = DBGetAuthorWeight($authorKey);
+		my $authorLastSeen = DBGetAuthorLastSeen($authorKey);
 
 		if (IsServer($authorKey)) {
 			if ($authorDescription) {
@@ -1193,6 +1185,7 @@ sub GetReadPage {
 		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
 		$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
 		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
+		$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 
 		$txtIndex .= $authorInfoTemplate;
 	}
@@ -1439,7 +1432,7 @@ sub WriteIndexPages {
 				$offset = $offset - ($itemCount % $pageLimit);
 			}
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
-			$queryParams{'order_clause'} = 'ORDER BY add_timestamp';
+			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 
 			my @ft = DBGetItemList(\%queryParams);
 
