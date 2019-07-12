@@ -4,6 +4,14 @@
 .tag-accept, .tag-friend, .tag-attend {
     color: #80c080;
 }
+.txt {
+    font-family: tahoma;
+    font-size: default;
+}
+.item-textart {
+    font-family: monospace;
+    font-size: 12pt;
+}
 div.reply {
     <!--border-left: 3pt dotted #c08000;-->
     margin-left: 2%;
@@ -16,11 +24,7 @@ div.txt {
 }
 body {
     font-family: helvetica;
-    size: default;
-}
-.txt {
-    font-family: tahoma;
-    size: default;
+    font-size: default;
 }
 .admin {
     background: repeating-linear-gradient(
