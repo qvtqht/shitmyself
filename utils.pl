@@ -857,6 +857,52 @@ sub trim {
 	}
 };
 
+sub GetSecondsHtml {
+	my $seconds = shift;
+
+	if (!$seconds) {
+		return;
+	}
+
+	chomp $seconds;
+
+	my $secondsString = $seconds;
+
+	if ($secondsString > 60) {
+		$secondsString = $secondsString / 60;
+
+		if ($secondsString > 60 ) {
+			$secondsString = $secondsString / 60;
+
+			if ($secondsString > 24) {
+				$secondsString = $secondsString / 24;
+
+				if ($secondsString > 365) {
+					$secondsString = $secondsString / 365;
+
+					$secondsString = floor($secondsString) . ' years';
+				}
+				elsif ($secondsString > 30) {
+					$secondsString = $secondsString / 30;
+
+					$secondsString = floor($secondsString) . ' months';
+				}
+				else {
+					$secondsString = floor($secondsString) . ' days';
+				}
+			}
+			else {
+				$secondsString = floor($secondsString) . ' hours';
+			}
+		}
+		else {
+			$secondsString = floor($secondsString) . ' minutes';
+		}
+	} else {
+		$secondsString = floor($secondsString) . ' seconds';
+	}
+}
+
 sub GetFileSizeHtml {
 	my $fileSize = shift;
   
