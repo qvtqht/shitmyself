@@ -842,7 +842,7 @@ sub DBGetVoteCounts {
 			vote_value,
 			COUNT(vote_value) AS vote_count
 		FROM
-			voteuuuu
+			vote
 		GROUP BY
 			vote_value
 		ORDER BY
