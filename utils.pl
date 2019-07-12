@@ -858,6 +858,13 @@ sub trim {
 };
 
 sub GetSecondsHtml {
+# returns a number of seconds as the most readable approximate time unit
+# 5 seconds = 5 seconds
+# 65 seconds = 1 minute
+# 360 seconds = 6 minutes
+# 3600 seconds = 1 hour
+# etc
+
 	my $seconds = shift;
 
 	if (!$seconds) {
