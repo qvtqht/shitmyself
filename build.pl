@@ -7,6 +7,7 @@ use utf8;
 require './utils.pl';
 require './index.pl';
 require './access.pl';
+#require './pages.pl';
 
 #if (GetConfig('upgrade_now') ne 'no') {
 #	PutConfig('last_upgrade', 'no');
@@ -46,5 +47,7 @@ MakeAddedIndex();
 WriteConfigFromDatabase();
 
 system('perl generate.pl');
+
+DBResetPageTouch();
 
 WriteLog( "Finished!");
