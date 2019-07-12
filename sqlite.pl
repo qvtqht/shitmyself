@@ -57,8 +57,8 @@ sub SqliteMakeTables() {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		key UNIQUE,
 		alias,
-		is_admin,
-		fingerprint
+		fingerprint,
+		pubkey_file_hash
 	)");
 
 	# vote_weight
@@ -243,7 +243,8 @@ sub SqliteMakeTables() {
 			author.key AS author_key, 
 			SUM(vote_weight.vote_weight) AS author_weight,
 			author_alias.alias AS author_alias,
-			IFNULL(author_score.author_score, 0) AS author_score
+			IFNULL(author_score.author_score, 0) AS author_score,
+			MAX(item_flat.add_timestamp) AS last_seen
 		FROM
 			author 
 			LEFT JOIN vote_weight
@@ -252,6 +253,8 @@ sub SqliteMakeTables() {
 				ON (author.key = author_alias.key)
 			LEFT JOIN author_score
 				ON (author.key = author_score.author_key)
+			LEFT JOIN item_flat
+				ON (author.key = item_flat.author_key)
 		GROUP BY
 			author.key, author_alias.alias
 	");
@@ -878,15 +881,16 @@ sub DBAddKeyAlias {
 
 	my $alias = shift;
 	my $fingerprint = shift;
+	my $pubkeyFileHash = shift;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO author_alias(key, alias, fingerprint) VALUES ";
+		$query = "INSERT OR REPLACE INTO author_alias(key, alias, fingerprint, pubkey_file_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= "(?, ?, ?)";
-	push @queryParams, $key, $alias, $fingerprint;
+	$query .= "(?, ?, ?, ?)";
+	push @queryParams, $key, $alias, $fingerprint, $pubkeyFileHash;
 }
 
 sub DBAddItemParent {
@@ -1502,7 +1506,8 @@ sub DBGetTopAuthors {
 			author_key,
 			author_alias,
 			author_score,
-			author_weight
+			author_weight,
+			last_seen
 		FROM author_flat
 		ORDER BY author_score DESC
 		LIMIT 50;
