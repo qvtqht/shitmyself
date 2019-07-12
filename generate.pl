@@ -212,7 +212,10 @@ sub GetWritePage {
 	my $titleHtml = "Write";
 
 	my $itemCount = DBGetItemCount();
-	my $itemLimit = 9000;
+	my $itemLimit = GetConfig('item_limit');
+	if (!$itemLimit) {
+		$itemLimit = 9000;
+	}
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'write');
 
