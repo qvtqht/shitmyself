@@ -1571,6 +1571,32 @@ sub DBGetAuthorLastSeen {
 	}
 }
 
+
+sub DBGetAuthorPublicKeyHash {
+	my $key = shift;
+	chomp ($key);
+
+	if (!IsFingerprint($key)) {
+		WriteLog('Problem! DBGetAuthorPublicKeyHash called with invalid parameter! returning');
+		return;
+	}
+
+	state %lastSeenCache;
+	if (exists($lastSeenCache{$key})) {
+		return $lastSeenCache{$key};
+	}
+
+	$key = SqliteEscape($key);
+
+	if ($key) { #todo fix non-param sql
+		my $query = "SELECT MAX(author_alias.pubkey_file_hash) AS pubkey_file_hash FROM author_alias WHERE key = '$key'";
+		$lastSeenCache{$key} = SqliteGetValue($query);
+		return $lastSeenCache{$key};
+	} else {
+		return "";
+	}
+}
+
 sub DBGetAuthorWeight {
 	my $key = shift;
 	chomp ($key);
