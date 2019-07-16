@@ -7,7 +7,12 @@ Testing Locally
 clean-build
 	purges cache/
 	removes html/*.html
+	removes config/template/*
 	calls build.pl
+
+open-database
+	opens index.sqlite3 in sqlitebrowser
+	for browsing indexed data
 
 build.pl
 rebuilds website, first looking for new messages in access log
@@ -17,16 +22,17 @@ rebuilds website, first looking for new messages in access log
 
 access.pl
 reads access log from the web server and parses actions submitted by clients.
-	apache-style access log should be symlinked to log/access.log
+	common log format should be symlinked to log/access.log
 	-or-
-	change it in config/admin/access_log_path
+	change the path in in config/admin/access_log_path
 
 index.pl
 generates sqlite database called index.sqlite3
 	contains data from html/txt/, log/, and config/
 
 generate.pl
-	generates website using the sqlite database, and config/
+	generates static website using the sqlite database, and config/
+	also generates some non-static elements such as .htaccess, PHP files
 
 lighttpd.pl
 	starts a local instance of lighttpd to serve the website
