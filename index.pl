@@ -376,6 +376,7 @@ sub IndexTextFile {
 		}
 
 		# look for hash tags
+
 		if ($message) {
 			WriteLog("... check for hashtags");
 			my @hashTags = ( $message =~ m/\#([a-zA-Z0-9]+)/mg );
@@ -811,7 +812,8 @@ sub IndexTextFile {
 
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
-					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
+#					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
+					$message =~ s/$reconLine/[$voteValue]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
