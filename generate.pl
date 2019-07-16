@@ -23,9 +23,6 @@ require './pages.pl';
 #my $HTMLDIR = "html.tmp";
 my $HTMLDIR = "html";
 
-sub GetAuthorHeader {
-	return "HI";
-}
 #
 # sub GetPageParams {
 # 	# Used for getting the title and query for a page given its type and parameters
@@ -206,6 +203,7 @@ sub GetIdentityPage {
 #}
 
 sub GetWritePage {
+	# $txtIndex stores html page output
 	my $txtIndex = "";
 
 	my $title = "Write";
@@ -270,12 +268,6 @@ sub GetWritePage {
 	return $txtIndex;
 }
 
-sub GetHomePage {
-	my $homePage;
-
-	#my $homePage = GetTemplate('page/home.template');
-}
-
 sub MakeStaticPages {
 	WriteLog('MakeStaticPages() BEGIN');
 
@@ -317,6 +309,7 @@ sub MakeStaticPages {
 
 	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
 
+
 	# Ok page
 	my $okPage = GetTemplate('actionvote.template');
 
@@ -327,6 +320,7 @@ sub MakeStaticPages {
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
+
 
 	# Manual page
 	my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
@@ -396,6 +390,8 @@ sub MakeStaticPages {
 	WriteLog('MakeStaticPages() END');
 }
 
+MakeStaticPages();
+
 WriteLog ("GetReadPage()...");
 
 #my $indexText = GetReadPage();
@@ -448,6 +444,7 @@ foreach my $hashRef (@authors) {
 #
 #	}
 }
+
 #
 # sub MakeRssFile {
 # 	my %queryParams;
@@ -516,8 +513,6 @@ foreach my $hashRef (@authors) {
 
 	PutFile("$HTMLDIR/rss.txt", $fileList);
 }
-
-MakeStaticPages();
 
 sub MakeClonePage {
 	WriteLog('MakeClonePage() called');
