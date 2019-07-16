@@ -7,7 +7,7 @@
 <tr><td>description:</td><td>$authorDescription</td></tr>
 <tr><td>influence:</td><td>$authorWeight</td></tr>
 <tr><td>last seen:</td><td>$authorLastSeen</td></tr>
-<tr><td>pubkey:</td><td>$publicKeyHash</td></tr>
+<tr><td>reg. entry:</td><td>$publicKeyHash</td></tr>
 <!--<tr><td>post count:</td><td>$postcount</td></tr>
 <tr><td>vote count:</td><td>$votecount</td></tr>-->
 </table>
