@@ -118,54 +118,6 @@ sub GetVersionPage {
 	return $txtPageHtml;
 }
 
-sub GetIdentityPage {
-	my $txtIndex = "";
-
-	my $title = "Profile";
-	my $titleHtml = "Profile";
-
-	$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
-
-	$txtIndex .= GetTemplate('maincontent.template');
-
-	my $idPage = GetTemplate('form/identity.template');
-
-	my $idCreateForm = GetTemplate('form/id_create.template');
-	my $prefillUsername = GetConfig('prefill_username');
-	$idCreateForm =~ s/\$prefillUsername/$prefillUsername/g;
-	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
-
-	my $idCurrentForm = GetTemplate('form/id_current.template');
-	$idPage =~ s/\$formIdCurrent/$idCurrentForm/g;
-
-	my $idAdminForm = GetTemplate('form/id_admin.template');
-	$idPage =~ s/\$formIdAdmin/$idAdminForm/g;
-
-	if (GetConfig('admin/gpg/use_gpg2')) {
-		my $gpg2Choices = GetTemplate('gpg2.choices.template');
-		$idPage =~ s/\$gpg2Algochoices/$gpg2Choices/;
-	} else {
-		$idPage =~ s/\$gpg2Algochoices//;
-	}
-
-	$txtIndex .= $idPage;
-
-	$txtIndex .= GetPageFooter();
-
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
-
-	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
-
-	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
-
-	return $txtIndex;
-}
-
 #sub InjectJs {
 #	my $scriptName = shift;
 #	chomp($scriptName);
