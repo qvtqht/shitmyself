@@ -183,7 +183,31 @@ sub GetVotesPage {
 	return $txtIndex;
 }
 
+sub GetItemTemplateFromHash {
+		my $itemHash = shift;
+		my $insetPrefix = shift;
 
+		if (IsSha1($itemHash)) {
+	#		my $itemTemplate;
+	#		if ($insetPrefix && $insetPrefix eq '>>') {
+	#			my %queryParams;
+	#			$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
+	#
+	#			my @files = DBGetItemList(\%queryParams);
+	#
+	#			$itemTemplate = GetItemTemplate($files[0]);
+	#		} else {
+	#			$itemTemplate = GetHtmlLink($itemHash);
+	#		}
+	#		return $itemTemplate;
+	#	} else {
+	#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
+	#		return '[item could not be displayed]';
+		}
+	#
+	#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
+	#	return '[aaaaahhhh!!!]';
+}
 
 sub GetItemPage {
 	#returns html for individual item page
@@ -240,10 +264,10 @@ sub GetItemPage {
 
 		WriteLog('@itemReplies = ' . @itemReplies);
 
-		#$txtIndex .= "<hr>";
+		#$txtIndex .= "<hr size=50>";
 		my $allReplies = '';
 
-		$allReplies = '<hr>' . $allReplies;
+		$allReplies = '<hr size=45>' . $allReplies;
 
 		my $replyComma = '';
 
@@ -261,7 +285,7 @@ sub GetItemPage {
 			my $replyTemplate = GetItemTemplate($replyItem);
 
 			if ($replyComma eq '') {
-				$replyComma = '<hr>';
+				$replyComma = '<hr size=35>';
 			} else {
 				$replyTemplate = $replyComma . $replyTemplate;
 			}
@@ -286,7 +310,7 @@ sub GetItemPage {
 					my $subReplyTemplate = GetItemTemplate($subReplyItem);
 
 					if ($subReplyComma eq '') {
-						$subReplyComma = '<hr>';
+						$subReplyComma = '<hr size=40>';
 					} else {
 						$subReplyTemplate = $subReplyComma . $replyTemplate;
 					}
@@ -498,7 +522,7 @@ sub GetItemTemplate {
 
 			while (scalar(@itemTags)) {
 				my $thisTag = pop @itemTags;
-				if ($thisTag eq 'poetry' || $thisTag eq 'textart') {
+				if ($thisTag eq 'textart') {
 					$itemClass .= ' item-textart';
 				}
 			}
@@ -1164,6 +1188,11 @@ sub GetReadPage {
 		my $authorWeight = DBGetAuthorWeight($authorKey);
 		my $authorLastSeen = DBGetAuthorLastSeen($authorKey);
 
+		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
+		my $publicKeyHash = GetHtmlLink($publicKeyHash);
+
+#		my $publicKeyHash = '';
+
 		if (IsServer($authorKey)) {
 			if ($authorDescription) {
 				$authorDescription .= '<br>';
@@ -1186,11 +1215,12 @@ sub GetReadPage {
 		$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
 		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 		$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
+		$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHash/g;
 
 		$txtIndex .= $authorInfoTemplate;
 	}
 
-	my $itemComma = '';
+	my $itemComma = '<hr size=30>';
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -1248,12 +1278,12 @@ sub GetReadPage {
 #				$row->{'show_quick_vote'} = 1;
 				$itemTemplate = GetItemTemplate($row);
 			} else {
-				$itemTemplate = '<hr>Problem decoding message</hr>';
+				$itemTemplate = '<p>Problem decoding message</p>';
 				WriteLog('Something happened and there is no $message where I expected it... Oh well, moving on.');
 			}
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr>';
+				$itemComma = '<hr size=20>';
 			} else {
 				$itemTemplate = $itemComma . $itemTemplate;
 			}
@@ -1363,7 +1393,7 @@ sub GetIndexPage {
 			$itemTemplate = GetItemTemplate($row);
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr>';
+				$itemComma = '<hr size=10>';
 			} else {
 				$itemTemplate = $itemComma . $itemTemplate;
 			}
