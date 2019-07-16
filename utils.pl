@@ -634,15 +634,25 @@ sub GetConfig {
 }
 
 sub ConfigKeyValid {
+	WriteLog('ConfigKeyValid()');
+
 	my $configName = shift;
+
+	WriteLog('ConfigKeyValid($configName)');
 
 	if ($configName =~ /^[a-z0-9_]{1,32}$/) {
 		WriteLog("WARNING! ConfigKeyValid() sanity check failed!");
 	}
 
+	WriteLog('ConfigKeyValid(\$configName sanity check passed)');
+
 	if (-e "default/$configName") {
+		WriteLog("default/$configName exists!");
+
 		return 1;
 	} else {
+		WriteLog("default/$configName NOT exist!");
+
 		return 0;
 	}
 }
