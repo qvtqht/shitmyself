@@ -50,4 +50,6 @@ system('perl generate.pl');
 
 DBResetPageTouch();
 
+system('perl gitflow.pl');
+
 WriteLog( "Finished!");
