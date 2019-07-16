@@ -221,6 +221,7 @@ foreach my $file (@gitChangesArray) {
 WriteIndexedConfig();
 
 if ($filesProcessed > 0) {
+	MakeStaticPages();
 	WriteIndexPages();
 }
 
