@@ -103,29 +103,33 @@ sub SqliteMakeTables() {
 #	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 
 	# vote
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by)");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by);");
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 
+	# item_attribute
+	SqliteQuery2("CREATE TABLE item_attribute(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, attribute);");
+	SqliteQuery2("CREATE UNIQUE INDEX item_attribute_unique ON item_attribute (file_hash, attribute);");
+
 	# item_page
-	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_param)");
-	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_param)");
+	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_param);");
+	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_param);");
 
 	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 
 	# event
-	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration)");
+	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration);");
 
 	# page_touch
-	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER)");
-	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param)");
+	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER);");
+	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
 
 	# config
-	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, source_item)");
-	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp, reset_flag)");
+	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, source_item);");
+	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp, reset_flag);");
 	SqliteQuery2("
 		CREATE VIEW config_latest AS
 		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag, source_item FROM config GROUP BY key ORDER BY timestamp DESC
-	");
+	;");
 
 
 #	SqliteQuery2("CREATE TABLE type(type_mask, type_name)");
@@ -1102,6 +1106,7 @@ sub DBAddEventRecord {
 	push @queryParams, $fileHash, $eventTime, $eventDuration, $signedBy;
 }
 
+
 sub DBAddVoteRecord {
 # DBAddVoteRecord
 # $fileHash
@@ -1170,6 +1175,60 @@ sub DBAddVoteRecord {
 	$query .= '(?, ?, ?, ?)';
 	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy;
 }
+
+
+
+sub DBAddItemAttribute {
+	# DBAddItemAttribute
+	# $fileHash
+	# $attribute
+
+	state $query;
+	state @queryParams;
+
+	WriteLog("DBAddItemAttribute()");
+
+	my $fileHash = shift;
+
+	if ($fileHash eq 'flush') {
+		WriteLog("DBAddItemAttribute(flush)");
+
+		if ($query) {
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = '';
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if (!$fileHash) {
+		WriteLog("DBAddItemAttribute() called without \$fileHash! Returning.");
+	}
+
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
+		DBAddItemAttribute('flush');
+		$query = '';
+	}
+
+	my $attribute = shift;
+
+	chomp $fileHash;
+	chomp $attribute;
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO item_attribute(file_hash, attribute) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= '(?, ?)';
+	push @queryParams, $fileHash, $attribute;
+}
+
 
 sub DBAddAddedTimeRecord {
 	# Adds a new record to added_time, typically from log/added.log
@@ -1511,7 +1570,6 @@ sub DBGetAuthorLastSeen {
 		return "";
 	}
 }
-
 
 sub DBGetAuthorWeight {
 	my $key = shift;
