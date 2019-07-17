@@ -1,7 +1,7 @@
 <p>Version: $version</p>
-<p>Item Count: $itemCount</p>
-<p>Profile Count: $authorCount</p>
-<p>Administrator: $admin</p>
+<p>Items: $itemCount</p>
+<p>Profiles: $authorCount</p>
+<p>Operator: $admin</p>
 <p>Server: $server</p>
 
 <!--
