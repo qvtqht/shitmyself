@@ -1546,6 +1546,31 @@ sub DBGetAuthorScore {
 	}
 }
 
+sub DBGetAuthorItemCount {
+	my $key = shift;
+	chomp ($key);
+
+	if (!IsFingerprint($key)) {
+		WriteLog('Problem! DBGetAuthorScore called with invalid parameter! returning');
+		return;
+	}
+
+	state %scoreCache;
+	if (exists($scoreCache{$key})) {
+		return $scoreCache{$key};
+	}
+
+	$key = SqliteEscape($key);
+
+	if ($key) { #todo fix non-param sql
+		my $query = "SELECT COUNT(file_hash) item_count FROM item_flat WHERE author_key = '$key'";
+		$scoreCache{$key} = SqliteGetValue($query);
+		return $scoreCache{$key};
+	} else {
+		return "";
+	}
+}
+
 sub DBGetAuthorLastSeen {
 	my $key = shift;
 	chomp ($key);
@@ -1617,7 +1642,7 @@ sub DBGetAuthorWeight {
 		my $query = "SELECT SUM(vote_weight) FROM vote_weight WHERE key = '$key'";
 		$weightCache{$key} = SqliteGetValue($query);
 
-		if ($weightCache{$key} < 1) {
+		if (!defined($weightCache{$key}) || $weightCache{$key} < 1) {
 			$weightCache{$key} = 1;
 		}
 
@@ -1693,6 +1718,10 @@ sub DBGetTopItems {
 			item_score DESC
 		LIMIT 50;
 	";
+
+	WriteLog('DBGetTopItems()');
+
+	WriteLog($query);
 
 	my @queryParams;
 
