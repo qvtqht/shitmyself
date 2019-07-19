@@ -9,6 +9,8 @@ use lib qw(lib);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
+#use List::Uniq ':all';
+
 #use Acme::RandomEmoji qw(random_emoji);
 
 require './utils.pl';
@@ -224,12 +226,16 @@ sub GetItemPage {
 	my $title = '';
 	my $titleHtml = '';
 
-	if (defined($file{'item_title'})) {
+	if (defined($file{'item_title'}) && $file{'item_title'}) {
+		WriteLog("GetItemPage: defined(item_title) = true!");
+
 		$title = HtmlEscape($file{'item_title'});
 		$titleHtml = HtmlEscape($file{'item_title'});
 
 		$title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
 	} else {
+		WriteLog("GetItemPage: defined(item_title) = false!");
+
 		$title = $file{'file_hash'};
 		$titleHtml = $file{'file_hash'};
 	}
@@ -367,7 +373,7 @@ sub GetItemPage {
 	}
 
 	if ($file{'vote_buttons'} && GetConfig('enable_checkboxes')) {
-		my $ballotTime = time();
+		my $ballotTime = GetTime();
 		my $voterTemplate .= GetTemplate("form/itemvote.template");
 
 		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
@@ -407,10 +413,11 @@ sub GetItemPage {
 sub GetHtmlLink {
 	my $hash = shift;
 
-	#todo sanity check
-
-	#todo templatize this
-	return '<a href="/' . GetHtmlFilename($hash) . '">' . substr($hash, 0, 8) . '..</a>';
+	if ($hash) {
+		#todo templatize this
+		return '<a href="/' . GetHtmlFilename($hash) . '">' . substr($hash, 0, 8) . '..</a>';
+	} else {
+	}
 }
 
 sub GetItemTemplate {
@@ -429,7 +436,8 @@ sub GetItemTemplate {
 	# show_vote_summary = shows item's list and count of tags
 	# show_quick_vote = displays quick vote buttons
 	# item_title = title
-
+	# tags_list = comma-separated list of tags the item has
+	# is_textart = set <tt><code> tags for the message itself
 
 	# get %file hash from supplied parameters
 	my %file = %{shift @_};
@@ -438,6 +446,8 @@ sub GetItemTemplate {
 	if (-e $file{'file_path'}) {
 		my $gitHash = $file{'file_hash'};
 		my $gpgKey = $file{'author_key'};
+
+		my $isTextart = 0;
 
 		my $isSigned;
 		if ($gpgKey) {
@@ -525,6 +535,7 @@ sub GetItemTemplate {
 				my $thisTag = pop @itemTags;
 				if ($thisTag eq 'textart') {
 					$itemClass .= ' item-textart';
+					$isTextart = 1;
 				}
 			}
 		}
@@ -578,6 +589,10 @@ sub GetItemTemplate {
 			$itemTemplate =~ s/\$itemTitleTemplate/$itemTitleTemplate/g;
 		} else {
 			$itemTemplate =~ s/\$itemTitleTemplate//g;
+		}
+
+		if ($isTextart) {
+			$itemText = '<tt><code>' . $message . '</code></tt>';
 		}
 
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
@@ -639,11 +654,11 @@ sub GetItemTemplate {
 				unshift @quickVotesList, split("\n", $quickVotesForTags);
 			}
 
-			{
+			if (1) {
 				my $quickVoteTemplate = GetTemplate('votequick.template');
 				my $tagButtons = '';
 				foreach my $quickTagValue (@quickVotesList) {
-					my $ballotTime = time();
+					my $ballotTime = GetTime();
 					if ($fileHash && $ballotTime) {
 						my $mySecret = GetConfig('admin/secret');
 						my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
@@ -666,6 +681,8 @@ sub GetItemTemplate {
 				$quickVoteTemplate =~ s/\$quickVoteButtons/$tagButtons/;
 
 				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteTemplate/;
+			} else {
+				$itemTemplate =~ s/\$quickVoteButtonGroup//;
 			}
 		} else {
 			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
@@ -685,7 +702,7 @@ sub GetPageFooter {
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
 
-	my $timeBuilt = time();
+	my $timeBuilt = GetTime();
 
 	my $timestamp = strftime('%F %T', localtime($timeBuilt));
 	my $myVersion = GetMyVersion();
@@ -805,6 +822,12 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
+#
+#	if (GetConfig('funstuff/js_clock')) {
+#		my $jsClock = Get
+#		$htmlStart =~ s/\$putClockHere/$putClockHere/g;
+#
+#	}
 
 	$htmlStart =~ s/\$introText/$introText/g;
 
@@ -923,37 +946,41 @@ sub GetTopItemsPage {
 
 	my @topItemsArray = @{$topItems};
 
-	my $itemListingWrapper = GetTemplate('item_listing_wrapper.template');
+	if (scalar(@topItemsArray)) {
+		my $itemListingWrapper = GetTemplate('item_listing_wrapper.template');
 
-	my $itemListings = '';
+		my $itemListings = '';
 
-	while (@topItemsArray) {
-		my $itemTemplate = GetTemplate('item_listing.template');
-		#todo don't need to do this every time
+		while (@topItemsArray) {
+			my $itemTemplate = GetTemplate('item_listing.template');
+			#todo don't need to do this every time
 
-		my $item = shift @topItemsArray;
+			my $item = shift @topItemsArray;
 
-		my $itemKey = @{$item}[2];
-		my $itemTitle = @{$item}[7];
-		my $itemScore = @{$item}[8];
+			my $itemKey = @{$item}[2];
+			my $itemTitle = @{$item}[7];
+			my $itemScore = @{$item}[8];
 
-		if (trim($itemTitle) eq '') {
-			$itemTitle = '(' . $itemKey . ')';
+			if (trim($itemTitle) eq '') {
+				$itemTitle = '(' . $itemKey . ')';
+			}
+
+			my $itemLink = GetHtmlFilename($itemKey);
+			$itemTitle = HtmlEscape($itemTitle);
+
+			$itemTemplate =~ s/\$link/$itemLink/g;
+			$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
+			$itemTemplate =~ s/\$itemScore/$itemScore/g;
+
+			$itemListings .= $itemTemplate;
 		}
 
-		my $itemLink = GetHtmlFilename($itemKey);
-		$itemTitle = HtmlEscape($itemTitle);
+		$itemListingWrapper =~ s/\$itemListings/$itemListings/;
 
-		$itemTemplate =~ s/\$link/$itemLink/g;
-		$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
-		$itemTemplate =~ s/\$itemScore/$itemScore/g;
-
-		$itemListings .= $itemTemplate;
+		$txtIndex .= $itemListingWrapper;
+	} else {
+		$txtIndex .= "<p>Couldn't find any items to put on this page. Recommend that you post something or contact your operator.</p>";
 	}
-
-	$itemListingWrapper =~ s/\$itemListings/$itemListings/;
-
-	$txtIndex .= $itemListingWrapper;
 
 	$txtIndex .= GetPageFooter();
 
@@ -991,10 +1018,10 @@ sub GetStatsPage {
 	}
 
 
-	my $currUpdateTime = time();
+	my $currUpdateTime = GetTime();
 	my $prevUpdateTime = GetConfig('last_update_time');
 	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
-		$prevUpdateTime = time();
+		$prevUpdateTime = GetTime();
 	}
 
 	my $updateInterval = $currUpdateTime - $prevUpdateTime;
@@ -1035,7 +1062,7 @@ sub GetScoreboardPage {
 	my $title = 'Top Scores';
 	my $titleHtml = 'Top Scores';
 
-	my $currentTime = time();
+	my $currentTime = GetTime();
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'scoreboard');
 
@@ -1058,8 +1085,9 @@ sub GetScoreboardPage {
 		my $authorKey = @{$author}[0];
 		my $authorAlias = @{$author}[1];
 		my $authorScore = @{$author}[2];
-		my $authorWeight = @{$author}[3];
+		my $authorWeight = @{$author}[3] || 1;
 		my $authorLastSeen = @{$author}[4];
+		my $authorItemCount = @{$author}[5];
 		my $authorAvatar = GetHtmlAvatar($authorKey);
 
 		my $authorLink = "/author/" . $authorKey . ".html";
@@ -1071,6 +1099,7 @@ sub GetScoreboardPage {
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
 		$authorItemTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
+		$authorItemTemplate =~ s/\$authorItemCount/$authorItemCount/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
 
 		$authorListings .= $authorItemTemplate;
@@ -1185,12 +1214,15 @@ sub GetReadPage {
 		my $authorAvatarHtml = GetAvatar($authorKey);
 		my $authorImportance = 1337;
 		my $authorScore = DBGetAuthorScore($authorKey);
+		my $itemCount = DBGetAuthorItemCount($authorKey);
 		my $authorDescription = '';
 		my $authorWeight = DBGetAuthorWeight($authorKey);
 		my $authorLastSeen = DBGetAuthorLastSeen($authorKey);
 
 		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
-		$publicKeyHash = GetHtmlLink($publicKeyHash);
+		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
+			$publicKeyHash = GetHtmlLink($publicKeyHash);
+		}
 
 #		my $publicKeyHash = '';
 
@@ -1213,10 +1245,15 @@ sub GetReadPage {
 		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
 		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
 		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
+		$authorInfoTemplate =~ s/\$itemCount/$itemCount/;
 		$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
 		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 		$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
-		$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHash/g;
+		if ($publicKeyHash) {
+			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHash/g;
+		} else {
+			$authorInfoTemplate =~ s/\$publicKeyHash//g;
+		}
 
 		$txtIndex .= $authorInfoTemplate;
 	}
@@ -1227,7 +1264,7 @@ sub GetReadPage {
 		my $file = $row->{'file_path'};
 
 		WriteLog("DBAddItemPage (1)");
-		DBAddItemPage($pageType, $pageParam, $row->{'file_hash'});
+		DBAddItemPage($row->{'file_hash'}, $pageType, $pageParam);
 
 		if ($file && -e $file) {
 			my $gitHash = $row->{'file_hash'};
@@ -1395,11 +1432,10 @@ sub GetIndexPage {
 
 			if ($itemComma eq '') {
 				$itemComma = '<hr size=10>';
-			} else {
-				$itemTemplate = $itemComma . $itemTemplate;
 			}
 
-			$itemList = $itemTemplate . $itemList;
+#			$itemList = $itemTemplate . $itemComma . $itemList;
+			$itemList = $itemList . $itemComma . $itemTemplate;
 		}
 	}
 
@@ -1729,7 +1765,5 @@ sub GetIdentityPage {
 
 	return $txtIndex;
 }
-
-
 
 1;
