@@ -26,6 +26,7 @@ use Time::Piece;
 my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
+# make a list of some directories that need to exist
 my @dirsThatShouldExist = qw(log html html/txt html/txt/log spam admin key cache html/author html/action html/top config);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
@@ -34,6 +35,7 @@ push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
 
+# create directories that need to exist
 foreach(@dirsThatShouldExist) {
 	if (!-d && !-e $_) {
 		mkdir $_;
@@ -43,28 +45,33 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
+# check if html/txt/ has a repo on it.
+# create repo if html/txt/.git/ is missing
 if (!-e 'html/txt/.git') {
 	my $pwd = `pwd`;
 	system("cd html/txt/ ; git init ; cd $pwd");
 }
 
+# figure out whether to use gpg or gpg2 command for gpg stuff
+# it might be stored in config
 my $gpgCommand = trim(GetConfig('admin/gpg/gpg_command'));
 if (!$gpgCommand) {
 	if (GetConfig('admin/gpg/use_gpg2')) {
 		$gpgCommand = 'gpg2';
 	}
 	else {
+		# if not in config, use whatever version we have as `gpg`
 		if (GetGpgMajorVersion() eq '2') {
 			$gpgCommand = 'gpg2';
 		}
 		else {
 			$gpgCommand = 'gpg';
 		}
-		#what a mess
 	}
 }
 WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
+# this code tried to use a non-default keyring, but abandoned for some reason
 # my $gpgCommand;
 # if (GetConfig('admin/gpg/use_gpg2')) {
 # 	$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
@@ -79,35 +86,50 @@ WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCom
 # WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
 sub GetCache {
+# get cache by cache key
+# comes from cache/ directory
+# plus current commit that git is on
+# this keeps cache version-specific
+
+#todo sanity checks
 	my $cacheName = shift;
 	chomp($cacheName);
 
+	# cache name prefixed by current version
 	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
 
+	# return contents of file at that path
 	return GetFile($cacheName);
 }
 
-sub LookForDate {
-	my @formats = ( '%Y/%m/%d %H:%M:%S', '%d %b %y');
-
-	my $dateString = shift;
-	chomp $dateString;
-
-	my $timestamp;
-	foreach my $format (@formats) {
-		if ( not defined $timestamp
-			and $timestamp =
-			eval {
-				localtime->strptime( $dateString, $format )
-			}
-		)
-		{
-			WriteLog("LookForDate: $dateString converted to $timestamp using $format");
-		}
-	}
-}
+#sub LookForDate {
+## looks for date in string
+## and returns it as epoch
+## not finished yet
+#	my @formats = ( '%Y/%m/%d %H:%M:%S', '%d %b %y');
+#
+#	my $dateString = shift;
+#	chomp $dateString;
+#
+#	my $timestamp;
+#	foreach my $format (@formats) {
+#		if ( not defined $timestamp
+#			and $timestamp =
+#			eval {
+#				localtime->strptime( $dateString, $format )
+#			}
+#		)
+#		{
+#			WriteLog("LookForDate: $dateString converted to $timestamp using $format");
+#		}
+#	}
+#}
 
 sub EnsureSubdirs {
+# ensures that subdirectories for a file exist
+# takes file's path as argument
+
+# todo remove requirement of external module
 	my $fullPath = shift;
 
 	my ( $file, $dirs ) = fileparse $fullPath;
@@ -122,6 +144,10 @@ sub EnsureSubdirs {
 }
 
 sub PutCache {
+# stores value in cache
+# $cacheName, $content
+
+#todo sanity checks and error handling
 	my $cacheName = shift;
 	chomp($cacheName);
 
@@ -134,6 +160,7 @@ sub PutCache {
 }
 
 sub UnlinkCache {
+# removes cache by unlinking file it's stored in
 	my $cacheName = shift;
 	chomp($cacheName);
 
@@ -145,6 +172,7 @@ sub UnlinkCache {
 }
 
 sub CacheExists {
+# returns 1 if cache exists, 0 if doesn't
     my $cacheName = shift;
     chomp($cacheName);
 
@@ -158,6 +186,10 @@ sub CacheExists {
 }
 
 sub GetGpgMajorVersion {
+# get the first number of the version which 'gpg --version' returns
+# expecting 1 or 2
+
+# todo sanity checks
     state $gpgVersion;
 
     if ($gpgVersion) {
@@ -175,6 +207,7 @@ sub GetGpgMajorVersion {
 }
 
 sub GetMyVersion {
+# returns current git commit hash as version
 	state $myVersion;
 
 	if ($myVersion) {
@@ -188,13 +221,6 @@ sub GetMyVersion {
 	return $myVersion;
 }
 
-# this is not needed, because we are not clearing out the html dir
-#if (!-e "html/txt") {
-#	system('ln -s "../txt" html/txt');
-#}
-
-####################################################################################
-#
 
 sub WriteConfigFromDatabase {
 #	print("1");
@@ -660,6 +686,18 @@ sub ConfigKeyValid {
 sub GetHtmlFilename {
 	my $hash = shift;
 
+	WriteLog("GetHtmlFilename()");
+
+	if (!defined($hash) || !$hash) {
+		if (WriteLog("Warning! GetHtmlFilename() called without parameter")) {
+
+			my $trace = Devel::StackTrace->new;
+			print $trace->as_string; # like carp
+		}
+
+		return;
+	}
+
 	WriteLog("GetHtmlFilename(\$hash = $hash)");
 
 	if (!IsSha1($hash)) {
@@ -687,6 +725,34 @@ sub GetHtmlFilename {
 			'.html';
 
 	return $htmlFilename;
+}
+
+sub GetDigitColor() {
+# this returns a 2-char color that corresponds to a digit for coloring the clock's digits
+
+	my $digit = shift;
+
+	if (!$digit) {
+		return;
+	}
+	if (length($digit) != 1) {
+		return;
+	}
+	#todo $digit must be ^[0-9]{1}$
+
+	my $digitColor = floor($digit / 10 * 255);
+	my $digitColorHex = sprintf("%X", $digitColor);
+
+	if (length($digitColorHex) < 2) {
+		$digitColorHex = '0' . $digitColorHex;
+	}
+
+	return $digitColor;
+}
+
+sub GetTime() {
+#	return (time() + 2207520000);
+	return (time());
 }
 
 sub GetTitle {
@@ -1084,27 +1150,6 @@ sub TrimPath {
 
 	return $string;
 }
-#
-sub GetGpgFingerprint {
-	#gets the full gpg fingerprint from a public key in a text file
-
-	my $file = shift;
-	chomp $file;
-
-	WriteLog( "gpg --with-colons --with-fingerprint \"$file\"\n");
-	my @gpgResults = split("\n", `gpg --with-colons --with-fingerprint "$file"`);
-
-	foreach my $line (@gpgResults) {
-		if (substr($line, 0, 3) eq "fpr") {
-			my $fingerprint = substr($line, 3);
-			$fingerprint =~ s/://g;
-
-			return $fingerprint;
-		}
-	}
-
-	return;
-}
 
 sub HtmlEscape {
 	my $text = shift;
@@ -1181,7 +1226,6 @@ sub GpgParse {
 	# $returnValues{'alias'} = alias of signer, if they've added one by submitting their public key
 	# $returnValues{'keyExpired'} = whether the key has expired: 0 for not expired, 1 for expired
 	# $returnValues{'gitHash'} = git's hash of the file's contents
-	# $returnValues{'fingerprint'} = full fingerprint of gpg key
 
 	WriteLog("===BEGIN GPG PARSE===");
 
@@ -1194,8 +1238,6 @@ sub GpgParse {
 	my $isSigned = 0;
 
 	my $gpg_key;
-
-	my $fingerprint = '';
 
 	my $alias = '';
 
@@ -1397,8 +1439,6 @@ sub GpgParse {
 				$message = `$gpgCommand --decrypt "$filePath"`;
 
 				$isSigned = 1;
-
-				#$fingerprint = GetGpgFingerprint($filePath); #todo
 			}
 
 			if (!$isSigned) {
@@ -1418,7 +1458,6 @@ sub GpgParse {
 		$returnValues{'alias'} = $alias;
 		$returnValues{'keyExpired'} = $keyExpired;
 		$returnValues{'gitHash'} = $gitHash;
-		$returnValues{'fingerprint'} = $fingerprint;
 		$returnValues{'verifyError'} = $verifyError;
 
 		store \%returnValues, $cachePath;
@@ -1498,18 +1537,17 @@ sub FormatForWeb {
 }
 
 sub WriteLog {
-	#todo sanitize?
-	my $text = shift;
-
-	if (!$text) {
-		$text = '(empty string)';
-	}
-
-	chomp $text;
-
-	my $timestamp = time();
-
 	if (-e 'config/admin/debug') {
+		my $text = shift;
+
+		if (!$text) {
+			$text = '(empty string)';
+		}
+
+		chomp $text;
+
+		my $timestamp = GetTime();
+
 		AppendFile("log/log.log", $timestamp . " " . $text);
 		print $timestamp . " " . $text . "\n";
 
@@ -1523,7 +1561,7 @@ sub WriteMessage {
 	my $text = shift;
 	chomp $text;
 
-	my $timestamp = time();
+	my $timestamp = GetTime();
 
 	print $timestamp . ' ' . $text . "\n";
 }
@@ -1539,8 +1577,8 @@ if ($lastVersion ne $currVersion) {
 	#WriteLog("gpg --list-keys CCEA3752");
 	#WriteLog($serverKey);
 
-	my $changeLogFilename = 'changelog_' . time() . '.txt';
-	my $changeLogMessage = 'Changelog Generated at ' . time() . "\n\n" . 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
+	my $changeLogFilename = 'changelog_' . GetTime() . '.txt';
+	my $changeLogMessage = 'Changelog Generated at ' . GetTime() . "\n\n" . 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
 
 	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
 	$changeLogList = trim($changeLogList);
@@ -1566,7 +1604,7 @@ if ($currAdmin) {
 	if ($lastAdmin ne $currAdmin) {
 		WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
 
-		my $changeAdminFilename = 'changeadmin_' . time() . '.txt';
+		my $changeAdminFilename = 'changeadmin_' . GetTime() . '.txt';
 		my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
 
 		PutFile("html/txt/$changeAdminFilename", $changeAdminMessage);
