@@ -50,7 +50,7 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE UNIQUE INDEX added_by_unique ON added_by(file_hash)");
 
 	# author
-	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE, published)");
+	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
 
 	# author_alias
 	SqliteQuery2("CREATE TABLE author_alias(
@@ -150,7 +150,7 @@ sub SqliteMakeTables() {
 		CREATE VIEW parent_count AS
 		SELECT
 			item_hash AS item_hash,
-			COUNT(*) AS parent_count
+			COUNT(parent_hash) AS parent_count
 		FROM
 			item_parent
 		GROUP BY
@@ -261,7 +261,8 @@ sub SqliteMakeTables() {
 			SUM(vote_weight.vote_weight) AS author_weight,
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
-			MAX(item_flat.add_timestamp) AS last_seen
+			MAX(item_flat.add_timestamp) AS last_seen,
+			COUNT(DISTINCT item_flat.file_hash) AS item_count
 		FROM
 			author 
 			LEFT JOIN vote_weight
@@ -409,7 +410,7 @@ sub DBGetEventsAfter {
 	my $time = shift;
 
 	if (!$time) {
-		$time = time();
+		$time = GetTime();
 	}
 
 	my $query;
@@ -826,7 +827,7 @@ sub DBAddPageTouch {
 	}
 
 	my $pageParam = shift;
-	my $touchTime = time();
+	my $touchTime = GetTime();
 
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
@@ -914,17 +915,16 @@ sub DBAddKeyAlias {
 	}
 
 	my $alias = shift;
-	my $fingerprint = shift;
 	my $pubkeyFileHash = shift;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO author_alias(key, alias, fingerprint, pubkey_file_hash) VALUES ";
+		$query = "INSERT OR REPLACE INTO author_alias(key, alias, pubkey_file_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= "(?, ?, ?, ?)";
-	push @queryParams, $key, $alias, $fingerprint, $pubkeyFileHash;
+	$query .= "(?, ?, ?)";
+	push @queryParams, $key, $alias, $pubkeyFileHash;
 }
 
 sub DBAddItemParent {
@@ -1677,7 +1677,8 @@ sub DBGetTopAuthors {
 			author_alias,
 			author_score,
 			author_weight,
-			last_seen
+			last_seen,
+			item_count
 		FROM author_flat
 		ORDER BY author_score DESC
 		LIMIT 50;
