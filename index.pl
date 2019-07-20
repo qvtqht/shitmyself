@@ -5,7 +5,6 @@ use warnings FATAL => 'all';
 use utf8;
 use POSIX qw(strftime);
 
-
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
@@ -40,7 +39,7 @@ sub MakeVoteIndex {
 	#This is how long anonymous votes are counted for;
 	my $voteLimit = GetConfig('vote_limit');
 
-	my $currentTime = time();
+	my $currentTime = GetTime();
 
 	if (defined($voteLog) && $voteLog) {
 		my @voteRecord = split("\n", GetFile("log/votes.log"));
@@ -59,18 +58,20 @@ sub MakeVoteIndex {
 sub MakeAddedIndex {
 	WriteLog( "MakeAddedIndex()\n");
 
-	my $addedLog = GetFile('log/added.log');
+	if (GetConfig('admin/read_added_log')) {
+		my $addedLog = GetFile('log/added.log');
 
-	if (defined($addedLog) && $addedLog) {
-		my @addedRecord = split("\n", GetFile("log/added.log"));
+		if (defined($addedLog) && $addedLog) {
+			my @addedRecord = split("\n", GetFile("log/added.log"));
 
-		foreach(@addedRecord) {
-			my ($filePath, $addedTime) = split('\|', $_);
+			foreach(@addedRecord) {
+				my ($filePath, $addedTime) = split('\|', $_);
 
-			DBAddAddedTimeRecord($filePath, $addedTime);
+				DBAddAddedTimeRecord($filePath, $addedTime);
+			}
+
+			DBAddAddedTimeRecord('flush');
 		}
-
-		DBAddAddedTimeRecord('flush');
 	}
 }
 
@@ -133,6 +134,7 @@ sub IndexTextFile {
 		DBAddConfigValue('flush');
 		DBAddTitle('flush');
 		DBAddItemClient('flush');
+		DBAddItemAttribute('flush');
 
 		return;
 	}
@@ -191,7 +193,6 @@ sub IndexTextFile {
 	# author's attributes
 	my $gpgKey;             # author's gpg key, hex 16 chars
 	my $alias;              # author's alias, as reported by gpg's parsing of their public key
-	my $fingerprint;        # author's gpg key, long-ass format (not used currently)
 
 	my $verifyError = 0;    # was there an error verifying the file with gpg?
 
@@ -220,7 +221,6 @@ sub IndexTextFile {
 		$gpgKey = $gpgResults{'key'};
 		$alias = $gpgResults{'alias'};
 		$gitHash = $gpgResults{'gitHash'};
-		$fingerprint = $gpgResults{'fingerprint'};
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
 		WriteLog("\$alias = $alias");
@@ -283,10 +283,10 @@ sub IndexTextFile {
 			WriteLog("... No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
 
 			# current time
-			my $newAddedTime = time();
+			my $newAddedTime = GetTime();
 			$addedTime = $newAddedTime; #todo is this right? confirm
 
-			if (GetConfig('admin/use_added_log')) {
+			if (GetConfig('admin/logging/write_added_log')) {
 				# add new line to added.log
 				my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
 				AppendFile('./log/added.log', $logLine);
@@ -305,8 +305,8 @@ sub IndexTextFile {
 		if (!GetAdminKey() && GetConfig('admin/admin_imprint') && $gpgKey && $alias) {
 			PutFile('./admin.key', $txt);
 
-			my $newAdminMessage = 'html/txt/' . time() . '_newadmin.txt';
-			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n" . time());
+			my $newAdminMessage = 'html/txt/' . GetTime() . '_newadmin.txt';
+			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n" . GetTime());
 			ServerSign($newAdminMessage);
 		}
 
@@ -333,7 +333,7 @@ sub IndexTextFile {
 		}
 
 		if ($alias) {
-			DBAddKeyAlias ($gpgKey, $alias, $fingerprint, $gitHash);
+			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
 
 			DBAddKeyAlias('flush');
 
@@ -403,7 +403,7 @@ sub IndexTextFile {
 		if ($message) {
 			if (IsAdmin($gpgKey)) {
 				if (trim($message) eq 'upgrade_now') {
-					my $time = time();
+					my $time = GetTime();
 
 					my $upgradeNow = system('perl ./upgrade.pl');
 
@@ -808,12 +808,15 @@ sub IndexTextFile {
 						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
 					}
 
+					DBAddVoteRecord($fileHash, $addedTime, 'hasvote');
+
 					DBAddItemParent($gitHash, $fileHash);
 
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
 					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
-#					$message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
-					$message =~ s/$reconLine/[$voteValue]/g;
+					# $message =~ s/$reconLine/[$voteValue] (vote on $fileHash)/g;
+					# $message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
+					$message =~ s/$reconLine/>>$fileHash\n[$voteValue]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
@@ -823,8 +826,8 @@ sub IndexTextFile {
 
 					DBAddPageTouch('tag', 'vote');
 
-					if (IsAdmin($gpgKey) || IsServer($gpgKey)) {
-						if ($voteValue eq 'remove') {
+					if (IsAdmin($gpgKey)) {
+						if ($voteValue eq 'remove' || $voteValue eq 'flag') {
 							AppendFile('log/deleted.log', $fileHash);
 							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
 							my $htmlFilename = 'html/' . GetHtmlFilename($fileHash);
@@ -968,6 +971,12 @@ sub MakeIndex {
 	WriteIndexedConfig();
 }
 
+my $arg1 = shift;
+if ($arg1) {
+	if (-e $arg1) {
+		IndexTextFile($arg1);
+	}
+}
 
 
 #MakeTagIndex();
