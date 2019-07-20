@@ -364,6 +364,7 @@ sub ProcessAccessLog {
 
 					# Generate filename from date and time
 					my $filename;
+#					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
 
@@ -373,13 +374,20 @@ sub ProcessAccessLog {
 
 					# Try to write to the file, exit if we can't
 					if (PutFile($pathedFilename, $message)) {
+						if (GetConfig('admin/organize_files')) {
+							my $hashFilename = GetFileHashPath($pathedFilename);
+							rename($pathedFilename, $hashFilename);
+							$pathedFilename = $hashFilename;
+						}
+
 						#Get the hash for this file
 						my $fileHash = GetFileHash($pathedFilename);
 
-						my $addedTime = time();
+						my $addedTime = GetTime();
 
-						if (GetConfig('admin/use_added_log')) {
+						if (GetConfig('admin/logging/write_added_log')) {
 							# #Add a line to the added.log that records the timestamp internally
+
 							my $addedLog = $fileHash . '|' . $addedTime;
 							AppendFile('./log/added.log', $addedLog);
 						}
@@ -499,7 +507,7 @@ sub ProcessAccessLog {
 
 					my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
 
-					my $currentTime = time();
+					my $currentTime = GetTime();
 					if (
 							($csrf eq $checksumCorrect) #checksum needs to match
 								&&
@@ -552,7 +560,7 @@ sub ProcessAccessLog {
 				# Verify the checksum
 				my $checksumCorrect = md5_hex($voteFile . $ballotTime . $mySecret);
 
-				my $currentTime = time();
+				my $currentTime = GetTime();
 				if ($checksum eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
 					my $voteEntry = "$voteFile|$ballotTime|$voteValue";
 
