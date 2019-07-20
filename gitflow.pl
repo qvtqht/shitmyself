@@ -11,11 +11,18 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 
+sub GetTime2() {
+# this is identical to GetTime() in utils.pl
+# #todo replace at some point
+	#	return (time() + 2207520000);
+	return (time());
+}
+
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
 
-print time() . " Begin requires\n";
+print GetTime2() . " Begin requires\n";
 
 require './utils.pl';
 require './sqlite.pl';
@@ -23,7 +30,7 @@ require './index.pl';
 require './access.pl';
 require './pages.pl';
 
-print time() . " End requires\n";
+print GetTime2() . " End requires\n";
 
 WriteLog('gitflow.pl begin');
 
@@ -32,12 +39,12 @@ $counter{'access_log'} = 0;
 $counter{'indexed_file'} = 0;
 
 my $lockTime = GetFile('cron.lock');
-my $currentTime = time();
+my $currentTime = GetTime2();
 
 if ($lockTime) {
 	if ($currentTime - 1800 < $lockTime) {
 		WriteLog('Quitting due to lock file');
-		die();
+		die('Quitting due to lock file');
 	} else {
 		WriteLog('Lock file exists, but old. Continuing.');
 	}
@@ -64,7 +71,7 @@ my $newItemCount;
 
 # time limit
 my $timeLimit = GetConfig('admin/gitflow_time_limit');
-my $startTime = time();
+my $startTime = GetTime2();
 #todo validation
 
 # Check to see if access log exists
@@ -139,7 +146,7 @@ foreach my $file (@gitChangesArray) {
 		last;
 	}
 
-	if ((time() - $startTime) > $timeLimit) {
+	if ((GetTime2() - $startTime) > $timeLimit) {
 		WriteLog("Time limit reached, exiting loop");
 		last;
 	}
@@ -157,7 +164,7 @@ foreach my $file (@gitChangesArray) {
 
 	# If the file exists, and is not a directory, process it
 	if (-e $fileFullPath && !-d $fileFullPath) {
-		my $addedTime = time();
+		my $addedTime = GetTime2();
 
 		# get file's hash from git
 		my $fileHash = GetFileHash($fileFullPath);
@@ -251,7 +258,7 @@ foreach my $page (@touchedPagesArray) {
 #		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
 #		last;
 #	}
-#	if ((time() - $startTime) > $timeLimit) {
+#	if ((GetTime2() - $startTime) > $timeLimit) {
 #		WriteLog("Time limit reached, exiting loop");
 #		last;
 #	}
@@ -359,7 +366,7 @@ foreach my $page (@touchedPagesArray) {
 ## rebuild abyss pages no more than once an hour (default/admin/abyss_rebuild_interval)
 #my $lastAbyssRebuild = GetConfig('last_abyss');
 #my $abyssRebuildInterval = GetConfig('admin/abyss_rebuild_interval');
-#my $curTime = time();
+#my $curTime = GetTime2();
 #
 #WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
 #if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
@@ -372,10 +379,14 @@ foreach my $page (@touchedPagesArray) {
 #}
 
 # save current time in config/admin/gitflow_last
-my $newLastFlow = time();
+my $newLastFlow = GetTime2();
 WriteLog($newLastFlow);
 PutConfig('admin/gitflow_last', $newLastFlow);
 
 unlink('cron.lock');
+
+WriteLog("======gitflow.pl DONE! ======");
+WriteLog("Items/files processed: $filesProcessed");
+print("Items/files processed: $filesProcessed\n");
 
 1;
