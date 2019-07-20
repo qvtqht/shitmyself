@@ -1,3 +1,5 @@
+Update pages for parent items recursively
+
 Web server handler for potential 404:
 	sha(url string)
 		check for item
