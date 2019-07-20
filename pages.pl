@@ -290,12 +290,6 @@ sub GetItemPage {
 
 			my $replyTemplate = GetItemTemplate($replyItem);
 
-			if ($replyComma eq '') {
-				$replyComma = '<hr size=35>';
-			} else {
-				$replyTemplate = $replyComma . $replyTemplate;
-			}
-
 			WriteLog('$replyTemplate');
 			WriteLog($replyTemplate);
 
@@ -330,9 +324,15 @@ sub GetItemPage {
 			}
 
 			if ($replyTemplate) {
+				if ($replyComma eq '') {
+					$replyComma = '<hr size=35>';
+				} else {
+					$replyTemplate = $replyComma . $replyTemplate;
+				}
+
 				$allReplies .= $replyTemplate;
 			} else {
-				WriteLog('Warning:  replyTemplate is missing for some reason!');
+				WriteLog('Warning: replyTemplate is missing for some reason!');
 			}
 		}
 
