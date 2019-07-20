@@ -1,3 +1,38 @@
+#todo #priority rss for all pages
+
+#todo trim long titles
+
+
+===
+
+safari Version 5.0.6 (5533.22.3)
+
+keygen no worky, just submits form
+
+#todo #meta need more sanity checks and fallbacks
+
+===
+
+when submitting via write.html and redirecting back to write.html, there is no indicator that something has happened.
+	nojs
+
+===
+
+need better handling of click-votes
+
+1) should redirect to where it came from
+  a) either through a js-cookie
+  b) through a server-side trick using location: header
+
+2) message about back button is unclear and now inaccurate since it opens in a new window/tab
+
+===
+
+how to make it easier who wants to fingerprint-sign messages
+	without having to remember to check the checkbox every time.
+
+
+
 config/enable_blockchain
 	builds a "blockchain" of message ids
 
