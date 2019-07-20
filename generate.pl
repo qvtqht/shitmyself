@@ -174,7 +174,7 @@ foreach my $hashRef (@authors) {
 	my $key = $hashRef->{'key'};
 
 	my $lastTouch = GetCache("key/$key");
-	if ($lastTouch && $lastTouch + $authorInterval > time()) {
+	if ($lastTouch && $lastTouch + $authorInterval > GetTime()) {
 		#WriteLog("I already did $key recently, too lazy to do it again");
 		#next;
 		#todo uncomment
@@ -194,7 +194,7 @@ foreach my $hashRef (@authors) {
 
 	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
 
-	PutCache("key/$key", time());
+	PutCache("key/$key", GetTime());
 }
 
 {
@@ -272,7 +272,7 @@ foreach my $hashRef (@authors) {
 
 		PutHtmlFile($targetPath, $fileIndex);
 
-		PutCache("file/$fileHash", time());
+		PutCache("file/$fileHash", GetTime());
 	}
 
 	PutFile("$HTMLDIR/rss.txt", $fileList);
@@ -286,7 +286,7 @@ sub MakeClonePage {
 	my $zipInterval = 3600;
 	my $lastZip = GetCache('last_zip');
 
-	if (!$lastZip || (time() - $lastZip) > $zipInterval) {
+	if (!$lastZip || (GetTime() - $lastZip) > $zipInterval) {
 		WriteLog("Making zip file...");
 
 		system("git archive --format zip --output html/hike.tmp.zip master");
@@ -297,7 +297,7 @@ sub MakeClonePage {
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 
-		PutCache('last_zip', time());
+		PutCache('last_zip', GetTime());
 	} else {
 		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
 	}
