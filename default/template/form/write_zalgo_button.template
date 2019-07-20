@@ -1,0 +1,3 @@
+<p>
+	<a onclick="zalgo_textarea('comment');return false;">zalgo</a>
+</p>
