@@ -45,6 +45,19 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
+
+my $gpgStderr;
+if (GetConfig('admin/gpg_include_stderr')) {
+	$gpgStderr = '2>&1';
+} else {
+	if (GetConfig('admin/debug')) {
+		$gpgStderr = '';
+	} else {
+		$gpgStderr = ' 2>/dev/null';
+	}
+}
+
+
 # check if html/txt/ has a repo on it.
 # create repo if html/txt/.git/ is missing
 if (!-e 'html/txt/.git') {
@@ -1321,12 +1334,12 @@ sub GpgParse {
 
 			WriteLog("Found public key header!");
 
-			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\"");
-			my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath"`;
+			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr");
+			my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath" $gpgStderr`;
 			WriteLog($gpg_result);
 
-			WriteLog("$gpgCommand --import \"$filePath\"");
-			my $gpgImportKeyResult = `$gpgCommand --import "$filePath"`;
+			WriteLog("$gpgCommand --import \"$filePath\" $gpgStderr");
+			my $gpgImportKeyResult = `$gpgCommand --import "$filePath" $gpgStderr`;
 			WriteLog($gpgImportKeyResult);
 
 			foreach (split("\n", $gpg_result)) {
@@ -1396,8 +1409,8 @@ sub GpgParse {
 		if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
 			# Verify the file by using command-line gpg
 			# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
-			WriteLog("$gpgCommand --verify --status-fd 1 \"$filePath\"\n");
-			my $gpg_result = `$gpgCommand --verify --status-fd 1 "$filePath"`;
+			WriteLog("$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
+			my $gpg_result = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
 			WriteLog($gpg_result);
 
 			my $key_id_prefix;
@@ -1435,8 +1448,8 @@ sub GpgParse {
 				$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 				$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
 
-				WriteLog("$gpgCommand --decrypt \"$filePath\"\n");
-				$message = `$gpgCommand --decrypt "$filePath"`;
+				WriteLog("$gpgCommand --decrypt \"$filePath\"\n $gpgStderr");
+				$message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
 
 				$isSigned = 1;
 			}
@@ -1644,16 +1657,16 @@ sub ServerSign {
 	}
 
 	# verify that key exists in gpg keychain
-	WriteLog("$gpgCommand --list-keys $serverKeyId");
+	WriteLog("$gpgCommand --list-keys $serverKeyId $gpgStderr");
 	#my $gpgCommand = GetConfig('admin/gpg/gpg_command');
 
-	my $serverKey = `$gpgCommand --list-keys $serverKeyId`;
+	my $serverKey = `$gpgCommand --list-keys $serverKeyId $gpgStderr`;
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
 	if (!-e "html/txt/server.key.txt") {
-		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId");
-		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId`;
+		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId $gpgStderr");
+		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId $gpgStderr`;
 
 		PutFile('html/txt/server.key.txt', $gpgOutput);
 
@@ -1668,8 +1681,8 @@ sub ServerSign {
 		# should start with $gpgCommand
 #		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 #		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		WriteLog("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		system("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
+		WriteLog("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\" $gpgStderr");
+		system("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\" $gpgStderr");
 
 		if (-e "$file.asc") {
 			WriteLog("Sign appears successful, rename .asc file to .txt");
