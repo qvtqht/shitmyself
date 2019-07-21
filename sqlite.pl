@@ -262,7 +262,7 @@ sub SqliteMakeTables() {
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
-			COUNT(DISTINCT item_flat.file_hash) AS item_count
+			COUNT(item_flat.file_hash) AS item_count
 		FROM
 			author 
 			LEFT JOIN vote_weight
@@ -1701,7 +1701,7 @@ sub DBGetTopItems {
 
 	my $whereClause;
 
-	$whereClause = "WHERE item_title != ''";
+	$whereClause = "WHERE item_title != '' AND parent_count = 0";
 
 	my $additionalWhereClause = shift;
 
