@@ -286,12 +286,13 @@ sub ProcessAccessLog {
 					if (scalar(@messageItems) > 1) {
 						$message = shift @messageItems;
 					}
-
+#
 #					my $replyUrlToken = ( $message=~ m/&replyto=(0-9a-f){40}/ );
 #					my $newReplyToken = '';
 #
 #					if ($replyUrlToken) {
 #						$newReplyToken =~ s/^&replyto=/>>/;
+#						$message =~ s/$replyUrlToken/$newReplyToken/g;
 #					}
 
 					# Unpack from URL encoding, probably exploitable :(
