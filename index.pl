@@ -223,6 +223,13 @@ sub IndexTextFile {
 		$gitHash = $gpgResults{'gitHash'};
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
 
+		if (GetConfig('admin/gpg_include_stderr')) {
+			if (index($message, 'gpg: Signature made ')) {
+				$message =~ s/'gpg: Signature made '/\n-- \n'gpg: Signature made '/g;
+			}
+		}
+
+
 		WriteLog("\$alias = $alias");
 
 		if ($gpgKey) {
