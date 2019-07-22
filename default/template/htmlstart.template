@@ -15,6 +15,6 @@ $styleSheet
 $logoText</a><br>
 $menuItems</h2>
 $introText
-<hr size=5>
+<hr size=2>
 </div>
 <main id=maincontent><a name=maincontent></a>
