@@ -170,6 +170,9 @@ WriteLog('@authors: ' . scalar(@authors));
 
 my $authorInterval = 3600;
 
+my $authorsCount = scalar(@authors);
+my $authorsIndex = 0;
+
 foreach my $hashRef (@authors) {
 	my $key = $hashRef->{'key'};
 
@@ -189,6 +192,11 @@ foreach my $hashRef (@authors) {
 	if (!-e "$HTMLDIR/author/$key") {
 		mkdir("$HTMLDIR/author/$key");
 	}
+
+	$authorsIndex++;
+	my $percent = ($authorsIndex / $authorsCount * 100);
+
+	WriteMessage("GetReadPage (author) $authorsIndex / $authorsCount ( $percent % ) $key");
 
 	my $authorIndex = GetReadPage('author', $key);
 
@@ -244,6 +252,9 @@ foreach my $hashRef (@authors) {
 
 	my $fileInterval = 3600;
 
+	my $filesCount = scalar(@files);
+	my $currentFile = 0;
+
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
@@ -257,6 +268,12 @@ foreach my $hashRef (@authors) {
 
 			next;
 		}
+
+		$currentFile++;
+
+		my $percent = $currentFile / $filesCount * 100;
+
+		WriteMessage("*** GetItemPage: $currentFile/$filesCount ($percent %) " . $file->{'file_hash'});
 
 		my $fileIndex = GetItemPage($file);
 
