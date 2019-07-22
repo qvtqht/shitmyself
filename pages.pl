@@ -260,6 +260,7 @@ sub GetItemPage {
 	$file{'show_vote_summary'} = 1;
 	$file{'show_quick_vote'} = 1;
 	$file{'vote_buttons'} = 1;
+	$file{'format_avatars'} = 1;
 
 	my $itemTemplate = GetItemTemplate(\%file);
 
@@ -270,10 +271,10 @@ sub GetItemPage {
 
 		WriteLog('@itemReplies = ' . @itemReplies);
 
-		#$txtIndex .= "<hr size=50>";
+		#$txtIndex .= "<hr size=1>";
 		my $allReplies = '';
 
-		$allReplies = '<hr size=45>' . $allReplies;
+		$allReplies = '<hr size=3>' . $allReplies;
 
 		my $replyComma = '';
 
@@ -303,7 +304,7 @@ sub GetItemPage {
 					#$subRepliesTemplate .= $$subReplyItem{'fi
 					# le_hash'};
 					$$subReplyItem{'template_name'} = 'item/item-small.template';
-					$$subReplyItem{'remove_token'} = '>>' . $$subReplyItem{'file_hash'};
+					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
 
 					WriteLog('$$subReplyItem{\'remove_token\'} = \'>>\' . $$subReplyItem{\'file_hash\'}');
 					WriteLog($$subReplyItem{'remove_token'} . ',' . $$subReplyItem{'file_hash'});
@@ -311,7 +312,7 @@ sub GetItemPage {
 					my $subReplyTemplate = GetItemTemplate($subReplyItem);
 
 					if ($subReplyComma eq '') {
-						$subReplyComma = '<hr size=40>';
+						$subReplyComma = '<hr size=4>';
 					} else {
 						$subReplyTemplate = $subReplyComma . $replyTemplate;
 					}
@@ -325,7 +326,7 @@ sub GetItemPage {
 
 			if ($replyTemplate) {
 				if ($replyComma eq '') {
-					$replyComma = '<hr size=35>';
+					$replyComma = '<hr size=5>';
 				} else {
 					$replyTemplate = $replyComma . $replyTemplate;
 				}
@@ -1258,7 +1259,7 @@ sub GetReadPage {
 		$txtIndex .= $authorInfoTemplate;
 	}
 
-	my $itemComma = '<hr size=30>';
+	my $itemComma = '<hr size=6>';
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -1321,7 +1322,7 @@ sub GetReadPage {
 			}
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr size=20>';
+				$itemComma = '<hr size=7>';
 			} else {
 				$itemTemplate = $itemComma . $itemTemplate;
 			}
@@ -1431,7 +1432,7 @@ sub GetIndexPage {
 			$itemTemplate = GetItemTemplate($row);
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr size=10>';
+				$itemComma = '<hr size=8>';
 			}
 
 #			$itemList = $itemTemplate . $itemComma . $itemList;
