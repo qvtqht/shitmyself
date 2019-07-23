@@ -489,7 +489,7 @@ sub GetPlainAvatar {
 	return $avatar;
 }
 
-sub GetAvatar {
+sub GetAvatar { #gets avatar based on author key
 	if (!GetConfig('html/color_avatars')) {
 		return GetPlainAvatar(@_);
 	}
