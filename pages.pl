@@ -36,7 +36,7 @@ sub GenerateSomeKindOfPage {
 	#
 }
 
-sub GetAuthorLink {
+sub GetAuthorLink { # returns avatar'ed link for an author id
 	my $gpgKey = shift;
 
 	if (!IsFingerprint($gpgKey)) {
@@ -961,6 +961,7 @@ sub GetTopItemsPage {
 			my $itemKey = @{$item}[2];
 			my $itemTitle = @{$item}[7];
 			my $itemScore = @{$item}[8];
+			my $authorKey = @{$item}[3];
 
 			if (trim($itemTitle) eq '') {
 				$itemTitle = '(' . $itemKey . ')';
@@ -969,9 +970,17 @@ sub GetTopItemsPage {
 			my $itemLink = GetHtmlFilename($itemKey);
 			$itemTitle = HtmlEscape($itemTitle);
 
+			my $authorAvatar;
+			if ($authorKey) {
+				$authorAvatar = GetAuthorLink($authorKey);
+			} else {
+				$authorAvatar = '';
+			}
+
 			$itemTemplate =~ s/\$link/$itemLink/g;
 			$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
 			$itemTemplate =~ s/\$itemScore/$itemScore/g;
+			$itemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 
 			$itemListings .= $itemTemplate;
 		}
