@@ -1,3 +1,15 @@
+sublimetext
+textedit
+	savefiles as datasources
+
+make ssi work
+
+serve hike/ from lighty
+store secret into hash-named files in hash-named dir
+and/or deny access to it from lighty
+
+==
+
 #todo #priority rss for all pages
 
 #todo trim long titles

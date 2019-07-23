@@ -9,3 +9,8 @@ I don't know how to package libs correctly so that they are part of the repo, bu
 config/admin/server_key_id
 	The key specified here must have been generated with the same version of GPG as in use.
 		Otherwise, GPG2 will revert to default key
+
+Public key upload doesn't update html profile page
+	Sometimes
+	for unknown reasons
+	Workaround: clean-build
