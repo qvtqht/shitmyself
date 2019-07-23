@@ -865,11 +865,11 @@ sub IndexTextFile {
 			# add a touch to the author page
 
 			# $addedTimeIsNew indicates that this is a freshly added file
-			if ($addedTimeIsNew) {
+#			if ($addedTimeIsNew) {
 				# delete any caches for this fingerprint's avatar
 				UnlinkCache("avatar/$gpgKey");
 				UnlinkCache("avatar.color/$gpgKey");
-			}
+#			}
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 
