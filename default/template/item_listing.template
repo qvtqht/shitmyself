@@ -1,1 +1,1 @@
-<tr><td><a href="$link">$itemTitle</a></td><td>$itemScore</td></tr>
+<tr><td><a href="$link">$itemTitle</a></td><td>$itemScore</td><td>$authorAvatar</td></tr>
