@@ -4,5 +4,6 @@ $footer
     <p class=disclaimer><small>
         $disclaimer
     </small></p>
+    $ssiFooter
 </footer>
 </main></body></html>
