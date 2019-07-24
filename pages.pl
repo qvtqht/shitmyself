@@ -488,17 +488,14 @@ sub GetItemTemplate {
 
 		#$message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
 
+		#hint GetHtmlFilename()
+		#todo verify that the items exist before turning them into links,
+		# so that we don't end up with broken links
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 
 		if ($file{'format_avatars'}) {
 			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
 		}
-
-		#hint GetHtmlFilename()
-		#todo verify that the items exist before turning them into links,
-		# so that we don't end up with broken links
-
-		#$message =~ s/([A-F0-9]{16})/xxx/g;
 
 		if (
 			$isSigned
@@ -728,6 +725,14 @@ sub GetPageFooter {
 	$footer .= $menuTemplate;
 
 	$txtFooter =~ s/\$footer/$footer/;
+
+	my $ssiFooter;
+	if (GetConfig('admin/ssi/enable')) {
+		$ssiFooter = '<p>Page requested and downloaded at ' . GetTemplate('template/ssi/print_date.ssi.template' . '</p>');
+	} else {
+		$ssiFooter = '';
+	}
+	$txtFooter =~ s/\$ssiFooter/$ssiFooter/;
 
 	return $txtFooter;
 }
@@ -1500,6 +1505,9 @@ sub WriteIndexPages {
 		my $lastPage = ceil($itemCount / $pageLimit);
 
 		for ($i = 0; $i < $lastPage; $i++) {
+			my $percent = ($i / $lastPage) * 100;
+			WriteMessage("*** WriteIndexPages: $i/$lastPage ($percent %) ");
+
 			my %queryParams;
 			my $offset = $i * $pageLimit;
 
