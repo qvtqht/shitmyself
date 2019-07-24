@@ -357,11 +357,19 @@ sub MakeClonePage {
 	WriteLog('$commits = git log -n 250 | grep ^commit');
 
 	if ($commits) {
+		my $currentCommit = 0;
 		foreach(split("\n", $commits)) {
+
 			my $commit = $_;
 			$commit =~ s/^commit //;
 			chomp($commit);
+
+			$currentCommit++;
+
 			if (IsSha1($commit)) {
+				my $percent = ($currentCommit / 250) * 100;
+				WriteMessage("*** GetVersionPage: $currentCommit/250 ($percent %) " . $commit);
+
 				my $htmlSubDir = 'html/' . substr($commit, 0, 2) . '/' . substr($commit, 2, 2);
 				my $htmlFilename = $commit;
 				if (!-e $htmlSubDir) {
@@ -369,6 +377,8 @@ sub MakeClonePage {
 				}
 				WriteLog("html/$commit.html");
 				PutHtmlFile("$htmlSubDir/$htmlFilename.html", GetVersionPage($commit));
+			} else {
+				WriteLog("generate.pl... Found non-SHA1 where SHA1 expected!!!");
 			}
 		}
 	}
