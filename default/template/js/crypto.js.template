@@ -506,7 +506,7 @@ function saveId() {
 					if (UrlExists(profileUrl)) {
 						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Go to your profile page</a>';
 					} else {
-						myIdProfile.innerHTML = 'Your profile page is missing. If you just registered, it should appear soon.';
+						myIdProfile.innerHTML = '';
 					}
 				}
 

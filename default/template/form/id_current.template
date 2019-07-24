@@ -13,7 +13,6 @@
 
     <p>
         <input type=button value="Share Public Key" onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
-        Press this if profile is missing.
     </p>
 
     <p>
