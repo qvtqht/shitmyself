@@ -104,6 +104,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
     <li>access.log</li>
     <li>SQLite</li>
     <li>PHP (optional)</li>
+    <li>SSI (optional)</li>
     <li>GNU/POSIX</li>
 </ul>
 
