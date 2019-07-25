@@ -174,7 +174,7 @@ sub SqliteMakeTables() {
 				vote.ballot_time,
 				vote.vote_value,
 				vote.signed_by,
-				sum(ifnull(vote_weight.vote_weight, 1)) vote_weight
+				SUM(IFNULL(vote_weight.vote_weight, 1)) vote_weight
 			FROM
 				vote
 				LEFT JOIN vote_weight ON (vote.signed_by = vote_weight.key)
@@ -258,15 +258,15 @@ sub SqliteMakeTables() {
 		AS 
 		SELECT 
 			author.key AS author_key, 
-			SUM(vote_weight.vote_weight) AS author_weight,
+			author_weight.vote_weight AS author_weight,
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
 			COUNT(item_flat.file_hash) AS item_count
 		FROM
 			author 
-			LEFT JOIN vote_weight
-				ON (author.key = vote_weight.key)
+			LEFT JOIN author_weight
+				ON (author.key = author_weight.key)
 			LEFT JOIN author_alias
 				ON (author.key = author_alias.key)
 			LEFT JOIN author_score
@@ -277,7 +277,18 @@ sub SqliteMakeTables() {
 			author.key, author_alias.alias
 	");
 
-
+	SqliteQuery2("
+		CREATE VIEW
+			author_weight
+		AS
+		SELECT
+			vote_weight.key AS key,
+			SUM(vote_weight.vote_weight) AS vote_weight
+		FROM
+			vote_weight
+		GROUP BY
+			vote_weight.key
+	");
 
 	SqliteQuery2("
 		CREATE VIEW
@@ -842,6 +853,12 @@ sub DBAddPageTouch {
 }
 
 sub DBGetVoteCounts {
+	my $orderBy = shift;
+	if ($orderBy) {
+	} else {
+		$orderBy = 'ORDER BY vote_count DESC';
+	}
+
 	my $query = "
 		SELECT
 			vote_value,
@@ -850,8 +867,7 @@ sub DBGetVoteCounts {
 			vote
 		GROUP BY
 			vote_value
-		ORDER BY
-			vote_count DESC;
+		$orderBy;
 	";
 
 	my $sth = $dbh->prepare($query);
@@ -998,6 +1014,10 @@ sub DBAddItem {
 	my $fileHash = shift;
 	my $itemType = shift;
 
+	if (!$authorKey) {
+		$authorKey = '';
+	}
+
 	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType);");
 
 	if (!$query) {
@@ -1086,9 +1106,13 @@ sub DBAddEventRecord {
 	my $eventDuration = shift;
 	my $signedBy = shift;
 
+	if (!$eventTime || !$eventDuration) {
+		WriteLog('DBAddEventRecord() sanity check failed! Missing $eventTime or $eventDuration');
+		return;
+	}
+
 	chomp $eventTime;
 	chomp $eventDuration;
-	chomp $signedBy;
 
 	if ($signedBy) {
 		chomp $signedBy;
