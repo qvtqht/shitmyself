@@ -258,9 +258,10 @@ sub ProcessAccessLog {
 			if ($status eq '404') {
 				# If there is no $submitPrefix found
 				if (!defined($submitPrefix)) {
-					WriteLog("No submitPrefix found...");
+					WriteLog("No submitPrefix found, but a 404 was...");
 					# Just add the whole URL text as an item, as long as admin_accept_url_text is on
 					$submitPrefix = '/';
+
 					WriteLog('$submitPrefix = /');
 				}
 			}
