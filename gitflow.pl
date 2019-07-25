@@ -229,7 +229,7 @@ WriteIndexedConfig();
 
 if ($filesProcessed > 0) {
 	MakeStaticPages();
-	WriteIndexPages();
+#	WriteIndexPages();
 }
 
 # get a list of pages that have been touched since the last git_flow
@@ -332,6 +332,9 @@ foreach my $page (@touchedPagesArray) {
 	elsif ($pageType eq 'tags') {
 		my $votesPage = GetVotesPage();
 		PutHtmlFile("html/tags.html", $votesPage);
+
+		my $tagsAlphaPage = GetTagsPage();
+		PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
 	}
 	#
 	# scores page
