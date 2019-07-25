@@ -1,0 +1,62 @@
+             Architecture Overview
+             ============ ========
+
+  _____
+ (;;;;(o)  access.log
+ |;;;;;`   ==========
+ |:::::    "standard" access log format
+ |;;;;;    any old webserver
+  '.,;;
+
+    __
+   |  |    access.pl (Perl)
+  _|  |_   =========
+  \Perl/   scans access.log for new items
+   \  /    parses requests, stores text files
+    \/
+
+    _____
+   /    /|   html/txt/*.txt
+  /____/ |   ==============
+ |readm| |   text files
+ |e.txt| |   git repo
+ |_____|/
+
+    __
+   |  |    index.pl (Perl, SQLite, Git, GPG)
+  _|  |_   =========
+  \Perl/   reads html/txt/*.txt
+   \  /    generates sqlite database with items
+    \/     uses PGP for reproducible user IDs
+
+  ______
+ (______)  index.sqlite3
+ |      |  =============
+ |SQLite|  normalized-ished, indexed data from text files
+ (______)  aggregate views, e.g. item_flat, author_flat
+
+    __
+   |  |    generate.pl (Perl, SQLite, Git)
+  _|  |_   =========
+  \Perl/   reads html/txt/*.txt
+   \  /    generates sqlite database with items
+    \/     uses PGP for reproducible user IDs
+
+  _______
+ | __ = ||   html/*.html, css, js
+ | __ o ||   ====================
+ | ____ ||   static website, categorized pages
+ |______||
+
+    __
+   | h|    httpd
+  _| t|_   =====
+  \  t /   serves webpages to browser
+   \ p/                               ______
+    \/     writes to ==> access.log  (;;;;(o)
+                         ==========  |;;;;;`
+  _________                          |:::::
+ |< > ==== |  browser                '.,;;
+ | ;';,;:; |  =======
+ | :;';,;: |  typical web browser
+ |_________|  most configurations supported
