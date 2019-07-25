@@ -157,8 +157,12 @@ sub GetVotesPage {
 
 	my @voteCountsArray = @{$voteCounts};
 
+	my $voteItemsWrapper = GetTemplate('tag_listing_wrapper.template');
+
+	my $voteItems = '';
+
 	while (@voteCountsArray) {
-		my $voteItemTemplate = GetTemplate('vote_page_link.template');
+		my $voteItemTemplate = GetTemplate('tag_listing.template');
 		#todo don't need to do this every time
 
 		my $tag = shift @voteCountsArray;
@@ -166,13 +170,91 @@ sub GetVotesPage {
 		my $tagName = @{$tag}[0];
 		my $tagCount = @{$tag}[1];
 
+		my $tagInfo = '';
+		if ($tagInfo = GetConfig('string/en/tag_info/'.$tagName)) {
+			#great
+		} else {
+			$tagInfo = '';
+		}
+
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
 		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
-		$voteItemTemplate =~ s/\$tagName/$tagName ($tagCount)/g;
+		$voteItemTemplate =~ s/\$tagName/$tagName/g;
+		$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
+		$voteItemTemplate =~ s/\$tagInfo/$tagInfo/g;
 
-		$txtIndex .= $voteItemTemplate;
+		$voteItems .= $voteItemTemplate;
 	}
+
+	$txtIndex .= '<p><b>Popular</b> <a href="/tags_alpha.html">Alphabetical</a></p>';
+
+	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
+
+	$txtIndex .= $voteItemsWrapper;
+
+	$txtIndex .= GetPageFooter();
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	my $avatarjs = GetTemplate('js/avatar.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+
+	return $txtIndex;
+}
+
+sub GetTagsPage {
+	#todo rewrite this more pretty
+	my $txtIndex = "";
+
+	my $title = 'Tags Alpha';
+	my $titleHtml = 'Tags Alpha';
+
+	$txtIndex = GetPageHeader($title, $titleHtml, 'tags');
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $voteCounts = DBGetVoteCounts('ORDER BY vote_value'); #todo sql shouldn't be here
+
+	my @voteCountsArray = @{$voteCounts};
+
+	my $voteItemsWrapper = GetTemplate('tag_listing_wrapper.template');
+
+	my $voteItems = '';
+
+	while (@voteCountsArray) {
+		my $voteItemTemplate = GetTemplate('tag_listing.template');
+		#todo don't need to do this every time
+
+		my $tag = shift @voteCountsArray;
+
+		my $tagName = @{$tag}[0];
+		my $tagCount = @{$tag}[1];
+
+		my $tagInfo = '';
+		if ($tagInfo = GetConfig('string/en/tag_info/'.$tagName)) {
+			#great
+		} else {
+			$tagInfo = '';
+		}
+
+		my $voteItemLink = "/top/" . $tagName . ".html";
+
+		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
+		$voteItemTemplate =~ s/\$tagName/$tagName/g;
+		$voteItemTemplate =~ s/\$tagInfo/$tagInfo/g;
+		$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
+
+		$voteItems .= $voteItemTemplate;
+	}
+
+	$txtIndex .= '<p><a href="/tags.html">Popular</a> <b>Alphabetical</b></p>';
+	#todo this should not be part of maincontent
+
+	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
+
+	$txtIndex .= $voteItemsWrapper;
 
 	$txtIndex .= GetPageFooter();
 
@@ -728,7 +810,7 @@ sub GetPageFooter {
 
 	my $ssiFooter;
 	if (GetConfig('admin/ssi/enable')) {
-		$ssiFooter = '<p>Page requested and downloaded at ' . GetTemplate('template/ssi/print_date.ssi.template' . '</p>');
+		$ssiFooter = '<p>' . GetTemplate('ssi/print_date.ssi.template') . '</p>';
 	} else {
 		$ssiFooter = '';
 	}
@@ -1505,11 +1587,11 @@ sub WriteIndexPages {
 		my $lastPage = ceil($itemCount / $pageLimit);
 
 		for ($i = 0; $i < $lastPage; $i++) {
-			my $percent = ($i / $lastPage) * 100;
-			WriteMessage("*** WriteIndexPages: $i/$lastPage ($percent %) ");
+			my $percent = (($i+1) / $lastPage) * 100;
+			WriteMessage("*** WriteIndexPages: " . ($i+1) . "/$lastPage ($percent %) ");
 
 			my %queryParams;
-			my $offset = $i * $pageLimit;
+			my $offset = ($i + 1) * $pageLimit;
 
 			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 

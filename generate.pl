@@ -389,6 +389,9 @@ WriteIndexPages();
 my $votesPage = GetVotesPage();
 PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
+my $tagsAlphaPage = GetTagsPage();
+PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
+
 my $scoreboardPage = GetScoreboardPage();
 PutHtmlFile('html/scores.html', $scoreboardPage);
 PutHtmlFile('html/author/index.html', $scoreboardPage);
