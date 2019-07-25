@@ -17,7 +17,7 @@
     <p>
         <label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
         <!--<label for=recloca><input type=checkbox id=recloca name=recloca> Record browser location</label><br>-->
-        <label for=rectime><input type=checkbox id=rectime name=rectime> Record timestamp</label>
+        <label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
     </p>
 
     <!--<p>-->
