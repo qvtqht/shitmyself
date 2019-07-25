@@ -47,7 +47,7 @@ foreach(@dirsThatShouldExist) {
 
 
 my $gpgStderr;
-if (GetConfig('admin/gpg_include_stderr')) {
+if (GetConfig('admin/gpg/capture_stderr_output')) {
 	$gpgStderr = '2>&1';
 } else {
 	if (GetConfig('admin/debug')) {
@@ -323,13 +323,21 @@ sub GetString {
 #	}
 #}
 
-sub GetFileHash {
+sub GetFileHash { # $fileName ; returns git's hash of file contents
+	WriteLog("GetFileHash()");
+
 	my $fileName = shift;
+
+	chomp $fileName;
+
+	WriteLog("GetFileHash($fileName)");
 
 	my $gitOutput = `git hash-object -w "$fileName"`;
 	#my $gitOutput = `sha1sum "$fileName" | cut -d ' ' -f 1`;
 
 	chomp($gitOutput);
+
+	WriteLog("GetFileHash($fileName) = $gitOutput");
 
 	return $gitOutput;
 }
