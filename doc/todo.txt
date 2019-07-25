@@ -1,3 +1,14 @@
+If item is just one line
+	And item has replies
+		And item has no spaces
+			And item looks like URL in other ways
+				Like ends with .html
+				Contains /
+				Especially 2/2/40.html
+			But not if ends in .png?
+				For now?
+Then
+	create url alias pointing to all replies to item
 
 
 No-JS voting is broken. Fix.

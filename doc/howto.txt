@@ -1,0 +1,11 @@
+How To
+
+Create New Profile
+==================
+1. Click [Profile] (top menu)
+2. If signed in, log out.
+3. Choose a name.
+4. Click [Create]
+5. Wait a few seconds.
+
+Post New Topic
