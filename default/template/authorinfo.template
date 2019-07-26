@@ -9,7 +9,6 @@
 <tr><td>influence:</td><td>$authorWeight</td></tr>
 <tr><td>last seen:</td><td>$authorLastSeen</td></tr>
 <tr><td>reg. entry:</td><td>$publicKeyHash</td></tr>
-<!--<tr><td>post count:</td><td>$postcount</td></tr>
-<tr><td>vote count:</td><td>$votecount</td></tr>-->
+<tr><td>your opinion:</td><td>$profileVoteButtons</td></tr>
 </table>
 <hr>

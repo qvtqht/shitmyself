@@ -503,6 +503,78 @@ sub GetHtmlLink {
 	}
 }
 
+sub GetItemVoteButtons {
+	my $fileHash = shift;
+
+	#todo sanity checks
+
+	my %voteTotals = DBGetItemVoteTotals($fileHash);
+
+	my @quickVotesList;
+
+	my $quickVotesForTags;
+
+	foreach my $voteTag (keys %voteTotals) {
+		$quickVotesForTags = GetConfig('tagset/' . $voteTag);
+		if ($quickVotesForTags) {
+			push @quickVotesList, split("\n", $quickVotesForTags);
+		}
+	}
+
+	my %dedupe = map { $_, 1 } @quickVotesList;
+	@quickVotesList = keys %dedupe;
+
+	$quickVotesForTags = GetConfig('tagset/' . 'all');
+	if ($quickVotesForTags) {
+		unshift @quickVotesList, split("\n", $quickVotesForTags);
+	}
+
+
+	my $quickVoteTemplate = GetTemplate('votequick.template');
+	my $tagButtons = '';
+	foreach my $quickTagValue (@quickVotesList) {
+		my $ballotTime = GetTime();
+		if ($fileHash && $ballotTime) {
+			my $mySecret = GetConfig('admin/secret');
+			my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
+
+			my $tagButton = GetTemplate('vote2button.template');
+
+			my $quickTagCaption = GetString($quickTagValue);
+
+			$tagButton =~ s/\$fileHash/$fileHash/g;
+			$tagButton =~ s/\$ballotTime/$ballotTime/g;
+			$tagButton =~ s/\$voteValue/$quickTagValue/g;
+			$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
+			$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
+			$tagButton =~ s/\$checksum/$checksum/g;
+
+			$tagButtons .= $tagButton;
+		}
+	}
+
+	return $tagButtons;
+}
+
+sub GetItemVotesSummary {
+	my $fileHash = shift;
+
+	#todo sanity checks
+
+	my %voteTotals = DBGetItemVoteTotals($fileHash);
+
+	my $votesSummary = '';
+
+	foreach my $voteTag (keys %voteTotals) {
+		$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
+	}
+	if ($votesSummary) {
+		$votesSummary = $votesSummary;
+	}
+
+	return $votesSummary;
+}
+
 sub GetItemTemplate {
 	WriteLog("GetItemTemplate");
 
@@ -715,6 +787,8 @@ sub GetItemTemplate {
 		}
 
 		if ($file{'show_quick_vote'}) {
+			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
+
 			my @quickVotesList;
 
 			my $quickVotesForTags;
@@ -1317,8 +1391,9 @@ sub GetReadPage {
 		my $authorLastSeen = DBGetAuthorLastSeen($authorKey);
 
 		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
+		my $publicKeyHashHtml = '';
 		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
-			$publicKeyHash = GetHtmlLink($publicKeyHash);
+			$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
 		}
 
 #		my $publicKeyHash = '';
@@ -1337,6 +1412,14 @@ sub GetReadPage {
 			$authorDescription .= '<b>Admin. Do not taunt.</b>';
 		}
 
+		if ($authorDescription) {
+			$authorDescription .= '<br>';
+		}
+		$authorDescription .= GetItemVotesSummary($publicKeyHash);
+
+		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash);
+
+
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$alias/$authorAliasHtml/;
 		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
@@ -1346,8 +1429,9 @@ sub GetReadPage {
 		$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
 		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 		$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
+		$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;
 		if ($publicKeyHash) {
-			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHash/g;
+			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
 		} else {
 			$authorInfoTemplate =~ s/\$publicKeyHash//g;
 		}
@@ -1591,7 +1675,7 @@ sub WriteIndexPages {
 			WriteMessage("*** WriteIndexPages: " . ($i+1) . "/$lastPage ($percent %) ");
 
 			my %queryParams;
-			my $offset = ($i + 1) * $pageLimit;
+			my $offset = $i * $pageLimit;
 
 			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 
