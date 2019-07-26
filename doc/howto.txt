@@ -9,3 +9,14 @@ Create New Profile
 5. Wait a few seconds.
 
 Post New Topic
+==============
+
+Set Admin
+=========
+1. Create an account
+2. Go to profile
+3. Click "reg.entry"
+4. Click "txt"
+5. Copy the public key
+6. Save it to admin.key (above html)
+7. Rebuild (./clean-build)
