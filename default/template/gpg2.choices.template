@@ -5,7 +5,7 @@
 <option value=p384>p384</option>
 <option value=p521>p521</option>
 <option value=secp256k1>secp256k1</option>
-<option value=brainpoolP256r1>brainpoolP256r1</option>
-<option value=brainpoolP384r1>brainpoolP384r1</option>
-<option value=brainpoolP512r1>brainpoolP512r1</option>
+<!--<option value=brainpoolP256r1>brainpoolP256r1</option>-->
+<!--<option value=brainpoolP384r1>brainpoolP384r1</option>-->
+<!--<option value=brainpoolP512r1>brainpoolP512r1</option>-->
 <!-- / gpg2.choices.template -->
