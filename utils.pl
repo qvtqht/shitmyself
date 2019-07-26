@@ -396,6 +396,8 @@ sub encode_entities2 {
 }
 
 sub GetHtmlAvatar {
+	state %avatarCache;
+
 # returns avatar suitable for comments
 	my $key = shift;
 	if (!$key) {
@@ -406,10 +408,16 @@ sub GetHtmlAvatar {
 		return;
 	}
 
+	if ($avatarCache{$key}) {
+		WriteLog("GetHtmlAvatar: found in hash");
+		return $avatarCache{$key};
+	}
+
 	my $avatar = GetAvatar($key);
 	if ($avatar) {
 		if (-e 'html/author/' . $key) {
 			my $avatarLink = GetAuthorLink($key);
+			$avatarCache{$key} = $avatar;
 			return $avatarLink;
 		}
 	} else {
