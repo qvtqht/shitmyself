@@ -8,7 +8,6 @@
 <tr><td>description:</td><td>$authorDescription</td></tr>
 <tr><td>influence:</td><td>$authorWeight</td></tr>
 <tr><td>last seen:</td><td>$authorLastSeen</td></tr>
-<tr><td>reg. entry:</td><td>$publicKeyHash</td></tr>
-<tr><td>your opinion:</td><td>$profileVoteButtons</td></tr>
+<tr><td>reg. entry:</td><td><b>$publicKeyHash</b> $profileVoteButtons</td></tr>
 </table>
 <hr>
