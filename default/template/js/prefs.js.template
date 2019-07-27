@@ -1,41 +1,58 @@
-function GetPrefs(prefKey) {
-	var json = localStorage.getItem('preferencesJson');
-
-	var objJson;
-
-	if (json) {
-		objJson = JSON.parse($json);
-	} else {
-		objJson = Object();
-	}
-
-	console.log(objJson);
-
-	return
-}
 
 function PrefsTest() {
 	SetPrefs('test', '123');
 
+	//alert('tst');
+
+	var a = GetPrefs('test');
+
+	alert(a);
+
+	return 0;
 
 }
+
+function GetPrefs(prefKey) {
+	var value = localStorage.getItem('p_'+prefKey);
+
+	return value;
+//	var json = localStorage.getItem('preferencesJson');
+//
+//	var objJson;
+//
+//	if (json) {
+//		objJson = JSON.parse($json);
+//	} else {
+//		objJson = Object();
+//	}
+//
+//	console.log(objJson);
+//
+//	return;
+}
+
 
 function SetPrefs(prefKey, prefValue) {
-	var json = localStorage.getItem('preferencesJson');
+//	var json = localStorage.getItem('preferencesJson');
+//
+//	var objJson;
+//
+//	if (json) {
+//		objJson = JSON.parse($json);
+//	} else {
+//		objJson = Object();
+//	}
+//
+//	console.log(objJson);
+//
+//
+//
+////	var prefsJson = objJson.stringify();
+//	var prefsJson = '';
 
-	var objJson;
-
-	if (json) {
-		objJson = JSON.parse($json);
-	} else {
-		objJson = Object();
-	}
-
-	console.log(objJson);
+//	localStorage.setItem('preferencesJson', prefsJson);
+	localStorage.setItem('p_'+prefKey, prefValue);
 
 
-
-	var prefsJson = objJson.stringify();
-
-	localStorage.setItem('preferencesJson', prefsJson);
 }
+
