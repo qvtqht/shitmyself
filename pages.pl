@@ -1814,6 +1814,7 @@ sub MakeStaticPages {
 
 	# Write prefs javasript
 	PutHtmlFile("$HTMLDIR/prefs.js", GetTemplate('js/prefs.js.template'));
+	PutHtmlFile("$HTMLDIR/prefstest.html", GetTemplate('js/prefstest.template'));
 
 
 	# .htaccess file for Apache
@@ -1938,7 +1939,8 @@ sub GetIdentityPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs $prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
