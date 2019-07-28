@@ -1,3 +1,10 @@
+Import for QDB data
+	voter_id
+	item
+	votes
+	vote_caption
+
+
 When generating HTML page
 	keep track of its subdir level
 	prefix '../' to urls as needed
