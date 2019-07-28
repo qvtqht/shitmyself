@@ -51,6 +51,21 @@ function undoSignout() {
 
 }
 
+function showHideCheckbox(id, ths) {
+
+	var pane = document.getElementById(id);
+	if (!pane) return;
+
+   pane.style.display=(ths.checked ? 'block' : 'none')
+
+   SetPrefs('check_'+id, (ths.checked ? 1 : 0));
+}
+
+if (pane = document.getElementById('curIdAdv') && GetPrefs('check_curIdAdv') == 1) {
+	document.getElementById('curIdAdvC').checked = 1;
+	showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'));
+}
+
 function signoutCounterDecrement() {
 	var ct = window.confct;
 

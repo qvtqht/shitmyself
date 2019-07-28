@@ -25,7 +25,7 @@
         <br><br>Save your private key<br>if you want to later use<br>same identity.
     </p>
 
-    <label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="document.getElementById('curIdAdv').style.display=(this.checked ? 'block' : 'none')"> Show advanced options</label>
+    <label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="showHideCheckbox('curIdAdv', this);"> Show advanced options</label>
 
     <span id=curIdAdv style="display:none">
         <p>
