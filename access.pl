@@ -182,6 +182,11 @@ sub ProcessAccessLog {
 			$prevLines{$lineHash} = 1;
 		}
 
+		# default/admin/logging/record_access_log_hash
+		if (GetConfig('default/admin/logging/record_access_log_hash')) {
+			#todo
+		}
+
 		# These are the values we will pull out of access.log
 		my $site;
 		my $hostname;
