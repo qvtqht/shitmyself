@@ -803,31 +803,31 @@ sub IndexTextFile {
 #				}
 
 				while(@voteLines) {
-					my $fileHash   = shift @voteLines;
-					my $ballotTime = shift @voteLines;
+					my $voteFileHash   = shift @voteLines;
+					my $voteBallotTime = shift @voteLines;
 					my $voteValue  = shift @voteLines;
-					my $csrf = shift @voteLines;
+					my $voteCsrf = shift @voteLines;
 					#shift @voteLines;
 
 					if ($isSigned) {
-						DBAddVoteRecord($fileHash, $ballotTime, $voteValue, $gpgKey);
+						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $gpgKey);
 					} else {
-						DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
+						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue);
 					}
 
-					DBAddVoteRecord($fileHash, $addedTime, 'hasvote');
+					DBAddVoteRecord($voteFileHash, $addedTime, 'hasvote');
 
-					DBAddItemParent($gitHash, $fileHash);
+					DBAddItemParent($gitHash, $voteFileHash);
 
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
-					my $reconLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
+					my $reconLine = "addvote/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
 					# $message =~ s/$reconLine/[$voteValue] (vote on $fileHash)/g;
 					# $message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
-					$message =~ s/$reconLine/>>$fileHash\n[$voteValue]/g;
+					$message =~ s/$reconLine/>>$voteFileHash\n[$voteValue]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddPageTouch('item', $fileHash);
+					DBAddPageTouch('item', $voteFileHash);
 
 					DBAddVoteRecord ($gitHash, $addedTime, 'vote');
 
@@ -835,9 +835,9 @@ sub IndexTextFile {
 
 					if (IsAdmin($gpgKey)) {
 						if ($voteValue eq 'remove' || $voteValue eq 'flag') {
-							AppendFile('log/deleted.log', $fileHash);
+							AppendFile('log/deleted.log', $voteFileHash);
 							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
-							my $htmlFilename = 'html/' . GetHtmlFilename($fileHash);
+							my $htmlFilename = 'html/' . GetHtmlFilename($voteFileHash);
 							if (-e $htmlFilename) {
 								unlink ($htmlFilename);
 							}
