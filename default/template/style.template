@@ -13,13 +13,11 @@
     font-size: 12pt;
 }
 div.reply {
-    <!--border-left: 3pt dotted #c08000;-->
     margin-left: 2%;
     padding-left: 3em;
     width: 98%;
 }
 div.txt {
-    <!--border-left: 3pt dotted #c08000;-->
     padding-left: 1em;
 }
 body {
