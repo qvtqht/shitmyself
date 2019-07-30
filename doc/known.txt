@@ -14,3 +14,11 @@ Public key upload doesn't update html profile page
 	Sometimes
 	for unknown reasons
 	Workaround: clean-build
+
+Remember to clean-build after updating default/
+	Because it is copied to config/ when accessed
+	clean-build will clear config/template/ and config/string/
+	This can cause accidental deletion of configuration
+	#todo rename to html.epoch and default.epoch or something
+	Remove the zip files to save space
+		How to check if needed? Total space?

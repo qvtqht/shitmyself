@@ -1,3 +1,17 @@
+#bug
+	Profile
+		Create
+		Share
+		Log Out
+		Log In
+	Share button is still "Thanks"
+
+
+Automatically friend server and operator on account creation
+	default/admin/auto_friend_admin
+	default/admin/auto_friend_server
+
+
 Expand PHP shims
 	Request > txt > DB > page update
 
