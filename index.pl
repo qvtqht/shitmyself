@@ -889,6 +889,8 @@ sub IndexTextFile {
 						DBAddTitle($gitHash, $title);
 
 						DBAddTitle('flush'); #todo refactor this out
+
+						DBAddVoteRecord($gitHash, $addedTime, 'hastitle');
 					}
 				}
 
