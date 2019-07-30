@@ -351,10 +351,12 @@ sub MakeClonePage {
 
 # generate commits page
 {
-	#todo only do this for versions mentioned in changelogs
-	my $commits = `git log -n 250 | grep ^commit`;
+	my $versionPageCount = 5;
 
-	WriteLog('$commits = git log -n 250 | grep ^commit');
+	#todo only do this for versions mentioned in changelogs
+	my $commits = `git log -n $versionPageCount | grep ^commit`;
+
+	WriteLog('$commits = git log -n $versionPageCount | grep ^commit');
 
 	if ($commits) {
 		my $currentCommit = 0;
@@ -367,8 +369,8 @@ sub MakeClonePage {
 			$currentCommit++;
 
 			if (IsSha1($commit)) {
-				my $percent = ($currentCommit / 250) * 100;
-				WriteMessage("*** GetVersionPage: $currentCommit/250 ($percent %) " . $commit);
+				my $percent = ($currentCommit / $versionPageCount) * 100;
+				WriteMessage("*** GetVersionPage: $currentCommit/$versionPageCount ($percent %) " . $commit);
 
 				my $htmlSubDir = 'html/' . substr($commit, 0, 2) . '/' . substr($commit, 2, 2);
 				my $htmlFilename = $commit;
