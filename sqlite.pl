@@ -1771,12 +1771,13 @@ sub DBGetTopItems {
 
 sub DBGetItemVoteTotals {
 	my $fileHash = shift;
-	chomp $fileHash;
 
 	if (!IsSha1($fileHash)) {
 		WriteLog('DBGetItemVoteTotals called with invalid $fileHash! returning');
 		return;
 	}
+
+	chomp $fileHash;
 
 	my $query = "
 		SELECT
