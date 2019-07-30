@@ -1607,7 +1607,10 @@ if ($lastVersion ne $currVersion) {
 	#WriteLog($serverKey);
 
 	my $changeLogFilename = 'changelog_' . GetTime() . '.txt';
-	my $changeLogMessage = 'Changelog Generated at ' . GetTime() . "\n\n" . 'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion;
+	#todo this should be a template;
+	my $changeLogMessage =
+		'Software Updated to Version ' . substr($currVersion, 0, 8) . '..' . "\n\n" .
+		'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
 
 	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
 	$changeLogList = trim($changeLogList);
