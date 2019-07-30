@@ -409,7 +409,16 @@ sub DBGetVotesForItem {
 	my $query;
 	my @queryParams;
 
-	$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = ?;";
+	$query = "
+		SELECT
+			file_hash,
+			ballot_time,
+			vote_value,
+			signed_by,
+			vote_weight
+		FROM vote_weighed
+		WHERE file_hash = ?
+	";
 	@queryParams = ($fileHash);
 
 	my $result = SqliteQuery2($query, @queryParams);
@@ -1772,7 +1781,7 @@ sub DBGetItemVoteTotals {
 	my $query = "
 		SELECT
 			vote_value,
-			SUM(IFNULL(vote_weight,1)) AS vote_weight
+			SUM(IFNULL(vote_weight,1)) AS vote_weight_sum
 		FROM
 			vote_weighed
 		WHERE
@@ -1780,7 +1789,7 @@ sub DBGetItemVoteTotals {
 		GROUP BY
 			vote_value
 		ORDER BY
-			vote_weight DESC;
+			vote_weight_sum DESC;
 	";
 
 	my @queryParams;
