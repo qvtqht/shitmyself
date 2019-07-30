@@ -1,0 +1,12 @@
+<html>
+<head>
+	<script type="text/javascript" src="prefs.js"></script>
+</head>
+<body>
+
+<a href=# onclick="return PrefsTest();">PrefsTest()</a>
+
+asdf
+
+</body>
+</html>
