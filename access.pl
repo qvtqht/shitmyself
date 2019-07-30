@@ -182,11 +182,6 @@ sub ProcessAccessLog {
 			$prevLines{$lineHash} = 1;
 		}
 
-		# default/admin/logging/record_access_log_hash
-		if (GetConfig('default/admin/logging/record_access_log_hash')) {
-			#todo
-		}
-
 		# These are the values we will pull out of access.log
 		my $site;
 		my $hostname;
@@ -235,6 +230,31 @@ sub ProcessAccessLog {
 		$req  = substr($req, 1);
 		chop($gmt);
 		chop($proto);
+
+		# END PARSING OF ACCESS LINE
+		############################
+
+		# default/admin/logging/record_access_log_hash
+		if (GetConfig('admin/logging/record_access_log_hash')) {
+			#todo
+		}
+
+		# ALLOW_DEOP, default deop string = elite
+		if (GetConfig('admin/allow_deop') == 1) {
+			my $deopString = GetConfig('admin/deop_string');
+
+			if ($deopString) {
+				my $filteredFile = $file;
+				$filteredFile =~ s/[^elit]//g;
+				chomp $filteredFile;
+
+				if ($filteredFile eq $deopString) {
+					WriteLog("Deop request found, removing admin.key");
+					unlink ('admin.key');
+					next;
+				}
+			}
+		}
 
 
 		## TEXT SUBMISSION PROCESSING BEGINS HERE ##
