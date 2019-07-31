@@ -16,7 +16,7 @@
     </p>
 
     <p>
-        <label for=creaIdAdvC><input type=checkbox id=creaIdAdvC onchange="document.getElementById('creaIdAdv').style.display=(this.checked ? 'block' : 'none')"> Show advanced options</label>
+        <label for=creaIdAdvC><input type=checkbox id=creaIdAdvC onchange="onchange="showHideCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
     </p>
 
     <span id=creaIdAdv style="display:none">

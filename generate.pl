@@ -110,7 +110,8 @@ sub GetVersionPage {
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
 	my $freshjs = GetTemplate('js/fresh.js.template');
-	my $injectJs = $avatarjs . "\n\n" . $freshjs;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	my $injectJs = $avatarjs . "\n\n" . $freshjs . "\n\n" . $prefsjs;
 	$scriptInject =~ s/\$javascript/$injectJs/g;
 
 	$txtPageHtml =~ s/<\/body>/$scriptInject<\/body>/;
@@ -341,7 +342,8 @@ sub MakeClonePage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$clonePage =~ s/<\/body>/$scriptInject<\/body>/;
 

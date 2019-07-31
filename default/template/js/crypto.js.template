@@ -51,19 +51,28 @@ function undoSignout() {
 
 }
 
-function showHideCheckbox(id, ths) {
+function showHideCheckbox(id, ths, prefName) {
 
 	var pane = document.getElementById(id);
 	if (!pane) return;
 
    pane.style.display=(ths.checked ? 'block' : 'none')
 
-   SetPrefs('check_'+id, (ths.checked ? 1 : 0));
+   SetPrefs(prefName, (ths.checked ? 1 : 0));
+
+   if (prefName == 'show_advanced') {
+   	ShowAdvanced();
+   }
 }
 
-if (pane = document.getElementById('curIdAdv') && GetPrefs('check_curIdAdv') == 1) {
+if (pane = document.getElementById('curIdAdv') && GetPrefs('show_advanced') == 1) {
 	document.getElementById('curIdAdvC').checked = 1;
-	showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'));
+	showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
+}
+
+if (pane = document.getElementById('creaIdAdv') && GetPrefs('show_advanced') == 1) {
+	document.getElementById('creaIdAdvC').checked = 1;
+	showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
 }
 
 function signoutCounterDecrement() {
@@ -617,7 +626,7 @@ function makePrivateKey(username, bits) {
 					var btnSharePubkey = document.getElementById('btnSharePub');
 					if (btnSharePubkey) {
 						btnSharePubkey.value = 'Share Public Key';
-						btnSharePubkey.disabled = 0;
+						btnSharePubkey.disabled = false;
 					}
 
 					//return frames["frame"].location.host;

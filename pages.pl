@@ -197,7 +197,8 @@ sub GetVotesPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -260,7 +261,8 @@ sub GetTagsPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -478,8 +480,11 @@ sub GetItemPage {
 	#formencode.js
 	my $formEncodeJs = GetTemplate('js/formencode.js.template');
 
+	#prefs.js
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+
 	#add them together
-	my $fullJs = $avatarjs . "\n" . $formEncodeJs;
+	my $fullJs = $avatarjs . "\n\n" . $formEncodeJs. "\n\n" . $prefsjs;
 
 	#replace the scripts in scriptinject.template
 	$scriptInject =~ s/\$javascript/$fullJs/g;
@@ -776,7 +781,8 @@ sub GetItemTemplate {
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
 			}
 			if ($votesSummary) {
-				$votesSummary = '<p><b>Existing Labels:</b><br>' . $votesSummary . '</p>';
+				$votesSummary = '<p class=advanced><b>Existing Labels:</b><br>' . $votesSummary . '</p>';
+				#todo templatize
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 
@@ -1157,7 +1163,8 @@ sub GetTopItemsPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -1285,7 +1292,8 @@ sub GetScoreboardPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -1526,7 +1534,10 @@ sub GetReadPage {
 	} else {
 		$avatarjs = GetTemplate('js/avatar.js.template');
 	}
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -1638,7 +1649,8 @@ sub GetIndexPage {
 
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -1747,7 +1759,8 @@ sub MakeStaticPages {
 	my $scriptInject = GetTemplate('scriptinject.template');
 	my $avatarjs = GetTemplate('js/avatar.js.template');
 	my $graciasjs = GetTemplate('js/gracias.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs$graciasjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$graciasjs\n\n$prefsjs/g;
 
 	$graciasPage =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -1783,7 +1796,8 @@ sub MakeStaticPages {
 
 	$scriptInject = GetTemplate('scriptinject.template');
 	$avatarjs = GetTemplate('js/avatar.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs/g;
+	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$tfmPage =~ s/<\/body>/$scriptInject<\/body>/;
 
@@ -1880,7 +1894,8 @@ sub GetWritePage {
 		my $scriptInject = GetTemplate('scriptinject.template');
 		my $avatarjs = GetTemplate('js/avatar.js.template');
 		my $writeOnLoad = GetTemplate('js/writeonload.js.template');
-		$scriptInject =~ s/\$javascript/$avatarjs$writeOnLoad/g;
+		my $prefsjs = GetTemplate('js/prefs.js.template');
+		$scriptInject =~ s/\$javascript/$avatarjs\n\n$writeOnLoad\n\n$prefsjs/g;
 
 		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
 

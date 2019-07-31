@@ -1,3 +1,16 @@
+function ShowAdvanced() {
+	var displayValue = 'none';
+	if (GetPrefs('show_advanced') == 1) {
+		displayValue = 'inline';
+	}
+
+	var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
+	for(var i = 0; i < divsToHide.length; i++){
+		//divsToHide[i].style.visibility = "hidden"; // or
+		divsToHide[i].style.display = displayValue; // depending on what you're doing
+	}
+}
+
 
 function PrefsTest() {
 	SetPrefs('test', '123');
@@ -55,4 +68,6 @@ function SetPrefs(prefKey, prefValue) {
 
 
 }
+
+ShowAdvanced();
 
