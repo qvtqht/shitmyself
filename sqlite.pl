@@ -185,32 +185,32 @@ sub SqliteMakeTables() {
 				vote.signed_by
 	");
 
-        SqliteQuery2("
-                CREATE VIEW
-                        item_score
-                AS
-                        SELECT
-                                item.file_hash AS file_hash,
-                                COUNT(vote.vote_value) AS item_score
-                        FROM
-                                vote
-                                LEFT JOIN item
-                                        ON (vote.file_hash = item.file_hash)
-                        GROUP BY
-                                item.file_hash
+	SqliteQuery2("
+		CREATE VIEW
+			item_score
+		AS
+			SELECT
+				item.file_hash AS file_hash,
+				COUNT(vote.vote_value) AS item_score
+			FROM
+				vote
+				LEFT JOIN item
+					ON (vote.file_hash = item.file_hash)
+			GROUP BY
+				item.file_hash
 
-        ");
+	");
 
-        SqliteQuery2("
-                CREATE VIEW
-                        item_tags_list
-                AS
-                SELECT
-                        file_hash,
-                        GROUP_CONCAT(DISTINCT vote_value) AS tags_list
-                FROM vote
-                GROUP BY file_hash
-        ");
+	SqliteQuery2("
+		CREATE VIEW
+			item_tags_list
+		AS
+		SELECT
+			file_hash,
+			GROUP_CONCAT(DISTINCT vote_value) AS tags_list
+		FROM vote
+		GROUP BY file_hash
+	");
 
 	SqliteQuery2("
 		CREATE VIEW item_flat AS
@@ -268,32 +268,32 @@ sub SqliteMakeTables() {
 			ORDER BY vote_count DESC
 	");
 
-        SqliteQuery2("
-                CREATE VIEW
-                        author_weight
-                AS
-                SELECT
-                        vote_weight.key AS key,
-                        SUM(vote_weight.vote_weight) AS vote_weight
-                FROM
-                        vote_weight
-                GROUP BY
-                        vote_weight.key
-        ");
+	SqliteQuery2("
+		CREATE VIEW
+			author_weight
+		AS
+		SELECT
+			vote_weight.key AS key,
+			SUM(vote_weight.vote_weight) AS vote_weight
+		FROM
+			vote_weight
+		GROUP BY
+			vote_weight.key
+	");
 
-        SqliteQuery2("
-                CREATE VIEW
-                        author_score
-                AS
-                        SELECT
-                                item_flat.author_key AS author_key,
-                                SUM(item_flat.item_score) AS author_score
-                        FROM
-                                item_flat
-                        GROUP BY
-                                item_flat.author_key
+	SqliteQuery2("
+		CREATE VIEW
+			author_score
+		AS
+			SELECT
+				item_flat.author_key AS author_key,
+				SUM(item_flat.item_score) AS author_score
+			FROM
+				item_flat
+			GROUP BY
+				item_flat.author_key
 
-        ");
+	");
 
 	SqliteQuery2("
 		CREATE VIEW 
@@ -1446,6 +1446,55 @@ sub DBGetAddedTime {
 # 	return @itemsArray;
 # }
 
+sub DBGetItemListByTagList { #get list of items by taglist (as array)
+# uses DBGetItemList()
+#	my @tagListArray = shift;
+
+#	if (scalar(@tagListArray) < 1) {
+#		return;
+#	}
+
+	#todo sanity checks
+
+	my @tagListArray = @_;
+
+	my $tagListCount = scalar(@tagListArray);
+
+	my $tagListArrayText = "'" . join ("','", @tagListArray) . "'";
+
+	my %queryParams;
+	my $whereClause = "
+		WHERE file_hash IN (
+			SELECT file_hash FROM (
+				SELECT
+					COUNT(id) AS vote_count,
+						file_hash
+				FROM vote
+				WHERE vote_value IN ($tagListArrayText)
+				GROUP BY file_hash
+			) WHERE vote_count >= $tagListCount
+		)
+	";
+	WriteLog("DBGetItemListByTagList");
+	WriteLog("$whereClause");
+
+	$queryParams{'where_clause'} = $whereClause;
+
+			#todo do it correctly like this:
+#	$sth = $dbh->prepare( "
+#            SELECT name, location
+#            FROM megaliths
+#            WHERE name = ?
+#            AND mapref = ?
+#            AND type LIKE ?
+#        " );
+#	$sth->bind_param( 1, "Avebury" );
+#	$sth->bind_param( 2, $mapreference );
+#	$sth->bind_param( 3, "%Stone Circle%" );
+
+	return DBGetItemList(\%queryParams);
+}
+
 sub DBGetItemList {
 	my $paramHashRef = shift;
 	my %params = %$paramHashRef;
@@ -1464,6 +1513,7 @@ sub DBGetItemList {
 			item_flat
 	";
 
+	#todo sanity check: typically, none of these should have a semicolon?
 	if (defined ($params{'join_clause'})) {
 		$query .= " " . $params{'join_clause'};
 	}
@@ -1493,6 +1543,24 @@ sub DBGetItemList {
 	}
 
 	return @resultsArray;
+}
+
+sub DBGetAllAppliedTags {
+	my $query = "SELECT DISTINCT vote_value FROM vote";
+
+	my $sth = $dbh->prepare($query);
+
+	my @ary;
+
+	$sth->execute();
+
+	$sth->bind_columns(\my $val1);
+
+	while ($sth->fetch) {
+		push @ary, $val1;
+	}
+
+	return @ary;
 }
 
 sub DBGetItemListForAuthor {

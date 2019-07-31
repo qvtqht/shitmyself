@@ -1013,19 +1013,13 @@ sub GetPageHeader {
 
 	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 
-	#	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
-	#$menuTemplate .= GetMenuItem("/top/pubkey.html", 'Authors');
-	$menuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
-	$menuTemplate .= GetMenuItem("/tags.html", 'Tags');
+	$menuTemplate .= GetMenuItem("/top/hastext_hastitle.html", 'Texts');
+	$menuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$menuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$menuTemplate .= GetMenuItem("/top.html", 'Top');
-	$menuTemplate .= GetMenuItem("/manual.html", 'Manual');
-	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
-	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
-	#$menuTemplate .= GetMenuItem("/index0.html", GetString('menu/abyss'));
-	#$menuTemplate .= GetMenuItem("/profile.html", 'Account');
-	#$menuTemplate .= GetMenuItem("/clone.html", GetString('menu/clone'));
-	#$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
+	$menuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
+	$menuTemplate .= GetMenuItem("/stats.html", 'Stats', 1);
+	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
 
 #	my $adminKey = GetAdminKey();
 #	if ($adminKey) {
@@ -1548,8 +1542,14 @@ sub GetReadPage {
 sub GetMenuItem {
 	my $address = shift;
 	my $caption = shift;
+	my $advanced = shift;
 
-	my $menuItem = GetTemplate('menuitem.template');
+	my $menuItem = '';
+	if ($advanced) {
+		$menuItem = GetTemplate('menuitem-advanced.template');
+	} else {
+		$menuItem = GetTemplate('menuitem.template');
+	}
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
@@ -1796,7 +1796,7 @@ sub MakeStaticPages {
 
 	$scriptInject = GetTemplate('scriptinject.template');
 	$avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
+	$prefsjs = GetTemplate('js/prefs.js.template');
 	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
 
 	$tfmPage =~ s/<\/body>/$scriptInject<\/body>/;

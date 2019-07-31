@@ -400,11 +400,10 @@ my $scoreboardPage = GetScoreboardPage();
 PutHtmlFile('html/scores.html', $scoreboardPage);
 PutHtmlFile('html/author/index.html', $scoreboardPage);
 
-my $topItemsPage = GetTopItemsPage();
-PutHtmlFile('html/top.html', $topItemsPage);
-
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};
+
+my @allTagsList;
 
 while (@voteCountsArray) {
 	my $tag = pop @voteCountsArray;
@@ -414,8 +413,49 @@ while (@voteCountsArray) {
 
 	my $indexPage = GetReadPage('tag', $tagName);
 
+	unshift @allTagsList, $tagName;
+
 	PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
 }
+
+
+my @tagsList = DBGetAllAppliedTags();
+
+WriteLog("DBGetAllAppliedTags returned " . scalar(@tagsList) . " items");
+
+foreach my $tag1 (@tagsList) {
+	WriteLog("DBGetAllAppliedTags $tag1...");
+	foreach my $tag2 (@tagsList) {
+		WriteLog("DBGetAllAppliedTags $tag1 $tag2");
+		my @items = DBGetItemListByTagList($tag1, $tag2);
+
+		if (scalar(@items) >= 5) {
+			WriteLog("Returned: ". scalar(@items));
+
+			my $testPage;
+			$testPage = GetIndexPage(\@items);
+
+			WriteLog("html/top/$tag1\_$tag2.html");
+
+			PutHtmlFile("html/top/$tag1\_$tag2.html", $testPage);
+
+			unshift @allTagsList, "$tag1\_$tag2";
+		} else {
+			WriteLog("Returned: ". scalar(@items));
+		}
+	}
+}
+
+#my $topItemsPage = GetTopItemsPage();
+my $topItemsPage = GetTopItemsPage();
+PutHtmlFile('html/top.html', $topItemsPage);
+
+@allTagsList = sort @allTagsList;
+my $tagCloudPage = '';
+foreach my $tag (@allTagsList) {
+	$tagCloudPage .= '<a href="top/' . $tag . '.html">' . $tag . '</a><br>';
+}
+PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #
 #sub MakePage {
 #	if (!$force) {
