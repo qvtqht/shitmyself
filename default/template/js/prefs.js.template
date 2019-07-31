@@ -1,4 +1,5 @@
 function ShowAdvanced() {
+//todo settimeout this baby, and use a static variable to remember the last state, refresh as needed. this will make it take effect on all open tabs
 	var displayValue = 'none';
 	if (GetPrefs('show_advanced') == 1) {
 		displayValue = 'inline';
