@@ -414,7 +414,6 @@ sub ProcessAccessLog {
 						my $fileHash = GetFileHash($pathedFilename);
 
 						if ($addTo404Log) {
-							WriteLog("Appending this item to 404.log");
 							AppendFile('./log/404.log', $fileHash);
 						}
 
