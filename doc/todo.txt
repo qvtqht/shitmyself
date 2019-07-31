@@ -1,3 +1,20 @@
+Write function to do js injection into pages
+	Replace the copy-pasta code
+
+Fill in zipfile(s) in gitflow.pl
+
+Find vouched users
+	Recursive seek of vouch/friend tag
+	Select all items that are marked admin
+		Find all vouch tags
+			Find all profiles that correspond to vouch tags
+				Find all items posted by these profiles
+					Find all
+
+Allow profiles to claim client ids
+	Items with fingerprint are then assigned to said profile
+
+
 
 INSTALLATION
 ============
