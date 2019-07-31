@@ -29,7 +29,7 @@ my @accessLogPaths;
 if ($accessLogPathsConfig) {
 	@accessLogPaths = split("\n", $accessLogPathsConfig);
 } else {
-	push @accessLogPaths GetConfig('admin/access_log_path');
+	push @accessLogPaths, GetConfig('admin/access_log_path');
 }
 
 #todo re-test this
