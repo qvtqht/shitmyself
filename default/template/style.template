@@ -95,5 +95,5 @@ form#compose {
 }
 
 .advanced {
-    color: #800000;
+    color: #804000;
 }
