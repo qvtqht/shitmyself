@@ -25,12 +25,13 @@
 
     <span id=curIdAdv style="display:none">
         <p>
-            <label for=myFP>Fingerprint:</label><br>
-            <span id=myFP></span>
+            <input type=button value="Share Public Key" id=btnSharePub onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
+            Press this button if profile is missing.
         </p>
 
         <p>
-            <input type=button value="Share Public Key" id=btnSharePub onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
+            <label for=myFP>Fingerprint:</label><br>
+            <span id=myFP></span>
         </p>
 
         <p>
