@@ -239,7 +239,7 @@ sub ProcessAccessLog {
 			#todo
 		}
 
-		# ALLOW_DEOP, default deop string = elite
+		# ALLOW_DEOP, default deop string
 		if (GetConfig('admin/allow_deop') == 1) {
 			my $deopString = GetConfig('admin/deop_string');
 
@@ -277,6 +277,7 @@ sub ProcessAccessLog {
 			}
 		}
 
+		my $addTo404Log = 0;
 		WriteLog("Check admin/accept_404_url_text...");
 		if (GetConfig('admin/accept_404_url_text')) {
 			#If the request was met with a 404
@@ -288,6 +289,8 @@ sub ProcessAccessLog {
 					$submitPrefix = '/';
 
 					WriteLog('$submitPrefix = /');
+
+					$addTo404Log = 1;
 				}
 			}
 		}
@@ -409,6 +412,11 @@ sub ProcessAccessLog {
 
 						#Get the hash for this file
 						my $fileHash = GetFileHash($pathedFilename);
+
+						if ($addTo404Log) {
+							WriteLog("Appending this item to 404.log");
+							AppendFile('./log/404.log', $fileHash);
+						}
 
 						my $addedTime = GetTime();
 
