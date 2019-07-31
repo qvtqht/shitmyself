@@ -1,10 +1,16 @@
-#bug
-	Profile
-		Create
-		Share
-		Log Out
-		Log In
-	Share button is still "Thanks"
+
+INSTALLATION
+============
+perl sanity checks
+check for httpd
+	options
+		lighttpd
+		httpd
+		..
+	start
+	connect
+	check for access.log
+
 
 
 Automatically friend server and operator on account creation

@@ -614,6 +614,12 @@ function makePrivateKey(username, bits) {
 
 					sharePubKey();
 
+					var btnSharePubkey = document.getElementById('btnSharePub');
+					if (btnSharePubkey) {
+						btnSharePubkey.value = 'Share Public Key';
+						btnSharePubkey.disabled = 0;
+					}
+
 					//return frames["frame"].location.host;
 
 					//window.open('/write.html#inspubkey', '_self');
@@ -633,6 +639,8 @@ function sharePubKey() {
 	iframe.name = "inspubkey"
 	iframe.style.display = 'none';
 	document.body.appendChild(iframe);
+
+
 //	window.open('/write.html#inspubkey', '_self');
 }
 
