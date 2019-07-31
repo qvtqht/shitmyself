@@ -185,6 +185,33 @@ sub SqliteMakeTables() {
 				vote.signed_by
 	");
 
+        SqliteQuery2("
+                CREATE VIEW
+                        item_score
+                AS
+                        SELECT
+                                item.file_hash AS file_hash,
+                                COUNT(vote.vote_value) AS item_score
+                        FROM
+                                vote
+                                LEFT JOIN item
+                                        ON (vote.file_hash = item.file_hash)
+                        GROUP BY
+                                item.file_hash
+
+        ");
+
+        SqliteQuery2("
+                CREATE VIEW
+                        item_tags_list
+                AS
+                SELECT
+                        file_hash,
+                        GROUP_CONCAT(DISTINCT vote_value) AS tags_list
+                FROM vote
+                GROUP BY file_hash
+        ");
+
 	SqliteQuery2("
 		CREATE VIEW item_flat AS
 			SELECT
@@ -241,16 +268,32 @@ sub SqliteMakeTables() {
 			ORDER BY vote_count DESC
 	");
 
-	SqliteQuery2("
-		CREATE VIEW
-			item_tags_list
-		AS
-		SELECT
-			file_hash,
-			GROUP_CONCAT(DISTINCT vote_value) AS tags_list
-		FROM vote
-		GROUP BY file_hash
-	");
+        SqliteQuery2("
+                CREATE VIEW
+                        author_weight
+                AS
+                SELECT
+                        vote_weight.key AS key,
+                        SUM(vote_weight.vote_weight) AS vote_weight
+                FROM
+                        vote_weight
+                GROUP BY
+                        vote_weight.key
+        ");
+
+        SqliteQuery2("
+                CREATE VIEW
+                        author_score
+                AS
+                        SELECT
+                                item_flat.author_key AS author_key,
+                                SUM(item_flat.item_score) AS author_score
+                        FROM
+                                item_flat
+                        GROUP BY
+                                item_flat.author_key
+
+        ");
 
 	SqliteQuery2("
 		CREATE VIEW 
@@ -275,50 +318,6 @@ sub SqliteMakeTables() {
 				ON (author.key = item_flat.author_key)
 		GROUP BY
 			author.key, author_alias.alias
-	");
-
-	SqliteQuery2("
-		CREATE VIEW
-			author_weight
-		AS
-		SELECT
-			vote_weight.key AS key,
-			SUM(vote_weight.vote_weight) AS vote_weight
-		FROM
-			vote_weight
-		GROUP BY
-			vote_weight.key
-	");
-
-	SqliteQuery2("
-		CREATE VIEW
-			item_score
-		AS
-			SELECT
-				item.file_hash AS file_hash,
-				COUNT(vote.vote_value) AS item_score
-			FROM
-				vote
-				LEFT JOIN item
-					ON (vote.file_hash = item.file_hash)
-			GROUP BY
-				item.file_hash
-
-	");
-
-
-	SqliteQuery2("
-		CREATE VIEW
-			author_score
-		AS
-			SELECT
-				item_flat.author_key AS author_key,
-				SUM(item_flat.item_score) AS author_score
-			FROM
-				item_flat
-			GROUP BY
-				item_flat.author_key
-
 	");
 }
 
