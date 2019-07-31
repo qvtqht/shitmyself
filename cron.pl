@@ -24,26 +24,36 @@ if (GetConfig('admin/git_cron_pull') == 1) {
 }
 # Read access.log using the path in the config
 
-my $accessLogPath = GetConfig('admin/access_log_path');
-WriteLog("\$accessLogPath = $accessLogPath");
+my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
+my @accessLogPaths;
+if ($accessLogPathsConfig) {
+	@accessLogPaths = split("\n", $accessLogPathsConfig);
+} else {
+	push @accessLogPaths GetConfig('admin/access_log_path');
+}
 
-my $startTime = GetTime();
-my $interval = GetConfig('admin/cron_continue');
-my $touch = 0;
+#todo re-test this
+foreach my $accessLogPath(@accessLogPaths) {
+	WriteLog("\$accessLogPath = $accessLogPath");
 
-while (!$touch || GetTime() < $startTime + $interval) {
-	$touch = 1;
+	my $startTime = GetTime();
+	my $interval = GetConfig('admin/cron_continue');
+	my $touch = 0;
 
-	if (!GetFile('cron.lock') || GetFile('cron.lock') ne $lockTime) {
-		WriteLog('Lock file has changed, quitting.');
-		last;
-	}
+	while (!$touch || GetTime() < $startTime + $interval) {
+		$touch = 1;
 
-	my $newItemCount = ProcessAccessLog($accessLogPath, 0);
+		if (!GetFile('cron.lock') || GetFile('cron.lock') ne $lockTime) {
+			WriteLog('Lock file has changed, quitting.');
+			last;
+		}
 
-	if ($newItemCount > 0) {
-		system('perl build.pl');
-		#WriteLog('Skipping build');
+		my $newItemCount = ProcessAccessLog($accessLogPath, 0);
+
+		if ($newItemCount > 0) {
+			system('perl build.pl');
+			#WriteLog('Skipping build');
+		}
 	}
 }
 
