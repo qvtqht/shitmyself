@@ -2,6 +2,7 @@
 
 # clean build script
 
+rm cron.lock
 rm -rfv cache
 rm -rfv html/*.html html/*/*.html html/*/*/*.html
 rm -rfv html/*.js html/*/*.js html/*/*/*.js
