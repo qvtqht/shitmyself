@@ -1,3 +1,14 @@
+Zip files
+	Multiple zip files
+		config
+		text files
+		pubkeys
+	Refresh with gitflow
+
+#bug Opera 12.x : advanced controls cannot be shown
+
+default/admin/require_token_for_indexing
+
 Write function to do js injection into pages
 	Replace the copy-pasta code
 
