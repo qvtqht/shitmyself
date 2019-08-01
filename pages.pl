@@ -874,17 +874,17 @@ sub GetPageFooter {
 
 	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span> ; ";
 
-	my $menuTemplate = '';
+	my $footerMenuTemplate = '';
 
 	#footer menu
-	$menuTemplate .= GetMenuItem("/stats.html", 'Stats');
-	$menuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
-	$menuTemplate .= GetMenuItem("/clone.html", 'Clone');
-	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss');
-	$menuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
-	$menuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
+	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Stats');
+	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
+	$footerMenuTemplate .= GetMenuItem("/clone.html", 'Clone');
+	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Abyss');
+	$footerMenuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
+	$footerMenuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 
-	$footer .= $menuTemplate;
+	$footer .= $footerMenuTemplate;
 
 	$txtFooter =~ s/\$footer/$footer/;
 
@@ -999,34 +999,35 @@ sub GetPageHeader {
 
 	$htmlStart =~ s/\$introText/$introText/g;
 
-	my $menuTemplate = "";
+	my $topMenuTemplate = "";
 
 	#todo replace with config/menu/*
 
 	#header menu
 	#
-	$menuTemplate .= GetMenuItem("/", GetString('menu/home'));
-
 	#my $identityLink = GetMenuItem("/profile.html", GetString('menu/sign_in'));
+
+
 	my $identityLink = '<span id="signin"></span><span class="myid" id=myid></span> ';
-	$menuTemplate .= $identityLink;
 
-	$menuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$topMenuTemplate .= $identityLink;
+	$topMenuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$topMenuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
+	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
+	$topMenuTemplate .= GetMenuItem("/top.html", 'Top');
+	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
+	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
+	$topMenuTemplate .= GetMenuItem("/stats.html", 'Stats', 1);
+	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
 
-	$menuTemplate .= GetMenuItem("/top/hastext_hastitle.html", 'Texts');
-	$menuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
-	$menuTemplate .= GetMenuItem("/scores.html", 'Authors');
-	$menuTemplate .= GetMenuItem("/top.html", 'Top');
-	$menuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
-	$menuTemplate .= GetMenuItem("/stats.html", 'Stats', 1);
-	$menuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
+	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
 
 #	my $adminKey = GetAdminKey();
 #	if ($adminKey) {
-#		$menuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
+#		$topMenuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
 #	}
 
-	$htmlStart =~ s/\$menuItems/$menuTemplate/g;
 
 	$txtIndex .= $htmlStart;
 
@@ -1394,8 +1395,10 @@ sub GetReadPage {
 
 		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
 		my $publicKeyHashHtml = '';
+		my $authorPubkeyTxtLink = '';
 		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
 			$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
+			#todo my $publicKeyTxtLink = ..;
 		}
 
 #		my $publicKeyHash = '';
@@ -1434,8 +1437,10 @@ sub GetReadPage {
 		$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;
 		if ($publicKeyHash) {
 			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
+			$authorInfoTemplate =~ s/\$authorPubkeyTxtLink/$authorPubkeyTxtLink/g;
 		} else {
 			$authorInfoTemplate =~ s/\$publicKeyHash//g;
+			$authorInfoTemplate =~ s/\$authorPubkeyTxtLink//g;
 		}
 
 		$txtIndex .= $authorInfoTemplate;
