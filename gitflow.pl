@@ -11,7 +11,7 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 
-sub GetTime2() {
+sub GetTime2() { # returns epoch time
 # this is identical to GetTime() in utils.pl
 # #todo replace at some point
 	#	return (time() + 2207520000);
