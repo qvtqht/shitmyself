@@ -34,6 +34,9 @@ body {
     );
     border-radius: 8pt;
 }
+.rmid {
+    color: red;
+}
 
 #logo {
     font-weight: bold;
