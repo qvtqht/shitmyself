@@ -305,7 +305,8 @@ sub SqliteMakeTables() {
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
-			COUNT(item_flat.file_hash) AS item_count
+			COUNT(item_flat.file_hash) AS item_count,
+			author_alias.pubkey_file_hash AS pubkey_file_hash
 		FROM
 			author 
 			LEFT JOIN author_weight
@@ -317,7 +318,7 @@ sub SqliteMakeTables() {
 			LEFT JOIN item_flat
 				ON (author.key = item_flat.author_key)
 		GROUP BY
-			author.key, author_alias.alias
+			author.key, author_alias.alias, pubkey_file_hash
 	");
 }
 
