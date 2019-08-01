@@ -21,6 +21,8 @@
 		<br><br>Save your private key<br>if you want to later use<br>same identity.
 	</p>
 
+	<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox('abcdefgh', this, 'beginner');"> Display beginner hints</label><br>
+
 	<label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="showHideCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
 
 	<span id=curIdAdv style="display:none">
