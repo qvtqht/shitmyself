@@ -14,7 +14,7 @@ $styleSheet
 <h2 class=menu><a id=logo class=logo title="Home" href="/">
 $logoText</a><br>
 $menuItems</h2>
-$introText
+<div class=beginner>$introText</div>
 <hr size=2>
 </div>
 <main id=maincontent><a name=maincontent></a>
