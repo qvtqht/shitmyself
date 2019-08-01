@@ -1,35 +1,54 @@
-function ShowAdvanced() {
+function ShowAdvanced() { // show or hide controls with class=advanced based on 'show_advanced' preference
 //todo settimeout this baby, and use a static variable to remember the last state, refresh as needed. this will make it take effect on all open tabs
-	var displayValue = 'none';
-	if (GetPrefs('show_advanced') == 1) {
-		displayValue = 'inline';
-	}
+	if (window.localStorage) {
+		var displayValue = 'none'; // hide by default
+		if (GetPrefs('show_advanced') == 1) { // check value of show_advanced preference
+			displayValue = 'inline'; // display
+		}
 
-	var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
-	for(var i = 0; i < divsToHide.length; i++){
-		//divsToHide[i].style.visibility = "hidden"; // or
-		divsToHide[i].style.display = displayValue; // depending on what you're doing
+		// thank you stackoverflow
+		var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
+		for (var i = 0; i < divsToHide.length; i++) {
+			//divsToHide[i].style.visibility = "hidden"; // or
+			divsToHide[i].style.display = displayValue; // depending on what you're doing
+		}
+
+		displayValue = 'inline'; // show by default
+		if (GetPrefs('beginner') == 0) { // check value of beginner preference
+			displayValue = 'none';
+		}
+
+		var divsToShow = document.getElementsByClassName('beginner');
+		for (var i = 0; i < divsToShow.length; i++) {
+			divsToShow[i].style.display = displayValue;
+		}
 	}
 }
 
-
-function PrefsTest() {
-	SetPrefs('test', '123');
+function PrefsTest() { //sets an item into localstorage prefs
+	SetPrefs('test', '123'); //set key 'test' to value '123
 
 	//alert('tst');
 
-	var a = GetPrefs('test');
+	var a = GetPrefs('test'); // get value of key 'test'
 
-	alert(a);
+	alert(a); // display alert with value of key
 
-	return 0;
-
+	return 0; // done
 }
 
-function GetPrefs(prefKey) {
-	var value = localStorage.getItem('p_'+prefKey);
+function GetPrefs(prefKey) { // get prefs value from localstorage
+	if (window.localStorage) {
+		var value = localStorage.getItem('p_'+prefKey);
 
-	return value;
+		if (!value) {
+			if (prefKey == 'beginner') {
+				value = 1;
+			}
+		}
+
+		return value;
+	}
 //	var json = localStorage.getItem('preferencesJson');
 //
 //	var objJson;
@@ -46,7 +65,7 @@ function GetPrefs(prefKey) {
 }
 
 
-function SetPrefs(prefKey, prefValue) {
+function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefValue
 //	var json = localStorage.getItem('preferencesJson');
 //
 //	var objJson;
@@ -65,10 +84,10 @@ function SetPrefs(prefKey, prefValue) {
 //	var prefsJson = '';
 
 //	localStorage.setItem('preferencesJson', prefsJson);
-	localStorage.setItem('p_'+prefKey, prefValue);
-
-
+	if (window.localStorage) {
+		localStorage.setItem('p_'+prefKey, prefValue); // set to local storage with p_ prefix
+	}
 }
 
-ShowAdvanced();
+ShowAdvanced(); // call ShowAdvanced
 
