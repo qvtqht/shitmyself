@@ -49,18 +49,22 @@ function undoSignout() {
 	var signinBox = document.getElementById('signin');
 	signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 
+//	var logo = document.getElementById('logo');
+//	if (logo) {
+//		logo.href = '/author/' + fingerprint
+//	} #todo
+
 }
 
 function showHideCheckbox(id, ths, prefName) {
-
 	var pane = document.getElementById(id);
-	if (!pane) return;
-
-   pane.style.display=(ths.checked ? 'block' : 'none')
+	if (pane) {
+   	pane.style.display=(ths.checked ? 'block' : 'none')
+	}
 
    SetPrefs(prefName, (ths.checked ? 1 : 0));
 
-   if (prefName == 'show_advanced') {
+   if (prefName == 'show_advanced' || prefName == 'beginner') {
    	ShowAdvanced();
    }
 }
@@ -68,6 +72,10 @@ function showHideCheckbox(id, ths, prefName) {
 if (pane = document.getElementById('curIdAdv') && GetPrefs('show_advanced') == 1) {
 	document.getElementById('curIdAdvC').checked = 1;
 	showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
+}
+
+if (pane = document.getElementById('curIdAdv') && GetPrefs('beginner') == 1) {
+	document.getElementById('beginnerC').checked = 1;
 }
 
 if (pane = document.getElementById('creaIdAdv') && GetPrefs('show_advanced') == 1) {
