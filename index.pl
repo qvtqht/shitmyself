@@ -55,7 +55,7 @@ sub MakeVoteIndex {
 	}
 }
 
-sub MakeAddedIndex {
+sub MakeAddedIndex { # reads from log/added.log and puts it into added_time table
 	WriteLog( "MakeAddedIndex()\n");
 
 	if (GetConfig('admin/read_added_log')) {
@@ -65,9 +65,9 @@ sub MakeAddedIndex {
 			my @addedRecord = split("\n", GetFile("log/added.log"));
 
 			foreach(@addedRecord) {
-				my ($filePath, $addedTime) = split('\|', $_);
+				my ($fileHash, $addedTime) = split('\|', $_);
 
-				DBAddAddedTimeRecord($filePath, $addedTime);
+				DBAddAddedTimeRecord($fileHash, $addedTime);
 			}
 
 			DBAddAddedTimeRecord('flush');

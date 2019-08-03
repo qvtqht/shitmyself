@@ -1,8 +1,5 @@
 #!/usr/bin/perl
 
-
-#todo add "account" and "sign up" and "register" links
-
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -19,8 +16,6 @@ require './utils.pl';
 require './sqlite.pl';
 require './pages.pl';
 
-#This has been commented out because it interferes with symlinked html dir
-#my $HTMLDIR = "html.tmp";
 my $HTMLDIR = "html";
 
 #
@@ -80,7 +75,7 @@ my $HTMLDIR = "html";
 # 	return %pageParams;
 # }
 
-sub GetVersionPage {
+sub GetVersionPage { # returns html with version information for $version (git commit id)
 	my $version = shift;
 
 	if (!IsSha1($version)) {
