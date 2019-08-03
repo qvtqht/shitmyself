@@ -1226,7 +1226,7 @@ sub GetStatsPage {
 #	$scriptInject =~ s/\$javascript/$avatarjs\n$freshjs\n$prefsjs/g;
 #	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
 
-	$statsPage = InjectJs($statsPage, qw(avatar, fresh, prefs));
+	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs));
 
 	return $statsPage;
 }
