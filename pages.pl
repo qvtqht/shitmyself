@@ -1151,7 +1151,8 @@ sub GetTopItemsPage {
 
 		$txtIndex .= $itemListingWrapper;
 	} else {
-		$txtIndex .= "<p>Couldn't find any items to put on this page. Recommend that you post something or contact your operator.</p>";
+		$txtIndex .= "<p class=beginner>Couldn't find any items to put on this page. Recommend that you post something or contact your operator.</p><p>No matches.</p>";
+		#todo should be in template/
 	}
 
 	$txtIndex .= GetPageFooter();
@@ -1217,15 +1218,42 @@ sub GetStatsPage {
 	$statsPage .= $statsTable;
 
 	$statsPage .= GetPageFooter();
+#
+#	my $scriptInject = GetTemplate('scriptinject.template');
+#	my $avatarjs = GetTemplate('js/avatar.js.template');
+#	my $freshjs = GetTemplate('js/fresh.js.template');
+#	my $prefsjs = GetTemplate('js/prefs.js.template');
+#	$scriptInject =~ s/\$javascript/$avatarjs\n$freshjs\n$prefsjs/g;
+#	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $freshjs = GetTemplate('js/fresh.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n$freshjs/g;
-
-	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
+	$statsPage = InjectJs($statsPage, qw(avatar, fresh, prefs));
 
 	return $statsPage;
+}
+
+sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
+	my $html = shift;
+	my @scriptNames = @_;
+
+	my $scriptsText = '';
+	my $scriptsComma = '';
+
+	foreach my $script (@scriptNames) {
+		if (!$scriptsComma) {
+			$scriptsComma = "\n\n";
+		} else {
+			$scriptsText .= $scriptsComma;
+		}
+
+		$scriptsText .= GetTemplate("js/$script.js.template");
+	}
+
+	my $scriptInject = GetTemplate('scriptinject.template');
+	$scriptInject =~ s/\$javascript/$scriptsText/g;
+
+	$html =~ s/<\/body>/$scriptInject<\/body>/;
+
+	return $html;
 }
 
 sub GetScoreboardPage {
@@ -1386,7 +1414,7 @@ sub GetReadPage {
 
 		my $authorAliasHtml = GetAlias($authorKey);
 		my $authorAvatarHtml = GetAvatar($authorKey);
-		my $authorImportance = 1337;
+		my $authorImportance = 1;
 		my $authorScore = DBGetAuthorScore($authorKey);
 		my $itemCount = DBGetAuthorItemCount($authorKey);
 		my $authorDescription = '';
