@@ -56,33 +56,6 @@ function undoSignout() {
 
 }
 
-function showHideCheckbox(id, ths, prefName) {
-	var pane = document.getElementById(id);
-	if (pane) {
-   	pane.style.display=(ths.checked ? 'block' : 'none')
-	}
-
-   SetPrefs(prefName, (ths.checked ? 1 : 0));
-
-   if (prefName == 'show_advanced' || prefName == 'beginner') {
-   	ShowAdvanced();
-   }
-}
-
-if (pane = document.getElementById('curIdAdv') && GetPrefs('show_advanced') == 1) {
-	document.getElementById('curIdAdvC').checked = 1;
-	showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
-}
-
-if (pane = document.getElementById('curIdAdv') && GetPrefs('beginner') == 1) {
-	document.getElementById('beginnerC').checked = 1;
-}
-
-if (pane = document.getElementById('creaIdAdv') && GetPrefs('show_advanced') == 1) {
-	document.getElementById('creaIdAdvC').checked = 1;
-	showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
-}
-
 function signoutCounterDecrement() {
 	var ct = window.confct;
 
@@ -528,7 +501,8 @@ function saveId() {
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {
-					myId2.innerHTML = getAvatar();
+//					myId2.innerHTML = getAvatar();
+					myId2.innerHTML = '<a href="/author/' + myFp + '/">' + getAvatar() + '</a>'; //todo remove hardcoding of url
 				}
 
 				var myIdProfile = document.getElementById('myIdProfile');
@@ -536,7 +510,8 @@ function saveId() {
 					var profileUrl = '/author/' + myFingerprint + '/';
 
 					if (UrlExists(profileUrl)) {
-						myIdProfile.innerHTML = '<a href="' + profileUrl + '">Go to your profile page</a>';
+						myIdProfile.innerHTML = '<span class=beginner><a href="' + profileUrl + '">Go to your Profile page</a></span>';
+						ShowAdvanced(1);
 					} else {
 						myIdProfile.innerHTML = '';
 					}

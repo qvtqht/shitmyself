@@ -1,12 +1,13 @@
+<!-- stats.template -->
+<fieldset>
 <p>Version: $version</p>
 <p>Items: $itemCount</p>
 <p>Profiles: $authorCount</p>
 <p>Operator: $admin</p>
 <p>Server: $server</p>
-
-<!--
-<p>Updated: $currUpdateTime</p>
-<p>Previous Update: $prevUpdateTime</p>
-<p>Apparent Update Interval: $updateInterval seconds</p>
-<p>Next Update: $nextUpdateTime</p>
--->
+<p class=advanced>Updated: $currUpdateTime</p>
+<p class=advanced>Previous Update: $prevUpdateTime</p>
+<p class=advanced>Apparent Update Interval: $updateInterval seconds</p>
+<p class=advanced>Next Update: $nextUpdateTime</p>
+</fieldset>
+<!-- / stats.template -->

@@ -1,3 +1,10 @@
-<table cellpadding=3><tr><th align=left>Name</th><th align=left>Score</th><th align=left>Items</th><th align=left>Influence</th><th align=left>Seen</th></tr>
+<table cellpadding=3>
+    <tr>
+        <th align=left>Name</th>
+        <th align=left>Score</th>
+        <th class=advanced align=left>Items</th>
+        <th class=advanced align=left>Influence</th>
+        <th class=advanced align=left>Seen</th>
+    </tr>
 $authorListings
 </table>

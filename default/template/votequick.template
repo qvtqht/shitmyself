@@ -1,5 +1,6 @@
 <!-- votequick.template -->
-<p class=quickvote><b>Your Opinion:</b><br>
+<p class="quickvote">
+    <span class=beginner>Please share your opinion with one of these handy buttons:<br></span>
     $quickVoteButtons
 </p>
 <!-- / votequick.template -->

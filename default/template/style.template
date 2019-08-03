@@ -54,8 +54,6 @@ form#compose {
     background-color: #f0e0f8
 }
 
-
-
 /* loading */
 .loading {
     text-align: center;

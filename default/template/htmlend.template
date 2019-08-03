@@ -1,9 +1,9 @@
 <hr>
 <footer>
-$footer
+    <span class=advanced>$footer</span>
     <p class=disclaimer><small>
         $disclaimer
     </small></p>
-    $ssiFooter
+    <span class=advanced>$ssiFooter</span>
 </footer>
 </main></body></html>
