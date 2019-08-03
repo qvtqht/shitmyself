@@ -14,7 +14,6 @@ function ShowAdvanced(force = 0) { // show or hide controls with class=advanced 
 			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
 			for (var i = 0; i < divsToHide.length; i++) {
 				//divsToHide[i].style.visibility = "hidden"; // or
-				alert(divsToHide[i].nodeName);
 				if (divsToHide[i].nodeName == 'P') {
 					divsToHide[i].style.display = 'block'; // depending on what you're doing
 				} else if (divsToHide[i].nodeName == 'TD') {
