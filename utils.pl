@@ -609,7 +609,10 @@ sub GetFile {
 	my $fileName = shift;
 
 	if (!$fileName) {
-		WriteLog('attempting GetFile() without $fileName');
+#		WriteLog('attempting GetFile() without $fileName'); #todo writelog is too much dependencies for here
+		if (-e 'config/admin/debug') {
+			die('attempting GetFile() without $fileName');
+		}
 		return;
 	}
 
@@ -1578,7 +1581,24 @@ sub WriteLog {
 		my $timestamp = GetTime();
 
 		AppendFile("log/log.log", $timestamp . " " . $text);
-		print $timestamp . " " . $text . "\n";
+
+		if (-e 'config/admin/prev_build_duration') {
+			state $prevBuildDuration;
+			$prevBuildDuration = $prevBuildDuration || trim(GetFile('config/admin/prev_build_duration'));
+			#bug here
+
+			if ($prevBuildDuration) {
+				state $buildBegin;
+				$buildBegin = $buildBegin || trim(GetFile('config/admin/build_begin'));
+
+				my $approximateProgress = (GetTime() - $buildBegin) / $prevBuildDuration * 100;
+				print '(~' . $approximateProgress . '%) ' . $timestamp . " " . $text . "\n";
+			} else {
+				print $timestamp . " " . $text . "\n";
+			}
+		} else {
+			print $timestamp . " " . $text . "\n";
+		}
 
 		return 1;
 	}

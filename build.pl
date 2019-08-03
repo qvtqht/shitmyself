@@ -9,6 +9,19 @@ require './index.pl';
 require './access.pl';
 #require './pages.pl';
 
+my $prevBuildStart = trim(GetFile('config/admin/build_begin'));
+my $prevBuildFinish = trim(GetFile('config/admin/build_end'));
+
+my $prevBuildDuration;
+if ($prevBuildFinish > $prevBuildStart) {
+	$prevBuildDuration = ($prevBuildFinish - $prevBuildStart);
+	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
+}
+
+PutFile('config/admin/build_begin', GetTime());
+PutFile('config/admin/build_end', '');
+
+
 #if (GetConfig('upgrade_now') ne 'no') {
 #	PutConfig('last_upgrade', 'no');
 #	exec('./upgrade.sh &');
@@ -53,3 +66,5 @@ DBResetPageTouch();
 system('perl gitflow.pl');
 
 WriteLog( "Finished!");
+
+PutFile('config/admin/build_end', GetTime());
