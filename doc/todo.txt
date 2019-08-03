@@ -1,3 +1,5 @@
+addalias/5questions/abcdef0123456789
+
 Take stuff that is not PGP-related out of crypto.js.template
 
 Zip files
@@ -76,7 +78,7 @@ Then
 	create url alias pointing to all replies to item
 
 
-No-JS voting is broken. Fix.
+No-JS voting is broken. Fix.#
 
 Update pages for parent items recursively
 
@@ -250,8 +252,6 @@ Instant updates
 Nicer-looking threading
 	Two-level thread nesting
 	"Reply" buttons on the item page and the child items
-One-click voting buttons
-	config for different tags based on existing tags
 Generate one page for each thread
 	Crawl the thread tree and build a graph
 
