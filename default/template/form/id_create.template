@@ -1,11 +1,11 @@
 <form id=formCreateId name=formCreateId style="display:none">
 
-    <p>
+    <p class=beginner>
         <big><b>Create Profile</b></big>
     </p>
 
     <p>
-        <label for=name>Name:
+        <label for=name><span class=beginner>Name:</span>
             <input type=text size=16 maxlength=16 name=name id=name onblur="if(this.value==''){this.value='$prefillUsername';}" onfocus="if(this.value=='$prefillUsername'){this.value='';}">
         </label>
     </p>
