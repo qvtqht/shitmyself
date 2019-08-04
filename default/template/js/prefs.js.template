@@ -14,9 +14,9 @@ function ShowAdvanced(force = 0) { // show or hide controls with class=advanced 
 			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
 			for (var i = 0; i < divsToHide.length; i++) {
 				//divsToHide[i].style.visibility = "hidden"; // or
-				if (divsToHide[i].nodeName == 'P') {
+				if (displayValue == 'initial' && divsToHide[i].nodeName == 'P') {
 					divsToHide[i].style.display = 'block'; // depending on what you're doing
-				} else if (divsToHide[i].nodeName == 'TD') {
+				} else if (displayValue == 'initial' && divsToHide[i].nodeName == 'TD') {
 					divsToHide[i].style.display = 'table-cell'; // depending on what you're doing
 				} else {
 					divsToHide[i].style.display = displayValue; // depending on what you're doing
@@ -46,7 +46,7 @@ function ShowAdvanced(force = 0) { // show or hide controls with class=advanced 
 	}
 
 	if (!force) {
-		setTimeout(ShowAdvanced, 1000);
+		setTimeout(ShowAdvanced, 3000);
 	}
 }
 
