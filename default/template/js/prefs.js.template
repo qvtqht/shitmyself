@@ -1,7 +1,7 @@
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 
-function ShowAdvanced(force = 0) { // show or hide controls with class=advanced based on 'show_advanced' preference
+function ShowAdvanced(force) { // show or hide controls with class=advanced based on 'show_advanced' preference
 //todo settimeout this baby, and use a static variable to remember the last state, refresh as needed. this will make it take effect on all open tabs
 	if (window.localStorage) {
 		var displayValue = 'none'; // hide by default
@@ -16,7 +16,7 @@ function ShowAdvanced(force = 0) { // show or hide controls with class=advanced 
 				//divsToHide[i].style.visibility = "hidden"; // or
 				if (displayValue == 'initial' && divsToHide[i].nodeName == 'P') {
 					divsToHide[i].style.display = 'block'; // depending on what you're doing
-				} else if (displayValue == 'initial' && divsToHide[i].nodeName == 'TD') {
+				} else if (displayValue == 'initial' && (divsToHide[i].nodeName == 'TH' || divsToHide[i].nodeName == 'TD')) {
 					divsToHide[i].style.display = 'table-cell'; // depending on what you're doing
 				} else {
 					divsToHide[i].style.display = displayValue; // depending on what you're doing
@@ -141,5 +141,5 @@ if (pane = document.getElementById('creaIdAdv') && GetPrefs('show_advanced') == 
 	showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
 }
 
-ShowAdvanced(); // call ShowAdvanced
+ShowAdvanced(0); // call ShowAdvanced
 
