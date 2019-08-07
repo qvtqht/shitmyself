@@ -1,4 +1,4 @@
-.tag-flag, .tag-troll, .tag-spam {
+.tag-flag, .tag-troll, .tag-spam, .tag-disagree, .tag-abuse, .tag-dislike, .tag-duplicate {
     color: #c08080;
 }
 .tag-accept, .tag-friend, .tag-attend {
