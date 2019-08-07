@@ -1542,7 +1542,23 @@ sub AddItemToConfigList {
 	PutConfig($configList, $myHosts);
 }
 
-sub FormatForWeb {
+sub FormatForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
+
+	if (!$text) {
+		return '';
+	}
+
+	$text = HtmlEscape($text);
+#	$text =~ s/\n /<br>&nbsp;/g;
+#	$text =~ s/^ /&nbsp;/g;
+#	$text =~ s/  / &nbsp;/g;
+	$text =~ s/\n/<br>\n/g;
+
+	return $text;
+}
+
+sub TextartForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
 	my $text = shift;
 
 	if (!$text) {
@@ -1562,8 +1578,6 @@ sub FormatForWeb {
 	# htmlspecialchars(
 	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
 	#));?><?=$tt_c?></description>
-
-
 
 	return $text;
 }
