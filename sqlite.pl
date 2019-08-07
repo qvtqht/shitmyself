@@ -119,6 +119,9 @@ sub SqliteMakeTables() {
 	# event
 	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration);");
 
+	# event
+	SqliteQuery2("CREATE TABLE location(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, latitude, longitude);");
+
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER);");
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
@@ -1080,8 +1083,8 @@ sub DBAddVoteWeight {
 }
 
 sub DBAddEventRecord {
-# DBAddEventRecord
-# $gitHash, $eventTime, $eventDuration, $signedBy
+	# DBAddEventRecord
+	# $gitHash, $eventTime, $eventDuration, $signedBy
 
 	state $query;
 	state @queryParams;
@@ -1109,7 +1112,7 @@ sub DBAddEventRecord {
 		DBAddEventRecord('flush');
 		$query = '';
 		@queryParams = ();
-	}	
+	}
 
 	my $eventTime = shift;
 	my $eventDuration = shift;
@@ -1137,6 +1140,67 @@ sub DBAddEventRecord {
 
 	$query .= '(?, ?, ?, ?)';
 	push @queryParams, $fileHash, $eventTime, $eventDuration, $signedBy;
+}
+
+
+sub DBAddLocationRecord {
+	# DBAddLocationRecord
+	# $gitHash, $latitude, $longitude, $signedBy
+
+	state $query;
+	state @queryParams;
+
+	WriteLog("DBAddLocationRecord()");
+
+	my $fileHash = shift;
+
+	if ($fileHash eq 'flush') {
+		WriteLog("DBAddLocationRecord(flush)");
+
+		if ($query) {
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = '';
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
+		DBAddLocationRecord('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	my $latitude = shift;
+	my $longitude = shift;
+	my $signedBy = shift;
+
+	if (!$latitude || !$longitude) {
+		WriteLog('DBAddLocationRecord() sanity check failed! Missing $latitude or $longitude');
+		return;
+	}
+
+	chomp $latitude;
+	chomp $longitude;
+
+	if ($signedBy) {
+		chomp $signedBy;
+	} else {
+		$signedBy = '';
+	}
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO location(item_hash, latitude, longitude, author_key) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= '(?, ?, ?, ?)';
+	push @queryParams, $fileHash, $latitude, $longitude, $signedBy;
 }
 
 
