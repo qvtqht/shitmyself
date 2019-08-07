@@ -135,6 +135,7 @@ sub IndexTextFile {
 		DBAddTitle('flush');
 		DBAddItemClient('flush');
 		DBAddItemAttribute('flush');
+		DBAddLocationRecord('flush');
 
 		return;
 	}
@@ -722,9 +723,46 @@ sub IndexTextFile {
 #			}
 #		}
 
+		# look for location tokens
+		# latlong/44.1234567,-44.433435454
+		if ($message) {
+			# get any matching token lines
+			my @latlongLines = ( $message =~ m/^latlong\/(\-?[0-9]{1,2}\.[0-9]{0,7}),(\-?[0-9]{1,2}\.[0-9]{0,7})/mg );
+			#                                   prefix   /lat     /long
+
+			if (@latlongLines) {
+				my $lineCount = @latlongLines / 2;
+				#todo assert no remainder
+
+				while (@latlongLines) {
+					my $latValue = shift @latlongLines;
+					my $longValue = shift @latlongLines;
+
+					WriteLog("About to DBAddLocationRecord() ... $latValue, $longValue");
+
+					if ($isSigned) {
+						DBAddLocationRecord($gitHash, $latValue, $longValue, $gpgKey);
+					} else {
+						DBAddLocationRecord($gitHash, $latValue, $longValue);
+					}
+
+					my $reconLine = "latlong/$latValue,$longValue";
+
+					$message =~ s/$reconLine/[Location: $latValue,$longValue]/g; #todo flesh out message
+
+					$detokenedMessage =~ s/$reconLine//g;
+
+					DBAddVoteRecord ($gitHash, $addedTime, 'location');
+
+					DBAddPageTouch('tag', 'location');
+				}
+			}
+		}
+
+
+
 		# look for addevent tokens
 		# addevent/1551234567/3600
-
 		if ($message) {
 			# get any matching token lines
 			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)/mg );
@@ -785,8 +823,8 @@ sub IndexTextFile {
 			}
 		}
 
+		# look for addvote tokens
 		if ($message) {
-
 			my @voteLines = ( $message =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
 			#                                prefix  /file hash      /time     /tag      /csrf
 
