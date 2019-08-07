@@ -3,11 +3,7 @@ use warnings FATAL => 'all';
 use threads;
 use utf8;
 
-
 require './utils.pl';
-require './index.pl';
-require './access.pl';
-#require './pages.pl';
 
 my $prevBuildStart = trim(GetFile('config/admin/build_begin'));
 my $prevBuildFinish = trim(GetFile('config/admin/build_end'));
@@ -20,6 +16,9 @@ if ($prevBuildFinish > $prevBuildStart) {
 
 PutFile('config/admin/build_begin', GetTime());
 PutFile('config/admin/build_end', '');
+
+require './index.pl';
+require './access.pl';
 
 
 #if (GetConfig('upgrade_now') ne 'no') {
