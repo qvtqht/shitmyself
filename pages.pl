@@ -643,7 +643,22 @@ sub GetItemTemplate {
 			WriteLog('$file{\'remove_token\'} is not set');
 		}
 
-		$message = FormatForWeb($message);
+		if ($file{'tags_list'}) {
+			my @itemTags = split(',', $file{'tags_list'});
+
+			while (scalar(@itemTags)) {
+				my $thisTag = pop @itemTags;
+				if ($thisTag eq 'textart') {
+					$isTextart = 1;
+				}
+			}
+		}
+
+		if ($isTextart) {
+			$message = TextartForWeb($message);
+		} else {
+			$message = FormatForWeb($message);
+		}
 
 		#$message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
 
@@ -684,17 +699,8 @@ sub GetItemTemplate {
 		if ($isAdmin) {
 			$itemClass .= ' admin';
 		}
-
-		if ($file{'tags_list'}) {
-			my @itemTags = split(',', $file{'tags_list'});
-
-			while (scalar(@itemTags)) {
-				my $thisTag = pop @itemTags;
-				if ($thisTag eq 'textart') {
-					$itemClass .= ' item-textart';
-					$isTextart = 1;
-				}
-			}
+		if ($isTextart) {
+			$itemClass .= ' item-textart';
 		}
 
 		my $authorUrl;
