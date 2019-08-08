@@ -534,6 +534,7 @@ sub GetItemVoteButtons {
 		unshift @quickVotesList, split("\n", $quickVotesForTags);
 	}
 
+	my $styleSheet = GetTemplate('style.template');
 
 	my $quickVoteTemplate = GetTemplate('votequick.template');
 	my $tagButtons = '';
@@ -547,11 +548,17 @@ sub GetItemVoteButtons {
 
 			my $quickTagCaption = GetString($quickTagValue);
 
+			# this is a hack, eventually should be replaced by config/tag_color #todo
+			if (index($styleSheet, "tag-$quickTagValue") > -1) {
+				$tagButton =~ s/\$class/tag-$quickTagValue/g;
+			} else {
+				$tagButton =~ s/class="\$class"//g;
+			}
+
 			$tagButton =~ s/\$fileHash/$fileHash/g;
 			$tagButton =~ s/\$ballotTime/$ballotTime/g;
 			$tagButton =~ s/\$voteValue/$quickTagValue/g;
 			$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
-			$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
 			$tagButton =~ s/\$checksum/$checksum/g;
 
 			$tagButtons .= $tagButton;
@@ -821,6 +828,8 @@ sub GetItemTemplate {
 			}
 
 			if (1) {
+				my $styleSheet = GetTemplate('style.template');
+
 				my $quickVoteTemplate = GetTemplate('votequick.template');
 				my $tagButtons = '';
 				foreach my $quickTagValue (@quickVotesList) {
@@ -837,8 +846,14 @@ sub GetItemTemplate {
 						$tagButton =~ s/\$ballotTime/$ballotTime/g;
 						$tagButton =~ s/\$voteValue/$quickTagValue/g;
 						$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
-						$tagButton =~ s/\$class/vb tag-$quickTagValue/g; #.vb class? css
 						$tagButton =~ s/\$checksum/$checksum/g;
+
+						# this is a hack, eventually should be replaced by config/tag_color #todo
+						if (index($styleSheet, "tag-$quickTagValue") > -1) {
+							$tagButton =~ s/\$class/tag-$quickTagValue/g;
+						} else {
+							$tagButton =~ s/class="\$class"//g;
+						}
 
 						$tagButtons .= $tagButton;
 					}
@@ -960,6 +975,7 @@ sub GetPageHeader {
 	my $orangeColor = '#f08000';
 	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetTemplate("style.template");
+
 #
 #	my @availablePatterns = glob('template/pattern/*.template');
 #	my $randomNumber = int(rand(@availablePatterns));
