@@ -1,3 +1,5 @@
+add pdf export for devices that prefer it
+
 addalias/5questions/abcdef0123456789
 
 Take stuff that is not PGP-related out of crypto.js.template
