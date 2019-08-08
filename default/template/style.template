@@ -4,6 +4,10 @@
 .tag-accept, .tag-friend, .tag-attend {
     color: #80c080;
 }
+.tag-textart {
+    font-family: monospace;
+    font-size: default;
+}
 .txt {
     font-family: tahoma;
     font-size: default;
