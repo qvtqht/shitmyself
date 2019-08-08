@@ -1,13 +1,13 @@
 <table>
 <tr><td>avatar:</td><td>$avatar</td></tr>
-<tr><td>alias:</td><td>$alias</td></tr>
-<tr><td>fingerprint:</td><td>$fingerprint</td></tr>
-<tr><td>importance:</td><td>$importance</td></tr>
+<tr class=advanced><td>alias:</td><td>$alias</td></tr>
+<tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
+<tr class=advanced><td>importance:</td><td>$importance</td></tr>
 <tr><td>score:</td><td>$authorScore</td></tr>
 <tr><td>items:</td><td>$itemCount</td></tr>
 <tr><td>description:</td><td>$authorDescription</td></tr>
-<tr><td>influence:</td><td>$authorWeight</td></tr>
+<tr class=advanced><td>influence:</td><td>$authorWeight</td></tr>
 <tr><td>last seen:</td><td>$authorLastSeen</td></tr>
-<tr><td>reg. entry:</td><td><b>$publicKeyHash</b><br>$profileVoteButtons</td></tr>
+<tr class=advanced><td>reg. entry:</td><td><b>$publicKeyHash</b> $authorPubkeyTxtLink<br>$profileVoteButtons</td></tr>
 </table>
 <hr>
