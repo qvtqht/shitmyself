@@ -42,7 +42,7 @@
 
 <p>Items are stored as plain text files (.txt), one of the most common and supported file formats, so that they can be easily inspected.</p>
 
-<p>Items are identified with a 40-digit "hash", which looks like this: <code><a href="/6b/50/a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a8112fde3a6276cb0c5b9cd8c949bc1625d0</a></code>. Sometimes you may see it shortened, like this: <code><a href="/6b/50/a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a811..</a></code></p>
+<p>Items are identified with a 40-digit "hash", which looks like this: <code><a href="/6b/50/6b50a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a8112fde3a6276cb0c5b9cd8c949bc1625d0</a></code>. Sometimes you may see it shortened, like this: <code><a href="/6b/50/a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a811..</a></code></p>
 
 <p>(more to come)</p>
 
@@ -284,10 +284,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>Example:</p>
 
 <p>
-<textarea style="width:100%">
 addvote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa<br>
 addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
-</textarea>
 <br>
 
 </p>
