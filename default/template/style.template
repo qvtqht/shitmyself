@@ -8,6 +8,10 @@
     font-family: monospace;
     font-size: default;
 }
+.tag-funny {
+    font-family: cursive;
+    font-size: default;
+}
 .txt {
     font-family: tahoma;
     font-size: default;
