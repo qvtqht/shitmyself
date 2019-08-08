@@ -1648,7 +1648,7 @@ if ($lastVersion ne $currVersion) {
 
 	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
 	$changeLogList = trim($changeLogList);
-	$changeLogMessage .= "\n\n$changeLogList";
+	$changeLogMessage .= "$changeLogList";
 
 	$changeLogMessage .= "\n\n#changelog";
 
