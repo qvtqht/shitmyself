@@ -538,6 +538,8 @@ sub GetItemVoteButtons {
 
 	my $quickVoteTemplate = GetTemplate('votequick.template');
 	my $tagButtons = '';
+	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
+
 	foreach my $quickTagValue (@quickVotesList) {
 		my $ballotTime = GetTime();
 		if ($fileHash && $ballotTime) {
@@ -548,11 +550,13 @@ sub GetItemVoteButtons {
 
 			my $quickTagCaption = GetString($quickTagValue);
 
-			# this is a hack, eventually should be replaced by config/tag_color #todo
-			if (index($styleSheet, "tag-$quickTagValue") > -1) {
-				$tagButton =~ s/\$class/tag-$quickTagValue/g;
-			} else {
-				$tagButton =~ s/class="\$class"//g;
+			if ($doVoteButtonStyles) {
+				# this is a hack, eventually should be replaced by config/tag_color #todo
+				if (index($styleSheet, "tag-$quickTagValue") > -1) {
+					$tagButton =~ s/\$class/tag-$quickTagValue/g;
+				} else {
+					$tagButton =~ s/class="\$class"//g;
+				}
 			}
 
 			$tagButton =~ s/\$fileHash/$fileHash/g;
@@ -1448,6 +1452,7 @@ sub GetReadPage {
 		my $authorPubkeyTxtLink = '';
 		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
 			$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
+			$authorPubkeyTxtLink = '<span class=advanced>.txt</span>';
 			#todo my $publicKeyTxtLink = ..;
 		}
 
