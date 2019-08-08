@@ -1,8 +1,13 @@
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 
-function ShowAdvanced(force) { // show or hide controls with class=advanced based on 'show_advanced' preference
-//todo settimeout this baby, and use a static variable to remember the last state, refresh as needed. this will make it take effect on all open tabs
+function ShowAdvanced(force) { // show or hide controls based on preferences
+//handles class=advanced based on 'show_advanced' preference
+//handles class=beginner based on 'beginner' preference
+//force parameter
+// 1 = does not re-do setTimeout
+// 0 = previous preference values are remembered, and are not re-done
+
 	if (window.localStorage) {
 		var displayValue = 'none'; // hide by default
 		if (GetPrefs('show_advanced') == 1) { // check value of show_advanced preference
@@ -16,8 +21,14 @@ function ShowAdvanced(force) { // show or hide controls with class=advanced base
 				//divsToHide[i].style.visibility = "hidden"; // or
 				if (displayValue == 'initial' && divsToHide[i].nodeName == 'P') {
 					divsToHide[i].style.display = 'block'; // depending on what you're doing
+				} else if (displayValue == 'initial' && divsToShow[i].nodeName == 'TR') {
+					divsToShow[i].style.display = 'table-row'; // depending on what you're doing
 				} else if (displayValue == 'initial' && (divsToHide[i].nodeName == 'TH' || divsToHide[i].nodeName == 'TD')) {
-					divsToHide[i].style.display = 'table-cell'; // depending on what you're doing
+					if (divsToHide[i].innerHTML != '') {
+						divsToHide[i].style.display = 'table-cell'; // depending on what you're doing
+					} else {
+						divsToHide[i].style.display = 'none'; // depending on what you're doing
+					}
 				} else {
 					divsToHide[i].style.display = displayValue; // depending on what you're doing
 				}
@@ -31,14 +42,30 @@ function ShowAdvanced(force) { // show or hide controls with class=advanced base
 		}
 
 		var bgColor = 'initial';
-		if (GetPrefs('show_advanced') == 1) { // check value of beginner preference
-			bgColor = '#ffffc0';
+		if (GetPrefs('beginner_highlight') == 1) { // check value of beginner preference
+			bgColor = '#ffffc0'; // beginner_highlight
 		}
 
 		if (force || showBeginnerLastAction != displayValue) {
 			var divsToShow = document.getElementsByClassName('beginner');
 			for (var i = 0; i < divsToShow.length; i++) {
 				divsToShow[i].style.display = displayValue;
+
+				if (displayValue == 'initial' && divsToShow[i].nodeName == 'P') {
+					divsToShow[i].style.display = 'block'; // depending on what you're doing
+				} else if (displayValue == 'initial' && divsToShow[i].nodeName == 'TR') {
+					divsToShow[i].style.display = 'table-row'; // depending on what you're doing
+				} else if (displayValue == 'initial' && (divsToShow[i].nodeName == 'TH' || divsToShow[i].nodeName == 'TD')) {
+//					divsToShow[i].style.display = 'table-cell'; // depending on what you're doing
+					if (divsToShow[i].innerHTML != '') {
+						divsToShow[i].style.display = 'table-cell'; // depending on what you're doing
+					} else {
+						divsToShow[i].style.display = 'none'; // depending on what you're doing
+					}
+				} else {
+					divsToShow[i].style.display = displayValue; // depending on what you're doing
+				}
+
 				divsToShow[i].style.backgroundColor = bgColor;
 			}
 			showBeginnerLastAction = displayValue;
@@ -122,7 +149,7 @@ function showHideCheckbox(id, ths, prefName) {
 
    SetPrefs(prefName, (ths.checked ? 1 : 0));
 
-   if (prefName == 'show_advanced' || prefName == 'beginner') {
+   if (prefName == 'show_advanced' || prefName == 'beginner' || prefName == 'beginner_highlight') {
    	ShowAdvanced(1);
    }
 }
@@ -134,6 +161,10 @@ if (pane = document.getElementById('curIdAdv') && GetPrefs('show_advanced') == 1
 
 if (pane = document.getElementById('curIdAdv') && GetPrefs('beginner') == 1) {
 	document.getElementById('beginnerC').checked = 1;
+}
+
+if (pane = document.getElementById('curIdAdv') && GetPrefs('beginner_highlight') == 1) {
+	document.getElementById('beginnerHighlight').checked = 1;
 }
 
 if (pane = document.getElementById('creaIdAdv') && GetPrefs('show_advanced') == 1) {
