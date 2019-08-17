@@ -74,16 +74,27 @@ my $timeLimit = GetConfig('admin/gitflow_time_limit');
 my $startTime = GetTime2();
 #todo validation
 
-# Check to see if access log exists
-if (-e $accessLogPath) {
-	#Process the access log (access.pl)
-	$newItemCount += ProcessAccessLog($accessLogPath, 0);
-
-	WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
-
-	$counter{'access_log'} += $newItemCount;
+my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
+my @accessLogPaths;
+if ($accessLogPathsConfig) {
+	@accessLogPaths = split("\n", $accessLogPathsConfig);
 } else {
-	WriteLog("WARNING: Could not find $accessLogPath");
+	push @accessLogPaths, GetConfig('admin/access_log_path');
+}
+
+#todo re-test this
+foreach my $accessLogPath(@accessLogPaths) {
+	# Check to see if access log exists
+	if (-e $accessLogPath) {
+		#Process the access log (access.pl)
+		$newItemCount += ProcessAccessLog($accessLogPath, 0);
+
+		WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
+
+		$counter{'access_log'} += $newItemCount;
+	} else {
+		WriteLog("WARNING: Could not find $accessLogPath");
+	}
 }
 
 # check if html/txt/ has its own git repository
