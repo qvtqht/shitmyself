@@ -24,7 +24,7 @@
     <p>
         <label for=bits>Algorithm:
             <select name=bits id=bits>
-                <option value=512 selected>rsa512</option>
+                <option value=512>rsa512</option>
                 <option value=1024>rsa1024</option>
                 <option value=2048>rsa2048</option>
                 <option value=4096>rsa4096</option>

@@ -1,6 +1,6 @@
 <!-- gpg2.choices.template -->
 <option value=curve25519>curve25519</option>
-<option value=ed25519>ed25519</option>
+<option value=ed25519 selected>ed25519</option>
 <option value=p256>p256</option>
 <option value=p384>p384</option>
 <option value=p521>p521</option>
