@@ -75,13 +75,16 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 	}
 }
 
-sub GetFileHashPath {
-# Returns the path a text file should reside at based on its hash
+sub GetFileHashPath { # Returns text file's standardized path based on its hash
 # e.g. /01/23/0123abcdef0123456789abcdef0123456789a.txt
+# also creates its subdirectories, #todo fixme
+
 	my $file = shift;
+	# take parameter
 
 	WriteLog("GetFileHashPath(\$file = $file)");
 
+	# file should exist and not be a directory
 	if (!-e $file || -d $file) {
 		WriteLog("GetFileHashPath(): Validation failed for $file");
 		return;
@@ -723,6 +726,19 @@ sub IndexTextFile {
 #			}
 #		}
 
+		# point/x,y
+		# line/x,y/x1,y2
+		# used for map
+		# map definition includes boundaries and included points
+		#
+		if ($message) {
+		}
+
+
+		# burningman/2:00/AA
+		# burningman/[2-10]:[00-59]
+
+
 		# look for location tokens
 		# latlong/44.1234567,-44.433435454
 		if ($message) {
@@ -758,7 +774,6 @@ sub IndexTextFile {
 				}
 			}
 		}
-
 
 
 		# look for addevent tokens
