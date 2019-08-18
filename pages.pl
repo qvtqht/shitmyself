@@ -798,7 +798,7 @@ sub GetItemTemplate {
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
 			}
 			if ($votesSummary) {
-				$votesSummary = '<p class=advanced><b>Existing Labels:</b><br>' . $votesSummary . '</p>';
+				$votesSummary = '<p class=advanced><b class=beginner>Existing Labels:</b><br class=beginner>' . $votesSummary . '</p>';
 				#todo templatize
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
