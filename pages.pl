@@ -142,6 +142,27 @@ sub GetPageLinks {
 	return GetPageLinks($currentPageNumber);
 }
 
+sub GetEventsPage {
+	my $txtPage = '';
+
+	my $title = 'Upcoming Events';
+	my $titleHtml = 'Upcoming Events';
+
+	$txtPage = GetPageHeader($title, $titleHtml, 'tags');
+
+	$txtPage .= GetTemplate('maincontent.template');
+
+	my $eventsArrayRef = DBGetEventsAfter(time());
+	my @events = @{$eventsArrayRef};
+
+	while (@events) {
+		my $event = shift @events;
+
+
+	}
+
+}
+
 sub GetVotesPage {
 	#todo rewrite this more pretty
 	my $txtIndex = "";
@@ -1992,7 +2013,10 @@ sub GetIdentityPage {
 
 	my $idCreateForm = GetTemplate('form/id_create.template');
 	my $prefillUsername = GetConfig('prefill_username');
+	my $termsOfService = FormatForWeb(GetConfig('string/en/tos'));
+
 	$idCreateForm =~ s/\$prefillUsername/$prefillUsername/g;
+	$idCreateForm =~ s/\$termsOfService/$termsOfService/g;
 	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
 
 	my $idCurrentForm = GetTemplate('form/id_current.template');

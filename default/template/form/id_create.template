@@ -15,6 +15,10 @@
         <span id=genStatus></span>
     </p>
 
+    <p id=tos class=advanced>
+        $termsOfService
+    </p>
+
     <p>
         <label for=creaIdAdvC><input type=checkbox id=creaIdAdvC onchange="showHideCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
     </p>
