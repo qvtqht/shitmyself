@@ -1,28 +1,32 @@
 <!--# write2.template #-->
 
 <form action="./gracias.html" id=compose class=submit name=submit>
-    <span id=writeintro></span>
+	<span id=writeintro></span>
 
-    <label for="comment" class=beginner>Write something, please. Limited to 1K chars. <a href="/manual.html">More info in docs.</a></label><br>
-    <textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
-    <p>
-        <input type=submit onclick="return writeSubmit();" value="Send Message" id=addtext>
-    </p>
+	<label for="comment" class=beginner>Write something, please. Limited to 1K chars. <a href="/manual.html">More info in docs.</a></label><br>
+	<textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
+	<p>
+		<input type=submit onclick="return writeSubmit();" value="Send Message" id=addtext>
+	</p>
 
-    <p>
-        <label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
-        <span id=userRadio></span>
-    </p>
+	<p>
+		<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
+		<span id=userRadio></span>
+	</p>
 
-    <p class=advanced>
-        <label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
-        <!--<label for=recloca><input type=checkbox id=recloca name=recloca> Record browser location</label><br>-->
-        <label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
-    </p>
+	<p class=advanced>
+		<label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
+		 <!--<label for=recloca><input type=checkbox id=recloca name=recloca> Record browser location</label><br>-->
+		<label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
+	</p>
+	
+	<p class=advanced>
+	   <label for=saveit><input type=checkbox id=saveit name=saveit> Save form settings</label>
+	</p>
 
-    <!--<p>-->
-        <!--<label for=addevent><input type=text size=32 maxlength=64 name=addevent id=addevent></label>-->
-    <!--</p>-->
+	<!--<p>-->
+		<!--<label for=addevent><input type=text size=32 maxlength=64 name=addevent id=addevent></label>-->
+	<!--</p>-->
 
 </form>
 <!--# / write2.template #-->
