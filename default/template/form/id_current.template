@@ -40,7 +40,8 @@
 		</p>
 
 		<p>
-			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox('abcdefgh', this, 'beginner');"> Display beginner hints</label>
+			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox('abcdefgh', this, 'beginner');"> Display beginner hints</label><br>
+			&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="showHideCheckbox('abcdefgh', this, 'beginner_highlight');"> Highlight hints</label>
 		</p>
 
 		<p id=def>
