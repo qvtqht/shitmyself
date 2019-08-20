@@ -21,7 +21,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 				//divsToHide[i].style.visibility = "hidden"; // or
 				if (displayValue == 'initial' && divsToHide[i].nodeName == 'P') {
 					divsToHide[i].style.display = 'block'; // depending on what you're doing
-				} else if (displayValue == 'initial' && divsToShow[i].nodeName == 'TR') {
+				} else if (displayValue == 'initial' && divsToHide[i].nodeName == 'TR') {
 					divsToShow[i].style.display = 'table-row'; // depending on what you're doing
 				} else if (displayValue == 'initial' && (divsToHide[i].nodeName == 'TH' || divsToHide[i].nodeName == 'TD')) {
 					if (divsToHide[i].innerHTML != '') {
