@@ -1,1 +1,13 @@
-<label class=fckchrm for=$fileHash_$voteValue><input type=checkbox name="addvote/$fileHash/$ballotTime/$voteValue/$checksum" id=$fileHash_$voteValue>$voteValue</label>
+<!-- votecheck.template -->
+<label
+	class=fckchrm
+	for=$fileHash_$voteValue
+>
+	<input
+		type=checkbox
+		name="vote/$fileHash/$ballotTime/$voteValue/$checksum"
+		id=$fileHash_$voteValue
+	>
+	$voteValue
+</label>
+<!-- / votecheck.template -->
