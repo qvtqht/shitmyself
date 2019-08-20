@@ -178,7 +178,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <h4>Voting</h4>
 
-<p>Example: addvote/0123456789abcdef/legit/1550000000/2753939054945</p>
+<p>Example: vote/0123456789abcdef/legit/1550000000/2753939054945</p>
 
 <p>This will add a vote of "legit" to the same item, with a timestamp of 15500... The last bit is the anti-CSRF checksum, which
     is currently ignored if the message is signed, but verified by the server (and signed) at the time of reading from access.log</p>
@@ -203,7 +203,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <h4>Vouching</h4>
 
-<p>Example: addvouch/F82FCD75AAEF7CC8/20</p>
+<p>Example: vouch/F82FCD75AAEF7CC8/20</p>
 
 <p>Adds 20 vouch points to fingerprint F82FCD75AAEF7CC8.</p>
 
@@ -273,7 +273,7 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <p>A voting token has the following parameters</p>
 
-<p><code>addvote/hash/time/tag/checksum</code></p>
+<p><code>vote/hash/time/tag/checksum</code></p>
 
 <p>The checksum is generated on the server, using the following formula:</p>
 
@@ -284,8 +284,8 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>Example:</p>
 
 <p>
-addvote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa<br>
-addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
+vote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa<br>
+vote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 <br>
 
 </p>
@@ -340,7 +340,7 @@ addvote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 
 <h5>Vouch</h5>
 
-<p>The <code>addvouch</code> token can only be used by the admin.</p>
+<p>The <code>vouch</code> token can only be used by the admin.</p>
 
 <h5>Remove</h5>
 

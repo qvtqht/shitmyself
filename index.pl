@@ -206,7 +206,7 @@ sub IndexTextFile {
 		#push @allowedactions addedtime
 	}
 	if (IsAdmin($gpgKey)) { #todo
-		#push @allowedactions addvouch
+		#push @allowedactions vouch
 		#push @allowedactions setconfig
 	}
 
@@ -527,13 +527,13 @@ sub IndexTextFile {
 			}
 		}
 
-		#look for addvouch #todo deprecate this
+		#look for vouch
 		if ($message) {
-			# look for addvouch, which adds a voting vouch for a user
-			# addvouch/F82FCD75AAEF7CC8/20
+			# look for vouch, which adds a voting vouch for a user
+			# vouch/F82FCD75AAEF7CC8/20
 
 			if (IsAdmin($gpgKey) || $isSigned) {
-				my @weightLines = ( $message =~ m/^addvouch\/([0-9A-F]{16})\/([0-9]+)/mg );
+				my @weightLines = ( $message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg );
 
 				if (@weightLines) {
 					my $lineCount = @weightLines / 2;
@@ -545,7 +545,7 @@ sub IndexTextFile {
 							#my $voterAvatar = GetAvatar($voterId);
 							#bug calling GetAvatar before the index is generated results in an avatar without alias
 
-							my $reconLine = "addvouch/$voterId/$voterWt";
+							my $reconLine = "vouch/$voterId/$voterWt";
 
 							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
@@ -777,11 +777,11 @@ sub IndexTextFile {
 
 
 		# look for addevent tokens
-		# addevent/1551234567/3600
+		# event/1551234567/3600
 		if ($message) {
 			# get any matching token lines
-			my @eventLines = ( $message =~ m/^addevent\/([0-9]+)\/([0-9]+)/mg );
-			#                                 prefix   /time     /duration
+			my @eventLines = ( $message =~ m/^event\/([0-9]+)\/([0-9]+)/mg );
+			#                                 prefix/time     /duration
 
 			if (@eventLines) {
 				my $lineCount = @eventLines / 2;
@@ -799,7 +799,7 @@ sub IndexTextFile {
 						DBAddEventRecord($gitHash, $eventTime, $eventDuration);
 					}
 
-					my $reconLine = "addevent/$eventTime/$eventDuration";
+					my $reconLine = "event/$eventTime/$eventDuration";
 
 					#$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
 
@@ -834,16 +834,18 @@ sub IndexTextFile {
 					DBAddVoteRecord ($gitHash, $addedTime, 'event');
 
 					DBAddPageTouch('tag', 'event');
+
+					DBAddPageTouch('events', 0);
 				}
 			}
 		}
 
-		# look for addvote tokens
+		# look for vote tokens
 		if ($message) {
-			my @voteLines = ( $message =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
+			my @voteLines = ( $message =~ m/^vote\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
 			#                                prefix  /file hash      /time     /tag      /csrf
 
-			#addvote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
+			#vote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
 			if (@voteLines) {
 				my $lineCount = @voteLines / 4;
@@ -873,7 +875,7 @@ sub IndexTextFile {
 					DBAddItemParent($gitHash, $voteFileHash);
 
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
-					my $reconLine = "addvote/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
+					my $reconLine = "vote/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
 					# $message =~ s/$reconLine/[$voteValue] (vote on $fileHash)/g;
 					# $message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
 					$message =~ s/$reconLine/>>$voteFileHash\n[$voteValue]/g;

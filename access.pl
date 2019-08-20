@@ -44,6 +44,8 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 
 my @submitReceivers = `find html/ | grep gracias.html`; #todo this is a hack
 
+#push @submitReceivers, 'html/write.html';
+
 foreach (@submitReceivers) {
 	s/^html\//\//;
 	s/$/\?comment=/;
@@ -529,7 +531,7 @@ sub ProcessAccessLog {
 
 				WriteLog($voteAtom);
 
-				my @voteLines = ( $voteAtom =~ m/^addvote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
+				my @voteLines = ( $voteAtom =~ m/^vote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
 				#                                 token   /item           /time     /tag      /csrf
 				if (@voteLines) {
 					my $fileHash   = shift @voteLines;
@@ -551,7 +553,7 @@ sub ProcessAccessLog {
 						#AppendFile("log/votes.log", $voteEntry);
 						#votes.log is deprecated in favor of adding stuff to the tree
 
-						my $newLine = "addvote/$fileHash/$ballotTime/$voteValue/$csrf";
+						my $newLine = "vote/$fileHash/$ballotTime/$voteValue/$csrf";
 						if ($newFile) {
 							$newFile .= "\n";
 						}
