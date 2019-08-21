@@ -143,23 +143,33 @@ sub GetPageLinks {
 }
 
 sub GetEventsPage {
+	WriteLog('GetEventsPage()');
+
 	my $txtPage = '';
 
 	my $title = 'Upcoming Events';
 	my $titleHtml = 'Upcoming Events';
 
-	$txtPage = GetPageHeader($title, $titleHtml, 'tags');
+	$txtPage = GetPageHeader($title, $titleHtml, 'events');
 
 	$txtPage .= GetTemplate('maincontent.template');
 
-	my $eventsArrayRef = DBGetEventsAfter(time());
+	my $eventsArrayRef = DBGetEventsAfter(1);
 	my @events = @{$eventsArrayRef};
+
+	WriteLog('GetEventsPage: Found ' . scalar(@events) . ' items returned from DBGetEventsAfter()');
 
 	while (@events) {
 		my $event = shift @events;
 
-
+		$txtPage .= @{$event}[1];
 	}
+
+	$txtPage .= GetPageFooter();
+
+	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs));
+
+	return $txtPage;
 
 }
 
@@ -216,12 +226,7 @@ sub GetVotesPage {
 
 	$txtIndex .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar, prefs));
 
 	return $txtIndex;
 }
@@ -280,12 +285,7 @@ sub GetTagsPage {
 
 	$txtIndex .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
 	return $txtIndex;
 }
@@ -492,26 +492,7 @@ sub GetItemPage {
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	#Inject necessary javascript
-	my $scriptInject = GetTemplate('scriptinject.template');
-
-	#avatar.js
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-
-	#formencode.js
-	my $formEncodeJs = GetTemplate('js/formencode.js.template');
-
-	#prefs.js
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-
-	#add them together
-	my $fullJs = $avatarjs . "\n\n" . $formEncodeJs. "\n\n" . $prefsjs;
-
-	#replace the scripts in scriptinject.template
-	$scriptInject =~ s/\$javascript/$fullJs/g;
-
-	#add to the end of the page
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1022,6 +1003,13 @@ sub GetPageHeader {
 
 	#$styleSheet =~ s/\w\w/ /g;
 
+	my $clock = '';
+	if (GetConfig('clock')) {
+		$clock = GetTemplate('clock.template');
+		my $currentTime = GetTime();
+		$clock =~ s/\$currentTime/$currentTime/;
+	}
+
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
@@ -1037,6 +1025,7 @@ sub GetPageHeader {
 	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
+	$htmlStart =~ s/\$clock/$clock/g;
 #
 #	if (GetConfig('funstuff/js_clock')) {
 #		my $jsClock = Get
@@ -1060,10 +1049,10 @@ sub GetPageHeader {
 	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/", GetString('menu/home'));
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$topMenuTemplate .= GetMenuItem("/top/hastext.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
-	$topMenuTemplate .= GetMenuItem("/top.html", 'Top');
+	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
+	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Stats', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
@@ -1204,12 +1193,7 @@ sub GetTopItemsPage {
 
 	$txtIndex .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
 	return $txtIndex;
 }
@@ -1265,13 +1249,6 @@ sub GetStatsPage {
 	$statsPage .= $statsTable;
 
 	$statsPage .= GetPageFooter();
-#
-#	my $scriptInject = GetTemplate('scriptinject.template');
-#	my $avatarjs = GetTemplate('js/avatar.js.template');
-#	my $freshjs = GetTemplate('js/fresh.js.template');
-#	my $prefsjs = GetTemplate('js/prefs.js.template');
-#	$scriptInject =~ s/\$javascript/$avatarjs\n$freshjs\n$prefsjs/g;
-#	$statsPage =~ s/<\/body>/$scriptInject<\/body>/;
 
 	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs));
 
@@ -1284,6 +1261,10 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 
 	my $scriptsText = '';
 	my $scriptsComma = '';
+
+	if (GetConfig('clock')) {
+		push @scriptNames, 'clock';
+	}
 
 	foreach my $script (@scriptNames) {
 		if (!$scriptsComma) {
@@ -1360,12 +1341,7 @@ sub GetScoreboardPage {
 
 	$txtIndex .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar, prefs));
 
 	return $txtIndex;
 }
@@ -1602,20 +1578,11 @@ sub GetReadPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs;
 	if ($pageType eq 'author') {
-		$avatarjs = GetTemplate('js/avatar.authorpage.js.template');
+		$txtIndex = InjectJs($txtIndex, qw(avatar.authorpage prefs));
 	} else {
-		$avatarjs = GetTemplate('js/avatar.js.template');
+		$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 	}
-
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
-
 
 	return $txtIndex;
 }
@@ -1624,6 +1591,10 @@ sub GetMenuItem {
 	my $address = shift;
 	my $caption = shift;
 	my $advanced = shift;
+#
+#	if (!-e "html/$address") { #don't make a menu item if file doesn't exist
+#		return '';
+#	}
 
 	my $menuItem = '';
 	if ($advanced) {
@@ -1726,14 +1697,7 @@ sub GetIndexPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	#$txtIndex =~ s/<\/body>/\<script src="openpgp.js">\<\/script>\<script src="crypto.js"><\/script><\/body>/;
-
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
 	return $txtIndex;
 }
@@ -1837,13 +1801,7 @@ sub MakeStaticPages {
 
 	$graciasPage .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $graciasjs = GetTemplate('js/gracias.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$graciasjs\n\n$prefsjs/g;
-
-	$graciasPage =~ s/<\/body>/$scriptInject<\/body>/;
+	$graciasPage = InjectJs($graciasPage, qw(avatar gracias prefs));
 
 	$graciasPage =~ s/<body /<body onload="makeRefLink();" /;
 
@@ -1875,12 +1833,7 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetPageFooter();
 
-	$scriptInject = GetTemplate('scriptinject.template');
-	$avatarjs = GetTemplate('js/avatar.js.template');
-	$prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$tfmPage =~ s/<\/body>/$scriptInject<\/body>/;
+	$tfmPage = InjectJs($tfmPage, qw(avatar, prefs));
 
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -1972,14 +1925,9 @@ sub GetWritePage {
 
 		$txtIndex .= GetPageFooter();
 
-		my $scriptInject = GetTemplate('scriptinject.template');
-		my $avatarjs = GetTemplate('js/avatar.js.template');
-		my $writeOnLoad = GetTemplate('js/writeonload.js.template');
-		my $prefsjs = GetTemplate('js/prefs.js.template');
-		$scriptInject =~ s/\$javascript/$avatarjs\n\n$writeOnLoad\n\n$prefsjs/g;
+		$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs));
 
-		$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
-
+		#todo break out into IncludeJs();
 		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
 		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
@@ -2036,12 +1984,7 @@ sub GetIdentityPage {
 
 	$txtIndex .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs $prefsjs/g;
-
-	$txtIndex =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar, prefs));
 
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
