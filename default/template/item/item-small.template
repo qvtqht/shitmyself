@@ -5,6 +5,7 @@ $itemTitleTemplate
 <p>
     <b><a href="$permalinkHtml" class=advanced>$itemName</a></b>
     $authorLink
+    &nbsp;
     <a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
 </p>
 <replies></replies>
