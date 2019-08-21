@@ -30,7 +30,7 @@ require './index.pl';
 require './access.pl';
 require './pages.pl';
 
-print GetTime2() . " End requires\n";
+print GetTime() . " End requires\n";
 
 WriteLog('gitflow.pl begin');
 
@@ -338,7 +338,7 @@ foreach my $page (@touchedPagesArray) {
 			WriteLog("gitflow.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
 		}
 	}
-   #
+	#
 	# tags page
 	elsif ($pageType eq 'tags') {
 		my $votesPage = GetVotesPage();
@@ -346,6 +346,12 @@ foreach my $page (@touchedPagesArray) {
 
 		my $tagsAlphaPage = GetTagsPage();
 		PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
+	}
+	#
+	# events page
+	elsif ($pageType eq 'events') {
+		my $eventsPage = GetEventsPage();
+		PutHtmlFile("html/events.html", $eventsPage);
 	}
 	#
 	# scores page
