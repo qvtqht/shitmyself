@@ -1,4 +1,4 @@
-<!-- write-small.template -->
+<!-- write-small2.template -->
 <form action="/gracias.html" class=submit name=writesmall>
 	<label for=comment>Say something <b>to everyone</b>, anonymously*:<br>
 	<input autocomplete=off id=comment name=comment size=80 style="max-width: 75%;" maxlength=6000></label><br>
@@ -26,4 +26,4 @@ function pushmessage() {
 // -->
 </script>
 
-<!-- / write-small.template -->
+<!-- / write-small2.template -->
