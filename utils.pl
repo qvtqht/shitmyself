@@ -535,6 +535,7 @@ sub GetAvatar { #gets avatar based on author key
 	}
 
 	my $avatar = GetTemplate('avatar.template');
+	#todo strip all whtespace outside of html tags here to make it non-wrap
 
 	if ($gpg_key) {
 		my $color1 = substr($gpg_key, 0, 6);
