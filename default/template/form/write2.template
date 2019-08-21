@@ -19,10 +19,10 @@
 		 <!--<label for=recloca><input type=checkbox id=recloca name=recloca> Record browser location</label><br>-->
 		<label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
 	</p>
-	
-	<p class=advanced>
-	   <label for=saveit><input type=checkbox id=saveit name=saveit> Save form settings</label>
-	</p>
+	<!---->
+	<!--<p class=advanced>-->
+	   <!--<label for=saveit><input type=checkbox id=saveit name=saveit> Save form settings</label>-->
+	<!--</p>-->
 
 	<!--<p>-->
 		<!--<label for=addevent><input type=text size=32 maxlength=64 name=addevent id=addevent></label>-->
