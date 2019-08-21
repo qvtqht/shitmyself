@@ -102,53 +102,10 @@ sub GetVersionPage { # returns html with version information for $version (git c
 
 	$txtPageHtml .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $freshjs = GetTemplate('js/fresh.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	my $injectJs = $avatarjs . "\n\n" . $freshjs . "\n\n" . $prefsjs;
-	$scriptInject =~ s/\$javascript/$injectJs/g;
-
-	$txtPageHtml =~ s/<\/body>/$scriptInject<\/body>/;
+	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar fresh prefs));
 
 	return $txtPageHtml;
 }
-
-#sub InjectJs {
-#	my $scriptName = shift;
-#	chomp($scriptName);
-#
-#	if (!$scriptName) {
-#		WriteLog('WARNING! InjectJs() called with missing $scriptName. Returning empty string');
-#		return '';
-#	}
-#
-#	WriteLog("InjectJs($scriptName)");
-#
-#	my $scriptInject = GetTemplate('scriptinject.template');
-#
-#	WriteLog($scriptInject);
-#	my $javascript = GetTemplate($scriptName);
-#
-#	WriteLog($
-#
-#	$scriptInject =~ s/\$javascript/$javascript/g;
-#
-#	return $scriptInject;
-#}
-
-#sub GetTopPage {
-#	my $tag = shift;
-#	chomp($tag);
-#
-#	my $txtIndex = '';
-#
-#	my $items = GetTopItemsForTag('interesting');
-#
-#	return $items;
-#
-#
-#}
 
 MakeStaticPages();
 
@@ -335,13 +292,7 @@ sub MakeClonePage {
 
 	$clonePage .= GetPageFooter();
 
-	my $scriptInject = GetTemplate('scriptinject.template');
-	my $avatarjs = GetTemplate('js/avatar.js.template');
-	my $prefsjs = GetTemplate('js/prefs.js.template');
-	$scriptInject =~ s/\$javascript/$avatarjs\n\n$prefsjs/g;
-
-	$clonePage =~ s/<\/body>/$scriptInject<\/body>/;
-
+	$clonePage = InjectJs($clonePage, qw(avatar prefs));
 
 	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
@@ -387,6 +338,9 @@ WriteIndexPages();
 
 my $votesPage = GetVotesPage();
 PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
+
+my $eventsPage = GetEventsPage();
+PutHtmlFile("html/events.html", $eventsPage);
 
 my $tagsAlphaPage = GetTagsPage();
 PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
