@@ -102,7 +102,11 @@ form#compose {
     background-color: #80ff80;
     padding: 5pt;
 }
-
-.advanced {
-    color: #804000;
+.avatar .username {
+    color: #404040;
+    text-shadow:
+    -1pt -1pt 0 #e0e0e0,
+    1pt -1pt 0 #e0e0e0,
+    -1pt 1pt 0 #e0e0e0,
+    1pt 1pt 0 #e0e0e0;
 }
