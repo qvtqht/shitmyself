@@ -8,5 +8,12 @@
 
 asdf
 
+<fieldset>
+	<legend>Interface Mode</legend>
+	<label for=radioInterfaceBeginner><input type=radio id=radioInterfaceBeginner name=interfaceMode value=beginner> Beginner</label>
+	<label for=radioInterfaceAdvanced><input type=radio id=radioInterfaceAdvanced name=interfaceMode value=intermed> Advanced</label>
+	<label for=radioInterfaceExpert><input type=radio id=radioInterfaceExpert name=interfaceMode value=expert> Expert</label>
+</fieldset>
+
 </body>
 </html>
