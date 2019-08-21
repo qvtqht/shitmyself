@@ -13,7 +13,7 @@ rm -rfv config/template/*
 rm -rfv config/string/*
 
 touch html/gracias.html
-rm log/log.log 
+rm log/log.log
 
 rm -rf html/txt/.git
 mkdir -p html/txt
