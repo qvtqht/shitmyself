@@ -631,7 +631,7 @@ sub GetFile {
 	return;
 }
 
-sub GetConfig {
+sub GetConfig { # gets configuration value based for $key
 	my $configName = shift;
 	chomp $configName;
 
