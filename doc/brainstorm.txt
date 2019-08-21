@@ -1,3 +1,37 @@
+pre-cache voted items per author
+	make available to clients
+
+
+Fill-in forms
+	Replace _____ with textareas
+	____ (desc)
+
+
+server-vouch
+	default/admin/server_vouch/enable
+	default/admin/server_vouch/string
+	If user posts string
+		Item is not posted
+		Server vouches user
+
+
+ask to add vouch for user whose post we're voting on
+
+posts voted on = vouch
+
+
+private key save methods
+	image with qr code
+		great for iphone and android
+		re-login procedure
+			select image from photos
+			private key is parsed from image
+		save procedure
+			qr code and/or image with text
+				generated and saved on device
+
+
+
 List file type
 	List of \n-separated text items
 	Doesn't require multiple files

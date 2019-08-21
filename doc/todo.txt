@@ -1,3 +1,13 @@
+How to recover from out of space errors?
+
+How to recover from broken perl script errors?
+
+Add ability to type in item hash
+	autocomplete with js
+		when returned items is 1, display item below
+		when 0, tell user to stop typing
+
+
 add pdf export for devices that prefer it
 
 addalias/5questions/abcdef0123456789
@@ -135,7 +145,7 @@ Current Top UI priorities
 		More friendly table-like listing of authors
 			Action counts with sort
 
-Does addvote still need timestamp?
+Does vote still need timestamp?
 
 Connect users
 	Using >> replies for user registration posts
@@ -504,7 +514,7 @@ Make access.pl make a new text file instead of adding to votes.log
 Ensure caches are deleted when a vote occurs
 
 Merge vote and reply forms
-   With JS, make the checkboxes appear/disappear inside the textbox as addvote/ lines
+   With JS, make the checkboxes appear/disappear inside the textbox as vote/ lines
 
 Add a message that appears the first time someone is posting something, like on HN
 
