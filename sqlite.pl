@@ -436,15 +436,35 @@ sub DBGetEventsAfter {
 		$time = GetTime();
 	}
 
+	WriteLog('DBGetEventsAfter(' . $time . ')');
+
 	my $query;
+
+	$query = "
+		SELECT
+			*
+		FROM
+			event
+			LEFT JOIN item_flat ON (event.item_hash = item_flat.file_hash)
+		WHERE
+			(event_time + event_duration) > ?;
+	";
+
 	my @queryParams;
+	push @queryParams, $time;
 
-	$query = "SELECT * FROM event WHERE (event_time + event_duration) > ?";
-	@queryParams = ($time);
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
 
-	my $result = SqliteQuery2($query, @queryParams);
+	my $ref = $sth->fetchall_arrayref();
 
-	return $result;
+	$sth->finish();
+
+	return $ref;
+
+	WriteLog('DBGetEventsAfter: ' . scalar(@{$ref}) . ' items returned');
+
+	return $ref;
 
 }
 
@@ -871,6 +891,7 @@ sub DBGetVoteCounts {
 		$orderBy = 'ORDER BY vote_count DESC';
 	}
 
+	#todo make this by item, not vote count
 	my $query = "
 		SELECT
 			vote_value,
@@ -1169,7 +1190,15 @@ sub DBAddLocationRecord {
 		return;
 	}
 
-	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
+	if (
+		$query
+			&&
+		(
+			length($query) >= DBMaxQueryLength()
+				||
+			scalar(@queryParams) > DBMaxQueryParams()
+		)
+	) {
 		DBAddLocationRecord('flush');
 		$query = '';
 		@queryParams = ();
@@ -1471,6 +1500,8 @@ sub DBGetAddedTime {
 	} #todo ideally this should verify it's a proper hash too
 
 	my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
+
+	WriteLog($query);
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
