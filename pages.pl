@@ -187,7 +187,7 @@ sub GetEventsPage {
 			$eventTitle = '(No Title)';
 		}
 
-		if ($eventItemAuthor) {
+		if (!$eventItemAuthor) {
 			$eventItemAuthor = '(No Author)';
 		}
 
