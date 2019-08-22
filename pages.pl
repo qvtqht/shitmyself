@@ -36,6 +36,16 @@ sub GenerateSomeKindOfPage {
 	#
 }
 
+sub GetStylesheet {
+	my $style = GetTemplate('style.template');
+
+	if (GetConfig('html/color_avatars')) {
+		$style .= "\n" . GetTemplate('style.avatar.template');
+	}
+
+	return $style;
+}
+
 sub GetAuthorLink { # returns avatar'ed link for an author id
 	my $gpgKey = shift;
 
@@ -536,7 +546,7 @@ sub GetItemVoteButtons {
 		unshift @quickVotesList, split("\n", $quickVotesForTags);
 	}
 
-	my $styleSheet = GetTemplate('style.template');
+	my $styleSheet = GetStylesheet();
 
 	my $quickVoteTemplate = GetTemplate('votequick.template');
 	my $tagButtons = '';
@@ -834,7 +844,7 @@ sub GetItemTemplate {
 			}
 
 			if (1) {
-				my $styleSheet = GetTemplate('style.template');
+				my $styleSheet = GetStylesheet();
 
 				my $quickVoteTemplate = GetTemplate('votequick.template');
 				my $tagButtons = '';
@@ -980,7 +990,7 @@ sub GetPageHeader {
 	my $disabledTextColor = '#808080';
 	my $orangeColor = '#f08000';
 	my $highlightColor = '#ffffc0';
-	my $styleSheet = GetTemplate("style.template");
+	my $styleSheet = GetStylesheet();
 
 #
 #	my @availablePatterns = glob('template/pattern/*.template');
