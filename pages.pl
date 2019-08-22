@@ -187,6 +187,10 @@ sub GetEventsPage {
 			$eventTitle = '(No Title)';
 		}
 
+		if ($eventItemAuthor) {
+			$eventItemAuthor = '(No Author)';
+		}
+
 		$eventItem =~ s/\$eventTitle/$eventTitle/;
 		$eventItem =~ s/\$eventTime/$eventTime/;
 		$eventItem =~ s/\$eventDuration/$eventDuration/;
