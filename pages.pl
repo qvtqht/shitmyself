@@ -169,8 +169,6 @@ sub GetEventsPage {
 
 	WriteLog('GetEventsPage: Found ' . scalar(@events) . ' items returned from DBGetEventsAfter()');
 
-	WriteLog(Data::Dumper->Dump(@events));
-
 	my $eventsItemsList = '';
 
 	while (@events) {
