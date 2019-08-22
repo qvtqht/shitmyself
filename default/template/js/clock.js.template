@@ -3,10 +3,18 @@
 			var n = d.getTime();
 			n = Math.ceil(n/1000);
 
-			document.getElementById('clock').innerHTML = n;
+			if (document.getElementById) {
+				var clock =	document.getElementById('clock');
 
-			setTimeout(setclock, 500);
+				clock.innerHTML = n
+//
+//				if (clock.style.display == 'none') {
+//					clock.style.display = 'float';
+//				}
+				clock.style.display = 'inline';
 
+				setTimeout(setclock, 500);
+			}
 		}
 
 		setTimeout(setclock, 500);
