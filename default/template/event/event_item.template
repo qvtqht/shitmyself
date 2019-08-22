@@ -1,0 +1,7 @@
+<li>
+	<b>$eventTitle</b><br>
+	at $eventTime<br>
+	for $eventDuration<br>
+	$eventItemLink
+	$eventItemAuthor
+</li>
