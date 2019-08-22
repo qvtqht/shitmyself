@@ -119,7 +119,7 @@ sub SqliteMakeTables() {
 	# event
 	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration);");
 
-	# event
+	# location
 	SqliteQuery2("CREATE TABLE location(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, latitude, longitude);");
 
 	# page_touch
@@ -429,7 +429,7 @@ sub DBGetVotesForItem {
 	return $result;
 }
 
-sub DBGetEventsAfter {
+sub DBGetEventsAfter { #gets events after $time and returns them as arrayref
 	my $time = shift;
 
 	if (!$time) {
@@ -442,16 +442,18 @@ sub DBGetEventsAfter {
 
 	$query = "
 		SELECT
-			*
+			item_flat.item_title AS event_title,
+			event.event_time AS event_time,
+			event.event_duration AS event_duration,
+			item_flat.file_hash AS file_hash,
+			item_flat.author_key AS author_key
 		FROM
 			event
 			LEFT JOIN item_flat ON (event.item_hash = item_flat.file_hash)
-		WHERE
-			(event_time + event_duration) > ?;
 	";
 
-	my @queryParams;
-	push @queryParams, $time;
+	my @queryParams = ();
+#	push @queryParams, $time;
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@queryParams);
@@ -460,12 +462,9 @@ sub DBGetEventsAfter {
 
 	$sth->finish();
 
-	return $ref;
-
 	WriteLog('DBGetEventsAfter: ' . scalar(@{$ref}) . ' items returned');
 
 	return $ref;
-
 }
 
 sub DBGetLatestConfig {
