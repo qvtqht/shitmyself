@@ -169,11 +169,40 @@ sub GetEventsPage {
 
 	WriteLog('GetEventsPage: Found ' . scalar(@events) . ' items returned from DBGetEventsAfter()');
 
+	WriteLog(Data::Dumper->Dump(@events));
+
+	my $eventsItemsList = '';
+
 	while (@events) {
 		my $event = shift @events;
+		my @eventA = @{$event};
 
-		$txtPage .= @{$event}[1];
+		my $eventItem = GetTemplate('event/event_item.template');
+
+		my $eventTitle = $eventA[0];
+		my $eventTime = $eventA[1];
+		my $eventDuration = $eventA[2];
+		my $eventItemLink = GetHtmlLink($eventA[3]);
+		my $eventItemAuthor = GetAvatar($eventA[4]);
+
+		if (!$eventTitle) {
+			$eventTitle = '(No Title)';
+		}
+
+		$eventItem =~ s/\$eventTitle/$eventTitle/;
+		$eventItem =~ s/\$eventTime/$eventTime/;
+		$eventItem =~ s/\$eventDuration/$eventDuration/;
+		$eventItem =~ s/\$eventItemLink/$eventItemLink/;
+		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
+
+		$eventsItemsList .= $eventItem;
 	}
+
+	my $eventsList = GetTemplate('event/event_list.template');
+
+	$eventsList =~ s/\$eventsList/$eventsItemsList/;
+
+	$txtPage .= $eventsList;
 
 	$txtPage .= GetPageFooter();
 
@@ -236,7 +265,7 @@ sub GetVotesPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar, prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
 	return $txtIndex;
 }
@@ -1351,7 +1380,7 @@ sub GetScoreboardPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar, prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
 	return $txtIndex;
 }
@@ -1843,7 +1872,7 @@ sub MakeStaticPages {
 
 	$tfmPage .= GetPageFooter();
 
-	$tfmPage = InjectJs($tfmPage, qw(avatar, prefs));
+	$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
 
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -1994,7 +2023,7 @@ sub GetIdentityPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar, prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
