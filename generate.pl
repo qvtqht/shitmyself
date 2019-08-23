@@ -129,6 +129,8 @@ my $authorsIndex = 0;
 foreach my $hashRef (@authors) {
 	my $key = $hashRef->{'key'};
 
+	WriteLog('Making stuff for author: ' . $hashRef->{'key'});
+
 	my $lastTouch = GetCache("key/$key");
 	if ($lastTouch && $lastTouch + $authorInterval > GetTime()) {
 		#WriteLog("I already did $key recently, too lazy to do it again");
@@ -152,6 +154,8 @@ foreach my $hashRef (@authors) {
 	WriteMessage("GetReadPage (author) $authorsIndex / $authorsCount ( $percent % ) $key");
 
 	my $authorIndex = GetReadPage('author', $key);
+
+	WriteLog("$HTMLDIR/author/$key/index.html");
 
 	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
 
