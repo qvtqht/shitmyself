@@ -164,10 +164,10 @@ sub GetEventsPage {
 
 	$txtPage .= GetTemplate('maincontent.template');
 
-	my $eventsArrayRef = DBGetEventsAfter(1);
+	my $eventsArrayRef = DBGetEvents();
 	my @events = @{$eventsArrayRef};
 
-	WriteLog('GetEventsPage: Found ' . scalar(@events) . ' items returned from DBGetEventsAfter()');
+	WriteLog('GetEventsPage: Found ' . scalar(@events) . ' items returned from DBGetEvents()');
 
 	my $eventsItemsList = '';
 
@@ -1088,7 +1088,7 @@ sub GetPageHeader {
 	my $identityLink = '<span id="signin"></span><span class="myid" id=myid></span> ';
 
 	$topMenuTemplate .= $identityLink;
-	$topMenuTemplate .= GetMenuItem("/", GetString('menu/home'));
+	$topMenuTemplate .= GetMenuItem("/", GetString('menu/home'), 1);
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
@@ -1969,8 +1969,8 @@ sub GetWritePage {
 		$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs));
 
 		#todo break out into IncludeJs();
-		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
-		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+#		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
+#		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
@@ -2027,8 +2027,8 @@ sub GetIdentityPage {
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
-	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+#	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
 
