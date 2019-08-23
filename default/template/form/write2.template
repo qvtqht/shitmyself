@@ -6,7 +6,7 @@
 	<label for="comment" class=beginner>Write something, please. Limited to 1K chars. <a href="/manual.html">More info in docs.</a></label><br>
 	<textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
 	<p>
-		<input type=submit onclick="return writeSubmit();" value="Send Message" id=addtext>
+		<input type=submit onclick="if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
 	</p>
 
 	<p>
