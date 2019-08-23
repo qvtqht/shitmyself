@@ -429,14 +429,8 @@ sub DBGetVotesForItem {
 	return $result;
 }
 
-sub DBGetEventsAfter { #gets events after $time and returns them as arrayref
-	my $time = shift;
-
-	if (!$time) {
-		$time = GetTime();
-	}
-
-	WriteLog('DBGetEventsAfter(' . $time . ')');
+sub DBGetEvents { #gets events list
+	WriteLog('DBGetEvents()');
 
 	my $query;
 
@@ -462,7 +456,7 @@ sub DBGetEventsAfter { #gets events after $time and returns them as arrayref
 
 	$sth->finish();
 
-	WriteLog('DBGetEventsAfter: ' . scalar(@{$ref}) . ' items returned');
+	WriteLog('DBGetEvents: ' . scalar(@{$ref}) . ' items returned');
 
 	return $ref;
 }
