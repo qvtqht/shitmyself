@@ -1,3 +1,7 @@
+Non-JS voting links redirect
+	Should redirect to page vote came from
+		And include anchor to item being voted on
+
 How to recover from out of space errors?
 
 How to recover from broken perl script errors?
