@@ -1,3 +1,4 @@
+<!-- authorinfo.template -->
 <table>
 <tr><td>avatar:</td><td>$avatar</td></tr>
 <tr class=advanced><td>alias:</td><td>$alias</td></tr>
@@ -11,3 +12,4 @@
 <tr class=advanced><td>reg. entry:</td><td><b>$publicKeyHash</b> $authorPubkeyTxtLink<br>$profileVoteButtons</td></tr>
 </table>
 <hr>
+<!-- / authorinfo.template -->
