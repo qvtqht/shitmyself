@@ -461,6 +461,45 @@ sub DBGetEvents { #gets events list
 	return $ref;
 }
 
+sub DBGetAuthorFriends {
+	my $authorKey = shift;
+	chomp $authorKey;
+
+	if (!$authorKey) {
+		return;
+	}
+
+	if (!IsFingerprint($authorKey)) {
+		return;
+	}
+
+	my $query = "
+		SELECT
+			DISTINCT item_flat.author_key
+		FROM
+			vote
+			LEFT JOIN item_flat ON (vote.file_hash = item_flat.file_hash)
+		WHERE
+			signed_by = ?
+			AND vote_value = 'friend'
+		;
+	";
+
+	my @queryParams = ();
+	push @queryParams, $authorKey;
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
+
+	my @resultsArray = ();
+
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
+	}
+
+	return @resultsArray;
+}
+
 sub DBGetLatestConfig {
 	my $query = "SELECT * FROM config_latest";
 	#todo write out the fields
