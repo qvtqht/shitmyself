@@ -1,25 +1,16 @@
-function AmIFresh() {
-	var mypath = window.mypath;
+var freshClient;
 
-	if (!mypath) {
-		mypath = window.location;
-		window.mypath = mypath;
-	}
+function corsc() {
+  if(this.readyState == this.HEADERS_RECEIVED) {
+	 var eTag = freshClient.getResponseHeader("ETag");
+	 if (eTag) {
+		if (window.lastEtag) {
+			if (eTag == window.lastEtag) {
+				// still fresh, no change
+			} else {
+				// change has happened
 
-	var client = new XMLHttpRequest();
-	client.open("HEAD", mypath, true);
-
-	client.onreadystatechange = function() {
-	  if(this.readyState == this.HEADERS_RECEIVED) {
-		 var eTag = client.getResponseHeader("ETag");
-		 if (eTag) {
-		 	if (window.lastEtag) {
-		 		if (eTag == window.lastEtag) {
-		 			// still fresh, no change
-		 		} else {
-		 			// change has happened
-
-	 				location.reload();
+				location.reload();
 //
 //		 			var client2 = new XMLHttpRequest();
 //		 			client2.open("GET", window.location);
@@ -29,20 +20,33 @@ function AmIFresh() {
 //			 				document.replaceChild(client2.responseText, document.documentElement);
 //		 				}
 //		 			}
-		 		}
-		 		window.lastEtag = eTag;
-		 	} else {
-		 		window.lastEtag = eTag;
 			}
-		 }
-	  }
+			window.lastEtag = eTag;
+		} else {
+			window.lastEtag = eTag;
+		}
+	 }
+  }
+}
+
+function AmIFresh() {
+	if (window.XMLHttpRequest) {
+		var mypath = window.mypath;
+
+		if (!mypath) {
+			mypath = window.location;
+			window.mypath = mypath;
+		}
+
+		freshClient = new XMLHttpRequest();
+		freshClient.open("HEAD", mypath, true);
+
+		freshClient.onreadystatechange = corsc;
+
+		freshClient.send();
+
+		setTimeout(AmIFresh, 3000);
 	}
-
-	client.send();
-
-	setTimeout(AmIFresh, 3000);
 }
 
 AmIFresh();
-
-

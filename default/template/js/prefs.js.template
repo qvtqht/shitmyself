@@ -154,23 +154,31 @@ function showHideCheckbox(id, ths, prefName) {
    }
 }
 
-if (pane = document.getElementById('curIdAdv') && GetPrefs('show_advanced') == 1) {
-	document.getElementById('curIdAdvC').checked = 1;
-	showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
+if (document.getElementById) {
+
+	var pane;
+
+	pane = document.getElementById('curIdAdv');
+	if (pane && GetPrefs('show_advanced') == 1) {
+		document.getElementById('curIdAdvC').checked = 1;
+		showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
+	}
+
+	pane = document.getElementById('curIdAdv');
+	if (pane && GetPrefs('beginner') == 1) {
+		document.getElementById('beginnerC').checked = 1;
+	}
+
+	pane = document.getElementById('curIdAdv')
+	if (pane && GetPrefs('beginner_highlight') == 1) {
+		document.getElementById('beginnerHighlight').checked = 1;
+	}
+
+	pane = document.getElementById('creaIdAdv');
+	if (pane && GetPrefs('show_advanced') == 1) {
+		document.getElementById('creaIdAdvC').checked = 1;
+		showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
+	}
+
+	ShowAdvanced(0); // call ShowAdvanced
 }
-
-if (pane = document.getElementById('curIdAdv') && GetPrefs('beginner') == 1) {
-	document.getElementById('beginnerC').checked = 1;
-}
-
-if (pane = document.getElementById('curIdAdv') && GetPrefs('beginner_highlight') == 1) {
-	document.getElementById('beginnerHighlight').checked = 1;
-}
-
-if (pane = document.getElementById('creaIdAdv') && GetPrefs('show_advanced') == 1) {
-	document.getElementById('creaIdAdvC').checked = 1;
-	showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
-}
-
-ShowAdvanced(0); // call ShowAdvanced
-
