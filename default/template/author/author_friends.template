@@ -1,6 +1,3 @@
 <!-- author_friends.template -->
-Friends:
-<ul>
 $authorFriendsList
-</ul>
 <!-- / author_friends.template -->
