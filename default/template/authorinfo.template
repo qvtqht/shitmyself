@@ -10,6 +10,7 @@
 <tr class=advanced><td>influence:</td><td>$authorWeight</td></tr>
 <tr><td>last seen:</td><td>$authorLastSeen</td></tr>
 <tr class=advanced><td>reg. entry:</td><td><b>$publicKeyHash</b> $authorPubkeyTxtLink<br>$profileVoteButtons</td></tr>
+<tr><td>friends:</td><td>$authorFriends</td></tr>
 </table>
 <hr>
 <!-- / authorinfo.template -->

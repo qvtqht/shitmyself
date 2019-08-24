@@ -366,6 +366,10 @@ sub GetTemplate {
 		return $templateCache{$filename};
 	}
 
+	if (GetConfig('admin/debug') && !-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
+		WriteLog("GetTemplate: template/$filename does not exist, exiting");
+	}
+
 	my $template = GetConfig('template/' . $filename);
 
 	$template .= "\n";
@@ -499,7 +503,7 @@ sub GetPlainAvatar {
 	$avatarCache{$gpgKey} = $avatar;
 
 	if ($avatar) {
-		PutCache("avatar/$gpgKey", $avatar);
+		PutCache("pavatar/$gpgKey", $avatar);
 	}
 
 	return $avatar;
@@ -984,21 +988,21 @@ sub GetSecondsHtml {
 
 	my $secondsString = $seconds;
 
-	if ($secondsString > 60) {
+	if ($secondsString >= 60) {
 		$secondsString = $secondsString / 60;
 
-		if ($secondsString > 60 ) {
+		if ($secondsString >= 60 ) {
 			$secondsString = $secondsString / 60;
 
-			if ($secondsString > 24) {
+			if ($secondsString >= 24) {
 				$secondsString = $secondsString / 24;
 
-				if ($secondsString > 365) {
+				if ($secondsString >= 365) {
 					$secondsString = $secondsString / 365;
 
 					$secondsString = floor($secondsString) . ' years';
 				}
-				elsif ($secondsString > 30) {
+				elsif ($secondsString >= 30) {
 					$secondsString = $secondsString / 30;
 
 					$secondsString = floor($secondsString) . ' months';

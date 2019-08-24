@@ -48,6 +48,13 @@ sub GetStylesheet {
 
 sub GetAuthorLink { # returns avatar'ed link for an author id
 	my $gpgKey = shift;
+	my $showPlain = shift;
+
+	if (!$showPlain) {
+		$showPlain = 0;
+	} else {
+		$showPlain = 1;
+	}
 
 	if (!IsFingerprint($gpgKey)) {
 		WriteLog("WARNING: GetAuthorLink() called with invalid parameter!");
@@ -55,7 +62,13 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 	}
 
 	my $authorUrl = "/author/$gpgKey/";
-	my $authorAvatar = GetAvatar($gpgKey);
+
+	my $authorAvatar = '';
+	if ($showPlain) {
+		$authorAvatar = GetPlainAvatar($gpgKey);
+	} else {
+		$authorAvatar = GetAvatar($gpgKey);
+	}
 
 	my $authorLink = GetTemplate('authorlink.template');
 
@@ -184,15 +197,36 @@ sub GetEventsPage {
 		my $eventItemAuthor = GetAvatar($eventA[4]);
 
 		if (!$eventTitle) {
-			$eventTitle = '(No Title)';
+			$eventTitle = 'Untitled';
 		}
 
 		if (!$eventItemAuthor) {
-			$eventItemAuthor = '(No Author)';
+			$eventItemAuthor = '';
+		}
+
+		my $eventTimeUntil = $eventTime - GetTime();
+		if ($eventTimeUntil > 0) {
+			$eventTimeUntil = 'in ' . GetSecondsHtml($eventTimeUntil);
+		} else {
+			$eventTimeUntil = $eventTimeUntil * -1;
+			$eventTimeUntil = GetSecondsHtml($eventTimeUntil) . ' ago';
+		}
+
+		if ($eventTime) {
+			$eventTime = EpochToHuman($eventTime);
+		} else {
+			$eventTime = '(no time)';
+		}
+
+		if ($eventDuration) {
+			$eventDuration = GetSecondsHtml($eventDuration);
+		} else {
+			$eventDuration = '(no duration)';
 		}
 
 		$eventItem =~ s/\$eventTitle/$eventTitle/;
 		$eventItem =~ s/\$eventTime/$eventTime/;
+		$eventItem =~ s/\$eventTimeUntil/$eventTimeUntil/;
 		$eventItem =~ s/\$eventDuration/$eventDuration/;
 		$eventItem =~ s/\$eventItemLink/$eventItemLink/;
 		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
@@ -1211,7 +1245,8 @@ sub GetTopItemsPage {
 
 			my $authorAvatar;
 			if ($authorKey) {
-				$authorAvatar = GetAuthorLink($authorKey);
+#				$authorAvatar = GetPlainAvatar($authorKey);
+				$authorAvatar = GetAuthorLink($authorKey, 1);
 			} else {
 				$authorAvatar = '';
 			}
@@ -1362,7 +1397,7 @@ sub GetScoreboardPage {
 
 		my $authorLink = "/author/" . $authorKey . ".html";
 
-#		$authorLastSeen = GetSecondsHtml(time() - $authorLastSeen) . ' ago';
+		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 
 		$authorItemTemplate =~ s/\$link/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
@@ -1494,8 +1529,6 @@ sub GetReadPage {
 			#todo my $publicKeyTxtLink = ..;
 		}
 
-#		my $publicKeyHash = '';
-
 		if (IsServer($authorKey)) {
 			if ($authorDescription) {
 				$authorDescription .= '<br>';
@@ -1517,7 +1550,6 @@ sub GetReadPage {
 
 		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash);
 
-
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$alias/$authorAliasHtml/;
 		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
@@ -1536,10 +1568,43 @@ sub GetReadPage {
 			$authorInfoTemplate =~ s/\$authorPubkeyTxtLink//g;
 		}
 
+
+		##### friends list begin #####
+
+		# get list of friends from db
+		my @authorFriendsArray = DBGetAuthorFriends($authorKey);
+
+		# generated html will reside here
+		my $authorFriends = '';
+
+		while (@authorFriendsArray) {
+			# get the friend's key
+			my $authorFriend = shift @authorFriendsArray;
+			my $authorFriendKey = %{$authorFriend}{'author_key'};
+
+			# get avatar (with link) for key
+			my $authorFriendAvatar .= GetAuthorLink($authorFriendKey);
+
+			# get friend list item template and insert linked avatar to it
+			my $authorFriendTemplate = GetTemplate('author/author_friends_item.template');
+			$authorFriendTemplate =~ s/\$authorFriendAvatar/$authorFriendAvatar/g;
+
+			# append it to list of friends html
+			$authorFriends .= $authorFriendTemplate
+		}
+
+		# wrap list of friends in wrapper
+		my $authorFriendsWrapper = GetTemplate('author/author_friends.template');
+		$authorFriendsWrapper =~ s/\$authorFriendsList/$authorFriends/;
+
+		# insert list of friends into authorinfo template
+		$authorInfoTemplate =~ s/\$authorFriends/$authorFriendsWrapper/;
+
+		# add authorinfo template to page
 		$txtIndex .= $authorInfoTemplate;
 	}
 
-	my $itemComma = '<hr size=6>';
+	my $itemComma = '';
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -1715,12 +1780,11 @@ sub GetIndexPage {
 			my $itemTemplate;
 			$itemTemplate = GetItemTemplate($row);
 
+			$itemList = $itemList . $itemComma . $itemTemplate;
+
 			if ($itemComma eq '') {
 				$itemComma = '<hr size=8>';
 			}
-
-#			$itemList = $itemTemplate . $itemComma . $itemList;
-			$itemList = $itemList . $itemComma . $itemTemplate;
 		}
 	}
 
@@ -2027,8 +2091,8 @@ sub GetIdentityPage {
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 
-#	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
 
