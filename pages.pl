@@ -1445,7 +1445,12 @@ sub GetReadPage {
 			$pageParam = shift;
 			$authorKey = $pageParam;
 
-			my $whereClause = "WHERE author_key='$authorKey'";
+			if (!IsFingerprint($authorKey)) {
+				WriteLog('GetReadPage(author) called with invalid parameter');
+				return;
+			}
+
+			my $whereClause = "WHERE author_key = '$authorKey'";
 
 			my $authorAliasHtml = GetAlias($authorKey);
 			my $authorAvatarHtml = GetAvatar($authorKey);
