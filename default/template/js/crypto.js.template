@@ -11,6 +11,19 @@ function logOut(t) {
 	logOut2();
 }
 
+
+function getPrivateKey() { // get private key from local storage
+// returns null otherwise
+
+	var privateKey = localStorage.getItem("privatekey");
+
+	if (privateKey === null || privateKey.length === 0) {
+		return null;
+	} else {
+		return privateKey;
+	}
+}
+
 function buttonSignOut(t) {
 	if (window.iii) {
 		logOut(t);
@@ -297,20 +310,6 @@ function copyTextToClipboard(textareaId) {
 }
 
 
-// gets the private key from local storage
-// returns null otherwise
-function getPrivateKey() {
-
-	var privateKey = localStorage.getItem("privatekey");
-
-	if (privateKey === null || privateKey.length === 0) {
-		return null;
-	} else {
-		return privateKey;
-	}
-}
-
-
 // called from write.html#inspubkey
 // used for sharing the stored public key automatically
 function insertPubKey() {
@@ -338,32 +337,18 @@ function getPublicKey() {
 function identityOnload() {
 	var pk = getPrivateKey();
 
-    // is there a private key?
+   // is there a private key?
 	if (pk) {
-	    // if there's a private key, see if the user wants to log out
-	    // by looking for #logout or #signout in the url
-	// disabled due to us not wanting this link to work
-		if (0 && window.location.hash &&	(window.location.hash == '#logout' || window.location.hash == '#signout')) {
-		    // log out
-   			logOut();
-   			// refresh the pk variable (should be null now)
-   			pk = getPrivateKey();
+		// if there's a private key, populate private key textbox
+		var textbox = document.getElementById("privatekey");
 
-            // refresh the page to update the menubar
-            // #todo make this happen without refreshing the page
-   			location.reload();
-   	    } else {
-   	        // otherwise just make sure the private key textbox is populated
-			var textbox = document.getElementById("privatekey");
-
-            // if it exists
-			if (textbox) {
-				textbox.value = pk;
-			}
+		// if it exists
+		if (textbox) {
+			textbox.value = pk;
 		}
 	}
 
-    // if there's a public key, and a public key textbox, populate it
+	// if there's a public key, and a public key textbox, populate it
 	var pubk = getPublicKey();
 	if (pubk) {
 		var textboxPub = document.getElementById("publickey");
@@ -373,7 +358,7 @@ function identityOnload() {
 		}
 	}
 
-    // if there's a pk, do a saveId(); just for the heck of it? dunno
+   // if there's a pk, do a saveId() to populate displayed info
 	if (pk) {
 		saveId();
 	}
@@ -381,17 +366,17 @@ function identityOnload() {
     // if there's a textbox for a name, populate it with the default
     // the default is set in config/prefill_user_name
     // and then templated in where $prefillUsername is
-    var nametext = document.getElementById("name");
+	var nametext = document.getElementById("name");
 	if (nametext) {
 		if (nametext.value == '') {
 			nametext.value = "$prefillUsername";
 		}
 	}
 
-    // show and hide identity page forms as necessary
+   // show and hide identity page forms as necessary
 	showHideForms();
 
-    // here we do the same thing we did above, checking for #logout and #signout? #strange #todo
+   // here we do the same thing we did above, checking for #logout and #signout? #strange #todo
 	// disabled
 	if (0 && window.location.hash) {
 		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
