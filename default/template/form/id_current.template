@@ -40,8 +40,12 @@
 		</p>
 
 		<p>
+			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="showHideCheckbox('abcdefgh', this, 'advanced_highlight');"> Highlight advanced things</label>
+		</p>
+
+		<p>
 			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox('abcdefgh', this, 'beginner');"> Display beginner hints</label><br>
-			&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="showHideCheckbox('abcdefgh', this, 'beginner_highlight');"> Highlight hints</label>
+			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="showHideCheckbox('abcdefgh', this, 'beginner_highlight');"> Highlight beginner hints</label></span>
 		</p>
 
 		<p id=def>
@@ -63,9 +67,6 @@
 				<input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');">
 
 			</p>
-
 		</span>
-
 	</span>
-
 </form>

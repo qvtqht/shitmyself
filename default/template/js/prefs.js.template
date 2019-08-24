@@ -14,6 +14,11 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			displayValue = 'initial'; // display
 		}
 
+		var bgColor = 'initial';
+		if (GetPrefs('advanced_highlight') == 1) { // check value of advanced_highlight preference
+			bgColor = '#ffe0e0'; // advanced_highlight
+		}
+
 		if (force || showAdvancedLastAction != displayValue) {
 			// thank you stackoverflow
 			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
@@ -32,6 +37,8 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 				} else {
 					divsToHide[i].style.display = displayValue; // depending on what you're doing
 				}
+
+				divsToHide[i].style.backgroundColor = bgColor;
 			}
 			showAdvancedLastAction = displayValue;
 		}
@@ -41,7 +48,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			displayValue = 'none';
 		}
 
-		var bgColor = 'initial';
+		bgColor = 'initial';
 		if (GetPrefs('beginner_highlight') == 1) { // check value of beginner preference
 			bgColor = '#ffffc0'; // beginner_highlight
 		}
@@ -149,7 +156,12 @@ function showHideCheckbox(id, ths, prefName) {
 
    SetPrefs(prefName, (ths.checked ? 1 : 0));
 
-   if (prefName == 'show_advanced' || prefName == 'beginner' || prefName == 'beginner_highlight') {
+   if (
+   	prefName == 'show_advanced' ||
+   	prefName == 'beginner' ||
+   	prefName == 'beginner_highlight' ||
+   	prefName == 'advanced_highlight'
+	) {
    	ShowAdvanced(1);
    }
 }
@@ -172,6 +184,10 @@ if (document.getElementById) {
 	pane = document.getElementById('curIdAdv')
 	if (pane && GetPrefs('beginner_highlight') == 1) {
 		document.getElementById('beginnerHighlight').checked = 1;
+	}
+
+	if (pane && GetPrefs('advanced_highlight') == 1) {
+		document.getElementById('advancedHighlight').checked = 1;
 	}
 
 	pane = document.getElementById('creaIdAdv');

@@ -11,9 +11,6 @@
     color: #c08000;
     padding: 2pt;
 }
-.advanced {
-    background-color: #ffd0d0;
-}
 .avatar .username, .avatar .username a {
     color: #f0f0f0;
     text-shadow:
