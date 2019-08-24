@@ -4,7 +4,7 @@
         <th align=left>Score</th>
         <th class=advanced align=left>Items</th>
         <th class=advanced align=left>Influence</th>
-        <th class=advanced align=left>Seen</th>
+        <th align=left>Seen</th>
     </tr>
 $authorListings
 </table>
