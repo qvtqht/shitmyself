@@ -120,7 +120,27 @@ sub SqliteMakeTables() {
 	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration);");
 
 	# location
-	SqliteQuery2("CREATE TABLE location(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, latitude, longitude);");
+	SqliteQuery2("
+		CREATE TABLE location(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			item_hash,
+			author_key,
+			latitude,
+			longitude
+		);
+	");
+
+	# brc
+	SqliteQuery2("
+		CREATE TABLE brc(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			item_hash,
+			author_key,
+			hours,
+			minutes,
+			street
+		);
+	");
 
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER);");
@@ -444,6 +464,8 @@ sub DBGetEvents { #gets events list
 		FROM
 			event
 			LEFT JOIN item_flat ON (event.item_hash = item_flat.file_hash)
+		ORDER BY
+			event_time
 	";
 
 	my @queryParams = ();
@@ -482,6 +504,7 @@ sub DBGetAuthorFriends {
 		WHERE
 			signed_by = ?
 			AND vote_value = 'friend'
+			AND ',' || item_flat.tags_list || ',' LIKE '%,pubkey,%'
 		;
 	";
 
@@ -1264,6 +1287,73 @@ sub DBAddLocationRecord {
 	push @queryParams, $fileHash, $latitude, $longitude, $signedBy;
 }
 
+sub DBAddBrcRecord { #adds record to brc table
+# $gitHash, $hours, $minutes, $street, $signedBy
+
+	state $query;
+	state @queryParams;
+
+	WriteLog("DBAddBrcRecord()");
+
+	my $fileHash = shift;
+
+	if ($fileHash eq 'flush') {
+		WriteLog("DBAddBrcRecord(flush)");
+
+		if ($query) {
+			$query .= ';';
+
+			SqliteQuery2($query, @queryParams);
+
+			$query = '';
+			@queryParams = ();
+		}
+
+		return;
+	}
+
+	if (
+		$query
+			&&
+			(
+				length($query) >= DBMaxQueryLength()
+					||
+				scalar(@queryParams) > DBMaxQueryParams()
+			)
+	) {
+		DBAddBrcRecord('flush');
+		$query = '';
+		@queryParams = ();
+	}
+
+	my $hours = shift;
+	my $minutes = shift;
+	my $street = shift;
+	my $signedBy = shift;
+
+	#todo sanity check here
+
+	chomp $hours;
+	chomp $minutes;
+	chomp $street;
+
+	if ($signedBy) {
+		chomp $signedBy;
+	} else {
+		$signedBy = '';
+	}
+
+	if (!$query) {
+		$query = "INSERT OR REPLACE INTO brc(item_hash, hours, minutes, street, author_key) VALUES ";
+	} else {
+		$query .= ",";
+	}
+
+	$query .= '(?, ?, ?, ?, ?)';
+	push @queryParams, $fileHash, $hours, $minutes, $street, $signedBy;
+}
+
+###
 
 sub DBAddVoteRecord {
 # DBAddVoteRecord

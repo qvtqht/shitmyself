@@ -139,6 +139,7 @@ sub IndexTextFile {
 		DBAddItemClient('flush');
 		DBAddItemAttribute('flush');
 		DBAddLocationRecord('flush');
+		DBAddBrcRecord('flush');
 
 		return;
 	}
@@ -403,7 +404,7 @@ sub IndexTextFile {
 
 						DBAddPageTouch('tag', $hashTag);
 
-						my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
+#						my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
 
 						#todo
 					}
@@ -727,7 +728,8 @@ sub IndexTextFile {
 #		}
 
 		# point/x,y
-		# line/x,y/x1,y2
+		# line/x1,y1/x2,y2
+		# area/x1,y1/x2,y2
 		# used for map
 		# map definition includes boundaries and included points
 		#
@@ -735,8 +737,50 @@ sub IndexTextFile {
 		}
 
 
-		# burningman/2:00/AA
-		# burningman/[2-10]:[00-59]
+		# brc/2:00/AA
+		# brc/([2-10]:[00-59])/([A-Z]{1-2})
+		if ($message) {
+			my @burningManLines = ($message =~ m/^brc\/([0-9]{1,2}):([0-9]{0,2})\/([A-Z]{1,2})/mg );
+
+			if (@burningManLines) {
+				my $lineCount = @burningManLines / 3;
+				#todo assert no remainder
+
+				while (@burningManLines) {
+					my $aveHours = shift @burningManLines;
+					my $aveMinutes = shift @burningManLines;
+					my $streetLetter = shift @burningManLines;
+
+					if ($aveHours < 2 || $aveHours > 10) {
+						next;
+					}
+
+					if ($aveHours == 10 && $aveMinutes > 0) {
+						next;
+					}
+
+					if ($aveMinutes > 60) {
+						next;
+					}
+
+					my $reconLine = "brc/$aveHours:$aveMinutes/$streetLetter";
+
+					$message =~ s/$reconLine/[)'( $aveHours:$aveMinutes at $streetLetter]/g;
+
+					$detokenedMessage =~ s/$reconLine//g;
+
+					if ($isSigned) {
+						DBAddBrcRecord($gitHash, $aveHours, $aveMinutes, $streetLetter, $gpgKey);
+					} else {
+						DBAddBrcRecord($gitHash, $aveHours, $aveMinutes, $streetLetter);
+					}
+
+					DBAddVoteRecord ($gitHash, $addedTime, 'brc');
+
+					DBAddPageTouch('tag', 'brc');
+				}
+			}
+		}
 
 
 		# look for location tokens
@@ -890,15 +934,25 @@ sub IndexTextFile {
 
 					if (IsAdmin($gpgKey)) {
 						if ($voteValue eq 'remove' || $voteValue eq 'flag') {
+							WriteLog('Found post by an admin requesting remove of file');
+
 							AppendFile('log/deleted.log', $voteFileHash);
 							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
 							my $htmlFilename = 'html/' . GetHtmlFilename($voteFileHash);
 							if (-e $htmlFilename) {
+								WriteLog($htmlFilename . ' exists, calling unlink()');
 								unlink ($htmlFilename);
+							} else {
+								WriteLog($htmlFilename . ' does NOT exist, very strange');
 							}
+
 							if (-e $file) {
-								unlink ($file);
+								WriteLog($file . ' exists, calling unlink()');
+								unlink($file);
+							} else {
+								WriteLog($file . ' does NOT exist, very strange');
 							}
+
 							#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
 						}
 					}
