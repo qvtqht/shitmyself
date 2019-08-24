@@ -682,6 +682,23 @@ sub SqliteEscape {
 # 	return $authorInfo;
 # }
 
+sub DBGetItemAuthor {
+	my $itemHash = shift;
+
+	if (!$itemHash || !IsItem($itemHash)) {
+		return;
+	}
+
+	my $query = 'SELECT author_key FROM item WHERE file_hash = ?';
+	my @queryParams = ();
+
+	push @queryParams, $itemHash;
+
+	my $authorKey = SqliteGetValue($query, @queryParams);
+
+	return $authorKey;
+}
+
 
 sub DBAddConfigValue {
 	state $query;
@@ -1972,8 +1989,8 @@ sub DBGetAuthorWeight {
 
 
 sub DBGetItemFields {
-	my $itemFields = "
-		item_flat.file_path file_path,
+	my $itemFields =
+		"item_flat.file_path file_path,
 		item_flat.item_name item_name,
 		item_flat.file_hash file_hash,
 		item_flat.author_key author_key,
@@ -1982,8 +1999,7 @@ sub DBGetItemFields {
 		item_flat.add_timestamp add_timestamp,
 		item_flat.item_title item_title,
 		item_flat.item_score item_score,
-		item_flat.tags_list tags_list
-	";
+		item_flat.tags_list tags_list";
 
 	return $itemFields;
 }
