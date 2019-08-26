@@ -1,7 +1,7 @@
 <!-- authorinfo.template -->
 <table>
 <tr><td>avatar:</td><td>$avatar</td></tr>
-<tr class=advanced><td>alias:</td><td>$alias</td></tr>
+<tr class=advanced><td>name:</td><td>$authorName</td></tr>
 <tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
 <tr class=advanced><td>importance:</td><td>$importance</td></tr>
 <tr><td>score:</td><td>$authorScore</td></tr>
