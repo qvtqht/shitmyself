@@ -1754,11 +1754,57 @@ sub ServerSign {
 	}
 }
 
+sub GetTimestampElement {
+	my $time = shift;
+
+	#todo sanity check;
+
+	my $timestampElement = GetTemplate('timestamp.template');
+
+	$timestampElement =~ s/\$timestamp/$time/;
+
+	return $timestampElement
+}
+
 sub DeleteFile {
 	my $fileHash = shift;
 
 	if ($fileHash) {
 	}
+}
+
+sub GetItemMessage { # retrieves item's message using cache or file path
+# $itemHash, $filePath
+
+	WriteLog('GetItemMessage()');
+
+	my $itemHash = shift;
+	if (!$itemHash) {
+		return;
+	}
+
+	chomp $itemHash;
+
+	if (!IsItem($itemHash)) {
+		return;
+	}
+
+	WriteLog("GetItemMessage($itemHash)");
+
+
+	my $message;
+	my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
+
+	if (-e $messageCacheName) {
+		$message = GetFile($messageCacheName);
+	} else {
+		my $filePath = shift;
+		#todo sanitize/sanitycheck
+
+		$message = GetFile($filePath);
+	}
+
+	return  $message;
 }
 
 1;
