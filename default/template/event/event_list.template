@@ -1,3 +1,5 @@
-<ul>
-	$eventsList
-</ul>
+<p>
+	<a href="/event.html">Add New Event</a>
+</p>
+
+$eventsList
