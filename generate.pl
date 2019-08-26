@@ -198,6 +198,86 @@ foreach my $hashRef (@authors) {
 # 	PutFile("$HTMLDIR/rss.txt", $fileList);
 # }
 
+
+
+
+sub MakeRssFile {
+ 	my %queryParams;
+ 	my @files = DBGetItemList(\%queryParams);
+
+ 	my $feedContainerTemplate = GetTemplate('rss/feed.xml.template');
+
+	my $feedTitle = 'zomg';
+	my $feedLink = 'linkomg';
+	my $feedDescription = 'descomg';
+	my $feedPubDate = 'testomg';
+
+	$feedContainerTemplate =~ s/\$feedTitle/$feedTitle/;
+	$feedContainerTemplate =~ s/\$feedLink/$feedLink/;
+	$feedContainerTemplate =~ s/\$feedDescription/$feedDescription/;
+	$feedContainerTemplate =~ s/\$feedPubDate/$feedPubDate/;
+
+ 	my $feedItems = '';
+ 	my $feedItemsToc = '';
+
+ 	foreach my $file(@files) {
+ 		my $fileHash = $file->{'file_hash'};
+
+ 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+ 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+
+ 			return;
+ 		}
+
+
+		#
+		#"item_flat.file_path file_path,
+		#item_flat.item_name item_name,
+		#item_flat.file_hash file_hash,
+		#item_flat.author_key author_key,
+		#item_flat.child_count child_count,
+		#item_flat.parent_count parent_count,
+		#item_flat.add_timestamp add_timestamp,
+		#item_flat.item_title item_title,
+		#item_flat.item_score item_score,
+		#item_flat.tags_list tags_list";
+
+
+ 		my $feedItem = GetTemplate('rss/feed.item.xml.template');
+
+		my $itemAbout = '';
+		my $fileName = $file->{'file_path'};
+		my $itemPubDate = $file->{'add_timestamp'};
+		my $itemTitle = $file->{'item_title'};
+		my $itemLink = GetHtmlFilename($fileHash);
+		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});
+
+		#todo sanitize
+
+ 		$feedItem =~ s/\$itemAbout/$itemAbout/g;
+ 		$feedItem =~ s/\$itemGuid/$fileHash/g;
+ 		$feedItem =~ s/\$itemPubDate/$itemPubDate/g;
+ 		$feedItem =~ s/\$itemTitle/$itemTitle/g;
+ 		$feedItem =~ s/\$itemLink/$itemLink/g;
+ 		$feedItem =~ s/\$itemDescription/$itemDescription/g;
+
+ 		my $feedTocItem = GetTemplate('rss/feed.toc.item.xml.template');
+
+ 		$feedTocItem =~ s/\$itemUrl/$itemLink/;
+
+ 		$feedItems .= $feedItem;
+ 		$feedItemsToc .= $feedTocItem;
+ 	}
+
+	$feedContainerTemplate =~ s/\$feedItemsList/$feedItemsToc/;
+	$feedContainerTemplate =~ s/\$feedItems/$feedItems/;
+
+ 	PutFile("$HTMLDIR/rss.xml", $feedContainerTemplate);
+}
+
+MakeRssFile();
+
+
 # this should create a page for each item
 {
 	my %queryParams = ();
