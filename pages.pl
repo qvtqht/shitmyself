@@ -190,14 +190,19 @@ sub GetEventsPage {
 
 		my $eventItem = GetTemplate('event/event_item.template');
 
+		my $eventItemHash = $eventA[3];
 		my $eventTitle = $eventA[0];
 		my $eventTime = $eventA[1];
 		my $eventDuration = $eventA[2];
-		my $eventItemLink = GetHtmlLink($eventA[3]);
+		my $eventItemLink = GetHtmlLink($eventItemHash);
 		my $eventItemAuthor = GetAvatar($eventA[4]);
 
 		if (!$eventTitle) {
 			$eventTitle = 'Untitled';
+		}
+
+		if ($eventTitle) {
+			$eventTitle = '<a href="' . GetHtmlFilename($eventItemHash) . '">' . $eventTitle . '</a>';
 		}
 
 		if (!$eventItemAuthor) {
@@ -224,12 +229,16 @@ sub GetEventsPage {
 			$eventDuration = '(no duration)';
 		}
 
+		my $eventVoteButtons = GetItemVoteButtons($eventItemHash, 'event');
+
 		$eventItem =~ s/\$eventTitle/$eventTitle/;
 		$eventItem =~ s/\$eventTime/$eventTime/;
 		$eventItem =~ s/\$eventTimeUntil/$eventTimeUntil/;
 		$eventItem =~ s/\$eventDuration/$eventDuration/;
 		$eventItem =~ s/\$eventItemLink/$eventItemLink/;
 		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
+		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
+		$eventItem =~ s/\$voteButtons/$eventVoteButtons/;
 
 		$eventsItemsList .= $eventItem;
 	}
@@ -585,30 +594,40 @@ sub GetHtmlLink {
 	}
 }
 
-sub GetItemVoteButtons {
+sub GetItemVoteButtons { # get vote buttons for item in html form
+# $fileHash = item's file hash
 	my $fileHash = shift;
 
 	#todo sanity checks
 
-	my %voteTotals = DBGetItemVoteTotals($fileHash);
-
 	my @quickVotesList;
 
-	my $quickVotesForTags;
+	my $tagSet;
+	$tagSet = shift;
 
-	foreach my $voteTag (keys %voteTotals) {
-		$quickVotesForTags = GetConfig('tagset/' . $voteTag);
-		if ($quickVotesForTags) {
-			push @quickVotesList, split("\n", $quickVotesForTags);
+	if ($tagSet) {
+		my $quickVotesForTagSet = GetConfig('tagset/' . $tagSet);
+		if ($quickVotesForTagSet) {
+			push @quickVotesList, split("\n", $quickVotesForTagSet);
 		}
-	}
+	} else {
+		my $quickVotesForTags;
+		my %voteTotals = DBGetItemVoteTotals($fileHash);
 
-	my %dedupe = map { $_, 1 } @quickVotesList;
-	@quickVotesList = keys %dedupe;
+		foreach my $voteTag (keys %voteTotals) {
+			$quickVotesForTags = GetConfig('tagset/' . $voteTag);
+			if ($quickVotesForTags) {
+				push @quickVotesList, split("\n", $quickVotesForTags);
+			}
+		}
 
-	$quickVotesForTags = GetConfig('tagset/' . 'all');
-	if ($quickVotesForTags) {
-		unshift @quickVotesList, split("\n", $quickVotesForTags);
+		$quickVotesForTags = GetConfig('tagset/' . 'all');
+		if ($quickVotesForTags) {
+			unshift @quickVotesList, split("\n", $quickVotesForTags);
+		}
+
+		my %dedupe = map { $_, 1 } @quickVotesList;
+		@quickVotesList = keys %dedupe;
 	}
 
 	my $styleSheet = GetStylesheet();
@@ -668,11 +687,10 @@ sub GetItemVotesSummary {
 	return $votesSummary;
 }
 
-sub GetItemTemplate {
+sub GetItemTemplate { # returns HTML for outputting one item
 	WriteLog("GetItemTemplate");
 
-	# Returns HTML template for outputting one item
-	# %file(array for each file)
+	# %file(hash for each file)
 	# file_path = file path including filename
 	# file_hash = git's hash of the file's contents
 	# author_key = gpg key of author (if any)
@@ -707,15 +725,7 @@ sub GetItemTemplate {
 		my $alias;
 		my $isAdmin = 0;
 
-		my $message;
-		my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
-		WriteLog('$messageCacheName (2) = ' . $messageCacheName);
-
-		if (-e $messageCacheName) {
-			$message = GetFile($messageCacheName);
-		} else {
-			$message = GetFile($file{'file_path'});
-		}
+		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
 		if ($file{'remove_token'}) {
 			WriteLog('$file{\'remove_token\'} = ' . $file{'remove_token'});
@@ -1309,14 +1319,16 @@ sub GetStatsPage {
 
 	PutConfig("last_update_time", $currUpdateTime);
 
-	my $nextUpdateTime = ($currUpdateTime + $updateInterval) . ' (' . EpochToHuman($currUpdateTime + $updateInterval) . ')';
-	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
-	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
+#	my $nextUpdateTime = ($currUpdateTime + $updateInterval) . ' (' . EpochToHuman($currUpdateTime + $updateInterval) . ')';
+#	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
+#	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
 
-	$statsTable =~ s/\$prevUpdateTime/$prevUpdateTime/;
-	$statsTable =~ s/\$currUpdateTime/$currUpdateTime/;
+	my $nextUpdateTime = ($currUpdateTime + $updateInterval);
+
+	$statsTable =~ s/\$prevUpdateTime/GetTimestampElement($prevUpdateTime)/e;
+	$statsTable =~ s/\$currUpdateTime/GetTimestampElement($currUpdateTime)/e;
 	$statsTable =~ s/\$updateInterval/$updateInterval/;
-	$statsTable =~ s/\$nextUpdateTime/$nextUpdateTime/;
+	$statsTable =~ s/\$nextUpdateTime/GetTimestampElement($nextUpdateTime)/e;
 
 	$statsTable =~ s/\$version/GetMyVersion()/e;
 	$statsTable =~ s/\$itemCount/$itemCount/e;
@@ -1326,7 +1338,7 @@ sub GetStatsPage {
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs));
+	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs timestamps));
 
 	return $statsPage;
 }
@@ -1397,7 +1409,7 @@ sub GetScoreboardPage {
 
 		my $authorLink = "/author/" . $authorKey . ".html";
 
-		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
+#		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 
 		$authorItemTemplate =~ s/\$link/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
@@ -1422,7 +1434,7 @@ sub GetScoreboardPage {
 	return $txtIndex;
 }
 
-sub GetReadPage {
+sub GetReadPage { # generates page with item listing based on parameters
 	# GetReadPage
 	#   $pageType
 	#		author
@@ -1430,15 +1442,17 @@ sub GetReadPage {
 	#	$parameter
 	#		for author = author's key hash
 	#		for tag = tag name/value
-	my $title;
-	my $titleHtml;
 
-	my $pageType = shift;
-	my $pageParam;
+	my $title; # plain-text title for <title>
+	my $titleHtml; # title which can have html formatting
 
-	my @files;
+	my $pageType = shift; # page type parameter
+	my $pageParam; # parameter for page type, optionally looked up later
 
-	my $authorKey;
+	my @files; # will contain array of hash-refs, one for each file
+
+	my $authorKey; # stores author's key, if page type is author
+	# #todo figure out why this is needed here
 
 	if (defined($pageType)) {
 		if ($pageType eq 'author') {
@@ -1466,6 +1480,7 @@ sub GetReadPage {
 			my %queryParams;
 			$queryParams{'where_clause'} = $whereClause;
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+
 			@files = DBGetItemList(\%queryParams);
 		}
 		if ($pageType eq 'tag') {
@@ -1556,7 +1571,7 @@ sub GetReadPage {
 		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash);
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
-		$authorInfoTemplate =~ s/\$alias/$authorAliasHtml/;
+		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
 		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
 		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
 		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
@@ -1888,6 +1903,10 @@ sub MakeStaticPages {
 	my $submitPage = GetWritePage();
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
 
+	# Add Event page
+	my $eventAddPage = GetEventAddPage();
+	PutHtmlFile("$HTMLDIR/event.html", $eventAddPage);
+
 
 	# Stats page
 	my $statsPage = GetStatsPage();
@@ -1928,6 +1947,7 @@ sub MakeStaticPages {
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
+	PutHtmlFile("$HTMLDIR/action/event.html", $okPage);
 
 
 	# Manual page
@@ -1957,8 +1977,8 @@ sub MakeStaticPages {
 
 
 	# OpenPGP javascript
-	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/openpgp.js.template'));
-	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/openpgp.worker.js.template'));
+	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
+	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
 
 	# Write form javasript
 	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
@@ -2038,8 +2058,8 @@ sub GetWritePage {
 		$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs));
 
 		#todo break out into IncludeJs();
-#		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
-#		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+		#		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
+		#		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 	} else {
@@ -2053,6 +2073,40 @@ sub GetWritePage {
 		$txtIndex .= $submitForm;
 		$txtIndex .= "Something went wrong. Could not get item count.";
 	}
+
+	return $txtIndex;
+}
+
+
+sub GetEventAddPage { # get html for /event.html
+	# $txtIndex stores html page output
+	my $txtIndex = "";
+
+	my $title = "Add Event";
+	my $titleHtml = "Add Event";
+
+	$txtIndex = GetPageHeader($title, $titleHtml, 'event_add');
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $eventAddForm = GetTemplate('form/event_add.template');
+
+#	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+#		localtime(time);
+#
+#	my $amPm = 0;
+#	if ($hour > 12) {
+#		$hour -= 12;
+#		$amPm = 1;
+#	}
+#
+	$txtIndex .= $eventAddForm;
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs event_add));
+
+#	$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 
 	return $txtIndex;
 }

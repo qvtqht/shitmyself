@@ -1,0 +1,19 @@
+function ShowTimestamps() {
+
+	if (window.getElementsByClassName) {
+		var te = document.getElementsByClassName("timestamp");
+		//timestamp elements
+
+		for (var i = 0; i < te.length; i++) {
+	//		if (!te.id) {
+	//			te.id = te.innerHTML;
+	//		}
+	//		te.innerHTML = te.id + '...';
+			te.innerHTML = '..';
+		}
+
+		setTimeout(ShowTimestamps, 5000);
+	}
+}
+
+ShowTimestamps();
