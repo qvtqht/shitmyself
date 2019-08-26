@@ -412,6 +412,13 @@ function saveId() {
         // store it to localstorage
 		setPrivateKey(privkey);
 
+		if (!window.openpgp) {
+			var script = document.createElement('script');
+			script.src = '/openpgp.js';
+			script.async = false; // This is required for synchronous execution
+			document.head.appendChild(script);
+		}
+
 		var openpgp = window.openpgp;
 
 		openpgp.config.show_version = false;
