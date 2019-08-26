@@ -1,0 +1,4 @@
+
+function UpdateEventEpoch() {
+	var month = document.forms['addevent'].month.value;
+}
