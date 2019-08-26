@@ -1,3 +1,11 @@
+Make forms out of text
+	[ ] abc
+		becomes <input checkbox name=md5(abc)> abc
+	___
+		bcomes field
+	Nothing else is needed for mvp
+
+
 pre-cache voted items per author
 	make available to clients
 

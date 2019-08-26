@@ -1,3 +1,10 @@
+Cut up event_add.template
+	So that the dropdowns are individually generated
+		Then put sane presets into them
+
+shortlink/foobar/sha1
+	added to .htaccess
+
 Non-JS voting links redirect
 	Should redirect to page vote came from
 		And include anchor to item being voted on
