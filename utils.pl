@@ -1555,10 +1555,22 @@ sub FormatForWeb { # replaces some spaces with &nbsp; to preserve text-based lay
 	}
 
 	$text = HtmlEscape($text);
-#	$text =~ s/\n /<br>&nbsp;/g;
-#	$text =~ s/^ /&nbsp;/g;
-#	$text =~ s/  / &nbsp;/g;
+	#	$text =~ s/\n /<br>&nbsp;/g;
+	#	$text =~ s/^ /&nbsp;/g;
+	#	$text =~ s/  / &nbsp;/g;
 	$text =~ s/\n/<br>\n/g;
+
+	return $text;
+}
+
+sub FormatForRss { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
+
+	if (!$text) {
+		return '';
+	}
+
+	$text = HtmlEscape($text);
 
 	return $text;
 }
