@@ -7,7 +7,6 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 //force parameter
 // 1 = does not re-do setTimeout
 // 0 = previous preference values are remembered, and are not re-done
-
 	if (window.localStorage) {
 		var displayValue = 'none'; // hide by default
 		if (GetPrefs('show_advanced') == 1) { // check value of show_advanced preference
@@ -55,15 +54,13 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		if (force || showBeginnerLastAction != displayValue) {
 			var divsToShow = document.getElementsByClassName('beginner');
-			for (var i = 0; i < divsToShow.length; i++) {
-				divsToShow[i].style.display = displayValue;
 
+			for (var i = 0; i < divsToShow.length; i++) {
 				if (displayValue == 'initial' && divsToShow[i].nodeName == 'P') {
 					divsToShow[i].style.display = 'block'; // depending on what you're doing
 				} else if (displayValue == 'initial' && divsToShow[i].nodeName == 'TR') {
 					divsToShow[i].style.display = 'table-row'; // depending on what you're doing
 				} else if (displayValue == 'initial' && (divsToShow[i].nodeName == 'TH' || divsToShow[i].nodeName == 'TD')) {
-//					divsToShow[i].style.display = 'table-cell'; // depending on what you're doing
 					if (divsToShow[i].innerHTML != '') {
 						divsToShow[i].style.display = 'table-cell'; // depending on what you're doing
 					} else {
@@ -97,103 +94,126 @@ function PrefsTest() { //sets an item into localstorage prefs
 }
 
 function GetPrefs(prefKey) { // get prefs value from localstorage
+// prefKey = preference key for key-value pair
+// needs optimizing #todo
 	if (window.localStorage) {
-		var value = localStorage.getItem('p_'+prefKey);
+		var currentPrefs = localStorage.getItem('prefs1');
+		var prefsObj;
+		if (currentPrefs) {
+			prefsObj = JSON.parse(currentPrefs);
+		} else {
+			prefsObj = Object();
+		}
+		var prefValue = prefsObj[prefKey];
 
-		if (!value) {
+		if (!prefValue && prefValue != 0) {
 			if (prefKey == 'beginner') {
-				value = 1;
+				prefValue = 1;
 			}
 		}
 
-		return value;
+		return prefValue;
 	}
-//	var json = localStorage.getItem('preferencesJson');
-//
-//	var objJson;
-//
-//	if (json) {
-//		objJson = JSON.parse($json);
-//	} else {
-//		objJson = Object();
-//	}
-//
-//	console.log(objJson);
-//
-//	return;
 }
-
 
 function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefValue
-//	var json = localStorage.getItem('preferencesJson');
-//
-//	var objJson;
-//
-//	if (json) {
-//		objJson = JSON.parse($json);
-//	} else {
-//		objJson = Object();
-//	}
-//
-//	console.log(objJson);
-//
-//
-//
-////	var prefsJson = objJson.stringify();
-//	var prefsJson = '';
-
-//	localStorage.setItem('preferencesJson', prefsJson);
 	if (window.localStorage) {
-		localStorage.setItem('p_'+prefKey, prefValue); // set to local storage with p_ prefix
+		var currentPrefs = localStorage.getItem('prefs1');
+		var prefsObj;
+		if (currentPrefs) {
+			prefsObj = JSON.parse(currentPrefs);
+		} else {
+			prefsObj = Object();
+		}
+		prefsObj[prefKey] = prefValue;
+
+		var newPrefsString = JSON.stringify(prefsObj);
+
+		localStorage.setItem('prefs1', newPrefsString);
 	}
 }
 
-function showHideCheckbox(id, ths, prefName) {
-	var pane = document.getElementById(id);
-	if (pane) {
-   	pane.style.display=(ths.checked ? 'block' : 'none')
+function showHideCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles affected elements
+// id = id of pane to hide or show; not required
+// ths = "this" of calling checkbox)
+// prefKey = key of preference value to set with checkbox
+//
+// this function is a bit of a mess, could use a refactor #todo
+
+	// this will look for pane with id=id and show/hide it if it exists
+	// used on the profile page
+	if (id) {
+		var pane = document.getElementById(id);
+		if (pane) {
+			pane.style.display=(ths.checked ? 'block' : 'none')
+		}
 	}
 
-   SetPrefs(prefName, (ths.checked ? 1 : 0));
+	// saves checkbox's value as 0/1 value to prefs(prefKey)
+   SetPrefs(prefKey, (ths.checked ? 1 : 0));
 
+	// if checkbox is one of these four, call ShowAdvanced(1)
+	// this will display or hide things based on settings
    if (
-   	prefName == 'show_advanced' ||
-   	prefName == 'beginner' ||
-   	prefName == 'beginner_highlight' ||
-   	prefName == 'advanced_highlight'
+   	prefKey == 'show_advanced' ||
+   	prefKey == 'beginner' ||
+   	prefKey == 'beginner_highlight' ||
+   	prefKey == 'advanced_highlight'
 	) {
    	ShowAdvanced(1);
    }
 }
 
 if (document.getElementById) {
-
+// below is code which sets the checked state of preference checkboxes
+// based on preference state
 	var pane;
 
+	// advanced checkbox of current profile pane
 	pane = document.getElementById('curIdAdv');
 	if (pane && GetPrefs('show_advanced') == 1) {
 		document.getElementById('curIdAdvC').checked = 1;
 		showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
 	}
 
+	// current profile pane (advanced section)
 	pane = document.getElementById('curIdAdv');
-	if (pane && GetPrefs('beginner') == 1) {
-		document.getElementById('beginnerC').checked = 1;
+	if (pane) {
+		//beginner checkbox
+		if (GetPrefs('beginner') == 1) {
+			var cb = document.getElementById('beginnerC');
+			if (cb) {
+				cb.checked = 1;
+			}
+		}
+
+		// beginner_highlight checkbox
+		if (GetPrefs('beginner_highlight') == 1) {
+			var cb = document.getElementById('beginnerHighlight');
+			if (cb) {
+				cb.checked = 1;
+			}
+		}
+
+		// advanced_highlight checkbox
+		if (GetPrefs('advanced_highlight') == 1) {
+			var cb = document.getElementById('advancedHighlight');
+			if (cb) {
+				cb.checked = 1;
+			}
+		}
 	}
 
-	pane = document.getElementById('curIdAdv')
-	if (pane && GetPrefs('beginner_highlight') == 1) {
-		document.getElementById('beginnerHighlight').checked = 1;
-	}
-
-	if (pane && GetPrefs('advanced_highlight') == 1) {
-		document.getElementById('advancedHighlight').checked = 1;
-	}
-
+	// create profile pane
 	pane = document.getElementById('creaIdAdv');
-	if (pane && GetPrefs('show_advanced') == 1) {
-		document.getElementById('creaIdAdvC').checked = 1;
-		showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
+	if (pane) {
+		if (GetPrefs('show_advanced') == 1) {
+			var cb = document.getElementById('creaIdAdvC');
+			if (cb) {
+				cb.checked = 1;
+				showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
+			}
+		}
 	}
 
 	ShowAdvanced(0); // call ShowAdvanced
