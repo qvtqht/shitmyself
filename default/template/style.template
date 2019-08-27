@@ -102,3 +102,7 @@ form#compose {
     background-color: #80ff80;
     padding: 5pt;
 }
+
+.advanced, .beginner {
+    padding: 2pt;
+}
