@@ -1,19 +1,53 @@
 function ShowTimestamps() {
+	var d = new Date();
+	var curTime = Math.floor(d.getTime() / 1000);
 
-	if (window.getElementsByClassName) {
-		var te = document.getElementsByClassName("timestamp");
-		//timestamp elements
-
-		for (var i = 0; i < te.length; i++) {
-	//		if (!te.id) {
-	//			te.id = te.innerHTML;
-	//		}
-	//		te.innerHTML = te.id + '...';
-			te.innerHTML = '..';
+	var te = document.getElementsByClassName("timestamp");
+	for (var i = 0; i < te.length; i++) {
+		if (te[i].style.textBefore) {
+		} else {
+			te[i].style.textBefore = te[i].innerHTML;
 		}
-
-		setTimeout(ShowTimestamps, 5000);
+		te[i].innerHTML = LongAgo(0 - (curTime - te[i].style.textBefore));
 	}
+
+	setTimeout(ShowTimestamps, 5000);
+}
+
+function LongAgo(seconds) {
+	var flip = 0;
+	if (seconds < 0) {
+		flip = 1;
+		seconds = 0 - seconds;
+	}
+
+	if (seconds >= 60) {
+		seconds = Math.ceil(seconds / 60);
+
+		if (seconds >= 60) {
+			seconds = Math.ceil(seconds / 60);
+
+			if (seconds >= 24) {
+				seconds = Math.ceil(seconds / 24);
+
+				seconds = seconds + ' hours';
+			}
+		} else {
+			seconds = seconds + ' minutes';
+		}
+	} else {
+		seconds = seconds + ' seconds';
+	}
+
+	if (flip) {
+		return seconds + ' seconds ago';
+	}
+
+	if (seconds > 0) {
+		return seconds + ' from now';
+	}
+
+	return 'just now!';
 }
 
 ShowTimestamps();
