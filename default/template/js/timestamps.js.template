@@ -14,7 +14,9 @@ function ShowTimestamps() {
 	setTimeout(ShowTimestamps, 5000);
 }
 
-function LongAgo(seconds) {
+function LongAgo(seconds) { // returns string with time units
+// takes seconds as parameter
+// returns a string like
 	var flip = 0;
 	if (seconds < 0) {
 		flip = 1;
@@ -40,7 +42,7 @@ function LongAgo(seconds) {
 	}
 
 	if (flip) {
-		return seconds + ' seconds ago';
+		return seconds + ' ago';
 	}
 
 	if (seconds > 0) {
