@@ -29,6 +29,9 @@
     <p>
         * <a href="#">Hard reset</a> (Clears everything)
     </p>
+    <p>
+        * <a href="#">EMERGENCY STOP</a> (Pull the handbrake)
+    </p>
 </form>
 
 <!-- / id_admin.template -->
