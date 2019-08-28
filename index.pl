@@ -765,7 +765,7 @@ sub IndexTextFile {
 
 					my $reconLine = "brc/$aveHours:$aveMinutes/$streetLetter";
 
-					$message =~ s/$reconLine/[)'( $aveHours:$aveMinutes at $streetLetter]/g;
+					$message =~ s/$reconLine/[BRC Location: $aveHours:$aveMinutes at $streetLetter]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
@@ -932,9 +932,13 @@ sub IndexTextFile {
 
 					DBAddPageTouch('tag', 'vote');
 
-					if (IsAdmin($gpgKey)) {
-						if ($voteValue eq 'remove' || $voteValue eq 'flag') {
-							WriteLog('Found post by an admin requesting remove of file');
+					if ($voteValue eq 'remove') {
+						my $voteItemAuthor = DBGetItemAuthor($voteFileHash) || '';
+
+						if ($gpgKey && (IsAdmin($gpgKey) || ($gpgKey eq $voteItemAuthor))) {
+							WriteLog('Found post requesting remove of file');
+
+							#todo there are bugs here somewhere, messages are not removed completely
 
 							AppendFile('log/deleted.log', $voteFileHash);
 							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
