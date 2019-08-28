@@ -1,17 +1,18 @@
+
 function ShowTimestamps() {
 	var d = new Date();
 	var curTime = Math.floor(d.getTime() / 1000);
 
 	var te = document.getElementsByClassName("timestamp");
 	for (var i = 0; i < te.length; i++) {
-		if (te[i].style.textBefore) {
+		if (te[i].title) {
 		} else {
-			te[i].style.textBefore = te[i].innerHTML;
+			te[i].setAttribute('title', te[i].innerHTML);
 		}
-		te[i].innerHTML = LongAgo(0 - (curTime - te[i].style.textBefore));
+		te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
 	}
 
-	setTimeout(ShowTimestamps, 5000);
+	setTimeout(ShowTimestamps, 15000);
 }
 
 function LongAgo(seconds) { // returns string with time units
@@ -32,6 +33,8 @@ function LongAgo(seconds) { // returns string with time units
 			if (seconds >= 24) {
 				seconds = Math.ceil(seconds / 24);
 
+				seconds = seconds + ' days';
+			} else {
 				seconds = seconds + ' hours';
 			}
 		} else {
