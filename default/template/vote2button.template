@@ -3,6 +3,5 @@
         href="/action/vote2.html?vote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on"
         class="$class"
         onclick="return signVote(this, 'vote/$fileHash/$ballotTime/$voteValue/$checksum');"
-        target=_blank
     >$voteCaption</a>
     <!-- / vote2button.template -->
