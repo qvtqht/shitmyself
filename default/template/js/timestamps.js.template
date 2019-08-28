@@ -48,11 +48,7 @@ function LongAgo(seconds) { // returns string with time units
 		return seconds + ' ago';
 	}
 
-	if (seconds > 0) {
-		return seconds + ' from now';
-	}
-
-	return 'just now!';
+	return seconds + ' from now';
 }
 
 ShowTimestamps();
