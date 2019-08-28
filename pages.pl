@@ -1939,7 +1939,7 @@ sub MakeStaticPages {
 
 
 	# Ok page
-	my $okPage = GetTemplate('actionvote.template');
+	my $okPage = GetTemplate('action_ok.template');
 
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
