@@ -9,6 +9,7 @@ rm -rfv html/*.js html/*/*.js html/*/*/*.js
 rm -rfv html/*.php html/*/*.php html/*/*/*.php
 rm -rfv html/.htaccess
 rm -rfv html/*.zip
+rm -rfv html/rss.xml html/rss.txt
 rm -rfv config/template/*
 rm -rfv config/string/*
 
