@@ -40,12 +40,12 @@
 		</p>
 
 		<p>
-			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="showHideCheckbox('abcdefgh', this, 'advanced_highlight');"> Highlight advanced things</label>
+			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="showHideCheckbox(0, this, 'advanced_highlight');"> Highlight advanced things</label>
 		</p>
 
 		<p>
-			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox('abcdefgh', this, 'beginner');"> Display beginner hints</label><br>
-			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="showHideCheckbox('abcdefgh', this, 'beginner_highlight');"> Highlight beginner hints</label></span>
+			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
+			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="showHideCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints</label></span>
 		</p>
 
 		<p id=def>
