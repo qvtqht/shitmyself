@@ -209,16 +209,17 @@ sub GetEventsPage {
 			$eventItemAuthor = '';
 		}
 
-		my $eventTimeUntil = $eventTime - GetTime();
-		if ($eventTimeUntil > 0) {
-			$eventTimeUntil = 'in ' . GetSecondsHtml($eventTimeUntil);
-		} else {
-			$eventTimeUntil = $eventTimeUntil * -1;
-			$eventTimeUntil = GetSecondsHtml($eventTimeUntil) . ' ago';
-		}
+		my $eventTimeUntil = $eventTime + $eventDuration;
+#		my $eventTimeUntil = $eventTime - GetTime();
+#		if ($eventTimeUntil > 0) {
+#			$eventTimeUntil = 'in ' . GetSecondsHtml($eventTimeUntil);
+#		} else {
+#			$eventTimeUntil = $eventTimeUntil * -1;
+#			$eventTimeUntil = GetSecondsHtml($eventTimeUntil) . ' ago';
+#		}
 
 		if ($eventTime) {
-			$eventTime = EpochToHuman($eventTime);
+#			$eventTime = EpochToHuman($eventTime);
 		} else {
 			$eventTime = '(no time)';
 		}
@@ -251,7 +252,7 @@ sub GetEventsPage {
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs));
+	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs timestamps));
 
 	return $txtPage;
 
