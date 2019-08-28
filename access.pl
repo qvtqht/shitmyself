@@ -14,6 +14,8 @@ use Digest::MD5 qw(md5_hex);
 use HTML::Entities qw(decode_entities);
 use URI::Encode qw(uri_decode);
 use Digest::SHA qw(sha512_hex);
+use POSIX qw( mktime );
+#use POSIX::strptime qw( strptime );
 
 ## CONFIG AND SANITY CHECKS ##
 
@@ -495,10 +497,89 @@ sub ProcessAccessLog {
 			}
 		}
 
+		my $eventAction = '/action/event.html?';
+		if (substr($file, 0, length($eventAction)) eq $eventAction) {
+			#			http://localhost:3000/gracias.html
+			#		x		?event_name=event_name
+			#		x		&brc_ave=9:55
+			#		x		&brc_street=Q
+			#		x		&event_location=location
+			#				&month=11
+			#				&day=11
+			#				&year=2025
+			#				&hour=11
+			#				&minute=15
+			#				&am_pm=1
+			#				&event_details=11%3A11%3A11
+
+			WriteLog("/action/event.html");
+
+			my $eventQuery = substr($file, index($file, '?') + 1);
+
+			my @eventAtoms = split('&', $eventQuery);
+
+			my %ep = (); # %eventParams
+
+			foreach my $param (@eventAtoms) {
+				my ($key, $value) = split('=', $param);
+
+				$ep{$key} = $value;
+			}
+
+			my $newFile = '';
+
+			if (exists($ep{'event_name'})) {
+				#todo validate/sanitize
+				$newFile .= $ep{'event_name'};
+				$newFile .= "\n\n";
+			}
+
+			if (exists($ep{'brc_ave'}) && exists($ep{'brc_street'})) {
+				#todo validate/sanitize
+				$newFile .= 'brc/' . $ep{'brc_ave'} . '/' . $ep{'brc_street'} . "\n\n";
+			}
+
+			if (exists($ep{'event_location'})) {
+				if (trim($ep{'event_location'}) ne '') {
+					$newFile .= 'Location: ' . uri_decode($ep{'event_location'});
+					$newFile .= "\n\n";
+				}
+			}
+
+			if (exists($ep{'month'}) && exists($ep{'day'}) && exists($ep{'year'})) {
+				if (exists($ep{'hours'}) && exists($ep{'minutes'})) {
+					if (exists($ep{'am_pm'})) {
+					} else {
+					}
+				} else {
+					my $eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'};
+#					my $eventDate = ParseDate($eventDateString);
+
+#					$newFile .= 'event/' . $eventDate . '/1';
+#					$newFile .= "\n\n";
+				}
+			}
+
+			#todo finish the other params
+
+			if ($newFile) {
+				#$newFile .= "\n\n(Anonymously submitted without a signature.)";
+
+				my $filename;
+				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
+
+				PutFile('html/txt/' . $filename, $newFile);
+#
+#				if (GetConfig('admin/server_key_id')) {
+#					ServerSign('html/txt/' . $filename);
+#				}
+			}
+		}
+
 		my $voteAction = '/action/vote2.html?';
 		if (substr($file, 0, length($voteAction)) eq $voteAction) {
 			#				http://localhost:3000/action/vote2.html?
-			#				addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
+			#					addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
 			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Finformative%2F435fcd62a628d7b918e243fe97912d7b=on
 			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ffriendly%2F435fcd62a628d7b918e243fe97912d7b=on
 			#					&addtag%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fmeta%2F435fcd62a628d7b918e243fe97912d7b=on
