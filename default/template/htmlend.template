@@ -1,7 +1,7 @@
 <hr>
 <footer>
     <span class=advanced>$footer</span>
-    <p class=disclaimer><small>
+    <p class="disclaimer advanced"><small>
         $disclaimer
     </small></p>
     <span class=advanced>$ssiFooter</span>
