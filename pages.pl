@@ -1429,7 +1429,7 @@ sub GetScoreboardPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps));
 
 	return $txtIndex;
 }
