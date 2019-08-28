@@ -31,7 +31,7 @@ if (window.localStorage) {
 				script.src = '/openpgp.js';
 				script.async = false; // This is required for synchronous execution
 				document.head.appendChild(script);
-			r}
+			}
 
 			var script2 = document.createElement('script');
 			script2.src = '/crypto.js';
