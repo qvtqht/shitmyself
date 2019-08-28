@@ -164,67 +164,6 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 
 <!-- -->
 
-<a name=tokens><h3>Tokens</h3></a>
-
-<p>Actions like replying, voting, configuring, etc. is done with text-based tokens.</p>
-
-<p><b>Remember to include tokens in your signed message.</b></p>
-
-<h4>Replies</h4>
-
-<p>Example token: >>0123456789abcdef</p>
-
-<p>On a line by itself, this will reference message with that ID (git's "SHA-1")</p>
-
-<h4>Voting</h4>
-
-<p>Example: vote/0123456789abcdef/legit/1550000000/2753939054945</p>
-
-<p>This will add a vote of "legit" to the same item, with a timestamp of 15500... The last bit is the anti-CSRF checksum, which
-    is currently ignored if the message is signed, but verified by the server (and signed) at the time of reading from access.log</p>
-
-<h4>Configuration</h4>
-
-<p>Example: setconfig/key=value</p>
-
-<p>Restricted to admin, unless config/anyone_can_config=1 and/or config/signed_can_config=1.</p>
-
-<p>Settings under the admin/ tree are always restricted to admin.</p>
-
-<p>Value is a string. If value looks like an item identifier (40-character-long lowercase hex string = [a-f0-9]{40}), a lookup will be attempted.</p>
-
-<p>If lookup succeeds, the config will be set to that item's contents, after signature parsing. Otherwise, the value will be treated as a string.</p>
-
-<h4>Hashtags</h4>
-
-<p>#example</p>
-
-<p>Translates to a tag-item vote being added.</p>
-
-<h4>Vouching</h4>
-
-<p>Example: vouch/F82FCD75AAEF7CC8/20</p>
-
-<p>Adds 20 vouch points to fingerprint F82FCD75AAEF7CC8.</p>
-
-<p>Requires signing by admin user.</p>
-
-<h4>Timestamp and Client Fingerprint</h4>
-
-<p>Example: addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911</p>
-
-<p>Example: addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6</p>
-
-<p>Records item as having been added at that time and/or by that client ID.</p>
-
-<h4>Event</h4>
-
-<p>Schedules an event.</p>
-
-<p>Example: addevent/1551234567/3600/csrf</p>
-
-<p>Params: start time (epoch), duration (seconds)</p>
-
 
 
 <!-- -->
@@ -256,39 +195,6 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>Copy the whole thing, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
 
 <p>You have now aliased your name to your key fingerprint.</p>
-
-<a name=commands><h3>Commands</h3></a>
-
-<!-- -->
-
-<h4>Introduction</h4>
-
-<p>Commands are in the form of simple tokens, length-constricted, ASCII only.</p>
-
-<h4>Adding a Vote</h4>
-
-<p>Voting is the process of applying a <b>tag</b> to an <b>item</b>.</p>
-
-<p style="font-size: larger">item + tag [+ author] = vote</p>
-
-<p>A voting token has the following parameters</p>
-
-<p><code>vote/hash/time/tag/checksum</code></p>
-
-<p>The checksum is generated on the server, using the following formula:</p>
-
-<code>MD5( concat(file hash, ballot creation time, secret) )</code>
-
-<p>The secret string is stored in config/admin/secret, and a random one is automatically generated if the config is empty.</p>
-
-<p>Example:</p>
-
-<p>
-vote/7e2418eda7c43c163b4cd426e9d5c26f1c8d8217/1544163475/agree/a4f883323400d18acc6c0f6fe625b6aa<br>
-vote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
-<br>
-
-</p>
 
 <!-- -->
 
@@ -386,8 +292,12 @@ vote/&lt;item hash&gt;/&lt;time&gt;/&lt;tag&gt;/&lt;checksum&gt;
 
 <p>The scripts are on GitHub here: <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
 
-<a name=other><h3>Other Questions</h3>
+<!-- -->
 
-<a href="write.html">Please ask them using the Write page</a>.
+<a name=other><h3>Other Resources</h3>
+
+<p><a href="tokens_reference.html">Tokens Reference</a>.</p>
+
+<p><a href="write.html">If you have questions, please ask them using Write page</a>.</p>
 
 <!-- / manual.template -->

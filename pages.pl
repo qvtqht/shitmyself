@@ -1969,6 +1969,22 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
 
+	# Tokens Reference page
+	my $tokensPage = GetPageHeader("Tokens Reference", "Tokens Reference", 'manual_tokens');
+
+	$tokensPage .= GetTemplate('maincontent.template');
+
+	my $tokensPageTemplate = GetTemplate('page/manual_tokens.template');
+
+	$tokensPage .= $tokensPageTemplate;
+
+	$tokensPage .= GetPageFooter();
+
+	$tokensPage = InjectJs($tokensPage, qw(avatar prefs));
+
+	PutHtmlFile("$HTMLDIR/tokens_reference.html", $tokensPage);
+
+
 	# Blank page
 	PutHtmlFile("$HTMLDIR/blank.html", "");
 

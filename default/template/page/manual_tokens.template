@@ -1,0 +1,113 @@
+<!-- manual_tokens.template -->
+
+<h1>Tokens Reference</h1>
+
+<h2>Introduction</h2>
+
+<p>Actions like replying, voting, configuring, etc. is done with text-based tokens.</p>
+
+<p>A token is just a bit of text which tells the system to do something.</p>
+
+<h4>Adding a Vote</h4>
+
+<!-- -->
+
+<h4>Reply</h4>
+
+<p>Example: <code>>>0123456789abcdef</code></p>
+
+<p>On a line by itself, this will reference the message which has that identifier.)</p>
+
+
+<h4>Vote</h4>
+
+<p>Voting is the process of applying a <b>tag</b> to an <b>item</b>.</p>
+
+<p style="font-size: larger">item + tag [+ author] = vote</p>
+
+<p>Example: <code>vote/0123456789abcdef/accept/1550000000</code></p>
+
+<p>Add vote of "accept" to the referenced item, with a timestamp of 1550000000.</p>
+
+<p>
+	Some vote actions carry additional consequences.
+	For example, voting "friend" on a user, will add them to your friends list.
+	Voting "remove" on an item which is yours (or as admin) results in removal of that item.
+</p>
+
+
+<h4>Configure</h4>
+
+<p>The setconfig and resetconfig tokens allow changing configuration.</p>
+
+<p>Example: <code>setconfig/html/color_avatars=1</code></p>
+
+<p>Example: <code>setconfig/string/en/page_intro/gracias=dc4f0b7833c04bcdf0a5e89b4be6bc9e11a1518f</code></p>
+
+<p>Example: <code>resetconfig/string/en/page_intro/gracias</code></p>
+
+<p>Settings under the admin/ tree are always restricted to admin.</p>
+
+<p>
+	Notes:
+	Value is a string.
+	If value looks like an item identifier, a lookup will be attempted.
+	If the item is found, its contents will be used as the value.
+</p>
+
+<p>Restricted to admin users, unless config/anyone_can_config=1 and/or config/signed_can_config=1.</p>
+
+
+<h4>Hashtags</h4>
+
+<p>Example: <code>#meta</code></p>
+
+<p>Translates to a tag-item vote being added.</p>
+
+
+<h4>Vouch</h4>
+
+<p>Gives specified user extra voting weight, used for scoring.</p>
+
+<p>Example: <code>vouch/F82FCD75AAEF7CC8/20</code></p>
+
+<p>(Adds 20 vouch points to fingerprint F82FCD75AAEF7CC8.)</p>
+
+<p>Requires signing by admin user.</p>
+
+
+<h4>Timestamp and Client Fingerprint</h4>
+
+<p>Example: <code>addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911</code></p>
+
+<p>Example: <code>addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6</code></p>
+
+<p>Records item as having been added at that time and/or by that client ID.</p>
+
+
+<h4>Event</h4>
+
+<p>Schedules an event.</p>
+
+<p>Example: <code>event/1551234567/3600</code></p>
+
+<p>Params: start time (epoch), duration (seconds)</p>
+
+
+<h4>Latitude-Logitude Location</h4>
+
+<p>Specifies an Earth location, in latitude-longitude format.</p>
+
+<p>Example: <code>latlong/-44.1234567,12.1234567</code></p>
+
+<p>Two negative or positive decimal values, with up to 9 digits after the decimal point.</p>
+
+
+<h4>Black Rock City (Burning Man) Location</h4>
+
+<p>Specifies an address in Black Rock City, in the form of avenue (between 2:00 - 10:00) and street (one letter A-ZZ)</p>
+
+<p>Example: <code>brc/4:20/A</code></p>
+
+
+<!-- / manual_tokens.template -->
