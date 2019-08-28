@@ -5,15 +5,20 @@
 
         You can continue to use the site without changing anything.<br><br>
 
-        Using profile features without JavaScript <i>if</i> requires GPG/PGP.<br><br>
+        <hr>
 
-        Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
+        <a href="/write.html"><b>Write something on this site</b></a><br><br>
+
+        <a href="/top/hastext.html"><b>Read what others have written</b></a>
 
         <hr>
 
-        <a href="/write.html">Write something on this site</a><br><br>
+        <b>Experts</b><br><br>
 
-        <a href="/top/hastext.html">Read what others have written</a>
+        Using profile features without JavaScript requires GPG/PGP.<br><br>
+
+        Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
+
     </p>
 </noscript>
 
