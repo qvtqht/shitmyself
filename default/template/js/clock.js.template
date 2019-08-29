@@ -4,16 +4,23 @@
 			n = Math.ceil(n/1000);
 
 			if (document.getElementById) {
+				var clockContainer = document.getElementById('clockContainer');
+				if (clockContainer) {
+					clockContainer.style.display = 'inline';
+				}
+
 				var clock =	document.getElementById('clock');
+				if (clock) {
 
-				clock.innerHTML = n
-//
-//				if (clock.style.display == 'none') {
-//					clock.style.display = 'float';
-//				}
-				clock.style.display = 'inline';
+					clock.innerHTML = n
+	//
+	//				if (clock.style.display == 'none') {
+	//					clock.style.display = 'float';
+	//				}
+					clock.style.display = 'inline';
 
-				setTimeout(setclock, 500);
+					setTimeout(setclock, 500);
+				}
 			}
 		}
 
