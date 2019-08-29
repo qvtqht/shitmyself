@@ -28,4 +28,12 @@ function UpdateTimeString() {
 	}
 
 	document.forms['addevent'].date_yyyy.value = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+
+	var d = new Date(year + '-' + month + '-' + day + ' ' + hour + ':' + minute);
+	var dd = d.getTime();
+	dd = Math.ceil(dd / 1000);
+
+	document.forms['addevent'].date_epoch.value = dd;
+
+
 }
