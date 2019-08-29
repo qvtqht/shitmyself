@@ -20,7 +20,7 @@
     </p>
 
     <p>
-        <label for=creaIdAdvC><input type=checkbox id=creaIdAdvC onchange="showHideCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
+        <label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="showHideCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
     </p>
 
     <span id=creaIdAdv style="display:none">

@@ -3,7 +3,7 @@ function ShowTimestamps() {
 	var d = new Date();
 	var curTime = Math.floor(d.getTime() / 1000);
 
-	var te = document.getElementsByClassName("timestamp");
+	var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
 	for (var i = 0; i < te.length; i++) {
 		if (te[i].title) {
 		} else {
@@ -48,7 +48,11 @@ function LongAgo(seconds) { // returns string with time units
 		return seconds + ' ago';
 	}
 
-	return seconds + ' from now';
+	if (seconds != '0 seconds') {
+		return seconds + ' from now';
+	}
+
+	return 'just now!';
 }
 
 ShowTimestamps();

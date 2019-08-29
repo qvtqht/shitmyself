@@ -20,7 +20,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		if (force || showAdvancedLastAction != displayValue) {
 			// thank you stackoverflow
-			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array
+			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array #todo nn3 compat
 			for (var i = 0; i < divsToHide.length; i++) {
 				//divsToHide[i].style.visibility = "hidden"; // or
 				if (displayValue == 'initial' && divsToHide[i].nodeName == 'P') {
@@ -53,7 +53,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 		}
 
 		if (force || showBeginnerLastAction != displayValue) {
-			var divsToShow = document.getElementsByClassName('beginner');
+			var divsToShow = document.getElementsByClassName('beginner');//#todo nn3 compat
 
 			for (var i = 0; i < divsToShow.length; i++) {
 				if (displayValue == 'initial' && divsToShow[i].nodeName == 'P') {
@@ -208,10 +208,10 @@ if (document.getElementById) {
 	pane = document.getElementById('creaIdAdv');
 	if (pane) {
 		if (GetPrefs('show_advanced') == 1) {
-			var cb = document.getElementById('creaIdAdvC');
+			var cb = document.getElementById('chkShowAdvanced');
 			if (cb) {
 				cb.checked = 1;
-				showHideCheckbox('creaIdAdv', document.getElementById('creaIdAdvC'), 'show_advanced');
+				showHideCheckbox('creaIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
 			}
 		}
 	}

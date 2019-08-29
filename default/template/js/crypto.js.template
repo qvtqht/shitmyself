@@ -25,8 +25,8 @@ function getPrivateKey() { // get private key from local storage
 }
 
 function buttonSignOut(t) {
-	if (window.iii) {
-		logOut(t);
+	if (window.iii) { //# iii is state of signout (1 if already clicked)
+		logOut(t); //
 	} else {
 		window.privKeyTrash = getPrivateKey();
 
