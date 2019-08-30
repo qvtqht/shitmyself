@@ -13,6 +13,8 @@ use File::Basename qw( fileparse );
 use File::Path qw( make_path );
 use File::Spec;
 
+use Date::Parse;
+
 use lib 'lib';
 
 use URI::Encode qw(uri_decode);
@@ -113,6 +115,14 @@ sub GetCache {
 
 	# return contents of file at that path
 	return GetFile($cacheName);
+}
+
+sub ParseDate { # takes $stringDate, returns epoch time
+	my $stringDate = shift;
+
+	my $time = str2time($stringDate);
+
+	return $time;
 }
 
 #sub LookForDate {
