@@ -10,7 +10,7 @@ $styleSheet
 </style>
 </head>
 <body link="$primaryColor" vlink="#806080" text="$textColor" bgcolor="$secondaryColor">
-<div id=amain><a href="#maincontent">Skip to main content</a>
+<div id=amain><a href="#maincontent">Skip to main content</a></div>
 $clock
 <h2 class=menu><a id=logo class="logo beginner" title="Home" href="/">$logoText<br></a>
 $menuItems</h2>
