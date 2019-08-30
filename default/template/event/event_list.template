@@ -1,5 +1,5 @@
 <p>
-	<a href="/event.html">Add New Event</a>
+	<a href="/event.html"><b><blink>Add New Event</blink></b></a>
 </p>
 
 $eventsList
