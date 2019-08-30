@@ -18,8 +18,6 @@ require './sqlite.pl';
 
 my $HTMLDIR = "html";
 
-
-
 sub GenerateSomeKindOfPage {
 	my $pageName = shift;
 
@@ -202,7 +200,8 @@ sub GetEventsPage {
 		}
 
 		if ($eventTitle) {
-			$eventTitle = '<a href="' . GetHtmlFilename($eventItemHash) . '">' . $eventTitle . '</a>';
+			$eventTitle = HtmlEscape($eventTitle);
+			$eventTitle = '<a href="' . GetHtmlFilename($eventItemHash) . '">' . $eventTitle . '</a>'; #todo templatify
 		}
 
 		if (!$eventItemAuthor) {
@@ -1092,7 +1091,13 @@ sub GetPageHeader {
 	my $clock = '';
 	if (GetConfig('clock')) {
 		$clock = GetTemplate('clock.template');
+
 		my $currentTime = GetTime();
+
+		if (GetConfig('admin/ssi/enable')) {
+			$currentTime = GetTemplate('clock_ssi.template');
+		}
+
 		$clock =~ s/\$currentTime/$currentTime/;
 	}
 
@@ -1950,23 +1955,48 @@ sub MakeStaticPages {
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/event.html", $okPage);
 
+	{
+		# Manual page
+		my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
 
-	# Manual page
-	my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
+		$tfmPage .= GetTemplate('maincontent.template');
 
-	$tfmPage .= GetTemplate('maincontent.template');
+		my $tfmPageTemplate = GetTemplate('page/manual.template');
 
-	my $tfmPageTemplate = GetTemplate('page/manual.template');
+		$tfmPage .= $tfmPageTemplate;
 
-	$tfmPage .= $tfmPageTemplate;
+		$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
 
-	$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
+		$tfmPage .= GetPageFooter();
 
-	$tfmPage .= GetPageFooter();
+		$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
 
-	$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
+		PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
-	PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
+	}
+
+	{
+		# Advanced Manual page
+		my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
+
+		$tfmPage .= GetTemplate('maincontent.template');
+
+		my $tfmPageTemplate = GetTemplate('page/manual_advanced.template');
+
+		my $writeForm = GetTemplate('form/write2.template');
+		$tfmPageTemplate =~ s/\$writeForm/$writeForm/g;
+
+		$tfmPage .= $tfmPageTemplate;
+
+		$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
+
+		$tfmPage .= GetPageFooter();
+
+		$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
+
+		PutHtmlFile("$HTMLDIR/manual_advanced.html", $tfmPage);
+
+	}
 
 
 	# Tokens Reference page

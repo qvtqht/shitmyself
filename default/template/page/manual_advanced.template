@@ -1,0 +1,181 @@
+<h1>Manual</h1>
+
+<h2>Introduction</h2>
+
+<p>Please enjoy this manual, and report any inaccuracies or potential for improvement.</p>
+
+$writeForm
+
+<h3>These Features May Be Confusing At First</h3>
+
+<ul>
+	<li>Your profile key lives on your device, not on this website or server.</li>
+	<li>This means that you own your profile, not this website or server.</li>
+	<li>This entire forum can be exported, migrated, cloned, and forked, without restriction.</li>
+	<li>Your profile stays on your device, and you can use it between any other forums.</li>
+	<li>Using the same profile on multiple devices and/or backing it up requires copying and pasting of a large blob of text.</li>
+</ul>
+
+
+<h3>Terminology and Notation</h3>
+
+<p><b>item</b></p>
+
+<p>An item is one "something" that has been added to the message board. Items are the most basic elements, on which everything else is built.</p>
+
+<p>Everything that happens on the message board is an item. For example, a text that someone has posted is an item, and so is a user profile, a vote, a reply, etc.</p>
+
+<p>Items are stored as plain text files (.txt), one of the most common and supported file formats, so that they can be easily inspected.</p>
+
+<p>Items are identified with a 40-digit "hash", which looks like this: <code><a href="/6b/50/6b50a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a8112fde3a6276cb0c5b9cd8c949bc1625d0</a></code>. Sometimes you may see it shortened, like this: <code><a href="/6b/50/a8112fde3a6276cb0c5b9cd8c949bc1625d0.html">6b50a811..</a></code></p>
+
+<p>(more to come)</p>
+
+<!-- -->
+
+
+<a name=gpg><h3>How to use GPG</h3></a>
+
+<h4>Summary for Experts</h4>
+
+<p>Creating a profile: Generate a PGP key, post public key.</p>
+
+<p>Posting stuff as your profile: sign with GPG, paste into textbox.</p>
+
+<h4>More descriptive version</h4>
+
+<p>You will need to <b>generate a key</b> and then <b>sign your messages</b>. Piece of cake.</p>
+
+<!-- -->
+
+<a name=sign><h3>Writing As Yourself</h3></a>
+
+<p>To write something under your new profile, you will need to sign your text.</p>
+
+<p>First, write the text that you want to post. Once you have finished writing it, save it to a .txt file.</p>
+
+<p>Look for the command to "Sign" (not encrypt) your text in your GPG software.</p>
+
+<p>Some software has no such option. In this case, you should use the "Encrypt" command, but ensure that the "To:" field is blank.</p>
+
+<p>You should end up with a big block of text that begins with "<tt>-----BEGIN PGP SIGNED MESSAGE-----</tt>"</p>
+
+<p>Copy this entire block of text, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
+
+<p>That's it!</p>
+
+<!-- -->
+
+
+<a name=uploadkey><h3>Uploading Your Public Key</h3></a>
+
+<p>Look for the option to export your public key in your software.</p>
+
+<p>You should end up with a block of text that starts with "<tt>-----BEGIN PGP PUBLIC KEY BLOCK-----</tt>".
+
+<p>Copy the whole thing, including the <tt>-----</tt> part, and submit it via the <a href="/write.html">Write</a> page.</p>
+
+<p>You have now aliased your name to your key fingerprint.</p>
+
+<!-- -->
+
+
+<!-- -->
+
+<a name=gpgcli><h3>Signing With Command-Line GPG</h3></a>
+
+<h4>Check GPG Version</h4>
+
+<p><tt>gpg --version</tt></p>
+
+<p>If you don't have GnuPG installed, go here: <a href="https://www.opengpg.org/">https://www.opengpg.org/</a></p>
+
+<h4>Generate Key Pair</h4>
+
+<p><tt>gpg --gen-key</tt></p>
+
+<h4>Export Public Key</h4>
+
+<p><tt>gpg --armor --export</tt></p>
+
+<h4>Sign Message in Text File</h4>
+
+<p><tt>gpg --clearsign example.txt</tt></p>
+
+<h4>Sign Message After Typing It</h4>
+
+<p><tt>gpg --clearsign</tt></p>
+
+<p>Start typing your message. When you're finished, press Enter, then ^D (Ctrl+D).</p>
+
+<!-- -->
+
+
+<a name=other><h3>Other Resources</h3></a>
+
+<p><a href="tokens_reference.html">Tokens Reference</a>.</p>
+
+<p><a href="write.html">If you have questions, please ask them using Write page</a>.</p>
+
+<!-- -->
+
+<a name=clone><h3>Cloning</h3></a>
+
+<p>You can easily clone this message board.</p>
+
+<p>There are no "secrets" stored here (e.g. passwords, private keys, password hashes), except the anti-CSRF salt.</p>
+
+<p>Any signing accounts are controlled by the users' private keys.</p>
+
+<p>An hourly zip of the entire site can be downloaded here: <a href="/hike.zip">/hike.zip</a>, including the git repo.</p>
+
+<p>The scripts are on GitHub here: <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
+
+<!-- -->
+
+<h4>Server Key</h4>
+
+<p>The Server key is set by first generating or importing the whole key into the server's keychain.</p>
+
+<p>The Server key is used for signing (and in the process also timestamping) various events that happen on the server.</p>
+
+<p>This ensures that the items were not posted by a random.</p>
+
+<p>The following actions are currently server-signed:</p>
+
+<p>Admin user changes. Server-signed notice is posted.</p>
+
+<p>Version changed. Server-signed "changelog" is posted, which includes the comment from the current version's commit, as well as all the previous commits that came before it, up to the most recent commit included in a changelog.</p>
+
+<p>Client fingerprint and timestamp for items that are posted where the user requests this.</p>
+
+<!-- -->
+
+
+<a name=admin><h3>Admin Stuff</h3></a>
+
+<p>There is planned support in the near future for roles, multiple admins, etc. in the near future.</p>
+
+<p>That said, this software currently supports two roles: Admin, and Server. Both are optional.</p>
+
+<h4>Admin User</h4>
+
+<p>The Admin key is set by putting the admin's public key, ASCII-armored, into <code>hike/admin.key</code>.
+
+<p>This user currently holds the following special powers:</p>
+
+<h5>Vouch</h5>
+
+<p>The <code>vouch</code> token can only be used by the admin.</p>
+
+<h5>Remove</h5>
+
+<p>The <code>remove</code> tag, when applied by the admin user, will cause an item to be removed at the nearest opportunity.</p>
+
+<p>All of the tokens in the removed item are undone at the next rebuild.</p>
+
+<h5>SetConfig</h5>
+
+<p>The <code>setconfig</code> token can always be applied by the admin.</p>
+
+<p>Settings under the <code>config/admin/</code> directory can only be set by the admin user.</p>
