@@ -4,6 +4,6 @@
     <p class="disclaimer advanced"><small>
         $disclaimer
     </small></p>
-    <span class=advanced>$ssiFooter</span>
+    $ssiFooter
 </footer>
 </main></body></html>
