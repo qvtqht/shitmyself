@@ -214,6 +214,12 @@ sub IndexTextFile {
 #	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
 #todo add support for .md (markdown) files
 
+#	if (substr(lc($file), length($file) -4, 4) eq ".jpg") {
+#		my $itemName = 'image...';
+#		my $gitHash = GetFileHash($file);
+#		DBAddItem ($file, $itemName, '',      $gitHash, 'jpg');
+#	} #aug29
+
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
 		my %gpgResults =  GpgParse($file);
 
@@ -388,7 +394,6 @@ sub IndexTextFile {
 		}
 
 		# look for hash tags
-
 		if ($message) {
 			WriteLog("... check for hashtags");
 			my @hashTags = ( $message =~ m/\#([a-zA-Z0-9]+)/mg );
@@ -412,6 +417,7 @@ sub IndexTextFile {
 			}
 		}
 
+		# look for 'upgrade_now' token
 		if ($message) {
 			if (IsAdmin($gpgKey)) {
 				if (trim($message) eq 'upgrade_now') {
@@ -427,8 +433,8 @@ sub IndexTextFile {
 			}
 		}
 
+		#look for setconfig and resetconfig
 		if ($message) {
-			#look for setconfig and resetconfig
 			if (IsAdmin($gpgKey) || GetConfig('admin/anyone_can_config') || GetConfig('admin/signed_can_config')) {
 				# preliminary conditions
 
@@ -783,11 +789,11 @@ sub IndexTextFile {
 		}
 
 
-		# look for location tokens
+		# look for location (latlong) tokens
 		# latlong/44.1234567,-44.433435454
 		if ($message) {
 			# get any matching token lines
-			my @latlongLines = ( $message =~ m/^latlong\/(\-?[0-9]{1,2}\.[0-9]{0,7}),(\-?[0-9]{1,2}\.[0-9]{0,7})/mg );
+			my @latlongLines = ( $message =~ m/^latlong\/(\-?[0-9]{1,2}\.[0-9]{0,9}),(\-?[0-9]{1,2}\.[0-9]{0,9})/mg );
 			#                                   prefix   /lat     /long
 
 			if (@latlongLines) {
@@ -820,7 +826,7 @@ sub IndexTextFile {
 		}
 
 
-		# look for addevent tokens
+		# look for event tokens
 		# event/1551234567/3600
 		if ($message) {
 			# get any matching token lines
@@ -867,6 +873,22 @@ sub IndexTextFile {
 						}
 					} else {
 						$eventDurationText = $eventDurationText . " seconds";
+					}
+
+					if ($month < 10) {
+						$month = '0' . $month;
+					}
+					if ($day_of_month < 10) {
+						$day_of_month = '0' . $day_of_month;
+					}
+					if ($hours < 10) {
+						$hours = '0' . $hours;
+					}
+					if ($minutes < 10) {
+						$minutes = '0' . $minutes;
+					}
+					if ($seconds < 10) {
+						$seconds = '0' . $seconds;
 					}
 
 					my $dateText = "$year/$month/$day_of_month $hours:$minutes:$seconds";
@@ -1073,7 +1095,7 @@ sub WriteIndexedConfig {
 sub MakeIndex {
 	WriteLog( "MakeIndex()...\n");
 
-	my @filesToInclude = @{$_[0]};
+	my @filesToInclude = @{$_[0]}; # ?
 
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
