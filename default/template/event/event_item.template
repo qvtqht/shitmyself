@@ -3,7 +3,7 @@
 	Starts: <span class=timestamp>$eventTime</span><br>
 	Ends: <span class=timestamp>$eventTimeUntil</span><br>
 	Duration: $eventDuration<br>
-	Creator: $eventItemAuthor<br>
+	$eventItemAuthor<br>
 	Link: $eventItemLink<br>
 	$voteButtons<br>
 </p>
