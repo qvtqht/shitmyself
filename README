@@ -83,6 +83,11 @@ requirements
 * DBI
 * SQLite
 
+optional
+========
+SSI
+PHP
+
 Debian, Ubuntu, and other apt-based syst
 ========================================
 sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2
