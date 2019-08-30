@@ -15,6 +15,8 @@ use HTML::Entities qw(decode_entities);
 use URI::Encode qw(uri_decode);
 use Digest::SHA qw(sha512_hex);
 use POSIX qw( mktime );
+use Date::Parse;
+
 #use POSIX::strptime qw( strptime );
 
 ## CONFIG AND SANITY CHECKS ##
@@ -504,13 +506,13 @@ sub ProcessAccessLog {
 			#		x		&brc_ave=9:55
 			#		x		&brc_street=Q
 			#		x		&event_location=location
-			#				&month=11
-			#				&day=11
-			#				&year=2025
-			#				&hour=11
-			#				&minute=15
-			#				&am_pm=1
-			#				&event_details=11%3A11%3A11
+			#		x		&month=11
+			#		x		&day=11
+			#		x		&year=2025
+			#		x		&hour=11
+			#		x		&minute=15
+			#		x		&am_pm=1
+			#		x		&event_details=11%3A11%3A11
 
 			WriteLog("/action/event.html");
 
@@ -522,6 +524,10 @@ sub ProcessAccessLog {
 
 			foreach my $param (@eventAtoms) {
 				my ($key, $value) = split('=', $param);
+
+				$value =~ s/\+/ /g;
+				$value = uri_decode($value);
+				$value = decode_entities($value);
 
 				$ep{$key} = $value;
 			}
@@ -536,7 +542,9 @@ sub ProcessAccessLog {
 
 			if (exists($ep{'brc_ave'}) && exists($ep{'brc_street'})) {
 				#todo validate/sanitize
-				$newFile .= 'brc/' . $ep{'brc_ave'} . '/' . $ep{'brc_street'} . "\n\n";
+				if ($ep{'brc_ave'} || $ep{'brc_street'}) {
+					$newFile .= 'brc/' . $ep{'brc_ave'} . '/' . $ep{'brc_street'} . "\n\n";
+				}
 			}
 
 			if (exists($ep{'event_location'})) {
@@ -545,19 +553,94 @@ sub ProcessAccessLog {
 					$newFile .= "\n\n";
 				}
 			}
+			
+			my %addedDates = (); # used to keep track of timestamps added to prevent duplicates
 
 			if (exists($ep{'month'}) && exists($ep{'day'}) && exists($ep{'year'})) {
-				if (exists($ep{'hours'}) && exists($ep{'minutes'})) {
-					if (exists($ep{'am_pm'})) {
-					} else {
-					}
-				} else {
-					my $eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'};
-#					my $eventDate = ParseDate($eventDateString);
+				my $eventDateString;
 
-#					$newFile .= 'event/' . $eventDate . '/1';
-#					$newFile .= "\n\n";
+				if ($ep{'month'} < 10) {
+					$ep{'month'} = '0' . $ep{'month'};
 				}
+
+				if ($ep{'day'} < 10) {
+					$ep{'day'} = '0' . $ep{'day'};
+				}
+
+				if (exists($ep{'hour'}) && exists($ep{'minute'})) {
+					if (exists($ep{'am_pm'}) && $ep{'am_pm'}) {
+						$ep{'hour'} += 12;
+					}
+
+					if ($ep{'hour'} < 10) {
+						$ep{'hour'} = '0' . $ep{'hour'};
+					}
+
+					if ($ep{'minute'} < 10) {
+						$ep{'minute'} = '0' . $ep{'minute'};
+					}
+
+					$eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'} . ' ' . $ep{'hour'} . ':' . $ep{'minute'};
+				} else {
+					$eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'};
+				}
+
+				my $eventDate = ParseDate($eventDateString);
+#				my $eventDate = $eventDateString;
+
+				if (!$addedDates{$eventDate}) {
+					$addedDates{$eventDate} = 1;
+	
+					$newFile .= 'event/' . $eventDate . '/1';
+					$newFile .= "\n\n";
+	
+					#todo actually calculate the date and duration
+				}
+			}
+
+			if (exists($ep{'date_epoch'})) {
+				my $eventDateEpoch = $ep{'date_epoch'};
+				
+				if ($eventDateEpoch) {
+
+					if (!$addedDates{$eventDateEpoch}) {
+						$addedDates{$eventDateEpoch} = 1;
+
+						#todo more sanity
+						$newFile .= 'event/' . $eventDateEpoch . '/2';
+						$newFile .= "\n\n";
+					}
+				}
+			}
+
+			if (exists($ep{'date_yyyy'})) {
+				my $eventDateStringFromYyyy = $ep{'date_yyyy'};
+
+				if ($eventDateStringFromYyyy) {
+					my $eventDateStringEpoch = ParseDate($eventDateStringFromYyyy);
+					if ($eventDateStringEpoch) {
+						WriteLog('$eventDateStringEpoch = ' . $eventDateStringEpoch);
+	
+						if ($eventDateStringEpoch) {
+							if (!$addedDates{$eventDateStringEpoch}) {
+								$addedDates{$eventDateStringEpoch} = 1;
+								
+								$newFile .= 'event/' . $eventDateStringEpoch . '/3';
+								$newFile .= "\n\n";
+							}
+						}
+					} else {
+						$newFile .= "Date: $eventDateStringFromYyyy";
+						$newFile .= "\n\n";
+					}
+				}
+			}
+
+			if (exists($ep{'event_details'})) {
+				my $eventDescription = $ep{'event_details'};
+
+				$newFile .= $eventDescription;
+				$newFile .= "\n\n";
 			}
 
 			#todo finish the other params
