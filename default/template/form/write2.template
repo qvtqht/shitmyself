@@ -3,13 +3,13 @@
 <form action="./gracias.html" id=compose class=submit name=submit>
 	<span id=writeintro></span>
 
-	<label for="comment" class=beginner>Please share something here. First line becomes title. <a href="/manual.html">More info in docs.</a></label><br>
+	<label for="comment" class=beginner>Please share something here. <a href="/manual.html">More info in docs.</a></label><br>
 	<textarea class=txtarea id=comment title="Enter some text to share here." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
 	<p>
 		<input type=submit onclick="if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
 	</p>
 
-	<p>
+	<p class=advanced>
 		<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
 		<span id=userRadio></span>
 	</p>
