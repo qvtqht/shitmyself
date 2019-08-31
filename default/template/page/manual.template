@@ -2,6 +2,10 @@
 
 <h1>Manual</h1>
 
+<p>Acknowlegements:
+	http://famfamfam.com/lab/icons/silk/
+</p>
+
 <a href="manual_advanced.html">Advanced users can tap this to see some technical details.</a>
 
 <!-- -->
@@ -77,8 +81,6 @@ beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit numb
 <p>The "Profile" item in the top menu is italicized when you are signed in through the Web UI.</p>
 
 <p>This is done as a subtle signed in status indicator without disclosing the user's information to shoulder surfers.</p>
-
-
 
 
 <!-- / manual.template -->
