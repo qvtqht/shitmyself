@@ -846,14 +846,18 @@ function signVote(t, token) {
 	var privkey = getPrivateKey();
 
 	if (!privkey) {
+		t.enabled = false;
+		t.style.backgroundColor = '#408040'; //#todo
+		t.style.borderRadius = '5pt'; //#todo
+
 		if (UrlExists(t.href)) {
-			t.enabled = false;
-			t.style.backgroundColor = '#408040'; //#todo
-			t.style.borderRadius = '5pt'; //#todo
+			// todo increment counter
 		}
 	} else {
-		t.style.backgroundColor = '#c0c0c0';
 		t.enabled = false;
+		t.style.backgroundColor = '#8080c0'; //#todo
+		t.style.color = '#f0f0f0';
+		t.style.borderRadius = '5pt'; //#todo
 
 		var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
@@ -870,10 +874,7 @@ function signVote(t, token) {
 			var url = '/gracias.html?comment=' + encodeURIComponent(signed.data);
 
 			if (UrlExists(url)) {
-				t.enabled = false;
-				t.style.backgroundColor = '#8080c0'; //#todo
-				t.style.color = '#f0f0f0';
-				t.style.borderRadius = '5pt'; //#todo
+				// todo incrememnt counter
 			}
 		});
 	}
