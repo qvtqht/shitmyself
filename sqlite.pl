@@ -71,7 +71,8 @@ sub SqliteMakeTables() {
 		item_name,
 		author_key,
 		file_hash UNIQUE,
-		item_type
+		item_type,
+		verify_error
 	)");
 
 	# item_title
@@ -118,6 +119,7 @@ sub SqliteMakeTables() {
 
 	# event
 	SqliteQuery2("CREATE TABLE event(id INTEGER PRIMARY KEY AUTOINCREMENT, item_hash, author_key, event_time, event_duration);");
+	SqliteQuery2("CREATE UNIQUE INDEX event_unique ON event(item_hash, event_time, event_duration);");
 
 	# location
 	SqliteQuery2("
@@ -1128,22 +1130,23 @@ sub DBAddItem {
 	my $authorKey = shift;
 	my $fileHash = shift;
 	my $itemType = shift;
+	my $verifyError = shift;
 
 	if (!$authorKey) {
 		$authorKey = '';
 	}
 
-	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType);");
+	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError);");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type) VALUES ";
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type, verify_error) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType;
+	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError;
 
-	$query .= "(?, ?, ?, ?, ?)";
+	$query .= "(?, ?, ?, ?, ?, ?)";
 }
 
 sub DBAddVoteWeight {
@@ -1774,6 +1777,8 @@ sub DBGetItemList {
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
 	}
+	
+	#todo bind params and use hash of parameters
 
 	WriteLog("DBGetItemList");
 	WriteLog("$query");
@@ -2038,6 +2043,34 @@ sub DBGetTopAuthors {
 	$sth->finish();
 
 	return $ref;
+}
+
+sub DBGetTopAuthors2 {
+	my $query = "
+		SELECT
+			author_key,
+			author_alias,
+			author_score,
+			author_weight,
+			last_seen,
+			item_count
+		FROM author_flat
+		ORDER BY author_score DESC
+		LIMIT 50;
+	";
+
+	my @queryParams;
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
+
+	my @resultsArray = ();
+
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
+	}
+
+	return @resultsArray;
 }
 
 sub DBGetTopItems {
