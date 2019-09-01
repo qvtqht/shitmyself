@@ -3,15 +3,15 @@
 # clean build script
 
 rm cron.lock
-rm -rfv cache
-rm -rfv html/*.html html/*/*.html html/*/*/*.html
-rm -rfv html/*.js html/*/*.js html/*/*/*.js
-rm -rfv html/*.php html/*/*.php html/*/*/*.php
-rm -rfv html/.htaccess
-rm -rfv html/*.zip
-rm -rfv html/rss.xml html/rss.txt
-rm -rfv config/template/*
-rm -rfv config/string/*
+rm -rf cache
+rm -rf html/*.html html/*/*.html html/*/*/*.html
+rm -rf html/*.js html/*/*.js html/*/*/*.js
+rm -rf html/*.php html/*/*.php html/*/*/*.php
+rm -rf html/.htaccess
+rm -rf html/*.zip
+rm -rf html/rss.xml html/rss.txt
+rm -rf config/template/*
+rm -rf config/string/*
 
 touch html/gracias.html
 rm log/log.log
