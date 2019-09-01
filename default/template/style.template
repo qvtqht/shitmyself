@@ -103,6 +103,14 @@ form#compose {
     padding: 5pt;
 }
 
-.advanced, .beginner {
-    padding: 2pt;
+.menu {
+    padding: 5pt;
+    $headerBackgroundPattern
+}
+.menu a {
+    text-shadow:
+    -1pt -1pt 0 white,
+    1pt -1pt 0 white,
+    -1pt 1pt 0 white,
+    1pt 1pt 0 white;
 }
