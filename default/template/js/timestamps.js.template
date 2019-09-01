@@ -2,6 +2,8 @@
 function ShowTimestamps() {
 	var d = new Date();
 	var curTime = Math.floor(d.getTime() / 1000);
+	
+	var changeLogged = 0;
 
 	var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
 	for (var i = 0; i < te.length; i++) {
@@ -9,10 +11,17 @@ function ShowTimestamps() {
 		} else {
 			te[i].setAttribute('title', te[i].innerHTML);
 		}
-		te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
+		if (te[i].innerHTML != LongAgo(0 - (curTime - te[i].title))) {
+			te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
+			changeLogged++;
+		}
 	}
 
-	setTimeout(ShowTimestamps, 15000);
+	if (changeLogged) {
+		setTimeout(ShowTimestamps, 5000);
+	} else {
+		setTimeout(ShowTimestamps, 15000);
+	}
 }
 
 function LongAgo(seconds) { // returns string with time units
@@ -25,23 +34,39 @@ function LongAgo(seconds) { // returns string with time units
 	}
 
 	if (seconds >= 60) {
-		seconds = Math.ceil(seconds / 60);
+		seconds = Math.floor(seconds / 60);
 
 		if (seconds >= 60) {
-			seconds = Math.ceil(seconds / 60);
+			seconds = Math.floor(seconds / 60);
 
 			if (seconds >= 24) {
-				seconds = Math.ceil(seconds / 24);
+				seconds = Math.floor(seconds / 24);
 
-				seconds = seconds + ' days';
+				if (seconds != 1) {
+					seconds = seconds + ' days';
+				} else {
+					seconds = seconds + ' day';
+				}
 			} else {
-				seconds = seconds + ' hours';
+				if (seconds != 1) {
+					seconds = seconds + ' hours';
+				} else {
+					seconds = seconds + ' hour';
+				}
 			}
 		} else {
-			seconds = seconds + ' minutes';
+			if (seconds != 1) {
+				seconds = seconds + ' minutes';
+			} else {
+				seconds = seconds + ' minute';
+			}
 		}
 	} else {
-		seconds = seconds + ' seconds';
+		if (seconds != 1) {
+			seconds = seconds + ' seconds';
+		} else {
+			seconds = seconds + ' second';
+		}
 	}
 
 	if (flip) {
