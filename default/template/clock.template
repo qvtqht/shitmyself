@@ -1,4 +1,4 @@
 <!-- clock.template -->
-<span style="background-color: #405040; color: #00f040; padding: 2pt; border-radius: 2pt;" id=clockContainer>
-<font id=clock>$currentTime</font></span>
+<span style="background-color: #405040; color: #00f040; padding: 5pt; border-radius: 5pt; border-style: inset; border-color: #808080; font-family: monospace;" id=clockContainer>
+<small><font id=clock>$currentTime</font></small></span>
 <!-- / clock.template -->
