@@ -1188,10 +1188,7 @@ sub DBAddVoteWeight {
 	push @queryParams, $key, $weight;
 }
 
-sub DBAddEventRecord {
-	# DBAddEventRecord
-	# $gitHash, $eventTime, $eventDuration, $signedBy
-
+sub DBAddEventRecord { # add event record to database; $gitHash, $eventTime, $eventDuration, $signedBy
 	state $query;
 	state @queryParams;
 
