@@ -1,0 +1,11 @@
+
+function ReportSelfUrl() {
+	var myUrl = window.location;
+//	var myUrl = window.location.hostname + ':' + window.location.port;
+	
+	if (myUrl) {
+		document.images[0].src = '/p.gif?mydomain=' + myUrl;
+	}
+}
+
+setTimeout(ReportSelfUrl, 5000);
