@@ -10,7 +10,11 @@ function corsc() {
 			} else {
 				// change has happened
 
-				location.reload();
+				//location.reload();
+				var clock = document.getElementById('clock');
+				if (clock) {
+					clock.style.color='yellow';
+				}
 //
 //		 			var client2 = new XMLHttpRequest();
 //		 			client2.open("GET", window.location);
