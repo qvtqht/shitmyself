@@ -413,8 +413,22 @@ sub GetItemTemplateFromHash {
 	#	return '[aaaaahhhh!!!]';
 }
 
-sub GetItemPage {
-	#returns html for individual item page
+sub GetItemPage {	# returns html for individual item page. %file as parameter
+	# %file {
+	#		file_hash = git's file hash
+	#		file_path = path where text file is stored
+	#		item_title = title, if any
+	#		author_key = author's fingerprint
+	#		vote_buttons = 1 to display vote buttons
+	#		display_full_hash = 1 to display full hash for permalink (otherwise shortened)
+	#		show_vote_summary = 1 to display all votes recieved separately from vote buttons
+	#		show_quick_vote = 1 to display quick vote buttons
+	#		vote_buttons = 1 to display vote buttons (checkboxes)
+	#		format_avatars = 1 to format fingerprint-looking strings into avatars
+	#		child_count = number of child items for this item
+	#		template_name = name of template to use (item.template is default)
+	#		remove_token = reply token to remove from message (used for displaying replies)
+	#	}
 
 	my %file = %{shift @_};
 	my $fileHash = $file{'file_hash'};
