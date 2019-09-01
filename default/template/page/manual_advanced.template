@@ -1,4 +1,4 @@
-<h1>Manual</h1>
+<h1>Advanced Manual</h1>
 
 <h2>Introduction</h2>
 
@@ -16,8 +16,14 @@ $writeForm
 	<li>Using the same profile on multiple devices and/or backing it up requires copying and pasting of a large blob of text.</li>
 </ul>
 
+<!-- -->
 
 <h3>Terminology and Notation</h3>
+
+<p><b>epoch time</b></p>
+
+<p>Most timestamps are currently in epoch time. This is the number of seconds since the
+	beginning of the Unix Epoch, and is (for the foreseeable future) a 10-digit number, beginning with 15. Example: <code>1557587720</code>.</p>
 
 <p><b>item</b></p>
 
@@ -151,7 +157,6 @@ $writeForm
 
 <!-- -->
 
-
 <a name=admin><h3>Admin Stuff</h3></a>
 
 <p>There is planned support in the near future for roles, multiple admins, etc. in the near future.</p>
@@ -179,3 +184,56 @@ $writeForm
 <p>The <code>setconfig</code> token can always be applied by the admin.</p>
 
 <p>Settings under the <code>config/admin/</code> directory can only be set by the admin user.</p>
+
+<!-- -->
+
+<a name=gpg><h3>How to use GPG</h3></a>
+
+<h4>Read This First</h4>
+
+<p>GnuPG<br><a href="https://www.gnupg.org/">https://www.gnupg.org/</a></p>
+
+<p>Read the GnuPG home page to familiarize yourself.</p>
+
+<h4>Android</h4>
+
+<p>OpenKeychain<br><a href="https://www.openkeychain.org/about/">https://www.openkeychain.org/about/</a></p>
+
+<h4>Apple iOS, iPhone, iPad</h4>
+
+<p>PGP Everywhere<br><a href="http://pgpeverywhere.com/">http://pgpeverywhere.com/</a></p>
+
+<h4>Apple macOS</h4>
+
+<p>GPG Suite<br><a href="https://gpgtools.org/">https://gpgtools.org/</a></p>
+
+<h4>Microsoft Windows</h4>
+
+<p>Gpg4Win<br><a href="https://www.gpg4win.org/">https://www.gpg4win.org/</a></p>
+
+<h4>More Options</h4>
+
+<p>OpenPGP Software<br><a href="https://www.openpgp.org/software/">https://www.openpgp.org/software/</a></p>
+
+<a name=keypair><h3>Creating Your Profile, AKA Key Pair</h3></a>
+
+<p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating a profile?</p>
+
+<h3>Benefits and Explanation of Account System</h3>
+
+<ul>
+	<li>All your posts will appear on your author page.</li>
+	<li>You can sign your posts with your name.</li>
+	<li>You can edit or delete your posts later.</li>
+	<li>You will get a colorful avatar that will appear with all your posts.</li>
+</ul>
+
+<p>You will need to create a key pair. Look for this option in your software and use it. (More detailed guides to come.)</p>
+
+<p>GPG is traditionally used for email, but <b>you do not have to provide your address</b> for this forum.
+	In fact, we recommend that you either leave the field blank.
+	Otherwise, your email address will be accessible by anyone, including spambots.</p>
+
+<p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
+
+<!-- -->
