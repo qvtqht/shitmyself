@@ -153,29 +153,31 @@ sub IndexTextFile {
 
 			# Figure out what the file's path should be
 			my $fileHashPath = GetFileHashPath($file);
-
-			# Does it match?
-			if ($file eq $fileHashPath) {
-				# No action needed
-				WriteLog('IndexTextFile: hash path matches, no action needed');
-			}
-			# It doesn't match, fix it
-			elsif ($file ne $fileHashPath) {
-				WriteLog('IndexTextFile: hash path does not match, organize');
-				WriteLog('Before: ' . $file);
-				WriteLog('After: ' . $fileHashPath);
-
-				if (-e $fileHashPath) {
-					WriteLog("Warning: $fileHashPath already exists!");
+			
+			if ($fileHashPath) {
+				# Does it match?
+				if ($file eq $fileHashPath) {
+					# No action needed
+					WriteLog('IndexTextFile: hash path matches, no action needed');
 				}
-
-				rename ($file, $fileHashPath);
-
-				# if new file exists
-				if (-e $fileHashPath) {
-					$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
-				} else {
-					WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
+				# It doesn't match, fix it
+				elsif ($file ne $fileHashPath) {
+					WriteLog('IndexTextFile: hash path does not match, organize');
+					WriteLog('Before: ' . $file);
+					WriteLog('After: ' . $fileHashPath);
+	
+					if (-e $fileHashPath) {
+						WriteLog("Warning: $fileHashPath already exists!");
+					}
+	
+					rename ($file, $fileHashPath);
+	
+					# if new file exists
+					if (-e $fileHashPath) {
+						$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+					} else {
+						WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
+					}
 				}
 			}
 		}
@@ -201,10 +203,13 @@ sub IndexTextFile {
 
 	my $verifyError = 0;    # was there an error verifying the file with gpg?
 
-	my $hasParent = 0;
+	my $hasParent = 0;		# has 1 or more parent items?
+
+	my @allowedActions;		# contains actions allowed to signer of message
 
 	if (IsServer($gpgKey)) { #todo
-		#push @allowedactions addedtime
+		push @allowedActions, 'addedtime';
+		push @allowedActions, 'addedby';
 	}
 	if (IsAdmin($gpgKey)) { #todo
 		#push @allowedactions vouch
@@ -226,13 +231,13 @@ sub IndexTextFile {
 		# see what gpg says about the file.
 		# if there is no gpg content, the attributes are still populated as possible
 
-		$txt = $gpgResults{'text'};
-		$message = $gpgResults{'message'};
-		$isSigned = $gpgResults{'isSigned'};
-		$gpgKey = $gpgResults{'key'};
-		$alias = $gpgResults{'alias'};
-		$gitHash = $gpgResults{'gitHash'};
-		$verifyError = $gpgResults{'verifyError'} ? 1 : 0;
+		$txt = $gpgResults{'text'}; # contents of the text file
+		$message = $gpgResults{'message'}; # message which will be displayed once tokes are processed
+		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
+		$gpgKey = $gpgResults{'key'}; # if it is signed, fingerprint of signer
+		$alias = $gpgResults{'alias'}; # alias of signer (from public key)
+		$gitHash = $gpgResults{'gitHash'}; # hash provided by git for the file
+		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; # 
 
 		if (GetConfig('admin/gpg/capture_stderr_output')) {
 			if (index($message, 'gpg: Signature made ')) {
@@ -361,6 +366,8 @@ sub IndexTextFile {
 
 			DBAddPageTouch('stats', 'foo');
 		}
+
+		DBAddPageTouch('rss', 'foo');
 
 		my $itemName = TrimPath($file);
 
@@ -1027,11 +1034,13 @@ sub IndexTextFile {
 
 						DBAddVoteRecord($gitHash, $addedTime, 'hastitle');
 					}
+
+					DBAddVoteRecord($gitHash, $addedTime, 'hastext');
+
+					DBAddPageTouch('tag', 'hastext');
+				} else {
+					
 				}
-
-				DBAddVoteRecord($gitHash, $addedTime, 'hastext');
-
-				DBAddPageTouch('tag', 'hastext');
 			}
 		}
 
@@ -1044,9 +1053,9 @@ sub IndexTextFile {
 		}
 
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, 'txt');
+			DBAddItem ($file, $itemName, $gpgKey, $gitHash, 'txt', $verifyError);
 		} else {
-			DBAddItem ($file, $itemName, '',      $gitHash, 'txt');
+			DBAddItem ($file, $itemName, '',      $gitHash, 'txt', $verifyError);
 		}
 
 		DBAddPageTouch('top', 'foo');
