@@ -557,7 +557,7 @@ sub GetItemPage {
 		$fileContents = GetFile($file{'file_path'});
 
 		$replyForm = GetTemplate('form/reply.template');
-		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
+#		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
 		$replyTo = $file{'file_hash'};
 
 		$prefillText = "";

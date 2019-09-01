@@ -287,9 +287,9 @@ function fallbackCopyTextToClipboard(textareaId) {
   try {
 	var successful = document.execCommand('copy');
 	var msg = successful ? 'successful' : 'unsuccessful';
-	console.log('Fallback: Copying text command was ' + msg);
+//	console.log('Fallback: Copying text command was ' + msg);
   } catch (err) {
-	console.error('Fallback: Oops, unable to copy', err);
+//	console.error('Fallback: Oops, unable to copy', err);
   }
 }
 
@@ -303,9 +303,9 @@ function copyTextToClipboard(textareaId) {
 	return;
   }
   navigator.clipboard.writeText(text).then(function() {
-	console.log('Async: Copying to clipboard was successful!');
+//	console.log('Async: Copying to clipboard was successful!');
   }, function(err) {
-	console.error('Async: Could not copy text: ', err);
+//	console.error('Async: Could not copy text: ', err);
   });
 }
 
@@ -763,7 +763,7 @@ function writeSubmit() {
 		signMessage();
 		return false;
 	} else {
-		console.log('neither anonymous nor signed option is checked. this should not happen under normal circumstances. submitting anyway!');
+//		console.log('neither anonymous nor signed option is checked. this should not happen under normal circumstances. submitting anyway!');
 		return true;
 		// this should not happen
 	}
@@ -894,7 +894,7 @@ function signMessage() {
 //			textbox.style.backgroundColor = '#c0c000';
 
 			var message = textbox.value;
-
+			
 			// if the message already has the header,
 			//    assume it's already signed and return
 			// #todo make it also verify that it's signed before returning
@@ -904,7 +904,20 @@ function signMessage() {
 			if (message.trim().substring(0, 34) == ('-----BEGIN PGP SIGNED MESSAGE-----')) {
 				return;
 			}
+			
+			var replyTo = document.getElementById('replyto');
 
+			if (replyTo) {
+				var replyToId = replyTo.value;
+
+				if (replyToId) {
+					if (message.indexOf('>>' + replyToId) > -1) {
+					} else {
+						message = '>>' + replyToId + '\n\n' + message;
+					}
+				}
+			}
+			
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
 
 			//privateKey.decrypt(passPhrase);

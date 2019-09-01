@@ -321,20 +321,23 @@ sub ProcessAccessLog {
 					if (scalar(@messageItems) > 1) {
 						$message = shift @messageItems;
 					}
-#
-#					my $replyUrlToken = ( $message=~ m/&replyto=(0-9a-f){40}/ );
-#					my $newReplyToken = '';
-#
-#					if ($replyUrlToken) {
-#						$newReplyToken =~ s/^&replyto=/>>/;
-#						$message =~ s/$replyUrlToken/$newReplyToken/g;
-#					}
 
 					# Unpack from URL encoding, probably exploitable :(
 					$message =~ s/\+/ /g;
 					$message = uri_decode($message);
 					$message = decode_entities($message);
 					#$message = trim($message);
+
+##
+#					my $replyUrlToken = ( $message=~ m/replyto=(0-9a-f){40}/ );
+#					my $newReplyToken = '';
+##
+#					if ($replyUrlToken) {
+#						my $newReplyToken = $replyUrlToken; 
+#						$newReplyToken =~ s/replyto=/>>/;
+#						$message =~ s/$replyUrlToken/$newReplyToken/g;
+#					}
+
 
 					#todo bugs below, since only stuff below -- should be reformatted
 
@@ -351,7 +354,7 @@ sub ProcessAccessLog {
 
 						if ($paramName eq 'replyto') {
 							if (IsItem($urlParam)) {
-								my $replyToId = $urlParam;
+								my $replyToId = $paramValue;
 
 								if (!($message =~ /\>\>$replyToId/)) {
 									$message .= "\n\n>>$replyToId";

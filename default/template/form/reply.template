@@ -5,6 +5,6 @@
 <textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
 <span id=replySignedContainer></span>
 <input type=submit value="Reply Unsigned">
-<input type=hidden name=replyto value="$replyTo">
+<input type=hidden name=replyto id=replyto value="$replyTo">
 </form>
 <!-- / reply.template -->
