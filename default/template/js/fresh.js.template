@@ -45,7 +45,7 @@ function AmIFresh() {
 
 		freshClient.send();
 
-		setTimeout(AmIFresh, 3000);
+		setTimeout(AmIFresh, 15000);
 	}
 }
 
