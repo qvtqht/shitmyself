@@ -1,9 +1,4 @@
 <!-- clock.template -->
-<p align=right style="display:none" id=clockContainer>
-<table style="padding: 5pt; border-radius: 5pt; font-size: large; position: fixed; right: 5pt; font-family: monospace; background-color: #405040; color: #00f040;" bgcolor="#405040">
-	<tr><td>
-		<font id=clock color="#00f040">$currentTime</font>
-	</td></tr>
-</table>
-</p>
+<span style="background-color: #405040; color: #00f040; padding: 2pt; border-radius: 2pt;" id=clockContainer>
+<font id=clock>$currentTime</font></span>
 <!-- / clock.template -->
