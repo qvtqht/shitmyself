@@ -80,13 +80,19 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 sub GetPageLink {
 	my $pageNumber = shift;
 
+	my $pageLimit = GetConfig('page_limit');
+	
+	my $pageStart = $pageNumber * $pageLimit;
+	my $pageEnd = $pageNumber * $pageLimit + $pageLimit;
+	my $pageCaption = $pageStart . '-' . $pageEnd;
+
 	state $pageLinkTemplate;
 	if (!defined($pageLinkTemplate)) {
 		$pageLinkTemplate = GetTemplate('pagelink.template');
 	}
 
 	my $pageLink = $pageLinkTemplate;
-	$pageLink =~ s/\$pageName/$pageNumber/;
+	$pageLink =~ s/\$pageName/$pageCaption/;
 
 	$pageLink =~ s/\$pageNumber/$pageNumber/;
 
@@ -98,15 +104,21 @@ sub GetPageLinks {
 
 	my $currentPageNumber = shift;
 
+	my $pageLimit = GetConfig('page_limit');
+	
 	WriteLog("GetPageLinks($currentPageNumber)");
 
 	if (defined($pageLinks)) {
 		WriteLog("GetPageLinks: \$pageLinks already exists, doing a quickie");
 
 		my $currentPageTemplate = GetPageLink($currentPageNumber);
+		
+		my $currentPageStart = $currentPageNumber * $pageLimit;
+		my $currentPageEnd = $currentPageNumber * $pageLimit + $pageLimit;
+		my $currentPageCaption = $currentPageStart . '-' . $currentPageEnd;
 
 		my $pageLinksFinal = $pageLinks;
-		$pageLinksFinal =~ s/$currentPageTemplate/<b>Page $currentPageNumber<\/b> /g;
+		$pageLinksFinal =~ s/$currentPageTemplate/<b>$currentPageCaption<\/b> /g;
 
 		return $pageLinksFinal;
 	}
@@ -117,8 +129,6 @@ sub GetPageLinks {
 	WriteLog("GetPageLinks: \$itemCount = $itemCount");
 
 	$pageLinks = "";
-
-	my $pageLimit = GetConfig('page_limit');
 
 	my $lastPageNum = ceil($itemCount / $pageLimit);
 
@@ -894,7 +904,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
 			}
 			if ($votesSummary) {
-				$votesSummary = '<p class=advanced><b class=beginner>Existing Labels:</b><br class=beginner>' . $votesSummary . '</p>';
+				$votesSummary = '<p class=advanced><b class=beginner>Attributes:</b> ' . $votesSummary . '</p>';
 				#todo templatize
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
@@ -1054,7 +1064,7 @@ sub GetPageHeader {
 		if (!$logoText) {
 			#$logoText = random_emoji();
 			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
-			$logoText = "*"
+			#$logoText = "*"
 		}
 		#$logoText = FormatForWeb($logoText);
 		#$logoText = HtmlEscape($logoText);
@@ -1109,12 +1119,12 @@ sub GetPageHeader {
 		$clock = GetTemplate('clock.template');
 
 		my $currentTime = GetTime();
-
-		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
-			$currentTime = GetTemplate('clock_ssi.template');
-		}
-		
-		$currentTime = trim($currentTime);
+#
+#		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
+#			$currentTime = GetTemplate('clock_ssi.template');
+#		}
+#		
+#		$currentTime = trim($currentTime);
 
 		$clock =~ s/\$currentTime/$currentTime/;
 	}
@@ -1156,12 +1166,11 @@ sub GetPageHeader {
 	my $identityLink = '<span id="signin"></span><span class="myid" id=myid></span> ';
 
 	$topMenuTemplate .= $identityLink;
-	$topMenuTemplate .= GetMenuItem("/", GetString('menu/home'), 1);
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
-	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
+	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Stats', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
@@ -1732,7 +1741,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(avatar.authorpage prefs));
+		$txtIndex = InjectJs($txtIndex, qw(avatar.authorpage prefs timestamps));
 	} else {
 		$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 	}
