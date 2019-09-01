@@ -1,3 +1,5 @@
+Display warning if message is signed, but there is no public key to verify
+
 Cut up event_add.template
 	So that the dropdowns are individually generated
 		Then put sane presets into them
