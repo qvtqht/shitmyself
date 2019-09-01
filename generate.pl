@@ -75,39 +75,7 @@ my $HTMLDIR = "html";
 # 	return %pageParams;
 # }
 
-sub GetVersionPage { # returns html with version information for $version (git commit id)
-	my $version = shift;
-
-	if (!IsSha1($version)) {
-		return;
-	}
-
-	my $txtPageHtml = '';
-
-	my $pageTitle = "Information page for version $version";
-
-	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'version');
-
-	$txtPageHtml .= $htmlStart;
-
-	$txtPageHtml .= GetTemplate('maincontent.template');
-
-	my $versionInfo = GetTemplate('versioninfo.template');
-	my $shortVersion = substr($version, 0, 8);
-
-	$versionInfo =~ s/\$version/$version/g;
-	$versionInfo =~ s/\$shortVersion/$shortVersion/g;
-
-	$txtPageHtml .= $versionInfo;
-
-	$txtPageHtml .= GetPageFooter();
-
-	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar fresh prefs));
-
-	return $txtPageHtml;
-}
-
-MakeStaticPages();
+MakeSummaryPages();
 
 WriteLog ("GetReadPage()...");
 
@@ -199,83 +167,7 @@ foreach my $hashRef (@authors) {
 # }
 
 
-
-
-sub MakeRssFile {
- 	my %queryParams;
- 	my @files = DBGetItemList(\%queryParams);
-
- 	my $feedContainerTemplate = GetTemplate('rss/feed.xml.template');
-
-	my $feedTitle = 'zomg';
-	my $feedLink = 'linkomg';
-	my $feedDescription = 'descomg';
-	my $feedPubDate = 'testomg';
-
-	$feedContainerTemplate =~ s/\$feedTitle/$feedTitle/;
-	$feedContainerTemplate =~ s/\$feedLink/$feedLink/;
-	$feedContainerTemplate =~ s/\$feedDescription/$feedDescription/;
-	$feedContainerTemplate =~ s/\$feedPubDate/$feedPubDate/;
-
- 	my $feedItems = '';
- 	my $feedItemsToc = '';
-
- 	foreach my $file(@files) {
- 		my $fileHash = $file->{'file_hash'};
-
- 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
- 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
-
- 			return;
- 		}
-
-
-		#
-		#"item_flat.file_path file_path,
-		#item_flat.item_name item_name,
-		#item_flat.file_hash file_hash,
-		#item_flat.author_key author_key,
-		#item_flat.child_count child_count,
-		#item_flat.parent_count parent_count,
-		#item_flat.add_timestamp add_timestamp,
-		#item_flat.item_title item_title,
-		#item_flat.item_score item_score,
-		#item_flat.tags_list tags_list";
-
-
- 		my $feedItem = GetTemplate('rss/feed.item.xml.template');
-
-		my $itemAbout = '';
-		my $fileName = $file->{'file_path'};
-		my $itemPubDate = $file->{'add_timestamp'};
-		my $itemTitle = $file->{'item_title'};
-		my $itemLink = GetHtmlFilename($fileHash);
-		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});
-
-		#todo sanitize
-
- 		$feedItem =~ s/\$itemAbout/$itemAbout/g;
- 		$feedItem =~ s/\$itemGuid/$fileHash/g;
- 		$feedItem =~ s/\$itemPubDate/$itemPubDate/g;
- 		$feedItem =~ s/\$itemTitle/$itemTitle/g;
- 		$feedItem =~ s/\$itemLink/$itemLink/g;
- 		$feedItem =~ s/\$itemDescription/$itemDescription/g;
-
- 		my $feedTocItem = GetTemplate('rss/feed.toc.item.xml.template');
-
- 		$feedTocItem =~ s/\$itemUrl/$itemLink/;
-
- 		$feedItems .= $feedItem;
- 		$feedItemsToc .= $feedTocItem;
- 	}
-
-	$feedContainerTemplate =~ s/\$feedItemsList/$feedItemsToc/;
-	$feedContainerTemplate =~ s/\$feedItems/$feedItems/;
-
- 	PutFile("$HTMLDIR/rss.xml", $feedContainerTemplate);
-}
-
-MakeRssFile();
+PutFile("$HTMLDIR/rss.xml", GetRssFile());
 
 
 # this should create a page for each item
@@ -330,55 +222,6 @@ MakeRssFile();
 	}
 
 	PutFile("$HTMLDIR/rss.txt", $fileList);
-}
-
-sub MakeClonePage {
-	WriteLog('MakeClonePage() called');
-
-	#This makes the zip file as well as the clone.html page that lists its size
-
-	my $zipInterval = 3600;
-	my $lastZip = GetCache('last_zip');
-
-	if (!$lastZip || (GetTime() - $lastZip) > $zipInterval) {
-		WriteLog("Making zip file...");
-
-		system("git archive --format zip --output html/hike.tmp.zip master");
-		#system("git archive -v --format zip --output html/hike.tmp.zip master");
-
-		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log .git/");
-		#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
-
-		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
-
-		PutCache('last_zip', GetTime());
-	} else {
-		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
-	}
-
-
-	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site", 'clone');
-
-	$clonePage .= GetTemplate('maincontent.template');
-
-	my $clonePageTemplate = GetTemplate('clone.template');
-
-	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
-
-	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
-	if (!$sizeHikeZip) {
-		$sizeHikeZip = 0;
-	}
-
-	$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
-
-	$clonePage .= $clonePageTemplate;
-
-	$clonePage .= GetPageFooter();
-
-	$clonePage = InjectJs($clonePage, qw(avatar prefs));
-
-	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
 }
 
 # generate commits page
@@ -518,14 +361,25 @@ PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #	PutFile('html/votes.txt', DBGetVotesTable());
 #}
 
-MakeClonePage();
-
-my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
-if ($homePageHasBeenWritten) {
-	WriteLog("Home Page has been written! Yay!");
+my $arg1 = shift;
+if ($arg1) {
+	if (-e $arg1) {
+		if ($arg1 == 'summary') {
+			MakeSummaryPages();
+		}
+	}
 } else {
-	WriteLog("Warning! Home Page has not been written! Fixing that");
-	PutHtmlFile('html/index.html', GetFile('html/write.html'));
+
+	MakeClonePage();
+
+	my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
+	if ($homePageHasBeenWritten) {
+		WriteLog("Home Page has been written! Yay!");
+	} else {
+		WriteLog("Warning! Home Page has not been written! Fixing that");
+		PutHtmlFile('html/index.html', GetFile('html/write.html'));
+	}
+
 }
 
 1;

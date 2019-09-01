@@ -9,6 +9,7 @@ use lib qw(lib);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
+
 #use List::Uniq ':all';
 
 #use Acme::RandomEmoji qw(random_emoji);
@@ -206,6 +207,8 @@ sub GetEventsPage {
 
 		if (!$eventItemAuthor) {
 			$eventItemAuthor = '';
+		} else {
+			$eventItemAuthor = 'Author: ' . $eventItemAuthor . '<br>'; #todo templatify
 		}
 
 		my $eventTimeUntil = $eventTime + $eventDuration;
@@ -605,6 +608,8 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 	my $tagSet;
 	$tagSet = shift;
 
+	my %voteTotals = DBGetItemVoteTotals($fileHash);
+	
 	if ($tagSet) {
 		my $quickVotesForTagSet = GetConfig('tagset/' . $tagSet);
 		if ($quickVotesForTagSet) {
@@ -612,7 +617,6 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 		}
 	} else {
 		my $quickVotesForTags;
-		my %voteTotals = DBGetItemVoteTotals($fileHash);
 
 		foreach my $voteTag (keys %voteTotals) {
 			$quickVotesForTags = GetConfig('tagset/' . $voteTag);
@@ -653,6 +657,11 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 				} else {
 					$tagButton =~ s/class="\$class"//g;
 				}
+			}
+
+			if ($voteTotals{$quickTagCaption}) {
+				$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
+				$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
 			}
 
 			$tagButton =~ s/\$fileHash/$fileHash/g;
@@ -932,7 +941,12 @@ sub GetItemTemplate { # returns HTML for outputting one item
 						my $tagButton = GetTemplate('vote2button.template');
 
 						my $quickTagCaption = GetString($quickTagValue);
-
+						
+						if ($voteTotals{$quickTagCaption}) {
+							$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
+							$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
+						}
+						
 						$tagButton =~ s/\$fileHash/$fileHash/g;
 						$tagButton =~ s/\$ballotTime/$ballotTime/g;
 						$tagButton =~ s/\$voteValue/$quickTagValue/g;
@@ -1001,8 +1015,10 @@ sub GetPageFooter {
 	$txtFooter =~ s/\$footer/$footer/;
 
 	my $ssiFooter;
-	if (GetConfig('admin/ssi/enable')) {
-		$ssiFooter = '<p>' . GetTemplate('ssi/print_date.ssi.template') . '</p>';
+	if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/footer_timestamp')) {
+		$ssiFooter = '<p class=advanced><font color="#808080"><small><span class=timestamp>' . 
+			trim(GetTemplate('ssi/print_date.ssi.template')) . 
+			'</span></small></font></p>'; #todo templatify
 	} else {
 		$ssiFooter = '';
 	}
@@ -1079,7 +1095,7 @@ sub GetPageHeader {
 	if (!$introText) {
 		$introText = trim(GetString('page_intro/default'));
 	}
-	#$patternName = GetConfig('header_pattern');
+#	$patternName = GetConfig('header_pattern');
 
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
@@ -1094,9 +1110,11 @@ sub GetPageHeader {
 
 		my $currentTime = GetTime();
 
-		if (GetConfig('admin/ssi/enable')) {
+		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
 			$currentTime = GetTemplate('clock_ssi.template');
 		}
+		
+		$currentTime = trim($currentTime);
 
 		$clock =~ s/\$currentTime/$currentTime/;
 	}
@@ -1212,6 +1230,10 @@ sub GetVoterTemplate {
 		my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
 
 		my $voteButtons = $voteButtonsTemplate;
+		
+		my $fileHashShort = substr($fileHash, 0, 8);
+		
+		$voteButtons =~ s/\$fileHashShort/$fileHashShort/g;
 		$voteButtons =~ s/\$fileHash/$fileHash/g;
 		$voteButtons =~ s/\$ballotTime/$ballotTime/g;
 		$voteButtons =~ s/\$checksum/$checksum/g;
@@ -1344,7 +1366,7 @@ sub GetStatsPage {
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs timestamps));
+	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs timestamps pingback));
 
 	return $statsPage;
 }
@@ -1431,7 +1453,6 @@ sub GetScoreboardPage {
 	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
 
 	$txtIndex .= $authorListingWrapper;
-
 
 	$txtIndex .= GetPageFooter();
 
@@ -1902,8 +1923,8 @@ sub WriteIndexPages {
 	}
 }
 
-sub MakeStaticPages {
-	WriteLog('MakeStaticPages() BEGIN');
+sub MakeSummaryPages {
+	WriteLog('MakeSummaryPages() BEGIN');
 
 	# Submit page
 	my $submitPage = GetWritePage();
@@ -1977,13 +1998,14 @@ sub MakeStaticPages {
 
 	{
 		# Advanced Manual page
-		my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
+		my $tfmPage = GetPageHeader("Advanced Manual", "Advanced Manual", 'manual_advanced');
 
 		$tfmPage .= GetTemplate('maincontent.template');
 
 		my $tfmPageTemplate = GetTemplate('page/manual_advanced.template');
 
 		my $writeForm = GetTemplate('form/write2.template');
+		#$writeForm =~ s/\$prefillText/I've read the advanced manual, and here is what I think:\n\n/;
 		$tfmPageTemplate =~ s/\$writeForm/$writeForm/g;
 
 		$tfmPage .= $tfmPageTemplate;
@@ -2059,7 +2081,7 @@ sub MakeStaticPages {
 
 	PutHtmlFile("$HTMLDIR/favicon.ico", '');
 
-	WriteLog('MakeStaticPages() END');
+	WriteLog('MakeSummaryPages() END');
 }
 
 sub GetWritePage {
@@ -2204,5 +2226,177 @@ sub GetIdentityPage {
 
 	return $txtIndex;
 }
+
+sub GetRssFile {
+	my %queryParams;
+	
+	$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+	my @files = DBGetItemList(\%queryParams);
+
+	my $feedContainerTemplate = GetTemplate('rss/feed.xml.template');
+
+	my $baseUrl = 'http://localhost:3000/';
+
+	my $feedTitle = 'feed omg';
+	my $feedLink = 'http://localhost:3000/';
+	my $feedDescription = 'descomg';
+	
+	my $feedPubDate = GetTime();
+	$feedPubDate = localtime($feedPubDate);
+	#%a, %d %b %Y %H:%M +:%S %Z
+
+	$feedContainerTemplate =~ s/\$feedTitle/$feedTitle/;
+	$feedContainerTemplate =~ s/\$feedLink/$feedLink/;
+	$feedContainerTemplate =~ s/\$feedDescription/$feedDescription/;
+	$feedContainerTemplate =~ s/\$feedPubDate/$feedPubDate/;
+
+	my $feedItems = '';
+	my $feedItemsToc = '';
+
+	foreach my $file(@files) {
+		my $fileHash = $file->{'file_hash'};
+
+		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+
+			return;
+		}
+
+
+		#
+		#"item_flat.file_path file_path,
+		#item_flat.item_name item_name,
+		#item_flat.file_hash file_hash,
+		#item_flat.author_key author_key,
+		#item_flat.child_count child_count,
+		#item_flat.parent_count parent_count,
+		#item_flat.add_timestamp add_timestamp,
+		#item_flat.item_title item_title,
+		#item_flat.item_score item_score,
+		#item_flat.tags_list tags_list";
+
+
+		my $feedItem = GetTemplate('rss/feed.item.xml.template');
+
+		my $fileName = $file->{'file_path'};
+		my $itemPubDate = $file->{'add_timestamp'};
+		my $itemTitle = $file->{'item_title'};
+		my $itemLink = 'http://localhost:3000/' . GetHtmlFilename($fileHash);
+		my $itemAbout = $itemLink;
+		my $itemGuid = $itemLink;
+		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});
+
+		if ($itemTitle eq '') {
+			$itemTitle = '(Untitled)';
+		}
+
+		$itemTitle = FormatForRss($itemTitle);
+		$itemDescription = FormatForRss($itemDescription);
+		
+
+		#todo sanitize
+
+		$feedItem =~ s/\$itemAbout/$itemAbout/g;
+		$feedItem =~ s/\$itemGuid/$itemGuid/g;
+		$feedItem =~ s/\$itemPubDate/$itemPubDate/g;
+		$feedItem =~ s/\$itemTitle/$itemTitle/g;
+		$feedItem =~ s/\$itemLink/$itemLink/g;
+		$feedItem =~ s/\$itemDescription/$itemDescription/g;
+
+		my $feedTocItem = GetTemplate('rss/feed.toc.item.xml.template');
+
+		$feedTocItem =~ s/\$itemUrl/$itemLink/;
+
+		$feedItems .= $feedItem;
+		$feedItemsToc .= $feedTocItem;
+	}
+
+	$feedContainerTemplate =~ s/\$feedItemsList/$feedItemsToc/;
+	$feedContainerTemplate =~ s/\$feedItems/$feedItems/;
+
+	return $feedContainerTemplate;
+}
+
+sub GetVersionPage { # returns html with version information for $version (git commit id)
+	my $version = shift;
+
+	if (!IsSha1($version)) {
+		return;
+	}
+
+	my $txtPageHtml = '';
+
+	my $pageTitle = "Information page for version $version";
+
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'version');
+
+	$txtPageHtml .= $htmlStart;
+
+	$txtPageHtml .= GetTemplate('maincontent.template');
+
+	my $versionInfo = GetTemplate('versioninfo.template');
+	my $shortVersion = substr($version, 0, 8);
+
+	$versionInfo =~ s/\$version/$version/g;
+	$versionInfo =~ s/\$shortVersion/$shortVersion/g;
+
+	$txtPageHtml .= $versionInfo;
+
+	$txtPageHtml .= GetPageFooter();
+
+	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar fresh prefs));
+
+	return $txtPageHtml;
+}
+
+sub MakeClonePage { # returns html for /clone.html
+	WriteLog('MakeClonePage() called');
+
+	#This makes the zip file as well as the clone.html page that lists its size
+
+	my $zipInterval = 3600;
+	my $lastZip = GetCache('last_zip');
+
+	if (!$lastZip || (GetTime() - $lastZip) > $zipInterval) {
+		WriteLog("Making zip file...");
+
+		system("git archive --format zip --output html/hike.tmp.zip master");
+		#system("git archive -v --format zip --output html/hike.tmp.zip master");
+
+		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log .git/");
+		#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
+
+		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
+
+		PutCache('last_zip', GetTime());
+	} else {
+		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
+	}
+
+
+	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site", 'clone');
+
+	$clonePage .= GetTemplate('maincontent.template');
+
+	my $clonePageTemplate = GetTemplate('clone.template');
+
+	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
+
+	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
+	if (!$sizeHikeZip) {
+		$sizeHikeZip = 0;
+	}
+
+	$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
+
+	$clonePage .= $clonePageTemplate;
+
+	$clonePage .= GetPageFooter();
+
+	$clonePage = InjectJs($clonePage, qw(avatar prefs));
+
+	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
+}
+
 
 1;

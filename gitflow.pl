@@ -239,7 +239,7 @@ foreach my $file (@gitChangesArray) {
 WriteIndexedConfig();
 
 if ($filesProcessed > 0) {
-	MakeStaticPages();
+	MakeSummaryPages();
 #	WriteIndexPages();
 }
 
@@ -375,6 +375,11 @@ foreach my $page (@touchedPagesArray) {
 	# index pages (abyss)
 	elsif ($pageType eq 'index') {
 		WriteIndexPages();
+	}
+	#
+	# rss feed
+	elsif ($pageType eq 'rss') {
+		PutFile("html/rss.xml", GetRssFile());
 	}
 }
 
