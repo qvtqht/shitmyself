@@ -8,7 +8,7 @@
 <tr><td>items:</td><td>$itemCount</td></tr>
 <tr><td>description:</td><td>$authorDescription</td></tr>
 <tr class=advanced><td>influence:</td><td>$authorWeight</td></tr>
-<tr><td>last seen:</td><td>$authorLastSeen</td></tr>
+<tr><td>last seen:</td><td class=timestamp>$authorLastSeen</td></tr>
 <tr class=advanced><td>reg. entry:</td><td><b>$publicKeyHash</b> $authorPubkeyTxtLink</td></tr>
 <tr><td>add feedback:</td><td>$profileVoteButtons</td></tr>
 <tr><td>friends:</td><td>$authorFriends</td></tr>
