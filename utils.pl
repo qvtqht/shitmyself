@@ -1581,6 +1581,7 @@ sub FormatForRss { # replaces some spaces with &nbsp; to preserve text-based lay
 	}
 
 	$text = HtmlEscape($text);
+	$text =~ s/\n/<br \/>\n/g;
 
 	return $text;
 }
