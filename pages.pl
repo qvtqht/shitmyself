@@ -35,26 +35,30 @@ sub GenerateSomeKindOfPage {
 	#
 }
 
-sub GetStylesheet {
+sub GetStylesheet { # returns style template based on config
 	my $style = GetTemplate('style.template');
+	# baseline style
 
 	if (GetConfig('html/color_avatars')) {
 		$style .= "\n" . GetTemplate('style.avatar.template');
+		# add style for color avatars if that's the setting
 	}
 
 	return $style;
 }
 
 sub GetAuthorLink { # returns avatar'ed link for an author id
-	my $gpgKey = shift;
-	my $showPlain = shift;
+	my $gpgKey = shift; # author's fingerprint
+	my $showPlain = shift; # 1 to display avatar without colors
 
+	# sanitize $showPlain
 	if (!$showPlain) {
 		$showPlain = 0;
 	} else {
 		$showPlain = 1;
 	}
 
+	# verify $gpgKey is valid 
 	if (!IsFingerprint($gpgKey)) {
 		WriteLog("WARNING: GetAuthorLink() called with invalid parameter!");
 		return;
@@ -332,8 +336,8 @@ sub GetTagsPage {
 	#todo rewrite this more pretty
 	my $txtIndex = "";
 
-	my $title = 'Tags Alpha';
-	my $titleHtml = 'Tags Alpha';
+	my $title = 'Tags Alphabetical';
+	my $titleHtml = 'Tags Alphabetical';
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'tags');
 
