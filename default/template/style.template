@@ -109,8 +109,9 @@ form#compose {
 }
 .menu a {
     text-shadow:
-    -1pt -1pt 0 white,
-    1pt -1pt 0 white,
-    -1pt 1pt 0 white,
-    1pt 1pt 0 white;
+    -2pt -2pt 1pt white,
+    1pt -1pt 1pt cyan,
+    -1pt 1pt 1pt magenta,
+    1pt 1pt 1pt black;
+    color: #808080;
 }
