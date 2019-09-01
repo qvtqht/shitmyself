@@ -236,7 +236,9 @@
 	</p>
 
 	<p>
-		<input value="Create Event (required)" type="submit">
+		<span style="padding: 5pt; background-color: #ffe000; border: 5pt; border-style: dashed; border-color: #e0ff00; border-radius: 15pt;">
+			<input value="Create Event (required)" type="submit" style="border-radius: 5pt; padding: 5pt;">
+		</span>
 	</p>
 
 	<p>
