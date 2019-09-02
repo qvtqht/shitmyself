@@ -52,8 +52,8 @@ if ($lockTime) {
 PutFile('cron.lock', $currentTime);
 $lockTime = $currentTime;
 
-# store the last time we did this from config/admin/gitflow_last
-my $lastFlow = GetConfig('admin/gitflow_last');
+# store the last time we did this from config/admin/gitflow/last_run
+my $lastFlow = GetConfig('admin/gitflow/last_run');
 
 if ($lastFlow) {
 	WriteLog('$lastFlow = ' . $lastFlow);
@@ -70,7 +70,7 @@ WriteLog("\$accessLogPath = $accessLogPath");
 my $newItemCount;
 
 # time limit
-my $timeLimit = GetConfig('admin/gitflow_time_limit');
+my $timeLimit = GetConfig('admin/gitflow/time_limit');
 my $startTime = GetTime2();
 #todo validation
 
@@ -137,11 +137,11 @@ my @gitChangesArray = split("\n", $gitChanges);
 # Log number of changes
 WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
 
-# See if gitflow_file_limit setting exists
+# See if gitflow/file_limit setting exists
 # This limits the number of files to process per launch of gitflow.pl
-my $filesLimit = GetConfig('admin/gitflow_file_limit');
+my $filesLimit = GetConfig('admin/gitflow/file_limit');
 if (!$filesLimit) {
-	WriteLog("WARNING: config/admin/gitflow_file_limit missing!");
+	WriteLog("WARNING: config/admin/gitflow/file_limit missing!");
 	$filesLimit = 100;
 }
 
@@ -253,9 +253,9 @@ my @touchedPagesArray = @$touchedPages;
 # write number of touched pages to log
 WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
 
-my $pagesLimit = GetConfig('admin/gitflow_page_limit');
+my $pagesLimit = GetConfig('admin/gitflow/page_limit');
 if (!$pagesLimit) {
-	WriteLog("WARNING: config/admin/gitflow_page_limit missing!");
+	WriteLog("WARNING: config/admin/gitflow/page_limit missing!");
 	$pagesLimit = 100;
 }
 my $pagesProcessed = 0;
@@ -403,10 +403,10 @@ foreach my $page (@touchedPagesArray) {
 #	PutConfig('last_abyss', $curTime);
 #}
 
-# save current time in config/admin/gitflow_last
+# save current time in config/admin/gitflow/last
 my $newLastFlow = GetTime2();
 WriteLog($newLastFlow);
-PutConfig('admin/gitflow_last', $newLastFlow);
+PutConfig('admin/gitflow/last', $newLastFlow);
 
 unlink('cron.lock');
 
