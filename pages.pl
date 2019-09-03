@@ -175,6 +175,7 @@ sub GetPageLinks {
 
 	$pageLinks = $frame;
 
+	#todo explain recursion
 	return GetPageLinks($currentPageNumber);
 }
 
@@ -486,43 +487,56 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
+	# if this item has a child_count, we want to print all the child items below
 	if ($file{'child_count'}) {
+		# get item's children (replies) and store in @itemReplies
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
+		#debug message
 		WriteLog('@itemReplies = ' . @itemReplies);
 
-		#$txtIndex .= "<hr size=1>";
+		# this will contain the replies as html output
 		my $allReplies = '';
 
+		# start with a horizontal rule to separate from above content
 		$allReplies = '<hr size=3>' . $allReplies;
 
+		# this will store separator between items.
+		# first item doesn't need separator above it
 		my $replyComma = '';
 
 		foreach my $replyItem (@itemReplies) {
+			# output info about item to debug
 			WriteLog('$replyItem: ' . $replyItem);
 			foreach my $replyVar ($replyItem) {
 				WriteLog($replyVar);
 			}
 
+			# use item-small template to display the reply items
 			$$replyItem{'template_name'} = 'item/item-small.template';
+			
+			# if the child item contains a reply token for our parent item
+			# we want to remove it, to reduce redundant information on the page
+			# to do this, we pass the remove_token parameter to GetItemTemplate below
 			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
-
-			WriteLog('$$replyItem{\'template_name\'} = ' . $$replyItem{'template_name'});
-
+			
+			# Get the reply template			
 			my $replyTemplate = GetItemTemplate($replyItem);
 
+			# output it to debug
 			WriteLog('$replyTemplate');
 			WriteLog($replyTemplate);
 
+			# if the reply item has children also, output the children
+			# threads are currently limited to 2 steps
+			# eventually, recurdsion can be used to output more levels
 			if ($$replyItem{'child_count'}) {
-				my $subRepliesTemplate = '';
-
-				my $subReplyComma = '';
+				my $subRepliesTemplate = ''; # will store the sub-replies html output
+													  
+				my $subReplyComma = ''; # separator for sub-replies
 
 				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
 				foreach my $subReplyItem (@subReplies) {
-					#$subRepliesTemplate .= $$subReplyItem{'fi
-					# le_hash'};
 					$$subReplyItem{'template_name'} = 'item/item-small.template';
 					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
 
@@ -560,6 +574,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
 	}
 
+	
 	if ($itemTemplate) {
 		$txtIndex .= $itemTemplate;
 	}
@@ -1126,6 +1141,7 @@ sub GetPageHeader {
 	}
 #	$patternName = GetConfig('header_pattern');
 
+	# this is for the css pattern that's displayed in the background of the top menu
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
 	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
@@ -1270,7 +1286,8 @@ sub GetVoterTemplate {
 	}
 }
 
-sub GetTopItemsPage {
+
+sub GetTopItemsPage { # returns page with top items listing
 	WriteLog("GetTopItemsPage()");
 
 	my $txtIndex = '';
@@ -1804,6 +1821,9 @@ sub GetIndexPage {
 	my $pageTitle = GetConfig('home_title');
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
+	
+	$htmlStart =~ s/<main id=maincontent><a name=maincontent><\/a>//;
+	# todo fix this hack
 
 	$txtIndex .= $htmlStart;
 
@@ -2003,6 +2023,8 @@ sub MakeSummaryPages {
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/event.html", $okPage);
+		
+	system('cp default/template/p.gif.template html/p.gif');
 
 	{
 		# Manual page
@@ -2208,7 +2230,7 @@ sub GetEventAddPage { # get html for /event.html
 	return $txtIndex;
 }
 
-sub GetIdentityPage {
+sub GetIdentityPage { #todo rename GetProfilePage?
 	my $txtIndex = "";
 
 	my $title = "Profile";
@@ -2245,7 +2267,7 @@ sub GetIdentityPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh));
 
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
