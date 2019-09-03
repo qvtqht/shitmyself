@@ -902,10 +902,14 @@ sub DBAddItemPage {
 }
 
 sub DBResetPageTouch {
+	WriteMessage("DBResetPageTouch() begin");
+
 	my $query = "DELETE FROM page_touch WHERE 1";
 	my @queryParams = ();
 
 	SqliteQuery2($query, @queryParams);
+
+	WriteMessage("DBResetPageTouch() end");
 }
 
 sub DBAddPageTouch {
