@@ -2079,7 +2079,7 @@ sub DBGetTopItems {
 
 	my $whereClause;
 
-	$whereClause = "WHERE item_title != '' AND parent_count = 0";
+	$whereClause = "WHERE item_title != '' AND parent_count = 0 AND tags_list NOT LIKE '%changelog%'";
 
 	my $additionalWhereClause = shift;
 
