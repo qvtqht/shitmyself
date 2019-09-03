@@ -915,13 +915,18 @@ sub IndexTextFile {
 
 		# look for vote tokens
 		if ($message) {
-			my @voteLines = ( $message =~ m/^vote\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
+			my @voteLines = ( $message =~ m/^(vote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
 			#                                prefix  /file hash      /time     /tag      /csrf
 
 			#vote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
+			my @addVoteLines = ( $message =~ m/^(addvote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
+			#                                    prefix   /file hash      /time     /tag      /csrf
+
+			push @voteLines, @addVoteLines;
+
 			if (@voteLines) {
-				my $lineCount = @voteLines / 4;
+				my $lineCount = @voteLines / 5;
 				#todo assert no remainder
 
 #				if ($isSigned) {
@@ -931,6 +936,7 @@ sub IndexTextFile {
 #				}
 
 				while(@voteLines) {
+					my $tokenPrefix = shift @voteLines;
 					my $voteFileHash   = shift @voteLines;
 					my $voteBallotTime = shift @voteLines;
 					my $voteValue  = shift @voteLines;
@@ -948,7 +954,7 @@ sub IndexTextFile {
 					DBAddItemParent($gitHash, $voteFileHash);
 
 					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
-					my $reconLine = "vote/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
+					my $reconLine = "$tokenPrefix/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
 					# $message =~ s/$reconLine/[$voteValue] (vote on $fileHash)/g;
 					# $message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
 					$message =~ s/$reconLine/>>$voteFileHash\n[$voteValue]/g;
