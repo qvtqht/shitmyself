@@ -10,7 +10,7 @@
 		id=comment
 		title="Enter some text to share here."
 		rows=9
-		cols=60
+		cols=40
 		name=comment
 		autofocus
 	>$prefillText</textarea><br>
