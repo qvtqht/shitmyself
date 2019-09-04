@@ -1279,6 +1279,9 @@ sub GpgParse {
 	my $filePath = shift;
 
 	my $txt = GetFile($filePath);
+	if (!$txt) {
+		$txt = '(Text is blank or not found)';
+	}
 
 	my $message;
 
