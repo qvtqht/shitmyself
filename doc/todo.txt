@@ -1,3 +1,13 @@
+If an exact line more than 5 words long is matched in any other files [>>]
+	(create a reference link)
+
+If item has no parents
+	Generate a full thread page
+	
+When updating item's touch status
+If item has parents, traverse them and update them all
+Update the top level thread page too
+
 Display warning if message is signed, but there is no public key to verify
 
 Cut up event_add.template
@@ -437,10 +447,8 @@ Add to specifications:
    authors are always 0-9A-F{16} (uppercase)
    csrf is always 0-9a-f{32}
    until better specifications are arrived at
-   consider an odd-numbered hash of some kind for uniqueness?
-      e.g sha1 with one char removed or added or something
-
-Move SQLite db into cache dir
+   consider an odd-numbered hash of some kind for uniqueness? +
+      e.g sha1 with one char removed or added or something +
 
 Write
    [x] enable longer text support
@@ -464,11 +472,7 @@ How to make things easier???
 
 Somehow handle cleanup of old .html files
 
-Fix Tags page so that correct counts are displayed
-
-Author pages should list all received tags at the top
-(sums of all received tags)
-interesting (55 [total]) spam (90000)
+Fix Tags page so that correct counts are displayed +
 
 Add roles directory
     Add roles/admin and roles/moderator
@@ -485,8 +489,6 @@ config/require_username
 
 Function to add file to index and update affected pages
 
-Home page = all tagged posts
-
 Untagged page = all untagged posts
  - make it easier to vote on this one
 
@@ -496,19 +498,16 @@ cookie-based prefs
 
 $fileHash <span class=nonessential>posted by</span> $avatar <span class=nonessential>at</span> 1500000000
 
-Maybe try Perl PGP modules?
+Maybe try Perl PGP modules? +
 
-No pubkey and/or bad sig should result in big red warning on page/listing
+No pubkey and/or bad sig should result in big red warning on page/listing +
 
-Front-end signature checks/indicators in input boxes
-
-Admin's page should be generated always
+Front-end signature checks/indicators in input boxes +
 
 site ui elements/forms/areas should be a different color than all the user-entered text content
 
-vote with signature --> write page, but not submitted --> still count as anon vote?
-
-item separator/horizontal bar should be color of item's hash
+vote with signature --> write page, but not submitted
+	still count as anon vote? +
 
 js fallback for saving via "more options" link on write-small.template
 
@@ -607,25 +606,12 @@ Sometimes on Android the button push is cancelled by the keyboard retract
 
 #bug on edge: tag links change colors, but flag links do not
 
-
-
-If only one page hide pagination buttons
-
 Fix the vote/tag links
    Js: implement
-
-Set Identity shou1d update the pub1i< key to <orrespond
 
 curl
     add to tree
         add timestamp
-
-Fix add time when .txt uploaded into tree manually
-    All .txt
-        added_time exists?
-            No?
-                Current time
-                    save
 
 textarea onchange
     begins with header?
@@ -638,7 +624,6 @@ Validate signed input on Write page
             verify signature with opengpg
                 green if valid
 
-
 Link target encryption key with parent id key using gpg --list-keys
    This way "Encrypted message for ..." is linked to the correct profile
 
@@ -650,13 +635,6 @@ Make gracias.html redirect to next drop from access.pl, which will contain any n
    Create IndexLogLine() in index.pl
    Create IndexParentLine() in index.pl
 
-Add GetHashFromFile function
-   To do what?
-
-Make updates instant
-   Make access.pl write to the index
-   Hook calls to generate.pl
-
 Make adding new views easier
 Add support for linking sister sites
    Add list of sites in config(?)
@@ -664,21 +642,26 @@ Add support for linking sister sites
    List them all on page
    Add menu item for page
 
-Add generation of default values to GetConfig
-   Site name
-   Site logo
 
 
 Cookie auth via secret URL per public key, encrypted for that key
-Tag hooks for the admin (via cookie auth?)
+
 Tag ratings and enable/disable page
+
 Integrate Perl taint
 
-When writing new html dir, make a list of all existing files, and remove from hash when written to, then delete all others remaining in hash
-	I think this is made unnecessary by clean-build
+===
+
+When writing new html dir, make a list of all existing files, 
+and remove from hash when written to, 
+then delete all others remaining in hash
+	clean-build makes this unnecessary, but still would be a useful feature
+	#optimize
+		
+
+===
 
 Add CSRF token to reply form
-Remove duplicate parent= footer
 Add support for messages with multiple ENC_TOs
    Add loop
    Limit to 5? 10?
