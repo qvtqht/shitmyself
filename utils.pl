@@ -643,6 +643,7 @@ sub GetFile {
 	}
 
 	return;
+	#todo do something for a file which is missing
 }
 
 sub GetConfig { # gets configuration value based for $key
