@@ -833,13 +833,22 @@ sub DBGetTouchedPages {
 
 	WriteLog("DBGetTouchedPages($lastTouch)");
 
+	#todo remove hardcoding
 	my $query = "
-		SELECT page_name, page_param, touch_time
+		SELECT page_name, page_param, touch_time, (page_name in ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) as priority_page
 		FROM page_touch
 		WHERE touch_time >= ?
-		ORDER BY touch_time
+		ORDER BY priority_page desc, touch_time
+		LIMIT 50;
 	";
 
+#	my $query = "
+#		SELECT page_name, page_param, touch_time
+#		FROM page_touch
+#		WHERE touch_time >= ?
+#		ORDER BY touch_time
+#	";
+#
 	my @params;
 	push @params, $lastTouch;
 
@@ -1744,7 +1753,7 @@ sub DBGetItemListByTagList { #get list of items by taglist (as array)
 	return DBGetItemList(\%queryParams);
 }
 
-sub DBGetItemList {
+sub DBGetItemList { # get list of items from database. takes reference to hash of parameters
 	my $paramHashRef = shift;
 	my %params = %$paramHashRef;
 
@@ -2020,33 +2029,33 @@ sub DBGetItemFields {
 	return $itemFields;
 }
 
+#sub DBGetTopAuthors {
+#	my $query = "
+#		SELECT
+#			author_key,
+#			author_alias,
+#			author_score,
+#			author_weight,
+#			last_seen,
+#			item_count
+#		FROM author_flat
+#		ORDER BY author_score DESC
+#		LIMIT 50;
+#	";
+#
+#	my @queryParams;
+#
+#	my $sth = $dbh->prepare($query);
+#	$sth->execute(@queryParams);
+#
+#	my $ref = $sth->fetchall_arrayref();
+#
+#	$sth->finish();
+#
+#	return $ref;
+#}
+
 sub DBGetTopAuthors {
-	my $query = "
-		SELECT
-			author_key,
-			author_alias,
-			author_score,
-			author_weight,
-			last_seen,
-			item_count
-		FROM author_flat
-		ORDER BY author_score DESC
-		LIMIT 50;
-	";
-
-	my @queryParams;
-
-	my $sth = $dbh->prepare($query);
-	$sth->execute(@queryParams);
-
-	my $ref = $sth->fetchall_arrayref();
-
-	$sth->finish();
-
-	return $ref;
-}
-
-sub DBGetTopAuthors2 {
 	my $query = "
 		SELECT
 			author_key,
@@ -2079,13 +2088,19 @@ sub DBGetTopItems {
 
 	my $whereClause;
 
-	$whereClause = "WHERE item_title != '' AND parent_count = 0 AND tags_list NOT LIKE '%changelog%'";
+	$whereClause = "
+		WHERE 
+			item_title != '' AND 
+			parent_count = 0 AND 
+			',' || tags_list || ',' NOT LIKE '%,changelog,%' 
+			AND  ',' || tags_list || ',' NOT LIKE '%flag%'
+	"; #todo remove hardcoding here
 
-	my $additionalWhereClause = shift;
-
-	if ($additionalWhereClause) {
-		$whereClause .= ' AND ' . $additionalWhereClause;
-	}
+	# not sure what this is supposed to be for...
+#	my $additionalWhereClause = shift;
+#	if ($additionalWhereClause) {
+#		$whereClause .= ' AND ' . $additionalWhereClause;
+#	}
 
 	my $query = "
 		SELECT
