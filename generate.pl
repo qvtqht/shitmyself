@@ -263,18 +263,24 @@ PutFile("$HTMLDIR/rss.xml", GetRssFile());
 
 WriteIndexPages();
 
+WriteMessage("GetVotesPage()...");
 my $votesPage = GetVotesPage();
 PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
 
+WriteMessage("GetEventsPage()...");
 my $eventsPage = GetEventsPage();
 PutHtmlFile("html/events.html", $eventsPage);
 
+WriteMessage("GetTagsPage()....");
 my $tagsAlphaPage = GetTagsPage();
 PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
 
+WriteMessage("GetScoreboardPage()...");
 my $scoreboardPage = GetScoreboardPage();
 PutHtmlFile('html/scores.html', $scoreboardPage);
 PutHtmlFile('html/author/index.html', $scoreboardPage);
+
+WriteMessage("DBGetVoteCounts()...");
 
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};
@@ -287,6 +293,8 @@ while (@voteCountsArray) {
 	my $tagName = @{$tag}[0];
 	#my $tagCount = @{$tag}[1];
 
+	WriteMessage("GetReadPage('tag', '$tagName')");
+
 	my $indexPage = GetReadPage('tag', $tagName);
 
 	unshift @allTagsList, $tagName;
@@ -294,6 +302,7 @@ while (@voteCountsArray) {
 	PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
 }
 
+WriteMessage("DBGetAllAppliedTags()...");
 
 my @tagsList = DBGetAllAppliedTags();
 
@@ -308,6 +317,8 @@ foreach my $tag1 (@tagsList) {
 		if (scalar(@items) >= 5) {
 			WriteLog("Returned: ". scalar(@items));
 
+			WriteMessage("Writing tags page for $tag1 together with $tag2");
+
 			my $testPage;
 			$testPage = GetIndexPage(\@items);
 
@@ -321,6 +332,8 @@ foreach my $tag1 (@tagsList) {
 		}
 	}
 }
+
+WriteMessage("GetTopItemsPage()");
 
 #my $topItemsPage = GetTopItemsPage();
 my $topItemsPage = GetTopItemsPage();
@@ -360,15 +373,17 @@ PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #if ($votesInDatabase) {
 #	PutFile('html/votes.txt', DBGetVotesTable());
 #}
-
-my $arg1 = shift;
-if ($arg1) {
-	if (-e $arg1) {
-		if ($arg1 == 'summary') {
-			MakeSummaryPages();
-		}
-	}
-} else {
+#
+#my $arg1 = shift;
+#if ($arg1) {
+#	if (-e $arg1) {
+#		if ($arg1 == 'summary') {
+#			WriteMessage('MakeSummaryPages');
+#			
+#			MakeSummaryPages();
+#		}
+#	}
+#} else {
 
 	MakeClonePage();
 
@@ -380,6 +395,6 @@ if ($arg1) {
 		PutHtmlFile('html/index.html', GetFile('html/write.html'));
 	}
 
-}
+#}
 
 1;
