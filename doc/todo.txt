@@ -1,3 +1,7 @@
+Generate json sets in /author/friends.json /votes.json and so on
+	For consumption by client
+		But also how to when nojs?
+
 If an exact line more than 5 words long is matched in any other files [>>]
 	(create a reference link)
 
@@ -419,10 +423,10 @@ Consider changing background color based on time of day?
 
 FEEDBACK FROM L.F.
 ==================
-it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages.
-2) Submit items via URL without any additional prefix
-   * e.g. http://qdb.us/text.goes.here
-   * test if spaces work in GTr
+it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages. + 
+2) Submit items via URL without any additional prefix x
+   * e.g. http://qdb.us/text.goes.here x
+   * test if spaces work in GTr +
 3) Set up short URLs to accept input (for live version)
 4) Make UI smaller
 5) Make links for voting so that form submission not required
