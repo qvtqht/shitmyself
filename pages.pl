@@ -418,6 +418,15 @@ sub GetItemTemplateFromHash {
 	#	return '[aaaaahhhh!!!]';
 }
 
+sub GetThreadPage {
+	my $threadParent = shift;
+	if (!IsItem($threadParent)) {
+		return;
+	}
+	
+	
+}
+
 sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# %file {
 	#		file_hash = git's file hash
@@ -1201,6 +1210,7 @@ sub GetPageHeader {
 	my $identityLink = '<span id="signin"></span><span class="myid" id=myid></span> ';
 
 	$topMenuTemplate .= $identityLink;
+	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
@@ -1445,7 +1455,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	return $html;
 }
 
-sub GetScoreboardPage {
+sub GetScoreboardPage { #returns html for /scores.html
 	#todo rewrite this more pretty
 	my $txtIndex = "";
 
@@ -1458,32 +1468,35 @@ sub GetScoreboardPage {
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $topAuthors = DBGetTopAuthors();
-
-	my @topAuthorsArray = @{$topAuthors};
+	my @topAuthors = DBGetTopAuthors();
 
 	my $authorListingWrapper = GetTemplate('author_listing_wrapper.template');
 
 	my $authorListings = '';
 
-	while (@topAuthorsArray) {
-		my $authorItemTemplate = GetTemplate('author_listing.template');
-		#todo don't need to do this every time
+	while (@topAuthors) {
+		# get the friend's key
+		my $authorRef = shift @topAuthors;
+		my %author = %{$authorRef};
 
-		my $author = shift @topAuthorsArray;
-
-		my $authorKey = @{$author}[0];
-		my $authorAlias = @{$author}[1];
-		my $authorScore = @{$author}[2];
-		my $authorWeight = @{$author}[3] || 1;
-		my $authorLastSeen = @{$author}[4];
-		my $authorItemCount = @{$author}[5];
+		my $authorKey = $author{'author_key'};
+		my $authorAlias = $author{'author_alias'};
+		my $authorScore = $author{'author_score'};
+		my $authorWeight = $author{'author_weight'} || 1;
+		my $authorLastSeen = $author{'last_seen'};
+		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey);
 
 		my $authorLink = "/author/" . $authorKey . ".html";
 
-#		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
+#		my $authorFriendKey = %{$authorFriend}{'author_key'};
 
+		my $authorItemTemplate = GetTemplate('author_listing.template');
+		#todo don't need to do this every time
+#
+		$authorLastSeen = $authorLastSeen;
+#		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
+#
 		$authorItemTemplate =~ s/\$link/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
@@ -1783,7 +1796,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 	}
 
 	return $txtIndex;
-}
+} # /GetReadPage
+
 
 sub GetMenuItem {
 	my $address = shift;
@@ -2223,7 +2237,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs event_add));
+	$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs event_add fresh));
 
 #	$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 
@@ -2287,13 +2301,18 @@ sub GetRssFile {
 
 	my $baseUrl = 'http://localhost:3000/';
 
-	my $feedTitle = 'feed omg';
-	my $feedLink = 'http://localhost:3000/';
-	my $feedDescription = 'descomg';
+	my $feedTitle = GetConfig('home_title');
+	my $feedLink = GetConfig('admin/my_domain'); # default = http://localhost:3000/
+	my $feedDescription = 'site_description';
 	
 	my $feedPubDate = GetTime();
 	$feedPubDate = localtime($feedPubDate);
 	#%a, %d %b %Y %H:%M +:%S %Z
+	
+	if (!$feedLink) {
+		$feedLink = 'localhost:3000';
+	}
+	$feedLink = 'http://' . $feedLink;
 
 	$feedContainerTemplate =~ s/\$feedTitle/$feedTitle/;
 	$feedContainerTemplate =~ s/\$feedLink/$feedLink/;
