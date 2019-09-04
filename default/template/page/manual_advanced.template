@@ -2,9 +2,7 @@
 
 <h2>Introduction</h2>
 
-<p>Please enjoy this manual, and report any inaccuracies or potential for improvement.</p>
-
-$writeForm
+<p>Please enjoy this manual, and report any inaccuracies or potential for improvement. It helps if you use #meta tag.</p>
 
 <h3>These Features May Be Confusing At First</h3>
 
@@ -119,7 +117,7 @@ $writeForm
 
 <a name=other><h3>Other Resources</h3></a>
 
-<p><a href="tokens_reference.html">Tokens Reference</a>.</p>
+<p><a href="manual_tokens.html">Tokens Reference</a>.</p>
 
 <p><a href="write.html">If you have questions, please ask them using Write page</a>.</p>
 

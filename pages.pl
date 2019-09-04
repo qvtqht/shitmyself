@@ -2098,7 +2098,7 @@ sub MakeSummaryPages {
 
 	$tokensPage = InjectJs($tokensPage, qw(avatar prefs));
 
-	PutHtmlFile("$HTMLDIR/tokens_reference.html", $tokensPage);
+	PutHtmlFile("$HTMLDIR/manual_tokens.html", $tokensPage);
 
 
 	# Blank page
