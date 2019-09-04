@@ -14,6 +14,11 @@ function corsc() {
 				var clock = document.getElementById('clock');
 				if (clock) {
 					clock.style.color='yellow';
+					
+					var clockContainer = document.getElementById('clockContainer');
+					if (clockContainer) {
+						clockContainer.style.backgroundColor='404000';
+					}
 				}
 //
 //		 			var client2 = new XMLHttpRequest();
