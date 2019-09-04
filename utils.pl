@@ -619,8 +619,7 @@ sub GetAlias {
 	}
 }
 
-# Gets the contents of a file
-sub GetFile {
+sub GetFile { # Gets the contents of file $fileName
 	my $fileName = shift;
 
 	if (!$fileName) {
@@ -707,14 +706,16 @@ sub GetConfig { # gets configuration value based for $key
 	return;
 }
 
-sub ConfigKeyValid {
+sub ConfigKeyValid { #checks whether a config key is valid 
+# valid means passes character sanitize
+# and exists in default/
 	WriteLog('ConfigKeyValid()');
 
 	my $configName = shift;
 
 	WriteLog('ConfigKeyValid($configName)');
 
-	if ($configName =~ /^[a-z0-9_]{1,32}$/) {
+	if ($configName =~ /^[a-z0-9_\/]{1,64}$/) {
 		WriteLog("WARNING! ConfigKeyValid() sanity check failed!");
 	}
 
