@@ -2069,7 +2069,7 @@ sub DBGetTopAuthors {
 		LIMIT 50;
 	";
 
-	my @queryParams;
+	my @queryParams = ();
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@queryParams);
