@@ -381,6 +381,8 @@ foreach my $page (@touchedPagesArray) {
 	elsif ($pageType eq 'rss') {
 		PutFile("html/rss.xml", GetRssFile());
 	}
+	
+	DBDeletePageTouch($pageType, $pageParam);
 }
 
 # if anything has changed, redo the abyss index pages

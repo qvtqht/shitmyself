@@ -921,6 +921,18 @@ sub DBResetPageTouch {
 	WriteMessage("DBResetPageTouch() end");
 }
 
+sub DBDeletePageTouch { # deletes page_touch entry ;  $pageName, $pageParam
+#todo optimize
+	my $query = 'DELETE FROM page_touch WHERE page_name = ? AND page_param = ?';
+	
+	my $pageName = shift;
+	my $pageParam = shift;
+	
+	 my @queryParams = ($pageName, $pageParam);
+	 
+	  SqliteQuery2($query, @queryParams); 
+}
+
 sub DBAddPageTouch {
 	state $query;
 	state @queryParams;
