@@ -123,20 +123,6 @@
 
 <!-- -->
 
-<a name=clone><h3>Cloning</h3></a>
-
-<p>You can easily clone this message board.</p>
-
-<p>There are no "secrets" stored here (e.g. passwords, private keys, password hashes), except the anti-CSRF salt.</p>
-
-<p>Any signing accounts are controlled by the users' private keys.</p>
-
-<p>An hourly zip of the entire site can be downloaded here: <a href="/hike.zip">/hike.zip</a>, including the git repo.</p>
-
-<p>The scripts are on GitHub here: <a href="https://www.github.com/gulkily/hike/">github.com/gulkily/hike</a>.</p>
-
-<!-- -->
-
 <h4>Server Key</h4>
 
 <p>The Server key is set by first generating or importing the whole key into the server's keychain.</p>
