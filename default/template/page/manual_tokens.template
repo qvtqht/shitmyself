@@ -42,9 +42,9 @@
 
 <p>Example: <code>setconfig/html/color_avatars=1</code></p>
 
-<p>Example: <code>setconfig/string/en/page_intro/gracias=dc4f0b7833c04bcdf0a5e89b4be6bc9e11a1518f</code></p>
+<p>Example: <code>setconfig/string/en/page_intro/post=dc4f0b7833c04bcdf0a5e89b4be6bc9e11a1518f</code></p>
 
-<p>Example: <code>resetconfig/string/en/page_intro/gracias</code></p>
+<p>Example: <code>resetconfig/string/en/page_intro/post</code></p>
 
 <p>Settings under the admin/ tree are always restricted to admin.</p>
 

@@ -1,6 +1,6 @@
 <!--# write.template #-->
 
-<form action="./gracias.html" id=compose class=submit name=submit>
+<form action="./post.html" id=compose class=submit name=submit>
     <span id=writeintro class=beginner><!--
     <p>What you write below is public... You <i>could</i> say the whole world is watching. Be nice, please.</p>
     <p>You can also submit commands, signed messages, public keys, and more! See manual and source code for details.</p>-->

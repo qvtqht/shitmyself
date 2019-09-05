@@ -871,7 +871,7 @@ function signVote(t, token) {
 		openpgp.config.show_comment = false;
 
 		openpgp.sign(options).then(function(signed) {
-			var url = '/gracias.html?comment=' + encodeURIComponent(signed.data);
+			var url = '/post.html?comment=' + encodeURIComponent(signed.data);
 
 			if (UrlExists(url)) {
 				// todo incrememnt counter

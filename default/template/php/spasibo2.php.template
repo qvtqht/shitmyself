@@ -1,6 +1,6 @@
 <?php
 ob_flush();
-//include('gracias.html');
+//include('post.html');
 
 //fastcgi_finish_request();
 

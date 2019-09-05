@@ -2008,22 +2008,22 @@ sub MakeSummaryPages {
 
 
 	# Target page for the submit page
-	my $graciasPage = GetPageHeader("Thank You", "Thank You", 'gracias');
-	$graciasPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
+	$postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
-	$graciasPage .= GetTemplate('maincontent.template');
+	$postPage .= GetTemplate('maincontent.template');
 
-	my $graciasTemplate = GetTemplate('page/gracias.template');
+	my $postTemplate = GetTemplate('page/post.template');
 
-	$graciasPage .= $graciasTemplate;
+	$postPage .= $postTemplate;
 
-	$graciasPage .= GetPageFooter();
+	$postPage .= GetPageFooter();
 
-	$graciasPage = InjectJs($graciasPage, qw(avatar gracias prefs));
+	$postPage = InjectJs($postPage, qw(avatar post prefs));
 
-	$graciasPage =~ s/<body /<body onload="makeRefLink();" /;
+	$postPage =~ s/<body /<body onload="makeRefLink();" /;
 
-	PutHtmlFile("$HTMLDIR/gracias.html", $graciasPage);
+	PutHtmlFile("$HTMLDIR/post.html", $postPage);
 
 
 	# Ok page
@@ -2171,7 +2171,7 @@ sub GetWritePage {
 			#my $submitForm = GetTemplate('form/write.template');
 
 			if (GetConfig('admin/php/enable')) {
-				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/gracias2.php'; }" /;
+				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
 			}
 
 			my $prefillText = "";

@@ -13,7 +13,7 @@ rm -rf html/rss.xml html/rss.txt
 rm -rf config/template/*
 rm -rf config/string/*
 
-touch html/gracias.html
+touch html/post.html
 rm log/log.log
 
 rm -rf html/txt/.git

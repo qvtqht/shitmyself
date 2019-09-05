@@ -1,5 +1,5 @@
 <!-- wikireply.template -->
-<form action="./gracias.html" class=reply>
+<form action="./post.html" class=reply>
     <!--<ul class=instructions>-->
         <!--<li>Respond to above using the field below. Just like new post.</li>-->
         <!--<li>There's no need to register if you want to write something.</li>-->

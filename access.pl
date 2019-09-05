@@ -43,10 +43,10 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 
 # Prefixes we will look for in access log to find comments
 # and their corresponding drop folders
-# Wherever there is a gracias.html and board.nfo exists
+# Wherever there is a post.html and board.nfo exists
 
 
-my @submitReceivers = `find html/ | grep gracias.html`; #todo this is a hack
+my @submitReceivers = `find html/ | grep post.html`; #todo this is a hack
 
 #push @submitReceivers, 'html/write.html';
 
@@ -271,17 +271,17 @@ sub ProcessAccessLog {
 
 		# Now we see if the user is posting a message
 		# We do this by looking for $submitPrefix,
-		# which is something like /text/gracias.html?comment=...
+		# which is something like /text/post.html?comment=...
 
 		my $submitPrefix;
 		my $submitTarget;
 
-		# Look for submitted text wherever gracias.html exists
+		# Look for submitted text wherever post.html exists
 		foreach (@submitReceivers) {
 			if (substr($file, 0, length($_)) eq $_) {
 				$submitPrefix = $_;
 				$submitTarget = substr($_, 1);
-				$submitTarget = substr($submitTarget, 0, rindex($submitTarget, "gracias.html"));
+				$submitTarget = substr($submitTarget, 0, rindex($submitTarget, "post.html"));
 				last;
 			}
 		}
@@ -504,7 +504,7 @@ sub ProcessAccessLog {
 
 		my $eventAction = '/action/event.html?';
 		if (substr($file, 0, length($eventAction)) eq $eventAction) {
-			#			http://localhost:3000/gracias.html
+			#			http://localhost:3000/post.html
 			#		x		?event_name=event_name
 			#		x		&brc_ave=9:55
 			#		x		&brc_street=Q

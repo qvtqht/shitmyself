@@ -129,7 +129,7 @@ sub PushItemToHost {
 	my $fileContents = GetFile($fileName);
 	$fileContents = uri_escape($fileContents);
 
-	my $url = 'http://' . $host . "/gracias.html?comment=" . $fileContents;
+	my $url = 'http://' . $host . "/post.html?comment=" . $fileContents;
 	$url = EscapeShellChars($url);
 
 	my $curlCommand = $curlPrefix . 'curl';

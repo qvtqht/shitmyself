@@ -1,8 +1,8 @@
 <!-- reply2.template -->
 <a name=reply></a>
-<form class=reply action="/gracias.html" id=compose>
+<form class=reply action="/post.html" id=compose>
     <big><b><i>Reply</i></b></big><br>
-    <textarea rows=4 cols=80 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
+    <textarea rows=4 cols=40 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
 
     <p>
         <input type=submit onclick="if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>

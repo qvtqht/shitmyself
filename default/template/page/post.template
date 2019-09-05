@@ -1,4 +1,4 @@
-<!-- gracias.template -->
+<!-- post.template -->
 <p>Thank you!</p>
 <p>Posted content may not appear immediately.</p>
 <pre>
@@ -9,4 +9,4 @@
     \__|_| |_|\__,_|_| |_|_|\_\
 </pre>
 <p><span id=retRef></span><a href="./">Continue to Home Page</a></p>
-<!-- / gracias.template -->
+<!-- / post.template -->

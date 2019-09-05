@@ -1,6 +1,6 @@
 <!--# write2.template #-->
 
-<form action="./gracias.html" id=compose class=submit name=submit>
+<form action="./post.html" id=compose class=submit name=submit>
 	<span id=writeintro></span>
 
 	<label for="comment" class=beginner>Please share something here. <a href="/manual.html">More info in docs.</a></label><br>
