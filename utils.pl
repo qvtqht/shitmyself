@@ -1280,7 +1280,12 @@ sub GpgParse {
 
 	my $filePath = shift;
 
-	my $txt = GetFile($filePath);
+	my $txt = '';
+	if (-e $filePath) {
+		$txt = GetFile($filePath);
+	} else {
+		$txt = $filePath;
+	}
 	if (!$txt) {
 		$txt = '(Text is blank or not found)';
 	}
@@ -1501,6 +1506,18 @@ sub GpgParse {
 
 		if (!$isSigned) {
 			$message = $txt;
+		}
+
+		if ($isSigned) {
+			my $messageTrimmed = trim($message);
+
+			if (
+				substr($messageTrimmed, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header || 
+				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header ||
+				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header
+			) {
+				#todo this is where we recurse GpgParse() and get any nested signed messages and stuff like that
+			}
 		}
 
 		$returnValues{'isSigned'} = $isSigned;
