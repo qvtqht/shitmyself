@@ -108,18 +108,13 @@ function disarmSignoutButton(t) {
 	document.getElementById('locm').style.display='none';
 }
 
-function makePaste() {
-	alert();
-}
-
 var loading = document.getElementById('loading');
 if (loading) {
 	loading.style.display = 'none';
 }
 
 
-// retrieve stored user fingerprint from localstorage
-function getUserFp() {
+function getUserFp() { // retrieve stored user fingerprint from localstorage
 	var fingerprint = localStorage.getItem("fingerprint");
 	if (fingerprint === null || fingerprint.length === 0) {
 		return null;
@@ -128,9 +123,7 @@ function getUserFp() {
 	}
 }
 
-// retrieve previously built avatar from localstore
-// this is already in html form
-function getAvatar() {
+function getAvatar() { // retrieve previously built avatar from localstore (already in html form)
 	var myAvatar = localStorage.getItem("avatar");
 	if (myAvatar === null || myAvatar.length === 0) {
 		return null;
@@ -139,12 +132,6 @@ function getAvatar() {
 	}
 }
 
-function valReplyToken() {
-// before we sign the message, we need to ensure that
-// there is a reply token if it is a reply form
-
-	sp = document.getElementById('replySignedContainer');
-}
 
 // if there's a user fingerprint,
 // this checks for a place to put a "post as" or "reply as" button
@@ -161,13 +148,13 @@ if (getUserFp()) {
 	}
 }
 
+function showHideForms() { // shows and hides the register and logged in forms
 // this is for the identity page
-// it shows and hides the register and logged in forms
 // depending on the currently logged in status
-// logged in =  create id is hidden, current id is displayed
-// logged out = create id is shown, current id is hidden
-// this will also enable/disable the restore/copy buttons in the private key form
-function showHideForms() {
+// 	logged in =  create id is hidden, current id is displayed
+// 	logged out = create id is shown, current id is hidden
+
+
     // if user fingerprint exists
 	if (getUserFp()) {
 	    //current id form, show it
@@ -224,8 +211,7 @@ function showHideForms() {
 	}
 }
 
-// call showHideForms()
-showHideForms();
+showHideForms(); // call showHideForms()
 
 function logOut2() {
 	removeStoredKeys();
@@ -242,24 +228,23 @@ function logOut2() {
 		textbox.value = '';
 	}
 
-    // remove displayed avatar at the top of the page
+	// remove displayed avatar at the top of the page
 	var avatar = document.getElementById("myid");
 	if (avatar) {
 		avatar.innerHTML = '';
 	}
 
-    // remove the displayed avatar on the page
+	// remove the displayed avatar on the page
 	avatar = document.getElementById("myAvatar");
 	if (avatar) {
 		avatar.innerHTML = '';
 	}
 
-    // show and hide the correct forms on the page, if applicable
+	// show and hide the correct forms on the page, if applicable
 	showHideForms();
 }
 
-// remove login-related stored keys
-function removeStoredKeys() {
+function removeStoredKeys() { // remove login-related stored keys
     // remove the keys
 	window.localStorage.removeItem("privatekey");
 	window.localStorage.removeItem("publickey");
@@ -323,8 +308,7 @@ function insertPubKey() {
 	}
 }
 
-// gets current user's cached public key from localstorage
-function getPublicKey() {
+function getPublicKey() { // gets current user's cached public key from localstorage
 	var publicKey = localStorage.getItem("publickey");
 	if (publicKey === null || publicKey.length === 0) {
 		return null;
@@ -333,8 +317,7 @@ function getPublicKey() {
 	}
 }
 
-// onload function for identity page
-function identityOnload() {
+function identityOnload() { // onload function for identity page
 	var pk = getPrivateKey();
 
    // is there a private key?
@@ -392,17 +375,16 @@ function setAvatar(avatar) {
 	window.localStorage.setItem("avatar", avatar);
 }
 
-// converts hex characters to symbols for the now unused
-// avatars that included different symbols instead of just
-// two asterisks
-function hexToChar(string) {
+function hexToChar(string) { // converts hex characters to symbols for the now unused
+// used by avatars that included different symbols instead of just two asterisks
+
 	return string.replace(/0/gi,'~').replace(/1/gi,'@').replace(/2/gi,'#').replace(/3/gi,'$').replace(/4/gi,'%').replace(/5/gi,'^').replace(/6/gi,'&').replace(/7/gi,'*').replace(/8/gi,'+').replace(/9/gi,'=').replace(/a/gi,'>').replace(/b/gi,'<').replace(/c/gi,'|').replace(/d/gi,'}').replace(/e/gi,':').replace(/f/gi,'+');
 }
 
-// if there's a private key textbox,
-// set the current private key and refresh the pubkey, fingerprint, and avatar too
+function saveId() { // set the current private key and refresh the pubkey, fingerprint, and avatar too
+// only if there's a private key textbox,
 // not much validation currently #todo
-function saveId() {
+
     // look for textbox
 	var textbox = document.getElementById("privatekey");
 
@@ -917,10 +899,14 @@ function signMessage() {
 					}
 				}
 			}
-			
+//			
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-
-			//privateKey.decrypt(passPhrase);
+//
+//			privateKey.decrypt('hello');
+//
+//			var privKeyObj = (await openpgp.key.readArmored(privkey)).keys[0];
+//			await privKeyObj.decrypt(passphrase);
+//			
 
 			options = {
 				data: message,                             // input as String (or Uint8Array)
