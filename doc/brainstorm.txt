@@ -389,3 +389,6 @@ Pop up a new node
 	
 NoScript button
 	
+Split message into lines
+	average line length = paragraph
+	smaller than average = heading
