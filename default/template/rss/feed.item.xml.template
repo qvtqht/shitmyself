@@ -3,5 +3,9 @@
         <pubDate>$itemPubDate</pubDate>
         <title>$itemTitle</title>
         <link>$itemLink</link>
-        <description>$itemDescription</description>
+        <description>
+                <![CDATA[
+                $itemDescription
+                ]]>
+        </description>
     </item>
