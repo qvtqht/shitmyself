@@ -1215,9 +1215,9 @@ sub GetPageHeader {
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
+	$topMenuTemplate .= GetMenuItem("/stats.html", '<small>Status</small>');
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
-	$topMenuTemplate .= GetMenuItem("/stats.html", 'Stats', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
 
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
