@@ -214,6 +214,9 @@ sub ProcessAccessLog {
 				 $req, $file, $proto, $status, $length, $ref) = split(' ',$line);
 		}
 
+		my $recordTimestamp = 0; # do we need to record timestamp?
+		my $recordFingerprint = 0;  # do we need to record timestamp?
+
 		# useragent is last. everything that is not the values we have pulled out so far
 		# is the useragent.
 		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 10;
@@ -346,9 +349,6 @@ sub ProcessAccessLog {
 #					$message =~ s/\&/\n&/g;
 					#is this dangerous?
 
-					my $recordTimestamp = 0;
-					my $recordFingerprint = 0;
-
 					foreach my $urlParam (@messageItems) {
 						my ($paramName, $paramValue) = split('=', $urlParam);
 
@@ -443,7 +443,7 @@ sub ProcessAccessLog {
 							GetConfig('admin/logging/record_clients')
 								||
 							GetConfig('admin/logging/record_sha512')
-						) {
+						) { #todo this should be factored into a function
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = '';
 
@@ -470,7 +470,7 @@ sub ProcessAccessLog {
 								ServerSign($addedFilename);
 							}
 
-							#DBAddAddedTimeRecord($fileHash, $addedTime);
+							DBAddAddedTimeRecord($fileHash, $addedTime);
 						}
 					} else {
 						WriteLog("WARNING: Could not open text file to write to: ' . $filename");
@@ -731,6 +731,13 @@ sub ProcessAccessLog {
 						$newFile .= $newLine;
 
 						$newItemCount++;
+					}
+
+					if (GetConfig('admin/logging/record_voter_fingerprint')) {
+						$recordFingerprint = 1;
+					}
+					if (GetConfig('admin/logging/record_voter_timestamp')) {
+						$recordTimestamp = 1;
 					}
 				}
 			}
