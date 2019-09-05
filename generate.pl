@@ -385,7 +385,7 @@ PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #	}
 #} else {
 
-	MakeClonePage();
+	MakeDataPage();
 
 	my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
 	if ($homePageHasBeenWritten) {

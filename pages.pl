@@ -1058,7 +1058,7 @@ sub GetPageFooter {
 	#footer menu
 	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Stats');
 	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
-	$footerMenuTemplate .= GetMenuItem("/clone.html", 'Clone');
+	$footerMenuTemplate .= GetMenuItem("/data.html", 'Data');
 	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Abyss');
 	$footerMenuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$footerMenuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
@@ -1324,7 +1324,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 			my $item = shift @topItemsArray;
 
-			my $itemKey = @{$item}[2];
+			my $itemKey = @{$item}[2]; #todo
 			my $itemTitle = @{$item}[7];
 			my $itemScore = @{$item}[8];
 			my $authorKey = @{$item}[3];
@@ -2356,7 +2356,11 @@ sub GetRssFile {
 		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});
 
 		if ($itemTitle eq '') {
-			$itemTitle = '(Untitled)';
+			if ($itemDescription) {
+				$itemTitle = $itemDescription;
+			} else {
+				$itemTitle = '(Untitled)';
+			}
 		}
 
 		$itemTitle = FormatForRss($itemTitle);
@@ -2418,10 +2422,10 @@ sub GetVersionPage { # returns html with version information for $version (git c
 	return $txtPageHtml;
 }
 
-sub MakeClonePage { # returns html for /clone.html
-	WriteLog('MakeClonePage() called');
+sub MakeDataPage { # returns html for /data.html
+	WriteLog('MakeDataPage() called');
 
-	#This makes the zip file as well as the clone.html page that lists its size
+	#This makes the zip file as well as the data.html page that lists its size
 
 	my $zipInterval = 3600;
 	my $lastZip = GetCache('last_zip');
@@ -2443,11 +2447,11 @@ sub MakeClonePage { # returns html for /clone.html
 	}
 
 
-	my $clonePage = GetPageHeader("Clone This Site", "Clone This Site", 'clone');
+	my $dataPage = GetPageHeader("Data", "Data", 'data');
 
-	$clonePage .= GetTemplate('maincontent.template');
+	$dataPage .= GetTemplate('maincontent.template');
 
-	my $clonePageTemplate = GetTemplate('clone.template');
+	my $dataPageTemplate = GetTemplate('data.template');
 
 	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
 
@@ -2456,15 +2460,15 @@ sub MakeClonePage { # returns html for /clone.html
 		$sizeHikeZip = 0;
 	}
 
-	$clonePageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
+	$dataPageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
 
-	$clonePage .= $clonePageTemplate;
+	$dataPage .= $dataPageTemplate;
 
-	$clonePage .= GetPageFooter();
+	$dataPage .= GetPageFooter();
 
-	$clonePage = InjectJs($clonePage, qw(avatar prefs));
+	$dataPage = InjectJs($dataPage, qw(avatar prefs));
 
-	PutHtmlFile("$HTMLDIR/clone.html", $clonePage);
+	PutHtmlFile("$HTMLDIR/data.html", $dataPage);
 }
 
 
