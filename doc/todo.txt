@@ -248,7 +248,7 @@ fix the remaining duplicate tags (?)
 abyss pages should be updated
 	and or not have tags on them
 
-#bug iframe should not have a border on gracias page
+#bug iframe should not have a border on post page
 
 javascripted one-click vote buttons that reflect status on-page
 
@@ -633,7 +633,7 @@ Link target encryption key with parent id key using gpg --list-keys
 
 Feeds list
    OPML
-Make gracias.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
+Make post.html redirect to next drop from access.pl, which will contain any newly-added posts as a list.
    If there is only one post, automatically redirect to it
    Otherwise, "is this one of your posts?"
    Create IndexLogLine() in index.pl

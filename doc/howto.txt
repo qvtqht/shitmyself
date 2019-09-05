@@ -15,7 +15,7 @@ Set Admin
 =========
 1. Create an account
 2. Go to profile
-3. Click "reg.entry"
+3. Click "pubkey"
 4. Click "txt"
 5. Copy the public key
 6. Save it to admin.key (above html)

@@ -1,3 +1,6 @@
+A big floating > button seems to be a worthwhile trend
+
+
 Make forms out of text
 	[ ] abc
 		becomes <input checkbox name=md5(abc)> abc
