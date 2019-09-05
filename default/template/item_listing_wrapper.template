@@ -1,3 +1,9 @@
-<table cellpadding=3><tr><th align=left>Title</th><th align=left>Score</th><th align=left>Author</th></tr>
-$itemListings
+<table cellpadding=3>
+	<tr>
+		<th align=left>Title</th>
+		<th align=left>Score</th>
+		<th align=left>Author</th>
+		<!--<th align=left>Time</th>-->
+	</tr>
+	$itemListings
 </table>
