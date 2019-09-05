@@ -1,3 +1,13 @@
+DATA page
+Zip files
+	Multiple zip files
+		config
+		text files
+		pubkeys
+	Refresh with gitflow
+
+
+
 Generate json sets in /author/friends.json /votes.json and so on
 	For consumption by client
 		But also how to when nojs?
@@ -40,13 +50,6 @@ add pdf export for devices that prefer it
 addalias/5questions/abcdef0123456789
 
 Take stuff that is not PGP-related out of crypto.js.template
-
-Zip files
-	Multiple zip files
-		config
-		text files
-		pubkeys
-	Refresh with gitflow
 
 #bug Opera 12.x : advanced controls cannot be shown
 
