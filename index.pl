@@ -386,8 +386,9 @@ sub IndexTextFile {
 					}
 
 					my $reconLine = ">>$parentHash";
-
+					
 					$message =~ s/$reconLine/$reconLine/;
+					
 					#$message =~ s/$reconLine/[In response to message $parentHash]/;
 					# replace with itself, no change needed
 
