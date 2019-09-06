@@ -392,32 +392,43 @@ sub GetTagsPage {
 	return $txtIndex;
 }
 
-sub GetItemTemplateFromHash {
-		my $itemHash = shift;
-		my $insetPrefix = shift;
-
-		if (IsSha1($itemHash)) {
-	#		my $itemTemplate;
-	#		if ($insetPrefix && $insetPrefix eq '>>') {
-	#			my %queryParams;
-	#			$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
-	#
-	#			my @files = DBGetItemList(\%queryParams);
-	#
-	#			$itemTemplate = GetItemTemplate($files[0]);
-	#		} else {
-	#			$itemTemplate = GetHtmlLink($itemHash);
-	#		}
-	#		return $itemTemplate;
-	#	} else {
-	#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
-	#		return '[item could not be displayed]';
-		}
-	#
-	#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
-	#	return '[aaaaahhhh!!!]';
-}
-
+#sub GetItemTemplateFromHash { # takes a hash, returns an item in html format
+##todo sanity checks etc
+#	my $itemHash = shift;
+#	my $templateName = shift;
+#
+#	my $itemTemplate = '';
+#
+#	if (IsSha1($itemHash)) {
+#
+#		my %queryParams;
+#		$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
+#
+#		my @files = DBGetItemList(\%queryParams);
+#
+#		WriteLog(Data::Dumper->Dump(@files));
+#		
+#		sleep 10;
+#		
+##			my $thisItem = @files[0];
+##			$thisItem{'template_name' = 'item/item-small.template';
+##
+#		#$itemTemplate = GetItemTemplate($files[0]);
+#	#		} else {
+#	#			$itemTemplate = GetHtmlLink($itemHash);
+#	#		}
+#	#		return $itemTemplate;
+#	#	} else {
+#	#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
+#	#		return '[item could not be displayed]';
+#		}
+#	#
+#	#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
+#	#	return '[aaaaahhhh!!!]';
+#	
+#	return $itemTemplate;
+#}
+#
 sub GetThreadPage {
 	my $threadParent = shift;
 	if (!IsItem($threadParent)) {
@@ -531,7 +542,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 			
 			# Get the reply template			
 			my $replyTemplate = GetItemTemplate($replyItem);
-
+			
 			# output it to debug
 			WriteLog('$replyTemplate');
 			WriteLog($replyTemplate);
@@ -640,7 +651,8 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	return $txtIndex;
 }
 
-sub GetHtmlLink {
+sub GetHtmlLink { 
+#todo this doesn't work with orgnaize off
 	my $hash = shift;
 
 	if ($hash) {
@@ -826,6 +838,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+#		$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
 
 		if ($file{'format_avatars'}) {
 			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
