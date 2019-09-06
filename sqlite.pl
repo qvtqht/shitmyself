@@ -685,7 +685,24 @@ sub SqliteEscape {
 # 	return $authorInfo;
 # }
 
-sub DBGetItemAuthor {
+sub DBGetItemTitle { # get title for item ($itemhash)
+	my $itemHash = shift;
+
+	if (!$itemHash || !IsItem($itemHash)) {
+		return;
+	}
+
+	my $query = 'SELECT title FROM item_title WHERE file_hash = ?';
+	my @queryParams = ();
+
+	push @queryParams, $itemHash;
+
+	my $itemTitle = SqliteGetValue($query, @queryParams);
+
+	return $itemTitle;
+}
+
+sub DBGetItemAuthor { # get author for item ($itemhash)
 	my $itemHash = shift;
 
 	if (!$itemHash || !IsItem($itemHash)) {
@@ -703,7 +720,7 @@ sub DBGetItemAuthor {
 }
 
 
-sub DBAddConfigValue {
+sub DBAddConfigValue { # add value to the config table ($key, $value)
 	state $query;
 	state @queryParams;
 
