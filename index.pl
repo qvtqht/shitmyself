@@ -333,42 +333,6 @@ sub IndexTextFile {
 			ServerSign($newAdminMessage);
 		}
 
-		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
-			$isAdmin = 1;
-
-			DBAddVoteRecord($gitHash, $addedTime, 'admin');
-
-			DBAddPageTouch('tag', ' admin');
-
-			DBAddPageTouch('scores', 'foo');
-
-			DBAddPageTouch('stats', 'foo');
-		}
-
-		if ($isSigned && $gpgKey) {
-			DBAddAuthor($gpgKey);
-
-			DBAddPageTouch('author', $gpgKey);
-
-			DBAddPageTouch('scores', 'foo');
-
-			DBAddPageTouch('stats', 'foo');
-		}
-
-		if ($alias) {
-			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
-
-			DBAddKeyAlias('flush');
-
-			DBAddPageTouch('author', $gpgKey);
-
-			DBAddPageTouch('scores', 'foo');
-
-			DBAddPageTouch('stats', 'foo');
-		}
-
-		DBAddPageTouch('rss', 'foo');
-
 		my $itemName = TrimPath($file);
 
 		# look for quoted message ids
@@ -569,7 +533,7 @@ sub IndexTextFile {
 
 							DBAddPageTouch('author', $voterId);
 
-							DBAddPageTouch('scores', 'foo');
+							DBAddPageTouch('scores', 0);
 						}
 
 						DBAddVoteRecord($gitHash, $addedTime, 'vouch');
@@ -909,7 +873,7 @@ sub IndexTextFile {
 
 					DBAddPageTouch('tag', 'event');
 
-					DBAddPageTouch('events', 0);
+					DBAddPageTouch('events', 1);
 				}
 			}
 		}
@@ -1065,7 +1029,7 @@ sub IndexTextFile {
 			DBAddItem ($file, $itemName, '',      $gitHash, 'txt', $verifyError);
 		}
 
-		DBAddPageTouch('top', 'foo');
+		DBAddPageTouch('top', 1);
 
 		if ($hasParent == 0) {
 #			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
@@ -1075,7 +1039,33 @@ sub IndexTextFile {
 
 		DBAddPageTouch('item', $gitHash);
 
-		DBAddPageTouch('index', 'foo'); #todo verify this works
+		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
+			$isAdmin = 1;
+
+			DBAddVoteRecord($gitHash, $addedTime, 'admin');
+
+			DBAddPageTouch('tag', ' admin');
+		}
+
+		if ($isSigned) {
+			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
+
+			DBAddKeyAlias('flush');
+
+			DBAddPageTouch('author', $gpgKey);
+
+			DBAddPageTouch('scores', 1);
+		}
+
+		DBAddPageTouch('stats', 1);
+		
+		DBAddPageTouch('events', 1);
+											 
+		DBAddPageTouch('rss', 'foo');
+
+		DBAddPageTouch('index', 1); #todo verify this works
+
+		DBAddPageTouch('flush');
 	}
 }
 
