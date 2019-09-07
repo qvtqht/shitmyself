@@ -333,6 +333,42 @@ sub IndexTextFile {
 			ServerSign($newAdminMessage);
 		}
 
+		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
+			$isAdmin = 1;
+
+			DBAddVoteRecord($gitHash, $addedTime, 'admin');
+
+			DBAddPageTouch('tag', ' admin');
+
+			DBAddPageTouch('scores', 'foo');
+
+			DBAddPageTouch('stats', 'foo');
+		}
+
+		if ($isSigned && $gpgKey) {
+			DBAddAuthor($gpgKey);
+
+			DBAddPageTouch('author', $gpgKey);
+
+			DBAddPageTouch('scores', 'foo');
+
+			DBAddPageTouch('stats', 'foo');
+		}
+
+		if ($alias) {
+			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
+
+			DBAddKeyAlias('flush');
+
+			DBAddPageTouch('author', $gpgKey);
+
+			DBAddPageTouch('scores', 'foo');
+
+			DBAddPageTouch('stats', 'foo');
+		}
+
+		DBAddPageTouch('rss', 'foo');
+
 		my $itemName = TrimPath($file);
 
 		# look for quoted message ids
