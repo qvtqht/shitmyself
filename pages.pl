@@ -784,29 +784,32 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 	# verify that referenced file path exists
 	if (-e $file{'file_path'}) {
-		my $gitHash = $file{'file_hash'};
-		my $gpgKey = $file{'author_key'};
+		my $gitHash = $file{'file_hash'}; # file hash/item identifier
+		my $gpgKey = $file{'author_key'}; # author's fingerprint
 
-		my $isTextart = 0;
+		my $isTextart = 0; # if textart, need extra formatting
 
-		my $isSigned;
-		if ($gpgKey) {
+		my $alias; # stores author's alias / name
+		my $isAdmin = 0; # author is admin? (needs extra styles)
+
+		my $isSigned; # is signed by user (also if it's a pubkey)
+		if ($gpgKey) { # if there's a gpg key, it's signed
 			$isSigned = 1;
 		} else {
 			$isSigned = 0;
 		}
 
-		my $alias;
-		my $isAdmin = 0;
-
+		# get formatted/post-processed message for this item
 		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
 		if ($file{'remove_token'}) {
-			WriteLog('$file{\'remove_token\'} = ' . $file{'remove_token'});
+			# if remove_token is specified, remove it from the message
 
+			WriteLog('$file{\'remove_token\'} = ' . $file{'remove_token'});
 
 			$message =~ s/$file{'remove_token'}//g;
 			$message = trim($message);
+			
 			#todo there is a bug here, but it is less significant than the majority of cases
 			#  the bug is that it removes the token even if it is not by itself on a single line
 			#  this could potentially be mis-used to join together two pieces of a forbidden string
@@ -816,101 +819,136 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		if ($file{'tags_list'}) {
+			# if there is a list of tags, check to see if there is a 'textart' tag
+
+			# split the tags list into @itemTags array
 			my @itemTags = split(',', $file{'tags_list'});
 
+			# loop through all the tags in @itemTags
 			while (scalar(@itemTags)) {
 				my $thisTag = pop @itemTags;
 				if ($thisTag eq 'textart') {
-					$isTextart = 1;
+					$isTextart = 1; # set isTextart to 1 if 'textart' tag is present
 				}
 			}
 		}
 
 		if ($isTextart) {
+			# if textart, format with extra spacing to preserve character arrangement
 			$message = TextartForWeb($message);
 		} else {
+			# if not textart, just escape html characters
 			$message = FormatForWeb($message);
 		}
 
 		#$message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
 
+		# if any references to other items, replace with link to item
+		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+
+#		$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
+
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
-		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+#		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 #		$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
 
+		# if format_avatars flag is set, replace author keys with avatars
 		if ($file{'format_avatars'}) {
 			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
 		}
-
+													 
 		if (
 			$isSigned
 				&&
 			IsAdmin($gpgKey)
 		) {
+			# if item is signed, and the signer is an admin, set $isAdmin = 1
 			$isAdmin = 1;
 		}
 
+		# escape the alias name for outputting to page
 		$alias = HtmlEscape($alias);
 
+		# initialize $itemTemplate for storing item output
 		my $itemTemplate = '';
 		if ($file{'template_name'}) {
+			# if template_name is specified, use that as the template
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
+			# otherwise, determine template based on item length (config/item_long_threshold)
 			if (length($message) > GetConfig('item_long_threshold')) {
+				# if item is long, use template/item/itemlong.template
 				$itemTemplate = GetTemplate("item/itemlong.template");
 			} else {
+				# otherwise use template/item/item.template
 				$itemTemplate = GetTemplate("item/item.template");
 			}
 		}
 
+		# initialize item's css class to 'txt'
 		my $itemClass = "txt";
 		if ($isSigned) {
+			# if item is signed, add "signed" css class
 			$itemClass .= ' signed';
 		}
 		if ($isAdmin) {
+			# if item is signed by an admin, add "admin" css class
 			$itemClass .= ' admin';
 		}
 		if ($isTextart) {
+			# if item is textart, add "item-textart" css class
+			#todo this may not be necessary anymore
 			$itemClass .= ' item-textart';
 		}
 
-		my $authorUrl;
-		my $authorAvatar;
-		my $authorLink;
+		my $authorUrl; # author's profile url
+		my $authorAvatar; # author's avatar
+		my $authorLink; # author's link
 
 		if ($gpgKey) {
+			# if theres a $gpgKey, set up related variables
+			
 			$authorUrl = "/author/$gpgKey/";
 			$authorAvatar = GetAvatar($gpgKey);
 
+			# generate $authorLink from template
 			$authorLink = GetTemplate('authorlink.template');
-
+			
 			$authorLink =~ s/\$authorUrl/$authorUrl/g;
 			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
+			# if no author, no $authorLink
 			$authorLink = "";
 		}
 
+		# set up $permalinkTxt, which links to the .txt version of the file
 		my $permalinkTxt = $file{'file_path'};
-#		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
-		my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
-
-#		$permalinkTxt =~ s/^\.//;
+		# strip the 'html/' prefix on the file's path, replace with /
+		# todo relative links
 		$permalinkTxt =~ s/html\//\//;
 
-		my $itemText = $message;
-		my $fileHash = GetFileHash($file{'file_path'});
-		my $itemName;
+		# set up $permalinkHtml, which links to the html page for the item
+		my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
+		#		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+		#		$permalinkTxt =~ s/^\.//;
+													 
+		my $itemText = $message; # output for item's message (formatted text)
+		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
+		my $itemName; # item's 'name'
+		
 		if ($file{'display_full_hash'}) {
+			# if display_full_hash is set, display the item's entire hash for name
 			$itemName = $fileHash;
 		} else {
+			# if display_full_hash is not set, truncate the hash to 8 characters
 			$itemName = substr($fileHash, 0, 8) . '..';
 		}
 
 		#my $replyCount = $file{'child_count'};
 
-		my $borderColor = '#' . substr($fileHash, 0, 6);
+		my $borderColor = '#' . substr($fileHash, 0, 6); # item's border color
 
 		my $addedTime = ''; #todo
 
