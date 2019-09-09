@@ -1263,6 +1263,7 @@ sub GetPageHeader {
 	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
+	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Preferences');
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
@@ -1696,7 +1697,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			if ($authorDescription) {
 				$authorDescription .= '<br>';
 			}
-			$authorDescription .= '<b>Admin. Do not taunt.</b>';
+			$authorDescription .= '<b>Admin.</b>';
 		}
 
 		if ($authorDescription) {
@@ -2036,6 +2037,9 @@ sub WriteIndexPages {
 	}
 }
 
+sub MakeFormPages {
+}
+
 sub MakeSummaryPages {
 	WriteLog('MakeSummaryPages() BEGIN');
 
@@ -2053,9 +2057,13 @@ sub MakeSummaryPages {
 	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
 
 
-	# Profile Management page
+	# Profile page
 	my $identityPage = GetIdentityPage();
 	PutHtmlFile("$HTMLDIR/profile.html", $identityPage);
+
+	# Preferences page
+	my $prefsPage = GetPrefsPage();
+	PutHtmlFile("$HTMLDIR/prefs.html", $prefsPage);
 
 
 	# Target page for the submit page
@@ -2272,8 +2280,16 @@ sub GetEventAddPage { # get html for /event.html
 	$txtIndex = GetPageHeader($title, $titleHtml, 'event_add');
 
 	$txtIndex .= GetTemplate('maincontent.template');
+	
 
 	my $eventAddForm = GetTemplate('form/event_add.template');
+
+	if (GetConfig('brc/enable')) {
+		my $brcAddressForm = GetTemplate('form/brc_address.template');
+		$eventAddForm =~ s/\$brcAddressForm/$brcAddressForm/;
+	} else {
+		$eventAddForm =~ s/\$brcAddressForm//;
+	}
 
 #	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
 #		localtime(time);
@@ -2335,6 +2351,32 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh));
 
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+
+	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
+
+	return $txtIndex;
+}
+
+sub GetPrefsPage {
+	my $txtIndex = "";
+
+	my $title = "Preferences";
+	my $titleHtml = "Preferences";
+
+	$txtIndex = GetPageHeader($title, $titleHtml, 'preferences');
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $prefsPage = GetTemplate('form/preferences.template');
+
+	$txtIndex .= $prefsPage;
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh));
+
+	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
