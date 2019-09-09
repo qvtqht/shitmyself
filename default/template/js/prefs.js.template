@@ -202,6 +202,14 @@ if (document.getElementById) {
 				cb.checked = 1;
 			}
 		}
+		
+		// display username checkbox
+		if (GetPrefs('display_username') == 1) {
+			var cb = document.getElementById('displayUsername');
+			if (cb) {
+				cb.checked = 1;
+			}
+		}
 	}
 
 	// create profile pane
