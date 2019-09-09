@@ -40,7 +40,7 @@
 		</p>
 
 		<p>
-			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="showHideCheckbox(0, this, 'advanced_highlight');"> Highlight advanced things</label>
+			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="showHideCheckbox(0, this, 'advanced_highlight');"> Highlight advanced options</label>
 		</p>
 
 		<p>
