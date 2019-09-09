@@ -334,29 +334,35 @@ sub IndexTextFile {
 		}
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
+		# it was posted by admin
 			$isAdmin = 1;
 
 			DBAddVoteRecord($gitHash, $addedTime, 'admin');
 
 			DBAddPageTouch('tag', ' admin');
 
-			DBAddPageTouch('scores', 'foo');
+			DBAddPageTouch('scores', 0);
 
-			DBAddPageTouch('stats', 'foo');
+			DBAddPageTouch('stats', 0);
 		}
 
 		if ($isSigned && $gpgKey) {
+		# it was signed and there's a gpg key
 			DBAddAuthor($gpgKey);
 
 			DBAddPageTouch('author', $gpgKey);
+			
+			DBAddPageTouch('scores', 0);
 
-			DBAddPageTouch('scores', 'foo');
-
-			DBAddPageTouch('stats', 'foo');
+			DBAddPageTouch('stats', 0);
 		}
 
 		if ($alias) {
 			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
+			
+			UnlinkCache('avatar/' . $gpgKey);
+			UnlinkCache('avatar.color/' . $gpgKey);
+			UnlinkCache('pavatar/' . $gpgKey);
 
 			DBAddKeyAlias('flush');
 
