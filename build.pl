@@ -100,13 +100,17 @@ WriteConfigFromDatabase();
 
 print "\n* Step " . ++$buildStep;
 
+DBAddPageTouch('summary', 0);
+
+print "\n* Step " . ++$buildStep;
+
 system('perl generate.pl');
 
 print "\n* Step " . ++$buildStep;
 
-DBResetPageTouch();
+#DBResetPageTouch();
 
-print "\n* Step " . ++$buildStep;
+#print "\n* Step " . ++$buildStep;
 
 system('perl gitflow.pl');
 
