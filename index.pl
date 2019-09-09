@@ -182,7 +182,7 @@ sub IndexTextFile {
 			}
 		}
 		else {
-			WriteLog('IndexTextFile: WTF?');
+			WriteLog('IndexTextFile: organizing not needed');
 		}
 	}
 
@@ -207,15 +207,6 @@ sub IndexTextFile {
 
 	my @allowedActions;		# contains actions allowed to signer of message
 
-	if (IsServer($gpgKey)) { #todo
-		push @allowedActions, 'addedtime';
-		push @allowedActions, 'addedby';
-	}
-	if (IsAdmin($gpgKey)) { #todo
-		#push @allowedactions vouch
-		#push @allowedactions setconfig
-	}
-
 #	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
 #todo add support for .md (markdown) files
 
@@ -235,6 +226,9 @@ sub IndexTextFile {
 		$message = $gpgResults{'message'}; # message which will be displayed once tokes are processed
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
 		$gpgKey = $gpgResults{'key'}; # if it is signed, fingerprint of signer
+		
+		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
+		
 		$alias = $gpgResults{'alias'}; # alias of signer (from public key)
 		$gitHash = $gpgResults{'gitHash'}; # hash provided by git for the file
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; # 
@@ -245,8 +239,16 @@ sub IndexTextFile {
 			}
 		}
 
+		if (IsServer($gpgKey)) { #todo
+			push @allowedActions, 'addedtime';
+			push @allowedActions, 'addedby';
+		}
+		if (IsAdmin($gpgKey)) { #todo
+			#push @allowedactions vouch
+			#push @allowedactions setconfig
+		}
 
-		WriteLog("\$alias = $alias");
+		WriteLog("IndexTextFile: \$alias = $alias");
 
 		if ($gpgKey) {
 			WriteLog("\$gpgKey = $gpgKey");
@@ -1018,13 +1020,10 @@ sub IndexTextFile {
 
 			DBAddPageTouch('author', $gpgKey);
 			# add a touch to the author page
-
-			# $addedTimeIsNew indicates that this is a freshly added file
-#			if ($addedTimeIsNew) {
-				# delete any caches for this fingerprint's avatar
-				UnlinkCache("avatar/$gpgKey");
-				UnlinkCache("avatar.color/$gpgKey");
-#			}
+			
+			UnlinkCache('avatar/' . $gpgKey);
+			UnlinkCache('avatar.color/' . $gpgKey);
+			UnlinkCache('pavatar/' . $gpgKey);
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 
@@ -1090,8 +1089,6 @@ sub IndexTextFile {
 		}
 
 		if ($isSigned) {
-			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
-
 			DBAddKeyAlias('flush');
 
 			DBAddPageTouch('author', $gpgKey);
