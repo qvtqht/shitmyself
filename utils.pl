@@ -520,6 +520,8 @@ sub GetPlainAvatar {
 }
 
 sub GetAvatar { #gets avatar based on author key
+	WriteLog("GetAvatar(...)");
+
 	if (!GetConfig('html/color_avatars')) {
 		return GetPlainAvatar(@_);
 	}
@@ -1507,18 +1509,18 @@ sub GpgParse {
 		if (!$isSigned) {
 			$message = $txt;
 		}
-
-		if ($isSigned) {
-			my $messageTrimmed = trim($message);
-
-			if (
-				substr($messageTrimmed, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header || 
-				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header ||
-				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header
-			) {
-				#todo this is where we recurse GpgParse() and get any nested signed messages and stuff like that
-			}
-		}
+#
+#		if ($isSigned) {
+#			my $messageTrimmed = trim($message);
+#
+#			if (
+#				substr($messageTrimmed, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header || 
+#				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header ||
+#				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header
+#			) {
+#				#todo this is where we recurse GpgParse() and get any nested signed messages and stuff like that
+#			}
+#		}
 
 		$returnValues{'isSigned'} = $isSigned;
 		$returnValues{'text'} = $txt;
@@ -1835,7 +1837,6 @@ sub GetItemMessage { # retrieves item's message using cache or file path
 	}
 
 	WriteLog("GetItemMessage($itemHash)");
-
 
 	my $message;
 	my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
