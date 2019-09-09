@@ -806,7 +806,7 @@ sub DBAddTitle {
 	push @queryParams, $hash, $title;
 }
 
-sub DBAddAuthor {
+sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 	state $query;
 	state @queryParams;
 
@@ -1057,7 +1057,11 @@ sub DBGetVoteCounts {
 #	return $query;
 #}
 
-sub DBAddKeyAlias {
+sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
+	# $key = gpg fingerprint
+	# $alias = author alias/name
+	# $pubkeyFileHash = hash of file in which pubkey resides
+	
 	state $query;
 	state @queryParams;
 
