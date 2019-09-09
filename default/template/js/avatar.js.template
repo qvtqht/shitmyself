@@ -5,7 +5,7 @@ function setAva() {
 	var myidBox = document.getElementById('myid');
 	var signinBox = document.getElementById('signin');
 
-	if (myidBox && signinBox) {
+	if (myidBox && signinBox && window.localStorage) {
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
@@ -14,7 +14,17 @@ function setAva() {
 		    signinBox.innerHTML = '';
 			var myFp = localStorage.getItem('fingerprint');
 			//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+//			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+
+			if (window.GetPrefs) {
+				if (GetPrefs('display_username')) {
+					myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+				} else {			
+					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+				}
+			} else {
+				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+			}
 
 			if (!window.openpgp) {
 				var script = document.createElement('script');
