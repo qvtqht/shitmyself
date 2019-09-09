@@ -260,32 +260,15 @@ if (!$pagesLimit) {
 }
 my $pagesProcessed = 0;
 
-# this part will refresh any pages that have been "touched"
-# in this case, 'touch' means when an item that affects the page
-# is updated or added
-foreach my $page (@touchedPagesArray) {
-#	$pagesProcessed++;
-#	if ($pagesProcessed > $pagesLimit) {
-#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
-#		last;
-#	}
-#	if ((GetTime2() - $startTime) > $timeLimit) {
-#		WriteLog("Time limit reached, exiting loop");
-#		last;
-#	}
-
-	# dereference @pageArray
-	my @pageArray = @$page;
-
-	# get the 3 items in it
-	my $pageType = shift @pageArray;
-	my $pageParam = shift @pageArray;
-	my $touchTime = shift @pageArray;
-
-	# output to log
-	WriteLog("\$pageType = $pageType");
-	WriteLog("\$pageParam = $pageParam");
-	WriteLog("\$touchTime = $touchTime");
+sub MakePage { # make a page and write it into html/ directory; $pageType, $pageParam
+# $pageType = author, item, tags, etc.
+# $pageParam = author_id, item_hash, etc.
+	my $pageType = shift;
+	my $pageParam = shift;
+	
+	#todo sanity checks
+	
+	WriteLog('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
 	# tag page, get the tag name from $pageParam
 	if ($pageType eq 'tag') {
@@ -309,7 +292,7 @@ foreach my $page (@touchedPagesArray) {
 
 		PutHtmlFile('html/author/' . $authorKey . '/index.html', $authorPage);
 	}
-   #
+	#
 	# if $pageType eq item, generate that item's page
 	elsif ($pageType eq 'item') {
 		# get the item's hash from the param field
@@ -381,6 +364,41 @@ foreach my $page (@touchedPagesArray) {
 	elsif ($pageType eq 'rss') {
 		PutFile("html/rss.xml", GetRssFile());
 	}
+	#
+	# summary pages
+	elsif ($pageType eq 'summary') {
+		MakeSummaryPages();
+	}
+}
+
+# this part will refresh any pages that have been "touched"
+# in this case, 'touch' means when an item that affects the page
+# is updated or added
+foreach my $page (@touchedPagesArray) {
+#	$pagesProcessed++;
+#	if ($pagesProcessed > $pagesLimit) {
+#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
+#		last;
+#	}
+#	if ((GetTime2() - $startTime) > $timeLimit) {
+#		WriteLog("Time limit reached, exiting loop");
+#		last;
+#	}
+
+	# dereference @pageArray
+	my @pageArray = @$page;
+
+	# get the 3 items in it
+	my $pageType = shift @pageArray;
+	my $pageParam = shift @pageArray;
+	my $touchTime = shift @pageArray;
+
+	# output to log
+	WriteLog("\$pageType = $pageType");
+	WriteLog("\$pageParam = $pageParam");
+	WriteLog("\$touchTime = $touchTime");
+
+	MakePage($pageType, $pageParam);
 	
 	DBDeletePageTouch($pageType, $pageParam);
 }
