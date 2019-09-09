@@ -1023,13 +1023,13 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				}
 			}
 
-			my %dedupe = map { $_, 1 } @quickVotesList;
-			@quickVotesList = keys %dedupe;
-
 			$quickVotesForTags = GetConfig('tagset/' . 'all');
 			if ($quickVotesForTags) {
 				unshift @quickVotesList, split("\n", $quickVotesForTags);
 			}
+
+			my %dedupe = map { $_, 1 } @quickVotesList;
+			@quickVotesList = keys %dedupe;
 
 			if (1) {
 				my $styleSheet = GetStylesheet();
@@ -1048,7 +1048,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 						
 						if ($voteTotals{$quickTagCaption}) {
 							$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
-							$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
+							$quickTagCaption = '<b>' . $quickTagCaption . '</b>';
 						}
 						
 						$tagButton =~ s/\$fileHash/$fileHash/g;
@@ -1258,12 +1258,11 @@ sub GetPageHeader {
 	#my $identityLink = GetMenuItem("/profile.html", GetString('menu/sign_in'));
 
 
-	my $identityLink = '<span id="signin"></span><span class="myid" id=myid></span> ';
+	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
 
-	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Preferences');
+	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s');
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
@@ -1271,6 +1270,7 @@ sub GetPageHeader {
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
+	$topMenuTemplate .= $identityLink;
 
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
 
@@ -1539,7 +1539,7 @@ sub GetScoreboardPage { #returns html for /scores.html
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey);
 
-		my $authorLink = "/author/" . $authorKey . ".html";
+		my $authorLink = "/author/" . $authorKey . "/";
 
 #		my $authorFriendKey = %{$authorFriend}{'author_key'};
 
@@ -2390,13 +2390,20 @@ sub GetRssFile {
 	$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 	my @files = DBGetItemList(\%queryParams);
 
-	my $feedContainerTemplate = GetTemplate('rss/feed.xml.template');
+	my $feedContainerTemplate = GetTemplate('rss/feed.xml.template');;
+	if (GetConfig('admin/html/ascii_only')) {
+		my $unicodeHeader = GetTemplate('rss/feed_header_utf8.xml.template');
+		my $asciiHeader = GetTemplate('rss/feed_header_ascii.xml.template');
+		
+		$feedContainerTemplate = $asciiHeader . substr($feedContainerTemplate, length($unicodeHeader));
+	}
 
 	my $baseUrl = 'http://localhost:3000/';
 
 	my $feedTitle = GetConfig('home_title');
 	my $feedLink = GetConfig('admin/my_domain'); # default = http://localhost:3000/
 	my $feedDescription = 'site_description';
+	my $aboutUrl = $baseUrl;
 	
 	my $feedPubDate = GetTime();
 	$feedPubDate = localtime($feedPubDate);
@@ -2411,6 +2418,7 @@ sub GetRssFile {
 	$feedContainerTemplate =~ s/\$feedLink/$feedLink/;
 	$feedContainerTemplate =~ s/\$feedDescription/$feedDescription/;
 	$feedContainerTemplate =~ s/\$feedPubDate/$feedPubDate/;
+	$feedContainerTemplate =~ s/\$aboutUrl/$aboutUrl/;
 
 	my $feedItems = '';
 	my $feedItemsToc = '';
