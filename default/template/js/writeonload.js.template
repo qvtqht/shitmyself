@@ -1,5 +1,5 @@
 
-// #todo this template should be renamed write.js.template or slt
+// == begin writeonload.js
 
 function writeOnload() {
 // this is a handler for browsers who don't know how to download .js files but support javascript
@@ -7,3 +7,5 @@ function writeOnload() {
 		writeOnload2();
 	}
 }
+
+// == end writeonload.js

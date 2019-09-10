@@ -1,3 +1,4 @@
+// == begin formencode.js 
 function formToText(formId) {
 	var form = document.getElementById(formId);
 
@@ -32,3 +33,4 @@ if (document.getElementById) {
 		//'<input type=button onclick="formToText(this.form.id)" value="Enqueue">';
 	}
 }
+// == end formencode.js

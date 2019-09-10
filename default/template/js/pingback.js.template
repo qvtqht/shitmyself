@@ -1,4 +1,4 @@
-
+// == begin pingback.js
 function ReportSelfUrl() {
 	var myUrl = window.location;
 //	var myUrl = window.location.hostname + ':' + window.location.port;
@@ -9,3 +9,4 @@ function ReportSelfUrl() {
 }
 
 setTimeout(ReportSelfUrl, 5000);
+// == end pingback.js

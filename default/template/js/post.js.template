@@ -1,4 +1,4 @@
-
+// == begin post.js
 function makeRefLink() {
 	if (document.getElementById && document.referrer) {
 		var retRef = document.getElementById('retRef');
@@ -9,3 +9,4 @@ function makeRefLink() {
 	}
 }
 
+// == end post.js

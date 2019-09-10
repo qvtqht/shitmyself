@@ -1,4 +1,4 @@
-
+// == begin timestamps.js
 function ShowTimestamps() {
 	var d = new Date();
 	var curTime = Math.floor(d.getTime() / 1000);
@@ -81,3 +81,5 @@ function LongAgo(seconds) { // returns string with time units
 }
 
 ShowTimestamps();
+
+// == end timestamps.js

@@ -1,4 +1,4 @@
-
+// == begin event_add.js
 function UpdateTimeString() {
 	var year = document.forms['addevent'].year.value;
 	var month = document.forms['addevent'].month.value;
@@ -37,3 +37,4 @@ function UpdateTimeString() {
 
 
 }
+// == end event_add.js
