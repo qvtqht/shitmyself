@@ -1,3 +1,5 @@
+// == begin prefs.js
+
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 
@@ -210,6 +212,14 @@ if (document.getElementById) {
 				cb.checked = 1;
 			}
 		}
+		
+		// reload pages if changed checkbox
+		if (GetPrefs('auto_reload_changed') == 1) {
+			var cb = document.getElementById('reloadChanged');
+			if (cb) {
+				cb.checked = 1;
+			}
+		}
 	}
 
 	// create profile pane
@@ -226,3 +236,4 @@ if (document.getElementById) {
 
 	ShowAdvanced(0); // call ShowAdvanced
 }
+// == end prefs.js

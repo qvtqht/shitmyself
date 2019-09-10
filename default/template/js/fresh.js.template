@@ -1,3 +1,5 @@
+
+// == begin fresh.js 
 var freshClient;
 
 function corsc() {
@@ -10,7 +12,13 @@ function corsc() {
 			} else {
 				// change has happened
 
-				//location.reload();
+				if (window.GetPrefs) {
+				// reload the page, if user prefers it
+					if (GetPrefs('auto_reload_changed')) {
+						location.reload();
+					}
+				}
+				
 				var clock = document.getElementById('clock');
 				if (clock) {
 					clock.style.color='yellow';
@@ -20,6 +28,10 @@ function corsc() {
 						clockContainer.style.backgroundColor='404000';
 					}
 				}
+				
+				// disable AmIFresh, no reason to keep running it
+				freshTimeout = -1;
+
 //
 //		 			var client2 = new XMLHttpRequest();
 //		 			client2.open("GET", window.location);
@@ -38,24 +50,45 @@ function corsc() {
   }
 }
 
-function AmIFresh() {
-	if (window.XMLHttpRequest) {
-		var mypath = window.mypath;
+function CheckIfFresh() {
+	var mypath = window.mypath;
 
-		if (!mypath) {
-			mypath = window.location;
-			window.mypath = mypath;
+	if (!mypath) {
+		mypath = window.location;
+		window.mypath = mypath;
+	}
+
+	freshClient = new XMLHttpRequest();
+	freshClient.open("HEAD", mypath, true);
+
+	freshClient.onreadystatechange = corsc;
+
+	freshClient.send();
+}
+
+var freshTimeout = 0;
+
+function AmIFresh() {
+	if (freshTimeout < 0) {
+		return;
+	}
+
+	if (window.XMLHttpRequest) {
+		if (!freshTimeout) {
+			freshTimeout = 1000;
+		} else {
+			CheckIfFresh();
 		}
 
-		freshClient = new XMLHttpRequest();
-		freshClient.open("HEAD", mypath, true);
-
-		freshClient.onreadystatechange = corsc;
-
-		freshClient.send();
-
-		setTimeout(AmIFresh, 15000);
+		freshTimeout = freshTimeout * 2;
+		
+		if (freshTimeout > 15000) {
+			freshTimeout = 15000;
+		} 
+      
+		setTimeout(AmIFresh, freshTimeout);
 	}
 }
 
 AmIFresh();
+// == end fresh.js
