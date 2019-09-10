@@ -1,33 +1,36 @@
-		function setclock() {
-			var d = new Date();
-			var n = d.getTime();
-			n = Math.ceil(n/1000);
-			
-			if (document.getElementById) {
-				var clockContainer = document.getElementById('clockContainer');
-				if (clockContainer) {
-					clockContainer.style.display = 'inline';
-				}
+// == begin clock.js
 
-				var clock =	document.getElementById('clock');
-				if (clock) {
+function setclock() {
+	var d = new Date();
+	var n = d.getTime();
+	n = Math.ceil(n/1000);
+	
+	if (document.getElementById) {
+		var clockContainer = document.getElementById('clockContainer');
+		if (clockContainer) {
+			clockContainer.style.display = 'inline';
+		}
+
+		var clock =	document.getElementById('clock');
+		if (clock) {
 //					var myDate = Date();
 //					var humanTime = '<small>' + myDate + '</small>';
 //
 //					clock.innerHTML = humanTime + '<br>' + n;
-					clock.innerHTML = n;
-					
-					
-	//
-	//				if (clock.style.display == 'none') {
-	//					clock.style.display = 'float';
-	//				}
-					clock.style.display = 'inline';
+			clock.innerHTML = n;
+			
+			
+//
+//				if (clock.style.display == 'none') {
+//					clock.style.display = 'float';
+//				}
+			clock.style.display = 'inline';
 
-					setTimeout(setclock, 500);
-				}
-			}
+			setTimeout(setclock, 500);
 		}
+	}
+}
 
-		setTimeout(setclock, 500);
+setTimeout(setclock, 500);
 
+// == end clock.js
