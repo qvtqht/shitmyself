@@ -1,6 +1,5 @@
 
-// just the avatar, please
-
+// == begin avatar.js
 function setAva() {
 	var myidBox = document.getElementById('myid');
 	var signinBox = document.getElementById('signin');
@@ -15,6 +14,17 @@ function setAva() {
 			var myFp = localStorage.getItem('fingerprint');
 			//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
 //			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+			
+			if (window.location.pathname == '/author/' + myFp + '/') {
+			// #todo factor this out, as it should only be on /author/.. pages 
+				// Create a new element
+				var itsYou = document.createElement('h3');
+				itsYou.innerHTML = 'This is you!';
+
+				var parentNode = document.getElementById('maincontent');
+
+				parentNode.insertBefore(itsYou, parentNode.firstChild);
+			}
 
 			if (window.GetPrefs) {
 				if (GetPrefs('display_username')) {
@@ -44,3 +54,4 @@ function setAva() {
 if (window.localStorage && document.getElementById) {
 	setAva();
 }
+// == end avatar.js
