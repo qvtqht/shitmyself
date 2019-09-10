@@ -238,6 +238,7 @@ foreach my $file (@gitChangesArray) {
 
 WriteIndexedConfig();
 
+# if new items were added, re-make all the summary pages (top authors, new threads, etc)
 if ($filesProcessed > 0) {
 	MakeSummaryPages();
 #	WriteIndexPages();
