@@ -1267,15 +1267,15 @@ sub GetPageHeader {
 
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s');
+#	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s');
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
+	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/stats.html", '<small>Status</small>');
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
-	$topMenuTemplate .= $identityLink;
 
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
 
@@ -1381,10 +1381,11 @@ sub GetTopItemsPage { # returns page with top items listing
 
 			my $item = shift @topItemsArray;
 
-			my $itemKey = @{$item}[2]; #todo
+			my $itemKey = @{$item}[2]; #todo rewrite using hash-refs
 			my $itemTitle = @{$item}[7];
 			my $itemScore = @{$item}[8];
 			my $authorKey = @{$item}[3];
+			my $itemLastTouch = '';
 
 			if (trim($itemTitle) eq '') {
 				$itemTitle = '(' . $itemKey . ')';
@@ -1405,6 +1406,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
 			$itemTemplate =~ s/\$itemScore/$itemScore/g;
 			$itemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
+			$itemTemplate =~ s/\$itemLastTouch/$itemLastTouch/g;
 
 			$itemListings .= $itemTemplate;
 		}

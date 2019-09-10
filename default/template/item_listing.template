@@ -1,5 +1,6 @@
 <tr>
-	<td><a href="$link">$itemTitle</a><br></td
-	><td>$itemScore<br></td>
+	<td><a href="$link">$itemTitle</a><br></td>
+	<td>$itemScore<br></td>
 	<td>$authorAvatar<br></td>
+	<td>$itemLastTouch<br></td>
 </tr>
