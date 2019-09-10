@@ -1,26 +1,28 @@
 // == begin timestamps.js
 function ShowTimestamps() {
-	var d = new Date();
-	var curTime = Math.floor(d.getTime() / 1000);
+	if (window.getElementsByClassName) {
+		var d = new Date();
+		var curTime = Math.floor(d.getTime() / 1000);
+		
+		var changeLogged = 0;
 	
-	var changeLogged = 0;
-
-	var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
-	for (var i = 0; i < te.length; i++) {
-		if (te[i].title) {
+		var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
+		for (var i = 0; i < te.length; i++) {
+			if (te[i].title) {
+			} else {
+				te[i].setAttribute('title', te[i].innerHTML);
+			}
+			if (te[i].innerHTML != LongAgo(0 - (curTime - te[i].title))) {
+				te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
+				changeLogged++;
+			}
+		}
+	
+		if (changeLogged) {
+			setTimeout(ShowTimestamps, 5000);
 		} else {
-			te[i].setAttribute('title', te[i].innerHTML);
+			setTimeout(ShowTimestamps, 15000);
 		}
-		if (te[i].innerHTML != LongAgo(0 - (curTime - te[i].title))) {
-			te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
-			changeLogged++;
-		}
-	}
-
-	if (changeLogged) {
-		setTimeout(ShowTimestamps, 5000);
-	} else {
-		setTimeout(ShowTimestamps, 15000);
 	}
 }
 
