@@ -455,17 +455,21 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	#		remove_token = reply token to remove from message (used for displaying replies)
 	#	}
 
+	# we're expecting a reference to a hash as the first parameter
+	# todo sanity checks here, it will probably break if anything else is supplied
 	my %file = %{shift @_};
+	
+	# create $fileHash and $filePath variables, since we'll be using them a lot
 	my $fileHash = $file{'file_hash'};
+	my $filePath = $file{'file_path'};
 
 	WriteLog("GetItemPage(" . $file{'file_path'} . ")");
 
+	# initialize variable which will contain page html
 	my $txtIndex = "";
 
-	my $filePath = $file{'file_path'};
-
-	my $title = '';
-	my $titleHtml = '';
+	my $title = ''; # title for <title>
+	my $titleHtml = ''; # title for <h1>
 
 	if (defined($file{'item_title'}) && $file{'item_title'}) {
 		WriteLog("GetItemPage: defined(item_title) = true!");
@@ -643,7 +647,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1102,7 +1106,8 @@ sub GetPageFooter {
 
 	my $myVersionPrettyLink = '<a href="' . $versionPageUrl . '">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
-	my $footer = "<span title=\"This page was created at $timestamp\">$timeBuilt</span> ; <span title=\"Version Number\">$myVersionPrettyLink</span> ; ";
+	#todo templatify
+	my $footer = "<span class=advanced><span class=beginner>Built </span><span class=timestamp>$timeBuilt</span> ; <span class=beginner>Version </span>$myVersionPrettyLink</span> ; ";
 
 	my $footerMenuTemplate = '';
 
@@ -1842,7 +1847,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(avatar.authorpage prefs timestamps));
+		$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps));
 	} else {
 		$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
 	}
@@ -2174,8 +2179,8 @@ sub MakeSummaryPages {
 
 	# Write form javasript
 	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
-	my $prefillUsername = GetConfig('prefill_username') || '';
-	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
+#	my $prefillUsername = GetConfig('prefill_username') || '';
+#	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
 
 	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
@@ -2348,7 +2353,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh profile));
 
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -2374,7 +2379,7 @@ sub GetPrefsPage {
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh profile));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
