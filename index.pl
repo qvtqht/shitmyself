@@ -995,8 +995,9 @@ sub IndexTextFile {
 							}
 
 							if (-e $file) {
-								WriteLog($file . ' exists, calling unlink()');
-								unlink($file);
+								#todo unlink the file represented by $voteFileHash, not $file
+#								WriteLog($file . ' exists, calling unlink()');
+#								unlink($file);
 							} else {
 								WriteLog($file . ' does NOT exist, very strange');
 							}
