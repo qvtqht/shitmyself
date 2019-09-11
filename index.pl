@@ -1036,10 +1036,15 @@ sub IndexTextFile {
 				if ($detokenedMessage) {
 					my $firstEol = index($detokenedMessage, "\n");
 
-					my $itemLengthCutoff = GetConfig('title_length_cutoff'); #default = 140
+					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 140
 
-					if ($firstEol <= $itemLengthCutoff && $firstEol >= 0) {
-						my $title = substr($detokenedMessage, 0, $firstEol);
+					if ($firstEol >= 0) {
+						my $title = '';
+						if ($firstEol <= $titleLengthCutoff) {
+							$title = substr($detokenedMessage, 0, $firstEol);
+						} else {
+							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '[...]';
+						}						
 
 						DBAddTitle($gitHash, $title);
 
