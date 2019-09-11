@@ -342,7 +342,10 @@ PutHtmlFile('html/top.html', $topItemsPage);
 @allTagsList = sort @allTagsList;
 my $tagCloudPage = '';
 foreach my $tag (@allTagsList) {
-	$tagCloudPage .= '<a href="top/' . $tag . '.html">' . $tag . '</a><br>';
+	my $linkTitle = $tag;
+	$linkTitle =~ s/_/+/;
+#	$linkTitle =~ s/\_/+/;
+	$tagCloudPage .= '<a href="top/' . $tag . '.html">' . $linkTitle . '</a><br>';
 }
 PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #
