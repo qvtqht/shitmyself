@@ -269,7 +269,7 @@ sub GetEventsPage {
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs timestamps));
+	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs timestamps voting));
 
 	return $txtPage;
 
@@ -647,7 +647,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh));
+	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh voting profile));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1268,8 +1268,8 @@ sub GetPageHeader {
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 #	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s');
-	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
-	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
+#	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
+#	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
 	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/stats.html", '<small>Status</small>');
@@ -1421,7 +1421,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting));
 
 	return $txtIndex;
 }
@@ -1849,9 +1849,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps));
+		$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps voting));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
+		$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting));
 	}
 
 	return $txtIndex;
@@ -1970,7 +1970,7 @@ sub GetIndexPage {
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile));
 
 	return $txtIndex;
 }

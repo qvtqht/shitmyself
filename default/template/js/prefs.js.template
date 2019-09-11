@@ -9,7 +9,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 //force parameter
 // 1 = does not re-do setTimeout
 // 0 = previous preference values are remembered, and are not re-done
-	if (window.localStorage) {
+	if (window.localStorage && window.getElementsByClassName) {
 		var displayValue = 'none'; // hide by default
 		if (GetPrefs('show_advanced') == 1) { // check value of show_advanced preference
 			displayValue = 'initial'; // display

@@ -1,5 +1,14 @@
 // == begin profile.js
 
+function getUserFp() { // retrieve stored user fingerprint from localstorage
+	var fingerprint = localStorage.getItem("fingerprint");
+	if (fingerprint === null || fingerprint.length === 0) {
+		return null;
+	} else {
+		return fingerprint;
+	}
+}
+
 function showHideForms() { // shows and hides the register and logged in forms
 // this is for the identity page
 // depending on the currently logged in status
