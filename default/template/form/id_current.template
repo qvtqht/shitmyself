@@ -1,6 +1,6 @@
 <form id=formCurId name=formCurId style="display:none">
 	<p class=beginner>
-		<big><b>Current Profile</b></big>
+		<big><b>Signed In As:</b></big>
 	</p>
 
 	<p>
