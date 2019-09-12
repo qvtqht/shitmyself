@@ -122,8 +122,6 @@ Then
 	create url alias pointing to all replies to item
 
 
-No-JS voting is broken. Fix.#
-
 Update pages for parent items recursively
 
 Web server handler for potential 404:
