@@ -100,8 +100,7 @@ WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCom
 # }
 # WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
 
-sub GetCache {
-# get cache by cache key
+sub GetCache { # get cache by cache key
 # comes from cache/ directory
 # plus current commit that git is on
 # this keeps cache version-specific
@@ -148,8 +147,7 @@ sub ParseDate { # takes $stringDate, returns epoch time
 #	}
 #}
 
-sub EnsureSubdirs {
-# ensures that subdirectories for a file exist
+sub EnsureSubdirs { # ensures that subdirectories for a file exist
 # takes file's path as argument
 
 # todo remove requirement of external module
@@ -166,9 +164,7 @@ sub EnsureSubdirs {
 	}
 }
 
-sub PutCache {
-# stores value in cache
-# $cacheName, $content
+sub PutCache { # stores value in cache; $cacheName, $content
 
 #todo sanity checks and error handling
 	my $cacheName = shift;
@@ -182,8 +178,7 @@ sub PutCache {
 	return PutFile($cacheName, $content);
 }
 
-sub UnlinkCache {
-# removes cache by unlinking file it's stored in
+sub UnlinkCache { # removes cache by unlinking file it's stored in
 	my $cacheName = shift;
 	chomp($cacheName);
 
@@ -194,8 +189,7 @@ sub UnlinkCache {
 	}
 }
 
-sub CacheExists {
-# returns 1 if cache exists, 0 if doesn't
+sub CacheExists { # Check whether specified cache entry exists, return 1 (exists) or 0 (not)
     my $cacheName = shift;
     chomp($cacheName);
 
@@ -208,8 +202,7 @@ sub CacheExists {
     }
 }
 
-sub GetGpgMajorVersion {
-# get the first number of the version which 'gpg --version' returns
+sub GetGpgMajorVersion { # get the first number of the version which 'gpg --version' returns
 # expecting 1 or 2
 
 # todo sanity checks
@@ -229,7 +222,7 @@ sub GetGpgMajorVersion {
     return $gpgVersion;
 }
 
-sub GetMyVersion {
+sub GetMyVersion { # Get the currently installed version (current commit's hash from git)
 # returns current git commit hash as version
 	state $myVersion;
 
@@ -245,7 +238,7 @@ sub GetMyVersion {
 }
 
 
-sub WriteConfigFromDatabase {
+sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to config/ directory (unfinished)
 #	print("1");
 #	my $query = "SELECT * FROM config_latest";
 #
@@ -279,7 +272,9 @@ sub WriteConfigFromDatabase {
 #	#write to config/
 }
 
-sub GetString {
+sub GetString { # Returns string from config/string/en/..., with special rules:
+# If contents of file are multiple lines, returns one of the lines, randomly
+# #todo look up locale, not hard-coded to en
 	my $stringKey = shift;
 
 	state %strings;
@@ -352,7 +347,7 @@ sub GetFileHash { # $fileName ; returns git's hash of file contents
 	return $gitOutput;
 }
 
-sub GetRandomHash {
+sub GetRandomHash { # returns a random sha1-looking hash, lowercase
 	my @chars=('a'..'f','0'..'9');
 	my $randomString;
 	foreach (1..40) {
@@ -361,9 +356,8 @@ sub GetRandomHash {
 	return $randomString;
 }
 
-# Gets template from template dir
-# Should not fail
-sub GetTemplate {
+sub GetTemplate { # returns specified template from HTML directory
+# returns empty string if template not found
 	my $filename = shift;
 	chomp $filename;
 #	$filename = "$SCRIPTDIR/template/$filename";
@@ -393,7 +387,7 @@ sub GetTemplate {
 	}
 }
 
-sub encode_entities2 {
+sub encode_entities2 { # returns $string with html entities <>"& encoded
 	my $string = shift;
 	if (!$string) {
 		return;
@@ -409,7 +403,7 @@ sub encode_entities2 {
 	return $string;
 }
 
-sub GetHtmlAvatar {
+sub GetHtmlAvatar { # Returns HTML avatar from cache 
 	state %avatarCache;
 
 # returns avatar suitable for comments
@@ -441,7 +435,7 @@ sub GetHtmlAvatar {
 	return $key;
 }
 
-sub GetPlainAvatar {
+sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG fingerprint
 	state %avatarCache;
 
 	my $gpgKey = shift;
@@ -519,7 +513,7 @@ sub GetPlainAvatar {
 	return $avatar;
 }
 
-sub GetAvatar { #gets avatar based on author key
+sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 	WriteLog("GetAvatar(...)");
 
 	if (!GetConfig('html/color_avatars')) {
@@ -600,9 +594,7 @@ sub GetAvatar { #gets avatar based on author key
 	return $avatar;
 }
 
-sub GetAlias {
-	#todo actually do a lookup
-
+sub GetAlias { # Returns alias for a GPG key
 	my $gpgKey = shift;
 	chomp $gpgKey;
 
@@ -734,7 +726,8 @@ sub ConfigKeyValid { #checks whether a config key is valid
 	}
 }
 
-sub GetHtmlFilename {
+sub GetHtmlFilename { # get the HTML filename for specified item hash
+# Returns 'ab/cd/abcdef01234567890[...].html'
 	my $hash = shift;
 
 	WriteLog("GetHtmlFilename()");
@@ -769,17 +762,17 @@ sub GetHtmlFilename {
 	#
 	my $htmlFilename =
 		substr($hash, 0, 2) .
-			'/' .
-			substr($hash, 2, 2) .
-			'/' .
-			$hash .
-			'.html';
+		'/' .
+		substr($hash, 2, 2) .
+		'/' .
+		$hash .
+		'.html';
 
 	return $htmlFilename;
 }
 
-sub GetDigitColor() {
-# this returns a 2-char color that corresponds to a digit for coloring the clock's digits
+sub GetDigitColor() { # returns a 2-char color that corresponds to a digit for coloring the clock's digits
+# Not sure of purpose, might be useful
 
 	my $digit = shift;
 
@@ -801,12 +794,14 @@ sub GetDigitColor() {
 	return $digitColor;
 }
 
-sub GetTime() {
+sub GetTime() { # Returns time in epoch format.
+# Just returns time() for now, but allows for converting to 1900-epoch time
+# instead of Unix epoch
 #	return (time() + 2207520000);
 	return (time());
 }
 
-sub GetTitle {
+sub GetTitle { # Gets title for file (incomplete, currently does nothing) 
 	my $text = shift;
 
 	if (!$text) {
@@ -815,7 +810,8 @@ sub GetTitle {
 
 }
 
-sub ResetConfig {
+sub ResetConfig { # Resets $configName to default by removing the config/* file
+# Does a ConfigKeyValid() sanity check first
 	my $configName = shift;
 
 	if (ConfigKeyValid($configName)) {
@@ -823,7 +819,11 @@ sub ResetConfig {
 	}
 }
 
-sub PutConfig {
+sub PutConfig { # writes config value to config storage
+# $configName = config name/key (file path)
+# $configValue = value to write for key
+# Uses PutFile()
+#
 	my $configName = shift;
 	my $configValue = shift;
 
@@ -831,9 +831,13 @@ sub PutConfig {
 
 	return PutFile("config/$configName", $configValue);
 }
-
-# Writes to a file
-sub PutFile {
+							  
+sub PutFile { # Writes content to a file; $file, $content, $binMode
+# $file = file path
+# $content = content to write
+# $binMode = whether or not to use binary mode when writing
+# ensures required subdirectories exist
+# 
 	WriteLog("PutFile(...)");
 
 	my $file = shift;
@@ -845,8 +849,6 @@ sub PutFile {
 	EnsureSubdirs($file);
 
 	WriteLog("PutFile($file, ...");
-
-
 
 	my $content = shift;
 	my $binMode = shift;
@@ -875,13 +877,13 @@ sub PutFile {
 	}
 }
 
-sub EpochToHuman {
+sub EpochToHuman { # returns epoch time as human readable time
 	my $time = shift;
 
 	return strftime('%F %T', localtime($time));
 }
 
-sub EpochToHuman2 {
+sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused 
 	my $time = shift;
 
 	my ($seconds, $minutes, $hours, $day_of_month, $month, $year, $wday, $yday, $isdst) = localtime($time);
@@ -890,7 +892,13 @@ sub EpochToHuman2 {
 
 }
 
-sub PutHtmlFile {
+sub PutHtmlFile { # writes content to html file, with special rules; parameters: $file, $content
+# the special rules are:
+# * if config/admin/html/ascii_only is set, all non-ascii characters are stripped from output to file
+# * if $file matches config/home_page, the output is also written to html/index.html
+#   also keeps track of whether home page has been written, and returns the status of it
+#   if $file is 'check_homepage'
+#      
 	my $file = shift;
 
 	state $homePageWritten;
@@ -945,7 +953,8 @@ sub PutHtmlFile {
 	}
 }
 
-sub GetFileAsHashKeys {
+sub GetFileAsHashKeys { # returns file as hash of lines
+# currently not used, not sure what it was for   
 	my $fileName = shift;
 
 	my @lines = split('\n', GetFile($fileName));
@@ -960,8 +969,7 @@ sub GetFileAsHashKeys {
 }
 
 
-# Appends line to a file
-sub AppendFile {
+sub AppendFile { # Appends to file; $file (path), $content to append
 	my $file = shift;
 	my $content = shift;
 
@@ -971,8 +979,7 @@ sub AppendFile {
 	}
 }
 
-#Trims a string
-sub trim {
+sub trim { # trims whitespace from beginning and end of string
 	my $s = shift;
 
 	if (defined($s)) {
@@ -984,8 +991,7 @@ sub trim {
 	}
 };
 
-sub GetSecondsHtml {
-# returns a number of seconds as the most readable approximate time unit
+sub GetSecondsHtml {# takes number of seconds as parameter, returns the most readable approximate time unit
 # 5 seconds = 5 seconds
 # 65 seconds = 1 minute
 # 360 seconds = 6 minutes
@@ -1037,7 +1043,7 @@ sub GetSecondsHtml {
 	}
 }
 
-sub GetFileSizeHtml {
+sub GetFileSizeHtml { # takes file size as number, and returns html-formatted human-readable size
 	my $fileSize = shift;
   
 	if (!$fileSize) {
@@ -1078,7 +1084,7 @@ sub GetFileSizeHtml {
 	return $fileSizeString;
 }
 
-sub IsServer {
+sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), 0 otherwise 
 	my $key = shift;
 
 	if (!$key) {
@@ -1109,7 +1115,8 @@ sub IsServer {
 	}
 }
 
-sub IsAdmin {
+sub IsAdmin { # returns 1 if parameter equals GetAdminKey() or GetServerKey(), otherwise 0
+# will probably be redesigned in the future
 	my $key = shift;
 
 	if (!IsFingerprint($key)) {
@@ -1127,9 +1134,7 @@ sub IsAdmin {
 }
 
 
-sub GetServerKey {
-	#Returns admin's key sig, 0 if there is none
-
+sub GetServerKey { # Returns server's public key, 0 if there is none
 	state $adminsKey;
 
 	if ($adminsKey) {
@@ -1158,9 +1163,7 @@ sub GetServerKey {
 	return 0;
 }
 
-sub GetAdminKey {
-	#Returns admin's key sig, 0 if there is none
-
+sub GetAdminKey { # Returns admin's public key, 0 if there is none
 	state $adminsKey = 0;
 
 	if ($adminsKey) {
@@ -1189,8 +1192,7 @@ sub GetAdminKey {
 	return 0;
 }
 
-# Trims the directories and the file extension from a file path
-sub TrimPath {
+sub TrimPath { # Trims the directories AND THE FILE EXTENSION from a file path
 	my $string = shift;
 
 	while (index($string, "/") >= 0) {
@@ -1202,7 +1204,7 @@ sub TrimPath {
 	return $string;
 }
 
-sub HtmlEscape {
+sub HtmlEscape { # encodes supplied string for html output
 	my $text = shift;
 
 	$text = encode_entities2($text);
@@ -1210,7 +1212,7 @@ sub HtmlEscape {
 	return $text;
 }
 
-sub IsSha1 {
+sub IsSha1 { # returns 1 if parameter is in sha1 hash format, 0 otherwise
 	my $string = shift;
 
 	if (!$string) {
@@ -1224,7 +1226,7 @@ sub IsSha1 {
 	}
 }
 
-sub IsItem {
+sub IsItem { # returns 1 if parameter is in item hash format (40 lowercase hex chars), 0 otherwise
 	my $string = shift;
 
 	if (!$string) {
@@ -1238,7 +1240,7 @@ sub IsItem {
 	}
 }
 
-sub IsMd5 {
+sub IsMd5 { # returns 1 if parameter is md5 hash, 0 otherwise
 	my $string = shift;
 
 	if (!$string) {
@@ -1252,7 +1254,7 @@ sub IsMd5 {
 	}
 }
 
-sub IsFingerprint {
+sub IsFingerprint { # returns 1 if parameter is a user fingerprint, 0 otherwise
 	my $string = shift;
 
 	if (!$string) {
@@ -1266,8 +1268,7 @@ sub IsFingerprint {
 	}
 }
 
-sub GpgParse {
-	# GpgParse
+sub GpgParse { # Parses a text file containing GPG-signed message, and returns information as a hash
 	# $filePath = path to file containing the text
 	#
 	# $returnValues{'isSigned'} = whether the message has a valid signature: 0 or 1 for valid signature
@@ -1277,6 +1278,8 @@ sub GpgParse {
 	# $returnValues{'alias'} = alias of signer, if they've added one by submitting their public key
 	# $returnValues{'keyExpired'} = whether the key has expired: 0 for not expired, 1 for expired
 	# $returnValues{'gitHash'} = git's hash of the file's contents
+	# $returnValues{'verifyError'} = whether there was an error with parsing the message
+
 
 	WriteLog("===BEGIN GPG PARSE===");
 
@@ -1541,7 +1544,7 @@ sub GpgParse {
 	return %returnValues;
 }
 
-sub EncryptMessage {
+sub EncryptMessage { # Encrypts message for target key (doesn't do anything yet)
 	my $targetKey = shift;
 	# file path
 	chomp($targetKey);
@@ -1549,7 +1552,10 @@ sub EncryptMessage {
 	#todo
 }
 
-sub AddItemToConfigList {
+sub AddItemToConfigList { # Adds a line to a list stored in config
+# $configList = reference to setting stored in config
+# $item = item to add to the list (appended to the file)
+
 	my $configList = shift;
 	chomp($configList);
 
@@ -1634,7 +1640,8 @@ sub TextartForWeb { # replaces some spaces with &nbsp; to preserve text-based la
 	return $text;
 }
 
-sub WriteLog {
+sub WriteLog {  # Writes timestamped message to console (stdout) AND log/log.log
+# Only if debug mode is enabled
 	if (-e 'config/admin/debug') {
 		my $text = shift;
 
@@ -1672,7 +1679,8 @@ sub WriteLog {
 	return 0;
 }
 
-sub WriteMessage {
+sub WriteMessage { # Writes timestamped message to console (stdout)
+# Even if debug mode is 0
 	my $text = shift;
 	chomp $text;
 
@@ -1733,8 +1741,9 @@ if ($currAdmin) {
 	}
 }
 
-sub ServerSign {
-# Signs a given file with the server's key, if it exists
+sub ServerSign { # Signs a given file with the server's key
+# If config/admin/server_key_id exists
+#   Otherwise, does nothing
 # Replaces file with signed version
 #
 # Server key should be stored in gpg keychain
@@ -1801,7 +1810,7 @@ sub ServerSign {
 	}
 }
 
-sub GetTimestampElement {
+sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	my $time = shift;
 
 	#todo sanity check;
@@ -1813,7 +1822,7 @@ sub GetTimestampElement {
 	return $timestampElement
 }
 
-sub DeleteFile {
+sub DeleteFile { #delete file with specified file hash (incomplete) 
 	my $fileHash = shift;
 
 	if ($fileHash) {
