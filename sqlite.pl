@@ -7,12 +7,13 @@ use DBI;
 use Data::Dumper;
 use 5.010;
 
-my $SqliteDbName = './cache/' . GetMyVersion() . '/index.sqlite3';
-my $dbh;
+my $SqliteDbName = './cache/' . GetMyVersion() . '/index.sqlite3'; # path to sqlite db
+
+my $dbh; # handle for sqlite interface
 
 require './utils.pl';
 
-sub SqliteConnect {
+sub SqliteConnect { # Establishes connection to sqlite db
 	$dbh = DBI->connect(
 		"dbi:SQLite:dbname=$SqliteDbName",
 		"",
@@ -22,15 +23,15 @@ sub SqliteConnect {
 }
 SqliteConnect();
 
-sub DBMaxQueryLength {
+sub DBMaxQueryLength { # Returns max number of characters to allow in sqlite query
 	return 10240;
 }
 
-sub DBMaxQueryParams {
+sub DBMaxQueryParams { # Returns max number of parameters to allow in sqlite query
 	return 128;
 }
 
-sub SqliteUnlinkDb {
+sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
 	if ($dbh) {
 		$dbh->disconnect();
 	}
@@ -38,8 +39,7 @@ sub SqliteUnlinkDb {
 	SqliteConnect();
 }
 
-#schema
-sub SqliteMakeTables() {
+sub SqliteMakeTables() { # creates sqlite schema 
 
 	# added_time
 	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp INTEGER);");
@@ -347,9 +347,9 @@ sub SqliteMakeTables() {
 	");
 }
 
-sub SqliteQuery2 {
-#params: $query, @queryParams
-#returns array ref
+sub SqliteQuery2 { # calls sqlite with query, and returns result as array reference
+# #params: $query, @queryParams
+
 	my $query = shift;
 	chomp $query;
 
@@ -367,7 +367,7 @@ sub SqliteQuery2 {
 	}
 }
 
-sub EscapeShellChars {
+sub EscapeShellChars { # escapes string for including in shell command
 	my $string = shift;
 	chomp $string;
 
@@ -422,7 +422,8 @@ sub EscapeShellChars {
 #	return $result;
 #}
 
-sub DBGetVotesForItem {
+sub DBGetVotesForItem { # Returns all votes (weighed) for item
+
 	my $fileHash = shift;
 
 	if (!IsSha1($fileHash)) {
@@ -486,7 +487,8 @@ sub DBGetEvents { #gets events list
 	return $ref;
 }
 
-sub DBGetAuthorFriends {
+sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged as friend
+# Looks for vote_value = 'friend' and items that contain 'pubkey' tag
 	my $authorKey = shift;
 	chomp $authorKey;
 
@@ -526,7 +528,9 @@ sub DBGetAuthorFriends {
 	return @resultsArray;
 }
 
-sub DBGetLatestConfig {
+sub DBGetLatestConfig { # Returns everything from config_latest view
+# config_latest contains the latest set value for each key stored
+
 	my $query = "SELECT * FROM config_latest";
 	#todo write out the fields
 
@@ -562,7 +566,7 @@ sub DBGetLatestConfig {
 #	return %hash;
 #}
 
-sub SqliteGetValue {
+sub SqliteGetValue { # Returns the first column from the first row returned by sqlite $query
 	my $query = shift;
 	chomp $query;
 
@@ -576,7 +580,9 @@ sub SqliteGetValue {
 	return $aref[0];
 }
 
-sub DBGetAuthorCount {
+sub DBGetAuthorCount { # Returns author count.
+# By default, all authors, unless $whereClause is specified
+
 	my $whereClause = shift;
 
 	my $authorCount;
@@ -591,7 +597,8 @@ sub DBGetAuthorCount {
 
 }
 
-sub DBGetItemCount {
+sub DBGetItemCount { # Returns item count.
+# By default, all items, unless $whereClause is specified
 	my $whereClause = shift;
 
 	my $itemCount;
@@ -605,20 +612,22 @@ sub DBGetItemCount {
 	return $itemCount;
 }
 
-sub DBGetReplyCount {
+sub DBGetReplyCount { # Returns reply (child) count for an item 
 	my $parentHash = shift;
 
 	if (!IsSha1($parentHash)) {
 		WriteLog('WARNING: DBGetReplyCount() called with invalid parameter');
 	}
 
-	my $itemCount = SqliteGetValue("SELECT COUNT(*) FROM item_parent WHERE parent_hash = '$parentHash'");
+	my $itemCount = SqliteGetValue("SELECT COUNT(*) AS reply_count FROM item_parent WHERE parent_hash = '$parentHash'");
 	chomp($itemCount);
 
 	return $itemCount;
 }
 
-sub DBGetItemParents {
+sub DBGetItemParents {# Returns all item's parents
+# $itemHash = item's hash/identifier
+# Sets up parameters and calls DBGetItemList
 	my $itemHash = shift;
 
 	if (!IsSha1($itemHash)) {
@@ -635,7 +644,10 @@ sub DBGetItemParents {
 	return DBGetItemList(\%queryParams);
 }
 
-sub DBGetItemReplies {
+sub DBGetItemReplies { # Returns replies for item (actually returns all child items)
+# $itemHash = item's hash/identifier
+# Sets up parameters and calls DBGetItemList
+
 	my $itemHash = shift;
 
 	if (!IsSha1($itemHash)) {
@@ -647,12 +659,13 @@ sub DBGetItemReplies {
 
 	my %queryParams;
 	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash')";
-	$queryParams{'order_clause'} = "ORDER BY add_timestamp"; #todo this should be by timestamp
+	$queryParams{'order_clause'} = "ORDER BY add_timestamp";
 
 	return DBGetItemList(\%queryParams);
 }
 
-sub SqliteEscape {
+sub SqliteEscape { # Escapes supplied text for use in sqlite query
+# Just changes ' to ''
 	my $text = shift;
 
 	if (defined $text) {
@@ -767,7 +780,7 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	return;
 }
 
-sub DBAddTitle {
+sub DBAddTitle { # Add entry to item_title table
 	state $query;
 	state @queryParams;
 
@@ -845,14 +858,20 @@ sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 	push @queryParams, $key;
 }
 
-sub DBGetTouchedPages {
+sub DBGetTouchedPages { # Returns items from page_touch table, used for prioritizing which pages need rebuild
+# index, rss, scores, stats, tags, and top are returned first
+# hard-coded at limit 50
 	my $lastTouch = shift;
 
 	WriteLog("DBGetTouchedPages($lastTouch)");
 
 	#todo remove hardcoding
 	my $query = "
-		SELECT page_name, page_param, touch_time, (page_name in ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) as priority_page
+		SELECT 
+			page_name, 
+			page_param, 
+			touch_time, 
+			(page_name IN ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) AS priority_page
 		FROM page_touch
 		WHERE touch_time >= ?
 		ORDER BY priority_page desc, touch_time
@@ -874,9 +893,9 @@ sub DBGetTouchedPages {
 	return $results;
 }
 
-# adds to item_page table
+sub DBAddItemPage { # adds an entry to item_page table
 # purpose of table is to track which items are on which pages
-sub DBAddItemPage {
+
 	state $query;
 	state @queryParams;
 
@@ -927,7 +946,8 @@ sub DBAddItemPage {
 	push @queryParams, $itemHash, $pageType, $pageParam;
 }
 
-sub DBResetPageTouch {
+sub DBResetPageTouch { # Clears the page_touch table
+# Called by clean-build, since it rebuilds the entire site
 	WriteMessage("DBResetPageTouch() begin");
 
 	my $query = "DELETE FROM page_touch WHERE 1";
@@ -950,7 +970,9 @@ sub DBDeletePageTouch { # deletes page_touch entry ;  $pageName, $pageParam
 	  SqliteQuery2($query, @queryParams); 
 }
 
-sub DBAddPageTouch {
+sub DBAddPageTouch { # Adds an entry to page_touch table
+# page_touch table is used for determining which pages need to be refreshed
+# DBAddPageTouch is called from IndexTextFile to schedule updates for pages affected by a newly indexed item
 	state $query;
 	state @queryParams;
 
@@ -1001,7 +1023,9 @@ sub DBAddPageTouch {
 	push @queryParams, $pageName, $pageParam, $touchTime;
 }
 
-sub DBGetVoteCounts {
+sub DBGetVoteCounts { # Get total vote counts by tag value
+# Takes $orderBy as parameter, with vote_count being default;
+# todo can probably be converted to parameterized query
 	my $orderBy = shift;
 	if ($orderBy) {
 	} else {
@@ -1140,7 +1164,8 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 	push @queryParams, $key, $alias, $pubkeyFileHash;
 }
 
-sub DBAddItemParent {
+sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
+# Usually this is when item references parent item, by being a reply or a vote, etc.
 	state $query;
 	state @queryParams;
 
@@ -1179,7 +1204,14 @@ sub DBAddItemParent {
 	push @queryParams, $itemHash, $parentHash;
 }
 
-sub DBAddItem {
+sub DBAddItem { # Adds a new item to database
+# $filePath = path to text file
+# $itemName = item's 'name' (currently hash)
+# $authorKey = author's gpg fingerprint
+# $fileHash = hash of item
+# $itemType = type of item (currently 'txt' is supported)
+# $verifyError = whether there was an error with gpg verification of item
+
 	state $query;
 	state @queryParams;
 
@@ -1229,7 +1261,7 @@ sub DBAddItem {
 	$query .= "(?, ?, ?, ?, ?, ?)";
 }
 
-sub DBAddVoteWeight {
+sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ token 
 	state $query;
 	state @queryParams;
 
@@ -1326,7 +1358,7 @@ sub DBAddEventRecord { # add event record to database; $gitHash, $eventTime, $ev
 }
 
 
-sub DBAddLocationRecord {
+sub DBAddLocationRecord { # Adds new location record from latlong token
 	# DBAddLocationRecord
 	# $gitHash, $latitude, $longitude, $signedBy
 
@@ -1462,7 +1494,7 @@ sub DBAddBrcRecord { #adds record to brc table
 
 ###
 
-sub DBAddVoteRecord {
+sub DBAddVoteRecord { # Adds a new vote (tag) record to an item based on vote/ token
 # DBAddVoteRecord
 # $fileHash
 # $ballotTime
@@ -1533,7 +1565,7 @@ sub DBAddVoteRecord {
 
 
 
-sub DBAddItemAttribute {
+sub DBAddItemAttribute { # adds record to item_attribute table ; currently unused
 	# DBAddItemAttribute
 	# $fileHash
 	# $attribute
@@ -1585,8 +1617,7 @@ sub DBAddItemAttribute {
 }
 
 
-sub DBAddAddedTimeRecord {
-	# Adds a new record to added_time, typically from log/added.log
+sub DBAddAddedTimeRecord { # Adds a new record to added_time, typically from log/added.log or from an addedtime token
 	# This records the time that the file was first submitted or picked up by the indexer
 	#	$fileHash = file's hash
 	#	$addedTime = time it was added
@@ -1644,12 +1675,9 @@ sub DBAddAddedTimeRecord {
 	push @queryParams, $fileHash, $addedTime;
 }
 
-sub DBAddItemClient {
-	# Adds a new record to added_time, typically from log/added.log
-	# This records the time that the file was first submitted or picked up by the indexer
-	#	$fileHash = file's hash
-	#	$addedTime = time it was added
-	#
+sub DBAddItemClient { # Adds a new record to added_by, which stores client fingerprint attached to item
+# $fileHash = item identifier
+# $addedClient = client identifier
 	state $query;
 	state @queryParams;
 
@@ -1683,8 +1711,6 @@ sub DBAddItemClient {
 	my $addedClient = shift;
 	chomp $addedClient;
 
-
-
 	WriteLog("DBAddItemClient($fileHash, $addedClient)");
 #
 #	if (!($addedClient =~ m/\[0-9a-f]{32}/)) { #todo is this clean enough?
@@ -1715,7 +1741,7 @@ sub DBAddItemClient {
 	WriteLog($query);
 }
 
-sub DBGetAddedTime {
+sub DBGetAddedTime { # return added time for item specified
 	my $fileHash = shift;
 	chomp ($fileHash);
 
@@ -1872,7 +1898,7 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 	return @resultsArray;
 }
 
-sub DBGetAllAppliedTags {
+sub DBGetAllAppliedTags { # return all tags that have been used at least once
 	my $query = "SELECT DISTINCT vote_value FROM vote";
 
 	my $sth = $dbh->prepare($query);
@@ -1890,7 +1916,7 @@ sub DBGetAllAppliedTags {
 	return @ary;
 }
 
-sub DBGetItemListForAuthor {
+sub DBGetItemListForAuthor { # return all items attributed to author 
 	my $author = shift;
 	chomp($author);
 
@@ -1907,7 +1933,7 @@ sub DBGetItemListForAuthor {
 	return DBGetItemList(\%params);
 }
 
-sub DBGetAuthorList {
+sub DBGetAuthorList { # returns list of all authors' gpg keys as array
 	my $query = "SELECT key FROM author";
 
     my $sth = $dbh->prepare($query);
@@ -1923,7 +1949,7 @@ sub DBGetAuthorList {
 	return @resultsArray;
 }
 
-sub DBGetAuthorAlias {
+sub DBGetAuthorAlias { # returns author's alias by gpg key
 	my $key = shift;
 	chomp ($key);
 
@@ -1948,7 +1974,8 @@ sub DBGetAuthorAlias {
 	}
 }
 
-sub DBGetAuthorScore {
+sub DBGetAuthorScore { # returns author's total score, or the sum of all the author's items' scores
+# $key = author's gpg key  
 	my $key = shift;
 	chomp ($key);
 
@@ -1973,7 +2000,8 @@ sub DBGetAuthorScore {
 	}
 }
 
-sub DBGetAuthorItemCount {
+sub DBGetAuthorItemCount { # returns number of items attributed to author identified by $key
+# $key = author's gpg key  
 	my $key = shift;
 	chomp ($key);
 
@@ -1998,7 +2026,8 @@ sub DBGetAuthorItemCount {
 	}
 }
 
-sub DBGetAuthorLastSeen {
+sub DBGetAuthorLastSeen { # return timestamp of last item attributed to author
+# $key = author's gpg key
 	my $key = shift;
 	chomp ($key);
 
@@ -2024,7 +2053,10 @@ sub DBGetAuthorLastSeen {
 }
 
 
-sub DBGetAuthorPublicKeyHash {
+sub DBGetAuthorPublicKeyHash { # Returns the hash/identifier of the file containing the author's public key
+# $key = author's gpg fingerprint
+# cached in hash called %authorPubKeyCache
+
 	my $key = shift;
 	chomp ($key);
 
@@ -2033,23 +2065,24 @@ sub DBGetAuthorPublicKeyHash {
 		return;
 	}
 
-	state %lastSeenCache;
-	if (exists($lastSeenCache{$key})) {
-		return $lastSeenCache{$key};
+	state %authorPubKeyCache;
+	if (exists($authorPubKeyCache{$key})) {
+		return $authorPubKeyCache{$key};
 	}
 
 	$key = SqliteEscape($key);
 
 	if ($key) { #todo fix non-param sql
 		my $query = "SELECT MAX(author_alias.pubkey_file_hash) AS pubkey_file_hash FROM author_alias WHERE key = '$key'";
-		$lastSeenCache{$key} = SqliteGetValue($query);
-		return $lastSeenCache{$key};
+		$authorPubKeyCache{$key} = SqliteGetValue($query);
+		return $authorPubKeyCache{$key};
 	} else {
 		return "";
 	}
 }
 
-sub DBGetAuthorWeight {
+sub DBGetAuthorWeight { # returns author's weight from vote_weight table
+# Determined by vouch/ tokens  
 	my $key = shift;
 	chomp ($key);
 
@@ -2080,7 +2113,7 @@ sub DBGetAuthorWeight {
 }
 
 
-sub DBGetItemFields {
+sub DBGetItemFields { # Returns fields we typically need to request from item_flat table
 	my $itemFields =
 		"item_flat.file_path file_path,
 		item_flat.item_name item_name,
@@ -2122,7 +2155,7 @@ sub DBGetItemFields {
 #	return $ref;
 #}
 
-sub DBGetTopAuthors {
+sub DBGetTopAuthors { # Returns top-scoring authors from the database
 	my $query = "
 		SELECT
 			author_key,
@@ -2150,7 +2183,7 @@ sub DBGetTopAuthors {
 	return @resultsArray;
 }
 
-sub DBGetTopItems {
+sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now)
 	my $itemFields = DBGetItemFields();
 
 	my $whereClause;
@@ -2196,7 +2229,7 @@ sub DBGetTopItems {
 	return $ref;
 }
 
-sub DBGetItemVoteTotals {
+sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash of [tag] -> count
 	my $fileHash = shift;
 
 	if (!IsSha1($fileHash)) {
