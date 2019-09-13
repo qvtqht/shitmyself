@@ -2,5 +2,5 @@
 	<td><a href="$link">$itemTitle</a><br></td>
 	<td>$itemScore<br></td>
 	<td>$authorAvatar<br></td>
-	<td>$itemLastTouch<br></td>
+	<td><span class=timestamp>$itemLastTouch</span><br></td>
 </tr>
