@@ -1265,14 +1265,14 @@ sub GetPageHeader {
 
 	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
 
+	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-#	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s');
-#	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors');
-#	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts');
+	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s', 1);
+	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors', 1);
+	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts', 1);
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
-	$topMenuTemplate .= $identityLink;
-	$topMenuTemplate .= GetMenuItem("/stats.html", '<small>Status</small>');
+	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status');
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
