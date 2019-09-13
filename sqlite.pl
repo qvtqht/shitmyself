@@ -1039,6 +1039,40 @@ sub DBGetVoteCounts {
 	return $ref;
 }
 
+sub DBGetItemLatestAction { # returns highest timestamp in all of item's children
+# $itemHash is the item's identifier
+
+	my $itemHash = shift;
+	my @queryParams = ();
+
+	# this is my first recursive sql query
+	my $query = '
+	SELECT MAX(add_timestamp) AS add_timestamp
+	FROM item_flat
+	WHERE file_hash IN (
+		WITH RECURSIVE item_threads(x) AS (
+			SELECT ?
+			UNION ALL
+			SELECT item_parent.item_hash
+			FROM item_parent, item_threads
+			WHERE item_parent.parent_hash = item_threads.x
+		)
+		SELECT * FROM item_threads
+	)
+	';
+	
+	push @queryParams, $itemHash;
+
+	my $sth = $dbh->prepare($query);
+	$sth->execute(@queryParams);
+
+	my @aref = $sth->fetchrow_array();
+
+	$sth->finish();
+
+	return $aref[0];
+}
+
 #sub GetTopItemsForTag {
 #	my $tag = shift;
 #	chomp($tag);
