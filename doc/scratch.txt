@@ -1,0 +1,369 @@
+127.0.0.1 localhost:3000 - [25/Aug/2019:18:49:30 -0400] 
+
+"GET /event.html? HTTP/1.1" 200 17423 "
+
+http://localhost:3000/post.html
+?event_name=event+name
+&brc_ave=2:00
+&brc_street=A
+&event_location=asdf
+&month=11
+&day=15
+&year=2027
+&hours=11
+&minutes=40
+&am_pm=0
+&event_details=this+is+a+test%0D%0A%0D%0Athank++you
+
+" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.2 Chrome/69.0.3497.128 Safari/537.36"
+
+
+127.0.0.1 localhost:3000 - [25/Aug/2019:22:35:19 -0400] "GET /event.html? HTTP/1.1" 200 17534 "
+
+http://localhost:3000/post.html
+?event_name=event_name
+&brc_ave=9:55
+&brc_street=Q
+&event_location=location
+&month=11
+&day=11
+&year=2025
+&hours=11
+&minutes=15
+&am_pm=1
+&event_details=11%3A11%3A11
+
+" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.2 Chrome/69.0.3497.128 Safari/537.36"
+
+
+
+http://localhost:3000/action/event.html?event_name=eventnaeme&brc_ave=2%3A00&brc_street=C&event_location=llcoation&month=8&day=24&year=2019&hour=2&minute=0&am_pm=1&date_yyyy=2019-08-24+14%3A00&event_details=wordfdfad%0D%0Aafdfad
+
+
+127.0.0.1 localhost:3000 - [27/Aug/2019:23:08:17 -0400] "GET 
+
+/action/event.html
+?event_name=eventnaeme
+&brc_ave=2%3A00
+&brc_street=C
+&event_location=llcoation
+&month=8
+&day=24
+&year=2019
+&hour=2
+&minute=0
+&am_pm=1
+&date_yyyy=2019-08-24+14%3A00
+&event_details=wordfdfad%0D%0Aafdfad
+
+
+ HTTP/1.1" 200 341 "http://localhost:3000/event.html" "Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0 SeaMonkey/2.49.4"
+
+
+
+
+
+===
+
+
+<h3>Clients/Browsers</h3>
+
+<p>An attempt is made to support every browser. If there is a problem, please report it.</p>
+
+<p>The basic features of the website, including reading, posting, replying, and voting, has been tested in the following browsers:</p>
+
+<ul>
+	<li>Netscape Navigator Gold 3.04</li>
+	<li>Netscape Communicator 4.8</li>
+	<li>Lynx 2.8.9rel.1</li>
+	<li>Links 2.17</li>
+	<li>Dillo 3.0.5</li>
+	<li>NetSurf 2.9</li>
+	<li>Wine IE 8.0</li>
+</ul>
+
+<p>Client-side JS signing works in modern browsers, tested in:</p>
+
+<ul>
+	<li>GNOME Web 3.28.5</li>
+	<li>qutebrowser 1.6.0</li>
+	<li>SeaMonkey 2.49.4</li>
+	<li>Firefox 52.7.2</li>
+	<li>Waterfox 56.2.9</li>
+	<li>Chromium 71.x</li>
+</ul>
+
+
+<!-- -->
+
+
+=====
+
+#todo fix issue if .txt files disappear during build/rebuild
+(needs sanity check and fallback for if txt file is missing after it's indexed)
+
+fatal: Cannot open 'html/txt/5e/97/5e9793af77b73981e67e89627dfec32febf63841.txt': No such file or directory
+Use of uninitialized value $txt in index at ./utils.pl line 1327.
+Use of uninitialized value in concatenation (.) or string at ./index.pl line 282.
+
+
+
+===
+
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+Inlined stylesheet
+Invalid value for property: font-size
+Line 16:
+      font-size: default;
+  -----------------------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+Inlined stylesheet
+Invalid value for property: font-size
+Line 20:
+      font-size: default;
+  -----------------------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+Inlined stylesheet
+Invalid value for property: font-size
+Line 24:
+      font-size: default;
+  -----------------------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+Inlined stylesheet
+Invalid value for property: font-size
+Line 40:
+      font-size: default;
+  -----------------------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: display
+Line 1:
+  initial
+  -------^
+[8/31/2019 9:41:34 PM] CSS - http://localhost:3000/profile.html
+DOM style property
+Invalid value for property: background-color
+Line 1:
+  initial
+  -------^
+
+
+Pay What You Want
+All plans have access to all features. Choose the amount that fits your situation and needs.
+
+No ads or tracking x
+Import from Disqus
+Voting x
+OAuth login
+Moderation tools
+Automatic spam filter
+Email notifications
+Automatic thread locking
+Sticky comments
+Data export x
+Enforce timeouts
+Shadow banning
+API access
+Live comments
+Single sign-on
+Email moderation
+Audit logs
+Email support x
+
+
+
+
+	Like 👍
+	Love ❤️
+	Haha 🤣😆
+	Wow 😮
+	Sad 😢
+	Angry 😠
+
+

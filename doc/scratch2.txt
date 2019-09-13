@@ -1,0 +1,37 @@
+with item_flat_cte as (
+	select * from item_flat
+	left join item_parent on (item_flat.file_hash = item_parent.parent_hash)
+	where parent_count = 0)
+select * from item_flat_cte;
+
+
+
+
+WITH RECURSIVE item_threads(x) AS (
+            SELECT 'd52ddd343058b0a74cfe39330c7e83deb68aa798' 
+                UNION ALL
+            SELECT item_parent.item_hash
+            FROM item_parent, approvers 
+            WHERE item_parent.parent_hash=approvers.x
+        )
+        SELECT * FROM item_threads;
+
+
+with recursive
+item_threads(x) as (
+	select '5f55cdf3a5c5b732995a4fd8edd9774aa0f48a18'
+	union all
+	select item_parent.item_hash
+	from item_parent, item_threads
+	where item_parent.parent_hash = item_threads.x)
+	select * from item_threads;
+
+
+
+select distinct count(page_name) c, page_name from page_touch group by page_name order by c;
+
+SELECT page_name, page_param, touch_time, (page_name in ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) as priority_page
+		FROM page_touch
+		WHERE touch_time >= 1567032513
+		ORDER BY priority_page desc, touch_time
+		LIMIT 50;
