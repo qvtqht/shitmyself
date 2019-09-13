@@ -1385,7 +1385,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			my $itemTitle = @{$item}[7];
 			my $itemScore = @{$item}[8];
 			my $authorKey = @{$item}[3];
-			my $itemLastTouch = '';
+			my $itemLastTouch = DBGetItemLatestAction($itemKey);
 
 			if (trim($itemTitle) eq '') {
 				$itemTitle = '(' . $itemKey . ')';
@@ -1421,7 +1421,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting timestamps profile));
 
 	return $txtIndex;
 }
@@ -1480,7 +1480,7 @@ sub GetStatsPage {
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs timestamps pingback));
+	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs timestamps pingback profile));
 
 	return $statsPage;
 }
