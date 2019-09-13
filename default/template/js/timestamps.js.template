@@ -1,6 +1,6 @@
 // == begin timestamps.js
 function ShowTimestamps() {
-	if (window.getElementsByClassName) {
+	if (document.getElementsByClassName) {
 		var d = new Date();
 		var curTime = Math.floor(d.getTime() / 1000);
 		
