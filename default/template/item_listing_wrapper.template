@@ -3,7 +3,7 @@
 		<th align=left>Title </th>
 		<th align=left>Score </th>
 		<th align=left>Author </th>
-		<th align=left>Last Bump </th>
+		<th align=left>Latest Reply </th>
 	</tr>
 	$itemListings
 </table>
