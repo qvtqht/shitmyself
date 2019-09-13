@@ -1,3 +1,4 @@
+<!-- item_listing_wrapper.template -->
 <table cellpadding=3>
 	<tr>
 		<th width="60%" align=left>Title </th>
@@ -7,3 +8,4 @@
 	</tr>
 	$itemListings
 </table>
+<!-- / item_listing_wrapper.template -->
