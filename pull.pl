@@ -18,7 +18,10 @@ chomp $SCRIPTDIR;
 require './utils.pl';
 require './sqlite.pl';
 
-sub PullFeedFromHost {
+sub PullFeedFromHost { # connects to $host with http and downloads any new items posted
+# downloads /rss.txt first
+# then downloads any listed items which are not already stored locally
+# determined by provided sha hash
 	my $host = shift;
 
 	chomp $host;
@@ -92,7 +95,7 @@ sub PullFeedFromHost {
 # my $DIR = dirname($FILE);
 # print $DIR, "\n";
 
-sub PushItemToHost {
+sub PushItemToHost { #pushes an item to host via /post.html
 	my $host = shift;
 	my $fileName = shift;
 	my $fileHash = shift;
@@ -140,7 +143,7 @@ sub PushItemToHost {
 	return $curlResult;
 }
 
-sub PullItemFromHost {
+sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 	my $host = shift;
 	my $fileName = shift;
 	my $hash = shift;
@@ -188,7 +191,7 @@ sub PullItemFromHost {
 }
 
 
-sub PushItemsToHost {
+sub PushItemsToHost { #pushes items to $host which have not already been pushed
 	my $host = shift;
 	chomp($host);
 
