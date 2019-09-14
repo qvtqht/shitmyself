@@ -31,7 +31,7 @@ WriteLog( "Using $SCRIPTDIR as install root...\n");
 #	}
 #}
 
-sub MakeVoteIndex {
+sub MakeVoteIndex { # Indexes any votes recorded in log/votes.log into database
 	WriteLog( "MakeVoteIndex()\n");
 
 	my $voteLog = GetFile("log/votes.log");
@@ -113,9 +113,10 @@ sub GetFileHashPath { # Returns text file's standardized path based on its hash
 	}
 }
 
-sub IndexTextFile {
+sub IndexTextFile { # indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush), flushes any queued queries
+# Also sets appropriate page_touch entries
 
 	my $file = shift;
 	chomp($file);
@@ -1114,7 +1115,7 @@ sub IndexTextFile {
 	}
 }
 
-sub WriteIndexedConfig {
+sub WriteIndexedConfig { # writes config indexed in database into config/
 	my @indexedConfig = DBGetLatestConfig();
 
 	foreach my $configLine(@indexedConfig) {
@@ -1143,7 +1144,7 @@ sub WriteIndexedConfig {
 	}
 }
 
-sub MakeIndex {
+sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteLog( "MakeIndex()...\n");
 
 	my @filesToInclude = @{$_[0]}; # ?

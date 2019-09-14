@@ -58,7 +58,7 @@ foreach (@submitReceivers) {
 
 ##################
 
-sub AddHost {
+sub AddHost { # adds a host to hte my_hosts config
 # $host
 # $ownAlias = whether it belongs to this instance
 
@@ -80,7 +80,7 @@ sub AddHost {
 
 }
 
-sub GenerateFilenameFromTime {
+sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
 	WriteLog('GenerateFilenameFromTime()');
 
 	# Generate filename from date and time
@@ -124,13 +124,13 @@ sub GenerateFilenameFromTime {
 }
 
 
+sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 # ProcessAccessLog (
 #	access log file path
 #   parse mode:
 #		0 = default site log
 #		1 = vhost log
 # )
-sub ProcessAccessLog {
 	WriteLog("ProcessAccessLog() begin");
 
 	# Processes the specified access.log file

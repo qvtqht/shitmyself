@@ -19,7 +19,7 @@ require './sqlite.pl';
 
 my $HTMLDIR = "html";
 
-sub GenerateSomeKindOfPage {
+sub GenerateSomeKindOfPage { # generates page html (doesn't do anything atm)
 	my $pageName = shift;
 
 	#todo is $pageName in list of allowed pages?
@@ -81,7 +81,7 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 	return $authorLink;
 }
 
-sub GetPageLink {
+sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	my $pageNumber = shift;
 
 	my $pageLimit = GetConfig('page_limit');
@@ -103,7 +103,8 @@ sub GetPageLink {
 	return $pageLink;
 }
 
-sub GetPageLinks {
+sub GetPageLinks { # returns html for pagination links
+# $currentPageNumber = current page  
 	state $pageLinks;
 
 	my $currentPageNumber = shift;
@@ -179,7 +180,7 @@ sub GetPageLinks {
 	return GetPageLinks($currentPageNumber);
 }
 
-sub GetEventsPage {
+sub GetEventsPage { # returns html for events page
 	WriteLog('GetEventsPage()');
 
 	my $txtPage = '';
@@ -275,7 +276,7 @@ sub GetEventsPage {
 
 }
 
-sub GetVotesPage {
+sub GetVotesPage { # returns html for tags listing page (sorted by number of uses)
 	#todo rewrite this more pretty
 	my $txtIndex = "";
 
@@ -333,7 +334,7 @@ sub GetVotesPage {
 	return $txtIndex;
 }
 
-sub GetTagsPage {
+sub GetTagsPage { # returns html for tags listing page (alphabetically sorted)
 	#todo rewrite this more pretty
 	my $txtIndex = "";
 
@@ -429,7 +430,7 @@ sub GetTagsPage {
 #	return $itemTemplate;
 #}
 #
-sub GetThreadPage {
+sub GetThreadPage { # returns page with entire discussion thread for a top-level item (incomplete)
 	my $threadParent = shift;
 	if (!IsItem($threadParent)) {
 		return;
@@ -746,7 +747,7 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 	return $tagButtons;
 }
 
-sub GetItemVotesSummary {
+sub GetItemVotesSummary { # returns html with list of tags applied to item, and their counts
 	my $fileHash = shift;
 
 	#todo sanity checks
@@ -1088,7 +1089,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	}
 }
 
-sub GetPageFooter {
+sub GetPageFooter { # returns html for page footer
 	my $txtFooter = GetTemplate('htmlend.template');
 
 #	my $disclaimer = GetConfig('string/en/disclaimer') . "\n" . GetConfig('string/ru/disclaimer');
@@ -1140,10 +1141,10 @@ my $primaryColor;
 my $secondaryColor;
 my $textColor;
 
-sub GetPageHeader {
-	my $title = shift;
-	my $titleHtml = shift;
-	my $pageType = shift;
+sub GetPageHeader { # returns html for page header
+	my $title = shift; # page title
+	my $titleHtml = shift; # formatted page title
+	my $pageType = shift; # type of page
 
 	if (!$pageType) {
 		$pageType = 'default';
@@ -1290,7 +1291,7 @@ sub GetPageHeader {
 	return $txtIndex;
 }
 
-sub GetVoterTemplate {
+sub GetVoterTemplate { # returns html for voter checkboxes
 	my $fileHash = shift;
 	my $ballotTime = shift;
 
@@ -1426,7 +1427,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	return $txtIndex;
 }
 
-sub GetStatsPage {
+sub GetStatsPage { # returns html for stats page
 	my $statsPage;
 
 	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
@@ -1858,7 +1859,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 } # /GetReadPage
 
 
-sub GetMenuItem {
+sub GetMenuItem { # returns html snippet for a menu item (used for both top and footer menus)
 	my $address = shift;
 	my $caption = shift;
 	my $advanced = shift;
@@ -1880,9 +1881,8 @@ sub GetMenuItem {
 	return $menuItem;
 }
 
-sub GetIndexPage {
-	# Returns index#.html files given an array of files
-	# Called by a loop in generate.pl
+sub GetIndexPage { # returns html for an index page, given an array of hash-refs containing item information
+	# Called from WriteIndexPages() and generate.pl
 	# Should probably be replaced with GetReadPage()
 
 	my $filesArrayReference = shift;
@@ -1975,7 +1975,7 @@ sub GetIndexPage {
 	return $txtIndex;
 }
 
-sub WriteIndexPages {
+sub WriteIndexPages { # writes the abyss pages (index0-n.html)
 	my $pageLimit = GetConfig('page_limit');
 	if (!$pageLimit) {
 		$pageLimit = 250;
@@ -2044,10 +2044,11 @@ sub WriteIndexPages {
 	}
 }
 
-sub MakeFormPages {
+sub MakeFormPages { #generates and writes all 'form' pages (doesn't do anything atm)
 }
 
-sub MakeSummaryPages {
+sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
+# write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 	WriteLog('MakeSummaryPages() BEGIN');
 
 	# Submit page
@@ -2214,7 +2215,7 @@ sub MakeSummaryPages {
 	WriteLog('MakeSummaryPages() END');
 }
 
-sub GetWritePage {
+sub GetWritePage { # returns html for write page
 	# $txtIndex stores html page output
 	my $txtIndex = "";
 
@@ -2365,7 +2366,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	return $txtIndex;
 }
 
-sub GetPrefsPage {
+sub GetPrefsPage { # returns html for preferences page (/prefs.html)
 	my $txtIndex = "";
 
 	my $title = "Preferences";
@@ -2391,7 +2392,7 @@ sub GetPrefsPage {
 	return $txtIndex;
 }
 
-sub GetRssFile {
+sub GetRssFile { # returns rss feed for current site
 	my %queryParams;
 	
 	$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
