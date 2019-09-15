@@ -1,4 +1,4 @@
-<p style="background-color: #ffc0a0; padding: 5pt; border-radius: 5pt;">
+<p id=eventCreate>
 	<a href="/event.html"><b><blink>Add New Event</blink></b></a>
 </p>
 

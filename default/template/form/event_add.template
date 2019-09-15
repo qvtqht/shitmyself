@@ -3,7 +3,7 @@
 		All fields are optional.
 	</p>
 
-	<p style="background-color: #c0c0ff; padding: 5pt;">
+	<p id=eventLocation>
 		<label for=event_location>
 			<b>Location:</b> <font color=green>(optional)</font>
 		</label>
@@ -21,7 +21,7 @@
 		<br><br>
 	</p>
 
-	<p style="background-color: #c0c0ff; padding: 5pt;">
+	<p id=eventBrcLocation>
 		<b>BRC Address</b> <font color=green>(optional)</font>
 		<br>
 
@@ -103,7 +103,7 @@
 		<br>
 	</p>
 
-	<p style="background-color: #c0ffc0; padding: 5pt;">
+	<p id=eventDate>
 		<b>Date</b> <font color=green>(optional)</font><br>
 
 		<select name="month" onchange="UpdateTimeString()">
@@ -235,8 +235,8 @@
 		</label>
 	</p>
 
-	<p style="background-color: #ffa000; padding: 5pt; border-radius: 5pt;">
-		<input value="Create Event" type="submit" style="border-radius: 5pt; padding: 5pt; font-size: large; font-weight: bold;"> (required)<br>
+	<p id=eventCreate>
+		<input value="Create Event" type="submit" id=eventCreateButton> (required)<br>
 		&nbsp; Please press button to create event 
 	</p>
 
