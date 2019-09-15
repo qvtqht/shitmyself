@@ -2,7 +2,7 @@
 <div style="border-color: $borderColor" class=reply>
 $itemTitleTemplate
 <span>$itemText</span>
-<span><b><a href="$permalinkHtml">$itemName</a></b> $authorLink</span>
+<span><b class=advanced><a href="$permalinkHtml">$itemName</a></b> $authorLink</span>
 <replies></replies>
 </div>
 <!-- / item-smaller.template -->
