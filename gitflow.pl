@@ -135,7 +135,7 @@ if (!$filesLimit) {
 }
 
 # Use git to find files that have changed in txt/ directory
-WriteLog("\$gitChanges = cd html/txt; git add . ; git status --porcelain | grep "^A" | head -n $filesLimit | cut -c 4-; cd ../..");
+WriteLog("\$gitChanges = cd html/txt; git add . ; git status --porcelain | grep \"^A\" | head -n $filesLimit | cut -c 4-; cd ../..");
 my $gitChanges = `cd html/txt; git add . ; git status --porcelain | grep "^A" | head -n $filesLimit | cut -c 4-; cd ../..`;
 
 WriteLog('$gitChanges = ' . $gitChanges);
