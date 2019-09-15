@@ -502,6 +502,8 @@ function makeKeyFromInputs() {
 	var bits = document.getElementById('bits').value;
 
 	makePrivateKey(user, bits);
+	
+	return 0;
 }
 
 function insPubKey() {

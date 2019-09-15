@@ -11,7 +11,7 @@
     </p>
 
     <p>
-        <input id=cSb type=submit value="Create" onclick="makeKeyFromInputs();return false;">
+        <input id=cSb type=submit value="Create" onclick="return makeKeyFromInputs();">
         <span id=genStatus></span>
     </p>
 
