@@ -126,17 +126,6 @@ if (!-e 'html/txt/.git') {
 	WriteLog($gitOutput);
 }
 
-# Use git to find files that have changed in txt/ directory
-my $gitChanges = `cd html/txt; git add . ; git status --porcelain | grep "^A" | cut -c 4-; cd ../..`;
-
-WriteLog('$gitChanges = ' . $gitChanges);
-
-# Get an array of changed files that git returned
-my @gitChangesArray = split("\n", $gitChanges);
-
-# Log number of changes
-WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
-
 # See if gitflow/file_limit setting exists
 # This limits the number of files to process per launch of gitflow.pl
 my $filesLimit = GetConfig('admin/gitflow/file_limit');
@@ -145,6 +134,18 @@ if (!$filesLimit) {
 	$filesLimit = 100;
 }
 
+# Use git to find files that have changed in txt/ directory
+WriteLog("\$gitChanges = cd html/txt; git add . ; git status --porcelain | grep "^A" | head -n $filesLimit | cut -c 4-; cd ../..");
+my $gitChanges = `cd html/txt; git add . ; git status --porcelain | grep "^A" | head -n $filesLimit | cut -c 4-; cd ../..`;
+
+WriteLog('$gitChanges = ' . $gitChanges);
+
+# Get an array of changed files that git returned
+my @gitChangesArray = split("\n", $gitChanges);
+
+# Log number of changes
+WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 # Keep track of how many files we've processed
 my $filesProcessed = 0;
 
