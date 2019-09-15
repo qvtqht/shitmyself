@@ -143,3 +143,13 @@ form#compose {
     font-size: large;
     font-weight: bold;
 }
+
+form.reply {
+	border: 5pt solid #f0f0e0;
+	background-color: #f0f0e0;
+	border-radius: 5pt;
+}
+
+#cSb {
+    background-color: orange; 
+}
