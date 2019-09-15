@@ -1,3 +1,5 @@
+Fix bug in progress indicator (debug output)
+
 In friendly mode, instead of >>12345, display the title
 
 DATA page
@@ -130,10 +132,6 @@ Web server handler for potential 404:
 			return or redirect to item's page
 
 Log each script's runtime and output in timestamped logs
-
-Decouple util page generation from index page generation
-	Generate util pages immediately after clean
-		Status note
 
 In Abyss index pages, votes/replies should include parent message in a box
 
