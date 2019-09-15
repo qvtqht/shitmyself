@@ -73,6 +73,7 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 		$authorAvatar = GetAvatar($gpgKey);
 	}
 
+	chomp $authorAvatar;
 	my $authorLink = GetTemplate('authorlink.template');
 
 	$authorLink =~ s/\$authorUrl/$authorUrl/g;
@@ -1269,7 +1270,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Pref\'s', 1);
+	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors', 1);
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts', 1);
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
@@ -1850,9 +1851,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps voting));
+		$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps voting profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting));
+		$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile));
 	}
 
 	return $txtIndex;
@@ -1970,7 +1971,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile fresh));
 
 	return $txtIndex;
 }
@@ -2542,10 +2543,10 @@ sub MakeDataPage { # returns html for /data.html
 	if (!$lastZip || (GetTime() - $lastZip) > $zipInterval) {
 		WriteLog("Making zip file...");
 
-		system("git archive --format zip --output html/hike.tmp.zip master");
-		#system("git archive -v --format zip --output html/hike.tmp.zip master");
+#		system("git archive --format zip --output html/hike.tmp.zip master");
+#		#system("git archive -v --format zip --output html/hike.tmp.zip master");
 
-		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log .git/");
+		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log");
 		#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
