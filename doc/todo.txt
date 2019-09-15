@@ -141,12 +141,6 @@ With SSI calculate user's fingerprint and direct them to /fp/abcdef
 
 Redirect gpg stderr output 2>/dev/null
 
-Progress indicators 
-	index.pl
-	generate.pl
-	gitflow.pl
-	to give general idea of how long script will run
-
 Import data from FB, G+, IG, etc.
 
 Build threads page
