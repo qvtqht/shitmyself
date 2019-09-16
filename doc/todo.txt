@@ -1,3 +1,7 @@
+Instead of index db being stored under version hash
+	Store it under md5(all schema creation statements)
+		Then it doesn't have to change unless schema changes
+
 Fix bug in progress indicator (debug output)
 
 In friendly mode, instead of >>12345, display the title
