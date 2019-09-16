@@ -1,9 +1,19 @@
-.tag-flag, .tag-troll, .tag-spam, .tag-disagree, .tag-abuse, .tag-dislike, .tag-duplicate {
+.tag-flag, 
+.tag-troll, 
+.tag-spam, 
+.tag-disagree, 
+.tag-abuse, 
+.tag-dislike, 
+.tag-duplicate {
     color: #c08080;
 }
-.tag-accept, .tag-friend, .tag-attend {
+
+.tag-accept, 
+.tag-friend, 
+.tag-attend {
     color: #80c080;
 }
+
 .tag-textart {
     font-family: monospace;
     font-size: default;
@@ -46,16 +56,6 @@ body {
     color: red;
 }
 
-#logo {
-    font-weight: bold;
-    color: $primaryColor;
-    text-shadow:
-        -3pt -3pt 0 red,
-        3pt -3pt 0 green,
-        -3pt 3pt 0 blue,
-        3pt 3pt 0 violet;
-    font-family: cursive;
-}
 form#compose {
     border: 5pt solid #e8d0ea;
     border-radius: 5pt;
@@ -107,18 +107,10 @@ form#compose {
     padding: 5pt;
     $headerBackgroundPattern
 }
-.menu a {
-    text-shadow:
-    -2pt -2pt 1pt white,
-    1pt -1pt 1pt cyan,
-    -1pt 1pt 1pt magenta,
-    1pt 1pt 1pt black;
-    color: #808080;
-}
+
 #clockContainer {
     background-color: #405040;
     color: #00f040;
-    padding: 5pt;
     border-radius: 5pt;
     border-style: inset;
     border-color: #808080;
