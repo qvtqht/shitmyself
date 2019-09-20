@@ -149,9 +149,6 @@ Build threads page
 	select * from item_flat where parent_count = 0
 		find all children recursively
 
-Fix bug with anonymous (server-side) replying
-	Where extra &replyto= gets appended at the end
-
 Add setting to ignore plain URL messages if they are an exact match for a file
 	This means no unintentional hit counting via hastext tag
 
