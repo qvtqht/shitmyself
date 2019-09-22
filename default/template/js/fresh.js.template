@@ -2,45 +2,57 @@
 // == begin fresh.js 
 var freshClient;
 
-function corsc() {
-  if(this.readyState == this.HEADERS_RECEIVED) {
-	 var eTag = freshClient.getResponseHeader("ETag");
-	 if (eTag) {
-		if (window.lastEtag) {
-			if (eTag == window.lastEtag) {
-				// still fresh, no change
-			} else {
-				// change has happened
-
-				if (window.GetPrefs) {
-				// reload the page, if user prefers it
-					if (GetPrefs('auto_reload_changed')) {
-						location.reload();
+function corsc() { // callback for requesting HEAD for current page
+	if(this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
+		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
+		
+		if (eTag) { // if etag header has a value
+			if (window.lastEtag) { // if we already saved one
+				if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
+					// still fresh, no change
+				} else { // etag was different from last one we saw
+					if (!window.etagChangeCounter) {
+						window.etagChangeCounter = 1;
+					} else {
+					  window.etagChangeCounter++;
 					}
-				}
-				
-				var clock = document.getElementById('clock');
-				if (clock) {
-					clock.style.color='yellow';
+					// for some reason, it changes the first time... 
+					// so use a counter to ignore the first one
+			  
+					if (window.etagChangeCounter > 1) { // second change or more
+						// actual change has happened
+
+					if (window.GetPrefs) { // reload the page, if user prefers it
+						if (GetPrefs('auto_reload_changed')) {
+							location.reload();
+						}
+					}
+
+					// below is changing clock's appearance from green to yellow					
+					var clock = document.getElementById('clock');
+					if (clock) {
+						clock.style.color='yellow';
+						
+						var clockContainer = document.getElementById('clockContainer');
+						if (clockContainer) {
+							clockContainer.style.backgroundColor='#404000';
+						}
+					}
 					
-					var clockContainer = document.getElementById('clockContainer');
-					if (clockContainer) {
-						clockContainer.style.backgroundColor='404000';
-					}
+					// disable AmIFresh, no reason to keep running it
+					freshTimeout = -1;
+	
+					// code below is experiment to load the page in background, 
+					// and then replace the current dom with it
+					//		 			var client2 = new XMLHttpRequest();
+					//		 			client2.open("GET", window.location);
+					//
+					//		 			client2.onreadystagechange = function() {
+					//		 				if (this.readyState == 4) {
+					//			 				document.replaceChild(client2.responseText, document.documentElement);
+					//		 				}
+					//		 			}
 				}
-				
-				// disable AmIFresh, no reason to keep running it
-				freshTimeout = -1;
-
-//
-//		 			var client2 = new XMLHttpRequest();
-//		 			client2.open("GET", window.location);
-//
-//		 			client2.onreadystagechange = function() {
-//		 				if (this.readyState == 4) {
-//			 				document.replaceChild(client2.responseText, document.documentElement);
-//		 				}
-//		 			}
 			}
 			window.lastEtag = eTag;
 		} else {
@@ -85,7 +97,7 @@ function AmIFresh() {
 		if (freshTimeout > 15000) {
 			freshTimeout = 15000;
 		} 
-      
+		
 		setTimeout(AmIFresh, freshTimeout);
 	}
 }
