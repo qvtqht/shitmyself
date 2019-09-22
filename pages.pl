@@ -19,6 +19,13 @@ require './sqlite.pl';
 
 my $HTMLDIR = "html";
 
+sub PopulateColors {
+	my $theme = 'default';
+	
+	my $clockColor = ''; 
+	
+}
+
 sub GenerateSomeKindOfPage { # generates page html (doesn't do anything atm)
 	my $pageName = shift;
 
@@ -271,7 +278,7 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs timestamps voting));
+	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs timestamps voting profile));
 
 	return $txtPage;
 
@@ -330,7 +337,7 @@ sub GetVotesPage { # returns html for tags listing page (sorted by number of use
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs profile));
 
 	return $txtIndex;
 }
@@ -1272,7 +1279,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
 	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors', 1);
-	$topMenuTemplate .= GetMenuItem("/top.html", 'Texts', 1);
+	$topMenuTemplate .= GetMenuItem("/top.html", 'Topics');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status');
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
@@ -1474,9 +1481,13 @@ sub GetStatsPage { # returns html for stats page
 	$statsTable =~ s/\$updateInterval/$updateInterval/;
 	$statsTable =~ s/\$nextUpdateTime/GetTimestampElement($nextUpdateTime)/e;
 
-	$statsTable =~ s/\$version/GetMyVersion()/e;
-	$statsTable =~ s/\$itemCount/$itemCount/e;
-	$statsTable =~ s/\$authorCount/$authorCount/e;
+	my $versionFull = GetMyVersion();
+	my $versionShort = substr($versionFull, 0, 8); 
+
+	$statsTable =~ s/\$versionFull/$versionFull/;
+	$statsTable =~ s/\$versionShort/$versionShort/;
+	$statsTable =~ s/\$itemCount/$itemCount/;
+	$statsTable =~ s/\$authorCount/$authorCount/;
 
 	$statsPage .= $statsTable;
 
@@ -2122,7 +2133,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetPageFooter();
 
-		$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
+		$tfmPage = InjectJs($tfmPage, qw(avatar prefs profile));
 
 		PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -2256,7 +2267,7 @@ sub GetWritePage { # returns html for write page
 
 		$txtIndex .= GetPageFooter();
 
-		$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs));
+		$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs profile));
 
 		#todo break out into IncludeJs();
 		#		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
@@ -2292,6 +2303,15 @@ sub GetEventAddPage { # get html for /event.html
 	
 
 	my $eventAddForm = GetTemplate('form/event_add.template');
+	
+	if (GetConfig('brc/enable')) {
+		# if brc mode is enabled, add fields for burning man location
+		my $brcLocationTemplate = GetTemplate('form/brc_location.template');
+		
+		$eventAddForm =~ s/\$brcLocation/$brcLocationTemplate/g;
+	} else {
+		$eventAddForm =~ s/\$brcLocation//g;
+	}
 
 	if (GetConfig('brc/enable')) {
 		my $brcAddressForm = GetTemplate('form/brc_address.template');
@@ -2313,7 +2333,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs event_add fresh));
+	$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs event_add fresh profile));
 
 #	$txtIndex =~ s/<body /<body onload="writeOnload();" /;
 
