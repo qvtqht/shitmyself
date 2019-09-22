@@ -27,14 +27,14 @@
 		<p>
 			<label for=displayUsername>
 				<input type=checkbox id=displayUsername onchange="showHideCheckbox(0, this, 'display_username');">
-				Display my username in top menu
+				Display my username in top menu (after reload)
 			</label>
 		</p>
 		
 		<p>
 			<label for=reloadChanged>
 				<input type=checkbox id=reloadChanged onchange="showHideCheckbox(0, this, 'auto_reload_changed');">
-				Reload pages if changes detected
+				Reload pages if changes detected (may be disruptive)
 			</label>
 		</p>
 
