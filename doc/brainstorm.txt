@@ -1,3 +1,9 @@
+setconfig/page/manual=foo
+	manual (hashes as foo)
+		<-- include abcd -->
+		<-- include defg -->
+
+
 A big floating > button seems to be a worthwhile trend
 
 
