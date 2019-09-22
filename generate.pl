@@ -166,8 +166,12 @@ foreach my $hashRef (@authors) {
 # 	PutFile("$HTMLDIR/rss.txt", $fileList);
 # }
 
+my %queryParams;
 
-PutFile("$HTMLDIR/rss.xml", GetRssFile());
+$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+my @rssFiles = DBGetItemList(\%queryParams);
+
+PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
 
 
 # this should create a page for each item

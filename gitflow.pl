@@ -364,7 +364,12 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	#
 	# rss feed
 	elsif ($pageType eq 'rss') {
-		PutFile("html/rss.xml", GetRssFile());
+		my %queryParams;
+
+		$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+		my @rssFiles = DBGetItemList(\%queryParams);
+
+		PutFile('html/rss.xml', GetRssFile(@rssFiles));
 	}
 	#
 	# summary pages

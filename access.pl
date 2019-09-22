@@ -58,7 +58,7 @@ foreach (@submitReceivers) {
 
 ##################
 
-sub AddHost { # adds a host to hte my_hosts config
+sub AddHost { # adds a host to config/system/my_hosts
 # $host
 # $ownAlias = whether it belongs to this instance
 
@@ -71,7 +71,7 @@ sub AddHost { # adds a host to hte my_hosts config
 	WriteLog("AddHost($host, $ownAlias)");
 
 	if ($ownAlias) {
-		AddItemToConfigList('my_hosts', $host);
+		AddItemToConfigList('system/my_hosts', $host);
 	}
 
 	AddItemToConfigList('pull_hosts', $host);

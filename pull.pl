@@ -32,7 +32,7 @@ sub PullFeedFromHost { # connects to $host with http and downloads any new items
 
 	$hostFeedUrl = $hostFeedUrl . '?you=' . uri_escape($host);
 
-	my @myHosts = split("\n", GetConfig('my_hosts'));
+	my @myHosts = split("\n", GetConfig('system/my_hosts'));
 	my $myHostUrl = $myHosts[rand @myHosts];
 
 	$hostFeedUrl .= '&me=' . uri_escape($myHostUrl);
