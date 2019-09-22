@@ -1,0 +1,82 @@
+	<p id=eventBrcLocation>
+		<b>BRC Address</b> <font color=green>(optional)</font>
+		<br>
+
+		<label for=brc_ave>Avenue:</label>
+
+		<select name="brc_ave" id=brc_ave>
+			<option></option>
+
+			<option value="2:00">2:00</option>
+			<option value="2:15">2:15</option>
+			<option value="2:30">2:30</option>
+			<option value="2:45">2:45</option>
+
+			<option value="3:00">3:00</option>
+			<option value="3:15">3:15</option>
+			<option value="3:30">3:30</option>
+			<option value="3:45">3:45</option>
+
+			<option value="4:00">4:00</option>
+			<option value="4:15">4:15</option>
+			<option value="4:30">4:30</option>
+			<option value="4:45">4:45</option>
+
+			<option value="5:00">5:00</option>
+			<option value="5:15">5:15</option>
+			<option value="5:30">5:30</option>
+			<option value="5:45">5:45</option>
+
+			<option value="6:00">6:00</option>
+			<option value="6:15">6:15</option>
+			<option value="6:30">6:30</option>
+			<option value="6:45">6:45</option>
+
+			<option value="7:00">7:00</option>
+			<option value="7:15">7:15</option>
+			<option value="7:30">7:30</option>
+			<option value="7:45">7:45</option>
+
+			<option value="8:00">8:00</option>
+			<option value="8:15">8:15</option>
+			<option value="8:30">8:30</option>
+			<option value="8:45">8:45</option>
+
+			<option value="9:00">9:00</option>
+			<option value="9:15">9:15</option>
+			<option value="9:30">9:30</option>
+			<option value="9:45">9:45</option>
+
+			<option value="10:00">10:00</option>
+		</select>
+
+		<br>
+
+		<label for=brc_street>Street Letter:</label>
+
+		<select id=brc_street name=brc_street>
+			<option></option>
+			<option value="A">A</option>
+			<option value="B">B</option>
+			<option value="C">C</option>
+			<option value="D">D</option>
+			<option value="E">E</option>
+			<option value="F">F</option>
+			<option value="G">G</option>
+			<option value="H">H</option>
+			<option value="I">I</option>
+			<option value="J">J</option>
+			<option value="K">K</option>
+			<option value="L">L</option>
+			<option value="M">M</option>
+			<option value="N">N</option>
+			<option value="O">O</option>
+			<option value="P">P</option>
+			<option value="Q">Q</option>
+		</select>
+		<br>
+
+		<small>(for Burning Man <font color=green>(optional)</font>)</small>
+		<br>
+	</p>
+
