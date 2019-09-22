@@ -258,16 +258,13 @@ From openpgp.js docs:
 Ensure that this (and the non-min version) is the version that is in the templates
 
 
-Add titles to items
+Add titles to items x
 	If title token present, use that
-		If not, use first X of title
+		If not, use first X of title x
 
 Make sure links work when pages are viewed locally
 	They currently do not, because they're /-prefixed
 
-
-If homepage is not built by the end of generate.pl,
-	do some default action
 
 <bump> button --> "bump"+sign --> submit
 
