@@ -1,42 +1,43 @@
 // == begin voting.js
 
 function signVote(t, token) {
-	var privkey = getPrivateKey();
-
-	if (!privkey) {
-		t.enabled = false;
-		t.style.backgroundColor = '#408040'; //#todo
-		t.style.borderRadius = '5pt'; //#todo
-
-		if (UrlExists(t.href)) {
-			// todo increment counter
-		}
-	} else {
-		t.enabled = false;
-		t.style.backgroundColor = '#8080c0'; //#todo
-		t.style.color = '#f0f0f0';
-		t.style.borderRadius = '5pt'; //#todo
-
-		var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-
-		options = {
-			data: token,                             // input as String (or Uint8Array)
-			privateKeys: [privKeyObj]                  // for signing
-		};
-
-		openpgp.config.show_version = false;
-
-		openpgp.config.show_comment = false;
-
-		openpgp.sign(options).then(function(signed) {
-			var url = '/post.html?comment=' + encodeURIComponent(signed.data);
-
-			if (UrlExists(url)) {
-				// todo incrememnt counter
+	if (document.getElementById) {
+		var privkey = getPrivateKey();
+	
+		if (!privkey) {
+			t.enabled = false;
+			t.style.backgroundColor = '#408040'; //#todo
+			t.style.borderRadius = '5pt'; //#todo
+	
+			if (UrlExists(t.href)) {
+				// todo increment counter
 			}
-		});
+		} else {
+			t.enabled = false;
+			t.style.backgroundColor = '#8080c0'; //#todo
+			t.style.color = '#f0f0f0';
+			t.style.borderRadius = '5pt'; //#todo
+	
+			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+	
+			options = {
+				data: token,                             // input as String (or Uint8Array)
+				privateKeys: [privKeyObj]                  // for signing
+			};
+	
+			openpgp.config.show_version = false;
+	
+			openpgp.config.show_comment = false;
+	
+			openpgp.sign(options).then(function(signed) {
+				var url = '/post.html?comment=' + encodeURIComponent(signed.data);
+	
+				if (UrlExists(url)) {
+					// todo incrememnt counter
+				}
+			});
+		}
 	}
-
 	return false;
 }
 
