@@ -1830,6 +1830,8 @@ sub DBGetItemListByTagList { #get list of items by taglist (as array)
 	WriteLog("$whereClause");
 
 	$queryParams{'where_clause'} = $whereClause;
+	
+	#todo this is currently an "OR" select, but it should be an "AND" select.
 
 			#todo do it correctly like this:
 #	$sth = $dbh->prepare( "
