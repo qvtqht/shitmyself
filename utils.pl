@@ -1862,4 +1862,11 @@ sub GetItemMessage { # retrieves item's message using cache or file path
 	return  $message;
 }
 
+sub GetPrefixedUrl { # returns url with relative prefix 
+	my $url = shift;
+	chomp $url; 
+	
+	return $url;
+}
+
 1;
