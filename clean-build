@@ -7,6 +7,7 @@ rm -rf cache
 rm -rf html/*.html html/*/*.html html/*/*/*.html
 rm -rf html/*.js html/*/*.js html/*/*/*.js
 rm -rf html/*.php html/*/*.php html/*/*/*.php
+rm -rf html/*.xml html/*/*.xml
 rm -rf html/.htaccess
 rm -rf html/*.zip
 rm -rf html/rss.xml html/rss.txt
