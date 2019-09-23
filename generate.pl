@@ -281,7 +281,7 @@ PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
 
 WriteMessage("GetScoreboardPage()...");
 my $scoreboardPage = GetScoreboardPage();
-PutHtmlFile('html/scores.html', $scoreboardPage);
+PutHtmlFile('html/authors.html', $scoreboardPage);
 PutHtmlFile('html/author/index.html', $scoreboardPage);
 
 WriteMessage("DBGetVoteCounts()...");

@@ -3,7 +3,7 @@
 	<p>Updated: $currUpdateTime</p>
 	<p>Next Update: $nextUpdateTime</p>
 	<p>Items: $itemCount</p>
-	<p>Authors: $authorCount</p>
+	<p><a href="/authors.html">Authors</a>: $authorCount</p>
 	<p>Operator: $admin</p>
 	<p class=advanced>Server: $server</p>
 	<p class=advanced>Previous Update: $prevUpdateTime</p>

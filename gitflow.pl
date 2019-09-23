@@ -342,7 +342,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	# scores page
 	elsif ($pageType eq 'scores') {
 		my $scoresPage = GetScoreboardPage();
-		PutHtmlFile('html/scores.html', $scoresPage);
+		PutHtmlFile('html/authors.html', $scoresPage);
 	}
 	#
 	# topitems page

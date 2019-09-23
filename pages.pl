@@ -1278,7 +1278,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
-	$topMenuTemplate .= GetMenuItem("/scores.html", 'Authors', 1);
+	$topMenuTemplate .= GetMenuItem("/authors.html", 'Authors', 1);
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Topics');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status');
@@ -1527,7 +1527,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	return $html;
 }
 
-sub GetScoreboardPage { #returns html for /scores.html
+sub GetScoreboardPage { #returns html for /authors.html
 	#todo rewrite this more pretty
 	my $txtIndex = "";
 
