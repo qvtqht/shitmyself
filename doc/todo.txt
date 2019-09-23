@@ -1,3 +1,8 @@
+Select all untagged (or unapproved) items
+	Put into zip file
+		Remove from txt
+			Commit in txt
+
 Instead of index db being stored under version hash
 	Store it under md5(all schema creation statements)
 		Then it doesn't have to change unless schema changes
