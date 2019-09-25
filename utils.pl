@@ -1438,7 +1438,10 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 			}
 
 			# Public key confirmed, update $message
-			if ($alias && $gpg_key) {
+			if ($gpg_key) {
+				if (!$alias) {
+					$alias = '(Blank)';
+				}
 				#$message = "Welcome, $alias\nFingerprint: $gpg_key";
 				$message = GetTemplate('message/user_reg.template');
 
@@ -1492,7 +1495,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 				}
 			}
 
-			if ($key_id_prefix) {
+			if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
 				# Extract the key fingerprint from GPG's output.
 				$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 				$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
