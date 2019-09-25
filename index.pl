@@ -75,7 +75,30 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 	}
 }
 
-sub GetFileHashPath { # Returns text file's standardized path based on its hash
+sub GetPathFromHash {
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
+		system('mkdir html/txt/' . substr($fileHash, 0, 2));
+	}
+
+	if (!-e 'html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
+		system('mkdir html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
+	}
+
+	my $fileHashSubDir = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2);
+
+	if ($fileHash) {
+		my $fileHashPath = 'html/txt/' . $fileHashSubDir . '/' . $fileHash . '.txt';
+
+		WriteLog("\$fileHashPath = $fileHashPath");
+
+		return $fileHashPath;
+	}
+}
+
+sub GetFileHashPath { # Returns text file's standardized path given its filename
 # e.g. /01/23/0123abcdef0123456789abcdef0123456789a.txt
 # also creates its subdirectories, #todo fixme
 
@@ -92,24 +115,10 @@ sub GetFileHashPath { # Returns text file's standardized path based on its hash
 
 	if ($file) {
 		my $fileHash = GetFileHash($file);
-
-		if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
-			system('mkdir html/txt/' . substr($fileHash, 0, 2));
-		}
-
-		if (!-e 'html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
-			system('mkdir html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
-		}
-
-		my $fileHashSubDir = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2);
-
-		if ($fileHash) {
-			my $fileHashPath = 'html/txt/' . $fileHashSubDir . '/' . $fileHash . '.txt';
-
-			WriteLog("\$fileHashPath = $fileHashPath");
-
-			return $fileHashPath;
-		}
+		
+		my $fileHashPath = GetPathFromHash($fileHash);
+		
+		return $fileHashPath;
 	}
 }
 
@@ -282,10 +291,14 @@ sub IndexTextFile { # indexes one text file into database
 
 			WriteLog('$gitHash = ' . $gitHash);
 
-			my $htmlFilename = 'html/' . GetHtmlFilename($gitHash);
+			my $htmlFilename = GetHtmlFilename($gitHash);
 
-			if (-e $htmlFilename) {
-				unlink($htmlFilename);
+			if ($htmlFilename) {
+				$htmlFilename = 'html/' . $htmlFilename;
+	
+				if (-e $htmlFilename) {
+					unlink($htmlFilename);
+				}
 			}
 
 			return;
@@ -997,8 +1010,19 @@ sub IndexTextFile { # indexes one text file into database
 
 							if (-e $file) {
 								#todo unlink the file represented by $voteFileHash, not $file
-#								WriteLog($file . ' exists, calling unlink()');
-#								unlink($file);
+								
+								if (!GetConfig('admin/logging/record_remove_action')) {
+									# this removes the remove call itself
+									WriteLog($file . ' exists, calling unlink()');
+									unlink($file);
+								}
+
+								my $votedFileHashPath = GetPathFromHash($voteFileHash);
+								if (-e $votedFileHashPath) {
+									WriteLog("removing $votedFileHashPath");
+									unlink($votedFileHashPath);
+								}
+
 							} else {
 								WriteLog($file . ' does NOT exist, very strange');
 							}
