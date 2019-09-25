@@ -8,6 +8,6 @@
 	<p class=advanced>Server: $server</p>
 	<p class=advanced>Previous Update: $prevUpdateTime</p>
 	<p class=advanced>Apparent Update Interval: $updateInterval seconds</p>
-	<p>Version: $versionShort<span class=advanced>($versionFull)</span></p>
+	<p>Version: $versionShort <span class=advanced>($versionFull)</span></p>
 </fieldset>
 <!-- / stats.template -->
