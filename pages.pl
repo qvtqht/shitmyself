@@ -1283,7 +1283,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status');
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
-	$topMenuTemplate .= GetMenuItem("/manual.html", 'Manual', 1);
+	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
 
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
@@ -1372,6 +1372,8 @@ sub GetTopItemsPage { # returns page with top items listing
 	my $titleHtml = 'Top Items';
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'top');
+	
+	$txtIndex .= '<p><b><a href="/write.html">Start a new topic</a></b></p>'; #todo templatize
 
 	$txtIndex .= GetTemplate('maincontent.template');
 

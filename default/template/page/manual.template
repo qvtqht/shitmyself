@@ -2,15 +2,61 @@
 
 <h1>Manual</h1>
 
-<a href="manual_advanced.html">Advanced users can tap this to see some technical details.</a>
+<!-- -->
+
+<h3><a href='#advanced'>&pi;</a></h3>
 
 <!-- -->
 
-<h3>Profile Menu Link</h3>
+<h3>Profile</h3>
 
-<p>The "Profile" item in the top menu is italicized when you are signed in through the Web UI.</p>
+<p>The Profile page is where you can create an "account" for yourself.</p>
 
-<p>This is done as a subtle signed in status indicator without disclosing the user's information to shoulder surfers.</p>
+<p>The "Profile" item in the top menu is italicized when you are signed in.</p>
+
+<p>To create a profile, enter a name, and click "Create".</p>
+
+<p>To sign out, use the Sign Out button. You can undo this for a few seconds with the Undo button.</p>
+
+<!-- -->
+
+<h3>Write</h3>
+
+<p>The Write page allows you to post something to the board.</p>
+
+<p>If you are signed in, it will be posted under your account. Otherwise, it will not be signed.</p>
+
+<p>Press Send Message to submit it to the message board.</p>
+
+<p>Your message may not be posted immediately.</p>
+
+<!-- -->
+
+<h3>Topics</h3>
+
+<p>Topics page displays the currently active discussion topics.</p>
+
+<p>You can start your own by just posting a message.</p>
+
+<!-- -->
+
+<h3>Events</h3>
+
+<p>Events page lists events that have been posted.</p>
+
+<p>You can post a new event using Add Event page.</p>
+
+<!-- -->
+
+<h3>Status</h3>
+
+<p>Status page has basic information about forum.</p>
+
+<!-- -->
+
+<a name=advanced><h3>Advanced</h3></a>
+
+<p><a href="manual_advanced.html">Advanced users can tap this to see some technical details.</a></p>
 
 
 <!-- / manual.template -->
