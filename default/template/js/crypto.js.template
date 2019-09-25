@@ -336,7 +336,7 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 
 			if (myAvatar == null || myAvatar.length == 0) {
 				if ( !document.getElementById("privatekey")) {
-					signinBox.innerHTML = '<a href="/profile.html">Login</a>';
+					signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 				}
 			} else {
 				//signinBox.innerHTML = '';
@@ -347,6 +347,7 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 				if (window.GetPrefs) {
 					if (GetPrefs('display_username')) {
 						myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+						signinBox.innerHTML = '';
 					} else {			
 						signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 					}

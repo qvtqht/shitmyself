@@ -29,6 +29,7 @@ function setAva() {
 			if (window.GetPrefs) {
 				if (GetPrefs('display_username')) {
 					myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+					signinBox.innerHTML = '';
 				} else {			
 					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 				}
