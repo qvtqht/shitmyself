@@ -1,6 +1,6 @@
 <!-- item_listing.template -->
 <tr>
-	<td><a href="$link">$itemTitle</a><br></td>
+	<td><b><a href="$link">$itemTitle</a></b><br></td>
 	<td>$itemScore<br></td>
 	<td>$authorAvatar<br></td>
 	<td><span class=timestamp>$itemLastTouch</span><br></td>
