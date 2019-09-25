@@ -1440,51 +1440,42 @@ sub GetTopItemsPage { # returns page with top items listing
 sub GetStatsPage { # returns html for stats page
 	my $statsPage;
 
-	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
-
-	my $statsTable = GetTemplate('stats.template');
-
 	my $itemCount = DBGetItemCount();
 	my $authorCount = DBGetAuthorCount();
 
 	my $adminId = GetAdminKey();
-	if ($adminId) {
-		$statsTable =~ s/\$admin/GetAuthorLink($adminId)/e;
-	} else {
-		$statsTable =~ s/\$admin/(None)/;
-	}
+	my $adminLink = GetAuthorLink($adminId);
 
 	my $serverId = GetServerKey();
-	if ($serverId) {
-		$statsTable =~ s/\$server/GetAuthorLink($serverId)/e;
-	} else {
-		$statsTable =~ s/\$server/(None)/;
-	}
-
-
-	my $currUpdateTime = GetTime();
-	my $prevUpdateTime = GetConfig('last_update_time');
-	if (!defined($prevUpdateTime) || !$prevUpdateTime) {
-		$prevUpdateTime = GetTime();
-	}
-
-	my $updateInterval = $currUpdateTime - $prevUpdateTime;
-
-	PutConfig("last_update_time", $currUpdateTime);
-
-#	my $nextUpdateTime = ($currUpdateTime + $updateInterval) . ' (' . EpochToHuman($currUpdateTime + $updateInterval) . ')';
-#	$prevUpdateTime = $prevUpdateTime . ' (' . EpochToHuman($prevUpdateTime) . ')';
-#	$currUpdateTime = $currUpdateTime . ' (' . EpochToHuman($currUpdateTime) . ')';
-
-	my $nextUpdateTime = ($currUpdateTime + $updateInterval);
-
-	$statsTable =~ s/\$prevUpdateTime/GetTimestampElement($prevUpdateTime)/e;
-	$statsTable =~ s/\$currUpdateTime/GetTimestampElement($currUpdateTime)/e;
-	$statsTable =~ s/\$updateInterval/$updateInterval/;
-	$statsTable =~ s/\$nextUpdateTime/GetTimestampElement($nextUpdateTime)/e;
+	my $serverLink = GetAuthorLink($serverId);
 
 	my $versionFull = GetMyVersion();
-	my $versionShort = substr($versionFull, 0, 8); 
+	my $versionShort = substr($versionFull, 0, 8);
+	
+	###
+
+	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
+	
+	my $statsTable = GetTemplate('stats.template');
+
+	if ($adminId) {
+		$statsTable =~ s/\$admin/$adminLink/;
+	} else {
+		$statsTable =~ s/\$admin/(Not defined)/;
+	}
+						 
+	if ($serverId) {
+		$statsTable =~ s/\$server/$serverLink/;
+	} else {
+		$statsTable =~ s/\$server/(Not defined)/;
+	}
+
+	my $lastUpdateTime = GetConfig('system/last_update_time');
+	if (!defined($lastUpdateTime) || !$lastUpdateTime) {
+		$lastUpdateTime = 0;
+	}
+
+	$statsTable =~ s/\$lastUpdateTime/GetTimestampElement($lastUpdateTime)/e;
 
 	$statsTable =~ s/\$versionFull/$versionFull/;
 	$statsTable =~ s/\$versionShort/$versionShort/;
@@ -1588,7 +1579,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps profile));
 
 	return $txtIndex;
 }
@@ -2598,7 +2589,7 @@ sub MakeDataPage { # returns html for /data.html
 
 	$dataPage .= GetPageFooter();
 
-	$dataPage = InjectJs($dataPage, qw(avatar prefs));
+	$dataPage = InjectJs($dataPage, qw(avatar prefs profile));
 
 	PutHtmlFile("$HTMLDIR/data.html", $dataPage);
 }

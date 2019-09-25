@@ -112,9 +112,13 @@ print "\n* Step " . ++$buildStep;
 
 #print "\n* Step " . ++$buildStep;
 
-system('perl gitflow.pl');
+UpdateUpdateTime();
 
 print "\n* Step " . ++$buildStep; #20
+
+system('perl gitflow.pl');
+
+print "\n* Step " . ++$buildStep;
 
 WriteLog( "Finished!");
 
