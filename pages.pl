@@ -1270,7 +1270,6 @@ sub GetPageHeader { # returns html for page header
 
 	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
 
-	$topMenuTemplate .= $identityLink;
 	$topMenuTemplate .= GetMenuItem("/", 'Home');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
@@ -1281,6 +1280,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
+	$topMenuTemplate .= $identityLink;
 
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
 
@@ -1876,8 +1876,11 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 		$menuItem = GetTemplate('menuitem.template');
 	}
 
+	my $color = '#' . substr(md5_hex($caption), 0, 6);
+
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
+	$menuItem =~ s/\$color/$color/g;
 
 	return $menuItem;
 }
