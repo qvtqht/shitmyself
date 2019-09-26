@@ -478,13 +478,13 @@ sub DBGetEvents { #gets events list
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@queryParams);
 
-	my $ref = $sth->fetchall_arrayref();
+	my @resultsArray = ();
 
-	$sth->finish();
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
+	}
 
-	WriteLog('DBGetEvents: ' . scalar(@{$ref}) . ' items returned');
-
-	return $ref;
+	return @resultsArray;
 }
 
 sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged as friend

@@ -200,25 +200,19 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage .= GetTemplate('maincontent.template');
 
-	my $eventsArrayRef = DBGetEvents();
-	my @events = @{$eventsArrayRef};
-
-	WriteLog('GetEventsPage: Found ' . scalar(@events) . ' items returned from DBGetEvents()');
+	my @eventsArray = DBGetEvents();
 
 	my $eventsItemsList = '';
 
-	while (@events) {
-		my $event = shift @events;
-		my @eventA = @{$event};
+	while (@eventsArray) {
+		my $event = shift @eventsArray;
 
-		my $eventItem = GetTemplate('event/event_item.template');
-
-		my $eventItemHash = $eventA[3];
-		my $eventTitle = $eventA[0];
-		my $eventTime = $eventA[1];
-		my $eventDuration = $eventA[2];
+		my $eventItemHash = %{$event}{'file_hash'};
+		my $eventTitle =  %{$event}{'item_title'};
+		my $eventTime = %{$event}{'event_time'};
+		my $eventDuration = %{$event}{'event_duration'};
 		my $eventItemLink = GetHtmlLink($eventItemHash);
-		my $eventItemAuthor = GetAvatar($eventA[4]);
+		my $eventItemAuthor = %{$event}{'author_key'};
 
 		if (!$eventTitle) {
 			$eventTitle = 'Untitled';
@@ -257,6 +251,8 @@ sub GetEventsPage { # returns html for events page
 		}
 
 		my $eventVoteButtons = GetItemVoteButtons($eventItemHash, 'event');
+
+		my $eventItem = GetTemplate('event/event_item.template');
 
 		$eventItem =~ s/\$eventTitle/$eventTitle/;
 		$eventItem =~ s/\$eventTime/$eventTime/;
