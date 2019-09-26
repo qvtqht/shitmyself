@@ -1,5 +1,5 @@
 // == begin timestamps.js
-function ShowTimestamps() {
+function ShowTimestamps() { // finds any class=timestamp, updates its displayed time as needed
 	if (document.getElementsByClassName) {
 		var d = new Date();
 		var curTime = Math.floor(d.getTime() / 1000);
@@ -8,13 +8,15 @@ function ShowTimestamps() {
 	
 		var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
 		for (var i = 0; i < te.length; i++) {
-			if (te[i].title) {
+			if (te[i].title) { // use title attribute to store timestamp number
 			} else {
 				te[i].setAttribute('title', te[i].innerHTML);
 			}
-			if (te[i].innerHTML != LongAgo(0 - (curTime - te[i].title))) {
-				te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
-				changeLogged++;
+			if (!isNaN(te[i].title)) {
+				if (te[i].innerHTML != LongAgo(0 - (curTime - te[i].title))) {
+					te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
+					changeLogged++;
+				}
 			}
 		}
 	
