@@ -10,13 +10,7 @@ Updated: 46 seconds ago
 Next Update: 46 seconds ago
 Previous Update: 46 seconds ago
 
-undo logout also triggers this:
-127.0.0.1 localhost:3000 - [23/Sep/2019:11:22:23 -0400] "HEAD /author/6A0E3B745D3E8665/ HTTP/1.1" 200 0 "http://localhost:3000/profile.html?name=bobo&bits=ed25519" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.2 Chrome/69.0.3497.128 Safari/537.36"
-
 #bug new keys are not automatically being shared
-
-This shouldn't happen:
-127.0.0.1 localhost:3000 - [23/Sep/2019:11:21:16 -0400] "HEAD /profile.html?name=bobo&bits=ed25519 HTTP/1.1" 200 0 "http://localhost:3000/profile.html?name=bobo&bits=ed25519" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.2 Chrome/69.0.3497.128 Safari/537.36"
 
 Merge p.gif into favicon.ico
 
