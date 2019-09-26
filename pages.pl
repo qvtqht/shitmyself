@@ -1364,8 +1364,8 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	my $txtIndex = '';
 
-	my $title = 'Top Items';
-	my $titleHtml = 'Top Items';
+	my $title = 'Topics';
+	my $titleHtml = 'Topics';
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'top');
 	
