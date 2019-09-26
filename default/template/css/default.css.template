@@ -103,9 +103,9 @@ form#compose {
     padding: 5pt;
 }
 
-.menu {
-    padding: 5pt;
-    $headerBackgroundPattern
+.menu { 
+	padding: 5pt;
+	$headerBackgroundPattern
 }
 
 #clockContainer {

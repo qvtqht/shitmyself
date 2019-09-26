@@ -43,7 +43,7 @@ sub GenerateSomeKindOfPage { # generates page html (doesn't do anything atm)
 }
 
 sub GetStylesheet { # returns style template based on config
-	my $style = GetTemplate('style.template');
+	my $style = GetTemplate('css/default.css.template');
 	# baseline style
 
 	if (GetConfig('html/color_avatars')) {
@@ -1117,7 +1117,7 @@ sub GetPageFooter { # returns html for page footer
 	my $footerMenuTemplate = '';
 
 	#footer menu
-	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Stats');
+	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Status');
 	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
 	$footerMenuTemplate .= GetMenuItem("/data.html", 'Data');
 	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Abyss');
@@ -1276,7 +1276,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/authors.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Topics');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
-	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status');
+	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status', 1);
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
@@ -1470,7 +1470,8 @@ sub GetStatsPage { # returns html for stats page
 		$lastUpdateTime = 0;
 	}
 
-	$statsTable =~ s/\$lastUpdateTime/GetTimestampElement($lastUpdateTime)/e;
+	$lastUpdateTime = GetTimestampElement($lastUpdateTime);
+	$statsTable =~ s/\$lastUpdateTime/$lastUpdateTime/;
 
 	$statsTable =~ s/\$versionFull/$versionFull/;
 	$statsTable =~ s/\$versionShort/$versionShort/;
@@ -1679,11 +1680,11 @@ sub GetReadPage { # generates page with item listing based on parameters
 		my $authorAliasHtml = GetAlias($authorKey);
 		my $authorAvatarHtml = GetAvatar($authorKey);
 		my $authorImportance = 1;
-		my $authorScore = DBGetAuthorScore($authorKey);
+		my $authorScore = DBGetAuthorScore($authorKey) || 0;
 		my $itemCount = DBGetAuthorItemCount($authorKey);
 		my $authorDescription = '';
 		my $authorWeight = DBGetAuthorWeight($authorKey);
-		my $authorLastSeen = DBGetAuthorLastSeen($authorKey);
+		my $authorLastSeen = DBGetAuthorLastSeen($authorKey) || 0;
 
 		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
 		my $publicKeyHashHtml = '';
@@ -1693,7 +1694,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			$authorPubkeyTxtLink = '<span class=advanced>.txt</span>';
 			#todo my $publicKeyTxtLink = ..;
 		}
-
+		
 		if (IsServer($authorKey)) {
 			if ($authorDescription) {
 				$authorDescription .= '<br>';
@@ -2346,9 +2347,11 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	my $idCreateForm = GetTemplate('form/id_create.template');
 	my $prefillUsername = GetConfig('prefill_username');
 	my $termsOfService = FormatForWeb(GetConfig('string/en/tos'));
+	my $usernameMaxLength = GetConfig('');
 
 	$idCreateForm =~ s/\$prefillUsername/$prefillUsername/g;
 	$idCreateForm =~ s/\$termsOfService/$termsOfService/g;
+	$idCreateForm =~ s/\$usernameMaxLength/$usernameMaxLength/g;
 	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
 
 	my $idCurrentForm = GetTemplate('form/id_current.template');
@@ -2483,11 +2486,14 @@ sub GetRssFile { # returns rss feed for current site
 				$itemTitle = '(Untitled)';
 			}
 		}
+		
+		if (!$itemPubDate) {
+			$itemPubDate = GetTime();
+		}
 
 		$itemTitle = FormatForRss($itemTitle);
 		$itemDescription = FormatForRss($itemDescription);
 		
-
 		#todo sanitize
 
 		$feedItem =~ s/\$itemAbout/$itemAbout/g;
