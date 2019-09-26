@@ -1,4 +1,4 @@
-<form id=formCreateId name=formCreateId style="display:none">
+<form id=formCreateId name=formCreateId style="display:none" onsubmit="return false;">
 
     <p class=beginner>
         <big><b>Create Profile</b></big>
@@ -11,7 +11,7 @@
     </p>
 
     <p>
-        <input id=cSb type=submit value="Create" onclick="return makeKeyFromInputs();">
+        <input id=cSb type=submit value="Create" onclick="makeKeyFromInputs();">
         <span id=genStatus></span>
     </p>
 
