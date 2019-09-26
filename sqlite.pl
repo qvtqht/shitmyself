@@ -2224,11 +2224,13 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@queryParams);
 
-	my $ref = $sth->fetchall_arrayref();
+	my @resultsArray = ();
 
-	$sth->finish();
+	while (my $row = $sth->fetchrow_hashref()) {
+		push @resultsArray, $row;
+	}
 
-	return $ref;
+	return @resultsArray;
 }
 
 sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash of [tag] -> count

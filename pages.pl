@@ -1373,25 +1373,24 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $topItems = DBGetTopItems();
-
-	my @topItemsArray = @{$topItems};
-
-	if (scalar(@topItemsArray)) {
+	my @topItems = DBGetTopItems();
+							 
+	if (scalar(@topItems)) {
 		my $itemListingWrapper = GetTemplate('item_listing_wrapper.template');
 
 		my $itemListings = '';
 
-		while (@topItemsArray) {
+		while (@topItems) {
 			my $itemTemplate = GetTemplate('item_listing.template');
 			#todo don't need to do this every time
 
-			my $item = shift @topItemsArray;
+			my $itemRef = shift @topItems;
+			my %item = %{$itemRef};
 
-			my $itemKey = @{$item}[2]; #todo rewrite using hash-refs
-			my $itemTitle = @{$item}[7];
-			my $itemScore = @{$item}[8];
-			my $authorKey = @{$item}[3];
+			my $itemKey = $item{'file_hash'};
+			my $itemTitle = $item{'item_title'};
+			my $itemScore = $item{'item_score'};
+			my $authorKey = $item{'author_key'};
 			my $itemLastTouch = DBGetItemLatestAction($itemKey);
 
 			if (trim($itemTitle) eq '') {
