@@ -1,1 +1,1 @@
-<a href="$address" style="text-decoration-color: $color" class=advanced><small>$caption</small></a> 
+<a href="$address" style="text-decoration-color: $color; border-bottom: 1pt solid $color" class=advanced><small>$caption</small></a> 
