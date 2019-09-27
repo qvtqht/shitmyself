@@ -406,14 +406,16 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 #					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
-
+					# Write to log file/debug console
 					WriteLog ("I'm going to put $filename\n");
 
+					# hardcoded path
 					my $pathedFilename = './html/txt/' . $filename;
 
 					# Try to write to the file, exit if we can't
 					if (PutFile($pathedFilename, $message)) {
 						if (GetConfig('admin/organize_files')) {
+							# If organizing is enabled, rename the file to its hash-based filename
 							my $hashFilename = GetFileHashPath($pathedFilename);
 							rename($pathedFilename, $hashFilename);
 							$pathedFilename = $hashFilename;
@@ -423,9 +425,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						my $fileHash = GetFileHash($pathedFilename);
 
 						if ($addTo404Log) {
+							# If it's a 404 and we are configured to log it, append to 404.log
 							AppendFile('./log/404.log', $fileHash);
 						}
 
+						# Remember when this file was added
 						my $addedTime = GetTime();
 
 						if (GetConfig('admin/logging/write_added_log')) {
@@ -435,15 +439,18 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							AppendFile('./log/added.log', $addedLog);
 						}
 
+						# Tell debug console about file save completion
 						WriteLog("Seems like PutFile() worked! $addedTime");
 
+						# Begin logging section
 						if (
 							GetConfig('admin/logging/record_timestamps')
 								||
 							GetConfig('admin/logging/record_clients')
 								||
 							GetConfig('admin/logging/record_sha512')
-						) { #todo this should be factored into a function
+						) { # if any of the logging options are turned on, proceed
+							# I guess we're saving this 
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = '';
 
