@@ -18,17 +18,15 @@
 			<span class=beginner><br>
 			<br><b>You have been signed out.</b><br>Forever, unless you saved.<br>Last chance to <a href=# onclick="undoSignout();">undo</a>.</span>
 		</span>
-		<span class=beginner><br><br>Save your private key<br>if you want to later use<br>same identity.</span>
+
+		<span>
+			<br><br><input type=button value="Create Public Profile" id=btnSharePub onclick="sharePubKey();this.disabled=1;this.value='Thanks!';">
+		</span>
 	</p>
 
 	<label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="showHideCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
 
 	<span id=curIdAdv style="display:none">
-		<p>
-			<input type=button value="Share Public Key" id=btnSharePub onclick="sharePubKey();this.disabled=1;this.value='Thanks!';"><br>
-			<span class=beginner>Press this button if profile is missing.</span>
-		</p>
-
 		<p>
 			<label for=myFP class=beginner>Fingerprint:<br></label>
 			<span id=myFP></span>
