@@ -119,7 +119,8 @@ if (!-d 'html/txt') {
 if (!-e 'html/txt/.git') {
 	my $pwd = `pwd`;
 
-	WriteLog("cd html/txt; git init; cd $pwd");
+#	WriteLog("cd html/txt; git init; cd $pwd");
+	WriteLog("cd html/txt; git init; git add *; git commit -m first commit; cd $pwd");
 
 	my $gitOutput = `cd html/txt; git init; git add *; git commit -m first commit; cd $pwd`;
 
@@ -219,6 +220,7 @@ foreach my $file (@gitChangesArray) {
 		#    cd back to pwd
 		WriteLog("cd html/txt; git add \"$file\"; git commit -m hi \"$file\"; cd $pwd");
 		my $gitCommit = `cd html/txt; git add "$file"; git commit -m hi "$file"; cd $pwd`;
+		#todo there's a minor bug here related to organize_files
 
 		# write git's output to log
 		WriteLog($gitCommit);
