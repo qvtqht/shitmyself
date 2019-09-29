@@ -49,6 +49,7 @@ foreach(@dirsThatShouldExist) {
 
 
 my $gpgStderr;
+# capture gpg's stderr output if 
 if (GetConfig('admin/gpg/capture_stderr_output')) {
 	$gpgStderr = '2>&1';
 } else {
@@ -1380,7 +1381,6 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 		# find pubkey header in message
 		if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
-
 			WriteLog("Found public key header!");
 
 			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr");
@@ -1417,9 +1417,13 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 				elsif ($gpgCommand eq 'gpg2' || GetConfig('admin/gpg/use_gpg2')) {
 					if (substr($_, 0, 4) eq 'pub ') {
 						WriteLog('gpg2 ; pub hit');
-						my @split = split(" ", $_, 4);
+						
+						WriteLog('$_ is ' . $_ . ' .. going to split it'); 
+						
+						my @split = split(" ", $_, 4); # 4 limits it to 4 fields
 						$gpg_key = $split[1];
 
+						WriteLog($split[0].'|'.$split[1].'|'.$split[2].'|'.$split[3]);
 						#$alias = $split[3];
 
 						@split = split("/", $gpg_key);
@@ -1427,12 +1431,17 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 						WriteLog('$gpg_key = ' . $gpg_key);
 					}
-					if (substr($_, 0, 3) eq 'uid') {
+					if (substr($_, 0, 3) eq 'uid' && !$alias) {
 						WriteLog('gpg2: uid hit');
+						
+						WriteLog('$_ is ' . $_);
 
 						my @split = split(' ', $_, 2);
+						
 						$alias = $split[1];
 						$alias = trim($alias);
+						
+						WriteLog('$alias is now ' . $alias);
 					}
 				}
 			}
@@ -1694,6 +1703,10 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 
 my $lastVersion = GetConfig('current_version');
 my $currVersion = GetMyVersion();
+
+if (!$lastVersion) {
+	$lastVersion = 0;
+}
 
 if ($lastVersion ne $currVersion) {
 	WriteLog("$lastVersion ne $currVersion, posting changelog");
