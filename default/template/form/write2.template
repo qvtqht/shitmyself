@@ -3,7 +3,7 @@
 <form action="./post.html" id=compose class=submit name=submit>
 	<span id=writeintro></span>
 
-	<label for="comment" class=beginner>Please share something here. <a href="/manual.html">More info in docs.</a></label><br>
+	<label for="comment" class=beginner>Write something here. Press button to send.</label><br>
 	
 	<textarea
 		class=txtarea
