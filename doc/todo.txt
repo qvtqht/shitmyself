@@ -1,14 +1,14 @@
+Crypt::OpenPGP
+
+Prefs link appears for no-JS #bug #issue
+	Prefs page is blank with no-JS
+
 Use item_page table to remove/rebuild all pages containing deleted item
 
 JS-driven global new items indicator
 
 #bug
 Preferences page is blank if not logged in
-
-#bug
-Updated: 46 seconds ago
-Next Update: 46 seconds ago
-Previous Update: 46 seconds ago
 
 #bug new keys are not automatically being shared
 
