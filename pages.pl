@@ -673,6 +673,7 @@ sub GetHtmlLink {
 
 sub GetItemVoteButtons { # get vote buttons for item in html form
 # $fileHash = item's file hash
+# $tagset (optional) use a particular tagset instead of item's default
 	my $fileHash = shift;
 
 	#todo sanity checks
@@ -1270,16 +1271,16 @@ sub GetPageHeader { # returns html for page header
 
 	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
 
-	$topMenuTemplate .= GetMenuItem("/", 'Home');
+	$topMenuTemplate .= GetMenuItem("/", 'Read');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
-	$topMenuTemplate .= GetMenuItem("/authors.html", 'Authors');
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Topics');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
+	$topMenuTemplate .= GetMenuItem("/authors.html", 'Authors');
+	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status', 1);
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
-	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
+	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 	$topMenuTemplate .= $identityLink;
 
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
@@ -1547,6 +1548,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorLastSeen = $author{'last_seen'};
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey);
+		my $authorVoteButtons = GetItemVoteButtons($authorKey, 'author');
 
 		my $authorLink = "/author/" . $authorKey . "/";
 
@@ -1565,6 +1567,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorItemTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 		$authorItemTemplate =~ s/\$authorItemCount/$authorItemCount/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
+		$authorItemTemplate =~ s/\$authorVoteButtons/$authorVoteButtons/g;
 
 		$authorListings .= $authorItemTemplate;
 	}
@@ -2296,9 +2299,9 @@ sub GetEventAddPage { # get html for /event.html
 
 	my $eventAddForm = GetTemplate('form/event_add.template');
 	
-	if (GetConfig('brc/enable')) {
+	if (GetConfig('brc/enable')) {;
 		# if brc mode is enabled, add fields for burning man location
-		my $brcLocationTemplate = GetTemplate('form/brc_location.template');
+		my $brcLocationTemplate = GetTemplate('event/brc_location.template');
 		
 		$eventAddForm =~ s/\$brcLocation/$brcLocationTemplate/g;
 	} else {
