@@ -3,6 +3,6 @@
     <td>$authorScore</td>
     <td class=advanced>$authorItemCount</td>
     <td class=advanced>$authorWeight</td>
-    <td class=timestamp>$authorLastSeen</td>
+    <td>$authorLastSeen</td>
     <td>$authorVoteButtons</td>
 </tr>

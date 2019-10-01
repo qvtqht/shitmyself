@@ -254,6 +254,9 @@ sub GetEventsPage { # returns html for events page
 
 		my $eventItem = GetTemplate('event/event_item.template');
 
+		$eventTime = GetTimestampElement($eventTime);
+		$eventTimeUntil = GetTimestampElement($eventTimeUntil);
+
 		$eventItem =~ s/\$eventTitle/$eventTitle/;
 		$eventItem =~ s/\$eventTime/$eventTime/;
 		$eventItem =~ s/\$eventTimeUntil/$eventTimeUntil/;
@@ -675,13 +678,11 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 # $fileHash = item's file hash
 # $tagset (optional) use a particular tagset instead of item's default
 	my $fileHash = shift;
+	my $tagSet = shift;
 
 	#todo sanity checks
 
 	my @quickVotesList;
-
-	my $tagSet;
-	$tagSet = shift;
 
 	my %voteTotals = DBGetItemVoteTotals($fileHash);
 	
@@ -1113,7 +1114,7 @@ sub GetPageFooter { # returns html for page footer
 	my $myVersionPrettyLink = '<a href="' . $versionPageUrl . '">' . substr($myVersion, 0, 8) . '..' . '</a>';
 
 	#todo templatify
-	my $footer = "<span class=advanced><span class=beginner>Built </span><span class=timestamp>$timeBuilt</span> ; <span class=beginner>Version </span>$myVersionPrettyLink</span> ; ";
+	my $footer = "<span class=advanced><span class=beginner>Printed: </span>" . GetTimestampElement($timeBuilt) . " ; <span class=beginner>Version </span>$myVersionPrettyLink</span> ; ";
 
 	my $footerMenuTemplate = '';
 
@@ -1131,9 +1132,7 @@ sub GetPageFooter { # returns html for page footer
 
 	my $ssiFooter;
 	if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/footer_timestamp')) {
-		$ssiFooter = '<p class=advanced><font color="#808080"><small><span class=timestamp>' . 
-			trim(GetTemplate('ssi/print_date.ssi.template')) . 
-			'</span></small></font></p>'; #todo templatify
+		$ssiFooter = '<p class=advanced><font color="#808080"><small>' . GetTimestampElement(trim(GetTemplate('ssi/print_date.ssi.template'))) . '</small></font></p>'; #todo templatify
 	} else {
 		$ssiFooter = '';
 	}
@@ -1408,6 +1407,8 @@ sub GetTopItemsPage { # returns page with top items listing
 			} else {
 				$authorAvatar = '';
 			}
+			
+			$itemLastTouch = GetTimestampElement($itemLastTouch);
 
 			$itemTemplate =~ s/\$link/$itemLink/g;
 			$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
@@ -1557,7 +1558,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorItemTemplate = GetTemplate('author_listing.template');
 		#todo don't need to do this every time
 #
-		$authorLastSeen = $authorLastSeen;
+		$authorLastSeen = GetTimestampElement($authorLastSeen);
 #		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 #
 		$authorItemTemplate =~ s/\$link/$authorLink/g;
@@ -1718,6 +1719,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 		$authorDescription .= GetItemVotesSummary($publicKeyHash);
 
 		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash);
+		
+		$authorLastSeen = GetTimestampElement()
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;

@@ -3,6 +3,6 @@
 	<td><b><a href="$link">$itemTitle</a></b><br></td>
 	<td>$itemScore<br></td>
 	<td>$authorAvatar<br></td>
-	<td><span class=timestamp>$itemLastTouch</span><br></td>
+	<td>$itemLastTouch<br></td>
 </tr>
 <!-- / item_listing.template -->
