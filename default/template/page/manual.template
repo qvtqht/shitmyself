@@ -1,20 +1,18 @@
 <!-- manual.template -->
 
-<h1>Manual</h1>
-
-<!-- -->
-
-<h3><a href='#advanced'>&pi;</a></h3>
+<h1>Manual<small><small><small><b><a href='manual_advanced.html'>&pi;</a></b></small></small></small></h1>
 
 <!-- -->
 
 <a name=profile><h3>Profile</h3></a>
 
-<p>The Profile page is where you can create an "account" for yourself.</p>
+<p>The Profile page is where you can create an <u>identity</u> for yourself.</p>
 
 <p>The "Profile" item in the top menu is italicized when you are signed in.</p>
 
-<p>To create a profile, enter a name, and click "Create".</p>
+<p>To create a key, enter a name, and press "Create".</p>
+
+<p>To create a public profile, use the "Create Public Profile" button..</p>
 
 <p>To sign out, use the Sign Out button. You can undo this for a few seconds with the Undo button.</p>
 
