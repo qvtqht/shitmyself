@@ -1,6 +1,6 @@
 <!-- item_listing_wrapper.template -->
 <table cellpadding=3>
-	<tr>
+	<tr class=beginner>
 		<th width="60%" align=left>Title </th>
 		<th align=left>Score </th>
 		<th align=left>Author </th>
