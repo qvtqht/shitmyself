@@ -1,0 +1,20 @@
+// == begin write_buttons.js
+
+// if there's a user fingerprint,
+// this checks for a place to put a "post as" or "reply as" button
+// and if it exists, puts the button there
+if (window.getUserFp) {
+	if (getUserFp()) {
+		var sp = document.getElementById('signAndPost');
+		var actName = 'Post as ';
+		if (!sp) {
+			sp = document.getElementById('replySignedContainer');
+			actName = 'Reply as ';
+		}
+		if (sp) {
+			sp.innerHTML = '<button onclick="signMessage();">' + actName + getAvatar() + '</button>';
+		}
+	}
+}
+
+// == end write_buttons.js
