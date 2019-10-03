@@ -1143,6 +1143,7 @@ sub GetPageFooter { # returns html for page footer
 
 my $primaryColor;
 my $secondaryColor;
+my $backgroundColor;
 my $textColor;
 
 sub GetPageHeader { # returns html for page header
@@ -1180,9 +1181,11 @@ sub GetPageHeader { # returns html for page header
 	my @primaryColorChoices = split("\n", GetConfig('primary_colors'));
 	$primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
-	#my @secondaryColorChoices = qw(f0fff0 ffffff);
 	my @secondaryColorChoices = split("\n", GetConfig('secondary_colors'));
 	$secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
+
+	my $backgroundColorChoices = split("\n", GetConfig('background_colors'));
+	$backgroundColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
 
 	my @textColorChoices = split("\n", GetConfig('text_colors'));
 	$textColor = "#" . $textColorChoices[int(rand(@textColorChoices))];
@@ -1243,6 +1246,7 @@ sub GetPageHeader { # returns html for page header
 	$htmlStart =~ s/\$title/$title/g;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
+	$htmlStart =~ s/\$backgroundColor/$backgroundColor/g;
 	$htmlStart =~ s/\$textColor/$textColor/g;
 	$htmlStart =~ s/\$disabledColor/$disabledColor/g;
 	$htmlStart =~ s/\$disabledTextColor/$disabledTextColor/g;
@@ -1720,7 +1724,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash);
 		
-		$authorLastSeen = GetTimestampElement()
+		$authorLastSeen = GetTimestampElement($authorLastSeen);
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;

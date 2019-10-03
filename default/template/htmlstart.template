@@ -1,7 +1,9 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <LINK REL="alternate" TITLE="RSS Feed" HREF="/rss.xml" TYPE="application/rss+xml">
 <title>$title</title>
 <style type="text/css">
@@ -10,7 +12,7 @@ $styleSheet
 -->
 </style>
 </head>
-<body link="$primaryColor" vlink="#806080" text="$textColor" bgcolor="$secondaryColor">
+<body link="$primaryColor" vlink="#806080" text="$textColor" bgcolor="$backgroundColor">
 <div id=amain><a href="#maincontent">Skip to main content</a><img src="/p.gif" id=pixel height=1 width=1></div>
 <h2 class=menu><a id=logo class="logo beginner" title="Home" href="/">$logoText</a> $clock 
 $menuItems</h2>
