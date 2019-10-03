@@ -1,11 +1,13 @@
 // == begin profile.js
 
 function getUserFp() { // retrieve stored user fingerprint from localstorage
-	var fingerprint = localStorage.getItem("fingerprint");
-	if (fingerprint === null || fingerprint.length === 0) {
-		return null;
-	} else {
-		return fingerprint;
+	if (window.localStorage) {
+		var fingerprint = localStorage.getItem("fingerprint");
+		if (fingerprint === null || fingerprint.length === 0) {
+			return null;
+		} else {
+			return fingerprint;
+		}
 	}
 }
 
@@ -38,15 +40,28 @@ function showHideForms() { // shows and hides the register and logged in forms
 		}
 
 		var signinBox = document.getElementById('signin');
+		var myidBox = document.getElementById('myid');
 		
 		if (window.GetPrefs) {
 			if (GetPrefs('display_username')) {
-				myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-				signinBox.innerHTML = '';
-			} else {			
-				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+				if (myidBox) {
+					if (window.myAvatar) {
+						myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+					}
+				}
+				if (signinBox) {
+					signinBox.innerHTML = '';
+				}
+			} else {
+				if (myidBox) {			
+					myidBox.innerHTML = '';
+				}
+				if (signinBox) {
+					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+				}
 			}
 		} else {
+			myidBox.innerHTML = '';
 			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 		}
 
