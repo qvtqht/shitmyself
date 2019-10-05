@@ -37,7 +37,7 @@ sub MakeVoteIndex { # Indexes any votes recorded in log/votes.log into database
 	my $voteLog = GetFile("log/votes.log");
 
 	#This is how long anonymous votes are counted for;
-	my $voteLimit = GetConfig('vote_limit');
+	my $voteLimit = GetConfig('admin/vote_limit');
 
 	my $currentTime = GetTime();
 
@@ -245,7 +245,7 @@ sub IndexTextFile { # indexes one text file into database
 
 		if (GetConfig('admin/gpg/capture_stderr_output')) {
 			if (index($message, 'gpg: Signature made ')) {
-				$message =~ s/'gpg: Signature made '/\n-- \n'gpg: Signature made '/g;
+				$message =~ s/gpg: Signature made /\n-- \ngpg: Signature made /g;
 			}
 		}
 
