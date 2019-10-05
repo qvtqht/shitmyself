@@ -5,7 +5,7 @@
 .tag-abuse, 
 .tag-dislike, 
 .tag-duplicate {
-    color: #c08080;
+	color: #c08080;
 }
 
 .tag-accept, 
@@ -144,4 +144,7 @@ form.reply {
 
 #cSb {
     background-color: orange; 
+}
+.advanced {
+	border-radius: 5pt;
 }
