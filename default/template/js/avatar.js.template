@@ -1,10 +1,9 @@
-
 // == begin avatar.js
-function setAva() {
-	var myidBox = document.getElementById('myid');
-	var signinBox = document.getElementById('signin');
+function setAva() { // sets avatar widgets (and italicizes Profile link)
+	var myidBox = document.getElementById('myid'); // displays username (if preference is set)
+	var signinBox = document.getElementById('signin'); // Profile link
 
-	if (myidBox && signinBox && window.localStorage) {
+	if (myidBox && signinBox && window.localStorage) { // check for elements and features
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
@@ -18,12 +17,12 @@ function setAva() {
 			if (window.location.pathname == '/author/' + myFp + '/') {
 			// #todo factor this out, as it should only be on /author/.. pages 
 				// Create a new element
-				var itsYou = document.createElement('h3');
+				var itsYou = document.getElementById('itsyou');
 				itsYou.innerHTML = 'This is you!';
 
 				var parentNode = document.getElementById('maincontent');
 
-				parentNode.insertBefore(itsYou, parentNode.firstChild);
+//				parentNode.insertBefore(itsYou, parentNode.firstChild);
 			}
 
 			if (window.GetPrefs) {
@@ -48,7 +47,6 @@ function setAva() {
 			script2.src = '/crypto.js';
 			script2.async = false; // This is required for synchronous execution
 			document.head.appendChild(script2);
-
 		}
 	}
 }
