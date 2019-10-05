@@ -29,7 +29,7 @@ my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
 # make a list of some directories that need to exist
-my @dirsThatShouldExist = qw(log html html/txt html/txt/log spam admin key cache html/author html/action html/top config);
+my @dirsThatShouldExist = qw(log html html/txt cache html/author html/action html/top config);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
@@ -47,9 +47,10 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
-
+# capture gpg's stderr output if capture_stderr_output is set
+# the value of $gpgStderr will be appended to gpg commands in GpgParse()
+# this block should be moved into GpgParse() probably
 my $gpgStderr;
-# capture gpg's stderr output if 
 if (GetConfig('admin/gpg/capture_stderr_output')) {
 	$gpgStderr = '2>&1';
 } else {
@@ -59,7 +60,6 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 		$gpgStderr = ' 2>/dev/null';
 	}
 }
-
 
 # check if html/txt/ has a repo on it.
 # create repo if html/txt/.git/ is missing
@@ -85,36 +85,31 @@ if (!$gpgCommand) {
 		}
 	}
 }
-WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
-
-# this code tried to use a non-default keyring, but abandoned for some reason
-# my $gpgCommand;
-# if (GetConfig('admin/gpg/use_gpg2')) {
-# 	$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
-# } else {
-# 	if (GetGpgMajorVersion() eq '2') {
-# 		$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
-# 	} else {
-# 		$gpgCommand = 'gpg2 --no-default-keyring --keyring ./hike.gpg';
-# 	}
-# 	#what a mess
-# }
-# WriteLog("admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2') . "; \$gpgCommand = $gpgCommand");
+WriteLog("utils.pl init: admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2'));
+WriteLog("utils.pl init: \$gpgCommand = $gpgCommand");
 
 sub GetCache { # get cache by cache key
-# comes from cache/ directory
-# plus current commit that git is on
-# this keeps cache version-specific
+	# comes from cache/ directory, under current git commit
+	# this keeps cache version-specific
 
-#todo sanity checks
+	#todo sanity checks
 	my $cacheName = shift;
 	chomp($cacheName);
+	
+	state $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
 
 	# cache name prefixed by current version
-	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
 
-	# return contents of file at that path
-	return GetFile($cacheName);
+	if (-e $cacheName) {
+		# return contents of file at that path
+		return GetFile($cacheName);
+	} else {
+		return;
+	}
 }
 
 sub ParseDate { # takes $stringDate, returns epoch time
@@ -157,7 +152,7 @@ sub EnsureSubdirs { # ensures that subdirectories for a file exist
 	my ( $file, $dirs ) = fileparse $fullPath;
 	if ( !$file ) {
 		return;
-		$fullPath = File::Spec->catfile( $fullPath, $file );
+		$fullPath = File::Spec->catfile($fullPath, $file);
 	}
 
 	if ( !-d $dirs ) {
@@ -174,7 +169,12 @@ sub PutCache { # stores value in cache; $cacheName, $content
 	my $content = shift;
 	chomp($content);
 
-	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+	state $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
+
+	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
 
 	return PutFile($cacheName, $content);
 }
@@ -183,7 +183,12 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 	my $cacheName = shift;
 	chomp($cacheName);
 
-	$cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+	state $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
+
+	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
 
 	if (-e $cacheName) {
 		unlink($cacheName);
@@ -191,36 +196,41 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 }
 
 sub CacheExists { # Check whether specified cache entry exists, return 1 (exists) or 0 (not)
-    my $cacheName = shift;
-    chomp($cacheName);
+	my $cacheName = shift;
+	chomp($cacheName);
 
-    $cacheName = './cache/' . GetMyVersion() . '/' . $cacheName;
+	state $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
 
-    if (-e $cacheName) {
-        return 1;
-    } else {
-        return 0;
-    }
+	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
+
+	if (-e $cacheName) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 sub GetGpgMajorVersion { # get the first number of the version which 'gpg --version' returns
 # expecting 1 or 2
 
 # todo sanity checks
-    state $gpgVersion;
+	state $gpgVersion;
 
-    if ($gpgVersion) {
-        return $gpgVersion;
-    }
+	if ($gpgVersion) {
+		return $gpgVersion;
+	}
 
-    $gpgVersion = `gpg --version`;
-    WriteLog('GetGpgMajorVersion: gpgVersion = ' . $gpgVersion);
+	$gpgVersion = `gpg --version`;
+	WriteLog('GetGpgMajorVersion: gpgVersion = ' . $gpgVersion);
 
-    $gpgVersion =~ s/\n.+//g;
-    $gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
-    $gpgVersion =~ s/[^0-9]//g;
+	$gpgVersion =~ s/\n.+//g;
+	$gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
+	$gpgVersion =~ s/[^0-9]//g;
 
-    return $gpgVersion;
+	return $gpgVersion;
 }
 
 sub GetMyVersion { # Get the currently installed version (current commit's hash from git)
@@ -284,12 +294,12 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 		my $string = GetConfig('string/en/'.$stringKey);
 
 		if ($string) {
-    		chomp ($string);
+			chomp ($string);
 
 	    	$strings{$stringKey} = $string;
-        } else {
-            return $stringKey;
-        }
+		} else {
+			return $stringKey;
+		}
 	}
 
 	if (defined($strings{$stringKey})) {
@@ -901,6 +911,8 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 #   if $file is 'check_homepage'
 #      
 	my $file = shift;
+	my $content = shift;
+	my $itemHash = shift; #optional
 
 	state $homePageWritten;
 	if (!defined($homePageWritten)) {
@@ -909,8 +921,6 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	if ($file eq 'check_homepage') {
 		return $homePageWritten;
 	}
-
-	my $content = shift;
 
 	WriteLog("PutHtmlFile($file), \$content)");
 	#WriteLog("===begin \$content===\n$content\n===");
@@ -951,6 +961,29 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle ($1)<\/title>/;
 		PutFile ('html/index.html', $content);
 		$homePageWritten = 1;
+	}
+	
+	# filling in 404 pages, using 404.log
+	if ($itemHash) {
+		# clean up the log file
+		system ('sort log/404.log | uniq > log/404.log.uniq ; mv log/404.log.uniq log/404.log');
+
+		# store log file in static variable for future 
+		state $log404; 
+		if (!$log404) {
+			$log404 = GetFile('log/404.log');
+		}
+
+		# if hash is found in 404 log, we will fill in the html page
+		if ($log404 =~ m/$itemHash/) {
+			my $aliasUrl = GetItemMessage($itemHash); # url is stored inside message
+
+			if ($aliasUrl =~ m/\.html$/) {
+				if (!-e 'html/' . $aliasUrl) { # don't clobber existing files
+					PutHtmlFile('html/' . $aliasUrl, $content); # put html file in place (#todo replace with ln -s)
+				}
+			}
+		}
 	}
 }
 
@@ -1136,21 +1169,20 @@ sub IsAdmin { # returns 1 if parameter equals GetAdminKey() or GetServerKey(), o
 
 
 sub GetServerKey { # Returns server's public key, 0 if there is none
-	state $adminsKey;
+	state $serversKey;
 
-	if ($adminsKey) {
-		return $adminsKey;
+	if ($serversKey) {
+		return $serversKey;
 	}
 
-	if (-e "html/txt/server.key.txt") {
-
+	if (-e "html/txt/server.key.txt") { #server's pub key should reside here
 		my %adminsInfo = GpgParse("html/txt/server.key.txt");
 
 		if ($adminsInfo{'isSigned'}) {
 			if ($adminsInfo{'key'}) {
-				$adminsKey = $adminsInfo{'key'};
+				$serversKey = $adminsInfo{'key'};
 
-				return $adminsKey;
+				return $serversKey;
 			} else {
 				return 0;
 			}
