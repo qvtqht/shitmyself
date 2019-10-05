@@ -24,7 +24,7 @@
 		</span>
 	</p>
 
-	<label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="showHideCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
+	<label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
 
 	<span id=curIdAdv style="display:none">
 		<p>
@@ -38,12 +38,12 @@
 		</p>
 
 		<p>
-			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="showHideCheckbox(0, this, 'advanced_highlight');"> Highlight advanced options</label>
+			<label for=advancedHighlight class=advanced><input type=checkbox id=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');"> Highlight advanced options</label>
 		</p>
 
 		<p>
-			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
-			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="showHideCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints</label></span>
+			<label for=beginnerC><input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
+			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints</label></span>
 		</p>
 
 		<p id=def>
@@ -61,8 +61,6 @@
 				<textarea cols=61 rows=16 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
 				<br><br>
 				<input type=button id=restoreid value="Restore Profile" onclick="saveId();sharePubKey();">
-				<span class=beginner>or</span>
-				<input type=button id=copypriv value="Copy Private Key" onclick="copyTextToClipboard('privatekey');">
 
 				<input type=button class=rmid id=rmid value="Sign Out" onclick="buttonSignOut(this)">
 

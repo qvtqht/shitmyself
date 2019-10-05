@@ -23,8 +23,8 @@ function corsc() { // callback for requesting HEAD for current page
 						// actual change has happened
 
 					if (window.GetPrefs) { // reload the page, if user prefers it
-						if (GetPrefs('auto_reload_changed')) {
-							location.reload();
+						if (GetPrefs('notify_on_change')) {
+							//location.reload();
 						}
 					}
 

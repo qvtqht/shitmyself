@@ -5,36 +5,36 @@
 	</p>
 
 	<label for=curIdAdvC>
-		<input type=checkbox id=curIdAdvC onchange="showHideCheckbox('curIdAdv', this, 'show_advanced');">
+		<input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
 		Show advanced options
 	</label>
 	
 	<span id=curIdAdv style="display:none">
 		<p>
 			<label for=advancedHighlight class=advanced>
-				<input type=checkbox id=advancedHighlight onChange="showHideCheckbox(0, this, 'advanced_highlight');">
+				<input type=checkbox id=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
 				Highlight advanced options
 			</label>
 		</p>
 
 		<p>
-			<label for=beginnerC><input type=checkbox id=beginnerC onchange="showHideCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
+			<label for=beginnerC><input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
 			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight>
-				<input type=checkbox id=beginnerHighlight onChange="showHideCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints
+				<input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints
 			</label></span>
 		</p>
 		
 		<p>
 			<label for=displayUsername>
-				<input type=checkbox id=displayUsername onchange="showHideCheckbox(0, this, 'display_username');">
-				Display my username in top menu (after reload)
+				<input type=checkbox id=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
+				Display my username in top menu
 			</label>
 		</p>
 		
 		<p>
 			<label for=reloadChanged>
-				<input type=checkbox id=reloadChanged onchange="showHideCheckbox(0, this, 'auto_reload_changed');">
-				Reload pages if changes detected (may be disruptive)
+				<input type=checkbox id=reloadChanged onchange="saveCheckbox(0, this, 'notify_on_change');">
+				Notify if page has changed
 			</label>
 		</p>
 

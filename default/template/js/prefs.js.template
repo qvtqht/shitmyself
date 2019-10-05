@@ -77,6 +77,8 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			showBeginnerLastAction = displayValue;
 		}
 	}
+	
+	setAva(); // #todo caching similar to above 
 
 	if (!force) {
 		setTimeout(ShowAdvanced, 3000);
@@ -135,7 +137,7 @@ function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefVa
 	}
 }
 
-function showHideCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles affected elements
+function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles affected elements
 // id = id of pane to hide or show; not required
 // ths = "this" of calling checkbox)
 // prefKey = key of preference value to set with checkbox
@@ -160,7 +162,8 @@ function showHideCheckbox(id, ths, prefKey) { // saves value of checkbox, toggle
    	prefKey == 'show_advanced' ||
    	prefKey == 'beginner' ||
    	prefKey == 'beginner_highlight' ||
-   	prefKey == 'advanced_highlight'
+   	prefKey == 'advanced_highlight' ||
+   	prefKey == 'display_username'
 	) {
    	ShowAdvanced(1);
    }
@@ -175,7 +178,7 @@ if (document.getElementById) {
 	pane = document.getElementById('curIdAdv');
 	if (pane && GetPrefs('show_advanced') == 1) {
 		document.getElementById('curIdAdvC').checked = 1;
-		showHideCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
+		saveCheckbox('curIdAdv', document.getElementById('curIdAdvC'), 'show_advanced');
 	}
 
 	// current profile pane (advanced section)
@@ -214,7 +217,7 @@ if (document.getElementById) {
 		}
 		
 		// reload pages if changed checkbox
-		if (GetPrefs('auto_reload_changed') == 1) {
+		if (GetPrefs('notify_on_change') == 1) {
 			var cb = document.getElementById('reloadChanged');
 			if (cb) {
 				cb.checked = 1;
@@ -229,7 +232,7 @@ if (document.getElementById) {
 			var cb = document.getElementById('chkShowAdvanced');
 			if (cb) {
 				cb.checked = 1;
-				showHideCheckbox('creaIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
+				saveCheckbox('creaIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
 			}
 		}
 	}

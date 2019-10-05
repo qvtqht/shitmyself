@@ -1,7 +1,7 @@
 <form id=formCreateId name=formCreateId style="display:none" onsubmit="return false;">
 
     <p class=beginner>
-        <big><b>Create Profile</b></big>
+        <big><b>Create Identity</b></big>
     </p>
 
     <p>
@@ -20,7 +20,7 @@
     </p>
 
     <p>
-        <label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="showHideCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
+        <label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
     </p>
 
     <span id=creaIdAdv style="display:none">
