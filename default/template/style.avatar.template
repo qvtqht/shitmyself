@@ -12,11 +12,10 @@
     padding: 2pt;
 }
 .avatar .username, .avatar .username a {
-    color: #f0f0f0;
+    color: #ffffff;
     text-shadow:
-    -1pt -1pt 0 #404040,
-    1pt -1pt 0 #404040,
-    -1pt 1pt 0 #404040,
-    1pt 1pt 0 #404040;
+    -1pt -1pt 0 #000000,
+    1pt -1pt 0 #000000,
+    -1pt 1pt 0 #000000,
+    1pt 1pt 0 #000000;
 }
-
