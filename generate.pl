@@ -312,27 +312,29 @@ my @tagsList = DBGetAllAppliedTags();
 
 WriteLog("DBGetAllAppliedTags returned " . scalar(@tagsList) . " items");
 
-foreach my $tag1 (@tagsList) {
-	WriteLog("DBGetAllAppliedTags $tag1...");
-	foreach my $tag2 (@tagsList) {
-		WriteLog("DBGetAllAppliedTags $tag1 $tag2");
-		my @items = DBGetItemListByTagList($tag1, $tag2);
-
-		if (scalar(@items) >= 5) {
-			WriteLog("Returned: ". scalar(@items));
-
-			WriteMessage("Writing tags page for $tag1 together with $tag2");
-
-			my $testPage;
-			$testPage = GetIndexPage(\@items);
-
-			WriteLog("html/top/$tag1\_$tag2.html");
-
-			PutHtmlFile("html/top/$tag1\_$tag2.html", $testPage);
-
-			unshift @allTagsList, "$tag1\_$tag2";
-		} else {
-			WriteLog("Returned: ". scalar(@items));
+if (GetConfig('tag_cloud_page')) {
+	foreach my $tag1 (@tagsList) {
+		WriteLog("DBGetAllAppliedTags $tag1...");
+		foreach my $tag2 (@tagsList) {
+			WriteLog("DBGetAllAppliedTags $tag1 $tag2");
+			my @items = DBGetItemListByTagList($tag1, $tag2);
+	
+			if (scalar(@items) >= 5) {
+				WriteLog("Returned: ". scalar(@items));
+	
+				WriteMessage("Writing tags page for $tag1 together with $tag2");
+	
+				my $testPage;
+				$testPage = GetIndexPage(\@items);
+	
+				WriteLog("html/top/$tag1\_$tag2.html");
+	
+				PutHtmlFile("html/top/$tag1\_$tag2.html", $testPage);
+	
+				unshift @allTagsList, "$tag1\_$tag2";
+			} else {
+				WriteLog("Returned: ". scalar(@items));
+			}
 		}
 	}
 }
@@ -344,14 +346,17 @@ my $topItemsPage = GetTopItemsPage();
 PutHtmlFile('html/top.html', $topItemsPage);
 
 @allTagsList = sort @allTagsList;
-my $tagCloudPage = '';
-foreach my $tag (@allTagsList) {
-	my $linkTitle = $tag;
-	$linkTitle =~ s/_/+/;
-#	$linkTitle =~ s/\_/+/;
-	$tagCloudPage .= '<a href="top/' . $tag . '.html">' . $linkTitle . '</a><br>';
+
+if (GetConfig('tag_cloud_page')) {
+	my $tagCloudPage = '';
+	foreach my $tag (@allTagsList) {
+		my $linkTitle = $tag;
+		$linkTitle =~ s/_/+/;
+	#	$linkTitle =~ s/\_/+/;
+		$tagCloudPage .= '<a href="top/' . $tag . '.html">' . $linkTitle . '</a><br>';
+	}
+	PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 }
-PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #
 #sub MakePage {
 #	if (!$force) {
@@ -392,15 +397,15 @@ PutHtmlFile('html/tagcloud.html', $tagCloudPage);
 #	}
 #} else {
 
-	MakeDataPage();
+MakeDataPage();
 
-	my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
-	if ($homePageHasBeenWritten) {
-		WriteLog("Home Page has been written! Yay!");
-	} else {
-		WriteLog("Warning! Home Page has not been written! Fixing that");
-		PutHtmlFile('html/index.html', GetFile('html/write.html'));
-	}
+my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
+if ($homePageHasBeenWritten) {
+	WriteLog("Home Page has been written! Yay!");
+} else {
+	WriteLog("Warning! Home Page has not been written! Fixing that");
+	PutHtmlFile('html/index.html', GetFile('html/write.html'));
+}
 
 #}
 
