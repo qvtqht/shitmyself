@@ -149,6 +149,10 @@ secondary_colors
 list of \n-separated hex colors (012bcd format) to be used randomly for ui secondary color
 default: (see repo)
 
+background_colors
+list of \n-separated hex colors (012bcd format) to be used randomly for ui background color
+default: (see repo)
+
 admin/pull_item_limit
 how many items to pull via http at a time when pulling from other nodes
 #todo work in progress, may not be necessary thanks to git
@@ -176,8 +180,15 @@ admin/gpg/use_gpg2
 if not 0, gpg2 command is used in place of gpg when performing GPG-related tasks
 default: 0
 
-vote_limit
-#todo document this
+admin/gpg/capture_stderr_output
+when gpg parses a message, stderr output is produced (signature date, etc.)
+when admin/gpg/capture_stderr_output is set to 1, this output is captured and appended to the displayed message text
+default: 0
+
+admin/vote_limit
+This is how long anonymous (unsigned) votes are counted for. Default is 365 days.
+Age of vote is calculated based on timestamp in vote token.
+default: 31536000
 
 zip_interval
 how frequentlly the zip archive of the entire site is updated, in seconds

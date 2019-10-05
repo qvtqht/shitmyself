@@ -1,3 +1,9 @@
+if md5(request) in 404.log
+	redirect page to md5(request) 
+
+sub Output Textarea With Helper Buttons
+	
+
 Welcome
 This board is managed by John Bob
 [Accept as Admin]

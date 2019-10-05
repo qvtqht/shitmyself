@@ -1,3 +1,6 @@
+Arrange files into subdirs by author key
+Rename them to title.txt, where appropriate
+
 Crypt::OpenPGP
 
 Prefs link appears for no-JS #bug #issue
