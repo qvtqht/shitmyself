@@ -1938,9 +1938,9 @@ sub DBGetItemListForAuthor { # return all items attributed to author
 sub DBGetAuthorList { # returns list of all authors' gpg keys as array
 	my $query = "SELECT key FROM author";
 
-    my $sth = $dbh->prepare($query);
+	my $sth = $dbh->prepare($query);
 
-    $sth->execute();
+	$sth->execute();
 
 	my @resultsArray = ();
 
