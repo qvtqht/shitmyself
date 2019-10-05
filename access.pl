@@ -444,6 +444,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 						# Begin logging section
 						if (
+							GetServerKey() # there should be a server key, otherwise do not log
+								&&
 							GetConfig('admin/logging/record_timestamps')
 								||
 							GetConfig('admin/logging/record_clients')
