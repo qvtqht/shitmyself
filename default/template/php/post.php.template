@@ -1,0 +1,62 @@
+<?php
+/*
+	this is php shim for accepting submissions
+	replaces post.html if admin/php/enabled
+*/
+
+if ($_GET) {
+	if ($_GET['comment']) {
+		$pwd = getcwd();
+		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/		
+		$txtDir = $pwd . '/txt/';
+		
+		$comment = $_GET['comment'];		
+		$hash = sha1($comment);
+		
+		if (
+			!file_exists(
+				$txtDir . 
+				'/' . 
+				substr($hash, 0, 2)
+			)
+		) {
+			mkdir($txtDir . '/' . substr($hash, 0, 2));
+		}
+		
+		if (
+			!file_exists(
+				$txtDir . 
+				'/' . 
+				substr($hash, 0, 2)
+			) . 
+			'/' . 
+			substr($hash, 2, 2)
+		) {
+			mkdir(
+				$txtDir . 
+				'/' . 
+				substr($hash, 0, 2) . 
+				'/' . 
+				substr($hash, 2, 2)
+			);
+		}
+		
+		$filePath = 
+			$txtDir . 
+			'/' . 
+			substr($hash, 0, 2) . 
+			'/' . 
+			substr($hash, 2, 2) . 
+			'/' . 
+			$hash . '.txt'
+		;
+		
+		file_put_contents($filePath, $comment);
+		
+		exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+		
+		exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+	}
+	
+	header('Location: /');
+}
