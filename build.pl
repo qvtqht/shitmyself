@@ -3,17 +3,22 @@ use warnings FATAL => 'all';
 use threads;
 use utf8;
 
-my $buildStep = 0;
-print "\n* Step " . ++$buildStep; #1
+sub BuildMessage {
+	print shift;
+	print "\n";
+}
+
+BuildMessage "Require ./utils.pl...";
 
 require './utils.pl';
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "Calculating build times...";
 
 my $prevBuildStart = trim(GetFile('config/admin/build_begin'));
 my $prevBuildFinish = trim(GetFile('config/admin/build_end'));
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "\$prevBuildStart = " . $prevBuildStart;
+BuildMessage "\$prevBuildFinish = " . $prevBuildFinish;
 
 my $prevBuildDuration;
 if ($prevBuildFinish > $prevBuildStart) {
@@ -21,92 +26,89 @@ if ($prevBuildFinish > $prevBuildStart) {
 	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
 }
 
-print "\n* Step " . ++$buildStep;
-
 PutFile('config/admin/build_begin', GetTime());
 PutFile('config/admin/build_end', '');
 
-print "\n* Step " . ++$buildStep; #5
+BuildMessage "Require ./index.pl...";
 
 require './index.pl';
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "Require ./access.pl...";
 
 require './access.pl';
 
-print "\n* Step " . ++$buildStep;
-
-#if (GetConfig('upgrade_now') ne 'no') {
+# BuildMessage "Upgrade stuff...";
+# if (GetConfig('upgrade_now') ne 'no') {
 #	PutConfig('last_upgrade', 'no');
 #	exec('./upgrade.sh &');
 #	die();
 #}
 #
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "SqliteUnlinkDB()...";
 
 SqliteUnlinkDb();
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "SqliteConnect()...";
 
 SqliteConnect();
 
-print "\n* Step " . ++$buildStep; #10
+BuildMessage "SqliteMakeTables()...";
 
 SqliteMakeTables();
+
+BuildMessage "Ensure there's html/txt and something inside...";
 
 if (!-e 'html/txt') {
 	mkdir('html/txt');
 }
 
-print "\n* Step " . ++$buildStep;
-
 if (!glob('html/txt')) {
 	PutFile('html/txt/hello.txt', 'Hello, World!');
 }
 
-print "\n* Step " . ++$buildStep;
-
 #my $accessLogPath = GetConfig('admin/access_log_path');
 #ProcessAccessLog($accessLogPath);
+
+BuildMessage "Looking for files...";
 
 # This holds all the files we will list in the primary index
 my @filesToInclude;
 push (@filesToInclude, `find html/txt | grep \.txt\$ | sort -r`);
 
-print "\n* Step " . ++$buildStep;
-
 #push (@filesToInclude, `find html/image | grep \.jpg\$ | sort -r`); #aug29
 
 #push (@filesToInclude, `find html/txt/ | grep \.md\$ | sort -r`); #todo add support for .md (markdown) files
 
+BuildMessage "MakeAddedIndex()...";
+
 MakeAddedIndex();
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "MakeIndex(\@filesToInclude)";
 
 MakeIndex(\@filesToInclude);
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "MakeVoteIndex()...";
 
 MakeVoteIndex();
 
-print "\n* Step " . ++$buildStep; #15
+BuildMessage "MakeAddedIndex()...";
 
 MakeAddedIndex();
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "WriteConfigFromDatabase()...";
 
 WriteConfigFromDatabase();
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "DBAddPageTouch('summary', 0)...";
 
 DBAddPageTouch('summary', 0);
 
-print "\n* Step " . ++$buildStep;
+BuildMessage "system('perl generate.pl')...";
 
 system('perl generate.pl');
 
-print "\n* Step " . ++$buildStep;
+BuildMessage("UpdateUpdateTime()...");
 
 #DBResetPageTouch();
 
@@ -114,14 +116,12 @@ print "\n* Step " . ++$buildStep;
 
 UpdateUpdateTime();
 
-print "\n* Step " . ++$buildStep; #20
+BuildMessage("system('perl gitflow.pl')...");
 
 system('perl gitflow.pl');
 
-print "\n* Step " . ++$buildStep;
-
-WriteLog( "Finished!");
-
-print "\n* Step " . ++$buildStep;
+BuildMessage("Done!");
 
 PutFile('config/admin/build_end', GetTime());
+
+WriteLog( "Finished!");
