@@ -472,7 +472,7 @@ function sharePubKey3() {
 	
 	var form = document.createElement('form');
 	form.setAttribute("action", "/post.html");
-	form.setAttribute("method", "get");	
+	form.setAttribute("method", "get");
 	
 	var txtComment = document.createElement('input');
 	txtComment.setAttribute("type", "hidden");
@@ -500,7 +500,7 @@ function sharePubKey2() {
 }
 
 function sharePubKey() {
-	if (1 == 1) {
+	if (1 == 0) {
 		return sharePubKey2();
 	}
 	
