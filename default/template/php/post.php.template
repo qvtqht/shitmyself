@@ -65,8 +65,10 @@ if ($_GET) {
 	if ($_SERVER['HTTP_REFERER']) {
 		$referer = $_SERVER['HTTP_REFERER'];
 		
-		header('Location: ' . $referer);
+//		header('Location: ' . $referer);
 	} else {
-		header('Location: /write.html');
+//		header('Location: /write.html');
 	}
+	
+	include('post.html');
 }
