@@ -355,7 +355,7 @@ sub IndexTextFile { # indexes one text file into database
 
 			DBAddVoteRecord($gitHash, $addedTime, 'admin');
 
-			DBAddPageTouch('tag', ' admin');
+			DBAddPageTouch('tag', 'admin');
 
 			DBAddPageTouch('scores', 0);
 
@@ -1069,9 +1069,10 @@ sub IndexTextFile { # indexes one text file into database
 					my $firstEol = index($detokenedMessage, "\n");
 
 					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 140
-
+					
 					if ($firstEol >= 0) {
 						my $title = '';
+
 						if ($firstEol <= $titleLengthCutoff) {
 							$title = substr($detokenedMessage, 0, $firstEol);
 						} else {
@@ -1123,7 +1124,7 @@ sub IndexTextFile { # indexes one text file into database
 
 			DBAddVoteRecord($gitHash, $addedTime, 'admin');
 
-			DBAddPageTouch('tag', ' admin');
+			DBAddPageTouch('tag', 'admin');
 		}
 
 		if ($isSigned) {
