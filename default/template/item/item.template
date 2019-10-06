@@ -1,10 +1,11 @@
 <!-- item.template -->
 <div class="$itemClass" style="border-color: $borderColor">
-$itemTitleTemplate
-<p>$itemText</p>
-<p><b><a class=advanced href="$permalinkHtml">$itemName</a></b> <a class=advanced href="$permalinkTxt">.txt</a> $authorLink $addedTime</p>
-$votesSummary
-$quickVoteButtonGroup
-<replies></replies>
+	$itemTitleTemplate
+	<p>$itemText</p>
+	<p><b><a class=advanced href="$permalinkHtml">$itemName</a></b> <a class=advanced href="$permalinkTxt">.txt</a>
+		$authorLink $addedTime</p>
+	$votesSummary
+	$quickVoteButtonGroup
+	<replies></replies>
 </div>
 <!-- / item.template -->
