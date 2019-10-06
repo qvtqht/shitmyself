@@ -1,3 +1,9 @@
+htaccess and lighttpd
+	if php=enabled
+		certain html files (if not all?) should be re-routed to php shim
+			example: post.html
+			vote2.html
+			
 Arrange files into subdirs by author key
 Rename them to title.txt, where appropriate
 
