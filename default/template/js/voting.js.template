@@ -1,5 +1,15 @@
 // == begin voting.js
 
+function PingUrl(url) { // loads arbitrary url
+// by creating an <img src=url> on the page
+// it ain't pretty, but it's compatible
+	var img = document.createElement('img');
+	img.setAttribute("src", url);
+	document.body.appendChild(img);	
+	// todo get rid of image eventually
+	// server-side shove an image into it as needed
+}
+
 function signVote(t, token) {
 	if (document.getElementById) {
 		var privkey = getPrivateKey();
@@ -9,7 +19,7 @@ function signVote(t, token) {
 			t.style.backgroundColor = '#408040'; //#todo
 			t.style.borderRadius = '5pt'; //#todo
 	
-			if (UrlExists(t.href)) {
+			if (PingUrl(t.href)) {
 				// todo increment counter
 			}
 		} else {
@@ -32,7 +42,7 @@ function signVote(t, token) {
 			openpgp.sign(options).then(function(signed) {
 				var url = '/post.php?comment=' + encodeURIComponent(signed.data);
 	
-				if (UrlExists(url)) {
+				if (PingUrl(url)) {
 					// todo incrememnt counter
 				}
 			});
