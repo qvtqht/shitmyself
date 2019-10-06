@@ -5,7 +5,7 @@
 */
 
 if ($_GET) {
-	if ($_GET['comment']) {
+	if (isset($_GET['comment'])) {
 		$pwd = getcwd();
 		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/		
 		$txtDir = $pwd . '/txt/';
@@ -53,10 +53,20 @@ if ($_GET) {
 		
 		file_put_contents($filePath, $comment);
 		
-		exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+		if (file_exists($scriptDir . '/index.pl')) {
+			exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+		}
 		
-		exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+		if (file_exists($scriptDir . '/gitflow.pl')) {
+			exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+		}
 	}
 	
-	header('Location: /');
+	if ($_SERVER['HTTP_REFERER']) {
+		$referer = $_SERVER['HTTP_REFERER'];
+		
+		header('Location: ' . $referer);
+	} else {
+		header('Location: /write.html');
+	}
 }
