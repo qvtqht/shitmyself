@@ -11,96 +11,96 @@
 .tag-accept, 
 .tag-friend, 
 .tag-attend {
-    color: #80c080;
+	color: #80c080;
 }
 
 .tag-textart {
-    font-family: monospace;
-    font-size: default;
+	font-family: monospace;
+	font-size: default;
 }
 .tag-funny {
-    font-family: cursive;
-    font-size: default;
+	font-family: cursive;
+	font-size: default;
 }
 .txt {
-    font-family: tahoma;
-    font-size: default;
+	font-family: tahoma;
+	font-size: default;
 }
 .item-textart {
-    font-family: monospace;
-    font-size: 12pt;
+	font-family: monospace;
+	font-size: 12pt;
 }
 div.reply {
-    margin-left: 2%;
-    padding-left: 3em;
-    width: 98%;
+	margin-left: 2%;
+	padding-left: 3em;
+	width: 98%;
 }
 div.txt {
-    padding-left: 1em;
+	padding-left: 1em;
 }
 body {
-    font-family: helvetica;
-    font-size: default;
+	font-family: helvetica;
+	font-size: default;
 }
 .admin {
-    background: repeating-linear-gradient(
-        135deg,
-        #ffffd0,
-        #ffffd0 10px,
-        #fffff0 10px,
-        #fffff0 20px
-    );
-    border-radius: 8pt;
+	background: repeating-linear-gradient(
+		135deg,
+		#ffffd0,
+		#ffffd0 10px,
+		#fffff0 10px,
+		#fffff0 20px
+	);
+	border-radius: 8pt;
 }
 .rmid {
-    color: red;
+	color: red;
 }
 
 form#compose {
-    border: 5pt solid #e8d0ea;
-    border-radius: 5pt;
-    background-color: #f0e0f8
+	border: 5pt solid #e8d0ea;
+	border-radius: 5pt;
+	background-color: #f0e0f8
 }
 
 /* loading */
 .loading {
-    text-align: center;
-    background-color: green;
-    color: gold;
-    font-size: xx-large;
-    font-weight: bold;
-    font-family: cursive;
+	text-align: center;
+	background-color: green;
+	color: gold;
+	font-size: xx-large;
+	font-weight: bold;
+	font-family: cursive;
 }
 
 #curIdAdv {
-    padding: 5pt;
+	padding: 5pt;
 }
 
 #formprivkey {
-    display: none;
-    background-color: #c0c0c0;
-    border: 5pt solid #ffa0a0;
-    padding: 5pt;
-    border-radius: 5pt;
+	display: none;
+	background-color: #c0c0c0;
+	border: 5pt solid #ffa0a0;
+	padding: 5pt;
+	border-radius: 5pt;
 }
 
 #formAdminId {
-    background-color: #ffe080;
-    padding: 5pt;
-    border: 5pt solid #c08000;
-    border-radius: 5pt;
+	background-color: #ffe080;
+	padding: 5pt;
+	border: 5pt solid #c08000;
+	border-radius: 5pt;
 }
 
 #formCreateId {
-    background-color: #c0ffc0;
-    padding: 5pt;
-    border: 5pt solid #d0f0d0;
-    border-radius: 5pt;
+	background-color: #c0ffc0;
+	padding: 5pt;
+	border: 5pt solid #d0f0d0;
+	border-radius: 5pt;
 }
 #formCurId {
-    display: none;
-    background-color: #80ff80;
-    padding: 5pt;
+	display: none;
+	background-color: #80ff80;
+	padding: 5pt;
 }
 
 .menu { 
@@ -109,31 +109,31 @@ form#compose {
 }
 
 #clockContainer {
-    background-color: #405040;
-    color: #00f040;
-    border-radius: 5pt;
-    border-style: inset;
-    border-color: #808080;
+	background-color: #405040;
+	color: #00f040;
+	border-radius: 5pt;
+	border-style: inset;
+	border-color: #808080;
 }
 #eventLocation, #eventBrcLocation {
-    background-color: #c0c0ff;
-    padding: 5pt;
+	background-color: #c0c0ff;
+	padding: 5pt;
 }
 #eventDate {
-    background-color: #c0ffc0;
-    padding: 5pt;
+	background-color: #c0ffc0;
+	padding: 5pt;
 }
 #eventCreate {
-    background-color: #ffa000;
-    padding: 5pt;
-    border-radius: 5pt;
+	background-color: #ffa000;
+	padding: 5pt;
+	border-radius: 5pt;
 }
 
 #eventCreateButton {
-    border-radius: 5pt;
-    padding: 5pt;
-    font-size: large;
-    font-weight: bold;
+	border-radius: 5pt;
+	padding: 5pt;
+	font-size: large;
+	font-weight: bold;
 }
 
 form.reply {
@@ -143,7 +143,7 @@ form.reply {
 }
 
 #cSb {
-    background-color: orange; 
+	background-color: orange; 
 }
 .advanced {
 	border-radius: 5pt;
