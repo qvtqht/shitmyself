@@ -49,6 +49,7 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 my @submitReceivers = `find html/ | grep post.html`; #todo this is a hack
 
 #push @submitReceivers, 'html/write.html';
+push @submitReceivers, 'html/post.php';
 
 foreach (@submitReceivers) {
 	s/^html\//\//;
@@ -797,10 +798,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 	# Close the log file handle
 	close(LOGFILE);
-
+	
 	#Clean up the access log tracker
 	my $newPrevLines = "";
-	foreach (keys %prevLines) {
+	
+	foreach (keys %prevLines) { #todo make this actually work
 		if ($prevLines{$_} > 0) {
 			$newPrevLines .= $_;
 			$newPrevLines .= "\n";
