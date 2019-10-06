@@ -1,6 +1,6 @@
 	background: linear-gradient(315deg, transparent 75%, #d45d55 0)-10px 0,
-    linear-gradient(45deg, transparent 75%, #d45d55 0)-10px 0,
-    linear-gradient(135deg, #a7332b 50%, transparent 0) 0 0,
-    linear-gradient(45deg, #6a201b 50%, #561a16 0) 0 0 #561a16;
-    background-size: 20px 20px;
-    /* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */
+	linear-gradient(45deg, transparent 75%, #d45d55 0)-10px 0,
+	linear-gradient(135deg, #a7332b 50%, transparent 0) 0 0,
+	linear-gradient(45deg, #6a201b 50%, #561a16 0) 0 0 #561a16;
+	background-size: 20px 20px;
+	/* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */

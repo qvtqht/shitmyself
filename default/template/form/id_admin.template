@@ -1,37 +1,36 @@
-
 <!-- id_admin.template -->
 
 <form id=formAdminId name=formAdminId style="display:none">
-    <p>
-        <big><b>Site Admin</b></big>
-    </p>
+	<p>
+		<big><b>Site Admin</b></big>
+	</p>
 
-    <p>
-        * <a href="#">Upgrade to latest</a>
-    </p>
+	<p>
+		* <a href="#">Upgrade to latest</a>
+	</p>
 
-    <p>
-        * <a href="#">Rebuild pages</a> (takes a minute)
-    </p>
+	<p>
+		* <a href="#">Rebuild pages</a> (takes a minute)
+	</p>
 
-    <p>
-        * <a href="#">Rebuild database</a> (takes 10 minutes)
-    </p>
+	<p>
+		* <a href="#">Rebuild database</a> (takes 10 minutes)
+	</p>
 
-    <p>
-        * <a href="#">Reset config</a> (retains posts)
-    </p>
+	<p>
+		* <a href="#">Reset config</a> (retains posts)
+	</p>
 
-    <p>
-        * <a href="#">Remove all posts</a> (retains config)
-    </p>
+	<p>
+		* <a href="#">Remove all posts</a> (retains config)
+	</p>
 
-    <p>
-        * <a href="#">Hard reset</a> (Clears everything)
-    </p>
-    <p>
-        * <a href="#">EMERGENCY STOP</a> (Pull the handbrake)
-    </p>
+	<p>
+		* <a href="#">Hard reset</a> (Clears everything)
+	</p>
+	<p>
+		* <a href="#">EMERGENCY STOP</a> (Pull the handbrake)
+	</p>
 </form>
 
 <!-- / id_admin.template -->

@@ -8,20 +8,20 @@
 <script language=javascript>
 <!--
 function pushmessage() {
-    var comment = document.getElementById('comment');
-    if (comment) {
-        window.localStorage.setItem('writesmall', comment.value);
+	var comment = document.getElementById('comment');
+	if (comment) {
+		window.localStorage.setItem('writesmall', comment.value);
 
-        if (window.localStorage.getItem('writesmall') == comment.value) {
-            return true;
-        }
+		if (window.localStorage.getItem('writesmall') == comment.value) {
+			return true;
+		}
 
-        alert("Something went wrong! Could not save your entered text in local storage.\n\nPlease copy it manually and paste it on the Write page.");
-        return false; // don't follow the link if we're gonna lose the comment
+		alert("Something went wrong! Could not save your entered text in local storage.\n\nPlease copy it manually and paste it on the Write page.");
+		return false; // don't follow the link if we're gonna lose the comment
 
-    } else {
-        return true;
-    }
+	} else {
+		return true;
+	}
 }
 // -->
 </script>

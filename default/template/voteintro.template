@@ -1,6 +1,6 @@
 <!-- voteintro.template -->
 <div class=topmessage>
-    $voteFrame
-    Here is a random item for you to moderate. Please vote using the buttons.<br>
+	$voteFrame
+	Here is a random item for you to moderate. Please vote using the buttons.<br>
 </div>
 <!-- /voteintro.template -->

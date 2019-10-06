@@ -1,7 +1,7 @@
-    <!-- vote2button.template -->
-    <a
-        href="/action/vote2.html?vote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on"
-        class="$class"
-        onclick="if (window.signVote) { return signVote(this, 'vote/$fileHash/$ballotTime/$voteValue/$checksum'); }"
-    >+$voteCaption</a>
-    <!-- / vote2button.template -->
+	<!-- vote2button.template -->
+	<a
+		href="/action/vote2.html?vote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum=on"
+		class="$class"
+		onclick="if (window.signVote) { return signVote(this, 'vote/$fileHash/$ballotTime/$voteValue/$checksum'); }"
+	>+$voteCaption</a>
+	<!-- / vote2button.template -->

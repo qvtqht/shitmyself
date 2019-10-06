@@ -1,62 +1,62 @@
 <form id=formCreateId name=formCreateId style="display:none" onsubmit="return false;">
 
-    <p class=beginner>
-        <big><b>Create Identity</b></big>
-    </p>
+	<p class=beginner>
+		<big><b>Create Identity</b></big>
+	</p>
 
-    <p>
-        <label for=name><span class=beginner>Name:</span>
-            <input type=text size=16 maxlength=$usernameMaxLength name=name id=name onblur="if(this.value==''){this.value='$prefillUsername';}" onfocus="if(this.value=='$prefillUsername'){this.value='';}">
-        </label>
-    </p>
+	<p>
+		<label for=name><span class=beginner>Name:</span>
+			<input type=text size=16 maxlength=$usernameMaxLength name=name id=name onblur="if(this.value==''){this.value='$prefillUsername';}" onfocus="if(this.value=='$prefillUsername'){this.value='';}">
+		</label>
+	</p>
 
-    <p>
-        <input id=cSb type=submit value="Create" onclick="makeKeyFromInputs();">
-        <span id=genStatus></span>
-    </p>
+	<p>
+		<input id=cSb type=submit value="Create" onclick="makeKeyFromInputs();">
+		<span id=genStatus></span>
+	</p>
 
-    <p id=tos class=advanced>
-        $termsOfService
-    </p>
+	<p id=tos class=advanced>
+		$termsOfService
+	</p>
 
-    <p>
-        <label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
-    </p>
+	<p>
+		<label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('creaIdAdv', this, 'show_advanced');"> Show advanced options</label>
+	</p>
 
-    <span id=creaIdAdv style="display:none">
+	<span id=creaIdAdv style="display:none">
 
-    <p>
-        <label for=bits>Algorithm:
-            <select name=bits id=bits>
-                <option value=512>rsa512</option>
-                <option value=1024>rsa1024</option>
-                <option value=2048>rsa2048</option>
-                <option value=4096>rsa4096</option>
+	<p>
+		<label for=bits>Algorithm:
+			<select name=bits id=bits>
+				<option value=512>rsa512</option>
+				<option value=1024>rsa1024</option>
+				<option value=2048>rsa2048</option>
+				<option value=4096>rsa4096</option>
 $gpg2Algochoices
-            </select>
-        </label>
-    </p>
+			</select>
+		</label>
+	</p>
 
-    <p id=abc>
-        * Generate a profile, also known as key pair<br>
-        * Store your <b>private key</b> in your browser/device<br>
-        * Publish your <b>public key</b>, including your name<br>
-    </p>
+	<p id=abc>
+		* Generate a profile, also known as key pair<br>
+		* Store your <b>private key</b> in your browser/device<br>
+		* Publish your <b>public key</b>, including your name<br>
+	</p>
 
-    <label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
+	<label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
 
-    <span id=creaIdExp style="display:none">
-        <p>
-            * Disable JavaScript<br>
-            * Use gpg at the command line<br>
-            * Write your own frontend<br>
-        </p>
-        <p>
-            Refer to Manual for more information.
-        </p>
-    </span>
+	<span id=creaIdExp style="display:none">
+		<p>
+			* Disable JavaScript<br>
+			* Use gpg at the command line<br>
+			* Write your own frontend<br>
+		</p>
+		<p>
+			Refer to Manual for more information.
+		</p>
+	</span>
 
-    </span>
+	</span>
 
 </form>
 

@@ -1,13 +1,13 @@
 <!-- item-small.template -->
 <div style="border-color: $borderColor" class=reply>
-$itemTitleTemplate
-<p>$itemText</p>
-<p>
-    <b><a href="$permalinkHtml" class=advanced>$itemName</a></b>
-    $authorLink
-    &nbsp;
-    <a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
-</p>
-<replies></replies>
+	$itemTitleTemplate
+	<p>$itemText</p>
+	<p>
+		<b><a href="$permalinkHtml" class=advanced>$itemName</a></b>
+		$authorLink
+		&nbsp;
+		<a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
+	</p>
+	<replies></replies>
 </div>
 <!-- / item-small.template -->

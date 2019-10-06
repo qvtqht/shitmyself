@@ -1,21 +1,21 @@
 
 /* avatars */
 .avatar .icon {
-    font-weight: bold;
-    margin-right: 2pt;
-    border-radius: 2pt;
-    padding: 1pt;
+	font-weight: bold;
+	margin-right: 2pt;
+	border-radius: 2pt;
+	padding: 1pt;
 }
 .avatar {
-    border-radius: 3pt;
-    color: #c08000;
-    padding: 2pt;
+	border-radius: 3pt;
+	color: #c08000;
+	padding: 2pt;
 }
 .avatar .username, .avatar .username a {
-    color: #ffffff;
-    text-shadow:
-    -1pt -1pt 0 #000000,
-    1pt -1pt 0 #000000,
-    -1pt 1pt 0 #000000,
-    1pt 1pt 0 #000000;
+	color: #ffffff;
+	text-shadow:
+	-1pt -1pt 0 #000000,
+	1pt -1pt 0 #000000,
+	-1pt 1pt 0 #000000,
+	1pt 1pt 0 #000000;
 }

@@ -1,9 +1,11 @@
 <hr>
 <footer>
-    <span class=advanced>$footer</span>
-    <p class="disclaimer advanced"><small>
-        $disclaimer
-    </small></p>
-    $ssiFooter
+	<span class=advanced>$footer</span>
+	<p class="disclaimer advanced">
+		<small>
+			$disclaimer
+		</small>
+	</p>
+	$ssiFooter
 </footer>
 </main></body></html>

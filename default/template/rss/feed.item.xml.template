@@ -1,11 +1,11 @@
-    <item rdf:about="$itemAbout">
-        <guid>$itemGuid</guid>
-        <pubDate>$itemPubDate</pubDate>
-        <title>$itemTitle</title>
-        <link>$itemLink</link>
-        <description>
-                <![CDATA[
-                $itemDescription
-                ]]>
-        </description>
-    </item>
+	<item rdf:about="$itemAbout">
+		<guid>$itemGuid</guid>
+		<pubDate>$itemPubDate</pubDate>
+		<title>$itemTitle</title>
+		<link>$itemLink</link>
+		<description>
+				<![CDATA[
+				$itemDescription
+				]]>
+		</description>
+	</item>
