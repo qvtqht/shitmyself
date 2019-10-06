@@ -18,7 +18,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 // 	logged out = create id is shown, current id is hidden
 
 
-    // if user fingerprint exists
+	// if user fingerprint exists
 	if (getUserFp()) {
 	    //current id form, show it
 		var formCur = document.getElementById('formCurId');
@@ -26,7 +26,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 			formCur.style.display = 'block';
 		}
 
-        //create id form, hide it
+		//create id form, hide it
 		var formCreate = document.getElementById('formCreateId');
 		if (formCreate) {
 			formCreate.style.display = 'none';
@@ -75,7 +75,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 			formCur.style.display = 'none';
 		}
 
-        // create form, show it
+		// create form, show it
 		var formCreate = document.getElementById('formCreateId');
 		if (formCreate) {
 			formCreate.style.display = 'block';
@@ -91,7 +91,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 		signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 	}
 
-    // hide the loading screen if it can be found
+	// hide the loading screen if it can be found
 	var loading = document.getElementById('loading');
 	if (loading) {
 		loading.style.display = 'none';
@@ -104,7 +104,7 @@ showHideForms(); // call showHideForms()
 function identityOnload() { // onload function for identity page (aka profile page)
 	var pk = getPrivateKey();
 
-   // is there a private key?
+	// is there a private key?
 	if (pk) {
 		// if there's a private key, populate private key textbox
 		var textbox = document.getElementById("privatekey");
@@ -125,14 +125,14 @@ function identityOnload() { // onload function for identity page (aka profile pa
 		}
 	}
 
-   // if there's a pk, do a saveId() to populate displayed info
+	// if there's a pk, do a saveId() to populate displayed info
 	if (pk) {
 		saveId();
 	}
 
-    // if there's a textbox for a name, populate it with the default
-    // the default is set in config/prefill_user_name
-    // and then templated in where $prefillUsername is
+	// if there's a textbox for a name, populate it with the default
+	// the default is set in config/prefill_user_name
+	// and then templated in where $prefillUsername is
 	var nametext = document.getElementById("name");
 	if (nametext) {
 		if (nametext.value == '') {
@@ -140,10 +140,10 @@ function identityOnload() { // onload function for identity page (aka profile pa
 		}
 	}
 
-   // show and hide identity page forms as necessary
+	// show and hide identity page forms as necessary
 	showHideForms();
 
-   // here we do the same thing we did above, checking for #logout and #signout? #strange #todo
+	// here we do the same thing we did above, checking for #logout and #signout? #strange #todo
 	// disabled
 	if (0 && window.location.hash) {
 		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
