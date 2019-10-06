@@ -2196,8 +2196,13 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 #	my $prefillUsername = GetConfig('prefill_username') || '';
 #	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
 
+	if (GetConfig('admin/php/enable')) {
+	#if php/enabled, then use post.php instead of post.html
+	#todo add rewrites for this
+		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
+	}
 	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
-
+	
 	# Write avatar javasript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
 
