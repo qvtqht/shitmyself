@@ -208,7 +208,7 @@ sub GetEventsPage { # returns html for events page
 		my $event = shift @eventsArray;
 
 		my $eventItemHash = %{$event}{'file_hash'};
-		my $eventTitle =  %{$event}{'item_title'};
+		my $eventTitle =  %{$event}{'event_title'};
 		my $eventTime = %{$event}{'event_time'};
 		my $eventDuration = %{$event}{'event_duration'};
 		my $eventItemLink = GetHtmlLink($eventItemHash);
@@ -1165,11 +1165,12 @@ sub GetPageHeader { # returns html for page header
 
 	state $logoText;
 	if (!defined($logoText)) {
-		$logoText = GetConfig('logo_text');
+		$logoText = GetConfig('logo/logo_text');
 		if (!$logoText) {
 			#$logoText = random_emoji();
 			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
 			#$logoText = "*"
+			$logoText = '';
 		}
 		#$logoText = FormatForWeb($logoText);
 		#$logoText = HtmlEscape($logoText);
@@ -1240,7 +1241,13 @@ sub GetPageHeader { # returns html for page header
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
-	$htmlStart =~ s/\$logoText/$logoText/g;
+	
+	if (GetConfig('logo/enabled')) {
+		$htmlStart =~ s/\$logoText/$logoText/g;
+	} else {
+		$htmlStart =~ s/\$logoText/$logoText/g;
+	}
+	
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
@@ -1254,7 +1261,8 @@ sub GetPageHeader { # returns html for page header
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
 	$htmlStart =~ s/\$clock/$clock/g;
-#
+
+	#
 #	if (GetConfig('funstuff/js_clock')) {
 #		my $jsClock = Get
 #		$htmlStart =~ s/\$putClockHere/$putClockHere/g;
