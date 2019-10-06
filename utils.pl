@@ -1079,7 +1079,7 @@ sub GetSecondsHtml {# takes number of seconds as parameter, returns the most rea
 
 sub GetFileSizeHtml { # takes file size as number, and returns html-formatted human-readable size
 	my $fileSize = shift;
-  
+
 	if (!$fileSize) {
 		return;
 	}
@@ -1921,6 +1921,19 @@ sub UpdateUpdateTime { # updates config/system/last_update_time, which is used b
 	my $lastUpdateTime = GetTime();
 
 	PutConfig("system/last_update_time", $lastUpdateTime);
+}
+
+sub RemoveEmptyDirectories { #looks for empty directories under $path and removes them
+	my $path = shift;
+	
+	#todo probably more sanitizing
+	
+	$path = trim($path);
+	if (!$path) {
+		return;
+	}
+	
+	system('find $path -type d -empty -delete');
 }
 
 1;
