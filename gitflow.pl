@@ -244,6 +244,9 @@ foreach my $file (@gitChangesArray) {
 
 WriteIndexedConfig();
 
+RemoveEmptyDirectories('./html/'); #includes txt/
+#RemoveEmptyDirectories('./txt/');
+
 # if new items were added, re-make all the summary pages (top authors, new threads, etc)
 if ($filesProcessed > 0) {
 	UpdateUpdateTime();
