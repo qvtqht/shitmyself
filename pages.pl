@@ -655,7 +655,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh voting profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh voting profile write_buttons));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1263,36 +1263,33 @@ sub GetPageHeader { # returns html for page header
 
 	$htmlStart =~ s/\$introText/$introText/g;
 
-	my $topMenuTemplate = "";
+	#top menu
+						  
+	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
+	my $adminKey = GetAdminKey();
 
 	#todo replace with config/menu/*
-
-	#header menu
-	#
-	#my $identityLink = GetMenuItem("/profile.html", GetString('menu/sign_in'));
-
-
-	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
+	my $topMenuTemplate = "";
 
 	$topMenuTemplate .= GetMenuItem("/", 'Read');
 	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
 	$topMenuTemplate .= GetMenuItem("/top.html", 'Topics');
 	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
 	$topMenuTemplate .= GetMenuItem("/authors.html", 'Authors');
-	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
+#	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status', 1);
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
+	if ($adminKey) {
+		$topMenuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
+	}
+
 	$topMenuTemplate .= $identityLink;
-
+	
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
-
-#	my $adminKey = GetAdminKey();
-#	if ($adminKey) {
-#		$topMenuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
-#	}
-
+	
+	# end top menu
 
 	$txtIndex .= $htmlStart;
 
@@ -2221,6 +2218,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		chomp $myPath;
 		$spasibo2Template =~ s/\$myPath/$myPath/g;
 		PutFile("$HTMLDIR/spasibo2.php", $spasibo2Template);
+		
+		my $postPhpTemplate = GetTemplate('php/post.php.template');
+		PutFile('html/post.php', $postPhpTemplate);
 	}
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
@@ -2252,7 +2252,10 @@ sub GetWritePage { # returns html for write page
 			#my $submitForm = GetTemplate('form/write.template');
 
 			if (GetConfig('admin/php/enable')) {
-				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
+				my $postHtml = 'post.html';
+				$submitForm =~ s/$postHtml/post.php/;
+
+				#				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
 			}
 
 			my $prefillText = "";
@@ -2608,5 +2611,120 @@ sub MakeDataPage { # returns html for /data.html
 	PutHtmlFile("$HTMLDIR/data.html", $dataPage);
 }
 
+sub MakePage { # make a page and write it into html/ directory; $pageType, $pageParam
+	# $pageType = author, item, tags, etc.
+	# $pageParam = author_id, item_hash, etc.
+	my $pageType = shift;
+	my $pageParam = shift;
+
+	#todo sanity checks
+
+	WriteLog('MakePage(' . $pageType . ', ' . $pageParam . ')');
+
+	# tag page, get the tag name from $pageParam
+	if ($pageType eq 'tag') {
+		my $tagName = $pageParam;
+
+		WriteLog("gitflow.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
+
+		my $tagPage = GetReadPage('tag', $tagName);
+		PutHtmlFile('html/top/' . $tagName . '.html', $tagPage);
+	}
+	#
+	# author page, get author's id from $pageParam
+	elsif ($pageType eq 'author') {
+		my $authorKey = $pageParam;
+
+		my $authorPage = GetReadPage('author', $authorKey);
+
+		if (!-e 'html/author/' . $authorKey) {
+			mkdir ('html/author/' . $authorKey);
+		}
+
+		PutHtmlFile('html/author/' . $authorKey . '/index.html', $authorPage);
+	}
+	#
+	# if $pageType eq item, generate that item's page
+	elsif ($pageType eq 'item') {
+		# get the item's hash from the param field
+		my $fileHash = $pageParam;
+
+		# get item list using DBGetItemList()
+		# #todo clean this up a little, perhaps crete DBGetItem()
+		my @files = DBGetItemList({'where_clause' => "WHERE file_hash = '$fileHash'"});
+
+		if (scalar(@files)) {
+			my $file = $files[0];
+
+			# get item page's path #todo refactor this into a function
+			#my $targetPath = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+			my $targetPath = 'html/' .GetHtmlFilename($fileHash);
+
+			# create a subdir for the first 2 characters of its hash if it doesn't exist already
+			if (!-e 'html/' . substr($fileHash, 0, 2)) {
+				mkdir('html/' . substr($fileHash, 0, 2));
+			}
+
+			# get the page for this item and write it
+			my $filePage = GetItemPage($file);
+			PutHtmlFile($targetPath, $filePage);
+		} else {
+			WriteLog("gitflow.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
+		}
+	}
+	#
+	# tags page
+	elsif ($pageType eq 'tags') {
+		my $votesPage = GetVotesPage();
+		PutHtmlFile("html/tags.html", $votesPage);
+
+		my $tagsAlphaPage = GetTagsPage();
+		PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
+	}
+	#
+	# events page
+	elsif ($pageType eq 'events') {
+		my $eventsPage = GetEventsPage();
+		PutHtmlFile("html/events.html", $eventsPage);
+	}
+	#
+	# scores page
+	elsif ($pageType eq 'scores') {
+		my $scoresPage = GetScoreboardPage();
+		PutHtmlFile('html/authors.html', $scoresPage);
+	}
+	#
+	# topitems page
+	elsif ($pageType eq 'top') {
+		my $topItemsPage = GetTopItemsPage();
+		PutHtmlFile('html/top.html', $topItemsPage);
+	}
+	#
+	# stats page
+	elsif ($pageType eq 'stats') {
+		my $statsPage = GetStatsPage();
+		PutHtmlFile('html/stats.html', $statsPage);
+	}
+	#
+	# index pages (abyss)
+	elsif ($pageType eq 'index') {
+		WriteIndexPages();
+	}
+	#
+	# rss feed
+	elsif ($pageType eq 'rss') {
+		my %queryParams;
+
+		$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+		my @rssFiles = DBGetItemList(\%queryParams);
+
+		PutFile('html/rss.xml', GetRssFile(@rssFiles));
+	}
+	#
+	# summary pages
+	elsif ($pageType eq 'summary') {
+		MakeSummaryPages();
+	}
+}
 
 1;
