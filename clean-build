@@ -13,6 +13,7 @@ rm -rf html/*.zip
 rm -rf html/rss.xml html/rss.txt
 rm -rf config/template/*
 rm -rf config/string/*
+find html -type d -empty -delete
 
 touch html/post.html
 rm log/log.log
