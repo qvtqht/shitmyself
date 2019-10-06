@@ -874,7 +874,7 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 			(page_name IN ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) AS priority_page
 		FROM page_touch
 		WHERE touch_time >= ?
-		ORDER BY priority_page desc, touch_time
+		ORDER BY priority_page DESC, touch_time DESC
 		LIMIT 50;
 	";
 
