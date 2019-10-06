@@ -1,3 +1,32 @@
+Figure out how to fix hasvote dupes in vote table
+	Probably need to differentiate votes and system tags, sadly
+
+split lighttpd.conf into templates?
+	necessary?
+
+fix untitled event issue
+
+make votes async
+
+cleanup stale items
+	items with 0 children
+		older than x days
+	items older than y days
+		and no "keep" votes
+	what else?
+	
+clean up empty directories
+
+what else to clean up?
+
+generate.pl
+gitflow.pl
+	do not process all by default
+	accept file/item as parameter
+	
+	
+====
+
 htaccess and lighttpd
 	if php=enabled
 		certain html files (if not all?) should be re-routed to php shim
