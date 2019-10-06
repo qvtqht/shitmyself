@@ -2211,7 +2211,7 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 			item_flat
 		$whereClause
 		ORDER BY
-			item_score DESC
+			item_score DESC, add_timestamp DESC
 		LIMIT 50;
 	";
 
