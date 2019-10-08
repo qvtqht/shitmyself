@@ -1288,10 +1288,10 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status', 1);
 	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
 	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
-	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 	if ($adminKey) {
-		$topMenuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin');
+		$topMenuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 	}
+	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 
 	$topMenuTemplate .= $identityLink;
 	
