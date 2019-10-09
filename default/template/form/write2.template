@@ -24,19 +24,15 @@
 		<span id=userRadio></span>
 	</p>
 
-	<!--<p class=advanced>-->
-		<!--<label for=recfing><input type=checkbox id=recfing name=recfing> Record device identifier</label><br>-->
-		 <!--&lt;!&ndash;<label for=recloca><input type=checkbox id=recloca name=recloca> Record browser location</label><br>&ndash;&gt;-->
-		<!--<label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>-->
-	<!--</p>-->
-	<!---->
-	<!--<p class=advanced>-->
-	   <!--<label for=saveit><input type=checkbox id=saveit name=saveit> Save form settings</label>-->
-	<!--</p>-->
-
-	<!--<p>-->
-		<!--<label for=addevent><input type=text size=32 maxlength=64 name=addevent id=addevent></label>-->
-	<!--</p>-->
-
+	<p class=advanced>
+		<label for=recdebg><input type=checkbox id=recdebg name=recdebg> Record debugging information</label><br>
+		<label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
+		<label for=recloca><input type=checkbox id=recloca name=recloca> Record device location</label><br>
+		<label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
+	</p>
+	
+	<p class=advanced>
+	   <label for=saveit><input type=checkbox id=saveit name=saveit> Save form settings</label>
+	</p>
 </form>
 <!--# / write2.template #-->
