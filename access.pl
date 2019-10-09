@@ -446,12 +446,14 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						# Begin logging section
 						if (
 							GetServerKey() # there should be a server key, otherwise do not log
-								&&
-							GetConfig('admin/logging/record_timestamps')
-								||
-							GetConfig('admin/logging/record_clients')
-								||
-							GetConfig('admin/logging/record_sha512')
+								&& 
+							(
+								GetConfig('admin/logging/record_timestamps')
+									||
+								GetConfig('admin/logging/record_clients')
+									||
+								GetConfig('admin/logging/record_sha512')
+							)
 						) { # if any of the logging options are turned on, proceed
 							# I guess we're saving this 
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
