@@ -29,13 +29,13 @@ if ($prevBuildFinish > $prevBuildStart) {
 PutFile('config/admin/build_begin', GetTime());
 PutFile('config/admin/build_end', '');
 
-BuildMessage "Require ./index.pl...";
-
-require './index.pl';
-
 BuildMessage "Require ./access.pl...";
 
 require './access.pl';
+
+BuildMessage "Require ./index.pl...";
+
+require './index.pl';
 
 # BuildMessage "Upgrade stuff...";
 # if (GetConfig('upgrade_now') ne 'no') {
@@ -84,9 +84,9 @@ BuildMessage "MakeAddedIndex()...";
 
 MakeAddedIndex();
 
-BuildMessage "MakeIndex(\@filesToInclude)";
+#BuildMessage "MakeIndex(\@filesToInclude)";
 
-MakeIndex(\@filesToInclude);
+#MakeIndex(\@filesToInclude);
 
 BuildMessage "MakeVoteIndex()...";
 
