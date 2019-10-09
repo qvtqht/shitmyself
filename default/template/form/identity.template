@@ -1,25 +1,39 @@
 <!-- identity.template -->
 <noscript>
-	<p class=warning><strong><b>Great news! You're browsing without JavaScript!</b></strong><br><br>
+	<p class=warning>
+		<strong><b>Great news! You're browsing without JavaScript!</b></strong>
+		<br><br>
 
-		You can continue to use the site without changing anything.<br><br>
+		You can continue to use the site without changing anything.
+		<br><br>
+		
+		To continue, try one of the following links:
+		<br><br>
+	
+		<hr>
 
-	<hr>
+		<a href="/write.html"><b>Write something on this site</b></a><br><br>
 
-	<a href="/write.html"><b>Write something on this site</b></a><br><br>
+		<a href="/top.html"><b>Read what others are talking about</b></a>
+	
+		<a href="/index0.html"><b>Dive into the Abyss (unfiltered cesspool)</b></a>
+	
+		<hr>
 
-	<a href="/top/hastext.html"><b>Read what others have written</b></a>
+		<b>Experts/Advanced Users:</b><br><br>
 
-	<hr>
+		Using profile features without JavaScript requires GPG/PGP.<br><br>
 
-	<b>Experts</b><br><br>
-
-	Using profile features without JavaScript requires GPG/PGP.<br><br>
-
-	Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
+		Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
 
 	</p>
 </noscript>
+
+<p>
+	Features below may not work without JavaScript.
+	
+	Pre-2015 browsers may also encounter issues below, even with JS enabled.
+</p>
 
 <p id=loading class=loading>
 	<br><br>
