@@ -613,34 +613,42 @@ sub IndexTextFile { # indexes one text file into database
 				WriteLog (". addedtime token found!");
 				my $lineCount = @addedLines / 2;
 
-				if ($isSigned) {
-					WriteLog("... isSigned");
-					if (IsServer($gpgKey)) {
-						WriteLog("... isServer");
-						while(@addedLines) {
-							WriteLog("... \@addedLines");
-							my $itemHash = shift @addedLines;
-							my $itemAddedTime = shift @addedLines;
+				while(@addedLines) {
+					WriteLog("... \@addedLines");
+					my $itemHash = shift @addedLines;
+					my $itemAddedTime = shift @addedLines;
 
-							WriteLog("... $itemHash, $itemAddedTime");
+					WriteLog("... $itemHash, $itemAddedTime");
 
-							my $reconLine = "addedtime/$itemHash/$itemAddedTime";
+					my $reconLine = "addedtime/$itemHash/$itemAddedTime";
 
-							WriteLog("... $reconLine");
+					WriteLog("... $reconLine");
 
-							$message =~ s/$reconLine/[Item $itemHash was added at $itemAddedTime.]/g;
+					my $validated = 0;
+
+					if ($isSigned) {
+						WriteLog("... isSigned");
+						if (IsServer($gpgKey)) {
+							WriteLog("... isServer");
+							
+							$validated = 1;
+
+							$message =~ s/$reconLine/[Server discovered $itemHash at $itemAddedTime.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
 							DBAddItemParent($gitHash, $itemHash);
 
 							DBAddPageTouch('item', $itemHash);
+
+							DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
+
+							DBAddPageTouch('tag', 'timestamp');
 						}
-
-						DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
-
-						DBAddPageTouch('tag', 'timestamp');
-					} else {
-						#todo
+					}
+					
+					if (!$validated) {
+						$message =~ s/$reconLine/[Claim that $itemHash was added at $itemAddedTime.]/g;
+						$detokenedMessage =~ s/$reconLine//g;
 					}
 				}
 			}
