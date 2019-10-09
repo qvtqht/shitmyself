@@ -638,6 +638,11 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		$replyForm =~ s/\$replyTo/$replyTo/g;
 		$replyForm =~ s/\$prefillText/$prefillText/g;
 
+		if (GetConfig('admin/php/enable')) {
+			my $postHtml = 'post.html';
+			$replyForm =~ s/$postHtml/post.php/;
+		}
+
 		$txtIndex .= $replyForm;
 	}
 
@@ -1727,7 +1732,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 		$authorDescription .= GetItemVotesSummary($publicKeyHash);
 
-		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash);
+		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash, 'pubkey');
 		
 		$authorLastSeen = GetTimestampElement($authorLastSeen);
 
@@ -2058,6 +2063,8 @@ sub WriteIndexPages { # writes the abyss pages (index0-n.html)
 		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
 
 		$indexPage .= GetPageFooter();
+		
+		InjectJs($indexPage, qw('profile'));
 
 		PutHtmlFile('html/index.html', $indexPage);
 	}
@@ -2224,14 +2231,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	if (GetConfig('admin/php/enable')) {
 		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess.for.php.template')."\n";
 
-		PutFile("$HTMLDIR/spasibo.php", GetTemplate('php/spasibo.php.template'));
 
-		my $spasibo2Template = GetTemplate('php/spasibo2.php.template');
-		my $myPath = `pwd`;
-		chomp $myPath;
-		$spasibo2Template =~ s/\$myPath/$myPath/g;
-		PutFile("$HTMLDIR/spasibo2.php", $spasibo2Template);
-		
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
 	}
@@ -2301,8 +2301,18 @@ sub GetWritePage { # returns html for write page
 		$submitForm =~ s/\$prefillText/$prefillText/g;
 
 		$txtIndex .= $submitForm;
-		$txtIndex .= "Something went wrong. Could not get item count.";
+#		$txtIndex .= "Something went wrong. Could not get item count.";
+		
+		$txtIndex .= 
+			'<p class=advanced><span class=beginner>Post Count: ' . 
+			$itemCount . 
+			'<br>' .
+			'Post Limit: ' . 
+			$itemLimit . 
+			'</p>';
 	}
+	
+	$txtIndex .= GetPageFooter();
 
 	return $txtIndex;
 }
@@ -2679,7 +2689,9 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 			}
 
 			# get the page for this item and write it
+			WriteLog('my $filePage = GetItemPage($file = "' . $file . '")');
 			my $filePage = GetItemPage($file);
+			WriteLog('PutHtmlFile($targetPath = ' . $targetPath . ', $filePage = ' . $filePage . ')');
 			PutHtmlFile($targetPath, $filePage);
 		} else {
 			WriteLog("gitflow.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
