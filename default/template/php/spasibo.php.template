@@ -1,6 +1,0 @@
-<?php
-//header('Location: /post2.html', true, 301);
-include('post.html');
-ob_flush();
-?>
-<iframe src=/post2.html>
