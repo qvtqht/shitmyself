@@ -4,6 +4,10 @@
 	replaces post.html if admin/php/enabled
 */
 
+	
+include('post.html');
+flush();
+
 if ($_GET) {
 	if (isset($_GET['comment'])) {
 		$pwd = getcwd();
@@ -53,12 +57,15 @@ if ($_GET) {
 		
 		file_put_contents($filePath, $comment);
 		
-		if (file_exists($scriptDir . '/index.pl')) {
-			exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
-		}
-		
-		if (file_exists($scriptDir . '/gitflow.pl')) {
-			exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+		if (!file_exists($scriptDir . 'cron.lock')) {
+			if (file_exists($scriptDir . '/index.pl')) {
+				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+			}
+			
+			if (file_exists($scriptDir . '/gitflow.pl')) {
+				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+			}
+		} else {
 		}
 	}
 	
@@ -69,6 +76,4 @@ if ($_GET) {
 	} else {
 //		header('Location: /write.html');
 	}
-	
-	include('post.html');
 }
