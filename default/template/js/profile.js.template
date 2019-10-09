@@ -17,84 +17,85 @@ function showHideForms() { // shows and hides the register and logged in forms
 // 	logged in =  create id is hidden, current id is displayed
 // 	logged out = create id is shown, current id is hidden
 
-
-	// if user fingerprint exists
-	if (getUserFp()) {
-	    //current id form, show it
-		var formCur = document.getElementById('formCurId');
-		if (formCur) {
-			formCur.style.display = 'block';
-		}
-
-		//create id form, hide it
-		var formCreate = document.getElementById('formCreateId');
-		if (formCreate) {
-			formCreate.style.display = 'none';
-		}
-
-		var formAdmin = document.getElementById('formAdminId');
-		if (formAdmin) {
-			if (getUserFp() == '$currentAdminId') {
-				formAdmin.style.display = 'block';
+	if (document.getElementById) { // more graceful "support" for nn3, nn4
+		// if user fingerprint exists
+		if (getUserFp()) {
+			//current id form, show it
+			var formCur = document.getElementById('formCurId');
+			if (formCur) {
+				formCur.style.display = 'block';
 			}
-		}
-
-		var signinBox = document.getElementById('signin');
-		var myidBox = document.getElementById('myid');
-		
-		if (window.GetPrefs) {
-			if (GetPrefs('display_username')) {
-				if (myidBox) {
-					if (window.myAvatar) {
-						myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+	
+			//create id form, hide it
+			var formCreate = document.getElementById('formCreateId');
+			if (formCreate) {
+				formCreate.style.display = 'none';
+			}
+	
+			var formAdmin = document.getElementById('formAdminId');
+			if (formAdmin) {
+				if (getUserFp() == '$currentAdminId') {
+					formAdmin.style.display = 'block';
+				}
+			}
+	
+			var signinBox = document.getElementById('signin');
+			var myidBox = document.getElementById('myid');
+			
+			if (window.GetPrefs) {
+				if (GetPrefs('display_username')) {
+					if (myidBox) {
+						if (window.myAvatar) {
+							myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+						}
+					}
+					if (signinBox) {
+						signinBox.innerHTML = '';
+					}
+				} else {
+					if (myidBox) {			
+						myidBox.innerHTML = '';
+					}
+					if (signinBox) {
+						signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 					}
 				}
-				if (signinBox) {
-					signinBox.innerHTML = '';
-				}
 			} else {
-				if (myidBox) {			
-					myidBox.innerHTML = '';
-				}
-				if (signinBox) {
-					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
-				}
+				myidBox.innerHTML = '';
+				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 			}
+	
+	//		signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 		} else {
-			myidBox.innerHTML = '';
-			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+		// else means user is not logged in
+	
+			// current id form, hide it
+			var formCur = document.getElementById('formCurId');
+			if (formCur) {
+				formCur.style.display = 'none';
+			}
+	
+			// create form, show it
+			var formCreate = document.getElementById('formCreateId');
+			if (formCreate) {
+				formCreate.style.display = 'block';
+			}
+	
+			var formAdmin = document.getElementById('formAdminId');
+			if (formAdmin) {
+				formAdmin.style.display = 'none';
+			}
+	
+			var signinBox = document.getElementById('signin');
+	
+			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 		}
-
-//		signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
-	} else {
-	// else means user is not logged in
-
-	    // current id form, hide it
-		var formCur = document.getElementById('formCurId');
-		if (formCur) {
-			formCur.style.display = 'none';
+	
+		// hide the loading screen if it can be found
+		var loading = document.getElementById('loading');
+		if (loading) {
+			loading.style.display = 'none';
 		}
-
-		// create form, show it
-		var formCreate = document.getElementById('formCreateId');
-		if (formCreate) {
-			formCreate.style.display = 'block';
-		}
-
-		var formAdmin = document.getElementById('formAdminId');
-		if (formAdmin) {
-			formAdmin.style.display = 'none';
-		}
-
-		var signinBox = document.getElementById('signin');
-
-		signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
-	}
-
-	// hide the loading screen if it can be found
-	var loading = document.getElementById('loading');
-	if (loading) {
-		loading.style.display = 'none';
 	}
 }
 
