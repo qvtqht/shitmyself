@@ -53,4 +53,14 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 if (window.localStorage && document.getElementById) {
 	setAva();
 }
+
+function getAvatar() { // retrieve previously built avatar from localstore (already in html form)
+	var myAvatar = localStorage.getItem("avatar");
+	if (myAvatar === null || myAvatar.length === 0) {
+		return null;
+	} else {
+		return myAvatar;
+	}
+}
+
 // == end avatar.js
