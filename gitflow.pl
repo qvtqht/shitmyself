@@ -122,9 +122,9 @@ if (!-e 'html/txt/.git') {
 #	WriteLog("cd html/txt; git init; cd $pwd");
 	WriteLog("cd html/txt; git init; git add *; git commit -m first commit; cd $pwd");
 
-	my $gitOutput = `cd html/txt; git init; git add *; git commit -m first commit; cd $pwd`;
+#	my $gitOutput = `cd html/txt; git init; git add *; git commit -m first commit; cd $pwd`;
 
-	WriteLog($gitOutput);
+#	WriteLog($gitOutput);
 }
 
 # See if gitflow/file_limit setting exists
@@ -172,7 +172,7 @@ foreach my $file (@gitChangesArray) {
 
 	# Log it
 	WriteLog('$file = ' . $file . " ($fileFullPath)");
-
+		
 	#todo add rss.txt addition
 
 	# If the file exists, and is not a directory, process it
