@@ -1,7 +1,10 @@
 <!-- post.template -->
-<p>Thank you!</p>
-<p>Posted content may not appear immediately.</p>
-<pre>
+<p>
+    <b>Thank you!</b>
+    
+    What would you like to do next?
+</p>
+<pre class=advanced>
     _   _                 _
    | |_| |__   __ _ _ __ | | __
    | __| '_ \ / _` | '_ \| |/ /
