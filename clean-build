@@ -20,9 +20,4 @@ rm log/log.log
 
 rm -rf html/txt/.git
 mkdir -p html/txt
-cd html/txt
-git init
-git add *
-git commit -m "rebuild"
-cd -
 time ./build.sh
