@@ -1,4 +1,3 @@
 <!-- clock.template -->
-<span id=clockContainer>
-<small><font id=clock>$currentTime</font></small></span>
+<span id=clockContainer class=advanced><small><font id=clock>$currentTime</font></small></span>
 <!-- / clock.template -->
