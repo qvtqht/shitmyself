@@ -1,3 +1,7 @@
+Can HTML pages be patched instead of rewritten?
+	<span id=abcdef_score>1234</span>
+	
+
 if md5(request) in 404.log
 	redirect page to md5(request) 
 
