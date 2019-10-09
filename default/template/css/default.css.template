@@ -109,8 +109,8 @@ form#compose {
 }
 
 #clockContainer {
-	background-color: #405040;
-	color: #00f040;
+	background-color: #405040 !important;
+	color: #00f040 !important;
 	border-radius: 5pt;
 	border-style: inset;
 	border-color: #808080;
@@ -145,6 +145,6 @@ form.reply {
 #cSb {
 	background-color: orange; 
 }
-.advanced {
-	border-radius: 5pt;
+.advanced, .beginner {
+	border-radius: 3pt;
 }
