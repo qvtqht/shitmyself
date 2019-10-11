@@ -123,19 +123,6 @@ form#compose {
 	background-color: #c0ffc0;
 	padding: 5pt;
 }
-#eventCreate {
-	background-color: #ffa000;
-	padding: 5pt;
-	border-radius: 5pt;
-}
-
-#eventCreateButton {
-	border-radius: 5pt;
-	padding: 5pt;
-	font-size: large;
-	font-weight: bold;
-}
-
 form.reply {
 	border: 5pt solid #f0f0e0;
 	background-color: #f0f0e0;
