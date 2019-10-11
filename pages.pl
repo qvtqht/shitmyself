@@ -2161,10 +2161,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $tfmPageTemplate = GetTemplate('page/manual_advanced.template');
 
-		my $writeForm = GetTemplate('form/write2.template');
-		#$writeForm =~ s/\$prefillText/I've read the advanced manual, and here is what I think:\n\n/;
-		$tfmPageTemplate =~ s/\$writeForm/$writeForm/g;
-
 		$tfmPage .= $tfmPageTemplate;
 
 		$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
@@ -2259,60 +2255,44 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
-		if ($itemCount < $itemLimit) {
-			my $submitForm = GetTemplate('form/write2.template');
-			#my $submitForm = GetTemplate('form/write.template');
+	my $submitForm = GetTemplate('form/write2.template');
+	#my $submitForm = GetTemplate('form/write.template');
 
-			if (GetConfig('admin/php/enable')) {
-				my $postHtml = 'post.html';
-				$submitForm =~ s/$postHtml/post.php/;
-
-				#				$submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
-			}
-
-			my $prefillText = "";
-
-			$submitForm =~ s/\$extraFields//g;
-			$submitForm =~ s/\$prefillText/$prefillText/g;
-
-			$txtIndex .= $submitForm;
-
-			#$txtIndex .= "Current Post Count: $itemCount; Current Post Limit: $itemLimit";
-		} else {
-			$txtIndex .= "Item limit ($itemLimit) has been reached (or exceeded). Please remove something before posting.";
-		}
-
-		$txtIndex .= GetPageFooter();
-
-		$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs profile));
-
-		#todo break out into IncludeJs();
-		#		my $scriptsInclude = '<script type="text/javascript" src="/zalgo.js"></script><script type="text/javascript" src="/openpgp.js"></script><script type="text/javascript" src="/crypto.js"></script>';
-		#		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
-
-		$txtIndex =~ s/<body /<body onload="writeOnload();" /;
-	} else {
-		my $submitForm = GetTemplate('form/write2.template');
-		#my $submitForm = GetTemplate('form/write.template');
-		my $prefillText = "";
-
-		$submitForm =~ s/\$extraFields//g;
-		$submitForm =~ s/\$prefillText/$prefillText/g;
-
-		$txtIndex .= $submitForm;
-#		$txtIndex .= "Something went wrong. Could not get item count.";
+	if (GetConfig('admin/php/enable')) {
+	#if php module is enabled, change the form target to post.php
+		my $postHtml = 'post.html'; 
+		# on a separate line because 
+		# putting it into the regex would require escaping the period,
+		# would in turn would mean that searching for "post.html" in the codebase would not find this line
 		
-		$txtIndex .= 
-			'<p class=advanced><span class=beginner>Post Count: ' . 
-			$itemCount . 
-			'<br>' .
-			'Post Limit: ' . 
-			$itemLimit . 
-			'</p>';
+		$submitForm =~ s/$postHtml/post.php/;
+
+		# this is how autosave would work
+		# $submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
 	}
-	
+
+	my $initText = '';
+
+	$submitForm =~ s/\$extraFields//g;
+	$submitForm =~ s/\$initText/$initText/g;
+
+	$txtIndex .= $submitForm;
+
+	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
+		$txtIndex .=
+
+		my $itemCounts = GetTemplate('form/itemcount.template');
+
+		$itemCounts =~ s/\$itemCount/$itemCount/g;
+		$itemCounts =~ s/\$itemLimit/$itemLimit/g;
+	}
+
 	$txtIndex .= GetPageFooter();
+
+	$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile));
+
+	# add call to writeOnload to page
+	$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
 
 	return $txtIndex;
 }
@@ -2361,9 +2341,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar writeonload prefs event_add fresh profile));
-
-#	$txtIndex =~ s/<body /<body onload="writeOnload();" /;
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs event_add fresh profile));
 
 	return $txtIndex;
 }
