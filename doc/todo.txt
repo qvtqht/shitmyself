@@ -1,3 +1,12 @@
+#bug
+	2 tabs
+		open write page in one tab
+		sign out in other tab
+		then try to submit from write page
+			expected: ??
+			actual: modal error, no profile
+				holdout from early days
+
 Prefill reply box with >>
 	Optinoally by default?
 	Because NN 1.22 does not seem to support <input type=hidden>
