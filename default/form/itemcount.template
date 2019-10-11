@@ -1,0 +1,6 @@
+<p class=advanced>
+	<span class=beginner>
+		Existing Item Count: $itemCount<br>
+		Limit: $itemLimit
+	</span>
+</p>
