@@ -29,12 +29,6 @@
 	</p>
 </noscript>
 
-<p>
-	Features below may not work without JavaScript.
-	
-	Pre-2015 browsers may also encounter issues below, even with JS enabled.
-</p>
-
 <p id=loading class=loading>
 	<br><br>
 	Loading...
