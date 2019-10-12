@@ -1443,7 +1443,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting timestamps profile));
+	$txtIndex = InjectJs($txtIndex, qw(prefs voting timestamps profile avatar));
 
 	return $txtIndex;
 }
@@ -2131,8 +2131,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/event.html", $okPage);
 		
-	system('cp default/template/p.gif.template html/p.gif');
-
 	{
 		# Manual page
 		my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
@@ -2290,6 +2288,7 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile));
+#	$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile geo));
 
 	# add call to writeOnload to page
 	$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
