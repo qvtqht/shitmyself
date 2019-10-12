@@ -1,27 +1,4 @@
-
 // == begin write.js
-//
-//navigator.geolocation.getCurrentPosition(showPosition);
-//function putInTextbox(position) {
-//	
-//}
-
-function getPositionCallback(position) {
-	
-}
- 
-function insertGeo() {
-	if (document.getElementById) {
-		var textbox = document.getElementById('comment');
-		if (textbox) {
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(
-					getPositionCallback
-				);
-			}
-		}
-	}
-}
 
 function writeOnload() {
 // this is a handler for browsers who don't know how to download .js files but support javascript
