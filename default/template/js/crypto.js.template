@@ -39,10 +39,6 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 		window.confct = 11;
 		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
 
-//		setTimeout(function(){
-//			disarmSignoutButton(t);
-//		}, 10000);
-
 		var signinBox = document.getElementById('signin');
 		signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
 
@@ -773,7 +769,12 @@ function signMessage() {
 			});
 		}
 	} else {
-		alert('No identity defined, cannot sign.');
+		// this is an edge case
+		// user signed out in another window, but wants to sign in this one
+		// signing is no longer possible, so just submit to be on safe side
+		
+		//alert('No identity defined, cannot sign.');
+		composeForm.submit();
 	}
 
 }
