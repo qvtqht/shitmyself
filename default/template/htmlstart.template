@@ -13,7 +13,7 @@ $styleSheet
 </style>
 </head>
 <body link="$primaryColor" vlink="#806080" text="$textColor" bgcolor="$backgroundColor">
-<div id=amain><a href="#maincontent">Skip to main content</a><img src="/p.gif" id=pixel height=1 width=1></div>
+<div id=amain><a href="#maincontent">Skip to main content</a></div>
 <h2 class=menu><a id=logo class="logo beginner" title="Home" href="/">$logoText</a> $clock 
 $menuItems</h2>
 <div class=beginner>$introText</div>
