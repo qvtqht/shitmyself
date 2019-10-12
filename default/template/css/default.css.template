@@ -1,19 +1,26 @@
+body {
+	font-family: helvetica;
+	font-size: default;
+}
+
+/* negative (red) tags */
 .tag-flag, 
 .tag-troll, 
 .tag-spam, 
-.tag-disagree, 
-.tag-abuse, 
-.tag-dislike, 
-.tag-duplicate {
+.tag-abuse {
 	color: #c08080;
+	background-color: #fff0f0;
 }
 
+/* positive (green) tags */
 .tag-accept, 
 .tag-friend, 
 .tag-attend {
 	color: #80c080;
+	background-color: #f0fff0;
 }
 
+/* special tags */
 .tag-textart {
 	font-family: monospace;
 	font-size: default;
@@ -22,14 +29,19 @@
 	font-family: cursive;
 	font-size: default;
 }
+
+/* regular text */
 .txt {
 	font-family: tahoma;
 	font-size: default;
 }
+
+/* textart items get monospace font */
 .item-textart {
 	font-family: monospace;
 	font-size: 12pt;
 }
+
 div.reply {
 	margin-left: 2%;
 	padding-left: 3em;
@@ -37,10 +49,6 @@ div.reply {
 }
 div.txt {
 	padding-left: 1em;
-}
-body {
-	font-family: helvetica;
-	font-size: default;
 }
 .admin {
 	background: repeating-linear-gradient(
@@ -52,6 +60,8 @@ body {
 	);
 	border-radius: 8pt;
 }
+
+/* sign out button */
 .rmid {
 	color: red;
 }
