@@ -65,8 +65,6 @@ Preferences page is blank if not logged in
 
 #bug new keys are not automatically being shared
 
-Merge p.gif into favicon.ico
-
 add "roles" for username
 	then every author with that username
 		if approved by admin444
