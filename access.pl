@@ -217,6 +217,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 		my $recordTimestamp = 0; # do we need to record timestamp?
 		my $recordFingerprint = 0;  # do we need to record timestamp?
+		my $recordDebugInfo = 0;  # do we need to record debug info?
 
 		# useragent is last. everything that is not the values we have pulled out so far
 		# is the useragent.
@@ -349,7 +350,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 #					$message =~ s/=on\&/\n&/g;
 #					$message =~ s/\&/\n&/g;
 					#is this dangerous?
-
+					
 					foreach my $urlParam (@messageItems) {
 						my ($paramName, $paramValue) = split('=', $urlParam);
 
@@ -378,6 +379,13 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						if ($paramName eq 'recfing') {
 							if ($paramValue eq 'on') {
 								$recordFingerprint = 1;
+							}
+						}
+						
+						if ($paramName eq 'debug') {
+							if ($paramValue eq 'on') {
+								$recordDebugInfo = 1;
+								WriteLog('$recordDebugInfo = 1');
 							}
 						}
 					}
@@ -442,6 +450,22 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 						# Tell debug console about file save completion
 						WriteLog("Seems like PutFile() worked! $addedTime");
+						
+						# record debug info
+						if ($recordDebugInfo) {
+							my $debugInfo = '>>' . $fileHash;
+							$debugInfo .= "\n\n";
+							$debugInfo .= $userAgent;
+							$debugInfo .= "\n";
+							$debugInfo .= "#meta #debug";
+							
+							my $debugFilename = 'debug_' . $fileHash . '.txt';
+							$debugFilename = 'html/txt/' . $debugFilename;
+							
+							WriteLog('PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
+							
+							PutFile($debugFilename, $debugInfo);
+						}
 
 						# Begin logging section
 						if (

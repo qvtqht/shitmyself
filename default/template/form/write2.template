@@ -23,13 +23,13 @@
 		<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
 		<span id=userRadio></span>
 	</p>
-	
-	<p class=advanced>
-		<a href=# onclick="insertGeo(); return false;">Insert location</a>
-	</p>
+	<!---->
+	<!--<p class=advanced>-->
+		<!--<a href=# onclick="insertGeo(); return false;">Insert location</a>-->
+	<!--</p>-->
 
 	<p class=advanced>
-		<label for=recdebg><input type=checkbox id=recdebg name=recdebg> Record debugging information</label><br>
+		<label for=debug><input type=checkbox id=debug name=debug> Record debugging information</label><br>
 		<label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
 		<label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
 	</p>
