@@ -6,7 +6,16 @@
 
 	<p>
 		<label for=name><span class=beginner>Name:</span>
-			<input type=text size=16 maxlength=$usernameMaxLength name=name id=name onblur="if(this.value==''){this.value='$prefillUsername';}" onfocus="if(this.value=='$prefillUsername'){this.value='';}">
+			<input 
+				type=text 
+				size=16 
+				maxlength=$usernameMaxLength 
+				name=name 
+				id=name 
+				onblur="if(this.value==''){this.value='$prefillUsername';}" 
+				onfocus="if(this.value=='$prefillUsername'){this.value='';}" 
+				value="$prefillUsername"
+			>
 		</label>
 	</p>
 
