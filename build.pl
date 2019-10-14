@@ -139,7 +139,7 @@ BuildMessage("Done!");
 PutFile('config/admin/build_end', GetTime());
 
 if (GetConfig('admin/lighttpd/enable')) {
-	system('time ./lighttpd.pl &');
+	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
 WriteLog( "Finished!");
