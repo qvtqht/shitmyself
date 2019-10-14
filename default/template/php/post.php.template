@@ -130,7 +130,7 @@ if ($_GET) {
 		}
 	}
 	
-	if ($_SERVER['HTTP_REFERER']) {
+	if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
 		$referer = $_SERVER['HTTP_REFERER'];
 		
 //		header('Location: ' . $referer);
@@ -141,6 +141,10 @@ if ($_GET) {
 	WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 }
 
-print ('<a href="' . $fileUrlPath . '">' . $fileUrlPath . '</a>');
+$html = file_get_contents('post.html');
 
-include('post.html');
+if ($fileUrlPath) {
+	$html = str_replace('<!-- submitted_text -->', '<a href="' . $fileUrlPath . '">See what you just posted</a><br><br>', $html);
+}
+
+print($html);
