@@ -4,50 +4,86 @@
 	replaces post.html if admin/php/enabled
 */
 
+function WriteLog($text) {
+	if (0) {
+		print htmlspecialchars($text) . "<br>";
+	}
+}
+
+function GetHtmlComment($comment) {
+	WriteLog('GetHtmlComment()');
+	WriteLog('$comment = ' . $comment);
 	
-include('post.html');
-flush();
+	$commentHtml = '<html><body>' . $comment . '</body></html>';
+	
+	WriteLog('$commentHtml = ' . $commentHtml);
+	
+	return $commentHtml;
+}
 
 if ($_GET) {
+	WriteLog('$_GET');
 	if (isset($_GET['comment'])) {
+		WriteLog('$_GET[\'comment\']');
+		
 		$pwd = getcwd();
-		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/		
+		
+		WriteLog('$pwd = ' . $pwd);
+		
+		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
+		
+		WriteLog('$scriptDir = ' . $scriptDir);
+		
 		$txtDir = $pwd . '/txt/';
 		
-		$comment = $_GET['comment'];		
+		WriteLog('$txtDir = ' . $txtDir);
+		
+		$htmlDir = $pwd . '/';
+		
+		WriteLog('$htmlDir = ' . $htmlDir);
+		
+		$comment = $_GET['comment'];
 		$hash = sha1($comment);
 		
-		if (
-			!file_exists(
-				$txtDir . 
-				'/' . 
-				substr($hash, 0, 2)
-			)
-		) {
-			mkdir($txtDir . '/' . substr($hash, 0, 2));
+		WriteLog('$comment = ' . $comment); 
+		WriteLog('$hash = ' . $hash);
+		
+		$fileName = './txt/' . $hash . '.tmp.txt';
+		
+		WriteLog('$fileName = ' . $fileName);
+		
+		file_put_contents($fileName, $comment);
+		
+		WriteLog('file_get_contents(' . $fileName . '):');
+		WriteLog(file_get_contents($fileName));
+		
+		$gitOutput = `git hash-object -w "$fileName"`;
+		
+		WriteLog ('git hash-object -w "' . $fileName . '"');
+		WriteLog ('$gitOutput = ' . $gitOutput);
+		
+		$hash = trim($gitOutput);
+		
+		WriteLog('$hash = ' . $hash);
+		
+		if (!file_exists($txtDir . substr($hash, 0, 2))) {
+			mkdir($txtDir . substr($hash, 0, 2));
 		}
 		
-		if (
-			!file_exists(
-				$txtDir . 
-				'/' . 
-				substr($hash, 0, 2)
-			) . 
-			'/' . 
-			substr($hash, 2, 2)
-		) {
-			mkdir(
-				$txtDir . 
-				'/' . 
-				substr($hash, 0, 2) . 
-				'/' . 
-				substr($hash, 2, 2)
-			);
+		if (!file_exists($txtDir . substr($hash, 0, 2)) . '/' . substr($hash, 2, 2)) {
+			mkdir($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
+		}
+		
+		if (!file_exists('./' .substr($hash, 0, 2))) {
+			mkdir('./' . substr($hash, 0, 2));
+		}
+		
+		if (!file_exists('./' . substr($hash, 0, 2)) . '/' . substr($hash, 2, 2)) {
+			mkdir('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
 		}
 		
 		$filePath = 
 			$txtDir . 
-			'/' . 
 			substr($hash, 0, 2) . 
 			'/' . 
 			substr($hash, 2, 2) . 
@@ -55,15 +91,40 @@ if ($_GET) {
 			$hash . '.txt'
 		;
 		
+		$fileHtmlPath = 
+			'./' .
+			substr($hash, 0, 2) . 
+			'/' . 
+			substr($hash, 2, 2) . 
+			'/' . 
+			$hash . '.html'
+		;
+		
+		$fileUrlPath = 
+			'/' .
+			substr($hash, 0, 2) . 
+			'/' . 
+			substr($hash, 2, 2) . 
+			'/' . 
+			$hash . '.html'
+		;
+		
 		file_put_contents($filePath, $comment);
 		
+//		$commentHtml = $comment; //getHtmlComment($fileHtmlPath);
+		$commentHtml = nl2br(str_replace('  ', ' &nbsp;', htmlspecialchars(wordwrap(trim($comment), 80, ' ', true), ENT_QUOTES|ENT_SUBSTITUTE, "UTF-8")));
+		
+		file_put_contents($fileHtmlPath, $commentHtml);
+		
+//		header ('Location: ' . $fileUrlPath);
+
 		if (!file_exists($scriptDir . 'cron.lock')) {
 			if (file_exists($scriptDir . '/index.pl')) {
-				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+//				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
 			}
 			
 			if (file_exists($scriptDir . '/gitflow.pl')) {
-				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+//				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
 			}
 		} else {
 		}
@@ -76,4 +137,10 @@ if ($_GET) {
 	} else {
 //		header('Location: /write.html');
 	}
+	
+	WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 }
+
+print ('<a href="' . $fileUrlPath . '">' . $fileUrlPath . '</a>');
+
+include('post.html');
