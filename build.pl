@@ -130,6 +130,10 @@ if (GetConfig('admin/lighttpd/enable')) {
 	BuildMessage("admin/lighttpd/enable was false");
 }
 
+if (GetConfig('admin/lighttpd/enable')) {
+	system('killall lighttpd; time ./lighttpd.pl &');
+}
+
 BuildMessage("system('perl gitflow.pl')...");
 
 system('perl gitflow.pl');
@@ -137,10 +141,6 @@ system('perl gitflow.pl');
 BuildMessage("Done!");
 
 PutFile('config/admin/build_end', GetTime());
-
-if (GetConfig('admin/lighttpd/enable')) {
-	system('killall lighttpd; time ./lighttpd.pl &');
-}
 
 WriteLog( "Finished!");
 
