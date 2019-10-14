@@ -9,12 +9,6 @@ User keys should also be voteable on?
 
 "Message the Admin(s)" link which goes to reply form on admin's pubkey page
 
-#bug GetConfig with default and no config doesn't get written into config
-	Expected: GetConfig --> config? no --> default? yes --> copy default to config
-	Actual: GetConfig --> config? no --> default? yes --> DOES NOT copy default to config
-
-Create a zip of sqlite db
-
 Prefill reply box with >>
 	Optionally by default?
 	Because NN 1.22 does not seem to support <input type=hidden>
