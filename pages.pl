@@ -2078,8 +2078,10 @@ sub GetLighttpdConfig {
 	chomp $pwd; # get rid of tailing newline
 	
 	my $docRoot = $pwd . '/' . 'html' . '/';
+	my $serverPort = GetConfig('admin/lighttpd/port') || 3000;
 	
 	$conf =~ s/\$serverDocumentRoot/$docRoot/;
+	$conf =~ s/\$serverPort/$serverPort/;
 
 	if (GetConfig('admin/php/enable')) {
 		my $phpConf = GetTemplate('lighttpd/lighttpd_php.conf.template');
