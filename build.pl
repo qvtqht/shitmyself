@@ -104,17 +104,31 @@ BuildMessage "DBAddPageTouch('summary', 0)...";
 
 DBAddPageTouch('summary', 0);
 
-BuildMessage "system('perl generate.pl')...";
-
-system('perl generate.pl');
-
 BuildMessage("UpdateUpdateTime()...");
 
-#DBResetPageTouch();
-
-#print "\n* Step " . ++$buildStep;
-
 UpdateUpdateTime();
+
+require './pages.pl';
+
+BuildMessage "require('./generate.pl')...";
+
+require('./generate.pl');
+
+if (GetConfig('admin/lighttpd/enable')) {
+	BuildMessage("admin/lighttpd/enable was true");
+	
+	BuildMessage('$lighttpdConf = GetLighttpdConfig()');
+	my $lighttpdConf = GetLighttpdConfig();
+	
+	BuildMessage('===== beg $lighttpdConf =====');
+	BuildMessage($lighttpdConf);
+	BuildMessage('===== end $lighttpdConf =====');
+	
+	BuildMessage('PutFile(\'config/lighttpd.conf\', $lighttpdConf);');
+	PutFile('config/lighttpd.conf', $lighttpdConf);
+} else {
+	BuildMessage("admin/lighttpd/enable was false");
+}
 
 BuildMessage("system('perl gitflow.pl')...");
 
@@ -124,4 +138,10 @@ BuildMessage("Done!");
 
 PutFile('config/admin/build_end', GetTime());
 
+if (GetConfig('admin/lighttpd/enable')) {
+	system('time ./lighttpd.pl &');
+}
+
 WriteLog( "Finished!");
+
+system('perl ./loop.pl');
