@@ -455,9 +455,9 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						if ($recordDebugInfo) {
 							my $debugInfo = '>>' . $fileHash;
 							$debugInfo .= "\n\n";
-							$debugInfo .= $userAgent;
-							$debugInfo .= "\n";
 							$debugInfo .= "#meta #debug";
+							$debugInfo .= "\n";
+							$debugInfo .= $userAgent;
 							
 							my $debugFilename = 'debug_' . $fileHash . '.txt';
 							$debugFilename = 'html/txt/' . $debugFilename;
@@ -628,12 +628,14 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 #				my $eventDate = $eventDateString;
 
 				if (!$addedDates{$eventDate}) {
-					$addedDates{$eventDate} = 1;
-	
-					$newFile .= 'event/' . $eventDate . '/1';
-					$newFile .= "\n\n";
-	
-					#todo actually calculate the date and duration
+					if ($eventDate ne 'NaN') {
+						$addedDates{$eventDate} = 1;
+		
+						$newFile .= 'event/' . $eventDate . '/1';
+						$newFile .= "\n\n";
+		
+						#todo actually calculate the date and duration
+					}
 				}
 			}
 
