@@ -399,12 +399,35 @@ if (GetConfig('tag_cloud_page')) {
 
 MakeDataPage();
 
-my $homePageHasBeenWritten = PutHtmlFile('check_homepage');
+my $homePageHasBeenWritten = PutHtmlFile('check_homepage'); # this is not a mistake, but a special command in PutHtmlFile()
+# returns true if index.html has been written, false if not
+
 if ($homePageHasBeenWritten) {
 	WriteLog("Home Page has been written! Yay!");
 } else {
 	WriteLog("Warning! Home Page has not been written! Fixing that");
-	PutHtmlFile('html/index.html', GetFile('html/write.html'));
+	
+	if (-e 'html/write.html') {
+		WriteLog('-e html/write.html');
+		PutHtmlFile('html/index.html', GetFile('html/write.html'));
+	} elsif (-e 'html/top.html') {
+		WriteLog('-e html/top.html');
+		PutHtmlFile('html/index.html', GetFile('html/top.html'));
+	} else {
+		WriteLog('fallback for html/index.html');
+		PutHtmlFile('html/index.html', 
+			'problem writing homepage...<br>
+			see admin.<br>
+			try <a href="/top.html">Top Posts</a> or 
+			<a href="/write.html">Writing Something</a> or 
+			<a href="/stats.html">Check the Server Status</a>.'
+		); #todo make nicer
+	} 	
+	
+	$homePageHasBeenWritten = PutHtmlFile('check_homepage');
+	if ($homePageHasBeenWritten) {
+		
+	}
 }
 
 #}
