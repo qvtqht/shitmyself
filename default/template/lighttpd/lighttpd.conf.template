@@ -10,7 +10,7 @@ server.modules += (
 server.document-root = "$serverDocumentRoot" 
 
 # default port for local dev
-server.port = 3000 
+server.port = $serverPort 
 
 # max request field size
 server.max-request-field-size = 16384 
