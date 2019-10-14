@@ -1,21 +1,26 @@
-#bug
-	2 tabs
-		open write page in one tab
-		sign out in other tab
-		then try to submit from write page
-			expected: ??
-			actual: modal error, no profile
-				holdout from early days
+
+
+Write page -- client-side save of preferences
+	Checkbox already exists
+
+User keys should also be voteable on?
+	Isn't that what vouch does?
+		But also perhaps friend and flag and all that too?
+
+"Message the Admin(s)" link which goes to reply form on admin's pubkey page
+
+#bug GetConfig with default and no config doesn't get written into config
+	Expected: GetConfig --> config? no --> default? yes --> copy default to config
+	Actual: GetConfig --> config? no --> default? yes --> DOES NOT copy default to config
+
+Create a zip of sqlite db
 
 Prefill reply box with >>
-	Optinoally by default?
+	Optionally by default?
 	Because NN 1.22 does not seem to support <input type=hidden>
 
 setcontent/abcde/abcd2
 setcontent/{hash of 404 url}/{hash of content}
-
-127.0.0.1 - - [09/Oct/2019:01:26:46 -0400] "GET /post.html?comment=what+if+netscape+1.22+want+reply%3F%0D%0A%0D%0Acan+netscape+navigator+reply%3F%0D%0A%0D%0Athank+you%0D%0A%0D%0A--+the+netscape+navigator&replyto=d195272c47654c396fee991165236ba927eb102b HTTP/1.0" 200 17256 "http://localhost:3000/d1/95/d195272c47654c396fee991165236ba927eb102b.html" "Mozilla/1.22 (Windows; I; 32bit)"
--- where is post.html coming from?
 
 #bug nn4 js=on vote links do not work (js error)
 
