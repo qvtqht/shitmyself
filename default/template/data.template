@@ -3,5 +3,6 @@
 <p>All data on this message board is freely available for download in the following, but not limited to, formats:</p>
 
 <p><a href="/hike.zip">/hike.zip</a> ($sizeHikeZip)</p>
+<p><a href="/index.sqlite3.zip">/index.sqlite3.zip</a> ($sizeSqliteZip)</p>
 
 <!-- / data.template -->

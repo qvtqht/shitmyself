@@ -2070,6 +2070,40 @@ sub WriteIndexPages { # writes the abyss pages (index0-n.html)
 	}
 }
 
+sub GetLighttpdConfig {
+	my $conf = GetTemplate('lighttpd/lighttpd.conf.template');
+	print $conf;
+	
+	my $pwd = `pwd`;
+	chomp $pwd; # get rid of tailing newline
+	
+	my $docRoot = $pwd . '/' . 'html' . '/';
+	
+	$conf =~ s/\$serverDocumentRoot/$docRoot/;
+
+	if (GetConfig('admin/php/enable')) {
+		my $phpConf = GetTemplate('lighttpd/lighttpd_php.conf.template');
+		
+		WriteLog('$phpConf beg =====');
+		WriteLog($phpConf);
+		WriteLog('$phpConf end =====');
+		
+		$conf .= "\n" . $phpConf;
+	}
+	
+	if (GetConfig('admin/ssi/enable')) {
+		my $ssiConf = GetTemplate('lighttpd/lighttpd_ssi.conf.template');
+
+		WriteLog('$ssiConf beg =====');
+		WriteLog($ssiConf);
+		WriteLog('$ssiConf end =====');
+
+		$conf .= "\n" . $ssiConf;
+	}
+	
+	return $conf;
+}
+
 sub MakeFormPages { #generates and writes all 'form' pages (doesn't do anything atm)
 }
 
@@ -2115,10 +2149,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	$postPage = InjectJs($postPage, qw(avatar post prefs));
 
 	$postPage =~ s/<body /<body onload="makeRefLink();" /;
+	
+	WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
 
 	PutHtmlFile("$HTMLDIR/post.html", $postPage);
-
-
+	
+	
 	# Ok page
 	my $okPage = GetTemplate('action_ok.template');
 
@@ -2223,8 +2259,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
 	if (GetConfig('admin/php/enable')) {
-		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess.for.php.template')."\n";
-
+		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess_php.template')."\n";
 
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
@@ -2571,15 +2606,17 @@ sub MakeDataPage { # returns html for /data.html
 	my $lastZip = GetCache('last_zip');
 
 	if (!$lastZip || (GetTime() - $lastZip) > $zipInterval) {
-		WriteLog("Making zip file...");
-
-#		system("git archive --format zip --output html/hike.tmp.zip master");
-#		#system("git archive -v --format zip --output html/hike.tmp.zip master");
+		WriteLog("Making zip files...");
+		
+		# zip -qr foo.zip somefile
+		# -q for quiet
+		# -r for recursive
 
 		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log");
-		#system("zip -qrv $HTMLDIR/hike.tmp.zip ./txt/ ./log/votes.log .git/");
-
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
+		
+		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyVersion() . "/index.sqlite3");
+		rename("$HTMLDIR/index.sqlite3.zip.tmp", "$HTMLDIR/index.sqlite3.zip");
 
 		PutCache('last_zip', GetTime());
 	} else {
@@ -2594,13 +2631,20 @@ sub MakeDataPage { # returns html for /data.html
 	my $dataPageTemplate = GetTemplate('data.template');
 
 	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
+	my $sizeSqliteZip = -s "$HTMLDIR/index.sqlite3.zip";
 
 	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
 	if (!$sizeHikeZip) {
 		$sizeHikeZip = 0;
 	}
 
+	$sizeSqliteZip = GetFileSizeHtml($sizeSqliteZip);
+	if (!$sizeSqliteZip) {
+		$sizeSqliteZip = 0;
+	}
+
 	$dataPageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
+	$dataPageTemplate =~ s/\$sizeSqliteZip/$sizeSqliteZip/g;
 
 	$dataPage .= $dataPageTemplate;
 
