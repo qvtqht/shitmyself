@@ -1,0 +1,12 @@
+# php fastcgi connector
+fastcgi.server = (
+	".php" => (
+		(
+			"bin-path" => "/bin/php-cgi",
+			"socket" => "/tmp/php.socket"
+		)
+	)
+)
+
+# php rewrites
+url.rewrite = ( "post.html?(.+)" => "/post.php?$1" )
