@@ -1793,6 +1793,15 @@ if ($currAdmin) {
 		ServerSign("html/txt/$changeAdminFilename");
 
 		PutConfig("current_admin", $currAdmin);
+
+		require('./sqlite.pl');
+
+		if ($lastAdmin) {
+			DBAddPageTouch('author', $lastAdmin);
+		}
+		if ($currAdmin) {
+			DBAddPageTouch('author', $currAdmin);
+		}
 	}
 }
 
@@ -1841,7 +1850,7 @@ sub ServerSign { # Signs a given file with the server's key
 
 		WriteLog($gpgOutput);
 	} #todo here we should also verify that server.key.txt matches server_key_id
-
+	
 	# if everything is ok, proceed to sign
 	if ($serverKey) {
 		WriteLog("We have a server key, so go ahead and sign the file.");
