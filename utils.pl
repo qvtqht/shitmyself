@@ -1597,38 +1597,45 @@ sub EncryptMessage { # Encrypts message for target key (doesn't do anything yet)
 }
 
 sub AddItemToConfigList { # Adds a line to a list stored in config
-# $configList = reference to setting stored in config
+# $configPath = reference to setting stored in config
 # $item = item to add to the list (appended to the file)
 
-	my $configList = shift;
-	chomp($configList);
+	my $configPath = shift;
+	chomp($configPath);
 
 	my $item = shift;
 	chomp($item);
 
-	my $myHosts = GetConfig($configList);
+	# get existing list
+	my $configList = GetConfig($configPath);
+						  
+	if ($configList) {
+	# if there is something already there, go through all this stuff
+		my @configListAsArray = split("\n", $configList);
 
-	if ($myHosts) {
-
-		my @hostsArray = split("\n", $myHosts);
-
-		foreach my $h (@hostsArray) {
+		foreach my $h (@configListAsArray) {
+		# loop through each item on list and check if already exists
 			if ($h eq $item) {
+				# item already exists in list, nothing else to do
 				return;
 			}
 		}
 
-		$myHosts .= "\n";
-		$myHosts .= $item;
-		$myHosts = trim($myHosts);
-		$myHosts .= "\n";
+		#append to list
+		$configList .= "\n";
+		$configList .= $item;
+		$configList = trim($configList);
+		$configList .= "\n";
 	} else {
-		$myHosts = $item . "\n";
+	# if nothing is there, just add the requested item
+		$configList = $item . "\n";
 	}
 
-	$myHosts =~ s/\n\n/\n/g;
+	# remove any blank lines
+	$configList =~ s/\n\n/\n/g;
 
-	PutConfig($configList, $myHosts);
+	# put it back
+	PutConfig($configPath, $configList);
 }
 
 sub FormatForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
