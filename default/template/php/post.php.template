@@ -20,12 +20,11 @@ function GetHtmlComment($comment) {
 	
 	return $commentHtml;
 }
+	
+function ProcessNewComment($comment) {
+	$hash = '';
 
-if ($_GET) {
-	WriteLog('$_GET');
-	if (isset($_GET['comment'])) {
-		WriteLog('$_GET[\'comment\']');
-		
+	if (isset($comment) && $comment) {	
 		$pwd = getcwd();
 		
 		WriteLog('$pwd = ' . $pwd);
@@ -42,7 +41,6 @@ if ($_GET) {
 		
 		WriteLog('$htmlDir = ' . $htmlDir);
 		
-		$comment = $_GET['comment'];
 		$hash = sha1($comment);
 		
 		WriteLog('$comment = ' . $comment); 
@@ -111,40 +109,94 @@ if ($_GET) {
 		
 		file_put_contents($filePath, $comment);
 		
-//		$commentHtml = $comment; //getHtmlComment($fileHtmlPath);
 		$commentHtml = nl2br(str_replace('  ', ' &nbsp;', htmlspecialchars(wordwrap(trim($comment), 80, ' ', true), ENT_QUOTES|ENT_SUBSTITUTE, "UTF-8")));
 		
-		file_put_contents($fileHtmlPath, $commentHtml);
+		$newPage = '<html><body>';
+		$newPage .=	'<p>' . $commentHtml . '</p>';
+		$newPage .=	'<p>Address: '. $fileUrlPath . '<br>';
+		$newPage .=	'Hash: ' . $hash . '<br><br>';
+		$newPage .=	'<p>This page should be replaced with a formatted version soon.</p>';
+	
+		$newPage .=	'</body></html>';
 		
-//		header ('Location: ' . $fileUrlPath);
-
+		file_put_contents($fileHtmlPath, $newPage);
+		
+		exec('cd .. ; perl ./pages.pl "' . $hash . '"');
+		
 		if (!file_exists($scriptDir . 'cron.lock')) {
 			if (file_exists($scriptDir . '/index.pl')) {
-//				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+	//				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
 			}
 			
 			if (file_exists($scriptDir . '/gitflow.pl')) {
-//				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+	//				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
 			}
 		} else {
 		}
-	}
-	
-	if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
-		$referer = $_SERVER['HTTP_REFERER'];
 		
-//		header('Location: ' . $referer);
-	} else {
-//		header('Location: /write.html');
+		if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
+			$referer = $_SERVER['HTTP_REFERER'];
+			
+	//		header('Location: ' . $referer);
+		} else {
+	//		header('Location: /write.html');
+		}
+		
+		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 	}
 	
-	WriteLog(' $fileUrlPath = ' . $fileUrlPath);
+	return $fileUrlPath;
 }
 
+$fileUrlPath = '';
+
+if ($_POST) {
+	WriteLog('$_POST');
+	if (isset($_POST['comment'])) {
+		$comment = $_POST['comment'];
+	}
+	
+	if ($_POST['replyto']) {
+		$replyTo = $_POST['replyto']; 
+		$replyToToken = '>>' . $replyTo;
+		
+		$comment .= "\n\n" . $replyToToken;
+	}
+	
+	$fileUrlPath = ProcessNewComment($comment.'post');
+}
+
+if ($_GET) {
+	WriteLog('$_GET');
+	if (isset($_GET['comment'])) {
+		$comment = $_GET['comment'];
+	}
+	
+	
+	if ($_GET['replyto']) {
+		$replyTo = $_GET['replyto']; 
+		$replyToToken = '>>' . $replyTo;
+		
+		$comment .= "\n\n" . $replyToToken;
+	}
+	
+	$fileUrlPath = ProcessNewComment($comment.'get');
+}
+		
 $html = file_get_contents('post.html');
 
-if ($fileUrlPath) {
-	$html = str_replace('<!-- submitted_text -->', '<a href="' . $fileUrlPath . '">See what you just posted</a><br><br>', $html);
+if (isset($fileUrlPath) && $fileUrlPath) {
+	$postedMessage = file_get_contents('../config/template/php/just_posted.template');
+	if (!$postedMessage && file_exists('../default/template/php/just_posted.template')) {
+		copy ('../default/template/php/just_posted.template', '../config/template/php/just_posted.template');
+		$postedMessage = file_get_contents('../default/template/php/just_posted.template');
+	} else {
+		$postedMessage = '<a href="' . $fileUrlPath . '">See what you just posted</a><br><br>';
+	}
+	
+	$postedMessage = str_replace('$fileUrlPath', $fileUrlPath, $postedMessage); 
+	
+	$html = str_replace('<!-- submitted_text -->', $postedMessage, $html);
 }
 
 print($html);
