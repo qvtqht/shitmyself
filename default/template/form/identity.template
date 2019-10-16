@@ -29,11 +29,7 @@
 	</p>
 </noscript>
 
-<p id=loading class=loading>
-	<br><br>
-	Loading...
-	<br><br><br>
-</p>
+<p id=loading class=loading></p>
 
 $formIdCurrent
 

@@ -1,5 +1,11 @@
 // == begin crypto.js
 
+var loading = document.getElementById('loading');
+if (loading) {
+//	loading.style.display = 'none';
+	loading.innerHTML = '<br><br>Loading...<br><br><br>';
+}
+
 // these are used to globally store the user's fingerprint and username
 var myFingerprint = '';
 var myUsername = '';
@@ -104,9 +110,9 @@ function disarmSignoutButton(t) {
 	document.getElementById('locm').style.display='none';
 }
 
-var loading = document.getElementById('loading');
-if (loading) {
-	loading.style.display = 'none';
+var loadingDone = document.getElementById('loading');
+if (loadingDone) {
+	loadingDone.style.display = 'none';
 }
 
 
