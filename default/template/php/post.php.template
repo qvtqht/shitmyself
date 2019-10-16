@@ -163,7 +163,7 @@ if ($_POST) {
 		$comment .= "\n\n" . $replyToToken;
 	}
 	
-	$fileUrlPath = ProcessNewComment($comment.'post');
+	$fileUrlPath = ProcessNewComment($comment);
 }
 
 if ($_GET) {
@@ -180,7 +180,7 @@ if ($_GET) {
 		$comment .= "\n\n" . $replyToToken;
 	}
 	
-	$fileUrlPath = ProcessNewComment($comment.'get');
+	$fileUrlPath = ProcessNewComment($comment);
 }
 		
 $html = file_get_contents('post.html');
