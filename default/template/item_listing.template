@@ -2,7 +2,7 @@
 <tr>
 	<td><b><a href="$link">$itemTitle</a></b><br></td>
 	<td>$itemScore<br></td>
-	<td>$authorAvatar<br></td>
 	<td>$itemLastTouch<br></td>
+	<td>$authorAvatar<br></td>
 </tr>
 <!-- / item_listing.template -->

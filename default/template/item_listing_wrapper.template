@@ -3,8 +3,8 @@
 	<tr class=beginner>
 		<th width="60%" align=left>Title </th>
 		<th align=left>Score </th>
-		<th align=left>Author </th>
-		<th align=left>Replied<br> </th>
+		<th align=left>Replied </th>
+		<th align=left>Author <br></th>
 	</tr>
 	$itemListings
 </table>
