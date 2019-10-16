@@ -16,7 +16,6 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 			
 			if (window.location.pathname == '/author/' + myFp + '/') {
 			// #todo factor this out, as it should only be on /author/.. pages 
-				// Create a new element
 				var itsYou = document.getElementById('itsyou');
 				itsYou.innerHTML = 'This is you!';
 
