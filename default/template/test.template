@@ -1,0 +1,33 @@
+<!-- test.template -->
+<form>
+<font face=arial>
+<table width=60% cellspacing=0 cellpadding=3 style="border: 3px outset #c0c0c0;" class=item>
+	<tr bgcolor=#000080 class=titlebar>
+		<td>
+			<font color=white><b>Untitled</b></font>
+		</td>
+		<td valign=top align=right>
+			<font color=white><a href=#><button name=x_abc><b><font color=white>x</font></b></button></a></font>
+		</td>
+	</tr>
+	
+	<tr bgcolor=#eeeeee class=body>
+		<td colspan=2 style="border: 2px inset #c0c0c0">
+			<p>abcad</p>
+			<p>adfadsfadfa</p>
+			<p>asdfadfad</p>
+		</td>
+	</tr>
+	
+	<tr bgcolor=#c0c0c0 class=statusbar style="border: 2px inset #c0c0c0">
+		<td>
+			<p>Posted by <b>Admin</b> at 1571247455</p>
+		</td>
+		<td align=right>
+			<p>Score: 123414</p>
+		</td>
+	</tr>
+</table>
+</font>
+</form>
+<!-- / test.template -->

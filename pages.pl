@@ -2114,6 +2114,8 @@ sub MakeFormPages { #generates and writes all 'form' pages (doesn't do anything 
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 	WriteLog('MakeSummaryPages() BEGIN');
+	
+	PutHtmlFile("$HTMLDIR/test.html", GetTemplate('test.template'));
 
 	# Submit page
 	my $submitPage = GetWritePage();
@@ -2785,6 +2787,9 @@ my $arg1 = shift;
 if ($arg1) {
 	if (IsItem($arg1)) {
 		MakePage('item', $arg1);
+	}
+	if ($arg1 eq '--summary') {
+		MakeSummaryPages();
 	}
 }
 
