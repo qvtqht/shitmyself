@@ -111,6 +111,8 @@ voter id should (debatable) be generated once per page, but is currently generat
 
 when an encrypted message has multiple recipients, only the first is used.
 
+server_key_id is tricky, must be 16 chars all caps
+
 terminology
 ===========
 author = anyone with a private key who has posted at least one item
