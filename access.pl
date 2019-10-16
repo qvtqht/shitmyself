@@ -124,6 +124,21 @@ sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
 	return $filename;
 }
 
+sub LogError {
+	my $errorText = shift;
+
+	my $debugInfo = '#error #meta ' . $errorText;
+	
+	my $time = GetTime();
+
+	my $debugFilename = 'error_' . $time . '.txt';
+	
+	$debugFilename = 'html/txt/' . $debugFilename;
+
+	WriteLog('PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
+
+	PutFile($debugFilename, $debugInfo);
+}
 
 sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 # ProcessAccessLog (
@@ -176,6 +191,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	# The following section parses the access log
 	# Thank you, StackOverflow
 	foreach my $line (<LOGFILE>) {
+		WriteLog($line);
+	
 		#Check to see if we've already processed this line
 		# by hashing it and looking for its hash in %prevLines
 		my $lineHash = md5_hex($line);
@@ -224,15 +241,38 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 10;
 		$userAgent = substr($line, $notUseragentLength);
 
+		WriteLog('ProcessAccessLog: $date = ' . $date);
+
+		my $errorTrap = 0;
+
+		if (substr($date, 0, 1) ne '[') {
+			LogError('Date Format Wrong: ' . $line);
+			next;
+		}
+
 		# Split $date into $time and $date
 		my $time = substr($date, 13);
 		$date = substr($date, 1, 11);
 
+		WriteLog('ProcessAccessLog: $time = ' . $time);
+		WriteLog('ProcessAccessLog: $date = ' . $date);
+
 		# convert date to yyyy-mm-dd format
 		my ($dateDay, $dateMonth, $dateYear) = split('/', $date);
 		my %mon2num = qw(jan 01 feb 02 mar 03 apr 04 may 05 jun 06 jul 07 aug 08 sep 09 oct 10 nov 11 dec 12);
+		
+		if (!$dateDay || !$dateMonth || !$dateYear) {
+			LogError('Missing Date: ' . $line);
+			next;
+		}
+		
 		$dateMonth = lc($dateMonth);
 		$dateMonth = $mon2num{$dateMonth};
+
+		if (!$time) {
+			LogError('Missing Time: ' . $line);
+			next;
+		}
 
 		#my $dateIso = "$dateYear-$dateMonth-$dateDay";
 		my ($timeHour, $timeMinute, $timeSecond) = split(':', $time);
