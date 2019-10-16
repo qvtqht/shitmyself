@@ -19,8 +19,8 @@
 		</td>
 	</tr>
 	
-	<tr bgcolor=#eeeeee class=body>
-		<td style="border: 2px inset #c0c0c0" colspan=2>
+	<tr class=body>
+		<td class=content style="border: 2px inset #c0c0c0" colspan=2 bgcolor=#ffffff>
 			<p>abcad
 			<p>adfadsfadfa
 			<p>asdfadfad
