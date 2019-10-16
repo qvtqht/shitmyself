@@ -1,8 +1,7 @@
 // begin write_php.js
 
-
 function commentOnChange(t, formId) {
-	if (t.value.length > 10) {
+	if (t.value.length > 4096) {
 		if (document.getElementById) {
 			form = document.getElementById(formId);
 			if (form) {
