@@ -1,4 +1,24 @@
+#bug on Authors page
+	The first time new author appears, their author is not colorized nor has an alias
 
+Archiving
+	Select entries 
+		older than X seconds
+		Not voted on by anyone
+		Not part of a thread
+	Add to zip file
+	Remove from tree
+	
+Handling text file removal
+	Find deleted files via git
+	Remove item page
+	Rebuild all associated pages
+
+If item is a reply
+	If contains hashtag
+		Hashtag vote applies to parent
+
+Add one-click Bump button to top menu
 
 Write page -- client-side save of preferences
 	Checkbox already exists

@@ -1,3 +1,7 @@
+Setting to expand css settings to include "test ones"
+	e.g. -webkit-foo or -gecko-whatever
+
+
 Can HTML pages be patched instead of rewritten?
 	<span id=abcdef_score>1234</span>
 	
