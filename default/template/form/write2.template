@@ -13,6 +13,7 @@
 		cols=32
 		name=comment
 		autofocus
+		onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
 	>$initText</textarea><br>
 		
 	<p>
