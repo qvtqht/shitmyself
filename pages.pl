@@ -1279,6 +1279,7 @@ sub GetPageHeader { # returns html for page header
 	#top menu
 						  
 	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
+	my $noJsIndicator = '<noscript><strike><a href="/profile.html">Profile</a></strike></noscript>';
 	my $adminKey = GetAdminKey();
 
 	#todo replace with config/menu/*
@@ -1299,6 +1300,7 @@ sub GetPageHeader { # returns html for page header
 	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 
 	$topMenuTemplate .= $identityLink;
+	$topMenuTemplate .= $noJsIndicator;
 	
 	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
 	
@@ -2121,11 +2123,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $eventAddPage = GetEventAddPage();
 	PutHtmlFile("$HTMLDIR/event.html", $eventAddPage);
 
-
 	# Stats page
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
-
+	
+	my $fourOhFourPage = GetTemplate('404.template');
+	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
 
 	# Profile page
 	my $identityPage = GetIdentityPage();
@@ -2135,10 +2138,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $prefsPage = GetPrefsPage();
 	PutHtmlFile("$HTMLDIR/prefs.html", $prefsPage);
 
-
 	# Target page for the submit page
 	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
-	$postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+#	$postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
 	$postPage .= GetTemplate('maincontent.template');
 
@@ -2160,7 +2162,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Ok page
 	my $okPage = GetTemplate('action_ok.template');
 
-	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+#	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
 	#$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
@@ -2324,7 +2326,11 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile));
+	if (GetConfig('php/enable')) {
+		$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile));
+	} else {
+		$txtIndex = InjectJs($txtIndex, qw(avatar write write_php prefs profile));
+	}
 #	$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile geo));
 
 	# add call to writeOnload to page
@@ -2717,7 +2723,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 			WriteLog('PutHtmlFile($targetPath = ' . $targetPath . ', $filePage = ' . $filePage . ')');
 			PutHtmlFile($targetPath, $filePage);
 		} else {
-			WriteLog("gitflow.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
+			WriteLog("pages.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
 		}
 	}
 	#
@@ -2772,6 +2778,13 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	# summary pages
 	elsif ($pageType eq 'summary') {
 		MakeSummaryPages();
+	}
+}
+
+my $arg1 = shift;
+if ($arg1) {
+	if (IsItem($arg1)) {
+		MakePage('item', $arg1);
 	}
 }
 
