@@ -1,41 +1,41 @@
 <!-- test.template -->
 <meta name="viewport" content="width=device-width">
-<form>
+
 <font face=arial>
-<table width=60% cellspacing=0 cellpadding=3 border=3 style="border: 3px outset #c0c0c0;" class=item>
-	<tr bgcolor=#000080 class=titlebar>
+<table width=60% cellspacing=0 cellpadding=3 border=3 style="border: 2pt outset #c0c0c0;" class=item>
+	<tr bgcolor=#000080 class=titlebar style="border:0">
 		<td colspan=2>
 			<font color=white><b>Untitled</b></font>
 		</td>
 	</tr>
 	
 	<tr bgcolor=#c0c0c0 class=menubar>
-		<td colspan=2>
+		<td colspan=2 style="border:0">
 		<p>
-			<a href=#>Agree </a>
-			<a href=#>Reply </a>
-			<a href=#>Report </a> 
-			<a href=#>Help </a>
+			<a href=#>Agree</a>;
+			<a href=#>Reply</a>;
+			<a href=#>Report</a>;
+			<a href=#>Help</a>;
+			<a></a>
 		</td>
 	</tr>
 	
 	<tr class=body>
-		<td class=content style="border: 2px inset #c0c0c0" colspan=2 bgcolor=#ffffff>
+		<td class=content style="border: 1pt inset #c0c0c0" colspan=2 bgcolor=#ffffff>
 			<p>abcad
 			<p>adfadsfadfa
 			<p>asdfadfad
 		</td>
 	</tr>
 	
-	<tr bgcolor=#c0c0c0 class=statusbar style="border: 2px inset #c0c0c0">
-		<td>
+	<tr bgcolor=#c0c0c0 class=statusbar>
+		<td style="border: 1pt inset #c0c0c0">
 			<p>Posted by <b>Admin</b> at 1571247455
 		</td>
-		<td align=right>
+		<td align=right style="border: 1pt inset #c0c0c0">
 			<p>Score: 123414
 		</td>
 	</tr>
 </table>
 </font>
-</form>
 <!-- / test.template -->
