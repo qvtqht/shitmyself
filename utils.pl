@@ -697,6 +697,8 @@ sub GetConfig { # gets configuration value based for $key
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 
+			WriteLog('PutConfig (' . $configName . ', ' . $configValue .');');
+
 			PutConfig ($configName, $configValue);
 
 			return $configValue;
@@ -863,9 +865,9 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 	my $content = shift;
 	my $binMode = shift;
 
-	if (!$content) {
-		return;
-	}
+#	if (!$content) {
+#		return;
+#	}
 	if (!$binMode) {
 		$binMode = 0;
 	} else {
@@ -958,7 +960,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 
 		$content =~ s/src="\//src="$subDir/ig;
 		$content =~ s/href="\//href="$subDir/ig;
-		$content =~ s/\.src = '\//src = '$subDir/ig;
+		$content =~ s/\.src = '\//.src = '$subDir/ig;
 	}
 
 #	if (GetConfig('admin/debug')) {
