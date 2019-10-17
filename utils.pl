@@ -65,7 +65,7 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 # create repo if html/txt/.git/ is missing
 if (!-e 'html/txt/.git') {
 	my $pwd = `pwd`;
-	system("cd html/txt/ ; git init ; cd $pwd");
+	system("git --git-dir=html/txt/.git init");
 }
 
 # figure out whether to use gpg or gpg2 command for gpg stuff
@@ -348,8 +348,7 @@ sub GetFileHash { # $fileName ; returns git's hash of file contents
 
 	WriteLog("GetFileHash($fileName)");
 
-	my $gitOutput = `git hash-object -w "$fileName"`;
-	#my $gitOutput = `sha1sum "$fileName" | cut -d ' ' -f 1`;
+	my $gitOutput = `git --git-dir=html/txt/.git hash-object -w "$fileName"`;
 
 	chomp($gitOutput);
 
@@ -913,6 +912,8 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	my $file = shift;
 	my $content = shift;
 	my $itemHash = shift; #optional
+	
+	my $relativizeUrls = GetConfig('html/relativize_urls');
 
 	state $homePageWritten;
 	if (!defined($homePageWritten)) {
@@ -939,6 +940,25 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	if ($stripNonAscii == 1) {
 		WriteLog( '$stripNonAscii == 1');
 		$content =~ s/[^[:ascii:]]//g;
+	}
+	
+	if ($relativizeUrls == 1) {
+		# src="/
+		# href="/
+		# .src = '/
+
+		my $count = ($file =~ s/\//\//g);
+		
+		my $subDir;
+		if ($count == 1) {
+			$subDir = './';
+		} else {
+			$subDir = '../' x ($count - 1);
+		}
+
+		$content =~ s/src="\//src="$subDir/ig;
+		$content =~ s/href="\//href="$subDir/ig;
+		$content =~ s/\.src = '\//src = '$subDir/ig;
 	}
 
 #	if (GetConfig('admin/debug')) {

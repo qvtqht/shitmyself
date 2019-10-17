@@ -2,7 +2,7 @@
 
 # the purpose of this script is to
 #   find new items in html/txt
-#   run IndexFile() on them
+#   run IndexTextFile() on them
 #   re-generate affected pages
 #		via the page_touch table
 
@@ -123,14 +123,11 @@ if (!$locked) {
 	}
 	
 	if (!-e 'html/txt/.git') {
-		my $pwd = `pwd`;
+		WriteLog("git --git-dir=html/txt/.git init 2>&1");
 	
-	#	WriteLog("cd html/txt; git init; cd $pwd");
-		WriteLog("cd html/txt; git init; git add *; git commit -m first commit; cd $pwd");
-	
-	#	my $gitOutput = `cd html/txt; git init; git add *; git commit -m first commit; cd $pwd`;
-	
-	#	WriteLog($gitOutput);
+		my $gitOutput = `git --git-dir=html/txt/.git init 2>&1`;
+		
+		WriteLog($gitOutput);
 	}
 	
 	# See if gitflow/file_limit setting exists
@@ -142,8 +139,8 @@ if (!$locked) {
 	}
 	
 	# Use git to find files that have changed in txt/ directory
-	WriteLog("\$gitChanges = cd html/txt; git add . ; git status --porcelain | grep \"^A\" | head -n $filesLimit | cut -c 4-; cd ../..");
-	my $gitChanges = `cd html/txt; git add . ; git status --porcelain | grep "^A" | head -n $filesLimit | cut -c 4-; cd ../..`;
+	WriteLog('$gitChanges = git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | head -n $filesLimit');
+	my $gitChanges = `git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | head -n $filesLimit`;
 	
 	WriteLog('$gitChanges = ' . $gitChanges);
 	
@@ -169,70 +166,69 @@ if (!$locked) {
 			WriteLog("Time limit reached, exiting loop");
 			last;
 		}
-	
+		
 		# Trim the file path
+		chomp $file;
 		$file = trim($file);
-	
-		# Add the txt/ path prefix
-		my $fileFullPath = 'html/txt/' . $file;
-	
+		
 		# Log it
-		WriteLog('$file = ' . $file . " ($fileFullPath)");
+		WriteLog('gitflow.pl: $file = ' . $file);
 			
 		#todo add rss.txt addition
 	
 		# If the file exists, and is not a directory, process it
-		if (-e $fileFullPath && !-d $fileFullPath) {
+		if (-e $file && !-d $file) {
 			my $addedTime = GetTime2();
+
+			WriteLog('gitflow.pl: $addedTime = ' . $addedTime); 
 	
 			# get file's hash from git
-			my $fileHash = GetFileHash($fileFullPath);
-	
+			my $fileHash = GetFileHash($file);
+
+			WriteLog('gitflow.pl: $fileHash = ' . $fileHash); 
+				
 			# if deletion of this file has been requested, skip
 			if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-				unlink($fileFullPath);
-				WriteLog("gitflow.pl: $fileHash exists in deleted.log, skipping");
+				unlink($file);
+				WriteLog("gitflow.pl: $fileHash exists in deleted.log, file removed and skipped");
 				next;
 			}
-	
-			my $fileHashPath;
-			# may need to check if file has been renamed
+
 			if (GetConfig('admin/organize_files')) {
-				$fileHashPath = GetFileHashPath($fileFullPath);
-			}
-	
-			# index file, flush immediately (why? #todo)
-			IndexTextFile($fileFullPath);
-			IndexTextFile('flush');
-	
-			# check if file has been renamed
-			if (GetConfig('admin/organize_files') && $fileHashPath) {
-				if (!-e $fileFullPath) {
+			# organize files aka rename to hash-based path
+				my $fileHashPath = GetFileHashPath($file);
+
+				WriteLog('gitflow.pl: $fileHashPath = ' . $fileHashPath);
+				
+				if ($fileHashPath && $file ne $fileHashPath) {
+					WriteLog('gitflow.pl: renaming ' . $file . ' to ' . $fileHashPath);
+					rename($file, $fileHashPath);
+					
 					if (-e $fileHashPath) {
-						$fileFullPath = $fileHashPath;
+						$file = $fileHashPath;
 					}
 				}
 			}
-	
+
+			WriteLog('gitflow.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
+			
 			# add a time_added record
 			DBAddAddedTimeRecord($fileHash, $addedTime);
-	
-			# remember pwd (current working directory);
-			my $pwd = `pwd`;
+
+			WriteLog('gitflow.pl: IndexTextFile(' . $file . ')');
+			
+			IndexTextFile($file);
 	
 			# run commands to
 			#	  add changed file to git repo
 			#    commit the change with message 'hi' #todo
 			#    cd back to pwd
 			
-			my $fileGitPath = substr($fileFullPath, 9);
-			
-			WriteLog("cd html/txt; git add \"$fileGitPath\"; git commit -m hi \"$fileGitPath\"; cd $pwd");
-			my $gitCommit = `cd html/txt; git add "$fileGitPath"; git commit -m hi "$fileGitPath"; cd $pwd`;
-			#todo there's a minor bug here related to organize_files
+			WriteLog("git --git-dir=html/txt/.git add \"$file\" 2>&1; git --git-dir=html/txt/.git commit -m automated_commit \"$file\" 2>&1");
+			my $gitCommit = `git --git-dir=html/txt/.git add "$file" 2>&1; git --git-dir=html/txt/.git commit -m automated_commit "$file" 2>&1`;
 	
 			# write git's output to log
-			WriteLog($gitCommit);
+			WriteLog('Result: ' . $gitCommit);
 	
 	#		# below is for debugging purposes
 	#
@@ -244,9 +240,11 @@ if (!$locked) {
 	#		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
 		} else {
 			# this should not happen
-			WriteLog("Error! $fileFullPath doesn't exist!");
+			WriteLog("Error! $file doesn't exist!");
 		}
 	}
+
+	IndexTextFile('flush');
 	
 	WriteIndexedConfig();
 	
