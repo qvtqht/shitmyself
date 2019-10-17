@@ -1076,7 +1076,7 @@ sub IndexTextFile { # indexes one text file into database
 				if ($detokenedMessage) {
 					my $firstEol = index($detokenedMessage, "\n");
 
-					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 140
+					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
 					
 					if ($firstEol >= 0) {
 						my $title = '';
