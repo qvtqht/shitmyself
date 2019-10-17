@@ -8,16 +8,14 @@ body {
 .tag-troll, 
 .tag-spam, 
 .tag-abuse {
-	color: #c08080;
-	background-color: #fff0f0;
+	color: #ee0000;
 }
 
 /* positive (green) tags */
 .tag-accept, 
 .tag-friend, 
 .tag-attend {
-	color: #80c080;
-	background-color: #f0fff0;
+	color: #00a000;
 }
 
 /* special tags */
