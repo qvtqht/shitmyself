@@ -134,14 +134,23 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
-BuildMessage("system('perl gitflow.pl')...");
-
-system('perl gitflow.pl');
-
+if (GetConfig('admin/build/gitflow_after')) {
+	BuildMessage("system('perl gitflow.pl')...");
+	
+	system('perl gitflow.pl');
+}
+	
 BuildMessage("Done!");
 
 PutFile('config/admin/build_end', GetTime());
 
 WriteLog( "Finished!");
 
-system('perl ./loop.pl');
+if (GetConfig('admin/build/loop_after')) {
+	WriteLog('Starting loop.pl...');
+
+	system('perl ./loop.pl');
+}
+
+
+1;
