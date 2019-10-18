@@ -23,6 +23,7 @@ function GetHtmlComment($comment) {
 	
 function ProcessNewComment($comment) {
 	$hash = '';
+	$fileUrlPath = '';
 
 	if (isset($comment) && $comment) {	
 		$pwd = getcwd();
@@ -125,11 +126,11 @@ function ProcessNewComment($comment) {
 		
 		if (!file_exists($scriptDir . 'cron.lock')) {
 			if (file_exists($scriptDir . '/index.pl')) {
-	//				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+				//exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
 			}
 			
 			if (file_exists($scriptDir . '/gitflow.pl')) {
-	//				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+				//exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
 			}
 		} else {
 		}
@@ -156,7 +157,7 @@ if ($_POST) {
 		$comment = $_POST['comment'];
 	}
 	
-	if ($_POST['replyto']) {
+	if (isset($_POST['replyto']) && $_POST['replyto']) {
 		$replyTo = $_POST['replyto']; 
 		$replyToToken = '>>' . $replyTo;
 		
@@ -173,7 +174,7 @@ if ($_GET) {
 	}
 	
 	
-	if ($_GET['replyto']) {
+	if (isset($_GET['replyto']) && $_GET['replyto']) {
 		$replyTo = $_GET['replyto']; 
 		$replyToToken = '>>' . $replyTo;
 		
@@ -186,8 +187,9 @@ if ($_GET) {
 $html = file_get_contents('post.html');
 
 if (isset($fileUrlPath) && $fileUrlPath) {
-	$postedMessage = file_get_contents('../config/template/php/just_posted.template');
-	if (!$postedMessage && file_exists('../default/template/php/just_posted.template')) {
+	if (file_exists('../config/template/php/just_posted.template')) {
+		$postedMessage = file_get_contents('../config/template/php/just_posted.template');
+	} elseif (file_exists('../default/template/php/just_posted.template')) {
 		copy ('../default/template/php/just_posted.template', '../config/template/php/just_posted.template');
 		$postedMessage = file_get_contents('../default/template/php/just_posted.template');
 	} else {
