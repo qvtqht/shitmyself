@@ -1,7 +1,7 @@
 <!-- topmenu.template -->
 <font face=arial>
-	<table cellspacing=0 cellpadding=5 border=0 bgcolor="#c0c0c0" class=dialo width=100%>
-		<tr bgcolor=#000080 class=titlebar style="border:0">
+	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialo width=100%>
+		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2><small>
 				<a href="#maincontent"><font color=white>Skip to main content</font></a>
 			</small></td>
@@ -13,7 +13,7 @@
 					$menuItems
 				</p>
 			</td>
-			<td class=clockContainer align=right style="border: 1pt inset #c0c0c0;">
+			<td class=clockContainer align=right style="border: 1pt inset $colorWindow;">
 				$clock
 			</td>
 		</tr>

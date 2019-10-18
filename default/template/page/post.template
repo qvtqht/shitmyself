@@ -1,19 +1,29 @@
 <!-- post.template -->
-<p>
-    <b>Thank you!</b>
-    
-    What would you like to do next?
-</p>
+<font face=arial>
+    <table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+        <tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+            <td>
+                <font color=white><b>Submission Received!</b></font>
+            </td>
+        </tr>
 
-<!-- submitted_text -->
+        <tr class=menubar>
+            <td>
+                <p>
+            </td>
+        </tr>
 
-<pre class=advanced>
-    _   _                 _
-   | |_| |__   __ _ _ __ | | __
-   | __| '_ \ / _` | '_ \| |/ /
-   | |_| | | | (_| | | | |   <
-    \__|_| |_|\__,_|_| |_|_|\_\
-</pre>
-<p><a href="./">Continue to Home Page</a></p>
-<p><b><span id=retRef></span></b></p>
+        <tr class=body>
+            <td class=content>
+                <p><b>Thank you!</b>
+				<p>Submission received, and is being cataloged.
+                <p>What would you like to do next?
+				<p><a href="./">Continue to Home Page</a></p>
+				<p><b><span id=retRef></span></b>
+				<p><span class=advanced><!-- submitted_text --></span>
+			</td>
+		</tr>
+	</table>
+</font>
+
 <!-- / post.template -->

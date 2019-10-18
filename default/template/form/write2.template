@@ -1,6 +1,6 @@
 <!--# write2.template #-->
 
-<form action="./post.html" id=compose class=submit name=submit>
+<form action="/post.html" id=compose class=submit name=submit>
 	<span id=writeintro></span>
 
 	<label for="comment" class=beginner>Write something here. Press button to send.</label><br>

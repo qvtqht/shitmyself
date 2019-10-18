@@ -1,0 +1,32 @@
+<!-- item_listing_wrapper2.template -->
+<font face=arial>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<td colspan=4>
+				<font color=white><b>Top Threads</b></font>
+			</td>
+		</tr>
+
+		<tr class=menubar>
+			<td colspan=4>
+				<p>
+			</td>
+		</tr>
+
+		<tr class=heading>
+			<th width="60%" align=left>Title </th>
+			<th align=left>Score </th>
+			<th align=left>Replied </th>
+			<th align=left>Author <br></th>
+		</tr>
+
+		$itemListings
+
+		<tr class=menubar>
+			<td colspan=4>
+				<p></p><b><a href="/write.html">New Topic</a></b>
+			</td>
+		</tr>
+	</table>
+</font>
+<!-- / item_listing_wrapper2.template -->

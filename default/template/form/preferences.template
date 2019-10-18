@@ -1,43 +1,59 @@
 <!-- preferences.template -->
 <form id=formCurId name=formCurId style="display:none">
-	<p class=beginner>
-		<big><b><span class=advanced>Client-Side</span> Preferences</b></big>
-	</p>
+	<font face=arial>
+		<table cellspacing=0 width=60% cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+				<td>
+					<font color=white><b><span class=advanced>Client-Side</span> Preferences</b></font>
+				</td>
+			</tr>
 
-	<label for=curIdAdvC>
-		<input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
-		Show advanced options
-	</label>
-	
-	<span id=curIdAdv style="display:none">
-		<p>
-			<label for=advancedHighlight class=advanced>
-				<input type=checkbox id=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
-				Highlight advanced options
-			</label>
-		</p>
+			<tr class=menubar>
+				<td>
+					<p><a href=#>Reset</a>
+				</td>
+			</tr>
 
-		<p>
-			<label for=beginnerC><input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
-			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight>
-				<input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints
-			</label></span>
-		</p>
-		
-		<p>
-			<label for=displayUsername>
-				<input type=checkbox id=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
-				Display my username in top menu
-			</label>
-		</p>
-		
-		<p>
-			<label for=reloadChanged>
-				<input type=checkbox id=reloadChanged onchange="saveCheckbox(0, this, 'notify_on_change');">
-				Notify if page has changed
-			</label>
-		</p>
-
-	</span>
+			<tr class=body>
+				<td class=content>
+					<label for=curIdAdvC>
+						<input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
+						Show advanced options
+					</label>
+					
+					<span id=curIdAdv style="display:none">
+						<p>
+							<label for=advancedHighlight class=advanced>
+								<input type=checkbox id=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
+								Highlight advanced options
+							</label>
+						</p>
+				
+						<p>
+							<label for=beginnerC><input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
+							<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight>
+								<input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints
+							</label></span>
+						</p>
+						
+						<p>
+							<label for=displayUsername>
+								<input type=checkbox id=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
+								Display my username in top menu
+							</label>
+						</p>
+						
+						<p>
+							<label for=reloadChanged>
+								<input type=checkbox id=reloadChanged onchange="saveCheckbox(0, this, 'notify_on_change');">
+								Notify if page has changed
+							</label>
+						</p>
+				
+					</span>
+				</td>
+			</tr>
+		</table>
+	</font>
 </form>
 <!-- / preferences.template -->

@@ -1,0 +1,63 @@
+<!--# write3.template #-->
+
+<form action="/post.html" id=compose class=submit name=submit>
+	<font face=arial>
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+				<td>
+					<font color=white><b>New Message</b></font>
+				</td>
+			</tr>
+
+			<tr class=menubar>
+				<td>
+					<p>
+				</td>
+			</tr>
+
+			<tr class=body>
+				<td class=content>
+					<span id=writeintro></span>
+
+					<label for="comment" class=beginner>To make topic, must use paragraphs.</label><br>
+
+					<textarea
+						class=txtarea
+						id=comment
+						title="Enter some text to share here."
+						rows=9
+						cols=32
+						name=comment
+						autofocus
+						onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
+						onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
+					>$initText</textarea><br>
+
+					<p>
+						<input type=submit onclick="if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
+					</p>
+
+					<p class=advanced>
+						<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
+						<span id=userRadio></span>
+					</p>
+					<!---->
+					<!--<p class=advanced>-->
+						<!--<a href=# onclick="insertGeo(); return false;">Insert location</a>-->
+					<!--</p>-->
+
+					<p class=advanced>
+						<label for=debug><input type=checkbox id=debug name=debug> Record debugging information</label><br>
+						<label for=recfing><input type=checkbox id=recfing name=recfing> Record device fingerprint</label><br>
+						<label for=rectime><input type=checkbox id=rectime name=rectime> Record submission timestamp</label>
+					</p>
+
+					<p class=advanced>
+					   <label for=saveit><input type=checkbox id=saveit> Save form settings (client-side)</label>
+					</p>
+				</td>
+			</tr>
+		</table>
+	</font>
+</form>
+<!--# / write3.template #-->

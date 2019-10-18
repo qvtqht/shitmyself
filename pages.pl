@@ -328,7 +328,7 @@ sub GetVotesPage { # returns html for tags listing page (sorted by number of use
 		$voteItems .= $voteItemTemplate;
 	}
 
-	$txtIndex .= '<p><b>Popular</b> <a href="/tags_alpha.html">Alphabetical</a></p>';
+#	$txtIndex .= '<p><b>Popular</b> <a href="/tags_alpha.html">Alphabetical</a></p>';
 
 	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
 
@@ -386,7 +386,7 @@ sub GetTagsPage { # returns html for tags listing page (alphabetically sorted)
 		$voteItems .= $voteItemTemplate;
 	}
 
-	$txtIndex .= '<p><a href="/tags.html">Popular</a> <b>Alphabetical</b></p>';
+#	$txtIndex .= '<p><a href="/tags.html">Popular</a> <b>Alphabetical</b></p>';
 	#todo this should not be part of maincontent
 
 	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
@@ -621,7 +621,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 		$fileContents = GetFile($file{'file_path'});
 
-		$replyForm = GetTemplate('form/reply.template');
+		$replyForm = GetTemplate('form/reply3.template');
 #		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
 		$replyFooter = '';
 		$replyTo = $file{'file_hash'};
@@ -685,11 +685,15 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 	my $fileHash = shift;
 	my $tagSet = shift;
 
+	WriteLog('GetItemVoteButtons(' . ($fileHash?$fileHash:'-') . ', ' . ($tagSet?$tagSet:'-') . ')');
+
 	#todo sanity checks
 
 	my @quickVotesList;
 
 	my %voteTotals = DBGetItemVoteTotals($fileHash);
+
+	WriteLog('GetItemVoteButtons(' . scalar(%voteTotals) . ')');
 	
 	if ($tagSet) {
 		my $quickVotesForTagSet = GetConfig('tagset/' . $tagSet);
@@ -714,12 +718,15 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 		my %dedupe = map { $_, 1 } @quickVotesList;
 		@quickVotesList = keys %dedupe;
 	}
+	
+	push @quickVotesList, 'flag';
 
 	my $styleSheet = GetStylesheet();
 
-	my $quickVoteTemplate = GetTemplate('votequick.template');
 	my $tagButtons = '';
 	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
+	
+	WriteLog('GetItemVoteButtons: @quickVotesList = ' . scalar(@quickVotesList));
 
 	foreach my $quickTagValue (@quickVotesList) {
 		my $ballotTime = GetTime();
@@ -742,7 +749,7 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 
 			if ($voteTotals{$quickTagCaption}) {
 				$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
-				$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
+#				$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
 			}
 
 			$tagButton =~ s/\$fileHash/$fileHash/g;
@@ -754,6 +761,8 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 			$tagButtons .= $tagButton;
 		}
 	}
+
+	WriteLog('GetItemVoteButtons returning: ' . $tagButtons);
 
 	return $tagButtons;
 }
@@ -896,10 +905,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# otherwise, determine template based on item length (config/item_long_threshold)
 			if (length($message) > GetConfig('item_long_threshold')) {
 				# if item is long, use template/item/itemlong.template
-				$itemTemplate = GetTemplate("item/itemlong.template");
+				$itemTemplate = GetTemplate("item/item2.template");
 			} else {
 				# otherwise use template/item/item.template
-				$itemTemplate = GetTemplate("item/item.template");
+				$itemTemplate = GetTemplate("item/item2.template");
 			}
 		}
 
@@ -967,9 +976,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $borderColor = '#' . substr($fileHash, 0, 6); # item's border color
 
 		my $addedTime = ''; #todo
-
+										  
 		if ($file{'item_title'}) {
-			my $itemTitleTemplate = GetTemplate('itemtitlelink.template');
+			my $itemTitleTemplate = GetTemplate('itemtitlelink2.template');
 
 			my $itemTitle = HtmlEscape($file{'item_title'});
 
@@ -1001,6 +1010,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 #			$itemTemplate =~ s/\$replyCount//g;
 #		}
 
+
 		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 		#todo this call is only needed if show_vote_summary or show_qiuck_vote
 
@@ -1025,74 +1035,21 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$votesSummary//g;
 		}
 
-		if ($file{'show_quick_vote'}) {
-			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-
-			my @quickVotesList;
-
-			my $quickVotesForTags;
-
-			foreach my $voteTag (keys %voteTotals) {
-				$quickVotesForTags = GetConfig('tagset/' . $voteTag);
-				if ($quickVotesForTags) {
-					push @quickVotesList, split("\n", $quickVotesForTags);
-				}
+		if (defined($file{'show_quick_vote'})) {
+			WriteLog('GetItemTemplate: $file{\'show_quick_vote\'} = ' . $file{'show_quick_vote'});
+	
+			if ($file{'show_quick_vote'}) {
+				my $quickVotesButtons = GetItemVoteButtons($file{'file_hash'}, 'hastext'); #todo refactor to take vote totals directly
+				
+				my $quickVoteButtonGroup = GetTemplate('voteqiuck2.template');
+				$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
+	
+				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteButtonGroup/;
+				$itemTemplate =~ s/\$infoBox/$quickVoteButtonGroup/;
 			}
-
-			$quickVotesForTags = GetConfig('tagset/' . 'all');
-			if ($quickVotesForTags) {
-				unshift @quickVotesList, split("\n", $quickVotesForTags);
-			}
-
-			my %dedupe = map { $_, 1 } @quickVotesList;
-			@quickVotesList = keys %dedupe;
-
-			if (1) {
-				my $styleSheet = GetStylesheet();
-
-				my $quickVoteTemplate = GetTemplate('votequick.template');
-				my $tagButtons = '';
-				foreach my $quickTagValue (@quickVotesList) {
-					my $ballotTime = GetTime();
-					if ($fileHash && $ballotTime) {
-						my $mySecret = GetConfig('admin/secret');
-						my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
-
-						my $tagButton = GetTemplate('vote2button.template');
-
-						my $quickTagCaption = GetString($quickTagValue);
-						
-						if ($voteTotals{$quickTagCaption}) {
-							$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
-							$quickTagCaption = '<b>' . $quickTagCaption . '</b>';
-						}
-						
-						$tagButton =~ s/\$fileHash/$fileHash/g;
-						$tagButton =~ s/\$ballotTime/$ballotTime/g;
-						$tagButton =~ s/\$voteValue/$quickTagValue/g;
-						$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
-						$tagButton =~ s/\$checksum/$checksum/g;
-
-						# this is a hack, eventually should be replaced by config/tag_color #todo
-						if (index($styleSheet, "tag-$quickTagValue") > -1) {
-							$tagButton =~ s/\$class/tag-$quickTagValue/g;
-						} else {
-							$tagButton =~ s/class="\$class"//g;
-						}
-
-						$tagButtons .= $tagButton;
-					}
-				}
-
-				$quickVoteTemplate =~ s/\$quickVoteButtons/$tagButtons/;
-
-				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteTemplate/;
-			} else {
-				$itemTemplate =~ s/\$quickVoteButtonGroup//;
-			}
-		} else {
-			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
+
+		$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 
 		return $itemTemplate;
 	} else {
@@ -1150,6 +1107,7 @@ my $primaryColor;
 my $secondaryColor;
 my $backgroundColor;
 my $textColor;
+my $linkColor = '';
 
 sub GetPageHeader { # returns html for page header
 	my $title = shift; # page title
@@ -1184,19 +1142,22 @@ sub GetPageHeader { # returns html for page header
 	my $txtIndex = "";
 
 	#my @primaryColorChoices = qw(008080 c08000 808080 8098b0 c5618e);
-	my @primaryColorChoices = split("\n", GetConfig('primary_colors'));
+	my @primaryColorChoices = split("\n", GetConfig('theme/color_primary'));
 	$primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
 
-	my @secondaryColorChoices = split("\n", GetConfig('secondary_colors'));
+	my @secondaryColorChoices = split("\n", GetConfig('theme/color_secondary'));
 	$secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
 
-	my $backgroundColorChoices = split("\n", GetConfig('background_colors'));
-	$backgroundColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
+	my @backgroundColorChoices = split("\n", GetConfig('theme/color_background'));
+	$backgroundColor = "#" . $backgroundColorChoices[int(rand(@backgroundColorChoices))];
 
-	my @textColorChoices = split("\n", GetConfig('text_colors'));
+	my @textColorChoices = split("\n", GetConfig('theme/color_text'));
 	$textColor = "#" . $textColorChoices[int(rand(@textColorChoices))];
 
+	my @linkColorChoices = split("\n", GetConfig('theme/color_link'));
+	$linkColor = "#" . $linkColorChoices[int(rand(@linkColorChoices))];
 
+	
 	#my $primaryColor = '#'.$primaryColorChoices[0];
 	#my $secondaryColor = '#f0fff0';
 	my $neutralColor = '#202020';
@@ -1247,15 +1208,49 @@ sub GetPageHeader { # returns html for page header
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
 	
-	if (GetConfig('logo/enabled')) {
-		$htmlStart =~ s/\$logoText/$logoText/g;
-	} else {
-		$htmlStart =~ s/\$logoText/$logoText/g;
-	}
+	#
+#	if (GetConfig('funstuff/js_clock')) {
+#		my $jsClock = Get
+#		$htmlStart =~ s/\$putClockHere/$putClockHere/g;
+#
+#	}
+
+	#top menu
+						  
+	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
+	my $noJsIndicator = '<noscript><strike><a href="/profile.html">Profile</a></strike></noscript>';
+	my $adminKey = GetAdminKey();
+
+	my $topMenuTemplate = GetTemplate('topmenu.template');
 	
+	my $menuItems = '';
+
+	#todo replace with config/menu/*
+	$menuItems .= GetMenuItem("/", 'Read');
+	$menuItems .= GetMenuItem("/write.html", GetString('menu/write'));
+	$menuItems .= GetMenuItem("/top.html", 'Topics');
+	$menuItems .= GetMenuItem("/events.html", 'Events');
+	$menuItems .= GetMenuItem("/authors.html", 'Authors');
+#	$menuItems .= GetMenuItem("/prefs.html", 'Prefs', 1);
+	$menuItems .= GetMenuItem("/stats.html", 'Status', 1);
+	$menuItems .= GetMenuItem("/tags.html", 'Tags', 1);
+	$menuItems .= GetMenuItem("/index0.html", 'Abyss', 1);
+	if ($adminKey) {
+		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
+	}
+	$menuItems .= GetMenuItem("/manual.html", 'Help');
+
+	$menuItems .= $identityLink;
+	$menuItems .= $noJsIndicator;
+
+	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
+	
+	$htmlStart =~ s/\$topMenu/$topMenuTemplate/g;
+
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
+	$htmlStart =~ s/\$linkColor/$linkColor/g;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$backgroundColor/$backgroundColor/g;
@@ -1266,44 +1261,15 @@ sub GetPageHeader { # returns html for page header
 	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
 	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
 	$htmlStart =~ s/\$clock/$clock/g;
-
-	#
-#	if (GetConfig('funstuff/js_clock')) {
-#		my $jsClock = Get
-#		$htmlStart =~ s/\$putClockHere/$putClockHere/g;
-#
-#	}
-
 	$htmlStart =~ s/\$introText/$introText/g;
 
-	#top menu
-						  
-	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
-	my $noJsIndicator = '<noscript><strike><a href="/profile.html">Profile</a></strike></noscript>';
-	my $adminKey = GetAdminKey();
 
-	#todo replace with config/menu/*
-	my $topMenuTemplate = "";
-
-	$topMenuTemplate .= GetMenuItem("/", 'Read');
-	$topMenuTemplate .= GetMenuItem("/write.html", GetString('menu/write'));
-	$topMenuTemplate .= GetMenuItem("/top.html", 'Topics');
-	$topMenuTemplate .= GetMenuItem("/events.html", 'Events');
-	$topMenuTemplate .= GetMenuItem("/authors.html", 'Authors');
-#	$topMenuTemplate .= GetMenuItem("/prefs.html", 'Prefs', 1);
-	$topMenuTemplate .= GetMenuItem("/stats.html", 'Status', 1);
-	$topMenuTemplate .= GetMenuItem("/tags.html", 'Tags', 1);
-	$topMenuTemplate .= GetMenuItem("/index0.html", 'Abyss', 1);
-	if ($adminKey) {
-		$topMenuTemplate .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
+	if (GetConfig('logo/enabled')) {
+		$htmlStart =~ s/\$logoText/$logoText/g;
+	} else {
+		$htmlStart =~ s/\$logoText/$logoText/g;
 	}
-	$topMenuTemplate .= GetMenuItem("/manual.html", 'Help');
 
-	$topMenuTemplate .= $identityLink;
-	$topMenuTemplate .= $noJsIndicator;
-	
-	$htmlStart =~ s/\$menuItems/$topMenuTemplate/g;
-	
 	# end top menu
 
 	$txtIndex .= $htmlStart;
@@ -1384,15 +1350,13 @@ sub GetTopItemsPage { # returns page with top items listing
 	my $titleHtml = 'Topics';
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'top');
-	
-	$txtIndex .= '<p><b><a href="/write.html">Start a new topic</a></b></p>'; #todo templatize
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	my @topItems = DBGetTopItems();
 							 
 	if (scalar(@topItems)) {
-		my $itemListingWrapper = GetTemplate('item_listing_wrapper.template');
+		my $itemListingWrapper = GetTemplate('item_listing_wrapper2.template');
 
 		my $itemListings = '';
 
@@ -1469,7 +1433,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
 	
-	my $statsTable = GetTemplate('stats.template');
+	my $statsTable = GetTemplate('stats2.template');
 
 	if ($adminId) {
 		$statsTable =~ s/\$admin/$adminLink/;
@@ -1490,6 +1454,14 @@ sub GetStatsPage { # returns html for stats page
 
 	$lastUpdateTime = GetTimestampElement($lastUpdateTime);
 	$statsTable =~ s/\$lastUpdateTime/$lastUpdateTime/;
+##
+	my $lastBuildTime = GetConfig('admin/build_end');
+	if (!defined($lastBuildTime) || !$lastBuildTime) {
+		$lastBuildTime = 0;
+	}
+
+	$lastBuildTime = GetTimestampElement($lastBuildTime);
+	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
 
 	$statsTable =~ s/\$versionFull/$versionFull/;
 	$statsTable =~ s/\$versionShort/$versionShort/;
@@ -1977,7 +1949,8 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$itemList = $itemList . $itemComma . $itemTemplate;
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr size=8>';
+#				$itemComma = '<hr size=8>';
+				$itemComma = '<p>';
 			}
 		}
 	}
@@ -2294,7 +2267,7 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $submitForm = GetTemplate('form/write2.template');
+	my $submitForm = GetTemplate('form/write3.template');
 	#my $submitForm = GetTemplate('form/write.template');
 
 	if (GetConfig('admin/php/enable')) {
@@ -2402,7 +2375,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 
 	my $idPage = GetTemplate('form/identity.template');
 
-	my $idCreateForm = GetTemplate('form/id_create.template');
+	my $idCreateForm = GetTemplate('form/id_create2.template');
 	my $prefillUsername = GetConfig('prefill_username');
 	my $termsOfService = FormatForWeb(GetConfig('string/en/tos'));
 	my $usernameMaxLength = GetConfig('');
@@ -2412,7 +2385,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	$idCreateForm =~ s/\$usernameMaxLength/$usernameMaxLength/g;
 	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
 
-	my $idCurrentForm = GetTemplate('form/id_current.template');
+	my $idCurrentForm = GetTemplate('form/id_current2.template');
 	$idPage =~ s/\$formIdCurrent/$idCurrentForm/g;
 
 	my $idAdminForm = GetTemplate('form/id_admin.template');

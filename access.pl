@@ -236,6 +236,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		my $recordFingerprint = 0;  # do we need to record timestamp?
 		my $recordDebugInfo = 0;  # do we need to record debug info?
 
+		if (!defined($hostname)||!defined($logName)||!defined($fullName)||!defined($date)||!defined($gmt)||!defined($req)||!defined($file)||!defined($proto)||!defined($status)||!defined($length)||!defined($ref)) {
+			LogError('Broken line in access.log: ' . $line);
+			next;
+		}
+
 		# useragent is last. everything that is not the values we have pulled out so far
 		# is the useragent.
 		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 10;

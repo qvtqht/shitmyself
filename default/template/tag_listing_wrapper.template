@@ -1,3 +1,22 @@
-<table cellpadding=3><tr><th align=left>Tag</th><th align=left>Count</th><th align=left class=beginner>Information</th></tr>
-$tagListings
-</table>
+<font face=arial>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+			<td colspan=3>
+				<font color=white><b>Attributes</b></font>
+			</td>
+		</tr>
+
+		<tr class=menubar>
+			<td colspan=3>
+				<p>
+			</td>
+		</tr>
+	
+		<tr>
+			<th align=left><a href="/tags_alpha.html">Tag</a></th>
+			<th align=left><a href="/tags.html">Count</a></th>
+			<th align=left class=beginner>Information</th>
+		</tr>
+		$tagListings
+	</table>
+</font>

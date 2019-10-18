@@ -64,12 +64,6 @@ div.txt {
 	color: red;
 }
 
-form#compose {
-	border: 5pt solid #e8d0ea;
-	border-radius: 5pt;
-	background-color: #f0e0f8
-}
-
 /* loading */
 .loading {
 	text-align: center;
@@ -111,11 +105,6 @@ form#compose {
 	background-color: #c0ffc0;
 	padding: 5pt;
 }
-form.reply {
-	border: 5pt solid #f0f0e0;
-	background-color: #f0f0e0;
-	border-radius: 5pt;
-}
 
 #cSb {
 	font-weight: bold; 
@@ -127,13 +116,13 @@ form.reply {
 .dialog {
 	border-style: outset;
 	border-width: 3pt;
-	border-color: #c0c0c0;
-	background-color: #c0c0c0;
+	border-color: $colorWindow;
+	background-color: $colorWindow;
 	spacing: 5pt;
 }
 .dialo {
 	border-style: outset;
 	border-width: 2pt;
-	border-color: #c0c0c0;
-	background-color: #c0c0c0;
+	border-color: $colorWindow;
+	background-color: $colorWindow;
 }

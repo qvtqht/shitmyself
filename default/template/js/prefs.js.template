@@ -52,7 +52,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		bgColor = 'initial';
 		if (GetPrefs('beginner_highlight') == 1) { // check value of beginner preference
-			bgColor = '#ffffc0'; // beginner_highlight
+			bgColor = '#f0f0d0'; // beginner_highlight
 		}
 
 		if (force || showBeginnerLastAction != displayValue) {

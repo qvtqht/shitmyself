@@ -2,8 +2,8 @@
 
 <form id=formCreateId name=formCreateId style="display:none" onsubmit="return false;">
 	<font face=arial>
-		<table cellspacing=0 cellpadding=6 border=0 bgcolor="#c0c0c0" class=dialog>
-			<tr bgcolor=#000080 class=titlebar style="border:0">
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
 					<font color=white><b>Create Identity</b></font>
 				</td>
@@ -88,8 +88,8 @@
 				</td>
 			</tr>
 
-			<tr bgcolor=#c0c0c0 class=statusbar>
-				<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+			<tr bgcolor=$colorWindow class=statusbar>
+				<td style="border: 1pt inset $colorWindow; padding: 2pt;">
 					Ready
 				</td>
 			</tr>

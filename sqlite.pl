@@ -2240,6 +2240,8 @@ sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash 
 		WriteLog('DBGetItemVoteTotals called with invalid $fileHash! returning');
 		return;
 	}
+	
+	WriteLog('DBGetItemVoteTotals('.$fileHash.')');
 
 	chomp $fileHash;
 

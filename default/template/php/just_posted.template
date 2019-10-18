@@ -1,4 +1,4 @@
 <a href="$fileUrlPath">
-	<b class=beginner>Success! Click here to see what you submitted!<br><br></b>
-	<b class=advanced><span class=beginner>Link: </span>$fileUrlPath<br><br></b>
+	<b class=beginner>Click Here to View Submission!!<br><br></b>
+	<!--<b class=advanced>$fileUrlPath<br><br></b>-->
 </a>

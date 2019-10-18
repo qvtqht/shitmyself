@@ -1,5 +1,5 @@
 <!-- item_listing.template -->
-<tr>
+<tr bgcolor="white" style="border: 1pt inset $colorWindow">
 	<td><b><a href="$link">$itemTitle</a></b><br></td>
 	<td>$itemScore<br></td>
 	<td>$itemLastTouch<br></td>

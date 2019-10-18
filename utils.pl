@@ -981,6 +981,14 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 #		}
 #	}
 
+	my $colorTitlebar = GetConfig('theme/color_titlebar');
+	$colorTitlebar =~ s/^([0-9a-fA-F]{6})$/#$1/;
+	$content =~ s/\$colorTitlebar/$colorTitlebar/g;
+
+	my $colorWindow = GetConfig('theme/color_window');
+	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
+	$content =~ s/\$colorWindow/$colorWindow/g;
+
 	PutFile($file, $content);
 
 	# this is a special hook for generating index.html, aka the home page
