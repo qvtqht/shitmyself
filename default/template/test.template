@@ -38,4 +38,50 @@
 	</tr>
 </table>
 </font>
+
+
+<hr>
+
+<!-- id_curent2.template -->
+<form id=formCurId name=formCurId style="display:none">
+	<font face=arial>
+		<table cellspacing=0 width=60% cellpadding=6 border=0 bgcolor="#c0c0c0" class=dialog>
+			<tr bgcolor=#000080 class=titlebar style="border:0">
+				<td>
+					<font color=white><b>Manage Identity</b></font>
+				</td>
+			</tr>
+
+			<tr class=menubar>
+				<td>
+					<p>
+				</td>
+			</tr>
+
+			<tr class=body>
+				<td class=content>
+					<p>
+						<span class=beginner>Signed In:</span>
+						<span id=myId2 class=avatar>Loading...</span>
+					</p>
+
+					
+				</td>
+			</tr>
+
+			<tr bgcolor=#c0c0c0 class=statusbar>
+				<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+					Ready
+				</td>
+			</tr>
+		</table>
+	</font>
+</form>
+<!-- / id_curent2.template -->
+
+
+
 <!-- / test.template -->
+
+
+
