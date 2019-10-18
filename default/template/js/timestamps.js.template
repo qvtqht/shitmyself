@@ -44,6 +44,7 @@ function LongAgo(seconds) { // returns string with time units
 			seconds = Math.floor(seconds / 60);
 
 			if (seconds >= 24) {
+			// #todo weeks, years, etc.
 				seconds = Math.floor(seconds / 24);
 
 				if (seconds != 1) {

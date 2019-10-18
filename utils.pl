@@ -5,6 +5,7 @@ use warnings;
 use utf8;
 use 5.010;
 use POSIX;
+use POSIX 'strftime';
 use Data::Dumper;
 
 use Devel::StackTrace;
@@ -479,6 +480,13 @@ sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG f
 	}
 
 	my $avatar = GetTemplate('avatar2.template');
+	
+	my $usernameColor = GetConfig('theme/color_username');
+	if (substr($usernameColor, 0, 1) ne '#') {
+		$usernameColor = '#' . $usernameColor;
+	} 
+	
+	$avatar =~ s/\$usernameColor/$usernameColor/g;
 
 	if ($gpgKey) {
 		my $alias = GetAlias($gpgKey);
@@ -1898,12 +1906,28 @@ sub ServerSign { # Signs a given file with the server's key
 
 sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	my $time = shift;
+	state $epoch;
+	
+	if (!defined($epoch)) {
+		$epoch = GetConfig('html/timestamp_epoch');
+	}
 
 	#todo sanity check;
 
-	my $timestampElement = GetTemplate('timestamp.template');
+	my $timestampElement = ''
+	if ($epoch) {
+		my $timestampElement = GetTemplate('timestamp.template');
 
-	$timestampElement =~ s/\$timestamp/$time/;
+		$timestampElement =~ s/\$timestamp/$time/;
+	} else {
+		$timestampElement = GetTemplate('timestamp2.template');
+
+		my $timeDate = strftime '%c', localtime $time;
+		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
+
+		$timestampElement =~ s/\$timestamp/$time/;
+		$timestampElement =~ s/\$timeDate/$timeDate/;
+	}
 
 	return $timestampElement
 }
