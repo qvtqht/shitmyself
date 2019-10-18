@@ -1,6 +1,12 @@
-select * from item_flat as item_flat where (',' || item_flat.tags_list || ',')  not like '%,vote,%' and (',' || item_flat.tags_list || ',')  not like '%,keep,%' and (',' || item_flat.tags_list || ',')  not like '%,accept,%' and (',' || item_flat.tags_list || ',')  not like '%,pubkey,%';
+"New Items" page for items not processed yet
+	added to by post.php
 
-select count(*) from item_flat as item_flat where (',' || item_flat.tags_list || ',')  not like '%,vote,%' and (',' || item_flat.tags_list || ',')  not like '%,keep,%' and (',' || item_flat.tags_list || ',')  not like '%,accept,%' and (',' || item_flat.tags_list || ',')  not like '%,pubkey,%';
+select * from item_flat 
+where (',' || item_flat.tags_list || ',')  not like '%,vote,%'  
+and (',' || item_flat.tags_list || ',')  not like '%,keep,%'  
+and (',' || item_flat.tags_list || ',')  not like '%,accept,%' 
+and (',' || item_flat.tags_list || ',')  not like '%,pubkey,%' 
+and (',' || item_flat.tags_list || ',')  not like '%,reply,%';
 
 #bug After an item is deleted, an empty page is re-generated, without any content, but with header, footer, and title!
 

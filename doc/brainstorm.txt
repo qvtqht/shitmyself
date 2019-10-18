@@ -1,3 +1,7 @@
+Encodings... something to consider
+	Especially for older browsers
+	#bug Unicode titles get cut off mid-character
+
 Setting to expand css settings to include "test ones"
 	e.g. -webkit-foo or -gecko-whatever
 
