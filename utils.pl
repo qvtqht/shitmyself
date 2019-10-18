@@ -1914,9 +1914,9 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 
 	#todo sanity check;
 
-	my $timestampElement = ''
+	my $timestampElement = '';
 	if ($epoch) {
-		my $timestampElement = GetTemplate('timestamp.template');
+		$timestampElement = GetTemplate('timestamp.template');
 
 		$timestampElement =~ s/\$timestamp/$time/;
 	} else {
@@ -1929,7 +1929,7 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 		$timestampElement =~ s/\$timeDate/$timeDate/;
 	}
 
-	return $timestampElement
+	return $timestampElement;
 }
 
 sub DeleteFile { #delete file with specified file hash (incomplete) 
