@@ -172,7 +172,7 @@ tags
 list of tags to provide user as voting options
 default: (see repo)
 
-text_colors
+theme/color_text
 list of colors to use randomly for page text, \n-separated
 default: (see repo)
 
