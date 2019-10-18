@@ -99,30 +99,11 @@ form#compose {
 	border-radius: 5pt;
 }
 
-#formCreateId {
-	background-color: #c0ffc0;
-	padding: 5pt;
-	border: 5pt solid #d0f0d0;
-	border-radius: 5pt;
-}
-#formCurId {
-	display: none;
-	background-color: #80ff80;
-	padding: 5pt;
-}
-
 .menu { 
 	padding: 5pt;
 	$headerBackgroundPattern
 }
 
-#clockContainer {
-	background-color: #405040 !important;
-	color: #00f040 !important;
-	border-radius: 5pt;
-	border-style: inset;
-	border-color: #808080;
-}
 #eventLocation, #eventBrcLocation {
 	background-color: #c0c0ff;
 	padding: 5pt;
@@ -138,8 +119,22 @@ form.reply {
 }
 
 #cSb {
-	background-color: orange; 
+	font-weight: bold; 
 }
 .advanced, .beginner {
 	border-radius: 3pt;
+}
+
+.dialog {
+	border-style: outset;
+	border-width: 3pt;
+	border-color: #c0c0c0;
+	background-color: #c0c0c0;
+	spacing: 5pt;
+}
+.dialo {
+	border-style: outset;
+	border-width: 2pt;
+	border-color: #c0c0c0;
+	background-color: #c0c0c0;
 }
