@@ -1,0 +1,100 @@
+<!-- id_create2.template -->
+
+<form id=formCreateId name=formCreateId style="display:none" onsubmit="return false;">
+	<font face=arial>
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="#c0c0c0" class=dialog>
+			<tr bgcolor=#000080 class=titlebar style="border:0">
+				<td>
+					<font color=white><b>Create Identity</b></font>
+				</td>
+			</tr>
+
+			<tr class=menubar>
+				<td>
+					<p>
+				</td>
+			</tr>
+
+			<tr class=body>
+				<td class=content>
+					<p>
+						<label for=name><span class=beginner>Name:</span>
+							<input 
+								type=text 
+								size=16 
+								maxlength=$usernameMaxLength 
+								name=name 
+								id=name 
+								onblur="if(this.value==''){this.value='$prefillUsername';}" 
+								onfocus="if(this.value=='$prefillUsername'){this.value='';}" 
+								value="$prefillUsername"
+							>
+						</label>
+					</p>
+
+					<p>
+						<input id=cSb type=submit value="Create" onclick="makeKeyFromInputs();">
+						<span id=genStatus></span>
+					</p>
+
+					<p id=tos class=advanced>
+						$termsOfService
+					</p>
+
+					<p>
+						<label for=chkShowAdvanced>
+							<input 
+								type=checkbox 
+								id=chkShowAdvanced 
+								onchange="saveCheckbox('creaIdAdv', this, 'show_advanced');"
+							> Show advanced options
+						</label>
+					</p>
+
+					<span id=creaIdAdv style="display:none">
+
+					<p>
+						<label for=bits>Algorithm:
+							<select name=bits id=bits>
+								<option value=512>rsa512</option>
+								<option value=1024>rsa1024</option>
+								<option value=2048>rsa2048</option>
+								<option value=4096>rsa4096</option>
+				$gpg2Algochoices
+							</select>
+						</label>
+					</p>
+
+					<p id=abc>
+						* Generate a profile, also known as key pair<br>
+						* Store your <b>private key</b> in your browser/device<br>
+						* Publish your <b>public key</b>, including your name<br>
+					</p>
+
+					<label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
+				
+					<span id=creaIdExp style="display:none">
+						<p>
+							* Disable JavaScript<br>
+							* Use gpg at the command line<br>
+							* Write your own frontend<br>
+						</p>
+						<p>
+							Refer to Manual for more information.
+						</p>
+					</span>
+				
+					</span>
+				</td>
+			</tr>
+
+			<tr bgcolor=#c0c0c0 class=statusbar>
+				<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+					Ready
+				</td>
+			</tr>
+		</table>
+	</font>
+</form>
+
+<!-- / id_create2.template -->

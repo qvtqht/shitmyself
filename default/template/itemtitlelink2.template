@@ -1,0 +1,7 @@
+<!-- itemtitlelink.template -->
+<tr class=titlebar>
+	<td colspan=2 bgcolor="#000080">
+		<b><font color=white>$itemTitle</font></b>
+	</td>
+</tr>
+<!-- / itemtitlelink.template -->

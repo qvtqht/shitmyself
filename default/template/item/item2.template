@@ -1,0 +1,21 @@
+<!-- item2.template -->
+<font face=arial>
+	<table width=79% cellspacing=3 cellpadding=3 border=2 bgcolor=#c0c0c0 style="border: 2pt outset #c0c0c0;" class=item>
+		$itemTitleTemplate
+
+		$quickVoteButtonGroup
+
+		<tr class=body>
+			<td class=content style="border: 1pt inset #c0c0c0" colspan=2 bgcolor=#ffffff>
+				<p>$itemText
+			</td>
+		</tr>
+
+		<tr bgcolor=#c0c0c0 class=statusbar>
+			<td style="border: 1pt inset #c0c0c0">
+				$infoBox
+			</td>
+		</tr>
+	</table>
+</font>
+<!-- / item2.template -->

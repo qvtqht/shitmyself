@@ -1,0 +1,33 @@
+<!-- stats2.template -->
+
+<font face=arial>
+	<table cellspacing=0 width=60% cellpadding=6 border=0 bgcolor="#c0c0c0" class=dialog>
+		<tr bgcolor=#000080 class=titlebar style="border:0">
+			<td>
+				<font color=white><b>Status</b></font>
+			</td>
+		</tr>
+
+		<tr class=body>
+			<td class=content>
+				<fieldset>
+					<p>Built: $lastBuildTime
+					<p>Updated: $lastUpdateTime
+					<p><a href="/index0.html">Items</a>: $itemCount
+					<p><a href="/authors.html">Authors</a>: $authorCount
+					<p>Operator: $admin
+					<p class=advanced>Server: $server
+					<p>Version: $versionShort <span class=advanced>($versionFull)</span>
+				</fieldset>
+			</td>
+		</tr>
+
+		<tr bgcolor=#c0c0c0 class=statusbar>
+			<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+				Ready
+			</td>
+		</tr>
+	</table>
+</font>
+
+<!-- / stats2.template -->

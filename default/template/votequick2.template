@@ -1,0 +1,8 @@
+<!-- votequick.template -->
+<tr bgcolor=#c0c0c0 class=menubar>
+	<td colspan=2 style="border:0">
+		<p>
+			$quickVoteButtons
+	</td>
+</tr>
+<!-- / votequick.template -->
