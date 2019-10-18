@@ -1,3 +1,5 @@
+#todo #bug 404 page links do not work with relative rewrite
+
 Opera 3.62 has no profile link #bug
 
 Mosaic's comments seem to be <!-- >
