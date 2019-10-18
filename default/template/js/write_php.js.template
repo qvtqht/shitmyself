@@ -1,7 +1,15 @@
 // begin write_php.js
 
+var commentOnChangeDone = 0;
 function commentOnChange(t, formId) {
-	if (t.value.length > 4096) {
+// changes form's method from get to post IF 
+// comment's length is more than 1024 
+	if (commentOnChangeDone) {
+		return;
+	}
+		
+	if (t.value.length > 1024) {
+		commentOnChangeDone = 1;
 		if (document.getElementById) {
 			form = document.getElementById(formId);
 			if (form) {

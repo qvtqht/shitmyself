@@ -14,6 +14,7 @@
 		name=comment
 		autofocus
 		onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
+		onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
 	>$initText</textarea><br>
 		
 	<p>
