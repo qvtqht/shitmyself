@@ -21,7 +21,7 @@ BuildMessage "\$prevBuildStart = " . $prevBuildStart;
 BuildMessage "\$prevBuildFinish = " . $prevBuildFinish;
 
 my $prevBuildDuration;
-if ($prevBuildFinish > $prevBuildStart) {
+if ($prevBuildFinish && $prevBuildStart && $prevBuildFinish > $prevBuildStart) {
 	$prevBuildDuration = ($prevBuildFinish - $prevBuildStart);
 	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
 }
@@ -134,6 +134,8 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
+PutFile('config/admin/build_end', GetTime());
+
 if (GetConfig('admin/build/gitflow_after')) {
 	BuildMessage("system('perl gitflow.pl')...");
 	
@@ -141,8 +143,6 @@ if (GetConfig('admin/build/gitflow_after')) {
 }
 	
 BuildMessage("Done!");
-
-PutFile('config/admin/build_end', GetTime());
 
 WriteLog( "Finished!");
 

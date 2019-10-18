@@ -1,5 +1,6 @@
 <!-- stats.template -->
 <fieldset>
+	<p>Built: $lastBuildTime</p>
 	<p>Updated: $lastUpdateTime</p>
 	<p><a href="/index0.html">Items</a>: $itemCount</p>
 	<p><a href="/authors.html">Authors</a>: $authorCount</p>
