@@ -99,8 +99,7 @@ form#compose {
 	border-radius: 5pt;
 }
 
-.menu { 
-	padding: 5pt;
+.menu, .titlebar { 
 	$headerBackgroundPattern
 }
 
