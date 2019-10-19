@@ -55,8 +55,8 @@ if (window.localStorage && document.getElementById) {
 
 function getAvatar() { // retrieve previously built avatar from localstore (already in html form)
 	var myAvatar = localStorage.getItem("avatar");
-	if (myAvatar === null || myAvatar.length === 0) {
-		return null;
+	if (!myAvatar || myAvatar.length == 0) {
+		return '';
 	} else {
 		return myAvatar;
 	}
