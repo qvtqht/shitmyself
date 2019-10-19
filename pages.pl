@@ -827,6 +827,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		# get formatted/post-processed message for this item
 		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
+		if (!$file{'item_title'}) {
+			#hack #todo
+			$file{'item_title'} = 'Untitled';
+		}
+
 		if ($file{'remove_token'}) {
 			# if remove_token is specified, remove it from the message
 
@@ -1040,16 +1045,19 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	
 			if ($file{'show_quick_vote'}) {
 				my $quickVotesButtons = GetItemVoteButtons($file{'file_hash'}, 'hastext'); #todo refactor to take vote totals directly
-				
-				my $quickVoteButtonGroup = GetTemplate('voteqiuck2.template');
+
+				my $quickVoteButtonGroup = GetTemplate('votequick2.template');
 				$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
 	
 				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteButtonGroup/;
 				$itemTemplate =~ s/\$infoBox/$quickVoteButtonGroup/;
+			} else {
+				$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 			}
+		} else {
+			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
 
-		$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 
 		return $itemTemplate;
 	} else {
@@ -1567,7 +1575,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps profile voting));
 
 	return $txtIndex;
 }
