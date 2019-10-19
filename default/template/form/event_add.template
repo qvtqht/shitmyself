@@ -1,166 +1,184 @@
 <form method="get" name=addevent action="/action/event.html">
-	<p>
-		All fields are optional.
-	</p>
+	<font face=arial>
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+				<td>
+					<font color=white><b>Manage Identity</b></font>
+				</td>
+			</tr>
 
-	<p id=eventLocation>
-		<label for=event_location>
-			<b>Location:</b> <font color=green>(optional)</font>
-		</label>
+			<tr class=menubar>
+				<td>
+					<p>
+				</td>
+			</tr>
 
-		<br>
+			<tr class=body>
+				<td class=content>
+					<p class=beginner>All fields are optional.</p>
 
-		<input name="event_location" id="event_location" type="text">
+					<p id=eventLocation>
+						<label for=event_location>
+							<b>Location:</b> <font color=green>(optional)</font>
+						</label>
 
-		<br>
+						<br>
 
-		<span class=beginner>
-			Tip: Describe how to find in detail.
-		</span>
+						<input name="event_location" id="event_location" type="text">
 
-		<br><br>
-	</p>
+						<br>
 
-	$brcLocation
+						<span class=beginner>
+							Tip: Describe how to find in detail.
+						</span>
 
-	<p id=eventDate>
-		<b>Date</b> <font color=green>(optional)</font><br>
+						<br><br>
+					</p>
 
-		<select name="month" onchange="UpdateTimeString()">
-			<option value="1">January</option>
-			<option value="2">February</option>
-			<option value="3">March</option>
-			<option value="4">April</option>
-			<option value="5">May</option>
-			<option value="6">June</option>
-			<option value="7">July</option>
-			<option value="8" selected="1">August</option>
-			<option value="9">September</option>
-			<option value="10">October</option>
-			<option value="11">November</option>
-			<option value="12">December</option>
-		</select>
+					$brcLocation
 
-		<select name="day" onchange="UpdateTimeString()">
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-			<option value="6">6</option>
-			<option value="7">7</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-			<option value="13">13</option>
-			<option value="14">14</option>
-			<option value="15">15</option>
-			<option value="16">16</option>
-			<option value="17">17</option>
-			<option value="18">18</option>
-			<option value="19">19</option>
-			<option value="20">20</option>
-			<option value="21">21</option>
-			<option value="22">22</option>
-			<option value="23">23</option>
-			<option value="24" selected="1">24</option>
-			<option value="25">25</option>
-			<option value="26">26</option>
-			<option value="27">27</option>
-			<option value="28">28</option>
-			<option value="29">29</option>
-			<option value="30">30</option>
-			<option value="31">31</option>
-		</select>
+					<p id=eventDate>
+						<b>Date</b> <font color=green>(optional)</font><br>
 
-		<select name="year" onchange="UpdateTimeString()">
-			<option value="2017">2017</option>
-			<option value="2018">2018</option>
-			<option value="2019" selected="1">2019</option>
-			<option value="2020">2020</option>
-			<option value="2021">2021</option>
-			<option value="2022">2022</option>
-			<option value="2023">2023</option>
-			<option value="2024">2024</option>
-			<option value="2025">2025</option>
-			<option value="2026">2026</option>
-			<option value="2027">2027</option>
-			<option value="2028">2028</option>
-			<option value="2029">2029</option>
-		</select>
+						<select name="month" onchange="UpdateTimeString()">
+							<option value="1">January</option>
+							<option value="2">February</option>
+							<option value="3">March</option>
+							<option value="4">April</option>
+							<option value="5">May</option>
+							<option value="6">June</option>
+							<option value="7">July</option>
+							<option value="8" selected="1">August</option>
+							<option value="9">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select>
 
-		<br>
+						<select name="day" onchange="UpdateTimeString()">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24" selected="1">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+						</select>
 
-		<b>Time</b> <font color=green>(optional)</font><br>
+						<select name="year" onchange="UpdateTimeString()">
+							<option value="2017">2017</option>
+							<option value="2018">2018</option>
+							<option value="2019" selected="1">2019</option>
+							<option value="2020">2020</option>
+							<option value="2021">2021</option>
+							<option value="2022">2022</option>
+							<option value="2023">2023</option>
+							<option value="2024">2024</option>
+							<option value="2025">2025</option>
+							<option value="2026">2026</option>
+							<option value="2027">2027</option>
+							<option value="2028">2028</option>
+							<option value="2029">2029</option>
+						</select>
 
-		<select name="hour" onchange="UpdateTimeString()">
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-			<option value="6">6</option>
-			<option value="7">7</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-		</select>
+						<br>
 
-		<select name="minute" onchange="UpdateTimeString()">
-			<option value="0">00</option>
-			<option value="5">05</option>
-			<option value="10">10</option>
-			<option value="15">15</option>
-			<option value="20">20</option>
-			<option value="25">25</option>
-			<option value="30">30</option>
-			<option value="35">35</option>
-			<option value="40">40</option>
-			<option value="45">45</option>
-			<option value="50">50</option>
-			<option value="55">55</option>
-		</select>
+						<b>Time</b> <font color=green>(optional)</font><br>
 
-		<select name="am_pm" onchange="UpdateTimeString()">
-			<option value="0">AM</option>
-			<option value="1">PM</option>
-		</select>
+						<select name="hour" onchange="UpdateTimeString()">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+						</select>
 
-		<span class=advanced>
-			<br><br>
-			<label for=date_yyyy><b>Time as Text</b> <font color=green>(optional)</font><br>
-			<input type=text name=date_yyyy id=date_yyyy size=20></label>
+						<select name="minute" onchange="UpdateTimeString()">
+							<option value="0">00</option>
+							<option value="5">05</option>
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+							<option value="25">25</option>
+							<option value="30">30</option>
+							<option value="35">35</option>
+							<option value="40">40</option>
+							<option value="45">45</option>
+							<option value="50">50</option>
+							<option value="55">55</option>
+						</select>
 
-			<br><br>
+						<select name="am_pm" onchange="UpdateTimeString()">
+							<option value="0">AM</option>
+							<option value="1">PM</option>
+						</select>
 
-			<label for=date_epoch><b>Epoch Seconds</b> <font color=green>(optional)</font><br>
-			<input type=text name=date_epoch id=date_epoch size=20></label>
-		</span>
-	</p>
+						<span class=advanced>
+							<br><br>
+							<label for=date_yyyy><b>Time as Text</b> <font color=green>(optional)</font><br>
+							<input type=text name=date_yyyy id=date_yyyy size=20></label>
 
-	<p>
-		<label for=event_details>
-			<b>Description</b> <font color=green>(optional)</font><br>
-			<textarea name="event_details" id="event_details" rows="5" cols=40></textarea>
-		</label>
-	</p>
+							<br><br>
 
-	<p>
-		<label for=event_name><b>Event Name</b> <font color=green>(optional)</font><br>
-			<input name=event_name id=event_name type=text>
-		</label>
-	</p>
+							<label for=date_epoch><b>Epoch Seconds</b> <font color=green>(optional)</font><br>
+							<input type=text name=date_epoch id=date_epoch size=20></label>
+						</span>
+					</p>
 
-	<p id=eventCreate>
-		<input value="Create Event" type="submit" id=eventCreateButton> (required)<br>
-		&nbsp; Please press button to create event 
-	</p>
+					<p>
+						<label for=event_details>
+							<b>Description</b> <font color=green>(optional)</font><br>
+							<textarea name="event_details" id="event_details" rows="5" cols=40></textarea>
+						</label>
+					</p>
 
-	<p>
-		<a href="/">Cancel</a> <font color=green>(optional)</font>
-	</p>
+					<p>
+						<label for=event_name><b>Event Name</b> <font color=green>(optional)</font><br>
+							<input name=event_name id=event_name type=text>
+						</label>
+					</p>
+
+					<p id=eventCreate>
+						<input value="Create Event" type="submit" id=eventCreateButton> (required)<br>
+						&nbsp; Please press button to create event
+					</p>
+
+					<p>
+						<a href="/">Cancel</a> <font color=green>(optional)</font>
+					</p>
+				</td>
+			</tr>
+		</table>
+	</font>
 </form>
