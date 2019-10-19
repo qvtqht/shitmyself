@@ -1,6 +1,6 @@
 <!-- topmenu.template -->
 <font face=arial>
-	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialo width=100%>
+	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog width=100%>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2><small>
 				<a href="#maincontent"><font color=white>Skip to main content</font></a>
