@@ -114,15 +114,9 @@ div.txt {
 }
 
 .dialog {
-	border-style: outset;
+	border-style: double;
 	border-width: 3pt;
-	border-color: $colorWindow;
+	border-color: $colorWindowBorder;
 	background-color: $colorWindow;
 	spacing: 5pt;
-}
-.dialo {
-	border-style: outset;
-	border-width: 2pt;
-	border-color: $colorWindow;
-	background-color: $colorWindow;
 }
