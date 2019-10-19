@@ -19,7 +19,7 @@
 				<td class=content>
 					<span id=writeintro></span>
 
-					<label for="comment" class=beginner>To make topic, must use paragraphs.</label><br>
+					<label for="comment" class=beginner>Write somethig and post it. If you use paragraphs, first line becomes title.</label><br>
 
 					<textarea
 						class=txtarea
