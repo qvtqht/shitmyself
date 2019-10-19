@@ -1,11 +1,28 @@
-<table cellpadding=3>
-	<tr class=beginner>
-		<th align=left>Name</th>
-		<th align=left>Score</th>
-		<th class=advanced align=left>Items</th>
-		<th class=advanced align=left>Influence</th>
-		<th align=left>Seen</th>
-		<th></th>
-	</tr>
-	$authorListings
-</table>
+<!-- author_listing_wrapper.template -->
+<font face=arial>
+	<table cellspacing=0 width=60% cellpadding=6 border=0 bgcolor=$colorWindow class=dialog>
+		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+			<td colspan=6>
+				<font color=white><b>Top Scores</b></font>
+			</td>
+		</tr>
+
+		<tr class=menubar>
+			<td colspan=6>
+				<p>
+			</td>
+		</tr>
+
+		<tr>
+			<th align=left>Name</th>
+			<th align=left>Score</th>
+			<th class=advanced align=left>Items</th>
+			<th class=advanced align=left>Influence</th>
+			<th align=left>Seen</th>
+			<th></th>
+		</tr>
+
+		$authorListings
+	</table>
+</font>
+<!-- / author_listing_wrapper.template -->
