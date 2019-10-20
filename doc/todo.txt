@@ -1,3 +1,10 @@
+Loop through all titlebar elements on page
+	Fist one which is visible, make it blue
+		Make the others all gray (inactive)
+		element.offsetWidth > 0 && element.offsetHeight > 0;
+
+
+
 #todo #bug 404 page links do not work with relative rewrite
 
 Opera 3.62 has no profile link #bug

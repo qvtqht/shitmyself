@@ -3,7 +3,7 @@
 	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog width=100%>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2><small>
-				<a href="#maincontent"><font color=white>Skip to main content</font></a>
+				<a href="#maincontent"><font color=white><b><small>Skip to main content</small></b></font></a>
 			</small></td>
 		</tr>
 

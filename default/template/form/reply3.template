@@ -1,5 +1,5 @@
 <!-- reply3.template -->
-<a name=reply></a>
+<p><a name=reply></a>
 <form class=reply action="/post.html" id=compose>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
@@ -20,7 +20,7 @@
 					<p>
 					<textarea rows=4 cols=40 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
 					<span id=replySignedContainer></span>
-					<input type=submit value="Reply Unsigned">
+					<input type=submit value="Reply Anonymously">
 					<input type=hidden name=replyto id=replyto value="$replyTo">
 				</td>
 			</tr>

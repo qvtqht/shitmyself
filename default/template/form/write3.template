@@ -19,7 +19,10 @@
 				<td class=content>
 					<span id=writeintro></span>
 
-					<label for="comment" class=beginner>Write somethig and post it. If you use paragraphs, first line becomes title.</label><br>
+					<label for="comment" class=beginner>
+						To create a new topic, write paragraphs.
+						<br>
+					</label>
 
 					<textarea
 						class=txtarea
@@ -55,6 +58,8 @@
 					<p class=advanced>
 					   <label for=saveit><input type=checkbox id=saveit> Save form settings (client-side)</label>
 					</p>
+
+					<p><br>
 				</td>
 			</tr>
 		</table>

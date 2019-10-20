@@ -1,13 +1,18 @@
 <!-- item-small.template -->
-<div style="border-color: $borderColor" class=reply>
+<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 	$itemTitleTemplate
-	<p>$itemText</p>
-	<p>
-		<b><a href="$permalinkHtml" class=advanced>$itemName</a></b>
-		$authorLink
-		&nbsp;
-		<a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
-	</p>
-	<replies></replies>
-</div>
+	<tr>
+		<td>
+			<p>$itemText</p>
+			<p>
+				<b><a href="$permalinkHtml" class=advanced>$itemName</a></b>
+				$authorLink
+				&nbsp;
+				<a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
+			</p>
+		</td>
+	</tr>
+</table>
+
+<replies></replies>
 <!-- / item-small.template -->

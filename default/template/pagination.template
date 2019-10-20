@@ -1,1 +1,15 @@
-<div class=pagination>$paginationLinks</div>
+<font face=arial>
+	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<td>
+				<font color=white><small><b>Pages</b></small></font>
+			</td>
+		</tr>
+
+		<tr class=body>
+			<td class=content>
+				<p class=pagination>$paginationLinks</p>
+			</td>
+		</tr>
+	</table>
+</font>

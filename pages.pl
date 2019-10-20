@@ -1090,7 +1090,7 @@ sub GetPageFooter { # returns html for page footer
 
 	#footer menu
 	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Status');
-	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
+#	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
 	$footerMenuTemplate .= GetMenuItem("/data.html", 'Data');
 	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Abyss');
 	$footerMenuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
@@ -1243,9 +1243,9 @@ sub GetPageHeader { # returns html for page header
 	$menuItems .= GetMenuItem("/stats.html", 'Status', 1);
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 1);
 	$menuItems .= GetMenuItem("/index0.html", 'Abyss', 1);
-	if ($adminKey) {
-		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
-	}
+#	if ($adminKey) {
+#		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
+#	}
 	$menuItems .= GetMenuItem("/manual.html", 'Help');
 
 	$menuItems .= $identityLink;

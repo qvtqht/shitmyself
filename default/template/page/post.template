@@ -21,6 +21,7 @@
 				<p><a href="./">Continue to Home Page</a></p>
 				<p><b><span id=retRef></span></b>
 				<p><span class=advanced><!-- submitted_text --></span>
+				<p><br>
 			</td>
 		</tr>
 	</table>

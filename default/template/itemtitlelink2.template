@@ -1,6 +1,6 @@
 <!-- itemtitlelink.template -->
-<tr class=titlebar>
-	<td colspan=2 bgcolor=$colorTitlebar>
+<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+	<td colspan=2>
 		<b><a href="$permalinkHtml"><font color=white>$itemTitle</font></a></b>
 	</td>
 </tr>

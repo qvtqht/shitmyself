@@ -1,6 +1,6 @@
 <!-- author_listing_wrapper.template -->
 <font face=arial>
-	<table cellspacing=0 width=60% cellpadding=6 border=0 bgcolor=$colorWindow class=dialog>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor=$colorWindow class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=6>
 				<font color=white><b>Top Scores</b></font>
@@ -23,6 +23,12 @@
 		</tr>
 
 		$authorListings
+
+		<tr class="statusbar">
+			<td colspan="6">
+				<p>12 authors</p>
+			</td>
+		</tr>
 	</table>
 </font>
 <!-- / author_listing_wrapper.template -->

@@ -989,9 +989,9 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
 	$content =~ s/\$colorWindow/$colorWindow/g;
 
-	my $colorWindowBorder = GetConfig('theme/color_window_border');
-	$colorWindowBorder =~ s/^([0-9a-fA-F]{6})$/#$1/;
-	$content =~ s/\$colorWindowBorder/$colorWindowBorder/g;
+	my $borderDialog = GetConfig('theme/border_dialog');
+	$borderDialog =~ s/^([0-9a-fA-F]{6})$/#$1/;
+	$content =~ s/\$borderDialog/$borderDialog/g;
 
 	PutFile($file, $content);
 
