@@ -1,6 +1,7 @@
 body {
 	font-family: helvetica;
 	font-size: default;
+	background-color: $backgroundColor;
 }
 
 /* negative (red) tags */
