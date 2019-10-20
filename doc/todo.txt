@@ -1,3 +1,5 @@
+Cache voted items locally so that buttons can be disabled on client-side
+
 Item page :
 	Reply box title should be "Re: parent's title" (if there is one)
 		All the way up to root comment
