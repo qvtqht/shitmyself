@@ -1,0 +1,36 @@
+<font face=arial>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<td>
+				<font color=white><b>No Matches</b></font>
+			</td>
+		</tr>
+
+		<tr class=menubar>
+			<td>
+				<p>
+			</td>
+		</tr>
+
+		<tr class=body>
+			<td class=content>
+				<p class=beginner>
+
+					Couldn't find any items to put on this page.<br><br>
+
+					Recommend that you post something or contact your operator.
+				</p>
+
+				<p>No matches.</p>
+
+				<p><br>
+			</td>
+		</tr>
+
+		<tr class=statusbar>
+			<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+				Ready
+			</td>
+		</tr>
+	</table>
+</font>

@@ -1411,7 +1411,8 @@ sub GetTopItemsPage { # returns page with top items listing
 
 		$txtIndex .= $itemListingWrapper;
 	} else {
-		$txtIndex .= "<p class=beginner>Couldn't find any items to put on this page. Recommend that you post something or contact your operator.</p><p>No matches.</p>";
+#		$txtIndex .= "<p class=beginner>Couldn't find any items to put on this page. Recommend that you post something or contact your operator.</p><p>No matches.</p>";
+		$txtIndex .= GetTemplate('item/no_items.template');
 		#todo should be in template/
 	}
 
@@ -2415,7 +2416,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
-	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
+	$txtIndex =~ s/<body /<body onload="if (window.identityOnload) { identityOnload(); }" /;
 
 	return $txtIndex;
 }
