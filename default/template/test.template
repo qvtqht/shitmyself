@@ -2,8 +2,8 @@
 <meta name="viewport" content="width=device-width">
 
 <font face=arial>
-<table width=60% cellspacing=0 cellpadding=3 border=3 style="border: 2pt outset #c0c0c0;" class=item>
-	<tr bgcolor=#000080 class=titlebar style="border:0">
+<table cellspacing=0 bgcolor="$colorWindow" cellpadding=3 border=3 style="border: $borderWindow;" class=dialog>
+	<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 		<td colspan=2>
 			<font color=white><b>Untitled</b></font>
 		</td>
@@ -45,8 +45,8 @@
 <!-- id_curent2.template -->
 <form id=formCurId name=formCurId style="display:none">
 	<font face=arial>
-		<table cellspacing=0 width=60% cellpadding=6 border=0 bgcolor="#c0c0c0" class=dialog>
-			<tr bgcolor=#000080 class=titlebar style="border:0">
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 				<td>
 					<font color=white><b>Manage Identity</b></font>
 				</td>
@@ -69,7 +69,7 @@
 				</td>
 			</tr>
 
-			<tr bgcolor=#c0c0c0 class=statusbar>
+			<tr class=statusbar>
 				<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
 					Ready
 				</td>
