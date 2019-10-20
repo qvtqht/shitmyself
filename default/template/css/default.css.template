@@ -114,9 +114,11 @@ div.txt {
 }
 
 .dialog {
-	border-style: double;
-	border-width: 3pt;
-	border-color: $colorWindowBorder;
+	border: $borderDialog;
 	background-color: $colorWindow;
 	spacing: 5pt;
+}
+
+.statusbar td {
+	border: 1pt inset #c0c0c0;
 }
