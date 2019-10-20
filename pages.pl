@@ -252,7 +252,7 @@ sub GetEventsPage { # returns html for events page
 
 		my $eventVoteButtons = GetItemVoteButtons($eventItemHash, 'event');
 
-		my $eventItem = GetTemplate('event/event_item.template');
+		my $eventItem = GetTemplate('event/event_item2.template');
 
 		$eventTime = GetTimestampElement($eventTime);
 		$eventTimeUntil = GetTimestampElement($eventTimeUntil);
@@ -269,7 +269,7 @@ sub GetEventsPage { # returns html for events page
 		$eventsItemsList .= $eventItem;
 	}
 
-	my $eventsList = GetTemplate('event/event_list.template');
+	my $eventsList = GetTemplate('event/event_list2.template');
 
 	$eventsList =~ s/\$eventsList/$eventsItemsList/;
 

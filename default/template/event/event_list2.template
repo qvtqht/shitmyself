@@ -1,0 +1,25 @@
+
+<font face=arial>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<td colspan=3>
+				<font color=white><b>Events</b></font>
+			</td>
+		</tr>
+
+		<tr class=menubar>
+			<td colspan=3>
+				<p><a href="/event.html"><b><blink>Add New Event</blink></b></a>
+			</td>
+		</tr>
+
+		$eventsList
+
+		<tr class=statusbar>
+			<td style="border: 1pt inset #c0c0c0; padding: 2pt;" colspan=3>
+				Ready
+			</td>
+		</tr>
+	</table>
+</font>
+

@@ -1,0 +1,15 @@
+<tr class=body bgcolor=white>
+	<td class=content valign=top>
+		<p><b>$eventTitle</b><br><br>
+		$voteButtons
+	</td>
+	<td valign=top>
+			Begins: $eventTime<br>
+			Ends: $eventTimeUntil<br>
+			<span class=advanced>Duration: $eventDuration<br></span>
+	</td>
+	<td valign=top>
+			Author: $eventItemAuthor<br>
+			<span class=advanced>Link: $eventItemLink<br></span>
+	</td>
+</tr>
