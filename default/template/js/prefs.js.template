@@ -240,4 +240,15 @@ if (document.getElementById) {
 
 	ShowAdvanced(0); // call ShowAdvanced
 }
+
+function ResetPrefs() {
+	if (window.localStorage) {
+		localStorage.removeItem('prefs1');
+
+		ShowAdvanced(1);
+
+		location.reload(); //#todo make this not necessary
+	}
+}
+
 // == end prefs.js
