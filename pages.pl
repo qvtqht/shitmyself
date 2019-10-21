@@ -592,7 +592,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 			if ($replyTemplate) {
 				if ($replyComma eq '') {
-					$replyComma = '<hr size=5>';
+#					$replyComma = '<hr size=5>';
 				} else {
 					$replyTemplate = $replyComma . $replyTemplate;
 				}
@@ -1239,10 +1239,10 @@ sub GetPageHeader { # returns html for page header
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
 	$menuItems .= GetMenuItem("/events.html", 'Events');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors');
-#	$menuItems .= GetMenuItem("/prefs.html", 'Prefs', 1);
+	$menuItems .= GetMenuItem("/index0.html", 'Abyss');
+	$menuItems .= GetMenuItem("/prefs.html", 'Prefs', 1);
 	$menuItems .= GetMenuItem("/stats.html", 'Status', 1);
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 1);
-	$menuItems .= GetMenuItem("/index0.html", 'Abyss', 1);
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
