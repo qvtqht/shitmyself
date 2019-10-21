@@ -14,6 +14,8 @@
 		<tr bgcolor="$colorWindow" class=statusbar>
 			<td style="border: 1pt inset $colorWindow">
 				$votesSummary
+				$authorLink
+				$addedTime
 			</td>
 		</tr>
 	</table>
