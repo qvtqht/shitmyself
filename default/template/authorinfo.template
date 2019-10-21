@@ -3,28 +3,25 @@
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2>
-				<font color=white><b>Author</b></font>
+				<font color=white><b>$authorName</b></font>
 			</td>
 		</tr>
 
 		<tr class=menubar>
 			<td colspan=2>
-				<p>
+				<p>$profileVoteButtons
 			</td>
 		</tr>
 
 		<tr><td>relation:</td><td><b><span id=itsyou></span></b></td></tr>
-		<tr><td>avatar:</td><td>$avatar</td></tr>
-		<tr class=advanced><td>name:</td><td>$authorName</td></tr>
-		<tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
-		<tr class=advanced><td>importance:</td><td>$importance</td></tr>
+		<tr class=advanced><td>avatar:</td><td>$avatar</td></tr>
+		<tr><td>fingerprint:</td><td>$fingerprint</td></tr>
 		<tr><td>score:</td><td>$authorScore</td></tr>
 		<tr><td>items:</td><td>$itemCount</td></tr>
 		<tr><td>description:</td><td>$authorDescription</td></tr>
 		<tr class=advanced><td>influence:</td><td>$authorWeight</td></tr>
 		<tr><td>last seen:</td><td>$authorLastSeen</td></tr>
 		<tr class=advanced><td>pubkey:</td><td><b>$publicKeyHash</b> $authorPubkeyTxtLink</td></tr>
-		<tr><td>feedback:</td><td>$profileVoteButtons</td></tr>
 		<tr><td>friends:</td><td>$authorFriends</td></tr>
 	</table>
 </font>
