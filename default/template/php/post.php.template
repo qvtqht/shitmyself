@@ -126,11 +126,11 @@ function ProcessNewComment($comment) {
 		
 		if (!file_exists($scriptDir . 'cron.lock')) {
 			if (file_exists($scriptDir . '/index.pl')) {
-				//exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
 			}
 			
 			if (file_exists($scriptDir . '/gitflow.pl')) {
-				//exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
 			}
 		} else {
 		}
