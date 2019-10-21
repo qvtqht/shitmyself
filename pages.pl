@@ -111,6 +111,14 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
+sub GetWindowTemplate {
+	my $windowTitle = shift;
+	my $windowMenubar = shift;
+	my $contentColumns = shift;
+	my $windowBody = shift;
+	my $windowStatus = shift;
+}
+
 sub GetPageLinks { # returns html for pagination links
 # $currentPageNumber = current page  
 	state $pageLinks;
@@ -593,6 +601,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 			if ($replyTemplate) {
 				if ($replyComma eq '') {
 #					$replyComma = '<hr size=5>';
+					$replyComma = '<p>';
 				} else {
 					$replyTemplate = $replyComma . $replyTemplate;
 				}
