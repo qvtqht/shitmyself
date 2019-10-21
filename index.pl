@@ -4,6 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 use utf8;
 use POSIX qw(strftime);
+#use Encode qw( encode_utf8 );
 
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
@@ -1084,8 +1085,8 @@ sub IndexTextFile { # indexes one text file into database
 						if ($firstEol <= $titleLengthCutoff) {
 							$title = substr($detokenedMessage, 0, $firstEol);
 						} else {
-							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '[...]';
-						}						
+							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
+						}
 
 						DBAddTitle($gitHash, $title);
 
