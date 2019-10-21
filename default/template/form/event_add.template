@@ -3,7 +3,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
-					<font color=white><b>Manage Identity</b></font>
+					<font color=white><b>Add Event</b></font>
 				</td>
 			</tr>
 
