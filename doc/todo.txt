@@ -1,3 +1,7 @@
+Create titles for
+	Pubkey
+	One-vote items
+
 Cache voted items locally so that buttons can be disabled on client-side
 
 Item page :
