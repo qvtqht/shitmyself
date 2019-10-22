@@ -1,4 +1,5 @@
-<tr class=body bgcolor=white>
+<!-- event_item2.template -->
+<tr bgcolor="$rowBgColor">
 	<td class=content valign=top>
 		<p>
 			<b>$eventTitle</b><br>
@@ -7,3 +8,4 @@
 			$eventItemAuthor
 	</td>
 </tr>
+<!-- / event_item2.template -->
