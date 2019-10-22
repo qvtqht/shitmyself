@@ -1,3 +1,22 @@
+User Study 10/22
+================
+Top Comment: Needs "more indication on what's what"
+Tasks:
+1. Create account
+>> Quick and straightforward, once I turned off advanced mode, which was enabled from the previous login.
+2. Post question "How do I use this?"
+>> Success, user chose own text.
+3. Find something to read and vote on it
+>> User clicked past several votable things, reaching to a profile page
+>>From the profile page, they clicked on the >>reply token (rather than the title bar)
+
+He said he would have thought the titlebar clickable if it was a different color
+	[Title bars are traditionally not clickable, other than the text]
+
+When tasked with the (described as advanced) migrating the profile to another device, very little progress was visible.
+	[I think it's necessary to use email for sending the private key.]
+
+
 User Study 4/5 1
 ================
 Thank you, user.

@@ -1,3 +1,7 @@
+#bug 404 page links to non-existing pages if it is displayed on a sub-url
+
+Make an archive of 88x31 browser buttons and display ones which test OK
+
 Create titles for
 	Pubkey
 	One-vote items
