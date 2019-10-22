@@ -195,6 +195,8 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 	} else {
 		$postedMessage = '<a href="' . $fileUrlPath . '">See what you just posted</a><br><br>';
 	}
+
+	$postedMessage .= '<p></p><a href="' . $fileUrlPath . '">See what you just posted</a><br><br>';
 	
 	$postedMessage = str_replace('$fileUrlPath', $fileUrlPath, $postedMessage); 
 	
