@@ -3,13 +3,13 @@
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
-			<td>
+			<td colspan=$contentColumnCount>
 				<font color=white><b>$windowTitle</b></font>
 			</td>
-		</tr>
+		</th>
 
 		<tr class=menubar>
-			<td>
+			<td colspan=$contentColumnCount>
 				<p>$windowMenubar
 			</td>
 		</tr>
@@ -17,7 +17,7 @@
 		$windowBody
 
 		<tr class=statusbar>
-			<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+			<td style="border: 1pt inset $colorWindow; padding: 2pt;" colspan=$contentColumnCount>
 				$windowStatus
 			</td>
 		</tr>

@@ -15,8 +15,8 @@
 
         <tr class=body>
             <td class=content>
-                <p><b>Thank you!</b>
-				<p>Submission received, and is being cataloged.
+                <p>Thank you!
+				<p><b>Received.</b> Processing...
                 <p>What would you like to do next?
 				<p><a href="./">Continue to Home Page</a></p>
 				<p><b><span id=retRef></span></b>

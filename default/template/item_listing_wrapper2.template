@@ -9,7 +9,7 @@
 
 		<tr class=menubar>
 			<td colspan=4>
-				<p>
+				<p><a href="/write.html">New Topic</a>
 			</td>
 		</tr>
 
@@ -22,10 +22,10 @@
 
 		$itemListings
 
-		<tr class=menubar>
-			<td colspan=4>
-				<p></p><b><a href="/write.html">New Topic</a></b>
-			</td>
+		<!--<tr><td colspan=4><br></td></tr>-->
+
+		<tr class=statusbar>
+			<td colspan=4>12 threads</td>
 		</tr>
 	</table>
 </font>

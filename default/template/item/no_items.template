@@ -2,7 +2,7 @@
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 			<td>
-				<font color=white><b>No Matches</b></font>
+				<font color=white><b>No Topics</b></font>
 			</td>
 		</tr>
 
@@ -16,12 +16,12 @@
 			<td class=content>
 				<p class=beginner>
 
-					Couldn't find any items to put on this page.<br><br>
+					There are no topics on this forum.<br><br>
 
-					Recommend that you post something or contact your operator.
+					Please post something or come back later.
 				</p>
 
-				<p>No matches.</p>
+				<p class=advanced>No matches.</p>
 
 				<p><br>
 			</td>

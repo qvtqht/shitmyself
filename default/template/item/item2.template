@@ -13,9 +13,9 @@
 
 		<tr bgcolor="$colorWindow" class=statusbar>
 			<td style="border: 1pt inset $colorWindow">
-				$votesSummary
-				$authorLink
-				$addedTime
+				<b><a href="$permalinkHtml" class=advanced>$fileHash</a></b>
+				<a href="$permalinkHtml">$addedTime</a>
+				by $authorLink
 			</td>
 		</tr>
 	</table>

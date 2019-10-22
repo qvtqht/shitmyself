@@ -12,7 +12,7 @@ $styleSheet
 -->
 </style>
 </head>
-<body link="$linkColor" text="$textColor" bgcolor="$colorWindow">
+<body link="$linkColor" text="$textColor" bgcolor="$backgroundColor">
 $topMenu
 <main id=maincontent><a name=maincontent></a>
 <p>

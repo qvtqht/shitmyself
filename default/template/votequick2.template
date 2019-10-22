@@ -1,6 +1,6 @@
 <!-- votequick2.template -->
 <tr bgcolor=$colorWindow class=menubar>
-	<td colspan=2 style="border:0">
+	<td style="border:0">
 		<p>
 			$quickVotesButtons
 	</td>

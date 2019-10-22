@@ -1,7 +1,7 @@
 <!-- itemtitlelink.template -->
 <tr bgcolor=$colorTitlebar class=titlebar style="border:0">
-	<td colspan=2>
-		<b><a href="$permalinkHtml"><font color=white>$itemTitle</font></a></b>
+	<td>
+		<b><font color=white>$itemTitle</font> <a class=advanced href="$permalinkTxt"><font color=white>.txt</font></a></b>
 	</td>
 </tr>
 <!-- / itemtitlelink.template -->
