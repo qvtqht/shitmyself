@@ -80,6 +80,10 @@ sub GetPathFromHash {
 	my $fileHash = shift;
 	chomp $fileHash;
 
+	if (!$fileHash) {
+		return;
+	}
+
 	if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
 		system('mkdir html/txt/' . substr($fileHash, 0, 2));
 	}
