@@ -1,3 +1,7 @@
+Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
+Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
+Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
+
 #bug 404 page links to non-existing pages if it is displayed on a sub-url
 
 Make an archive of 88x31 browser buttons and display ones which test OK
