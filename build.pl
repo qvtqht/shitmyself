@@ -134,6 +134,11 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
+WriteLog("git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep \"^A\" | cut -c 4- | grep \"html/txt\" | grep \"txt\$\" | wc -l");
+my $filesLeft = `git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | wc -l`;
+
+PutConfig('admin/gitflow/files_left', $filesLeft);
+
 PutFile('config/admin/build_end', GetTime());
 
 if (GetConfig('admin/build/gitflow_after')) {

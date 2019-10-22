@@ -137,7 +137,7 @@ if (!$locked) {
 		WriteLog("WARNING: config/admin/gitflow/file_limit missing!");
 		$filesLimit = 100;
 	}
-	
+
 	# Use git to find files that have changed in txt/ directory
 	WriteLog('$gitChanges = git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | head -n $filesLimit');
 	my $gitChanges = `git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | head -n $filesLimit`;
@@ -250,7 +250,12 @@ if (!$locked) {
 	
 	RemoveEmptyDirectories('./html/'); #includes txt/
 	#RemoveEmptyDirectories('./txt/');
-	
+
+	WriteLog("git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep \"^A\" | cut -c 4- | grep \"html/txt\" | grep \"txt\$\" | wc -l");
+	my $filesLeft = `git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | wc -l`;
+
+	PutConfig('admin/gitflow/files_left', $filesLeft);
+
 	# if new items were added, re-make all the summary pages (top authors, new threads, etc)
 	if ($filesProcessed > 0) {
 		UpdateUpdateTime();

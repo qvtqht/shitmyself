@@ -1916,12 +1916,41 @@ sub ServerSign { # Signs a given file with the server's key
 	}
 }
 
+sub FormatDate {
+	my $epoch = shift;
+
+	my $time = GetTime();
+
+	my $difference = $time - $epoch;
+
+	my $formattedDate = '';
+
+	if ($difference < 86400) {
+		$formattedDate = strftime '%H:%M', localtime $epoch;
+	} elsif ($difference < 86400 * 30) {
+		$formattedDate = strftime '%m/%d', localtime $epoch;
+	} else {
+		$formattedDate = strftime '%c', localtime $epoch;
+		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
+	}
+
+	return $formattedDate;
+}
+
 sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	my $time = shift;
 	state $epoch;
+
+	my $prefix = shift;
 	
 	if (!defined($epoch)) {
 		$epoch = GetConfig('html/timestamp_epoch');
+	}
+
+	if (!$prefix) {
+		$prefix = '';
+	} else {
+		chomp $prefix;
 	}
 
 	#todo sanity check;
@@ -1934,12 +1963,15 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	} else {
 		$timestampElement = GetTemplate('timestamp2.template');
 
-		my $timeDate = strftime '%c', localtime $time;
+		my $timeDate = FormatDate($time);
+#		my $timeDate = strftime '%c', localtime $time;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 
 		$timestampElement =~ s/\$timestamp/$time/;
 		$timestampElement =~ s/\$timeDate/$timeDate/;
 	}
+
+	chomp $timestampElement;
 
 	return $timestampElement;
 }

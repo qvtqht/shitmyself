@@ -111,12 +111,47 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowTemplate {
+sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $contentColumnCount, $windowBody, $windowStatus
+# returns template for html-table-based-"window"
 	my $windowTitle = shift;
 	my $windowMenubar = shift;
-	my $contentColumns = shift;
+	my $contentColumnCount = shift;
 	my $windowBody = shift;
 	my $windowStatus = shift;
+
+	my $windowTemplate = GetTemplate('window/standard.template');
+
+	if ($windowTitle) {
+		$windowTemplate =~ s/\$windowTitle/$windowTitle/g;
+	} else {
+		$windowTemplate =~ s/$windowTitle//g;
+	}
+
+	if ($contentColumnCount) {
+		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
+	} else {
+		$windowTemplate =~ s/\ colspan=$contentColumnCount//g;
+	}
+
+	if ($windowMenubar) {
+		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
+	} else {
+		$windowTemplate =~ s/$windowMenubar//g;
+	}
+
+	if ($windowBody) {
+		$windowTemplate =~ s/\$windowBody/$windowBody/g;
+	} else {
+		$windowTemplate =~ s/$windowBody//g;
+	}
+
+	if ($windowBody) {
+		$windowTemplate =~ s/\$windowStatus/$windowStatus/g;
+	} else {
+		$windowTemplate =~ s/$windowStatus//g;
+	}
+
+	return $windowTemplate;
 }
 
 sub GetPageLinks { # returns html for pagination links
@@ -212,8 +247,19 @@ sub GetEventsPage { # returns html for events page
 
 	my $eventsItemsList = '';
 
+	my $rowBgColor = '';
+	my $rowBgColor0 = GetConfig('theme/color_row_0');
+	my $rowBgColor1 = GetConfig('theme/color_row_1');
+
 	while (@eventsArray) {
 		my $event = shift @eventsArray;
+
+		#alternating row colors hack
+		if ($rowBgColor eq $rowBgColor0) {
+			$rowBgColor = $rowBgColor1;
+		} else {
+			$rowBgColor = $rowBgColor0;
+		}
 
 		my $eventItemHash = %{$event}{'file_hash'};
 		my $eventTitle =  %{$event}{'event_title'};
@@ -273,6 +319,7 @@ sub GetEventsPage { # returns html for events page
 		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
 		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
 		$eventItem =~ s/\$voteButtons/$eventVoteButtons/;
+		$eventItem =~ s/\$rowBgColor/$rowBgColor/;
 
 		$eventsItemsList .= $eventItem;
 	}
@@ -669,7 +716,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh voting profile write_buttons));
+	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh voting profile write_buttons timestamps));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -959,7 +1006,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
 			# if no author, no $authorLink
-			$authorLink = "";
+			$authorLink = "Anonymous"; #todo put it into getitemtemplate logic instead
 		}
 
 		# set up $permalinkTxt, which links to the .txt version of the file
@@ -989,10 +1036,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		my $borderColor = '#' . substr($fileHash, 0, 6); # item's border color
 
-		my $addedTime = ''; #todo
+		my $addedTime = DBGetAddedTime($fileHash); #todo optimize
+		$addedTime = GetTimestampElement($addedTime, 'at ');
 										  
 		if ($file{'item_title'}) {
-			my $itemTitleTemplate = GetTemplate('itemtitlelink2.template');
+			my $itemTitleTemplate = GetTemplate('item_title_link2.template');
 
 			my $itemTitle = HtmlEscape($file{'item_title'});
 
@@ -1038,7 +1086,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
 			}
 			if ($votesSummary) {
-				$votesSummary = '<p class=advanced><b class=beginner>Attributes:</b> ' . $votesSummary . '</p>';
+				$votesSummary = $votesSummary . '<br>';
 				#todo templatize
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
@@ -1066,7 +1114,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		} else {
 			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
-
 
 		return $itemTemplate;
 	} else {
@@ -1126,6 +1173,21 @@ my $backgroundColor;
 my $textColor;
 my $linkColor = '';
 
+sub GetThemeColor {
+	my $colorName = shift;
+	chomp $colorName;
+
+	my @colorChoices = split("\n", GetConfig('theme/color_' . $colorName));
+
+	my $color = @colorChoices[int(rand(@colorChoices))];
+
+	if ($color =~ m/^[0-9a-fA-F]{6}$/) {
+		$color = '#' . $color;
+	}
+
+	return $color;
+}
+
 sub GetPageHeader { # returns html for page header
 	my $title = shift; # page title
 	my $titleHtml = shift; # formatted page title
@@ -1158,21 +1220,11 @@ sub GetPageHeader { # returns html for page header
 
 	my $txtIndex = "";
 
-	#my @primaryColorChoices = qw(008080 c08000 808080 8098b0 c5618e);
-	my @primaryColorChoices = split("\n", GetConfig('theme/color_primary'));
-	$primaryColor = "#" . $primaryColorChoices[int(rand(@primaryColorChoices))];
-
-	my @secondaryColorChoices = split("\n", GetConfig('theme/color_secondary'));
-	$secondaryColor = "#" . $secondaryColorChoices[int(rand(@secondaryColorChoices))];
-
-	my @backgroundColorChoices = split("\n", GetConfig('theme/color_background'));
-	$backgroundColor = "#" . $backgroundColorChoices[int(rand(@backgroundColorChoices))];
-
-	my @textColorChoices = split("\n", GetConfig('theme/color_text'));
-	$textColor = "#" . $textColorChoices[int(rand(@textColorChoices))];
-
-	my @linkColorChoices = split("\n", GetConfig('theme/color_link'));
-	$linkColor = "#" . $linkColorChoices[int(rand(@linkColorChoices))];
+	$primaryColor = GetThemeColor('primary');
+	$secondaryColor = GetThemeColor('secondary');
+	$backgroundColor = GetThemeColor('background');
+	$textColor = GetThemeColor('text');
+	$linkColor = GetThemeColor('link');
 
 	
 	#my $primaryColor = '#'.$primaryColorChoices[0];
@@ -1377,9 +1429,22 @@ sub GetTopItemsPage { # returns page with top items listing
 
 		my $itemListings = '';
 
+		my $rowBgColor = '';
+		my $rowBgColor0 = GetConfig('theme/color_row_0');
+		my $rowBgColor1 = GetConfig('theme/color_row_1');
+
+		my $itemCount = scalar(@topItems);
+
 		while (@topItems) {
 			my $itemTemplate = GetTemplate('item_listing.template');
 			#todo don't need to do this every time
+
+			#alternating row colors hack
+			if ($rowBgColor eq $rowBgColor0) {
+				$rowBgColor = $rowBgColor1;
+			} else {
+				$rowBgColor = $rowBgColor0;
+			}
 
 			my $itemRef = shift @topItems;
 			my %item = %{$itemRef};
@@ -1412,17 +1477,27 @@ sub GetTopItemsPage { # returns page with top items listing
 			$itemTemplate =~ s/\$itemScore/$itemScore/g;
 			$itemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 			$itemTemplate =~ s/\$itemLastTouch/$itemLastTouch/g;
+			$itemTemplate =~ s/\$rowBgColor/$rowBgColor/g;
 
 			$itemListings .= $itemTemplate;
 		}
 
 		$itemListingWrapper =~ s/\$itemListings/$itemListings/;
 
+		my $statusText = '';
+		if ($itemCount == 0) {
+			$statusText = 'No threads found.';
+		} elsif ($itemCount == 1) {
+			$statusText = '1 thread';
+		} elsif ($itemCount > 1) {
+			$statusText = $itemCount . ' threads';
+		}
+
+		$itemListingWrapper = GetWindowTemplate('Top Threads', '<a href="/write.html">New Topic</a>', 4, $itemListings, $statusText);
+
 		$txtIndex .= $itemListingWrapper;
 	} else {
-#		$txtIndex .= "<p class=beginner>Couldn't find any items to put on this page. Recommend that you post something or contact your operator.</p><p>No matches.</p>";
 		$txtIndex .= GetTemplate('item/no_items.template');
-		#todo should be in template/
 	}
 
 	$txtIndex .= GetPageFooter();
@@ -1478,6 +1553,8 @@ sub GetStatsPage { # returns html for stats page
 		$lastBuildTime = 0;
 	}
 
+	my $filesLeft = GetConfig('admin/gitflow/files_left') || 0;
+
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
 
@@ -1485,6 +1562,7 @@ sub GetStatsPage { # returns html for stats page
 	$statsTable =~ s/\$versionShort/$versionShort/;
 	$statsTable =~ s/\$itemCount/$itemCount/;
 	$statsTable =~ s/\$authorCount/$authorCount/;
+	$statsTable =~ s/\$filesLeft/$filesLeft/;
 
 	$statsPage .= $statsTable;
 
@@ -1960,6 +2038,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$row->{'show_quick_vote'} = 1;
 			$row->{'vote_buttons'} = 1;
 			$row->{'show_vote_summary'} = 1;
+			$row->{'display_full_hash'} = 0;
 
 			my $itemTemplate;
 			$itemTemplate = GetItemTemplate($row);
