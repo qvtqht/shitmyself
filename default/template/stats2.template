@@ -14,6 +14,7 @@
 					<p>Built: $lastBuildTime
 					<p>Updated: $lastUpdateTime
 					<p><a href="/index0.html">Items</a>: $itemCount
+					<p>Queue: $filesLeft
 					<p><a href="/authors.html">Authors</a>: $authorCount
 					<p>Operator: $admin
 					<p class=advanced>Server: $server
