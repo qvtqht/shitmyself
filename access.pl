@@ -471,8 +471,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						if (GetConfig('admin/organize_files')) {
 							# If organizing is enabled, rename the file to its hash-based filename
 							my $hashFilename = GetFileHashPath($pathedFilename);
-							rename($pathedFilename, $hashFilename);
-							$pathedFilename = $hashFilename;
+							if ($hashFilename) {
+								rename($pathedFilename, $hashFilename);
+								$pathedFilename = $hashFilename;
+							}
 						}
 
 						#Get the hash for this file
