@@ -1,3 +1,6 @@
+sharePubKey() should not change the current page, if possible
+	Make it submit in teh background
+
 Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
 Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
 Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
