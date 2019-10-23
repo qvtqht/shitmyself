@@ -1963,7 +1963,10 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	} else {
 		$timestampElement = GetTemplate('timestamp2.template');
 
-		my $timeDate = FormatDate($time);
+		my $timeDate = $time;
+		if ($time =~ m/^[0-9]+$/) {
+			my $timeDate = FormatDate($time);
+		}
 #		my $timeDate = strftime '%c', localtime $time;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 
