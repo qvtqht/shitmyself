@@ -1024,7 +1024,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
 		my $itemName; # item's 'name'
 		
-		if ($file{'display_full_hash'}) {
+		if ($file{'display_full_hash'} && $file{'display_full_hash'} != 0) {
 			# if display_full_hash is set, display the item's entire hash for name
 			$itemName = $fileHash;
 		} else {
@@ -1621,6 +1621,8 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	my $authorListings = '';
 
+	my $authorCount = scalar(@topAuthors);
+
 	while (@topAuthors) {
 		# get the friend's key
 		my $authorRef = shift @topAuthors;
@@ -1657,7 +1659,15 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorListings .= $authorItemTemplate;
 	}
 
+	my $authorCountMessage = '';
+	if ($authorCount == 1) {
+		$authorCountMessage = '1 author';
+	} else {
+		$authorCountMessage = $authorCount . ' authors';
+	}
+
 	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
+	$authorListingWrapper =~ s/\$authorCountMessage/$authorCountMessage/;
 
 	$txtIndex .= $authorListingWrapper;
 
