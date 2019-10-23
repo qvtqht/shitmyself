@@ -442,6 +442,8 @@ function makePrivateKey(username, bits) {
 					saveId();
 					
 					setPublicKey(key.publicKeyArmored);
+
+					sharePubKey();
 					
 //					sharePubKey();
 
@@ -464,44 +466,35 @@ function makePrivateKey(username, bits) {
 	}
 }
 
-function sharePubKey3() {
+function sharePubKey() {
 	var pubKey = getPublicKey();
-	
+
 	var form = document.createElement('form');
 	form.setAttribute("action", "/post.html");
 	form.setAttribute("method", "get");
-	
+
 	var txtComment = document.createElement('input');
 	txtComment.setAttribute("type", "hidden");
 	txtComment.setAttribute("value", pubKey);
 	txtComment.setAttribute("name", "comment");
-	
+
 	form.appendChild(txtComment);
 	document.getElementsByTagName('body')[0].appendChild(form);
 
 	document.body.appendChild(form);
-	
-	form.submit();	
-}
 
-function sharePubKey2() {
-	if (1 == 1) {
-		return sharePubKey3();
-	}
-	
-	var iframe = document.createElement("iframe");
-	iframe.src = '/write.html#inspubkey';
-	iframe.name = "inspubkey"
-	iframe.style.display = 'none';
-	document.body.appendChild(iframe);
-}
+	form.submit();
 
-function sharePubKey() {
-	if (1 == 0) {
-		return sharePubKey2();
-	}
-	
-	window.open('/write.html#inspubkey', '_self');
+/////
+//	window.open('/write.html#inspubkey', '_self');
+
+/////
+//	var iframe = document.createElement("iframe");
+//	iframe.src = '/write.html#inspubkey';
+//	iframe.name = "inspubkey"
+//	iframe.style.display = 'none';
+//	document.body.appendChild(iframe);
+
 }
 
 function makeKeyFromInputs() {
@@ -515,7 +508,7 @@ function makeKeyFromInputs() {
 	var bits = document.getElementById('bits').value;
 
 	makePrivateKey(user, bits);
-	
+
 	return 0;
 }
 
