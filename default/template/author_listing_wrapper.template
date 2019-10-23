@@ -26,7 +26,7 @@
 
 		<tr class="statusbar">
 			<td colspan="6">
-				<p>12 authors</p>
+				<p>$authorCountMessage</p>
 			</td>
 		</tr>
 	</table>
