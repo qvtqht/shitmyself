@@ -1,3 +1,5 @@
+Put infobox with all of the item's attributes on item details page
+
 sharePubKey() should not change the current page, if possible
 	Make it submit in teh background
 
