@@ -1037,7 +1037,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
 			# if no author, no $authorLink
-			$authorLink = "Anonymous"; #todo put it into getitemtemplate logic instead
+			$authorLink = 'an anonymous author'; #todo put it into getitemtemplate logic instead
 		}
 
 		# set up $permalinkTxt, which links to the .txt version of the file
