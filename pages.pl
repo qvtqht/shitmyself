@@ -111,11 +111,17 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $contentColumnCount, $windowBody, $windowStatus
+sub GetWindowHeader {
+	my @columns = shift;
+
+
+}
+
+sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 # returns template for html-table-based-"window"
 	my $windowTitle = shift;
 	my $windowMenubar = shift;
-	my $contentColumnCount = shift;
+	my $columnHeadings = shift;
 	my $windowBody = shift;
 	my $windowStatus = shift;
 
@@ -127,10 +133,29 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $contentColumnCount, $w
 		$windowTemplate =~ s/$windowTitle//g;
 	}
 
-	if ($contentColumnCount) {
-		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
+	my $contentColumnCount = 0;
+
+	if ($columnHeadings) {
+		my $windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
+		my $windowHeaderColumns = '';
+		my @columnsArray = split(',', $columnHeadings);
+
+		my $printedColumnsCount = 0;
+		foreach my $columnCaption (@columnsArray) {
+			$printedColumnsCount++;
+			my $columnHeaderTemplate = GetTemplate('window/header_column.template');
+			if ($printedColumnsCount >= scalar(@columnsArray)) {
+				$columnCaption .= '<br>'; # for no-table browsers
+			}
+			$columnHeaderTemplate =~ s/\$headerCaption/$columnCaption/;
+			$windowHeaderColumns .= $columnHeaderTemplate;
+		}
+		$windowHeaderTemplate =~ s/\$windowHeadings/$windowHeaderColumns/;
+		$windowTemplate =~ s/\$windowHeader/$windowHeaderTemplate/;
+		$contentColumnCount = scalar(@columnsArray);
 	} else {
-		$windowTemplate =~ s/\ colspan=$contentColumnCount//g;
+		$windowTemplate =~ s/\$windowHeader//g;
+		$contentColumnCount = 0;
 	}
 
 	if ($windowMenubar) {
@@ -149,6 +174,12 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $contentColumnCount, $w
 		$windowTemplate =~ s/\$windowStatus/$windowStatus/g;
 	} else {
 		$windowTemplate =~ s/$windowStatus//g;
+	}
+
+	if ($contentColumnCount) {
+		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
+	} else {
+		$windowTemplate =~ s/\ colspan=$contentColumnCount//g;
 	}
 
 	return $windowTemplate;
@@ -1493,7 +1524,15 @@ sub GetTopItemsPage { # returns page with top items listing
 			$statusText = $itemCount . ' threads';
 		}
 
-		$itemListingWrapper = GetWindowTemplate('Top Threads', '<a href="/write.html">New Topic</a>', 4, $itemListings, $statusText);
+		my $columnHeadings = 'Title,Score,Replied,Author';
+
+		$itemListingWrapper = GetWindowTemplate(
+			'Top Threads',
+			'<a href="/write.html">New Topic</a>',
+			$columnHeadings,
+			$itemListings,
+			$statusText
+		);
 
 		$txtIndex .= $itemListingWrapper;
 	} else {

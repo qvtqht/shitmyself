@@ -22,8 +22,6 @@
 
 		$itemListings
 
-		<!--<tr><td colspan=4><br></td></tr>-->
-
 		<tr class=statusbar>
 			<td colspan=4>12 threads</td>
 		</tr>
