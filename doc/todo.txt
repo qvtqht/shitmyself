@@ -1,13 +1,7 @@
-Change "by Anonymous" to "by an anonymous user"
-
 Put infobox with all of the item's attributes on item details page
 
 sharePubKey() should not change the current page, if possible
 	Make it submit in teh background
-
-Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
-Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
-Argument "<!--#echo var="DATE_LOCAL" -->" isn't numeric in subtraction (-) at ./utils.pl line 1924.
 
 #bug 404 page links to non-existing pages if it is displayed on a sub-url
 
