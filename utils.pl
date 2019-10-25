@@ -1939,10 +1939,12 @@ sub FormatDate {
 
 sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	my $time = shift;
+	my $prefix = shift;
+
 	state $epoch;
 
-	my $prefix = shift;
-	
+	chomp $time;
+
 	if (!defined($epoch)) {
 		$epoch = GetConfig('html/timestamp_epoch');
 	}
@@ -1953,6 +1955,8 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 		chomp $prefix;
 	}
 
+	WriteLog('GetTimestampElement("' . $time . '","' . $prefix . '")');
+
 	#todo sanity check;
 
 	my $timestampElement = '';
@@ -1961,12 +1965,17 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 
 		$timestampElement =~ s/\$timestamp/$time/;
 	} else {
+		WriteLog('GetTimestampElement: $epoch = false');
+
 		$timestampElement = GetTemplate('timestamp2.template');
 
 		my $timeDate = $time;
+
 		if ($time =~ m/^[0-9]+$/) {
-			my $timeDate = FormatDate($time);
+			WriteLog('GetTimestampElement: ($time =~ m/^[0-9]+$/) is true');
+			$timeDate = FormatDate($time);
 		}
+
 #		my $timeDate = strftime '%c', localtime $time;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 
