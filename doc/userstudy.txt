@@ -1,3 +1,15 @@
+User Study 10/23
+================
+Notes: User is a programmer and self-described geeky person
+1. Am I logged in? Needs indicator.
+2. Need feedback in UI when something is processing
+	Comment submission
+	Voting
+3. Home button? Where is it? How to get to Home?
+4. Voting buttons are not obvious -- are they tags someone else added or ??
+5. Indicator of voting completed
+6. Tooltips
+
 User Study 10/22
 ================
 Top Comment: Needs "more indication on what's what"
