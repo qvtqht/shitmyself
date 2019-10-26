@@ -1,5 +1,5 @@
 <!-- item2.template -->
-<font face=arial>
+<font face=arial class="$itemClass">
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		$itemTitleTemplate
 
@@ -14,7 +14,9 @@
 		<tr bgcolor="$colorWindow" class=statusbar>
 			<td style="border: 1pt inset $colorWindow">
 				<a href="$permalinkHtml">$addedTime</a>
-				by $authorLink
+				$authorLink
+				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt></a>
+				<a href="#reply" class=beginner>reply($replyCount)</a>
 			</td>
 		</tr>
 	</table>
