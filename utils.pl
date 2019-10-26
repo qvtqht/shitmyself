@@ -1939,7 +1939,6 @@ sub FormatDate {
 
 sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	my $time = shift;
-	my $prefix = shift;
 
 	state $epoch;
 
@@ -1949,13 +1948,7 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 		$epoch = GetConfig('html/timestamp_epoch');
 	}
 
-	if (!$prefix) {
-		$prefix = '';
-	} else {
-		chomp $prefix;
-	}
-
-	WriteLog('GetTimestampElement("' . $time . '","' . $prefix . '")');
+	WriteLog('GetTimestampElement("' . $time . '")');
 
 	#todo sanity check;
 
