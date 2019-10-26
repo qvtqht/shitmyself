@@ -243,11 +243,13 @@ if (document.getElementById) {
 
 function ResetPrefs() {
 	if (window.localStorage) {
-		localStorage.removeItem('prefs1');
+		if (confirm('Reset all preferences to their defaults?')) {
+			localStorage.removeItem('prefs1');
 
-		ShowAdvanced(1);
+			ShowAdvanced(1);
 
-		location.reload(); //#todo make this not necessary
+			location.reload(); //#todo make this not necessary
+		}
 	}
 }
 
