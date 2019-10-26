@@ -10,7 +10,7 @@
 
 			<tr class=menubar>
 				<td>
-					<p><a href=# onclick="ResetPrefs()">Reset</a>
+					<p><a href=# onclick="ResetPrefs()">Reset to Defaults</a>
 				</td>
 			</tr>
 
