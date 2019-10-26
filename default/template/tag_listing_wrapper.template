@@ -1,8 +1,9 @@
+<!-- tag_listing_wrapper.template -->
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=3>
-				<font color=white><b>Attributes</b></font>
+				<font color=white><b>Tags</b></font>
 			</td>
 		</tr>
 
@@ -20,3 +21,4 @@
 		$tagListings
 	</table>
 </font>
+<!-- / tag_listing_wrapper.template -->

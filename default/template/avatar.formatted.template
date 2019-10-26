@@ -1,4 +1,4 @@
-<!-- avatar.template -->
+<!-- avatar.formatted.template -->
 <span class=avatar style="background-color: #$color1">
 	<span class=icon>
 		<font color="#$color2">
@@ -14,4 +14,4 @@
 		</font>
 	</span>
 </span>
-<!-- / avatar.template -->
+<!-- / avatar.formatted.template -->

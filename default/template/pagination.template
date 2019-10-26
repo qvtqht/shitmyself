@@ -1,4 +1,5 @@
-<font face=arial>
+<!-- pagination.template -->
+<font face=arial><p>
 	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 			<td>
@@ -12,4 +13,5 @@
 			</td>
 		</tr>
 	</table>
-</font>
+</p></font>
+<!-- / pagination.template -->
