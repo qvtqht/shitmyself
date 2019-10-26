@@ -123,3 +123,6 @@ div.txt {
 .statusbar td {
 	border: 1pt inset #c0c0c0;
 }
+textarea {
+	border: 2pt inset #c0c0c0;
+}
