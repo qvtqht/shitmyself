@@ -1,3 +1,11 @@
+#bug NN3 display issues (blank table cells)
+
+#bug Built: 18195 days ago
+After clean-build before first gitflow
+
+#bug Printed twice on item page:
+<main id=maincontent><a name=maincontent></a>
+
 Put infobox with all of the item's attributes on item details page
 
 sharePubKey() should not change the current page, if possible
@@ -10,6 +18,11 @@ Make an archive of 88x31 browser buttons and display ones which test OK
 Create titles for
 	Pubkey
 	One-vote items
+	anything else Untitled
+	Where to do it?
+		Probably insert into item_title
+		Or on output
+			if pubkey and no title then output 'user registration'
 
 Cache voted items locally so that buttons can be disabled on client-side
 
