@@ -258,7 +258,9 @@ sub GetPageLinks { # returns html for pagination links
 
 	$pageLinks = $frame;
 
-	#todo explain recursion
+	# up to this point, we are building the in-memory template for the pagination links
+	# once it is stored in $pageLinks, which is a static ("state") variable,
+	# GetPageLinks() returns at the top, and does not reach here.
 	return GetPageLinks($currentPageNumber);
 }
 
@@ -1037,7 +1039,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
 			# if no author, no $authorLink
-			$authorLink = 'an anonymous author'; #todo put it into getitemtemplate logic instead
+			$authorLink = ''; #todo put it into getitemtemplate logic instead
 		}
 
 		# set up $permalinkTxt, which links to the .txt version of the file
@@ -1053,6 +1055,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 													 
 		my $itemText = $message; # output for item's message (formatted text)
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
+		my $fileHashShort = substr($fileHash, 0, 8) . '..';
 		my $itemName; # item's 'name'
 		
 		if ($file{'display_full_hash'} && $file{'display_full_hash'} != 0) {
@@ -1063,12 +1066,12 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemName = substr($fileHash, 0, 8) . '..';
 		}
 
-		#my $replyCount = $file{'child_count'};
+		my $replyCount = $file{'child_count'};
 
 		my $borderColor = '#' . substr($fileHash, 0, 6); # item's border color
 
 		my $addedTime = DBGetAddedTime($fileHash); #todo optimize
-		$addedTime = GetTimestampElement($addedTime, 'at ');
+		$addedTime = GetTimestampElement($addedTime);
 										  
 		if ($file{'item_title'}) {
 			my $itemTitleTemplate = GetTemplate('item_title_link2.template');
@@ -1087,6 +1090,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemText = '<tt><code>' . $message . '</code></tt>';
 		}
 
+		my $replyLink = $permalinkHtml . '#reply'; #todo this doesn't need the url before #reply if it is on the item's page
+
+
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		$itemTemplate =~ s/\$authorLink/$authorLink/g;
@@ -1094,14 +1100,16 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
 		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
+		$itemTemplate =~ s/\$fileHashShort/$fileHashShort/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 		$itemTemplate =~ s/\$addedTime/$addedTime/g;
+		$itemTemplate =~ s/\$replyLink/$replyLink/g;
 
-#		if ($replyCount) {
-#			$itemTemplate =~ s/\$replyCount/\($replyCount\)/g;
-#		} else {
-#			$itemTemplate =~ s/\$replyCount//g;
-#		}
+		if ($replyCount) {
+			$itemTemplate =~ s/\$replyCount/$replyCount/g;
+		} else {
+			$itemTemplate =~ s/\$replyCount/0/g;
+		}
 
 
 		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
@@ -1738,6 +1746,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	# #todo figure out why this is needed here
 
 	if (defined($pageType)) {
+		#$pageType can be 'author', 'tag
 		if ($pageType eq 'author') {
 			$pageParam = shift;
 			$authorKey = $pageParam;
@@ -2038,14 +2047,13 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
 	
-	$htmlStart =~ s/<main id=maincontent><a name=maincontent><\/a>//;
-	# todo fix this hack
-
 	$txtIndex .= $htmlStart;
 
 	if (defined($currentPageNumber)) {
 		$txtIndex .= GetPageLinks($currentPageNumber);
 	}
+
+	$txtIndex .= '<p>';
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -2103,6 +2111,8 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	$txtIndex .= $itemList;
 
+	$txtIndex .= '<p>';
+
 	#	$txtIndex .= GetTemplate('voteframe.template');
 
 	if (defined($currentPageNumber)) {
@@ -2115,7 +2125,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile fresh));
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile fresh timestamps));
 
 	return $txtIndex;
 }
