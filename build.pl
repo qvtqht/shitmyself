@@ -141,6 +141,11 @@ PutConfig('admin/gitflow/files_left', $filesLeft);
 
 PutFile('config/admin/build_end', GetTime());
 
+UpdateUpdateTime();
+# Stats page
+my $statsPage = GetStatsPage();
+PutHtmlFile("html/stats.html", $statsPage);
+
 if (GetConfig('admin/build/gitflow_after')) {
 	BuildMessage("system('perl gitflow.pl')...");
 	
