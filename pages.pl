@@ -80,8 +80,9 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 		$authorAvatar = GetAvatar($gpgKey);
 	}
 
-	chomp $authorAvatar;
 	my $authorLink = GetTemplate('authorlink.template');
+
+	$authorAvatar = trim($authorAvatar);
 
 	$authorLink =~ s/\$authorUrl/$authorUrl/g;
 	$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
@@ -1631,6 +1632,10 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 		push @scriptNames, 'clock';
 	}
 
+	if (GetConfig('admin/force_profile')) {
+		push @scriptNames, 'force_profile';
+	}
+
 	foreach my $script (@scriptNames) {
 		if (!$scriptsComma) {
 			$scriptsComma = "\n\n";
@@ -2240,12 +2245,25 @@ sub GetLighttpdConfig {
 sub MakeFormPages { #generates and writes all 'form' pages (doesn't do anything atm)
 }
 
+#sub GetUserInitPage {
+#	my $userInitPage = GetTemplate('user_init.template');
+#	$userInitPage = InjectJs($userInitPage, 'user_init');
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$userInitPage =~ s/<\/body>/$scriptsInclude<\/body>/;
+#
+#	return $userInitPage;
+#}
+#
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 	WriteLog('MakeSummaryPages() BEGIN');
 	
 	PutHtmlFile("$HTMLDIR/test.html", GetTemplate('test.template'));
 
+#	# User Init page
+#	my $userInitPage = GetUserInitPage();
+#	PutHtmlFile("$HTMLDIR/user_init.html", $userInitPage);
+#
 	# Submit page
 	my $submitPage = GetWritePage();
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);

@@ -1,0 +1,13 @@
+// == begin force_profile.js
+if (window.getUserFp) {
+	if (!getUserFp()) {
+		var url = window.location.toString();
+
+		var filename = url.split('/').pop();
+
+		if (filename != 'profile.html') {
+			window.location = '/profile.html';
+		}
+	}
+}
+// == end force_profile.js
