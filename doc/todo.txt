@@ -1,10 +1,11 @@
+#bug An extra eol is happening somewhere in between avatar2.template and authorlink.template
+	causing for an extra trailing underlined space at the end of the username link
+		html/color_avatars=0
+
 #bug NN3 display issues (blank table cells)
 
 #bug Built: 18195 days ago
 After clean-build before first gitflow
-
-#bug Printed twice on item page:
-<main id=maincontent><a name=maincontent></a>
 
 Put infobox with all of the item's attributes on item details page
 
