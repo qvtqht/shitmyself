@@ -1,13 +1,13 @@
 <!-- item2.template -->
-<font face=arial class="$itemClass">
+<font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		$itemTitleTemplate
 
 		$quickVoteButtonGroup
 
 		<tr class=body>
-			<td class=content style="border: 1pt inset $colorWindow" colspan=2 bgcolor=#ffffff>
-				<p>$itemText
+			<td class=content colspan=2 bgcolor=#ffffff>
+				<p class="$itemClass">$itemText</p>
 			</td>
 		</tr>
 
