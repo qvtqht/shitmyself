@@ -1,3 +1,10 @@
+getElementById() polyfill for netscape
+	until better alternative
+
+Threaded pages
+	#bug reply count not shown for first level replies
+	Second level replies are not indented
+
 Add 404 hook for htaccess/Apache
 
 Add simple index page for txt/
@@ -58,8 +65,6 @@ and (',' || item_flat.tags_list || ',')  not like '%,pubkey,%'
 and (',' || item_flat.tags_list || ',')  not like '%,reply,%';
 
 #bug After an item is deleted, an empty page is re-generated, without any content, but with header, footer, and title!
-
-RELATIVE URLS FOR ALL LINKS
 
 Installer/dependency installer
 	which gpg

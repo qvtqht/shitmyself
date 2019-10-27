@@ -528,6 +528,8 @@ sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG f
 		PutCache("pavatar/$gpgKey", $avatar);
 	}
 
+	chomp $avatar;
+
 	return $avatar;
 }
 
@@ -956,6 +958,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		# src="/
 		# href="/
 		# .src = '/
+		# .location = '/
 
 		my $count = ($file =~ s/\//\//g);
 		
@@ -969,6 +972,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		$content =~ s/src="\//src="$subDir/ig;
 		$content =~ s/href="\//href="$subDir/ig;
 		$content =~ s/\.src = '\//.src = '$subDir/ig;
+		$content =~ s/\.location = '\//.location = '$subDir/ig;
 	}
 
 #	if (GetConfig('admin/debug')) {
@@ -1930,7 +1934,7 @@ sub FormatDate {
 	} elsif ($difference < 86400 * 30) {
 		$formattedDate = strftime '%m/%d', localtime $epoch;
 	} else {
-		$formattedDate = strftime '%c', localtime $epoch;
+		$formattedDate = strftime '%a, %d %b %Y', localtime $epoch;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 	}
 
