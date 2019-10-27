@@ -2347,18 +2347,23 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetTemplate('maincontent.template');
 
-		my $tfmPageTemplate = GetTemplate('page/manual_advanced.template');
+		my $tfmPageContent = GetTemplate('page/manual_advanced.template');
 
-		$tfmPage .= $tfmPageTemplate;
+		my $tfmPageWindow = GetWindowTemplate(
+			'Advanced Manual',
+			'<p>', #menubar
+			'', #columns
+			'<tr class=body bgcolor=white><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			'Ready'
+		);
 
-		$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
+		$tfmPage .= $tfmPageWindow;
 
 		$tfmPage .= GetPageFooter();
 
 		$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
 
 		PutHtmlFile("$HTMLDIR/manual_advanced.html", $tfmPage);
-
 	}
 
 
