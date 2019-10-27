@@ -37,7 +37,7 @@
 					>$initText</textarea><br>
 
 					<p>
-						<input type=submit onclick="if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
+						<input type=submit onclick="this.value = 'Please wait... (click to try again)'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
 					</p>
 
 					<p class=advanced>
