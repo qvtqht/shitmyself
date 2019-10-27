@@ -1,3 +1,7 @@
+Add 404 hook for htaccess/Apache
+
+Add simple index page for txt/
+
 #bug An extra eol is happening somewhere in between avatar2.template and authorlink.template
 	causing for an extra trailing underlined space at the end of the username link
 		html/color_avatars=0
