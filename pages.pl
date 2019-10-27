@@ -112,12 +112,6 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowHeader {
-	my @columns = shift;
-
-
-}
-
 sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 # returns template for html-table-based-"window"
 	my $windowTitle = shift;
@@ -2326,11 +2320,18 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetTemplate('maincontent.template');
 
-		my $tfmPageTemplate = GetTemplate('page/manual.template');
+		my $tfmPageContent = GetTemplate('page/manual.template');
+		$tfmPageContent .= '<p>' . GetTemplate('netnow3.template') . '</p>';
 
-		$tfmPage .= $tfmPageTemplate;
+		my $tfmPageWindow = GetWindowTemplate(
+			'Manual',
+			'<p>', #menubar
+			'', #columns
+			'<tr class=body bgcolor=white><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			'Ready'
+		);
 
-		$tfmPage .= '<p>' . GetTemplate('netnow3.template') . '</p>';
+		$tfmPage .= $tfmPageWindow;
 
 		$tfmPage .= GetPageFooter();
 
