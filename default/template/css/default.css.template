@@ -24,10 +24,6 @@ body {
 	font-family: monospace;
 	font-size: default;
 }
-.tag-funny {
-	font-family: cursive;
-	font-size: default;
-}
 
 /* regular text */
 .txt {
