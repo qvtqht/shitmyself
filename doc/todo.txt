@@ -1,3 +1,5 @@
+Tags page with 0 tags
+
 getElementById() polyfill for netscape
 	until better alternative
 
