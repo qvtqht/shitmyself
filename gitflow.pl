@@ -276,7 +276,7 @@ if (!$locked) {
 	my $pagesLimit = GetConfig('admin/gitflow/page_limit');
 	if (!$pagesLimit) {
 		WriteLog("WARNING: config/admin/gitflow/page_limit missing!");
-		$pagesLimit = 100;
+		$pagesLimit = 1000;
 	}
 	my $pagesProcessed = 0;
 	
@@ -284,7 +284,7 @@ if (!$locked) {
 	# in this case, 'touch' means when an item that affects the page
 	# is updated or added
 	foreach my $page (@touchedPagesArray) {
-	#	$pagesProcessed++;
+		$pagesProcessed++;
 	#	if ($pagesProcessed > $pagesLimit) {
 	#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
 	#		last;
@@ -342,6 +342,8 @@ if (!$locked) {
 	WriteLog("======gitflow.pl DONE! ======");
 	WriteLog("Items/files processed: $filesProcessed");
 	print("Items/files processed: $filesProcessed\n");
+	WriteLog("Pages processed: $pagesProcessed");
+	print("Pages processed: $pagesProcessed\n");
 }
 
 1;
