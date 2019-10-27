@@ -8,5 +8,4 @@ function makeRefLink() {
 		}
 	}
 }
-
 // == end post.js

@@ -1,5 +1,4 @@
-
-// == begin fresh.js 
+// == begin fresh.js
 var freshClient;
 
 function corsc() { // callback for requesting HEAD for current page
