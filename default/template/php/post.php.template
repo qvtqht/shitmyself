@@ -180,8 +180,10 @@ if ($_GET) {
 		
 		$comment .= "\n\n" . $replyToToken;
 	}
-	
-	$fileUrlPath = ProcessNewComment($comment);
+
+	if ($comment) {
+		$fileUrlPath = ProcessNewComment($comment);
+	}
 }
 		
 $html = file_get_contents('post.html');
