@@ -924,6 +924,14 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	my $file = shift;
 	my $content = shift;
 	my $itemHash = shift; #optional
+
+	if (!$file) {
+		return;
+	}
+
+	if (!$content) {
+		$content = '';
+	}
 	
 	my $relativizeUrls = GetConfig('html/relativize_urls');
 
@@ -1946,7 +1954,11 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 
 	state $epoch;
 
-	chomp $time;
+	if ($time) {
+		chomp $time;
+	} else {
+		$time = 0;
+	}
 
 	if (!defined($epoch)) {
 		$epoch = GetConfig('html/timestamp_epoch');
