@@ -1036,6 +1036,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# if no author, no $authorLink
 			$authorLink = ''; #todo put it into getitemtemplate logic instead
 		}
+		$authorLink = trim($authorLink);
 
 		# set up $permalinkTxt, which links to the .txt version of the file
 		my $permalinkTxt = $file{'file_path'};
