@@ -1,3 +1,11 @@
+Vacuum old items
+	Items older than 1 day
+		And don't have following tags:
+			keep
+			admin
+			vouch
+
+
 #bug Page indicators show incorrect number of last item
 	1-150 151-300 <--- 300 should be e.g. 253
 
