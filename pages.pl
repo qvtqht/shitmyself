@@ -95,7 +95,7 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 
 	my $pageLimit = GetConfig('page_limit');
 	
-	my $pageStart = $pageNumber * $pageLimit;
+	my $pageStart = $pageNumber * $pageLimit + 1;
 	my $pageEnd = $pageNumber * $pageLimit + $pageLimit;
 	my $pageCaption = $pageStart . '-' . $pageEnd;
 
@@ -1090,7 +1090,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
-		$itemTemplate =~ s/\$authorLink/$authorLink/g;
+		if ($authorLink) {
+			$itemTemplate =~ s/\$authorLink/[$authorLink]/g;
+		} else {
+			$itemTemplate =~ s/\$authorLink//g;
+		}
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
 		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
@@ -1135,7 +1139,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			WriteLog('GetItemTemplate: $file{\'show_quick_vote\'} = ' . $file{'show_quick_vote'});
 	
 			if ($file{'show_quick_vote'}) {
-				my $quickVotesButtons = GetItemVoteButtons($file{'file_hash'}, 'hastext'); #todo refactor to take vote totals directly
+				my $quickVotesButtons = GetItemVoteButtons($file{'file_hash'}); #todo refactor to take vote totals directly
 
 				my $quickVoteButtonGroup = GetTemplate('votequick2.template');
 				$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
