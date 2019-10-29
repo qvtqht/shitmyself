@@ -1906,7 +1906,10 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 }
 
 sub DBGetAllAppliedTags { # return all tags that have been used at least once
-	my $query = "SELECT DISTINCT vote_value FROM vote";
+	my $query = "
+		SELECT DISTINCT vote_value FROM vote
+		JOIN item ON (vote.file_hash = item.file_hash)
+	";
 
 	my $sth = $dbh->prepare($query);
 
