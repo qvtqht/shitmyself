@@ -340,6 +340,25 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 #	}
 #}
 
+sub GitPipe {
+	my $gitCommand = shift;
+
+	if (!$gitCommand) {
+		return;
+	}
+
+	my $gitCommandPrefix = 'git --git-dir=html/txt/.git --work-tree=html/txt ';
+	my $gitCommandSuffix = ' 2>&1';
+
+	$gitCommand = $gitCommandPrefix . $gitCommand . $gitCommandSuffix;
+
+	WriteLog($gitCommand);
+
+	my $gitCommandResult = `$gitCommand`;
+
+	return $gitCommandResult;
+}
+
 sub GetFileHash { # $fileName ; returns git's hash of file contents
 	WriteLog("GetFileHash()");
 
@@ -349,7 +368,11 @@ sub GetFileHash { # $fileName ; returns git's hash of file contents
 
 	WriteLog("GetFileHash($fileName)");
 
-	my $gitOutput = `git --git-dir=html/txt/.git hash-object -w "$fileName"`;
+	WriteLog("git --git-dir=html/txt/.git hash-object -w \"$fileName\" 2>&1");
+
+	my $gitOutput = `git --git-dir=html/txt/.git hash-object -w "$fileName" 2>&1`;
+
+	WriteLog($gitOutput);
 
 	chomp($gitOutput);
 
