@@ -465,7 +465,7 @@ sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG f
 
 	if ($avatarCache{$gpgKey}) {
 		WriteLog("GetPlainAvatar: found in hash");
-		return $avatarCache{$gpgKey};
+		return trim($avatarCache{$gpgKey});
 	}
 
 	WriteLog("GetPlainAvatar: continuing with cache lookup");
@@ -474,7 +474,7 @@ sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG f
 	#should be refreshed when pubkey is posted
 	#and also #todo reprocess all(some?) signed but previously unparsable messages
 
-	my $avCacheFile = GetCache("avatar/$gpgKey");
+	my $avCacheFile = GetCache("pavatar/$gpgKey");
 	if ($avCacheFile) {
 		return $avCacheFile;
 	}
@@ -515,7 +515,7 @@ sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG f
 #			$avatar =~ s/\$char2/$char2/g;
 #			$avatar =~ s/\$char3/$char3/g;
 		} else {
-			$avatar = '($gpgKey)';
+			$avatar = '($gpgKey)'; #todo what's this?
 		}
 	} else {
 		$avatar = "(bug_detected)";
