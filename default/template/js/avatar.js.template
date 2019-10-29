@@ -19,7 +19,7 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 				var itsYou = document.getElementById('itsyou');
 				itsYou.innerHTML = 'This is you!';
 
-				var parentNode = document.getElementById('maincontent');
+//				var parentNode = document.getElementById('maincontent');
 
 //				parentNode.insertBefore(itsYou, parentNode.firstChild);
 			}
