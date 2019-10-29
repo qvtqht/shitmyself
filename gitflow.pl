@@ -146,9 +146,11 @@ if (!$locked) {
 	
 	# Get an array of changed files that git returned
 	my @gitChangesArray = split("\n", $gitChanges);
+
+	my $gitChangesCount = scalar(@gitChangesArray);
 	
 	# Log number of changes
-	WriteLog('scalar(@gitChangesArray) = ' . scalar(@gitChangesArray));
+	WriteLog('scalar(@gitChangesArray) = ' . $gitChangesCount);
 																																	
 	# Keep track of how many files we've processed
 	my $filesProcessed = 0;
@@ -210,13 +212,15 @@ if (!$locked) {
 				}
 			}
 
-			WriteLog('gitflow.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
+#			WriteLog('gitflow.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
 			
 			# add a time_added record
-			DBAddAddedTimeRecord($fileHash, $addedTime);
+#			DBAddAddedTimeRecord($fileHash, $addedTime);
 
 			WriteLog('gitflow.pl: IndexTextFile(' . $file . ')');
-			
+
+			WriteMessage('gitflow.pl: IndexTextFile(' . $file . '), file ' . $filesProcessed . '/' . $gitChangesCount . ' (max ' . $filesLimit . ')');
+
 			IndexTextFile($file);
 	
 			# run commands to
@@ -262,23 +266,23 @@ if (!$locked) {
 		MakeSummaryPages();
 	#	WriteIndexPages();
 	}
-	
-	# get a list of pages that have been touched since the last git_flow
-	# this is from the page_touch table
-	my $touchedPages = DBGetTouchedPages($lastFlow);
-	
-	# de-reference array of touched pages
-	my @touchedPagesArray = @$touchedPages;
-	
-	# write number of touched pages to log
-	WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
-	
+
 	my $pagesLimit = GetConfig('admin/gitflow/page_limit');
 	if (!$pagesLimit) {
 		WriteLog("WARNING: config/admin/gitflow/page_limit missing!");
 		$pagesLimit = 1000;
 	}
 	my $pagesProcessed = 0;
+
+	# get a list of pages that have been touched since the last git_flow
+	# this is from the page_touch table
+	my $touchedPages = DBGetTouchedPages($pagesLimit);
+	
+	# de-reference array of touched pages
+	my @touchedPagesArray = @$touchedPages;
+	
+	# write number of touched pages to log
+	WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
 	
 	# this part will refresh any pages that have been "touched"
 	# in this case, 'touch' means when an item that affects the page
