@@ -18,6 +18,62 @@ sub GetTime2() { # returns epoch time
 	return (time());
 }
 
+sub BuildTouchedPages {
+	my $pagesLimit = GetConfig('admin/gitflow/limit_page');
+	if (!$pagesLimit) {
+		WriteLog("WARNING: config/admin/gitflow/limit_page missing!");
+		$pagesLimit = 1000;
+	}
+	state $pagesProcessed;
+	if (!$pagesProcessed) {
+		$pagesProcessed = 1;
+	}
+
+	# get a list of pages that have been touched since the last git_flow
+	# this is from the page_touch table
+	my $touchedPages = DBGetTouchedPages($pagesLimit);
+
+	# de-reference array of touched pages
+	my @touchedPagesArray = @$touchedPages;
+
+	# write number of touched pages to log
+	WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
+
+	# this part will refresh any pages that have been "touched"
+	# in this case, 'touch' means when an item that affects the page
+	# is updated or added
+	foreach my $page (@touchedPagesArray) {
+		$pagesProcessed++;
+		#	if ($pagesProcessed > $pagesLimit) {
+		#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
+		#		last;
+		#	}
+		#	if ((GetTime2() - $startTime) > $timeLimit) {
+		#		WriteLog("Time limit reached, exiting loop");
+		#		last;
+		#	}
+
+		# dereference @pageArray
+		my @pageArray = @$page;
+
+		# get the 3 items in it
+		my $pageType = shift @pageArray;
+		my $pageParam = shift @pageArray;
+		my $touchTime = shift @pageArray;
+
+		# output to log
+		WriteLog("\$pageType = $pageType");
+		WriteLog("\$pageParam = $pageParam");
+		WriteLog("\$touchTime = $touchTime");
+
+		MakePage($pageType, $pageParam);
+
+		DBDeletePageTouch($pageType, $pageParam);
+	}
+
+	return $pagesProcessed;
+}
+
 # We'll use pwd for for the install root dir
 my $SCRIPTDIR = `pwd`;
 chomp $SCRIPTDIR;
@@ -54,7 +110,6 @@ if (!$locked) {
 	$counter{'access_log'} = 0;
 	$counter{'indexed_file'} = 0;
 
-
 	PutFile('cron.lock', $currentTime);
 	$lockTime = $currentTime;
 	
@@ -67,16 +122,19 @@ if (!$locked) {
 		WriteLog('$lastFlow undefined');
 		$lastFlow = 0;
 	}
+
+	my $pagesProcessed;
+	$pagesProcessed = BuildTouchedPages();
 	
-	# get the path of access log, usually log/access.log
-	my $accessLogPath = GetConfig('admin/access_log_path');
-	WriteLog("\$accessLogPath = $accessLogPath");
-	
+#	# get the path of access log, usually log/access.log
+#	my $accessLogPath = GetConfig('admin/access_log_path');
+#	WriteLog("\$accessLogPath = $accessLogPath");
+#
 	# this will store the new item count we get from access.log
 	my $newItemCount;
 	
 	# time limit
-	my $timeLimit = GetConfig('admin/gitflow/time_limit');
+	my $timeLimit = GetConfig('admin/gitflow/limit_time');
 	my $startTime = GetTime2();
 	#todo validation
 	
@@ -124,17 +182,18 @@ if (!$locked) {
 	
 	if (!-e 'html/txt/.git') {
 		WriteLog("git --git-dir=html/txt/.git init 2>&1");
-	
+
 		my $gitOutput = `git --git-dir=html/txt/.git init 2>&1`;
+		#my $gitOutput = GitPipe('init');
 		
 		WriteLog($gitOutput);
 	}
 	
 	# See if gitflow/file_limit setting exists
 	# This limits the number of files to process per launch of gitflow.pl
-	my $filesLimit = GetConfig('admin/gitflow/file_limit');
+	my $filesLimit = GetConfig('admin/gitflow/limit_file');
 	if (!$filesLimit) {
-		WriteLog("WARNING: config/admin/gitflow/file_limit missing!");
+		WriteLog("WARNING: config/admin/gitflow/limit_file missing!");
 		$filesLimit = 100;
 	}
 
@@ -267,55 +326,7 @@ if (!$locked) {
 	#	WriteIndexPages();
 	}
 
-	my $pagesLimit = GetConfig('admin/gitflow/page_limit');
-	if (!$pagesLimit) {
-		WriteLog("WARNING: config/admin/gitflow/page_limit missing!");
-		$pagesLimit = 1000;
-	}
-	my $pagesProcessed = 0;
 
-	# get a list of pages that have been touched since the last git_flow
-	# this is from the page_touch table
-	my $touchedPages = DBGetTouchedPages($pagesLimit);
-	
-	# de-reference array of touched pages
-	my @touchedPagesArray = @$touchedPages;
-	
-	# write number of touched pages to log
-	WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
-	
-	# this part will refresh any pages that have been "touched"
-	# in this case, 'touch' means when an item that affects the page
-	# is updated or added
-	foreach my $page (@touchedPagesArray) {
-		$pagesProcessed++;
-	#	if ($pagesProcessed > $pagesLimit) {
-	#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
-	#		last;
-	#	}
-	#	if ((GetTime2() - $startTime) > $timeLimit) {
-	#		WriteLog("Time limit reached, exiting loop");
-	#		last;
-	#	}
-	
-		# dereference @pageArray
-		my @pageArray = @$page;
-	
-		# get the 3 items in it
-		my $pageType = shift @pageArray;
-		my $pageParam = shift @pageArray;
-		my $touchTime = shift @pageArray;
-	
-		# output to log
-		WriteLog("\$pageType = $pageType");
-		WriteLog("\$pageParam = $pageParam");
-		WriteLog("\$touchTime = $touchTime");
-	
-		MakePage($pageType, $pageParam);
-		
-		DBDeletePageTouch($pageType, $pageParam);
-	}
-	
 	# if anything has changed, redo the abyss index pages
 	#if ($newItemCount) {
 		#WriteIndexPages();
@@ -335,6 +346,8 @@ if (!$locked) {
 	#	WriteIndexPages();
 	#	PutConfig('last_abyss', $curTime);
 	#}
+
+	$pagesProcessed = BuildTouchedPages();
 	
 	# save current time in config/admin/gitflow/last
 	my $newLastFlow = GetTime2();
