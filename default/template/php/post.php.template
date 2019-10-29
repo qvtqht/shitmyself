@@ -25,7 +25,11 @@ function ProcessNewComment($comment) {
 	$hash = '';
 	$fileUrlPath = '';
 
-	if (isset($comment) && $comment) {	
+	WriteLog('ProcessNewComment(...)');
+
+	if (isset($comment) && $comment) {
+		WriteLog('ProcessNewComment: $comment exists');
+
 		$pwd = getcwd();
 		
 		WriteLog('$pwd = ' . $pwd);
@@ -53,17 +57,17 @@ function ProcessNewComment($comment) {
 		
 		file_put_contents($fileName, $comment);
 		
-		WriteLog('file_get_contents(' . $fileName . '):');
+		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
 		WriteLog(file_get_contents($fileName));
 		
 		$gitOutput = `git hash-object -w "$fileName"`;
 		
-		WriteLog ('git hash-object -w "' . $fileName . '"');
-		WriteLog ('$gitOutput = ' . $gitOutput);
+		WriteLog('ProcessNewComment: git hash-object -w "' . $fileName . '"');
+		WriteLog('ProcessNewComment: $gitOutput = ' . $gitOutput);
 		
 		$hash = trim($gitOutput);
 		
-		WriteLog('$hash = ' . $hash);
+		WriteLog('ProcessNewComment: $hash = ' . $hash);
 		
 		if (!file_exists($txtDir . substr($hash, 0, 2))) {
 			mkdir($txtDir . substr($hash, 0, 2));
@@ -111,13 +115,12 @@ function ProcessNewComment($comment) {
 		file_put_contents($filePath, $comment);
 		
 		$commentHtml = nl2br(str_replace('  ', ' &nbsp;', htmlspecialchars(wordwrap(trim($comment), 80, ' ', true), ENT_QUOTES|ENT_SUBSTITUTE, "UTF-8")));
-		
+
 		$newPage = '<html><body>';
 		$newPage .=	'<p>' . $commentHtml . '</p>';
 		$newPage .=	'<p>Address: '. $fileUrlPath . '<br>';
 		$newPage .=	'Hash: ' . $hash . '<br><br>';
 		$newPage .=	'<p>This page should be replaced with a formatted version soon.</p>';
-	
 		$newPage .=	'</body></html>';
 		
 		file_put_contents($fileHtmlPath, $newPage);
@@ -133,6 +136,7 @@ function ProcessNewComment($comment) {
 				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
 			}
 		} else {
+
 		}
 		
 		if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
@@ -171,13 +175,14 @@ if ($_GET) {
 	WriteLog('$_GET');
 	if (isset($_GET['comment'])) {
 		$comment = $_GET['comment'];
+	} else {
+		$comment = '';
 	}
-	
 	
 	if (isset($_GET['replyto']) && $_GET['replyto']) {
 		$replyTo = $_GET['replyto']; 
 		$replyToToken = '>>' . $replyTo;
-		
+
 		$comment .= "\n\n" . $replyToToken;
 	}
 
@@ -195,9 +200,9 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 		copy ('../default/template/php/just_posted.template', '../config/template/php/just_posted.template');
 		$postedMessage = file_get_contents('../default/template/php/just_posted.template');
 	} else {
-		$postedMessage = '<a href="' . $fileUrlPath . '">See what you just posted</a><br><br>';
+		$postedMessage = '<a href="' . $fileUrlPath . '" class=beginner>See what you just posted.</a><br><br>';
 	}
-	
+
 	$postedMessage = str_replace('$fileUrlPath', $fileUrlPath, $postedMessage); 
 	
 	$html = str_replace('<!-- submitted_text -->', $postedMessage, $html);
