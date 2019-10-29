@@ -860,10 +860,10 @@ sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 
 sub DBGetTouchedPages { # Returns items from page_touch table, used for prioritizing which pages need rebuild
 # index, rss, scores, stats, tags, and top are returned first
-# hard-coded at limit 50
-	my $lastTouch = shift;
 
-	WriteLog("DBGetTouchedPages($lastTouch)");
+	my $touchedPageLimit = shift;
+
+	WriteLog("DBGetTouchedPages($touchedPageLimit)");
 
 	#todo remove hardcoding
 	my $query = "
@@ -873,9 +873,8 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 			touch_time, 
 			(page_name IN ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) AS priority_page
 		FROM page_touch
-		WHERE touch_time >= ?
 		ORDER BY priority_page DESC, touch_time DESC
-		LIMIT 50;
+		LIMIT ?;
 	";
 
 #	my $query = "
@@ -886,7 +885,7 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 #	";
 #
 	my @params;
-	push @params, $lastTouch;
+	push @params, $touchedPageLimit;
 
 	my $results = SqliteQuery2($query, @params);
 
@@ -1010,6 +1009,10 @@ sub DBAddPageTouch { # Adds an entry to page_touch table
 
 	my $pageParam = shift;
 	my $touchTime = GetTime();
+
+	if (!$pageParam) {
+		$pageParam = 0;
+	}
 
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
@@ -1651,6 +1654,8 @@ sub DBAddAddedTimeRecord { # Adds a new record to added_time, typically from log
 	my $addedTime = shift;
 	chomp $addedTime;
 
+	WriteLog('DBAddAddedTimeRecord(' . $fileHash . ',' . $addedTime . ')');
+
 	if (!$addedTime =~ m/\d{9,10}/) { #todo is this clean enough?
 		WriteLog('DBAddAddedTimeRecord called with invalid parameter! returning');
 		return;
@@ -2168,7 +2173,7 @@ sub DBGetTopAuthors { # Returns top-scoring authors from the database
 			item_count
 		FROM author_flat
 		ORDER BY author_score DESC
-		LIMIT 50;
+		LIMIT 1024;
 	";
 
 	my @queryParams = ();
