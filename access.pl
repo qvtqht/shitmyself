@@ -493,6 +493,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 							my $addedLog = $fileHash . '|' . $addedTime;
 							AppendFile('./log/added.log', $addedLog);
+
+							if (GetConfig('admin/access_log_call_index')) {
+								WriteLog('access.pl: access_log_call_index is true, therefore DBAddAddedTimeRecord('.$fileHash.','.$addedTime.')');
+								DBAddAddedTimeRecord($fileHash, $addedTime);
+							}
 						}
 
 						# Tell debug console about file save completion
@@ -554,6 +559,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							}
 
 							DBAddAddedTimeRecord($fileHash, $addedTime);
+						}
+
+						if (GetConfig('admin/access_log_call_index')) {
+							WriteLog('access.pl: access_log_call_index is true, therefore IndexTextFile('.$pathedFilename.')');
+							IndexTextFile($pathedFilename);
 						}
 					} else {
 						WriteLog("WARNING: Could not open text file to write to: ' . $filename");
