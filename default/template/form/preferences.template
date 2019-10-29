@@ -1,5 +1,5 @@
 <!-- preferences.template -->
-<form id=formCurId name=formCurId style="display:none">
+<form id=formPreferences name=formPreferences style="display:none">
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">

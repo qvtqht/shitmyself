@@ -28,10 +28,12 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 				if (GetPrefs('display_username')) {
 					myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
 					signinBox.innerHTML = '';
-				} else {			
+				} else {
+					myidBox.innerHTML = '';
 					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 				}
 			} else {
+				myidBox.innerHTML = '';
 				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 			}
 

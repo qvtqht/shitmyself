@@ -2617,7 +2617,7 @@ sub GetPrefsPage { # returns html for preferences page (/prefs.html)
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
-	$txtIndex =~ s/<body /<body onload="identityOnload();" /;
+	$txtIndex =~ s/<body /<body onload="PrefsOnload();" /;
 
 	return $txtIndex;
 }

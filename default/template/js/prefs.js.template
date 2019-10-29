@@ -155,19 +155,19 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 	}
 
 	// saves checkbox's value as 0/1 value to prefs(prefKey)
-   SetPrefs(prefKey, (ths.checked ? 1 : 0));
+	SetPrefs(prefKey, (ths.checked ? 1 : 0));
 
 	// if checkbox is one of these four, call ShowAdvanced(1)
 	// this will display or hide things based on settings
-   if (
-   	prefKey == 'show_advanced' ||
-   	prefKey == 'beginner' ||
-   	prefKey == 'beginner_highlight' ||
-   	prefKey == 'advanced_highlight' ||
-   	prefKey == 'display_username'
+	if (
+		prefKey == 'show_advanced' ||
+		prefKey == 'beginner' ||
+		prefKey == 'beginner_highlight' ||
+		prefKey == 'advanced_highlight' ||
+		prefKey == 'display_username'
 	) {
-   	ShowAdvanced(1);
-   }
+		ShowAdvanced(1);
+	}
 }
 
 if (document.getElementById) {
@@ -251,6 +251,11 @@ function ResetPrefs() {
 			location.reload(); //#todo make this not necessary
 		}
 	}
+}
+
+function PrefsOnload() { // onload function for preferences page
+	// show and hide page form as necessary
+	showHideForms();
 }
 
 // == end prefs.js

@@ -47,6 +47,8 @@ function showHideForms() { // shows and hides the register and logged in forms
 					if (myidBox) {
 						if (window.myAvatar) {
 							myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+						} else {
+							myidBox.innerHTML = '';
 						}
 					}
 					if (signinBox) {
@@ -87,14 +89,22 @@ function showHideForms() { // shows and hides the register and logged in forms
 			}
 	
 			var signinBox = document.getElementById('signin');
-	
 			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+
+			var myidBox = document.getElementById('myid');
+			myidBox.innerHTML = '';
 		}
 	
 		// hide the loading screen if it can be found
 		var loading = document.getElementById('loading');
 		if (loading) {
 			loading.style.display = 'none';
+		}
+
+		// display the preferences screen if it can be found
+		var prefsForm = document.getElementById('formPreferences');
+		if (prefsForm) {
+			prefsForm.style.display = 'block';
 		}
 	}
 }
