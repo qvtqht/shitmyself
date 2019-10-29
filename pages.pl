@@ -1837,11 +1837,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
 		my $publicKeyHashHtml = '';
-		my $authorPubkeyTxtLink = '';
 		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
 			$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
-			$authorPubkeyTxtLink = '<span class=advanced>.txt</span>';
-			#todo my $publicKeyTxtLink = ..;
 		}
 		
 		if (IsServer($authorKey)) {
@@ -1879,10 +1876,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 		$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;
 		if ($publicKeyHash) {
 			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
-			$authorInfoTemplate =~ s/\$authorPubkeyTxtLink/$authorPubkeyTxtLink/g;
 		} else {
 			$authorInfoTemplate =~ s/\$publicKeyHash//g;
-			$authorInfoTemplate =~ s/\$authorPubkeyTxtLink//g;
 		}
 
 
