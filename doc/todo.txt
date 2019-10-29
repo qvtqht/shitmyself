@@ -1,3 +1,32 @@
+#bug Page indicators show incorrect number of last item
+	1-150 151-300 <--- 300 should be e.g. 253
+
+#bug tags page counts all tags, including ones applied to non-existing items
+	This may be a feature, but tag pages without any items return 404
+		So maybe non-existing items referenced in votes should be reflected somehow
+
+Add messaging for unverified user fingerprints (no pubkey, but has messages claiming to be from that ID)
+	Figure out how to avoid spoofing
+
+Implement client-side hide/show of class=admin elements
+	Determine admin state by reading variable or array which is embedded in html pages
+
+Add Event page
+	Add end date fields
+		or duration?
+			for advanced users
+	Add latlong selector
+	Pre-select date that makes sense
+	Form submit target needs update/templating
+	Create Event button needs Please wait
+	Target form to php if php enabled
+
+Events Page
+	Split into Current, Upcoming, Past events
+	Fix no-js display of dates in future (currently just 01:00
+
+#todo if 0 items index0.html (Abyss) is missing
+
 Tags page with 0 tags
 
 getElementById() polyfill for netscape
