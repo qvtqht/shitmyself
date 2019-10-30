@@ -181,10 +181,7 @@ if (!$locked) {
 	}
 	
 	if (!-e 'html/txt/.git') {
-		WriteLog("git --git-dir=html/txt/.git init 2>&1");
-
-		my $gitOutput = `git --git-dir=html/txt/.git init 2>&1`;
-		#my $gitOutput = GitPipe('init');
+		my $gitOutput = GitPipe('init');
 		
 		WriteLog($gitOutput);
 	}
@@ -198,8 +195,9 @@ if (!$locked) {
 	}
 
 	# Use git to find files that have changed in txt/ directory
-	WriteLog('$gitChanges = git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | head -n $filesLimit');
-	my $gitChanges = `git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | head -n $filesLimit`;
+	GitPipe('add html/txt');
+
+	my $gitChanges = GitPipe('status --porcelain', '| grep "^A" | cut -c 4- | grep "html/txt" | grep "txt$" | head -n ' . $filesLimit);
 	
 	WriteLog('$gitChanges = ' . $gitChanges);
 	
@@ -286,9 +284,10 @@ if (!$locked) {
 			#	  add changed file to git repo
 			#    commit the change with message 'hi' #todo
 			#    cd back to pwd
-			
-			WriteLog("git --git-dir=html/txt/.git add \"$file\" 2>&1; git --git-dir=html/txt/.git commit -m automated_commit \"$file\" 2>&1");
-			my $gitCommit = `git --git-dir=html/txt/.git add "$file" 2>&1; git --git-dir=html/txt/.git commit -m automated_commit "$file" 2>&1`;
+
+			GitPipe('add "' . $file .'"');
+
+			my $gitCommit = GitPipe('commit -m automated_commit "' . $file . '"');
 	
 			# write git's output to log
 			WriteLog('Result: ' . $gitCommit);
@@ -314,8 +313,9 @@ if (!$locked) {
 	RemoveEmptyDirectories('./html/'); #includes txt/
 	#RemoveEmptyDirectories('./txt/');
 
-	WriteLog("git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep \"^A\" | cut -c 4- | grep \"html/txt\" | grep \"txt\$\" | wc -l");
-	my $filesLeft = `git --git-dir=html/txt/.git add html/txt 2>&1 ; git --git-dir=html/txt/.git status --porcelain 2>&1 | grep "^A" | cut -c 4- | grep "html/txt" | grep "txt\$" | wc -l`;
+	GitPipe('add html/txt');
+
+	my $filesLeft = GitPipe('status --porcelain', '| grep "^A" | cut -c 4- | grep "html/txt" | grep "txt$" | wc -l');
 
 	PutConfig('admin/gitflow/files_left', $filesLeft);
 
