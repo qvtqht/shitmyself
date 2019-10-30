@@ -26,11 +26,8 @@ sub PopulateColors {
 	
 }
 
-sub GenerateSomeKindOfPage { # generates page html (doesn't do anything atm)
-	my $pageName = shift;
-
-	#todo is $pageName in list of allowed pages?
-
+sub GenerateDialogPage { # generates page with dialog
+	# #todo:
 	# home
 	# write
 	# about
@@ -39,7 +36,35 @@ sub GenerateSomeKindOfPage { # generates page html (doesn't do anything atm)
 	# tags list
 	# items for tag
 	# more complicated query
-	#
+
+	my $pageName = shift; # page name: 404
+	my $pageTitle = shift; # page title (
+	my $windowContents = shift;
+
+	#todo is $pageName in list of allowed pages?
+
+	if ($pageName) {
+		if ($pageName eq '404') {
+			$pageTitle = '404 Message Received';
+
+			$windowContents  = '';
+			$windowContents .= '<tr><td class=body>';
+			$windowContents .= GetTemplate('404.template');
+			$windowContents .= '</td></tr>';
+
+			my $pageTemplate;
+			$pageTemplate = '';
+
+			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, 'default'); #GetTemplate('htmlstart.template');
+
+			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, 'Ready');
+			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
+
+			$pageTemplate .= GetPageFooter();
+
+			return $pageTemplate;
+		}
+	}
 }
 
 sub GetStylesheet { # returns style template based on config
@@ -130,6 +155,12 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windo
 
 	my $contentColumnCount = 0;
 
+	if ($windowMenubar) {
+		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
+	} else {
+		$windowTemplate =~ s/\$windowMenubar//g;
+	}
+
 	if ($columnHeadings) {
 		my $windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
 		my $windowHeaderColumns = '';
@@ -153,22 +184,16 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windo
 		$contentColumnCount = 0;
 	}
 
-	if ($windowMenubar) {
-		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
-	} else {
-		$windowTemplate =~ s/$windowMenubar//g;
-	}
-
 	if ($windowBody) {
 		$windowTemplate =~ s/\$windowBody/$windowBody/g;
 	} else {
-		$windowTemplate =~ s/$windowBody//g;
+		$windowTemplate =~ s/\$windowBody//g;
 	}
 
 	if ($windowBody) {
 		$windowTemplate =~ s/\$windowStatus/$windowStatus/g;
 	} else {
-		$windowTemplate =~ s/$windowStatus//g;
+		$windowTemplate =~ s/\$windowStatus//g;
 	}
 
 	if ($contentColumnCount) {
@@ -1227,7 +1252,7 @@ sub GetThemeColor {
 	return $color;
 }
 
-sub GetPageHeader { # returns html for page header
+sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
 	my $title = shift; # page title
 	my $titleHtml = shift; # formatted page title
 	my $pageType = shift; # type of page
@@ -2270,7 +2295,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
 	
-	my $fourOhFourPage = GetTemplate('404.template');
+	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
 
 	# Profile page
@@ -2321,11 +2346,11 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		$tfmPage .= GetTemplate('maincontent.template');
 
 		my $tfmPageContent = GetTemplate('page/manual.template');
-		$tfmPageContent .= '<p>' . GetTemplate('netnow3.template') . '</p>';
+#		$tfmPageContent .= '<p>' . GetTemplate('netnow3.template') . '</p>';
 
 		my $tfmPageWindow = GetWindowTemplate(
 			'Manual',
-			'<p>', #menubar
+			'', #menubar
 			'', #columns
 			'<tr class=body bgcolor=white><td>'.$tfmPageContent.'</td></tr>', #todo unhack
 			'Ready'
@@ -2525,7 +2550,7 @@ sub GetEventAddPage { # get html for /event.html
 		$eventAddForm =~ s/\$brcAddressForm//;
 	}
 
-#	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+	#	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
 #		localtime(time);
 #
 #	my $amPm = 0;
@@ -2539,6 +2564,12 @@ sub GetEventAddPage { # get html for /event.html
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs event_add fresh profile));
+
+	my $rowBgColor0 = GetConfig('theme/color_row_0');
+	my $rowBgColor1 = GetConfig('theme/color_row_1');
+
+	$txtIndex =~ s/\$rowBgColor0/$rowBgColor0/g;
+	$txtIndex =~ s/\$rowBgColor1/$rowBgColor1/g;
 
 	return $txtIndex;
 }

@@ -66,7 +66,7 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 # create repo if html/txt/.git/ is missing
 if (!-e 'html/txt/.git') {
 	my $pwd = `pwd`;
-	system("git --git-dir=html/txt/.git init");
+	GitPipe('init');
 }
 
 # figure out whether to use gpg or gpg2 command for gpg stuff
@@ -347,14 +347,33 @@ sub GitPipe {
 		return;
 	}
 
+	WriteLog('GitPipe: $gitCommand = ' . $gitCommand);
+
+	my $commandsFollowing = shift;
+	if (!$commandsFollowing) {
+		$commandsFollowing = '';
+	} else {
+		$commandsFollowing = ' ' . $commandsFollowing;
+	}
+
 	my $gitCommandPrefix = 'git --git-dir=html/txt/.git --work-tree=html/txt ';
 	my $gitCommandSuffix = ' 2>&1';
 
-	$gitCommand = $gitCommandPrefix . $gitCommand . $gitCommandSuffix;
+	my $gitCommandFull = $gitCommandPrefix . $gitCommand . $gitCommandSuffix . $commandsFollowing;
 
-	WriteLog($gitCommand);
+	WriteLog('GitPipe: $gitCommandFull = ' . $gitCommandFull);
 
-	my $gitCommandResult = `$gitCommand`;
+	my $gitCommandResult = `$gitCommandFull`;
+
+	WriteLog('GitPipe: $gitCommandResult = ' . $gitCommandResult);
+
+	if ($gitCommandResult =~ m/^fatal:/) {
+		if ($gitCommand ne 'init') {
+			GitPipe('init');
+		}
+
+		return;
+	}
 
 	return $gitCommandResult;
 }
@@ -368,17 +387,18 @@ sub GetFileHash { # $fileName ; returns git's hash of file contents
 
 	WriteLog("GetFileHash($fileName)");
 
-	WriteLog("git --git-dir=html/txt/.git hash-object -w \"$fileName\" 2>&1");
+	my $gitOutput = GitPipe('hash-object -w "' . $fileName. '"');
 
-	my $gitOutput = `git --git-dir=html/txt/.git hash-object -w "$fileName" 2>&1`;
+	if ($gitOutput) {
+		WriteLog($gitOutput);
+		chomp($gitOutput);
 
-	WriteLog($gitOutput);
+		WriteLog("GetFileHash($fileName) = $gitOutput");
 
-	chomp($gitOutput);
-
-	WriteLog("GetFileHash($fileName) = $gitOutput");
-
-	return $gitOutput;
+		return $gitOutput;
+	} else {
+		return;
+	}
 }
 
 sub GetRandomHash { # returns a random sha1-looking hash, lowercase
@@ -1016,9 +1036,13 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 #		}
 #	}
 
-	my $colorTitlebar = GetConfig('theme/color_titlebar');
-	$colorTitlebar =~ s/^([0-9a-fA-F]{6})$/#$1/;
-	$content =~ s/\$colorTitlebar/$colorTitlebar/g;
+	my $colorTitlebarText = GetConfig('theme/color_titlebar_text');#
+	$colorTitlebarText =~ s/^([0-9a-fA-F]{6})$/#$1/;#
+	$content =~ s/\$colorTitlebarText/$colorTitlebarText/g;#
+
+	my $colorTitlebar = GetConfig('theme/color_titlebar');#
+	$colorTitlebar =~ s/^([0-9a-fA-F]{6})$/#$1/;#
+	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
 	my $colorWindow = GetConfig('theme/color_window');
 	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
@@ -1417,252 +1441,264 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 	my $gitHash = GetFileHash($filePath);
 
-	my $cachePath;
-	$cachePath = "./cache/" . GetMyVersion() . "/gpg/$gitHash.cache";
+	if ($gitHash) {
 
-	my %returnValues;
+		my $cachePath;
+		$cachePath = "./cache/" . GetMyVersion() . "/gpg/$gitHash.cache";
 
-	if (-e $cachePath) {
-		WriteLog("GpgParse cache hit! $cachePath");
+		my %returnValues;
 
-		%returnValues = %{retrieve($cachePath)};
+		if (-e $cachePath) {
+			WriteLog("GpgParse cache hit! $cachePath");
 
-	} else {
-		# Signed messages begin with this header
-		my $gpg_message_header = "-----BEGIN PGP SIGNED MESSAGE-----";
+			%returnValues = %{retrieve($cachePath)};
 
-		# Public keys (that set the username) begin with this header
-		my $gpg_pubkey_header = "-----BEGIN PGP PUBLIC KEY BLOCK-----";
+		} else {
+			# Signed messages begin with this header
+			my $gpg_message_header = "-----BEGIN PGP SIGNED MESSAGE-----";
 
-		# Encrypted messages begin with this header
-		my $gpg_encrypted_header = "-----BEGIN PGP MESSAGE-----";
+			# Public keys (that set the username) begin with this header
+			my $gpg_pubkey_header = "-----BEGIN PGP PUBLIC KEY BLOCK-----";
 
-		###########################################################################
-		## Below where we check for a GPG signed message and sort it accordingly ##
-		###########################################################################
+			# Encrypted messages begin with this header
+			my $gpg_encrypted_header = "-----BEGIN PGP MESSAGE-----";
 
-		my $trimmedTxt = trim($txt);
+			###########################################################################
+			## Below where we check for a GPG signed message and sort it accordingly ##
+			###########################################################################
 
-		my $verifyError = 0;
+			my $trimmedTxt = trim($txt);
 
-		######################
-		## ENCRYPTED MESSAGE
-		##
+			my $verifyError = 0;
 
-		if (index($txt, $gpg_encrypted_header) != -1) {
-			$message = "This is an encrypted message. Decryption is not yet supported by the web interface.";
-		}
+			######################
+			## ENCRYPTED MESSAGE
+			##
 
-#		if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
-#			WriteLog("$gpgCommand --batch --list-only --status-fd 1 \"$filePath\"");
-#			my $gpg_result = `$gpgCommand --batch --list-only --status-fd 1 "$filePath"`;
-#			WriteLog($gpg_result);
-#
-#			foreach (split("\n", $gpg_result)) {
-#				chomp;
-#
-#				my $key_id_prefix;
-#				my $key_id_suffix;
-#
-#				if (index($gpg_result, "[GNUPG:] ENC_TO ") >= 0) {
-#					$key_id_prefix = "[GNUPG:] ENC_TO ";
-#					$key_id_suffix = " ";
-#
-#					if ($key_id_prefix) {
-#						# Extract the key fingerprint from GPG's output.
-#						$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
-#						$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
-#
-#						$message = "Encrypted message for $gpg_key\n";
-#
-#						$isSigned = 1;
-#
-#					}
-#				}
-#			}
-#		}
+			if (index($txt, $gpg_encrypted_header) != -1) {
+				$message = "This is an encrypted message. Decryption is not yet supported by the web interface.";
+			}
 
-		###############
-		## PUBLIC KEY
-		##
+			#		if (substr($trimmedTxt, 0, length($gpg_encrypted_header)) eq $gpg_encrypted_header) {
+			#			WriteLog("$gpgCommand --batch --list-only --status-fd 1 \"$filePath\"");
+			#			my $gpg_result = `$gpgCommand --batch --list-only --status-fd 1 "$filePath"`;
+			#			WriteLog($gpg_result);
+			#
+			#			foreach (split("\n", $gpg_result)) {
+			#				chomp;
+			#
+			#				my $key_id_prefix;
+			#				my $key_id_suffix;
+			#
+			#				if (index($gpg_result, "[GNUPG:] ENC_TO ") >= 0) {
+			#					$key_id_prefix = "[GNUPG:] ENC_TO ";
+			#					$key_id_suffix = " ";
+			#
+			#					if ($key_id_prefix) {
+			#						# Extract the key fingerprint from GPG's output.
+			#						$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
+			#						$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
+			#
+			#						$message = "Encrypted message for $gpg_key\n";
+			#
+			#						$isSigned = 1;
+			#
+			#					}
+			#				}
+			#			}
+			#		}
 
-		WriteLog("Looking for public key header...");
+			###############
+			## PUBLIC KEY
+			##
 
-		# find pubkey header in message
-		if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
-			WriteLog("Found public key header!");
+			WriteLog("Looking for public key header...");
 
-			WriteLog("$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr");
-			my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath" $gpgStderr`;
-			WriteLog($gpg_result);
+			# find pubkey header in message
+			if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
+				WriteLog("Found public key header!");
 
-			WriteLog("$gpgCommand --import \"$filePath\" $gpgStderr");
-			my $gpgImportKeyResult = `$gpgCommand --import "$filePath" $gpgStderr`;
-			WriteLog($gpgImportKeyResult);
+				WriteLog("$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr");
+				my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath" $gpgStderr`;
+				WriteLog($gpg_result);
 
-			foreach (split("\n", $gpg_result)) {
-				chomp;
-				WriteLog("Looking for returned alias in $_");
+				WriteLog("$gpgCommand --import \"$filePath\" $gpgStderr");
+				my $gpgImportKeyResult = `$gpgCommand --import "$filePath" $gpgStderr`;
+				WriteLog($gpgImportKeyResult);
 
-				# gpg 1
-				if ($gpgCommand eq 'gpg' && !GetConfig('admin/gpg/use_gpg2')) {
-					WriteLog('$gpgCommand is gpg');
+				foreach (split("\n", $gpg_result)) {
+					chomp;
+					WriteLog("Looking for returned alias in $_");
 
-					if (substr($_, 0, 4) eq 'pub ') {
-						my @split = split(" ", $_, 4);
-						$alias = $split[3];
-						$gpg_key = $split[1];
+					# gpg 1
+					if ($gpgCommand eq 'gpg' && !GetConfig('admin/gpg/use_gpg2')) {
+						WriteLog('$gpgCommand is gpg');
 
-						@split = split("/", $gpg_key);
-						$gpg_key = $split[1];
+						if (substr($_, 0, 4) eq 'pub ') {
+							my @split = split(" ", $_, 4);
+							$alias = $split[3];
+							$gpg_key = $split[1];
 
-						$alias =~ s|<.+?>||g;
-						$alias =~ s/^\s+//;
-						$alias =~ s/\s+$//;
+							@split = split("/", $gpg_key);
+							$gpg_key = $split[1];
+
+							$alias =~ s|<.+?>||g;
+							$alias =~ s/^\s+//;
+							$alias =~ s/\s+$//;
+						}
+					}
+
+					# gpg 2
+					elsif ($gpgCommand eq 'gpg2' || GetConfig('admin/gpg/use_gpg2')) {
+						if (substr($_, 0, 4) eq 'pub ') {
+							WriteLog('gpg2 ; pub hit');
+
+							WriteLog('$_ is ' . $_ . ' .. going to split it');
+
+							my @split = split(" ", $_, 4); # 4 limits it to 4 fields
+							$gpg_key = $split[1];
+
+							WriteLog($split[0] . '|' . $split[1] . '|' . $split[2] . '|' . $split[3]);
+							#$alias = $split[3];
+
+							@split = split("/", $gpg_key);
+							$gpg_key = $split[1];
+
+							WriteLog('$gpg_key = ' . $gpg_key);
+						}
+						if (substr($_, 0, 3) eq 'uid' && !$alias) {
+							WriteLog('gpg2: uid hit');
+
+							WriteLog('$_ is ' . $_);
+
+							my @split = split(' ', $_, 2);
+
+							$alias = $split[1];
+							$alias = trim($alias);
+
+							WriteLog('$alias is now ' . $alias);
+						}
 					}
 				}
 
-				# gpg 2
-				elsif ($gpgCommand eq 'gpg2' || GetConfig('admin/gpg/use_gpg2')) {
-					if (substr($_, 0, 4) eq 'pub ') {
-						WriteLog('gpg2 ; pub hit');
-						
-						WriteLog('$_ is ' . $_ . ' .. going to split it'); 
-						
-						my @split = split(" ", $_, 4); # 4 limits it to 4 fields
-						$gpg_key = $split[1];
-
-						WriteLog($split[0].'|'.$split[1].'|'.$split[2].'|'.$split[3]);
-						#$alias = $split[3];
-
-						@split = split("/", $gpg_key);
-						$gpg_key = $split[1];
-
-						WriteLog('$gpg_key = ' . $gpg_key);
+				# Public key confirmed, update $message
+				if ($gpg_key) {
+					if (!$alias) {
+						$alias = '(Blank)';
 					}
-					if (substr($_, 0, 3) eq 'uid' && !$alias) {
-						WriteLog('gpg2: uid hit');
-						
-						WriteLog('$_ is ' . $_);
+					#$message = "Welcome, $alias\nFingerprint: $gpg_key";
+					$message = GetTemplate('message/user_reg.template');
 
-						my @split = split(' ', $_, 2);
-						
-						$alias = $split[1];
-						$alias = trim($alias);
-						
-						WriteLog('$alias is now ' . $alias);
-					}
+					$message =~ s/\$name/$alias/g;
+					$message =~ s/\$fingerprint/$gpg_key/g;
+
 				}
-			}
-
-			# Public key confirmed, update $message
-			if ($gpg_key) {
-				if (!$alias) {
-					$alias = '(Blank)';
+				else {
+					$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
 				}
-				#$message = "Welcome, $alias\nFingerprint: $gpg_key";
-				$message = GetTemplate('message/user_reg.template');
-
-				$message =~ s/\$name/$alias/g;
-				$message =~ s/\$fingerprint/$gpg_key/g;
-
-			} else {
-				$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
-			}
-
-			$isSigned = 1;
-		}
-
-		#######################
-		## GPG SIGNED MESSAGE
-		##
-		if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
-			# Verify the file by using command-line gpg
-			# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
-			WriteLog("$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
-			my $gpg_result = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
-			WriteLog($gpg_result);
-
-			my $key_id_prefix;
-			my $key_id_suffix;
-
-			if (index($gpg_result, "[GNUPG:] BADSIG") >= 0 || index($gpg_result, "[GNUPG:] ERRSIG") >= 0 || index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
-				#			$key_id_prefix = 0;
-				#			$key_id_suffix = 0;
-				#%returnValues{'sigError'} = 1;
-				WriteLog("Decoding error detected!!!!1");
-				$verifyError = 1;
-
-			}
-			else {
-				#			if (index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
-				#				$key_id_prefix = "[GNUPG:] NO_PUBKEY ";
-				#				$key_id_suffix = "\n";
-				#			}
-
-				if (index($gpg_result, "[GNUPG:] GOODSIG ") >= 0) {
-					$key_id_prefix = "[GNUPG:] GOODSIG ";
-					$key_id_suffix = " ";
-				}
-
-				if (index($gpg_result, "[GNUPG:] EXPKEYSIG ") >= 0) {
-					$key_id_prefix = "[GNUPG:] EXPKEYSIG ";
-					$key_id_suffix = " ";
-
-					$keyExpired = 1;
-				}
-			}
-
-			if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
-				# Extract the key fingerprint from GPG's output.
-				$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
-				$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
-
-				WriteLog("$gpgCommand --decrypt \"$filePath\"\n $gpgStderr");
-				$message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
 
 				$isSigned = 1;
 			}
 
-			if (!$isSigned) {
-				WriteLog("Decoding signed message fallthrough!!!1 Setting \$verifyError = 1");
-				$verifyError = 1;
+			#######################
+			## GPG SIGNED MESSAGE
+			##
+			if (substr($trimmedTxt, 0, length($gpg_message_header)) eq $gpg_message_header) {
+				# Verify the file by using command-line gpg
+				# --status-fd 1 makes gpg output to STDOUT using a more concise syntax
+				WriteLog("$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
+				my $gpg_result = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
+				WriteLog($gpg_result);
+
+				my $key_id_prefix;
+				my $key_id_suffix;
+
+				if (index($gpg_result, "[GNUPG:] BADSIG") >= 0 || index($gpg_result, "[GNUPG:] ERRSIG") >= 0 || index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
+					#			$key_id_prefix = 0;
+					#			$key_id_suffix = 0;
+					#%returnValues{'sigError'} = 1;
+					WriteLog("Decoding error detected!!!!1");
+					$verifyError = 1;
+
+				}
+				else {
+					#			if (index($gpg_result, "[GNUPG:] NO_PUBKEY ") >= 0) {
+					#				$key_id_prefix = "[GNUPG:] NO_PUBKEY ";
+					#				$key_id_suffix = "\n";
+					#			}
+
+					if (index($gpg_result, "[GNUPG:] GOODSIG ") >= 0) {
+						$key_id_prefix = "[GNUPG:] GOODSIG ";
+						$key_id_suffix = " ";
+					}
+
+					if (index($gpg_result, "[GNUPG:] EXPKEYSIG ") >= 0) {
+						$key_id_prefix = "[GNUPG:] EXPKEYSIG ";
+						$key_id_suffix = " ";
+
+						$keyExpired = 1;
+					}
+				}
+
+				if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
+					# Extract the key fingerprint from GPG's output.
+					$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
+					$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
+
+					WriteLog("$gpgCommand --decrypt \"$filePath\"\n $gpgStderr");
+					$message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
+
+					$isSigned = 1;
+				}
+
+				if (!$isSigned) {
+					WriteLog("Decoding signed message fallthrough!!!1 Setting \$verifyError = 1");
+					$verifyError = 1;
+				}
 			}
+
+			if (!$isSigned) {
+				$message = $txt;
+			}
+			#
+			#		if ($isSigned) {
+			#			my $messageTrimmed = trim($message);
+			#
+			#			if (
+			#				substr($messageTrimmed, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header ||
+			#				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header ||
+			#				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header
+			#			) {
+			#				#todo this is where we recurse GpgParse() and get any nested signed messages and stuff like that
+			#			}
+			#		}
+
+			$returnValues{'isSigned'} = $isSigned;
+			$returnValues{'text'} = $txt;
+			$returnValues{'message'} = $message;
+			$returnValues{'key'} = $gpg_key;
+			$returnValues{'alias'} = $alias;
+			$returnValues{'keyExpired'} = $keyExpired;
+			$returnValues{'gitHash'} = $gitHash;
+			$returnValues{'verifyError'} = $verifyError;
+
+			store \%returnValues, $cachePath;
 		}
 
-		if (!$isSigned) {
-			$message = $txt;
-		}
-#
-#		if ($isSigned) {
-#			my $messageTrimmed = trim($message);
-#
-#			if (
-#				substr($messageTrimmed, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header || 
-#				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header ||
-#				substr($messageTrimmed, 0, length($gpg_message_header)) eq $gpg_message_header
-#			) {
-#				#todo this is where we recurse GpgParse() and get any nested signed messages and stuff like that
-#			}
-#		}
+		WriteLog("GpgParse success! $cachePath");
 
-		$returnValues{'isSigned'} = $isSigned;
-		$returnValues{'text'} = $txt;
-		$returnValues{'message'} = $message;
-		$returnValues{'key'} = $gpg_key;
-		$returnValues{'alias'} = $alias;
-		$returnValues{'keyExpired'} = $keyExpired;
-		$returnValues{'gitHash'} = $gitHash;
-		$returnValues{'verifyError'} = $verifyError;
+		WriteLog("===END GPG PARSE===");
 
-		store \%returnValues, $cachePath;
+		return %returnValues;
+	} else {
+		die;
+
+		WriteLog('GpgParse fail! no $gitHash');
+
+		WriteLog("===END GPG PARSE===");
+
+		return;
 	}
-
-	WriteLog("GpgParse success! $cachePath");
-
-	WriteLog("===END GPG PARSE===");
-
-	return %returnValues;
 }
 
 sub EncryptMessage { # Encrypts message for target key (doesn't do anything yet)

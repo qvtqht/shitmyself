@@ -4,7 +4,7 @@
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 			<td colspan=$contentColumnCount>
-				<font color=white><b>$windowTitle</b></font>
+				<font color=$colorTitlebarText><b>$windowTitle</b></font>
 			</td>
 		</th>
 

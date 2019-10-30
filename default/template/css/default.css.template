@@ -95,11 +95,11 @@ div.txt {
 }
 
 #eventLocation, #eventBrcLocation {
-	background-color: #c0c0ff;
+	background-color: $rowBgColor0;
 	padding: 5pt;
 }
 #eventDate {
-	background-color: #c0ffc0;
+	background-color: $rowBgColor1;
 	padding: 5pt;
 }
 
