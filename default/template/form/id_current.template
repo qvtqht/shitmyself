@@ -24,7 +24,7 @@
 		</span>
 	</p>
 
-	<label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
+	<label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
 
 	<span id=curIdAdv style="display:none">
 		<p>

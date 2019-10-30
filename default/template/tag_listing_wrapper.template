@@ -3,7 +3,7 @@
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=3>
-				<font color=white><b>Tags</b></font>
+				<font color=$colorTitlebarText><b>Tags</b></font>
 			</td>
 		</tr>
 

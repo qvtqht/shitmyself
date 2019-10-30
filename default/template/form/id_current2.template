@@ -4,7 +4,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
-					<font color=white><b>Manage Identity</b></font>
+					<font color=$colorTitlebarText><b>Manage Identity</b></font>
 				</td>
 			</tr>
 
@@ -39,7 +39,7 @@
 
 					<fieldset>
 						<legend>
-							<label for=curIdAdvC><input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
+							<label for=chkShowAdvanced><input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');"> Show advanced options</label>
 						</legend>
 
 						<span id=curIdAdv style="display:none">

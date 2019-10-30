@@ -4,7 +4,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
-					<font color=white><b>Preferences</b></font>
+					<font color=$colorTitlebarText><b>Preferences</b></font>
 				</td>
 			</tr>
 
@@ -16,26 +16,41 @@
 
 			<tr class=body>
 				<td class=content>
-					<label for=curIdAdvC>
-						<input type=checkbox id=curIdAdvC onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
+					<p>
+						<label for=chkWantToVote>
+							<input type=checkbox id=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
+							Want to vote
+						</label>
+					</p>
+
+					<label for=chkShowAdvanced>
+						<input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
 						Show advanced options
 					</label>
-					
+
 					<span id=curIdAdv style="display:none">
 						<p>
+							<label for=beginnerC>
+								<input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');">
+								Show beginner hints
+							</label>
+							<br>
+							<span class=beginner>
+								<label for=beginnerHighlight>
+									<input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');">
+									Highlight beginner hints
+								</label>
+								<br>
+							</span>
+						</p>
+
+
 							<label for=advancedHighlight class=advanced>
 								<input type=checkbox id=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
 								Highlight advanced options
 							</label>
 						</p>
-				
-						<p>
-							<label for=beginnerC><input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
-							<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight>
-								<input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints
-							</label></span>
-						</p>
-						
+
 						<p>
 							<label for=displayUsername>
 								<input type=checkbox id=displayUsername onchange="saveCheckbox(0, this, 'display_username');">

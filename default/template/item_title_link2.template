@@ -4,7 +4,7 @@
 		<b>
 			<!--<span class=icon style="color: white; background-color: $borderColor; border: 1pt solid gray; border-radius: 8pt;">... </span>-->
 			<!--<font style="padding-left: 3pt;" color=white>$itemTitle</font>-->
-			<font color=white>$itemTitle</font>
+			<font color=$colorTitlebarText>$itemTitle</font>
 		</b>
 	</td>
 </tr>

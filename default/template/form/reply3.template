@@ -5,7 +5,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 				<td>
-					<font color=white><b>Reply</b></font>
+					<font color=$colorTitlebarText><b>Reply</b></font>
 				</td>
 			</tr>
 

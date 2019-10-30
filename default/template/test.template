@@ -5,7 +5,7 @@
 <table cellspacing=0 bgcolor="$colorWindow" cellpadding=3 border=3 style="border: $borderWindow;" class=dialog>
 	<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 		<td colspan=2>
-			<font color=white><b>Untitled</b></font>
+			<font color=$colorTitlebarText><b>Untitled</b></font>
 		</td>
 	</tr>
 	
@@ -48,7 +48,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 				<td>
-					<font color=white><b></b></font>
+					<font color=$colorTitlebarText><b></b></font>
 				</td>
 			</tr>
 

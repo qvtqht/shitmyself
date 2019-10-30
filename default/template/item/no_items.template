@@ -2,7 +2,7 @@
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
 			<td>
-				<font color=white><b>No Topics</b></font>
+				<font color=$colorTitlebarText><b>No Topics</b></font>
 			</td>
 		</tr>
 

@@ -1,9 +1,10 @@
 <!-- votequick2.template -->
 <tr bgcolor=$colorWindow class=menubar>
 	<td style="border:0">
-		<p>
-			<span class=beginner>Use these voting buttons to rate this item:<br></span>
+		<p class=voter>
+			<span class=beginner>Use voting buttons to rate item:<br></span>
 			$quickVotesButtons
+		</p>
 	</td>
 </tr>
 <!-- / votequick2.template -->
