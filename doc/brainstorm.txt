@@ -1,3 +1,14 @@
+JS themes
+	Take from template/theme*
+		Generate json array (or plaintext)
+
+JS localstorage feature check
+	If no localstorage then
+		Set cookie
+			Server reads cookie and provides additional fallback
+				Can be done with SSI possibly?
+				Also PHP option
+
 Encodings... something to consider
 	Especially for older browsers
 	#bug Unicode titles get cut off mid-character
