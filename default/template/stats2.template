@@ -18,7 +18,8 @@
 					<p><a href="/authors.html">Authors</a>: $authorCount
 					<p>Operator: $admin
 					<p class=advanced>Server: $server
-					<p>Version: $versionShort <span class=advanced>($versionFull)</span>
+					<p>Version: $versionShort
+					 <!--<span class=advanced>($versionFull)</span>-->
 				</fieldset>
 			</td>
 		</tr>
