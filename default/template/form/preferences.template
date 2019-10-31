@@ -54,7 +54,7 @@
 						<p>
 							<label for=displayUsername>
 								<input type=checkbox id=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
-								Display my username in top menu
+								Display username in top menu
 							</label>
 						</p>
 						
