@@ -18,7 +18,6 @@ while (!system('perl ./gitflow.pl')) {
                |_|    |_|       
 ';
 
-	sleep 2;
 }
 
 1;
