@@ -77,7 +77,7 @@ div.txt {
 
 #formprivkey {
 	display: none;
-	background-color: #c0c0c0;
+	background-color: $colorWindow;
 	border: 5pt solid #ffa0a0;
 	padding: 5pt;
 	border-radius: 5pt;
@@ -117,8 +117,8 @@ div.txt {
 }
 
 .statusbar td {
-	border: 1pt inset #c0c0c0;
+	border: 1pt inset $colorWindow;
 }
 textarea {
-	border: 2pt inset #c0c0c0;
+	border: 2pt inset $colorWindow;
 }
