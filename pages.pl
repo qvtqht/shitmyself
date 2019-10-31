@@ -100,7 +100,7 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 
 	my $authorAvatar = '';
 	if ($showPlain) {
-		$authorAvatar = GetPlainAvatar($gpgKey);
+		$authorAvatar = GetAvatar($gpgKey);
 	} else {
 		$authorAvatar = GetAvatar($gpgKey);
 	}
@@ -1112,7 +1112,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		my $replyLink = $permalinkHtml . '#reply'; #todo this doesn't need the url before #reply if it is on the item's page
-
 
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;

@@ -23,6 +23,7 @@ use URI::Escape;
 #use HTML::Entities qw(encode_entities);
 use Storable;
 use Time::Piece;
+use Digest::SHA qw(sha1_hex);
 
 
 # We'll use pwd for for the install root dir
@@ -62,12 +63,46 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 	}
 }
 
-# check if html/txt/ has a repo on it.
-# create repo if html/txt/.git/ is missing
-if (!-e 'html/txt/.git') {
-	my $pwd = `pwd`;
-	GitPipe('init');
-}
+#sub GitPipe { # runs git with proper prefix, sufix, and post-command pipe
+## $gitCommand = git command (excluding the 'git' part)
+## $commandsFollowing = what follows after the git command (and after the command suffix)
+#
+#	my $gitCommand = shift;
+#
+#	if (!$gitCommand) {
+#		return;
+#	}
+#
+#	WriteLog('GitPipe: $gitCommand = ' . $gitCommand);
+#
+#	my $commandsFollowing = shift;
+#	if (!$commandsFollowing) {
+#		$commandsFollowing = '';
+#	} else {
+#		$commandsFollowing = ' ' . $commandsFollowing;
+#	}
+#
+#	my $gitCommandPrefix = 'git --git-dir=html/txt/.git --work-tree=html/txt ';
+#	my $gitCommandSuffix = ' 2>&1';
+#
+#	my $gitCommandFull = $gitCommandPrefix . $gitCommand . $gitCommandSuffix . $commandsFollowing;
+#
+#	WriteLog('GitPipe: $gitCommandFull = ' . $gitCommandFull);
+#
+#	my $gitCommandResult = `$gitCommandFull`;
+#
+#	WriteLog('GitPipe: $gitCommandResult = ' . $gitCommandResult);
+#
+#	if ($gitCommandResult =~ m/^fatal:/) {
+#		if ($gitCommand ne 'init') {
+#			GitPipe('init');
+#		}
+#
+#		return;
+#	}
+#
+#	return $gitCommandResult;
+#}
 
 # figure out whether to use gpg or gpg2 command for gpg stuff
 # it might be stored in config
@@ -340,43 +375,6 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 #	}
 #}
 
-sub GitPipe {
-	my $gitCommand = shift;
-
-	if (!$gitCommand) {
-		return;
-	}
-
-	WriteLog('GitPipe: $gitCommand = ' . $gitCommand);
-
-	my $commandsFollowing = shift;
-	if (!$commandsFollowing) {
-		$commandsFollowing = '';
-	} else {
-		$commandsFollowing = ' ' . $commandsFollowing;
-	}
-
-	my $gitCommandPrefix = 'git --git-dir=html/txt/.git --work-tree=html/txt ';
-	my $gitCommandSuffix = ' 2>&1';
-
-	my $gitCommandFull = $gitCommandPrefix . $gitCommand . $gitCommandSuffix . $commandsFollowing;
-
-	WriteLog('GitPipe: $gitCommandFull = ' . $gitCommandFull);
-
-	my $gitCommandResult = `$gitCommandFull`;
-
-	WriteLog('GitPipe: $gitCommandResult = ' . $gitCommandResult);
-
-	if ($gitCommandResult =~ m/^fatal:/) {
-		if ($gitCommand ne 'init') {
-			GitPipe('init');
-		}
-
-		return;
-	}
-
-	return $gitCommandResult;
-}
 
 sub GetFileHash { # $fileName ; returns git's hash of file contents
 	WriteLog("GetFileHash()");
@@ -387,18 +385,20 @@ sub GetFileHash { # $fileName ; returns git's hash of file contents
 
 	WriteLog("GetFileHash($fileName)");
 
-	my $gitOutput = GitPipe('hash-object -w "' . $fileName. '"');
-
-	if ($gitOutput) {
-		WriteLog($gitOutput);
-		chomp($gitOutput);
-
-		WriteLog("GetFileHash($fileName) = $gitOutput");
-
-		return $gitOutput;
-	} else {
-		return;
-	}
+	return sha1_hex(GetFile($fileName));
+#
+#	my $gitOutput = GitPipe('hash-object -w "' . $fileName. '"');
+#
+#	if ($gitOutput) {
+#		WriteLog($gitOutput);
+#		chomp($gitOutput);
+#
+#		WriteLog("GetFileHash($fileName) = $gitOutput");
+#
+#		return $gitOutput;
+#	} else {
+#		return;
+#	}
 }
 
 sub GetRandomHash { # returns a random sha1-looking hash, lowercase
@@ -489,7 +489,23 @@ sub GetHtmlAvatar { # Returns HTML avatar from cache
 	return $key;
 }
 
-sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG fingerprint
+sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
+# affected by config/html/color_avatars
+	WriteLog("GetAvatar(...)");
+
+	state $avatarCacheDir;
+	state $avatarTemplate;
+
+	if (!$avatarCacheDir || !$avatarTemplate) {
+		if (GetConfig('html/color_avatars')) {
+			$avatarCacheDir = 'avatar.color/';
+			$avatarTemplate = 'avatar.template';
+		} else {
+			$avatarCacheDir = 'avatar.plain/';
+			$avatarTemplate = 'avatar2.template';
+		}
+	}
+
 	state %avatarCache;
 
 	my $gpgKey = shift;
@@ -500,158 +516,78 @@ sub GetPlainAvatar { # Returns plain avatar without colors (HTML) based on GPG f
 
 	chomp $gpgKey;
 
-#	if (!IsFingerprint($gpgKey)) {
-#		return;
-#	}
-#
-	WriteLog("GetPlainAvatar($gpgKey)");
+	WriteLog("GetAvatar($gpgKey)");
 
 	if ($avatarCache{$gpgKey}) {
-		WriteLog("GetPlainAvatar: found in hash");
-		return trim($avatarCache{$gpgKey});
-	}
-
-	WriteLog("GetPlainAvatar: continuing with cache lookup");
-
-	#todo this may need to get refreshed if pubkey has been posted
-	#should be refreshed when pubkey is posted
-	#and also #todo reprocess all(some?) signed but previously unparsable messages
-
-	my $avCacheFile = GetCache("pavatar/$gpgKey");
-	if ($avCacheFile) {
-		return $avCacheFile;
-	}
-
-	my $avatar = GetTemplate('avatar2.template');
-	
-	my $usernameColor = GetConfig('theme/color_username');
-	if (substr($usernameColor, 0, 1) ne '#') {
-		$usernameColor = '#' . $usernameColor;
-	} 
-	
-	$avatar =~ s/\$usernameColor/$usernameColor/g;
-
-	if ($gpgKey) {
-		my $alias = GetAlias($gpgKey);
-		$alias = encode_entities2($alias);
-		#$alias = encode_entities($alias, '<>&"');
-
-		if ($alias) {
-
-#			my $char1 = substr($gpgKey, 12, 1);
-#			my $char2 = substr($gpgKey, 13, 1);
-#			my $char3 = substr($gpgKey, 14, 1);
-##
-#			$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-#			$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-#			$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-##
-#			my $char1 = '*';
-#			my $char2 = '*';
-#
-#			$avatar =~ s/\$color1/$color1/g;
-#			$avatar =~ s/\$color2/$color2/g;
-#			$avatar =~ s/\$color3/$color3/g;
-#			#$avatar =~ s/\$color4/$color4/g;
-			$avatar =~ s/\$alias/$alias/g;
-#			$avatar =~ s/\$char1/$char1/g;
-#			$avatar =~ s/\$char2/$char2/g;
-#			$avatar =~ s/\$char3/$char3/g;
-		} else {
-			$avatar = '($gpgKey)'; #todo what's this?
-		}
-	} else {
-		$avatar = "(bug_detected)";
-		WriteLog("GetPlainAvatar: problem detected... \$gpgKey is missing where it shouldn't be");
-	}
-
-	$avatarCache{$gpgKey} = $avatar;
-
-	if ($avatar) {
-		PutCache("pavatar/$gpgKey", $avatar);
-	}
-
-	chomp $avatar;
-
-	return $avatar;
-}
-
-sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
-	WriteLog("GetAvatar(...)");
-
-	if (!GetConfig('html/color_avatars')) {
-		return GetPlainAvatar(@_);
-	}
-
-	state %avatarCache;
-
-	my $gpg_key = shift;
-
-	if (!$gpg_key) {
-		return;
-	}
-
-	chomp $gpg_key;
-
-	WriteLog("GetAvatar($gpg_key)");
-
-	if ($avatarCache{$gpg_key}) {
-		WriteLog("GetAvatar: found in hash");
-		return $avatarCache{$gpg_key};
+		WriteLog('GetAvatar: found in %avatarCache');
+		return $avatarCache{$gpgKey};
 	}
 
 	WriteLog("GetAvatar: continuing with cache lookup");
 
-	my $avCacheFile = GetCache("avatar.color/$gpg_key");
+	my $avCacheFile = GetCache($avatarCacheDir . $gpgKey);
 	if ($avCacheFile) {
+		$avatarCache{$gpgKey} = $avCacheFile;
 		return $avCacheFile;
 	}
 
-	my $avatar = GetTemplate('avatar.template');
+	my $avatar = GetTemplate($avatarTemplate);
 	#todo strip all whtespace outside of html tags here to make it non-wrap
 
-	if ($gpg_key) {
-		my $color1 = substr($gpg_key, 0, 6);
-		my $color2 = substr($gpg_key, 3, 6);
-		my $color3 = substr($gpg_key, 6, 6);
-		my $color4 = substr($gpg_key, 9, 6);
+	if ($gpgKey) {
+		my $alias = GetAlias($gpgKey);
 
-		my $alias = GetAlias($gpg_key);
-		$alias = encode_entities2($alias);
-		#$alias = encode_entities($alias, '<>&"');
+		if (GetConfig('html/color_avatars')) {
+			my $color1 = substr($gpgKey, 0, 6);
+			my $color2 = substr($gpgKey, 3, 6);
+			my $color3 = substr($gpgKey, 6, 6);
+			my $color4 = substr($gpgKey, 9, 6);
 
-		if ($alias) {
+			if (length($alias) > 16) {
+				$alias = substr($alias, 0, 16);
+			}
 
-			#		my $char1 = substr($gpg_key, 12, 1);
-			#		my $char2 = substr($gpg_key, 13, 1);
-			#		my $char3 = substr($gpg_key, 14, 1);
-			#
-			#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-			#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-			#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+			$alias = encode_entities2($alias);
+			#$alias = encode_entities($alias, '<>&"');
 
-			my $char1 = '*';
-			my $char2 = '*';
+			if ($alias) {
+				#		my $char1 = substr($gpg_key, 12, 1);
+				#		my $char2 = substr($gpg_key, 13, 1);
+				#		my $char3 = substr($gpg_key, 14, 1);
+				#
+				#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+				#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+				#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
 
-			$avatar =~ s/\$color1/$color1/g;
-			$avatar =~ s/\$color2/$color2/g;
-			$avatar =~ s/\$color3/$color3/g;
-			#$avatar =~ s/\$color4/$color4/g;
-			$avatar =~ s/\$alias/$alias/g;
-			$avatar =~ s/\$char1/$char1/g;
-			$avatar =~ s/\$char2/$char2/g;
-			#$avatar =~ s/\$char3/$char3/g;
+				my $char1 = '*';
+				my $char2 = '*';
+
+				$avatar =~ s/\$color1/$color1/g;
+				$avatar =~ s/\$color2/$color2/g;
+				$avatar =~ s/\$color3/$color3/g;
+				#$avatar =~ s/\$color4/$color4/g;
+				$avatar =~ s/\$alias/$alias/g;
+				$avatar =~ s/\$char1/$char1/g;
+				$avatar =~ s/\$char2/$char2/g;
+				#$avatar =~ s/\$char3/$char3/g;
+			}
+			else {
+				$avatar = '';
+			}
 		} else {
-			$avatar = '';
+			$avatar =~ s/\$alias/$alias/g;
 		}
 	} else {
 		$avatar = "";
 	}
 
-	$avatarCache{$gpg_key} = $avatar;
+	my $colorUsername = GetConfig('theme/color_username');
+	$avatar =~ s/\$colorUsername/$colorUsername/g;
+
+	$avatarCache{$gpgKey} = $avatar;
 
 	if ($avatar) {
-		PutCache("avatar.color/$gpg_key", $avatar);
+		PutCache($avatarCacheDir . $gpgKey, $avatar);
 	}
 
 	return $avatar;
@@ -1044,13 +980,13 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	$colorTitlebar =~ s/^([0-9a-fA-F]{6})$/#$1/;#
 	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
-	my $colorWindow = GetConfig('theme/color_window');
-	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
-	$content =~ s/\$colorWindow/$colorWindow/g;
-
 	my $borderDialog = GetConfig('theme/border_dialog');
 	$borderDialog =~ s/^([0-9a-fA-F]{6})$/#$1/;
 	$content =~ s/\$borderDialog/$borderDialog/g;
+
+	my $colorWindow = GetConfig('theme/color_window');
+	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
+	$content =~ s/\$colorWindow/$colorWindow/g;
 
 	PutFile($file, $content);
 

@@ -134,9 +134,7 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
-GitPipe('add html/txt');
-
-my $filesLeft = GitPipe('status --porcelain', '| grep "^A" | cut -c 4- | grep "html/txt" | grep "txt$" | wc -l');
+my $filesLeft = 0; #todo
 
 PutConfig('admin/gitflow/files_left', $filesLeft);
 

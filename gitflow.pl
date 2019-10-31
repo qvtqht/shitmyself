@@ -179,13 +179,8 @@ if (!$locked) {
 	if (!-d 'html/txt') {
 		WriteLog('Problem!!! html/txt is not a directory!');
 	}
-	
-	if (!-e 'html/txt/.git') {
-		my $gitOutput = GitPipe('init');
-		
-		WriteLog($gitOutput);
-	}
-	
+
+
 	# See if gitflow/file_limit setting exists
 	# This limits the number of files to process per launch of gitflow.pl
 	my $filesLimit = GetConfig('admin/gitflow/limit_file');
@@ -194,29 +189,13 @@ if (!$locked) {
 		$filesLimit = 100;
 	}
 
-	# Use git to find files that have changed in txt/ directory
-	GitPipe('add html/txt');
-
-	my $gitChanges = GitPipe('status --porcelain', '| grep "^A" | cut -c 4- | grep "html/txt" | grep "txt$" | head -n ' . $filesLimit);
-	
-	WriteLog('$gitChanges = ' . $gitChanges);
-	
-	# Get an array of changed files that git returned
-	my @gitChangesArray = split("\n", $gitChanges);
-
-	my $gitChangesCount = scalar(@gitChangesArray);
-	
-	# Log number of changes
-	WriteLog('scalar(@gitChangesArray) = ' . $gitChangesCount);
-																																	
-	# Keep track of how many files we've processed
+	my $findCommand = 'find html/txt | grep -i txt$';
+	my @files = split("\n", `$findCommand`);
 	my $filesProcessed = 0;
-	
+
 	# Go through all the changed files
-	foreach my $file (@gitChangesArray) {
-		# Add to counter
-		$filesProcessed++;
-		if ($filesProcessed > $filesLimit) {
+	foreach my $file (@files) {
+		if ($filesProcessed >= $filesLimit) {
 			WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
 			last;
 		}
@@ -269,6 +248,10 @@ if (!$locked) {
 				}
 			}
 
+			if (GetCache('indexed/' . $fileHash)) {
+				next;
+			}
+
 #			WriteLog('gitflow.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
 			
 			# add a time_added record
@@ -276,21 +259,18 @@ if (!$locked) {
 
 			WriteLog('gitflow.pl: IndexTextFile(' . $file . ')');
 
-			WriteMessage('gitflow.pl: IndexTextFile(' . $file . '), file ' . $filesProcessed . '/' . $gitChangesCount . ' (max ' . $filesLimit . ')');
-
 			IndexTextFile($file);
-	
+
+			PutCache('indexed/' . $fileHash, 1);
+
+			# Add to counter
+			$filesProcessed++;
+
 			# run commands to
 			#	  add changed file to git repo
 			#    commit the change with message 'hi' #todo
 			#    cd back to pwd
 
-			GitPipe('add "' . $file .'"');
-
-			my $gitCommit = GitPipe('commit -m automated_commit "' . $file . '"');
-	
-			# write git's output to log
-			WriteLog('Result: ' . $gitCommit);
 	
 	#		# below is for debugging purposes
 	#
@@ -313,9 +293,7 @@ if (!$locked) {
 	RemoveEmptyDirectories('./html/'); #includes txt/
 	#RemoveEmptyDirectories('./txt/');
 
-	GitPipe('add html/txt');
-
-	my $filesLeft = GitPipe('status --porcelain', '| grep "^A" | cut -c 4- | grep "html/txt" | grep "txt$" | wc -l');
+	my $filesLeft = 0; #todo
 
 	PutConfig('admin/gitflow/files_left', $filesLeft);
 
