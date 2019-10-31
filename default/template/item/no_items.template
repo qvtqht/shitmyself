@@ -28,7 +28,7 @@
 		</tr>
 
 		<tr class=statusbar>
-			<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+			<td style="border: 1pt inset $colorWindow; padding: 2pt;">
 				Ready
 			</td>
 		</tr>

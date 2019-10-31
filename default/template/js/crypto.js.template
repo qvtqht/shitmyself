@@ -103,7 +103,7 @@ function signoutCounterDecrement() {
 }
 
 function disarmSignoutButton(t) {
-	t.style.backgroundColor = '#c0c0c0';
+	t.style.backgroundColor = '$colorWindow';
 	t.style.color = 'red';
 	window.iii = 0;
 	window.privKeyTrash = '';
