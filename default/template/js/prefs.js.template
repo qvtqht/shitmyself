@@ -9,7 +9,9 @@ function ShowControlsByClassName() { // shows or hides elements based on class n
 
 function SetElementVisible(element, displayValue, bgColor) { // sets element's visible status based on tag type
 // also sets background color
-	element.style.backgroundColor = bgColor;
+	if (bgColor) {
+		element.style.backgroundColor = bgColor;
+	}
 
 	if (displayValue == 'initial' && element.nodeName == 'P') {
 		element.style.display = 'block';
@@ -24,8 +26,6 @@ function SetElementVisible(element, displayValue, bgColor) { // sets element's v
 	} else {
 		element.style.display = displayValue;
 	}
-
-	element.style.backgroundColor = bgColor;
 }
 
 function ShowAdvanced(force) { // show or hide controls based on preferences
@@ -46,7 +46,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			var elemVoter = document.getElementsByClassName('voter');
 
 			for (var i = 0; i < elemVoter.length; i++) {
-				SetElementVisible(elemVoter[i], displayVoter, 'red');
+				SetElementVisible(elemVoter[i], displayVoter, 0);
 			}
 		}
 
