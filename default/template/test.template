@@ -9,7 +9,7 @@
 		</td>
 	</tr>
 	
-	<tr bgcolor=#c0c0c0 class=menubar>
+	<tr bgcolor=$colorWindow class=menubar>
 		<td colspan=2 style="border:0">
 		<p>
 			<a href=#>Agree</a>;
