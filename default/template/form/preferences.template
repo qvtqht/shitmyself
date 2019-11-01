@@ -19,7 +19,7 @@
 					<p>
 						<label for=chkWantToVote>
 							<input type=checkbox id=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
-							Want to vote
+							Willing to moderate
 						</label>
 					</p>
 
