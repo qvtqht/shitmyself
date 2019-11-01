@@ -1,6 +1,11 @@
+
+
+
+#bug going back to a page with [x] advanced does not update checkbox status after it is has been changed down-history
+
 Bill of rights for users
-1. Users can download their data in a useful format
-2. Users can see inside the system and re-prove the connections
+1. Users can download their data in a useful format.
+2. Users can review the full vote record.
 3. Voting is a right, not a privilege. All clients will be accommodated.
 
 
