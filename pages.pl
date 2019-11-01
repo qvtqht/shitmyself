@@ -64,6 +64,8 @@ sub GenerateDialogPage { # generates page with dialog
 
 			return $pageTemplate;
 		}
+		if ($pageName eq 'ok') {
+		}
 	}
 }
 
@@ -1363,10 +1365,10 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
 	$menuItems .= GetMenuItem("/events.html", 'Events');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors');
-	$menuItems .= GetMenuItem("/index0.html", 'Abyss');
-	$menuItems .= GetMenuItem("/prefs.html", 'Prefs', 1);
-	$menuItems .= GetMenuItem("/stats.html", 'Status', 1);
-	$menuItems .= GetMenuItem("/tags.html", 'Tags', 1);
+	$menuItems .= GetMenuItem("/index0.html", 'Abyss', 'voter');
+	$menuItems .= GetMenuItem("/prefs.html", 'Prefs', 'advanced');
+	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
@@ -2034,14 +2036,18 @@ sub GetReadPage { # generates page with item listing based on parameters
 sub GetMenuItem { # returns html snippet for a menu item (used for both top and footer menus)
 	my $address = shift;
 	my $caption = shift;
-	my $advanced = shift;
+	my $className = shift;
+
+	if (!$className) {
+		$className = '';
+	}
 #
 #	if (!-e "html/$address") { #don't make a menu item if file doesn't exist
 #		return '';
 #	}
 
 	my $menuItem = '';
-	if ($advanced) {
+	if ($className eq 'advanced') {
 		$menuItem = GetTemplate('menuitem-advanced.template');
 	} else {
 		$menuItem = GetTemplate('menuitem.template');
