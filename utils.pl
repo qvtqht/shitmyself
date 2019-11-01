@@ -543,10 +543,6 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 			my $color3 = substr($gpgKey, 6, 6);
 			my $color4 = substr($gpgKey, 9, 6);
 
-			if (length($alias) > 16) {
-				$alias = substr($alias, 0, 16);
-			}
-
 			$alias = encode_entities2($alias);
 			#$alias = encode_entities($alias, '<>&"');
 
@@ -600,6 +596,10 @@ sub GetAlias { # Returns alias for a GPG key
 	WriteLog("GetAlias($gpgKey)");
 
 	my $alias = DBGetAuthorAlias($gpgKey);
+
+	if ($alias && length($alias) > 24) {
+		$alias = substr($alias, 0, 24);
+	}
 
 	if ($alias) {
 		$alias =~ s|<.+?>||g;
