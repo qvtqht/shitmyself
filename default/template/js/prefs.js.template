@@ -26,6 +26,8 @@ function SetElementVisible(element, displayValue, bgColor) { // sets element's v
 	} else {
 		element.style.display = displayValue;
 	}
+
+	return 1;
 }
 
 function ShowAdvanced(force) { // show or hide controls based on preferences
@@ -181,6 +183,8 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 	) {
 		ShowAdvanced(1);
 	}
+
+	return 1;
 }
 
 if (document.getElementById) {
