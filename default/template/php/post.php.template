@@ -4,13 +4,13 @@
 	replaces post.html if admin/php/enabled
 */
 
-function WriteLog($text) {
+function WriteLog($text) { // writes to debug log if enabled
 	if (0) {
 		print htmlspecialchars($text) . "<br>";
 	}
 }
 
-function GetHtmlComment($comment) {
+function GetHtmlComment($comment) { // returns comment with basic html wrapper
 	WriteLog('GetHtmlComment()');
 	WriteLog('$comment = ' . $comment);
 	
@@ -21,9 +21,9 @@ function GetHtmlComment($comment) {
 	return $commentHtml;
 }
 	
-function ProcessNewComment($comment) {
-	$hash = '';
-	$fileUrlPath = '';
+function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
+	$hash = ''; // hash of new comment's contents
+	$fileUrlPath = ''; // path file should be stored in based on $hash
 
 	WriteLog('ProcessNewComment(...)');
 
@@ -60,12 +60,13 @@ function ProcessNewComment($comment) {
 		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
 		WriteLog(file_get_contents($fileName));
 		
-		$gitOutput = `git hash-object -w "$fileName"`;
-		
-		WriteLog('ProcessNewComment: git hash-object -w "' . $fileName . '"');
+		$gitOutput = `sha1sum "$fileName"`;
+
 		WriteLog('ProcessNewComment: $gitOutput = ' . $gitOutput);
-		
-		$hash = trim($gitOutput);
+
+		$gitOutput = explode(' ', trim($gitOutput));
+
+		$hash = trim($gitOutput[0]);
 		
 		WriteLog('ProcessNewComment: $hash = ' . $hash);
 		
@@ -123,17 +124,23 @@ function ProcessNewComment($comment) {
 		$newPage .=	'<p>This page should be replaced with a formatted version soon.</p>';
 		$newPage .=	'</body></html>';
 		
-		file_put_contents($fileHtmlPath, $newPage);
-		
-		exec('cd .. ; perl ./pages.pl "' . $hash . '"');
-		
+//		file_put_contents($fileHtmlPath, $newPage);
+//
+//		exec('cd "' . $scriptDir . '" ; perl ./pages.pl "' . $hash . '"');
+//
 		if (!file_exists($scriptDir . 'cron.lock')) {
+			WriteLog('cron.lock no exist, trying index.pl');
+
 			if (file_exists($scriptDir . '/index.pl')) {
-				exec('cd ' . $scriptDir . ' ; perl index.pl ' . $filePath);
+				WriteLog('index.pl found, calling');
+
+				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
 			}
 			
 			if (file_exists($scriptDir . '/gitflow.pl')) {
-				exec('cd ' . $scriptDir . ' ; perl gitflow.pl');
+				WriteLog('gitflow.pl found, calling');
+
+				WriteLog(`cd "$scriptDir" ; perl ./gitflow.pl`);
 			}
 		} else {
 
@@ -148,6 +155,10 @@ function ProcessNewComment($comment) {
 		}
 		
 		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
+	}
+
+	if ($pwd) {
+		WriteLog(`cd $pwd`);
 	}
 	
 	return $fileUrlPath;
@@ -167,8 +178,10 @@ if ($_POST) {
 		
 		$comment .= "\n\n" . $replyToToken;
 	}
-	
-	$fileUrlPath = ProcessNewComment($comment);
+
+	if ($comment) {
+		$fileUrlPath = ProcessNewComment($comment);
+	}
 }
 
 if ($_GET) {
