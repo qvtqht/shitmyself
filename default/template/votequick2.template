@@ -2,7 +2,7 @@
 <tr bgcolor=$colorWindow class=menubar>
 	<td style="border:0">
 		<p class=voter>
-			<span class=beginner>Use voting buttons to rate item:<br></span>
+			<span class=beginner>Please use these buttons to moderate:<br></span>
 			$quickVotesButtons
 		</p>
 	</td>
