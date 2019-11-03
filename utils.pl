@@ -483,10 +483,11 @@ sub GetHtmlAvatar { # Returns HTML avatar from cache
 			return $avatarLink;
 		}
 	} else {
-		return $key;
+#		return $key;
+		return 'unregistered';
 	}
 
-	return $key;
+	return 'unregistered';
 }
 
 sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
@@ -608,7 +609,8 @@ sub GetAlias { # Returns alias for a GPG key
 
 		return $alias;
 	} else {
-		return $gpgKey;
+#		return $gpgKey;
+		return 'unregistered';
 	}
 }
 
