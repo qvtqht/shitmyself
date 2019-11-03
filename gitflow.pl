@@ -160,10 +160,7 @@ if (!$locked) {
 			WriteLog("WARNING: Could not find $accessLogPath");
 		}
 	}
-	
-	# check if html/txt/ has its own git repository
-	# init a new repo in html/txt/ if html/txt/.git/ is missing
-	
+
 	if (!-e 'html') {
 		system('mkdir html');
 	}
@@ -293,7 +290,7 @@ if (!$locked) {
 	RemoveEmptyDirectories('./html/'); #includes txt/
 	#RemoveEmptyDirectories('./txt/');
 
-	my $filesLeft = 0; #todo
+	my $filesLeft = `find html/txt | grep txt\$ | wc`; #todo
 
 	PutConfig('admin/gitflow/files_left', $filesLeft);
 
