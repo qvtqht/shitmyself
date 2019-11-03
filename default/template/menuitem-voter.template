@@ -1,0 +1,3 @@
+<span class=voter>
+	<a href="$address" style="text-decoration-color: $color; border-bottom: 3pt solid $color">$caption</a>; 
+</span>
