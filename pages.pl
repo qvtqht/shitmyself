@@ -2049,6 +2049,8 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 	my $menuItem = '';
 	if ($className eq 'advanced') {
 		$menuItem = GetTemplate('menuitem-advanced.template');
+	} elsif ($className eq 'voter') {
+		$menuItem = GetTemplate('menuitem-voter.template');
 	} else {
 		$menuItem = GetTemplate('menuitem.template');
 	}
