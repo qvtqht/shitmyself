@@ -1,5 +1,5 @@
-
-
+Summarize >1k points
+Only display points if > 1k
 
 #bug going back to a page with [x] advanced does not update checkbox status after it is has been changed down-history
 
