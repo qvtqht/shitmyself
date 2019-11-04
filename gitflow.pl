@@ -186,9 +186,18 @@ if (!$locked) {
 		$filesLimit = 100;
 	}
 
-	my $findCommand = 'find html/txt | grep -i txt$';
-	my @files = split("\n", `$findCommand`);
+	my $findCommand;
+	my @files;
+
+
+	$findCommand = 'grep -rl "PUBLIC KEY" html/txt';
+	push @files, split("\n", `$findCommand`);
+
+	$findCommand = 'find html/txt | grep -i txt$';
+	push @files, split("\n", `$findCommand`);
+
 	my $filesProcessed = 0;
+
 
 	# Go through all the changed files
 	foreach my $file (@files) {
@@ -290,7 +299,7 @@ if (!$locked) {
 	RemoveEmptyDirectories('./html/'); #includes txt/
 	#RemoveEmptyDirectories('./txt/');
 
-	my $filesLeft = `find html/txt | grep txt\$ | wc`; #todo
+	my $filesLeft = `find html/txt | grep txt\$ | wc -l`; #todo
 
 	PutConfig('admin/gitflow/files_left', $filesLeft);
 
