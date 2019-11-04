@@ -1558,7 +1558,8 @@ sub GetTopItemsPage { # returns page with top items listing
 			$statusText = $itemCount . ' threads';
 		}
 
-		my $columnHeadings = 'Title,Score,Replied,Author';
+#		my $columnHeadings = 'Title,Score,Replied,Author';
+		my $columnHeadings = '';
 
 		$itemListingWrapper = GetWindowTemplate(
 			'Top Threads',
