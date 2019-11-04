@@ -2,28 +2,21 @@
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
-			<td colspan=4>
+			<td>
 				<font color=$colorTitlebarText><b>Top Threads</b></font>
 			</td>
 		</tr>
 
 		<tr class=menubar>
-			<td colspan=4>
+			<td>
 				<p><a href="/write.html">New Topic</a>
 			</td>
-		</tr>
-
-		<tr class=heading>
-			<th width="60%" align=left>Title </th>
-			<th align=left>Score </th>
-			<th align=left>Replied </th>
-			<th align=left>Author <br></th>
 		</tr>
 
 		$itemListings
 
 		<tr class=statusbar>
-			<td colspan=4>12 threads</td>
+			<td>12 threads</td>
 		</tr>
 	</table>
 </font>

@@ -1530,7 +1530,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			my $authorAvatar;
 			if ($authorKey) {
 #				$authorAvatar = GetPlainAvatar($authorKey);
-				$authorAvatar = GetAuthorLink($authorKey, 1);
+				$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
 			} else {
 				$authorAvatar = '';
 			}
