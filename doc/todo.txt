@@ -1,3 +1,5 @@
+Warning when write content becomes close to too long for GET
+
 Summarize >1k points
 Only display points if > 1k
 
