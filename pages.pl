@@ -1297,7 +1297,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $neutralColor = '#202020';
 	my $disabledColor = '#c0c0c0';
 	my $disabledTextColor = '#808080';
-	my $orangeColor = '#f08000';
+	my $orangeColor = '#f08000'; #FFA500
 	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetStylesheet();
 
