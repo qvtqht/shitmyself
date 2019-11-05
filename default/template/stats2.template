@@ -13,8 +13,8 @@
 				<fieldset>
 					<p>Built: $lastBuildTime
 					<p>Updated: $lastUpdateTime
-					<p><a href="/index0.html">Items</a>: $itemCount
-					<p class=advanced><a href="/txt/">Queue</a>: $filesLeft
+					<p><a href="/index0.html">Indexed</a>: $itemCount
+					<p class=advanced><a href="/txt/">Total</a>: $filesLeft
 					<p><a href="/authors.html">Authors</a>: $authorCount
 					<p>Operator: $admin
 					<p class=advanced>Server: $server
