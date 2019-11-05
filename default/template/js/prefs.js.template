@@ -7,10 +7,15 @@ var showVoterLastAction = '';
 function ShowControlsByClassName() { // shows or hides elements based on class name match
 }
 
-function SetElementVisible(element, displayValue, bgColor) { // sets element's visible status based on tag type
+function SetElementVisible(element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
 // also sets background color
 	if (bgColor) {
 		element.style.backgroundColor = bgColor;
+	}
+
+	if (borderStyle) {
+		element.style.border = borderStyle;
+		element.style.borderRadius = '3pt';
 	}
 
 	if (displayValue == 'initial' && element.nodeName == 'P') {
@@ -48,7 +53,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			var elemVoter = document.getElementsByClassName('voter');
 
 			for (var i = 0; i < elemVoter.length; i++) {
-				SetElementVisible(elemVoter[i], displayVoter, 0);
+				SetElementVisible(elemVoter[i], displayVoter, 0, '3pt solid orange');
 			}
 		}
 
@@ -67,7 +72,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array #todo nn3 compat
 			for (var i = 0; i < divsToHide.length; i++) {
 				//divsToHide[i].style.visibility = "hidden"; // or
-				SetElementVisible(divsToHide[i], displayValue, bgColor);
+				SetElementVisible(divsToHide[i], displayValue, bgColor, 0);
 			}
 			showAdvancedLastAction = displayValue;
 		}
@@ -86,7 +91,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			var divsToShow = document.getElementsByClassName('beginner');//#todo nn3 compat
 
 			for (var i = 0; i < divsToShow.length; i++) {
-				SetElementVisible(divsToShow[i], displayValue, bgColor);
+				SetElementVisible(divsToShow[i], displayValue, bgColor, 0);
 			}
 			showBeginnerLastAction = displayValue;
 		}
