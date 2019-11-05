@@ -1,3 +1,5 @@
+Netscape 2.0 and 3.0 js errors
+
 Warning when write content becomes close to too long for GET
 
 Summarize >1k points
