@@ -41,34 +41,35 @@
 						$termsOfService
 					</p>
 
-					<p>
-						<label for=chkShowAdvanced>
-							<input 
-								type=checkbox 
-								id=chkShowAdvanced 
-								onchange="saveCheckbox('creaIdAdv', this, 'show_advanced');"
-							> Show advanced options
-						</label>
-					</p>
+
+					<label for=chkShowAdvanced>
+						<input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
+						Show advanced options
+					</label>
+
 
 					<span id=creaIdAdv style="display:none">
 
 					<p>
 						<label for=bits>Algorithm:
 							<select name=bits id=bits>
-								<option value=512>rsa512</option>
-								<option value=1024>rsa1024</option>
-								<option value=2048>rsa2048</option>
-								<option value=4096>rsa4096</option>
+								<option value=512>rsa512 (fast)</option>
+								<option value=1024>rsa1024 (slow</option>
+								<option value=2048>rsa2048 (slow)</option>
+								<option value=4096>rsa4096 (very slow)</option>
 				$gpg2Algochoices
 							</select>
-						</label>
+						</label><br><br>
+
 					</p>
 
 					<p id=abc>
 						* Generate a profile, also known as key pair<br>
 						* Store your <b>private key</b> in your browser/device<br>
 						* Publish your <b>public key</b>, including your name<br>
+						* RSA 512 and 1024 are easy to break<br>
+						* RSA 2048 and 4096 can be slow or not working at all<br>
+						* Non-RSA algorithms may not work with older PGP<br>
 					</p>
 
 					<label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
