@@ -1,0 +1,38 @@
+<!-- itemlong.template -->
+<div class="$itemClass" style="border-color: $borderColor">
+<p><b><a class=advanced href="$permalinkHtml">$itemName</a></b> <a class=advanced href="$permalinkTxt">.txt</a> $authorLink</p>
+$itemTitleTemplate
+<p>$itemText</p>
+<p><b><a class=advanced href="$permalinkHtml">$itemName</a></b> <a class=advanced href="$permalinkTxt">.txt</a> $authorLink</p>
+$votesSummary
+$quickVoteButtonGroup
+</div>
+<!-- / itemlong.template -->
+
+<!-- itemlong2.template -->
+<font face=arial>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		$itemTitleTemplate
+
+		$quickVoteButtonGroup
+
+		<tr class=body>
+			<td class=content colspan=2 bgcolor=#ffffff>
+				<p class="$itemClass">$itemText</p>
+			</td>
+		</tr>
+
+		<tr bgcolor="$colorWindow" class=statusbar>
+			<td style="border: 1pt inset $colorWindow">
+				<a href="$permalinkHtml">$addedTime</a>
+				$authorLink
+				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt></a>
+				<a href="#reply" class=beginner>reply($replyCount)</a>
+			</td>
+		</tr>
+	</table>
+</font>
+
+<replies></replies>
+
+<!-- / itemlong2.template -->
