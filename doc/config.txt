@@ -1,5 +1,5 @@
-admin/abyss_rebuild_interval
-how frequently the Abyss (all items) pages are rebuilt, in seconds
+admin/queue_rebuild_interval
+how frequently the Queue (all items) pages are rebuilt, in seconds
 default: 86400 (1 day)
 
 admin/access_log_path

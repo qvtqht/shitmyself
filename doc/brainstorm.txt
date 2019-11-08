@@ -1,3 +1,14 @@
+Java-PGP for Netscape 2.0-3.0?
+
+Hash each line
+	Store
+		Find common lines
+			Maybe restrict to short lines only?
+
+Adjustable hashing scheme?
+	Multiple hashing schme?
+		Instead of file_hash, multiple columns?
+
 JS themes
 	Take from template/theme*
 		Generate json array (or plaintext)
