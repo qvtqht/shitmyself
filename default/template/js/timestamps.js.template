@@ -37,13 +37,31 @@ function LongAgo(seconds) { // returns string with time units
 		seconds = 0 - seconds;
 	}
 
-	if (seconds >= 60) {
+	if (seconds < 60) {
+		if (seconds != 1) {
+			seconds = seconds + ' seconds';
+		} else {
+			seconds = seconds + ' second';
+		}
+	} else {
 		seconds = Math.floor(seconds / 60);
 
-		if (seconds >= 60) {
+		if (seconds < 60) {
+			if (seconds != 1) {
+				seconds = seconds + ' minutes';
+			} else {
+				seconds = seconds + ' minute';
+			}
+		} else {
 			seconds = Math.floor(seconds / 60);
 
-			if (seconds >= 24) {
+			if (seconds < 24) {
+				if (seconds != 1) {
+					seconds = seconds + ' hours';
+				} else {
+					seconds = seconds + ' hour';
+				}
+			} else {
 			// #todo weeks, years, etc.
 				seconds = Math.floor(seconds / 24);
 
@@ -52,25 +70,7 @@ function LongAgo(seconds) { // returns string with time units
 				} else {
 					seconds = seconds + ' day';
 				}
-			} else {
-				if (seconds != 1) {
-					seconds = seconds + ' hours';
-				} else {
-					seconds = seconds + ' hour';
-				}
 			}
-		} else {
-			if (seconds != 1) {
-				seconds = seconds + ' minutes';
-			} else {
-				seconds = seconds + ' minute';
-			}
-		}
-	} else {
-		if (seconds != 1) {
-			seconds = seconds + ' seconds';
-		} else {
-			seconds = seconds + ' second';
 		}
 	}
 
