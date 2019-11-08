@@ -31,7 +31,7 @@ sub GenerateDialogPage { # generates page with dialog
 	# home
 	# write
 	# about
-	# abyss
+	# queue
 	# index
 	# tags list
 	# items for tag
@@ -702,8 +702,8 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 			if ($replyTemplate) {
 				if ($replyComma eq '') {
-#					$replyComma = '<hr size=5>';
-					$replyComma = '<p>';
+					$replyComma = '<hr size=5>';
+#					$replyComma = '<p>';
 				} else {
 					$replyTemplate = $replyComma . $replyTemplate;
 				}
@@ -1180,6 +1180,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
 
+		my $itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all');
+		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
+
 		return $itemTemplate;
 	} else {
 		return '';
@@ -1213,7 +1216,7 @@ sub GetPageFooter { # returns html for page footer
 	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Status');
 #	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
 	$footerMenuTemplate .= GetMenuItem("/data.html", 'Data');
-	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Abyss');
+	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Queue');
 	$footerMenuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
 	$footerMenuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
 
@@ -1365,10 +1368,10 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
 	$menuItems .= GetMenuItem("/events.html", 'Events');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors');
-	$menuItems .= GetMenuItem("/index0.html", 'Abyss', 'voter');
-	$menuItems .= GetMenuItem("/prefs.html", 'Prefs', 'advanced');
-	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
-	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
+	$menuItems .= GetMenuItem("/index0.html", 'Queue', 'voter');
+	$menuItems .= GetMenuItem("/prefs.html", 'Preferences');
+	$menuItems .= GetMenuItem("/stats.html", 'Status');
+	$menuItems .= GetMenuItem("/tags.html", 'Tags');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
@@ -2135,8 +2138,8 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$itemList = $itemList . $itemComma . $itemTemplate;
 
 			if ($itemComma eq '') {
-#				$itemComma = '<hr size=8>';
-				$itemComma = '<p>';
+				$itemComma = '<hr size=8>';
+#				$itemComma = '<p>';
 			}
 		}
 	}
@@ -2162,7 +2165,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	return $txtIndex;
 }
 
-sub WriteIndexPages { # writes the abyss pages (index0-n.html)
+sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	my $pageLimit = GetConfig('page_limit');
 	if (!$pageLimit) {
 		$pageLimit = 250;
@@ -2302,7 +2305,18 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Stats page
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
-	
+
+	my $jsTestPage = GetTemplate('js/test.js.template');
+	PutHtmlFile("$HTMLDIR/jstest.html", $jsTestPage);
+
+	my $jsTest2Page = GetTemplate('js/test2.js.template');
+#	$jsTest2Page = InjectJs($jsTest2Page, qw(sha512.js));
+	PutHtmlFile("$HTMLDIR/jstest2.html", $jsTest2Page);
+
+	my $jsTest3Page = GetTemplate('js/test3.js.template');
+#	$jsTest3Page = InjectJs($jsTest3Page, qw(sha512.js));
+	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
+
 	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
 
@@ -2954,7 +2968,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 		PutHtmlFile('html/stats.html', $statsPage);
 	}
 	#
-	# index pages (abyss)
+	# index pages (queue)
 	elsif ($pageType eq 'index') {
 		WriteIndexPages();
 	}
