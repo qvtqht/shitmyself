@@ -85,7 +85,8 @@ WriteLog ("GetReadPage()...");
 
 WriteLog ("Author pages...");
 
-my @authors = DBGetAuthorList();
+#my @authors = DBGetAuthorList();
+my @authors = ();
 
 WriteLog('@authors: ' . scalar(@authors));
 
