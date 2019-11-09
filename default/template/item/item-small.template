@@ -8,6 +8,7 @@
 				<a href="$permalinkHtml" class=advanced>$addedTime</a>
 				$authorLink
 				<a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
+				$itemFlagButton
 			</p>
 
 			<replies></replies>
