@@ -826,11 +826,11 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 			unshift @quickVotesList, split("\n", $quickVotesForTags);
 		}
 
+		push @quickVotesList, 'flag';
+
 		my %dedupe = map { $_, 1 } @quickVotesList;
 		@quickVotesList = keys %dedupe;
 	}
-	
-	push @quickVotesList, 'flag';
 
 	my $styleSheet = GetStylesheet();
 
@@ -1356,6 +1356,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 						  
 	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
 	my $noJsIndicator = '<noscript><strike><a href="/profile.html">Profile</a></strike></noscript>';
+	#todo profile link should be color-underlined like other menus
+
 	my $adminKey = GetAdminKey();
 
 	my $topMenuTemplate = GetTemplate('topmenu.template');
@@ -1368,8 +1370,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
 	$menuItems .= GetMenuItem("/events.html", 'Events');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors');
-	$menuItems .= GetMenuItem("/index0.html", 'Queue', 'voter');
-	$menuItems .= GetMenuItem("/prefs.html", 'Preferences');
+	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
+	$menuItems .= GetMenuItem("/prefs.html", 'Settings');
 	$menuItems .= GetMenuItem("/stats.html", 'Status');
 	$menuItems .= GetMenuItem("/tags.html", 'Tags');
 #	if ($adminKey) {
@@ -2635,7 +2637,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
 
 	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;

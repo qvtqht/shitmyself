@@ -37,18 +37,17 @@
 						<span id=genStatus></span>
 					</p>
 
-					<p id=tos class=advanced>
-						$termsOfService
-					</p>
-
-
-					<label for=chkShowAdvanced>
-						<input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
+					<label for=chkShowAdvanced2>
+						<input type=checkbox id="chkShowAdvanced2" onchange="saveCheckbox('creaIdAdv', this, 'show_advanced');">
 						Show advanced options
 					</label>
 
 
-					<span id=creaIdAdv style="display:none">
+					<span id=creaIdAdv style="display:none" class=advanced>
+
+					<p id=tos class=advanced>
+						$termsOfService
+					</p>
 
 					<p>
 						<label for=bits>Algorithm:
@@ -68,7 +67,7 @@
 						* Store your <b>private key</b> in your browser/device<br>
 						* Publish your <b>public key</b>, including your name<br>
 						* RSA 512 and 1024 are easy to break<br>
-						* RSA 2048 and 4096 can be slow or not working at all<br>
+						* RSA 2048 and 4096 may be slow or not work at all<br>
 						* Non-RSA algorithms may not work with older PGP<br>
 					</p>
 

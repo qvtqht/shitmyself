@@ -201,6 +201,7 @@ if (document.getElementById) {
 	pane = document.getElementById('curIdAdv');
 	if (pane && GetPrefs('show_advanced') == 1) {
 		document.getElementById('chkShowAdvanced').checked = 1;
+		document.getElementById('chkShowAdvanced2').checked = 1;
 		saveCheckbox('curIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
 	}
 
@@ -209,7 +210,7 @@ if (document.getElementById) {
 	if (pane) {
 		//beginner checkbox
 		if (GetPrefs('beginner') == 1) {
-			var cb = document.getElementById('beginnerC');
+			var cb = document.getElementById('chkBeginner');
 			if (cb) {
 				cb.checked = 1;
 			}
@@ -225,7 +226,7 @@ if (document.getElementById) {
 
 		// beginner_highlight checkbox
 		if (GetPrefs('beginner_highlight') == 1) {
-			var cb = document.getElementById('beginnerHighlight');
+			var cb = document.getElementById('chkBeginnerHighlight');
 			if (cb) {
 				cb.checked = 1;
 			}
@@ -249,7 +250,7 @@ if (document.getElementById) {
 		
 		// reload pages if changed checkbox
 		if (GetPrefs('notify_on_change') == 1) {
-			var cb = document.getElementById('reloadChanged');
+			var cb = document.getElementById('chkNotifyOnChange');
 			if (cb) {
 				cb.checked = 1;
 			}

@@ -4,7 +4,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
-					<font color=$colorTitlebarText><b>Preferences</b></font>
+					<font color=$colorTitlebarText><b>Settings</b></font>
 				</td>
 			</tr>
 
@@ -18,27 +18,27 @@
 				<td class=content>
 					<p>
 						<label for=chkWantToVote>
-							<input type=checkbox id=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
+							<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
 							Willing to moderate
 							<span class=voter>:-)</span>
 						</label>
 					</p>
 
 					<label for=chkShowAdvanced>
-						<input type=checkbox id=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
+						<input type=checkbox id=chkShowAdvanced name=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
 						Show advanced options
 					</label>
 
 					<span id=curIdAdv style="display:none">
 						<p>
-							<label for=beginnerC>
-								<input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');">
+							<label for=chkBeginner>
+								<input type=checkbox id=chkBeginner name=chkBeginner onchange="saveCheckbox(0, this, 'beginner');">
 								Show beginner hints
 							</label>
 							<br>
 							<span class=beginner>
-								<label for=beginnerHighlight>
-									<input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');">
+								<label for=chkBeginnerHighlight>
+									<input type=checkbox id=chkBeginnerHighlight name=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');">
 									Highlight beginner hints
 								</label>
 								<br>
@@ -47,21 +47,21 @@
 
 
 							<label for=advancedHighlight class=advanced>
-								<input type=checkbox id=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
+								<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
 								Highlight advanced options
 							</label>
 						</p>
 
 						<p>
 							<label for=displayUsername>
-								<input type=checkbox id=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
+								<input type=checkbox id=displayUsername name=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
 								Display username in top menu
 							</label>
 						</p>
 						
 						<p>
-							<label for=reloadChanged>
-								<input type=checkbox id=reloadChanged onchange="saveCheckbox(0, this, 'notify_on_change');">
+							<label for=chkNotifyOnChange>
+								<input type=checkbox id=chkNotifyOnChange name=chkNotifyOnChange onchange="saveCheckbox(0, this, 'notify_on_change');">
 								Notify if page has changed
 							</label>
 						</p>

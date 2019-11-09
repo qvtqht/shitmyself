@@ -42,8 +42,8 @@
 		</p>
 
 		<p>
-			<label for=beginnerC><input type=checkbox id=beginnerC onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
-			<span class=beginner>&nbsp; &nbsp; <label for=beginnerHighlight><input type=checkbox id=beginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints</label></span>
+			<label for=chkBeginner><input type=checkbox id=chkBeginner onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
+			<span class=beginner>&nbsp; &nbsp; <label for=chkBeginnerHighlight><input type=checkbox id=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints</label></span>
 		</p>
 
 		<p id=def>
