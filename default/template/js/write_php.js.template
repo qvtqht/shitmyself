@@ -8,7 +8,9 @@ function commentOnChange(t, formId) {
 		return;
 	}
 		
-	if (t.value.length > 1024) {
+	if (t.value.length <= 1024) {
+		// do nothing
+	} else {
 		commentOnChangeDone = 1;
 		if (document.getElementById) {
 			form = document.getElementById(formId);
@@ -20,3 +22,4 @@ function commentOnChange(t, formId) {
 }
 
 // end write_php.js
+
