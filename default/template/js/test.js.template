@@ -5,14 +5,15 @@
 <SCRIPT>
 <!--
 function setCase (caseSpec){
-if (caseSpec == "upper") {
-   document.form1.firstName.value=document.form1.firstName.value.toUpperCase()
-   document.form1.lastName.value=document.form1.lastName.value.toUpperCase()
-   document.form1.output.value=document.form1.output.value.toUpperCase()}
-   else {
-   document.form1.firstName.value=document.form1.firstName.value.toLowerCase()
-   document.form1.lastName.value=document.form1.lastName.value.toLowerCase()
-   document.form1.output.value=document.form1.output.value.toLowerCase()}
+	if (caseSpec == "upper") {
+		document.form1.firstName.value=document.form1.firstName.value.toUpperCase()
+		document.form1.lastName.value=document.form1.lastName.value.toUpperCase()
+		document.form1.output.value=document.form1.output.value.toUpperCase()
+	} else {
+		document.form1.firstName.value=document.form1.firstName.value.toLowerCase()
+		document.form1.lastName.value=document.form1.lastName.value.toLowerCase()
+		document.form1.output.value=document.form1.output.value.toLowerCase()
+	}
 }
 
 var worldString="Hello, world"
@@ -20,7 +21,7 @@ var worldString="Hello, world"
 document.write(worldString.small())
 document.write("<P>" + worldString.big())
 document.write("<P>" + worldString.fontsize(7))
-alert(worldString.fontsize(7));
+alert(worldString.fontsize(7).fontsize(3));
 
 
 // -->
