@@ -2319,6 +2319,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 #	$jsTest3Page = InjectJs($jsTest3Page, qw(sha512.js));
 	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
 
+	my $clockTest = GetTemplate('clock2.template');
+	my $clockTestPage = '<html><body>';
+	$clockTestPage .= $clockTest;
+	$clockTestPage .= '</body></html>';
+	$clockTestPage = InjectJs($clockTestPage, qw(clock));
+#	$jsTest3Page = InjectJs($jsTest3Page, qw(sha512.js));
+	PutHtmlFile("$HTMLDIR/clock.html", $clockTestPage);
+
 	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
 
