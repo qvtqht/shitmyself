@@ -58,7 +58,7 @@ Events Page
 	Split into Current, Upcoming, Past events
 	Fix no-js display of dates in future (currently just 01:00
 
-#todo if 0 items index0.html (Abyss) is missing
+#todo if 0 items index0.html (Queue) is missing
 
 Tags page with 0 tags
 
@@ -380,7 +380,7 @@ Web server handler for potential 404:
 
 Log each script's runtime and output in timestamped logs
 
-In Abyss index pages, votes/replies should include parent message in a box
+In Queue index pages, votes/replies should include parent message in a box
 
 With SSI calculate user's fingerprint and direct them to /fp/abcdef
 
@@ -484,7 +484,7 @@ identity page: disable username textbox while generating new id
 
 fix the remaining duplicate tags (?)
 
-abyss pages should be updated
+queue pages should be updated
 	and or not have tags on them
 
 #bug iframe should not have a border on post page
@@ -493,7 +493,7 @@ javascripted one-click vote buttons that reflect status on-page
 
 #bug submitting write-small form from author pages
 
-#bug abyss page has token on it still
+#bug queue page contains template token
 
 
 From openpgp.js docs:
