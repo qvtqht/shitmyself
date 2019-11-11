@@ -29,6 +29,13 @@ function setclock() {
 			setTimeout(setclock, 500); //#todo only do this if clock is visible ; restart clock if becomes visible again
 		}
 	}
+
+	if (document.frmClock) {
+		if (document.frmClock.txtClock) {
+			document.frmClock.txtClock.value = n;
+			document.frmClock.txtClock.innerHTML = n;
+		}
+	}
 }
 
 setTimeout(setclock, 500);
