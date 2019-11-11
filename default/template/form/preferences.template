@@ -69,6 +69,13 @@
 					</span>
 				</td>
 			</tr>
+
+			<tr bgcolor="$colorWindow" class=statusbar>
+				<td style="border: 1pt inset $colorWindow; padding: 2pt;">
+					Ready
+				</td>
+			</tr>
+
 		</table>
 	</font>
 </form>
