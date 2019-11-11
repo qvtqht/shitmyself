@@ -2681,7 +2681,7 @@ sub GetPrefsPage { # returns html for preferences page (/prefs.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
