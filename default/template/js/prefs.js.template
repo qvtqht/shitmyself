@@ -200,8 +200,16 @@ if (document.getElementById) {
 	// advanced checkbox of current profile pane
 	pane = document.getElementById('curIdAdv');
 	if (pane && GetPrefs('show_advanced') == 1) {
-		document.getElementById('chkShowAdvanced').checked = 1;
-		document.getElementById('chkShowAdvanced2').checked = 1;
+		var chkAdvanced = document.getElementById('chkShowAdvanced');
+		if (chkAdvanced) {
+			chkAdvanced.checked = 1;
+		}
+
+		chkAdvanced = document.getElementById('chkShowAdvanced2');
+		if (chkAdvanced) {
+			chkAdvanced.checked = 1;
+		}
+
 		saveCheckbox('curIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
 	}
 
