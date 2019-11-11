@@ -2360,7 +2360,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	
 	
 	# Ok page
-	my $okPage = GetTemplate('action_ok.template');
+#	my $okPage = GetTemplate('action_ok.template');
+	my $okPage;# = GetTemplate('action_ok.template');
+
+	$okPage .= GetPageHeader('OK', 'OK', 'default'); #GetTemplate('htmlstart.template');
+
+	my $windowContents = GetTemplate('action_ok2.template');
+
+	$okPage .= GetWindowTemplate('OK', '', '', $windowContents, 'Ready');
+	#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
+
+	$okPage .= GetPageFooter();
 
 #	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
