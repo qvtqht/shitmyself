@@ -189,8 +189,8 @@ if (!$locked) {
 	my $findCommand;
 	my @files;
 
-
-	$findCommand = 'grep -rl "PUBLIC KEY" html/txt';
+	#prioritize files with a public key in them
+	$findCommand = 'grep -rl "-----BEGIN PGP PUBLIC KEY BLOCK-----" html/txt';
 	push @files, split("\n", `$findCommand`);
 
 	$findCommand = 'find html/txt | grep -i txt$';
