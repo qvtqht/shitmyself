@@ -10,6 +10,12 @@ function PingUrl(url) { // loads arbitrary url
 	// server-side shove an image into it as needed
 }
 
+
+//function OptionsDefault(token, privKeyObj) {
+//	this.data = token;
+//	this.privateKeys = [privKeyObj];
+//}
+
 function signVote(t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
 // token = full voting token, in the format vote/$fileHash/$ballotTime/$voteValue/$checksum
@@ -39,6 +45,10 @@ function signVote(t, token) { // signs a vote from referenced vote button
 
 			// load the private key into openpgp
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+
+			var options;
+
+//			options = OptionsDefault();
 
 			// set the options
 			options = {
