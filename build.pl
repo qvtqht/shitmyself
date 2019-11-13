@@ -134,7 +134,10 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
-my $filesLeft = `find html/txt | grep txt\$ | wc -l`; #todo
+my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+my $filesLeft = `$filesLeftCommand`; #todo
+
+WriteLog('build.pl: $filesLeft = ' . $filesLeft);
 
 PutConfig('admin/gitflow/files_left', $filesLeft);
 

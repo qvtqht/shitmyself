@@ -299,7 +299,10 @@ if (!$locked) {
 	RemoveEmptyDirectories('./html/'); #includes txt/
 	#RemoveEmptyDirectories('./txt/');
 
-	my $filesLeft = `find html/txt | grep txt\$ | wc -l`; #todo
+	my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+	my $filesLeft = `$filesLeftCommand`; #todo
+
+	WriteLog('gitflow.pl: $filesLeft = ' . $filesLeft);
 
 	PutConfig('admin/gitflow/files_left', $filesLeft);
 
