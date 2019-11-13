@@ -1054,6 +1054,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$authorUrl = "/author/$gpgKey/";
 			$authorAvatar = GetAvatar($gpgKey);
 
+			$authorAvatar = trim($authorAvatar);
+
 			# generate $authorLink from template
 			$authorLink = GetTemplate('authorlink.template');
 			

@@ -539,6 +539,8 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 	if ($gpgKey) {
 		my $alias = GetAlias($gpgKey);
 
+		$alias = trim($alias);
+
 		if (GetConfig('html/color_avatars')) {
 			my $color1 = substr($gpgKey, 0, 6);
 			my $color2 = substr($gpgKey, 3, 6);
