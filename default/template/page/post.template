@@ -24,6 +24,12 @@
 				<p><br>
 			</td>
 		</tr>
+
+		<tr class=statusbar>
+			<td>
+				<p>Ready
+			</td>
+		</tr>
 	</table>
 </font>
 
