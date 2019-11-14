@@ -2640,7 +2640,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	$idCreateForm =~ s/\$usernameMaxLength/$usernameMaxLength/g;
 	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
 
-	my $idCurrentForm = GetTemplate('form/id_current2.template');
+	my $idCurrentForm = GetTemplate('form/id_current.template');
 	$idPage =~ s/\$formIdCurrent/$idCurrentForm/g;
 
 	my $idAdminForm = GetTemplate('form/id_admin.template');
