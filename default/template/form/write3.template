@@ -17,50 +17,51 @@
 
 			<tr class=body>
 				<td class=content>
-					<span id=writeintro></span>
+					<fieldset>
+						<span id=writeintro></span>
 
-					<label for="comment" class=beginner>
-						To create a new topic, write paragraphs.
-						<br>
-					</label>
+						<legend><label for="comment" class=beginner>
+							To create a new topic, write paragraphs.
+							<br>
+						</label></legend>
 
-					<textarea
-						class=txtarea
-						id=comment
-						title="Enter some text to share here."
-						rows=9
-						cols=32
-						name=comment
-						autofocus
-						onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
-						onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
-					>$initText</textarea><br>
+						<textarea
+							class=txtarea
+							id=comment
+							title="Enter some text to share here."
+							rows=9
+							cols=32
+							name=comment
+							autofocus
+							onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
+							onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
+						>$initText</textarea><br>
 
-					<p>
-						<input type=submit onclick="this.value = 'Please wait... (click to try again)'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
-					</p>
+						<p>
+							<input type=submit onclick="this.value = 'Please wait... (click to try again)'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
+						</p>
 
-					<p class=advanced>
-						<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
-						<span id=userRadio></span>
-					</p>
-					<!---->
-					<!--<p class=advanced>-->
-						<!--<a href=# onclick="insertGeo(); return false;">Insert location</a>-->
-					<!--</p>-->
+						<p class=advanced>
+							<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
+							<span id=userRadio></span>
+						</p>
+						<!---->
+						<!--<p class=advanced>-->
+							<!--<a href=# onclick="insertGeo(); return false;">Insert location</a>-->
+						<!--</p>-->
 
-					<p class=advanced>
-						<label for=debug><input type=checkbox id=debug name=debug> Include debugging information</label><br>
-						<label for=recfing><input type=checkbox id=recfing name=recfing> Notarize device fingerprint</label><br>
-						<label for=rectime><input type=checkbox id=rectime name=rectime> Notarize submission timestamp</label>
-						<span class=beginner><br><br>Notarize means record, sign, and publish.<br>Like taking picture of today's newspaper.</span>
-					</p>
+						<p class=advanced>
+							<label for=debug><input type=checkbox id=debug name=debug> Include debugging information</label><br>
+							<label for=recfing><input type=checkbox id=recfing name=recfing> Notarize device fingerprint</label><br>
+							<label for=rectime><input type=checkbox id=rectime name=rectime> Notarize submission timestamp</label>
+							<span class=beginner><br><br>Notarize means record, sign, and publish.<br>Like taking picture of today's newspaper.</span>
+						</p>
 
-					<!--<p class=advanced>-->
-					   <!--<label for=saveit><input type=checkbox id=saveit> Save form settings (client-side</label>-->
-					<!--</p>-->
+						<!--<p class=advanced>-->
+						   <!--<label for=saveit><input type=checkbox id=saveit> Save form settings (client-side</label>-->
+						<!--</p>-->
 
-					<p><br>
+					</fieldset>
 				</td>
 			</tr>
 		</table>
