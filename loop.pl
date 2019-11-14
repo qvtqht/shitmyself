@@ -8,7 +8,7 @@ use warnings;
 
 system('rm cron.lock');
 
-while (!system('perl ./gitflow.pl')) {
+while (!system('perl ./gitflow.pl')) { # if error in gitflow, quit
 	print '
   _                          _  
  | | ___   ___  _ __   _ __ | | 
