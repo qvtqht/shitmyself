@@ -316,12 +316,12 @@ sub GetEventsPage { # returns html for events page
 			$rowBgColor = $rowBgColor0;
 		}
 
-		my $eventItemHash = %{$event}{'file_hash'};
-		my $eventTitle =  %{$event}{'event_title'};
-		my $eventTime = %{$event}{'event_time'};
-		my $eventDuration = %{$event}{'event_duration'};
+		my $eventItemHash = $event->{'file_hash'};
+		my $eventTitle =  $event->{'event_title'};
+		my $eventTime = $event->{'event_time'};
+		my $eventDuration = $event->{'event_duration'};
 		my $eventItemLink = GetHtmlLink($eventItemHash);
-		my $eventItemAuthor = %{$event}{'author_key'};
+		my $eventItemAuthor = $event->{'author_key'};
 
 		if (!$eventTitle) {
 			$eventTitle = 'Untitled';
@@ -1927,7 +1927,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		while (@authorFriendsArray) {
 			# get the friend's key
 			my $authorFriend = shift @authorFriendsArray;
-			my $authorFriendKey = %{$authorFriend}{'author_key'};
+			my $authorFriendKey = $authorFriend->{'author_key'};
 
 			# get avatar (with link) for key
 			my $authorFriendAvatar .= GetAuthorLink($authorFriendKey);
