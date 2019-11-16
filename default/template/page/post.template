@@ -18,7 +18,8 @@
                 <p>Thank you!
 				<p><b>Received.</b> Processing...
                 <p>What would you like to do next?
-				<p><a href="./">Continue to Home Page</a></p>
+				<p><a href="/">Continue to Home Page</a></p>
+				<p><a href="/write.html">Write Something Else</p>
 				<p><b><span id=retRef></span></b>
 				<p><span class=advanced><!-- submitted_text --></span>
 				<p><br>
