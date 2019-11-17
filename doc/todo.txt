@@ -1,3 +1,9 @@
+#todo #bug IE4 voting buttons do not work
+
+#todo #bug IE4 pages have js errors:
+    Settings
+
+
 Shorter-term: Learn how to deal with  "url-ctrls-reject" => "enable" being default in lighttpd
 Longer-term Remove lighttpd from project
 
