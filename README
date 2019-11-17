@@ -65,9 +65,11 @@ for local testing
 
 for deployment using apache or lighttpd
 =======================================
-1. symlink log/access.log to wherever your access log lives
-2. symlink html root to html/
-3. add ./cron.sh to your crontab, set to run as often as you like
+1. symlink log/access.log to wherever your access log lives, (e.g. ln -s log/access.log ~/logs/http/access.log)
+2. symlink html root to html/ (e.g. rmdir /var/www/html ; ln -s html /var/www/html)
+3. add ./cron.sh to your crontab, set to run as often as you like to update the site (or run it manually)
+4. if you want faster updates (at the expense of attack surface), use the php module, which will trigger updates too
+5. when upgrading (e.g. git pull) you must re-run build.pl (or clean-build)
 
 requirements
 ============
@@ -88,13 +90,13 @@ optional
 SSI
 PHP
 
-Debian, Ubuntu, and other apt-based syst
-========================================
+Debian, Ubuntu, and other apt-based
+===================================
 sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2
 
 Redhat, Centos, Fedora, and other yum-based
 ===========================================
-sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite3 lighttpd gnupg gnupg2
+sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite3 lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
 
 known issues
 ============
