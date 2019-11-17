@@ -324,13 +324,15 @@ if ($homePageHasBeenWritten) {
 		PutHtmlFile('html/index.html', GetFile('html/top.html'));
 	} else {
 		WriteLog('fallback for html/index.html');
-		PutHtmlFile('html/index.html', 
-			'problem writing homepage...<br>
-			see admin.<br>
-			try <a href="/top.html">Top Posts</a> or 
-			<a href="/write.html">Writing Something</a> or 
-			<a href="/stats.html">Check the Server Status</a>.'
-		); #todo make nicer
+		my $fallbackHomepage =
+'<html><body><h1>Placeholder</h1>
+<p>There was a problem writing homepage. Please contact your administrator for resolution.</p>
+<p>Try one of these links in the mean time:</p>
+<p><a href="/top.html">Top Posts</a></p>
+<p><a href="/write.html">Writing Something</a></p>
+<p><a href="/stats.html">Check the Server Status</a></p>';
+
+		PutHtmlFile('html/index.html', $fallbackHomepage);
 	} 	
 	
 	$homePageHasBeenWritten = PutHtmlFile('check_homepage');
