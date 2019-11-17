@@ -96,7 +96,7 @@ sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl 
 
 Redhat, Centos, Fedora, and other yum-based
 ===========================================
-sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite3 lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
+sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
 
 known issues
 ============
