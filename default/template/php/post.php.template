@@ -139,10 +139,10 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
 			}
 			
-			if (file_exists($scriptDir . '/gitflow.pl')) {
-				WriteLog('gitflow.pl found, calling');
+			if (file_exists($scriptDir . '/touched.pl')) {
+				WriteLog('touched.pl found, calling');
 
-				WriteLog(`cd "$scriptDir" ; perl ./gitflow.pl`);
+				WriteLog(`cd "$scriptDir" ; perl ./touched.pl`);
 			}
 		} else {
 
