@@ -1,3 +1,13 @@
+Test Install on fresh Fedora 31
+===============================
+git
+lighttpd
+perl-Devel-StackTrace
+perl-Digest-SHA
+perl-HTML-Parser
+perl-DBD-SQLite
+lighttpd-fastcgi
+
 User Study 10/27
 ================
 User says forum is intuitive
