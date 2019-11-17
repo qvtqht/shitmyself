@@ -22,7 +22,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 #use HTML::Entities qw(encode_entities);
 use Storable;
-use Time::Piece;
+#use Time::Piece;
 use Digest::SHA qw(sha1_hex);
 
 
