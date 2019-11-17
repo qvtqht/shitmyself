@@ -6,5 +6,7 @@
 
 AddDefaultCharset utf-8
 
+ErrorDocument 404 /404.html
+
 #RewriteEngine On
 #RewriteRule ^action/.+ /ok.html
