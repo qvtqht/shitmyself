@@ -8,7 +8,7 @@ use POSIX;
 use POSIX 'strftime';
 use Data::Dumper;
 
-use Devel::StackTrace;
+#use Devel::StackTrace;
 
 use File::Basename qw( fileparse );
 use File::Path qw( make_path );
