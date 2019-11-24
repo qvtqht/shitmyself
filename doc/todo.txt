@@ -1,3 +1,6 @@
+Create token which allows a new item to "overwrite" an item
+	Perhaps only admin or original author?
+
 Netscape 2.0 and 3.0 js errors
 
 Warning when write content becomes close to too long for GET
