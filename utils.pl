@@ -8,7 +8,7 @@ use POSIX;
 use POSIX 'strftime';
 use Data::Dumper;
 
-use Devel::StackTrace;
+#use Devel::StackTrace;
 
 use File::Basename qw( fileparse );
 use File::Path qw( make_path );
@@ -22,7 +22,7 @@ use URI::Encode qw(uri_decode);
 use URI::Escape;
 #use HTML::Entities qw(encode_entities);
 use Storable;
-use Time::Piece;
+#use Time::Piece;
 use Digest::SHA qw(sha1_hex);
 
 

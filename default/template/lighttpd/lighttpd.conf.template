@@ -58,3 +58,7 @@ server.dir-listing = "enable"
 dir-listing.activate = "enable"
 
 server.error-handler-404 = "/404.html"
+
+server.http-parseopts = (
+    "url-ctrls-reject" => "disable"
+)

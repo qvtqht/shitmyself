@@ -1,3 +1,10 @@
+Resolve issues with missing modules. Add everythig to lib/ dir
+
+#todo #bug IE4 voting buttons do not work
+
+#todo #bug IE4 pages have js errors:
+    Settings
+
 Create token which allows a new item to "overwrite" an item
 	Perhaps only admin or original author?
 

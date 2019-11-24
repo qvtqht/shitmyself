@@ -316,12 +316,12 @@ sub GetEventsPage { # returns html for events page
 			$rowBgColor = $rowBgColor0;
 		}
 
-		my $eventItemHash = %{$event}{'file_hash'};
-		my $eventTitle =  %{$event}{'event_title'};
-		my $eventTime = %{$event}{'event_time'};
-		my $eventDuration = %{$event}{'event_duration'};
+		my $eventItemHash = $event->{'file_hash'};
+		my $eventTitle =  $event->{'event_title'};
+		my $eventTime = $event->{'event_time'};
+		my $eventDuration = $event->{'event_duration'};
 		my $eventItemLink = GetHtmlLink($eventItemHash);
-		my $eventItemAuthor = %{$event}{'author_key'};
+		my $eventItemAuthor = $event->{'author_key'};
 
 		if (!$eventTitle) {
 			$eventTitle = 'Untitled';
@@ -1727,7 +1727,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 		my $authorLink = "/author/" . $authorKey . "/";
 
-#		my $authorFriendKey = %{$authorFriend}{'author_key'};
+#		my $authorFriendKey = $authorFriend->{'author_key'};
 
 		my $authorItemTemplate = GetTemplate('author_listing.template');
 		#todo don't need to do this every time
@@ -1930,7 +1930,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		while (@authorFriendsArray) {
 			# get the friend's key
 			my $authorFriend = shift @authorFriendsArray;
-			my $authorFriendKey = %{$authorFriend}{'author_key'};
+			my $authorFriendKey = $authorFriend->{'author_key'};
 
 			# get avatar (with link) for key
 			my $authorFriendAvatar .= GetAuthorLink($authorFriendKey);
@@ -3013,6 +3013,63 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 		MakeSummaryPages();
 	}
 }
+
+sub BuildTouchedPages {
+	my $pagesLimit = GetConfig('admin/gitflow/limit_page');
+	if (!$pagesLimit) {
+		WriteLog("WARNING: config/admin/gitflow/limit_page missing!");
+		$pagesLimit = 1000;
+	}
+	state $pagesProcessed;
+	if (!$pagesProcessed) {
+		$pagesProcessed = 1;
+	}
+
+	# get a list of pages that have been touched since the last git_flow
+	# this is from the page_touch table
+	my $touchedPages = DBGetTouchedPages($pagesLimit);
+
+	# de-reference array of touched pages
+	my @touchedPagesArray = @$touchedPages;
+
+	# write number of touched pages to log
+	WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
+
+	# this part will refresh any pages that have been "touched"
+	# in this case, 'touch' means when an item that affects the page
+	# is updated or added
+	foreach my $page (@touchedPagesArray) {
+		$pagesProcessed++;
+		#	if ($pagesProcessed > $pagesLimit) {
+		#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
+		#		last;
+		#	}
+		#	if ((GetTime2() - $startTime) > $timeLimit) {
+		#		WriteLog("Time limit reached, exiting loop");
+		#		last;
+		#	}
+
+		# dereference @pageArray
+		my @pageArray = @$page;
+
+		# get the 3 items in it
+		my $pageType = shift @pageArray;
+		my $pageParam = shift @pageArray;
+		my $touchTime = shift @pageArray;
+
+		# output to log
+		WriteLog("\$pageType = $pageType");
+		WriteLog("\$pageParam = $pageParam");
+		WriteLog("\$touchTime = $touchTime");
+
+		MakePage($pageType, $pageParam);
+
+		DBDeletePageTouch($pageType, $pageParam);
+	}
+
+	return $pagesProcessed;
+}
+
 
 my $arg1 = shift;
 if ($arg1) {
