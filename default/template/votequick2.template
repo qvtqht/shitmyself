@@ -1,7 +1,7 @@
 <!-- votequick2.template -->
-<tr bgcolor=$colorWindow class=menubar>
+<tr bgcolor=$colorWindow class=voter>
 	<td style="border:0">
-		<p class=voter>
+		<p>
 			<span class=beginner>Please use these buttons to moderate:<br></span>
 			$quickVotesButtons
 		</p>
