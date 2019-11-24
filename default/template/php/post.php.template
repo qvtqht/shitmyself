@@ -6,7 +6,7 @@
 
 function WriteLog($text) { // writes to debug log if enabled
 	if (0) {
-		print (htmlspecialchars($text) . "<br>");
+		print (htmlspecialchars($text) . "<br>\n");
 	}
 }
 
@@ -51,11 +51,13 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		WriteLog('$comment = ' . $comment); 
 		WriteLog('$hash = ' . $hash);
 		
-		$fileName = './txt/' . $hash . '.tmp.txt';
+		$fileName = './txt/' . $hash . '.txt';
 		
 		WriteLog('$fileName = ' . $fileName);
 		
-		file_put_contents($fileName, $comment);
+		file_put_contents($fileName . '.tmp', $comment);
+
+		rename($fileName . '.tmp', $fileName);
 		
 		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
 		WriteLog(file_get_contents($fileName));
@@ -71,23 +73,28 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
         $hash = sha1_file($fileName);
 		
 		WriteLog('ProcessNewComment: $hash = ' . $hash);
-		
-		if (!file_exists($txtDir . substr($hash, 0, 2))) {
-			mkdir($txtDir . substr($hash, 0, 2));
+
+		{ // create prefix subdirectories under txt/
+			if (!file_exists($txtDir . substr($hash, 0, 2))) {
+				mkdir($txtDir . substr($hash, 0, 2));
+			}
+
+			if (!file_exists($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2))) {
+				mkdir($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
+			}
 		}
-		
-		if (!file_exists($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2))) {
-			mkdir($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
+
+		{ // create prefix subdirectories under ./ (html/)
+			if (!file_exists('./' .substr($hash, 0, 2))) {
+				mkdir('./' . substr($hash, 0, 2));
+			}
+
+			if (!file_exists('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2))) {
+				mkdir('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
+			}
 		}
-		
-		if (!file_exists('./' .substr($hash, 0, 2))) {
-			mkdir('./' . substr($hash, 0, 2));
-		}
-		
-		if (!file_exists('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2))) {
-			mkdir('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
-		}
-		
+
+		// generate path for new txt file
 		$filePath = 
 			$txtDir . 
 			substr($hash, 0, 2) . 
@@ -96,7 +103,8 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			'/' . 
 			$hash . '.txt'
 		;
-		
+
+		// generate path for new html file
 		$fileHtmlPath = 
 			'./' .
 			substr($hash, 0, 2) . 
@@ -105,7 +113,8 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			'/' . 
 			$hash . '.html'
 		;
-		
+
+		// generate path for client-side path to html file
 		$fileUrlPath = 
 			'/' .
 			substr($hash, 0, 2) . 
@@ -114,10 +123,29 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			'/' . 
 			$hash . '.html'
 		;
-		
+
+		// save new post to txt file
 		file_put_contents($filePath, $comment);
-		
-		$commentHtml = nl2br(str_replace('  ', ' &nbsp;', htmlspecialchars(wordwrap(trim($comment), 80, ' ', true), ENT_QUOTES|ENT_SUBSTITUTE, "UTF-8")));
+
+		// escape comment for output as html
+		$commentHtml =
+			nl2br(
+				str_replace(
+					'  ',
+					' &nbsp;',
+					htmlspecialchars(
+						wordwrap(
+							trim($comment),
+							80,
+							' ',
+							true
+						),
+						ENT_QUOTES|ENT_SUBSTITUTE,
+						"UTF-8"
+					)
+				)
+			)
+		;
 
 		$newPage = '<html><body>';
 		$newPage .=	'<p>' . $commentHtml . '</p>';
