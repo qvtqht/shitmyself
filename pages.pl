@@ -161,6 +161,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windo
 		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
 	} else {
 		$windowTemplate =~ s/\$windowMenubar//g;
+		#todo currently results in an empty menubar
 	}
 
 	if ($columnHeadings) {
@@ -2233,13 +2234,18 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	} else {
 		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'), 'home_empty');
 
-		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
+#		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
+
+		my $infoMessage = '<tr><td><p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p></td></tr>';
+
+		$indexPage .= GetWindowTemplate('No Items', '', '', $infoMessage, 'Ready');
 
 		$indexPage .= GetPageFooter();
 		
 		InjectJs($indexPage, qw('profile'));
 
 		PutHtmlFile('html/index.html', $indexPage);
+		PutHtmlFile('html/index0.html', $indexPage);
 	}
 }
 
