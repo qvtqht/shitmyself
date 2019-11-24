@@ -14,41 +14,35 @@ function commentOnChange(t, formId) {
 //
 // also shows/hides warning message, lblWriteLengthWarning
 
+	var strFormMode = 'GET';
+	var strWarnDisplay = 'none';
+
 	if (t.value.length <= 1024) {
 		if (intCommentOnChange != 1) {
 			intCommentOnChange = 1;
 		} else {
 			return;
 		}
-
-		if (document.getElementById) {
-			var form = document.getElementById(formId);
-			if (form) {
-				form.setAttribute('method', 'GET');
-			}
-
-			var warning = document.getElementById('lblWriteLengthWarning');
-			if (warning) {
-				warning.style.display = 'none';
-			}
-		}
 	} else {
 		if (intCommentOnChange != 0) {
 			intCommentOnChange = 0;
+
+			strFormMode = 'POST';
+			strWarnDisplay = 'block';
 		} else {
 			return;
 		}
+	}
 
-		if (document.getElementById) {
-			var form = document.getElementById(formId);
-			if (form) {
-				form.setAttribute('method', 'POST');
-			}
+	if (document.getElementById) {
+		var form = document.getElementById(formId);
+		if (form) {
+			form.setAttribute('method', strFormMode);
+		}
 
-			var warning = document.getElementById('lblWriteLengthWarning');
-			if (warning) {
-				warning.style.display = 'block';
-			}
+		var warning = document.getElementById('lblWriteLengthWarning');
+		if (warning) {
+			warning.style.display = strWarnDisplay;
 		}
 	}
 }
