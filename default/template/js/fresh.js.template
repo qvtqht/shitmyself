@@ -18,7 +18,7 @@ function corsc() { // callback for requesting HEAD for current page
 					// for some reason, it changes the first time... 
 					// so use a counter to ignore the first one
 			  
-					if (window.etagChangeCounter > 1) { // second change or more
+					if (1 < window.etagChangeCounter) { // second change or more
 						// actual change has happened
 
 					if (window.GetPrefs) { // reload the page, if user prefers it
@@ -93,7 +93,7 @@ function AmIFresh() {
 
 		freshTimeout = freshTimeout * 2;
 		
-		if (freshTimeout > 15000) {
+		if (15000 < freshTimeout) {
 			freshTimeout = 15000;
 		} 
 		
