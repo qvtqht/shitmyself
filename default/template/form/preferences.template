@@ -27,6 +27,11 @@
 					<label for=chkShowAdvanced>
 						<input type=checkbox id=chkShowAdvanced name=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
 						Show advanced options
+						<label for=advancedHighlight class=advanced>
+							<br>
+							<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
+							Highlight advanced options
+						</label>
 					</label>
 
 					<span id=curIdAdv style="display:none">
@@ -43,13 +48,6 @@
 								</label>
 								<br>
 							</span>
-						</p>
-
-
-							<label for=advancedHighlight class=advanced>
-								<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
-								Highlight advanced options
-							</label>
 						</p>
 
 						<p>
