@@ -16,6 +16,10 @@
 		onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
 		onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
 	>$initText</textarea><br>
+
+	<p id=lblWriteLengthWarning>
+		Warning: Messages longer than 1000 characters are delivered less reliably
+	</p>
 		
 	<p>
 		<input type=submit onclick="if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
