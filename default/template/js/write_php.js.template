@@ -1,21 +1,53 @@
 // begin write_php.js
 
-var commentOnChangeDone = 0;
+var intCommentOnChange = 0;
+
 function commentOnChange(t, formId) {
-// changes form's method from get to post IF 
-// comment's length is more than 1024 
-	if (commentOnChangeDone) {
-		return;
-	}
-		
+// changes form's method from get to post
+// if comment's length is more than 1024
+// and vice versa
+//
+// GET is more compatible and reliable
+// POST allows longer messages
+// 1024 is a relatively safe value
+// some servers support up to 5-6K
+//
+// also shows/hides warning message, lblWriteLengthWarning
+
 	if (t.value.length <= 1024) {
-		// do nothing
-	} else {
-		commentOnChangeDone = 1;
+		if (intCommentOnChange != 1) {
+			intCommentOnChange = 1;
+		} else {
+			return;
+		}
+
 		if (document.getElementById) {
-			form = document.getElementById(formId);
+			var form = document.getElementById(formId);
+			if (form) {
+				form.setAttribute('method', 'GET');
+			}
+
+			var warning = document.getElementById('lblWriteLengthWarning');
+			if (warning) {
+				warning.style.display = 'none';
+			}
+		}
+	} else {
+		if (intCommentOnChange != 0) {
+			intCommentOnChange = 0;
+		} else {
+			return;
+		}
+
+		if (document.getElementById) {
+			var form = document.getElementById(formId);
 			if (form) {
 				form.setAttribute('method', 'POST');
+			}
+
+			var warning = document.getElementById('lblWriteLengthWarning');
+			if (warning) {
+				warning.style.display = 'block';
 			}
 		}
 	}

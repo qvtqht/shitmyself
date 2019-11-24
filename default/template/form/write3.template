@@ -41,6 +41,10 @@
 							<input type=submit onclick="this.value = 'Please wait... (click to try again)'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
 						</p>
 
+						<p id=lblWriteLengthWarning class=warning style="display: none">
+							Warning: Long messages are less reliable.
+						</p>
+
 						<p class=advanced>
 							<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
 							<span id=userRadio></span>
