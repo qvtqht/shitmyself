@@ -3,7 +3,8 @@
 function getUserFp() { // retrieve stored user fingerprint from localstorage
 	if (window.localStorage) {
 		var fingerprint = localStorage.getItem("fingerprint");
-		if (fingerprint === null || fingerprint.length === 0) {
+		if (!fingerprint) {
+//		if (fingerprint === null || fingerprint.length === 0) {
 			return null;
 		} else {
 			return fingerprint;
