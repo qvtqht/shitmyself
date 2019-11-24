@@ -16,7 +16,7 @@ This public/private keypair carries with it voting rights with a weight equal to
 
 I am assigning this keypair to this anonymous entity for the following reasons:
 
-During my transition from a building dweller to a free person, I was often under the illusion that I needed to dwell in a building without having one available.
+During my transition from having a "stable" residence and "floating", I was often under the illusion that I needed to dwell in a building without having one available.
 
 During this time, Anonymous allowed me to stay at their residence with no expected repayment of any kind.
 
