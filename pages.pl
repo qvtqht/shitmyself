@@ -1676,6 +1676,9 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 			$scriptsText .= $scriptsComma;
 		}
 
+		#todo does there need to be a warning here if script content contains > character,
+		# which is incompatible with mosaic's html comment syntax?
+
 		$scriptsText .= GetTemplate("js/$script.js.template");
 	}
 
