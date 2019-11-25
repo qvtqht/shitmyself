@@ -7,13 +7,11 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+			signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + 'Profile</a' + String.fromCharCode(62) + '';
 		} else {
 		    signinBox.innerHTML = '';
 			var myFp = localStorage.getItem('fingerprint');
-			//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-//			signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
-			
+
 			if (window.location.pathname == '/author/' + myFp + '/') {
 			// #todo factor this out, as it should only be on /author/.. pages 
 				var itsYou = document.getElementById('itsyou');
@@ -26,15 +24,15 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 
 			if (window.GetPrefs) {
 				if (GetPrefs('display_username')) {
-					myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+					myidBox.innerHTML = '<a href="/profile.html" class=avatar' + String.fromCharCode(62) + myAvatar + '</a' + String.fromCharCode(62);
 					signinBox.innerHTML = '';
 				} else {
 					myidBox.innerHTML = '';
-					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+					signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + '<i' + String.fromCharCode(62) + 'Profile</i' + String.fromCharCode(62) + '</a' + String.fromCharCode(62) + '';
 				}
 			} else {
 				myidBox.innerHTML = '';
-				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+				signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + '<i' + String.fromCharCode(62) + 'Profile</i' + String.fromCharCode(62) + '</a' + String.fromCharCode(62) + '';
 			}
 
 			if (!window.openpgp) {

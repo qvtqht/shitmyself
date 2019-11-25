@@ -14,9 +14,9 @@ function setclock() {
 		var clock =	document.getElementById('clock');
 		if (clock) {
 //					var myDate = Date();
-//					var humanTime = '<small>' + myDate + '</small>';
+//					var humanTime = '<small' + String.fromCharCode(62) + '' + myDate + '</small' + String.fromCharCode(62) + '';
 //
-//					clock.innerHTML = humanTime + '<br>' + n;
+//					clock.innerHTML = humanTime + '<br' + String.fromCharCode(62) + '' + n;
 			clock.innerHTML = n;
 			
 			

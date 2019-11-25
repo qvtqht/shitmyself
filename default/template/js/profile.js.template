@@ -47,7 +47,12 @@ function showHideForms() { // shows and hides the register and logged in forms
 				if (GetPrefs('display_username')) {
 					if (myidBox) {
 						if (window.myAvatar) {
-							myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+							myidBox.innerHTML =
+								'<a href="/profile.html" class=avatar' +
+								String.fromCharCode(62) +
+								myAvatar +
+								'</a' +
+								String.fromCharCode(62);
 						} else {
 							myidBox.innerHTML = '';
 						}
@@ -60,15 +65,27 @@ function showHideForms() { // shows and hides the register and logged in forms
 						myidBox.innerHTML = '';
 					}
 					if (signinBox) {
-						signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+						signinBox.innerHTML =
+							'<a href="/profile.html"' +
+							String.fromCharCode(62) + '<i' +
+							String.fromCharCode(62) +
+							'Profile</i' +
+							String.fromCharCode(62) .
+							'</a' +
+							String.fromCharCode(62);
 					}
 				}
 			} else {
 				myidBox.innerHTML = '';
-				signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+				signinBox.innerHTML =
+					'<a href="/profile.html"' +
+					String.fromCharCode(62) +
+					'<i' + String.fromCharCode(62) +
+					'Profile</i' +
+					String.fromCharCode(62) +
+					'</a' +
+					String.fromCharCode(62);
 			}
-	
-	//		signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
 		} else {
 		// else means user is not logged in
 	
@@ -90,7 +107,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 			}
 	
 			var signinBox = document.getElementById('signin');
-			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+			signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + 'Profile</a' + String.fromCharCode(62);
 
 			var myidBox = document.getElementById('myid');
 			myidBox.innerHTML = '';
@@ -111,7 +128,6 @@ function showHideForms() { // shows and hides the register and logged in forms
 }
 
 showHideForms(); // call showHideForms()
-
 
 function identityOnload() { // onload function for identity page (aka profile page)
 	var pk = getPrivateKey();
