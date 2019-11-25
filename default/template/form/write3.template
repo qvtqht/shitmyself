@@ -58,7 +58,6 @@
 							<label for=debug><input type=checkbox id=debug name=debug> Include debugging information</label><br>
 							<label for=recfing><input type=checkbox id=recfing name=recfing> Notarize device fingerprint</label><br>
 							<label for=rectime><input type=checkbox id=rectime name=rectime> Notarize submission timestamp</label>
-							<span class=beginner><br><br>Notarize means record, sign, and publish.<br>Like taking picture of today's newspaper.</span>
 						</p>
 
 						<!--<p class=advanced>-->
