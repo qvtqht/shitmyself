@@ -25,10 +25,6 @@
 		<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
 		<span id=userRadio></span>
 	</p>
-	<!---->
-	<!--<p class=advanced>-->
-		<!--<a href=# onclick="insertGeo(); return false;">Insert location</a>-->
-	<!--</p>-->
 
 	<p class=advanced>
 		<label for=debug><input type=checkbox id=debug name=debug> Record debugging information</label><br>

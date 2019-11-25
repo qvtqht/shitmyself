@@ -38,7 +38,7 @@
 						>$initText</textarea><br>
 
 						<p>
-							<input type=submit onclick="this.value = 'Please wait... (click to try again)'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
+							<input type=submit onclick="this.value = 'Please wait...'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
 						</p>
 
 						<p id=lblWriteLengthWarning class=warning style="display: none">
@@ -49,20 +49,12 @@
 							<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
 							<span id=userRadio></span>
 						</p>
-						<!---->
-						<!--<p class=advanced>-->
-							<!--<a href=# onclick="insertGeo(); return false;">Insert location</a>-->
-						<!--</p>-->
 
 						<p class=advanced>
 							<label for=debug><input type=checkbox id=debug name=debug> Include debugging information</label><br>
 							<label for=recfing><input type=checkbox id=recfing name=recfing> Notarize device fingerprint</label><br>
 							<label for=rectime><input type=checkbox id=rectime name=rectime> Notarize submission timestamp</label>
 						</p>
-
-						<!--<p class=advanced>-->
-						   <!--<label for=saveit><input type=checkbox id=saveit> Save form settings (client-side</label>-->
-						<!--</p>-->
 
 					</fieldset>
 				</td>
