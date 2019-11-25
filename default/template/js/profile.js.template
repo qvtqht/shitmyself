@@ -70,7 +70,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 							String.fromCharCode(62) + '<i' +
 							String.fromCharCode(62) +
 							'Profile</i' +
-							String.fromCharCode(62) .
+							String.fromCharCode(62) +
 							'</a' +
 							String.fromCharCode(62);
 					}
