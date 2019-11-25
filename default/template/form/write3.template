@@ -1,5 +1,13 @@
 <!--# write3.template #-->
 
+<!-- >
+<b>Attention Mosaic Users!</b><br>
+To submit a message, put it into the address field, like so:<br>
+Example: http://www.example.com/<b>your+message+here</b><br>
+(Use a plus sign (+) instead of spaces.)<br>
+This workaround is necessary because Mosaic does not support HTML forms.
+-->
+
 <form action="/post.html" id=compose class=submit name=submit>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
