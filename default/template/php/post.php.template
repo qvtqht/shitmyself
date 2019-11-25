@@ -147,13 +147,13 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			)
 		;
 
-		$newPage = '<html><body>';
-		$newPage .=	'<p>' . $commentHtml . '</p>';
-		$newPage .=	'<p>Address: '. $fileUrlPath . '<br>';
-		$newPage .=	'Hash: ' . $hash . '<br><br>';
-		$newPage .=	'<p>This page should be replaced with a formatted version soon.</p>';
-		$newPage .=	'</body></html>';
-		
+//		$newPage = '<html><body>';
+//		$newPage .=	'<p>' . $commentHtml . '</p>';
+//		$newPage .=	'<p>Address: '. $fileUrlPath . '<br>';
+//		$newPage .=	'Hash: ' . $hash . '<br><br>';
+//		$newPage .=	'<p>This page should be replaced with a formatted version soon.</p>';
+//		$newPage .=	'</body></html>';
+//
 //		file_put_contents($fileHtmlPath, $newPage);
 //
 //		exec('cd "' . $scriptDir . '" ; perl ./pages.pl "' . $hash . '"');
