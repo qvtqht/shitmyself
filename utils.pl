@@ -1586,7 +1586,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 					$gpg_key = substr($gpg_result, index($gpg_result, $key_id_prefix) + length($key_id_prefix));
 					$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
 
-					WriteLog("$gpgCommand --decrypt \"$filePath\"\n $gpgStderr");
+					WriteLog("$gpgCommand --decrypt \"$filePath\" $gpgStderr");
 					$message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
 
 					$isSigned = 1;
@@ -2061,6 +2061,25 @@ sub RemoveEmptyDirectories { #looks for empty directories under $path and remove
 	}
 	
 	system('find $path -type d -empty -delete');
+}
+
+sub RemoveOldItems {
+	my $query = "
+		SELECT * FROM item_flat WHERE file_hash NOT IN (
+			SELECT file_hash FROM item_flat
+			WHERE
+				',' || tags_list || ',' like '%keep%'
+					OR
+				file_hash IN (
+					SELECT item_hash
+					FROM item_parent
+					WHERE parent_hash IN (
+						SELECT file_hash FROM item_flat WHERE ',' || tags_list || ',' LIKE '%keep%'
+					)
+				)
+		)
+		ORDER BY add_timestamp
+	";
 }
 
 1;
