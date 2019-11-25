@@ -139,10 +139,10 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
+sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus
 # returns template for html-table-based-"window"
 	my $windowTitle = shift;
-	my $windowMenubar = shift;
+	my $windowMenubarContent = shift;
 	my $columnHeadings = shift;
 	my $windowBody = shift;
 	my $windowStatus = shift;
@@ -157,7 +157,10 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubar, $columnHeadings, $windo
 
 	my $contentColumnCount = 0;
 
-	if ($windowMenubar) {
+	if ($windowMenubarContent) {
+		my $windowMenubar = GetTemplate('window/menubar.template');
+		$windowMenubar =~ s/\$windowMenubarContent/$windowMenubarContent/;
+
 		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
 	} else {
 		$windowTemplate =~ s/\$windowMenubar//g;
@@ -2378,7 +2381,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	my $windowContents = GetTemplate('action_ok2.template');
 
-	$okPage .= GetWindowTemplate('OK', '', '', $windowContents, 'Ready');
+	$okPage .= GetWindowTemplate('Data Received', '', '', $windowContents, 'Ready');
 	#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 
 	$okPage .= GetPageFooter();
