@@ -358,7 +358,13 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 
 				var myCrea = document.getElementById('myCrea');
 				if (myCrea) {
-					myCrea.innerHTML = pubKeyObj.primaryKey.created.toString();
+					var idCreationTime = pubKeyObj.primaryKey.created.toString();
+
+					if (idCreationTime.indexOf(' GMT-') != -1) {
+						idCreationTime = idCreationTime.substring(0, idCreationTime.indexOf(' GMT-'));
+					}
+
+					myCrea.innerHTML = idCreationTime;
 				}
 
 				var myFinger = document.getElementById('myFP');
