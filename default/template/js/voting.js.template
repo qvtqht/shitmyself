@@ -1,7 +1,7 @@
 // == begin voting.js
 
 function PingUrl(url) { // loads arbitrary url
-// by creating an <img src=url> on the page
+// by creating an <img src=url on the page
 // it ain't pretty, but it's compatible
 	var img = document.createElement('img');
 	img.setAttribute("src", url);
@@ -15,6 +15,14 @@ function PingUrl(url) { // loads arbitrary url
 //	this.data = token;
 //	this.privateKeys = [privKeyObj];
 //}
+
+function signCallback (signed) {
+	var url = '/post.html?comment=' + encodeURIComponent(signed.data);
+
+	if (PingUrl(url)) {
+		// todo incrememnt counter
+	}
+}
 
 function signVote(t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
@@ -51,22 +59,24 @@ function signVote(t, token) { // signs a vote from referenced vote button
 //			options = OptionsDefault();
 
 			// set the options
-			options = {
-				data: token, // input as String (or Uint8Array)
-				privateKeys: [privKeyObj] // for signing
-			};
-	
+//
+//			options = {
+//				data: token, // input as String (or Uint8Array)
+//				privateKeys: [privKeyObj] // for signing
+//			};
+
+			options = new Object();
+
+			options.data = token;
+			options.privateKeys = privKeyObj;
+
+			alert();
+
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
 
 			// sign the voting token and send to post.html when finished
-			openpgp.sign(options).then(function(signed) {
-				var url = '/post.html?comment=' + encodeURIComponent(signed.data);
-	
-				if (PingUrl(url)) {
-					// todo incrememnt counter
-				}
-			});
+			openpgp.sign(options).then(signCallback);
 		}
 	}
 
