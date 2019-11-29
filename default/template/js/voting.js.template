@@ -70,7 +70,7 @@ function signVote(t, token) { // signs a vote from referenced vote button
 			options.data = token;
 			options.privateKeys = privKeyObj;
 
-			alert();
+//			alert();
 
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
