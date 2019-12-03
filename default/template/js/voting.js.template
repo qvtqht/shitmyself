@@ -1,13 +1,24 @@
 // == begin voting.js
+//
+//function PingUrl(url) { // loads arbitrary url
+//// by creating an <img src=url on the page
+//// it ain't pretty, but it's compatible
+//	var img = document.createElement('img');
+//	img.setAttribute("src", url);
+//	document.body.appendChild(img);
+//	// todo get rid of image eventually
+//	// server-side shove an image into it as needed
+//}
 
-function PingUrl(url) { // loads arbitrary url
-// by creating an <img src=url on the page
-// it ain't pretty, but it's compatible
-	var img = document.createElement('img');
-	img.setAttribute("src", url);
-	document.body.appendChild(img);	
-	// todo get rid of image eventually
-	// server-side shove an image into it as needed
+function PingUrl(url) { // loads arbitrary url via image
+// compatible with most js
+	if (document.images) {
+		var img = document.images[0];
+
+		if (img) {
+			img.setAttribute("src", url);
+		}
+	}
 }
 
 
