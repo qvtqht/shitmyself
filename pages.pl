@@ -9,6 +9,7 @@ use lib qw(lib);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
+use File::Copy;
 
 #use List::Uniq ':all';
 
@@ -2507,6 +2508,21 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 	PutHtmlFile("$HTMLDIR/favicon.ico", '');
+
+	{
+		# p.gif
+		WriteLog('making p.gif');
+
+		if (!-e './config/template/p.gif.template') {
+			if (-e 'default/template/p.gif.template') {
+				copy('default/template/p.gif.template', 'config/template/p.gif.template');
+			}
+		}
+
+		if (-e 'config/template/p.gif.template') {
+			copy('config/template/p.gif.template', 'html/p.gif');
+		}
+	}
 
 	WriteLog('MakeSummaryPages() END');
 }
