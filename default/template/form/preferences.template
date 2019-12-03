@@ -16,6 +16,8 @@
 
 			<tr class=body>
 				<td class=content>
+					<fieldset>
+					<legend>Moderation</legend>
 					<p>
 						<label for=chkWantToVote>
 							<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
@@ -23,16 +25,22 @@
 							<span class=voter>:-)</span>
 						</label>
 					</p>
+					</fieldset>
 
+					<fieldset>
+					<legend>
 					<label for=chkShowAdvanced>
 						<input type=checkbox id=chkShowAdvanced name=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
 						Show advanced options
-						<label for=advancedHighlight class=advanced>
-							<br>
-							<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
-							Highlight advanced options
-						</label>
 					</label>
+					</legend>
+
+					<label for=advancedHighlight class=advanced>
+						<br>
+						<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
+						Highlight advanced options
+					</label>
+
 
 					<span id=curIdAdv style="display:none">
 						<p>
@@ -65,6 +73,7 @@
 						</p>
 				
 					</span>
+					</fieldset>
 				</td>
 			</tr>
 
