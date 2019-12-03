@@ -14,6 +14,6 @@ To "build" the html site, I run "./clean-build"
 
 To start the http server, I use "./lighttpd.sh". The site is then accessible at http://localhost:3000/
 
-To keep the site updating as I interact with it, I run "./loop.pl", which just keeps running gitflow.pl in a loop.
+To keep the site updating as I interact with it, I run "./loop.pl", which just keeps running update.pl in a loop.
 
 
