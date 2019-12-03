@@ -13,6 +13,7 @@ $styleSheet
 </style>
 </head>
 <body link="$linkColor" text="$textColor" bgcolor="$backgroundColor">
+<img src="/p.gif" height=1 width=1>
 $topMenu
 <main id=maincontent><a name=maincontent></a>
 <p>
