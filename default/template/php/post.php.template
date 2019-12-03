@@ -164,11 +164,15 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			if (file_exists($scriptDir . '/index.pl')) {
 				WriteLog('index.pl found, calling');
 
+				WriteLog('cd "' . $scriptDir . '" ; perl ./index.pl "' . $filePath . '"');
+
 				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
 			}
-			
+
 			if (file_exists($scriptDir . '/touched.pl')) {
 				WriteLog('touched.pl found, calling');
+
+				WriteLog('cd "' . $scriptDir . '" ; perl ./touched.pl');
 
 				WriteLog(`cd "$scriptDir" ; perl ./touched.pl`);
 			}
