@@ -1,4 +1,10 @@
-Resolve issues with missing modules. Add everythig to lib/ dir
+#bug with PHP enabled, replies create a dupe
+	Dupe contains >> token at the bottom (from access log)
+	Other copy does not (from PHP)
+
+<script language="JavaScript1.3">
+
+Resolve issues with missing modules. Add everything to lib/ dir
 
 #todo #bug IE4 voting buttons do not work
 
@@ -21,7 +27,6 @@ Bill of rights for users
 1. Users can download their data in a useful format.
 2. Users can review the full vote record.
 3. Voting is a right, not a privilege. All clients will be accommodated.
-
 
 Split config/admin/debug into log file and stdout
 
@@ -90,7 +95,7 @@ Add simple index page for txt/
 #bug NN3 display issues (blank table cells)
 
 #bug Built: 18195 days ago
-After clean-build before first gitflow
+After clean-build before first update
 
 Put infobox with all of the item's attributes on item details page
 
@@ -153,7 +158,7 @@ Add 404 ahndler for apache
  
 After rebuild/upgrade, have setting which notifies
 	This server was recently rebuilt, still updating
-		Remove message when gitflow = 0
+		Remove message when update = 0
 	
 #bug on Authors page
 	The first time new author appears, their author is not colorized nor has an alias
@@ -211,7 +216,7 @@ cleanup stale items
 what else to clean up?
 
 generate.pl
-gitflow.pl
+update.pl
 	do not process all by default
 	accept file/item as parameter
 	
@@ -265,7 +270,7 @@ Zip files
 		config
 		text files
 		pubkeys
-	Refresh with gitflow
+	Refresh with update
 
 
 
@@ -319,7 +324,7 @@ default/admin/require_token_for_indexing
 Write function to do js injection into pages
 	Replace the copy-pasta code
 
-Fill in zipfile(s) in gitflow.pl
+Fill in zipfile(s) in update.pl
 
 Find vouched users
 	Recursive seek of vouch/friend tag
@@ -505,7 +510,6 @@ javascripted one-click vote buttons that reflect status on-page
 
 #bug queue page contains template token
 
-
 From openpgp.js docs:
 	The dist/compat/openpgp.min.js bundle also works with Internet Explorer 11 and old versions of Safari.
 Ensure that this (and the non-min version) is the version that is in the templates
@@ -518,7 +522,6 @@ Add titles to items x
 Make sure links work when pages are viewed locally
 	They currently do not, because they're /-prefixed
 
-
 <bump> button --> "bump"+sign --> submit
 
 re-add write-small to home page
@@ -528,7 +531,7 @@ re-add write-small to home page
 
 make it easy to switch admin
 	remember admin actions as admin actions when admin changes
-		alternatively, multiple ad
+		alternatively, multiple admins
 
 Current Priorities
 ==================
@@ -540,11 +543,9 @@ Nicer-looking threading
 Generate one page for each thread
 	Crawl the thread tree and build a graph
 
-
 Use shortened hashes to identify posts
 	Make checkbox names shorter
 	Make HTML files names shorter
-
 
 Check for, download, and install dependencies
 	gpg
@@ -552,32 +553,21 @@ Check for, download, and install dependencies
 	lighttpd
 	perl modules
 
-
 #todo
 # if we need to read from the db, like to generate.pl
 # and there is no database, we can fall back on whatever
 # version is available
 
-
-
 Make it possible to restore from private key without creating new ID first.
 
-Bug: Why does gitflow.pl do a bunch of stuff right after a rebuild?
+Bug: Why does update.pl do a bunch of stuff right after a rebuild?
 	Items need to be added to the sub-repo whenever rebuilding
 
 Bug: When there are 0 items, top menu is not populated with avatar
 
-Fix the &replyto= getting appended to the message
-	On anon reply messages
-
-Make item IDs shorter
-	Prevent collisions
-
 Make JS load more tolerable on slower connections
 	* minify the js (and test)
 	* https://stackoverflow.com/questions/20014933/progress-of-loading-external-js-file
-
-Define default tags for post types
 
 ** Fix the bug with messages by new users not being processed correctly **
 	This happens if the message is indexed before the public key
@@ -624,7 +614,6 @@ Does server.key.txt exist?
       Generate key with gpg --unattended
    Yes:
       Sign message with it
-   
 
 FILE TYPE SUPPORT
 =================
@@ -636,19 +625,12 @@ Image support
 	embed in html or <img> tag, etc.
 
 Other filetypes that can be supported
-
-latex
-pdf
-txt
-doc
-xls
-and so on
-
-
-Set up new domains
-Polish the install process
-Improve parsing of URLs
-Write scripts for instant updates
+	latex
+	pdf
+	txt
+	doc
+	xls
+	and so on
 
 ACCESSIBILITY FROM LIMITED DEVICES
 ==================================
@@ -666,7 +648,6 @@ ACCESSIBILITY FROM LIMITED DEVICES
 
 Consider changing background color based on time of day?
 
-
 FEEDBACK FROM L.F.
 ==================
 it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages. + 
@@ -679,7 +660,6 @@ it might be helpful to have the tags right on the home page, so that it's not la
 
 Consider changing background color based on time of day?
 
-
 FEEDBACK FROM L.F.
 ==================
 it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages.
@@ -689,8 +669,6 @@ Underlining 'publicly and right now' may be confused as a hyperlink, maybe can b
 Also, as a personal preference I think the ellipse around the numbers can be removed or made into a rectangle
 And consider adding a title/informative header to the page in general, to give more context to what this page is.
    It could be something like "hike.qdb.us" on the very top, a very short description underneath it, and then tabs (home, write, tags, manual) go underneath that
-
-
 
 Add to specifications:
    items are always 0-9a-f{40} (lowercase)
@@ -728,10 +706,7 @@ Add roles directory
     Add roles/admin and roles/moderator
         Add support for having multiple public keys in here as text file
 
-
-
 Add client-side handling of HTTP 431 messages when submitting something new
-
 
 config/require_username
     config/username_mask
@@ -745,8 +720,6 @@ Untagged page = all untagged posts
 cookie-based prefs
  - stylesheet
  - hide non-essential ui elements
-
-$fileHash <span class=nonessential>posted by</span> $avatar <span class=nonessential>at</span> 1500000000
 
 Maybe try Perl PGP modules? +
 
@@ -783,9 +756,6 @@ Add a message that appears the first time someone is posting something, like on 
 [Admin] has assigned a weight of [100] to [ABC]
 abc can assign a weight of up to 100 to anyone else?
 
-When listing replies, we can strip the >parenthash part from replies
-   while leaving it in the detail view for that comment
-
 Entertaining stats page
    top voter + top tags = top tags by voter
    top voters
@@ -802,50 +772,22 @@ Read profile from user submission
    Update added_timestamp
       How? It's in added.log
 
-Post profile
-   Wording for instructions
-   Decide on format
-      Prefill Write
-      Or
-      Dedicated page
-
-Profile page
-   Fingerprint:
-   Name:
-   Creation Date:
-   Posts:
-   Voted:
-   Votes Earned:
-   Most Recent Action:
-
 Add "via [sitename]" to pulled and pushed items
 
 Sometimes generated keys have the header/comment field
 
-The Meta refresh seems to be responsible for the scriptless links not turning color
-
-Blank text files still cause problems
-
-NN3 compatibility still needs some work
-
 rebuilding everything twice is a good way of maintaining integrity
-
-move csrf salt to config
 
 forgot to add conversions to user pages
 
 some pages (author pages?) are still in a different func
 
-mod_security can interfere with some signed posts
-
-it would be nice to cut down the posting time from 1-2 minutes to instant.
-
-"create profile" should go to a prefilled textbox with profile template OR to a page to edit profile
+mod_security can interfere with some signed posts #known
 
 Some of the buttons can probably be made full width
    To make them easier to press on mobile
 
-Sometimes on Android the button push is cancelled by the keyboard retract
+Sometimes on Android the button push is cancelled by the keyboard retract #bug
    Or something like that
       Load page
       Press Write
@@ -853,8 +795,6 @@ Sometimes on Android the button push is cancelled by the keyboard retract
       Press the "Post" button
          Expected: Posted
          Actual: First tab is usually ignored
-
-#bug on edge: tag links change colors, but flag links do not
 
 Fix the vote/tag links
    Js: implement
@@ -892,22 +832,7 @@ Add support for linking sister sites
    List them all on page
    Add menu item for page
 
-
-
 Cookie auth via secret URL per public key, encrypted for that key
-
-Tag ratings and enable/disable page
-
-Integrate Perl taint
-
-===
-
-When writing new html dir, make a list of all existing files, 
-and remove from hash when written to, 
-then delete all others remaining in hash
-	clean-build makes this unnecessary, but still would be a useful feature
-	#optimize
-		
 
 ===
 
