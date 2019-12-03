@@ -39,13 +39,13 @@ lighttpd.pl
 	http://localhost:3000/
 	lighttpd.conf, included
 
-gitflow.pl
+update.pl
 	runs access.pl
 	looks for any changes in html/txt/
 		if any changes, "fills in" sqlite db-index and then html/
 
 validate.pl
-	(in the future will) compare the results of index.pl+generate.pl vs gitflow.pl
+	(in the future will) compare the results of index.pl+generate.pl vs update.pl
 
 installation on GNU platforms
 =============================

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# runs gitflow.pl in a loop
+# runs update.pl in a loop
 # pauses for 2 seconds in between
 
 use strict;
@@ -8,7 +8,7 @@ use warnings;
 
 system('rm cron.lock');
 
-while (!system('perl ./gitflow.pl')) { # if error in gitflow, quit
+while (!system('perl ./update.pl')) { # if error in update, quit
 	print '
   _                          _  
  | | ___   ___  _ __   _ __ | | 

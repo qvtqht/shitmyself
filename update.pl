@@ -48,7 +48,7 @@ if (!$locked) {
 	
 	print GetTime() . " End requires\n";
 	
-	WriteLog('gitflow.pl begin');
+	WriteLog('update.pl begin');
 	
 	my %counter;
 	$counter{'access_log'} = 0;
@@ -57,8 +57,8 @@ if (!$locked) {
 	PutFile('cron.lock', $currentTime);
 	$lockTime = $currentTime;
 	
-	# store the last time we did this from config/admin/gitflow/last_run
-	my $lastFlow = GetConfig('admin/gitflow/last_run');
+	# store the last time we did this from config/admin/update/last_run
+	my $lastFlow = GetConfig('admin/update/last_run');
 	
 	if ($lastFlow) {
 		WriteLog('$lastFlow = ' . $lastFlow);
@@ -78,9 +78,13 @@ if (!$locked) {
 	my $newItemCount;
 	
 	# time limit
-	my $timeLimit = GetConfig('admin/gitflow/limit_time');
+	my $timeLimit = GetConfig('admin/update/limit_time');
 	my $startTime = GetTime2();
 	#todo validation
+
+	if ($timeLimit) {
+		$timeLimit = 60;
+	}
 	
 	my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
 	my @accessLogPaths;
@@ -122,11 +126,11 @@ if (!$locked) {
 	}
 
 
-	# See if gitflow/file_limit setting exists
-	# This limits the number of files to process per launch of gitflow.pl
-	my $filesLimit = GetConfig('admin/gitflow/limit_file');
+	# See if update/file_limit setting exists
+	# This limits the number of files to process per launch of update.pl
+	my $filesLimit = GetConfig('admin/update/limit_file');
 	if (!$filesLimit) {
-		WriteLog("WARNING: config/admin/gitflow/limit_file missing!");
+		WriteLog("WARNING: config/admin/update/limit_file missing!");
 		$filesLimit = 100;
 	}
 
@@ -160,7 +164,7 @@ if (!$locked) {
 		$file = trim($file);
 		
 		# Log it
-		WriteLog('gitflow.pl: $file = ' . $file);
+		WriteLog('update.pl: $file = ' . $file);
 			
 		#todo add rss.txt addition
 	
@@ -168,17 +172,17 @@ if (!$locked) {
 		if (-e $file && !-d $file) {
 			my $addedTime = GetTime2();
 
-			WriteLog('gitflow.pl: $addedTime = ' . $addedTime); 
+			WriteLog('update.pl: $addedTime = ' . $addedTime);
 	
 			# get file's hash from git
 			my $fileHash = GetFileHash($file);
 
-			WriteLog('gitflow.pl: $fileHash = ' . $fileHash); 
+			WriteLog('update.pl: $fileHash = ' . $fileHash);
 				
 			# if deletion of this file has been requested, skip
 			if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 				unlink($file);
-				WriteLog("gitflow.pl: $fileHash exists in deleted.log, file removed and skipped");
+				WriteLog("update.pl: $fileHash exists in deleted.log, file removed and skipped");
 				next;
 			}
 
@@ -186,10 +190,10 @@ if (!$locked) {
 			# organize files aka rename to hash-based path
 				my $fileHashPath = GetFileHashPath($file);
 
-				WriteLog('gitflow.pl: $fileHashPath = ' . $fileHashPath);
+				WriteLog('update.pl: $fileHashPath = ' . $fileHashPath);
 				
 				if ($fileHashPath && $file ne $fileHashPath) {
-					WriteLog('gitflow.pl: renaming ' . $file . ' to ' . $fileHashPath);
+					WriteLog('update.pl: renaming ' . $file . ' to ' . $fileHashPath);
 					rename($file, $fileHashPath);
 					
 					if (-e $fileHashPath) {
@@ -202,12 +206,12 @@ if (!$locked) {
 				next;
 			}
 
-#			WriteLog('gitflow.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
+#			WriteLog('update.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
 			
 			# add a time_added record
 #			DBAddAddedTimeRecord($fileHash, $addedTime);
 
-			WriteLog('gitflow.pl: IndexTextFile(' . $file . ')');
+			WriteLog('update.pl: IndexTextFile(' . $file . ')');
 
 			IndexTextFile($file);
 
@@ -246,9 +250,9 @@ if (!$locked) {
 	my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
 	my $filesLeft = `$filesLeftCommand`; #todo
 
-	WriteLog('gitflow.pl: $filesLeft = ' . $filesLeft);
+	WriteLog('update.pl: $filesLeft = ' . $filesLeft);
 
-	PutConfig('admin/gitflow/files_left', $filesLeft);
+	PutConfig('admin/update/files_left', $filesLeft);
 
 	# if new items were added, re-make all the summary pages (top authors, new threads, etc)
 	if ($filesProcessed > 0) {
@@ -280,14 +284,14 @@ if (!$locked) {
 
 	$pagesProcessed = BuildTouchedPages();
 	
-	# save current time in config/admin/gitflow/last
+	# save current time in config/admin/update/last
 	my $newLastFlow = GetTime2();
 	WriteLog($newLastFlow);
-	PutConfig('admin/gitflow/last', $newLastFlow);
+	PutConfig('admin/update/last', $newLastFlow);
 	
 	unlink('cron.lock');
 	
-	WriteLog("======gitflow.pl DONE! ======");
+	WriteLog("======update.pl DONE! ======");
 	WriteLog("Items/files processed: $filesProcessed");
 	print("Items/files processed: $filesProcessed\n");
 	WriteLog("Pages processed: $pagesProcessed");

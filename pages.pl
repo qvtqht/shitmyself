@@ -1638,7 +1638,7 @@ sub GetStatsPage { # returns html for stats page
 		$lastBuildTime = 0;
 	}
 
-	my $filesLeft = GetConfig('admin/gitflow/files_left') || 0;
+	my $filesLeft = GetConfig('admin/update/files_left') || 0;
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
@@ -2919,7 +2919,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	if ($pageType eq 'tag') {
 		my $tagName = $pageParam;
 
-		WriteLog("gitflow.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
+		WriteLog("update.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
 
 		my $tagPage = GetReadPage('tag', $tagName);
 		PutHtmlFile('html/top/' . $tagName . '.html', $tagPage);
@@ -3024,9 +3024,9 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 }
 
 sub BuildTouchedPages {
-	my $pagesLimit = GetConfig('admin/gitflow/limit_page');
+	my $pagesLimit = GetConfig('admin/update/limit_page');
 	if (!$pagesLimit) {
-		WriteLog("WARNING: config/admin/gitflow/limit_page missing!");
+		WriteLog("WARNING: config/admin/update/limit_page missing!");
 		$pagesLimit = 1000;
 	}
 	state $pagesProcessed;

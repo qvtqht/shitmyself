@@ -139,7 +139,7 @@ my $filesLeft = `$filesLeftCommand`; #todo
 
 WriteLog('build.pl: $filesLeft = ' . $filesLeft);
 
-PutConfig('admin/gitflow/files_left', $filesLeft);
+PutConfig('admin/update/files_left', $filesLeft);
 
 PutFile('config/admin/build_end', GetTime());
 
@@ -148,10 +148,10 @@ UpdateUpdateTime();
 my $statsPage = GetStatsPage();
 PutHtmlFile("html/stats.html", $statsPage);
 
-if (GetConfig('admin/build/gitflow_after')) {
-	BuildMessage("system('perl gitflow.pl')...");
+if (GetConfig('admin/build/update_after')) {
+	BuildMessage("system('perl update.pl')...");
 	
-	system('perl gitflow.pl');
+	system('perl update.pl');
 }
 	
 BuildMessage("Done!");
