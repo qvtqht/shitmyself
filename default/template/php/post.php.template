@@ -5,22 +5,11 @@
 */
 
 function WriteLog($text) { // writes to debug log if enabled
-	if (0) {
+	if (0) { // use this to toggle output
 		print (htmlspecialchars($text) . "<br>\n");
 	}
 }
 
-function GetHtmlComment($comment) { // returns comment with basic html wrapper
-	WriteLog('GetHtmlComment()');
-	WriteLog('$comment = ' . $comment);
-	
-	$commentHtml = '<html><body>' . $comment . '</body></html>';
-	
-	WriteLog('$commentHtml = ' . $commentHtml);
-	
-	return $commentHtml;
-}
-	
 function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
@@ -37,11 +26,13 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
 		
 		WriteLog('$scriptDir = ' . $scriptDir);
-		
+
+		// $txtDir
 		$txtDir = $pwd . '/txt/';
 		
 		WriteLog('$txtDir = ' . $txtDir);
-		
+
+		// $htmlDir
 		$htmlDir = $pwd . '/';
 		
 		WriteLog('$htmlDir = ' . $htmlDir);
@@ -51,7 +42,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		WriteLog('$comment = ' . $comment); 
 		WriteLog('$hash = ' . $hash);
 		
-		$fileName = './txt/' . $hash . '.txt';
+		$fileName = $txtDir . $hash . '.txt';
 		
 		WriteLog('$fileName = ' . $fileName);
 		
@@ -61,14 +52,6 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		
 		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
 		WriteLog(file_get_contents($fileName));
-		
-//		$gitOutput = `sha1sum "$fileName"`;
-//
-//		WriteLog('ProcessNewComment: $gitOutput = ' . $gitOutput);
-//
-//		$gitOutput = explode(' ', trim($gitOutput));
-//
-//		$hash = trim($gitOutput[0]);
 
         $hash = sha1_file($fileName);
 		
@@ -147,17 +130,6 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			)
 		;
 
-//		$newPage = '<html><body>';
-//		$newPage .=	'<p>' . $commentHtml . '</p>';
-//		$newPage .=	'<p>Address: '. $fileUrlPath . '<br>';
-//		$newPage .=	'Hash: ' . $hash . '<br><br>';
-//		$newPage .=	'<p>This page should be replaced with a formatted version soon.</p>';
-//		$newPage .=	'</body></html>';
-//
-//		file_put_contents($fileHtmlPath, $newPage);
-//
-//		exec('cd "' . $scriptDir . '" ; perl ./pages.pl "' . $hash . '"');
-//
 		if (!file_exists($scriptDir . 'cron.lock')) {
 			WriteLog('cron.lock no exist, trying index.pl');
 
@@ -182,9 +154,11 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		
 		if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
 			$referer = $_SERVER['HTTP_REFERER'];
-			
+
+			// #todo uncomment this once this script is working
 	//		header('Location: ' . $referer);
 		} else {
+			// #todo uncomment this once this script is working
 	//		header('Location: /write.html');
 		}
 		
