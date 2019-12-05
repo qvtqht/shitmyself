@@ -87,7 +87,7 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24" selected="1">24</option>
+							<option value="24">24</option>
 							<option value="25">25</option>
 							<option value="26">26</option>
 							<option value="27">27</option>
@@ -100,7 +100,7 @@
 						<select name="year" onchange="UpdateTimeString()">
 							<option value="2017">2017</option>
 							<option value="2018">2018</option>
-							<option value="2019" selected="1">2019</option>
+							<option value="2019">2019</option>
 							<option value="2020">2020</option>
 							<option value="2021">2021</option>
 							<option value="2022">2022</option>
