@@ -92,11 +92,6 @@ Add simple index page for txt/
 	causing for an extra trailing underlined space at the end of the username link
 		html/color_avatars=0
 
-#bug NN3 display issues (blank table cells)
-
-#bug Built: 18195 days ago
-After clean-build before first update
-
 Put infobox with all of the item's attributes on item details page
 
 sharePubKey() should not change the current page, if possible
@@ -128,11 +123,6 @@ Loop through all titlebar elements on page
 
 #todo #bug 404 page links do not work with relative rewrite
 
-Opera 3.62 has no profile link #bug
-
-Mosaic's comments seem to be <!-- >
-	Deal with it somehow
-
 "New Items" page for items not processed yet
 	added to by post.php
 
@@ -153,8 +143,8 @@ Installer/dependency installer
 			install fedora modules
 Add number of unprocessed text files to stats page
  
-Add 404 ahndler for apache
-	ADd config for it
+Add 404 handler for apache
+	Add config for it
  
 After rebuild/upgrade, have setting which notifies
 	This server was recently rebuilt, still updating
@@ -296,6 +286,7 @@ Cut up event_add.template
 
 shortlink/foobar/sha1
 	added to .htaccess
+	added to lighttpd config
 
 Non-JS voting links redirect
 	Should redirect to page vote came from
@@ -336,8 +327,6 @@ Find vouched users
 
 Allow profiles to claim client ids
 	Items with fingerprint are then assigned to said profile
-
-
 
 INSTALLATION
 ============
