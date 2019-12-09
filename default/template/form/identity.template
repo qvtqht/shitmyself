@@ -1,33 +1,6 @@
 <!-- identity.template -->
-<noscript>
-	<p class=warning>
-		<strong><b>Great news! You're browsing without JavaScript!</b></strong>
-		<br><br>
 
-		You can continue to use the site without changing anything.
-		<br><br>
-		
-		To continue, try one of the following links:
-		<br><br>
-	
-		<hr>
-
-		<a href="/write.html"><b>Write something on this site</b></a><br><br>
-
-		<a href="/top.html"><b>Read what others are talking about</b></a><br><br>
-	
-		<a href="/index0.html"><b>Vote on new, uncategorized content</b></a>
-	
-		<hr>
-
-		<b>Experts/Advanced Users:</b><br><br>
-
-		Using profile features without JavaScript requires GPG/PGP.<br><br>
-
-		Please <a href="/manual.html">read the Manual</a> for more information.<br><br>
-
-	</p>
-</noscript>
+$noJsInformation
 
 <p id=loading class=loading></p>
 
