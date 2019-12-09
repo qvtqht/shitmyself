@@ -126,6 +126,76 @@ sub GetFileHashPath { # Returns text file's standardized path given its filename
 		return $fileHashPath;
 	}
 }
+#
+#sub IndexToken {
+#	my $message = shift;
+#
+#	my $tokenName = shift;
+#
+#	my $tokenResults
+#
+#	if ($tokenName eq 'addedtime') {
+#		my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
+#	}
+#
+#	my $tokens = ( $message =~
+#
+#
+#
+#	if ($message) {
+#		# look for addedtime, which adds an added time for an item
+#		# #token
+#		# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911
+#
+#		my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
+#
+#		if (@addedLines) {
+#			WriteLog (". addedtime token found!");
+#			my $lineCount = @addedLines / 2;
+#
+#			while(@addedLines) {
+#				WriteLog("... \@addedLines");
+#				my $itemHash = shift @addedLines;
+#				my $itemAddedTime = shift @addedLines;
+#
+#				WriteLog("... $itemHash, $itemAddedTime");
+#
+#				my $reconLine = "addedtime/$itemHash/$itemAddedTime";
+#
+#				WriteLog("... $reconLine");
+#
+#				my $validated = 0;
+#
+#				if ($isSigned) {
+#					WriteLog("... isSigned");
+#					if (IsServer($gpgKey)) {
+#						WriteLog("... isServer");
+#
+#						$validated = 1;
+#
+#						$message =~ s/$reconLine/[Server discovered $itemHash at $itemAddedTime.]/g;
+#						$detokenedMessage =~ s/$reconLine//g;
+#
+#						DBAddItemParent($gitHash, $itemHash);
+#
+#						DBAddPageTouch('item', $itemHash);
+#
+#						DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
+#
+#						DBAddPageTouch('tag', 'timestamp');
+#					}
+#				}
+#
+#				if (!$validated) {
+#					$message =~ s/$reconLine/[Claim that $itemHash was added at $itemAddedTime.]/g;
+#					$detokenedMessage =~ s/$reconLine//g;
+#				}
+#			}
+#		}
+#
+#		$hasParent = 1;
+#	}
+#}
 
 sub IndexTextFile { # indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
@@ -958,6 +1028,9 @@ sub IndexTextFile { # indexes one text file into database
 
 		# look for vote tokens
 		if ($message) {
+			# here we look for two formats, prefixed with vote/ and addvote/
+			# experimental compatibility
+
 			my @voteLines = ( $message =~ m/^(vote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
 			#                                prefix  /file hash      /time     /tag      /csrf
 
@@ -966,6 +1039,7 @@ sub IndexTextFile { # indexes one text file into database
 			my @addVoteLines = ( $message =~ m/^(addvote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
 			#                                    prefix   /file hash      /time     /tag      /csrf
 
+			# join the two arrays of matches together
 			push @voteLines, @addVoteLines;
 
 			if (@voteLines) {
@@ -979,6 +1053,8 @@ sub IndexTextFile { # indexes one text file into database
 #				}
 
 				while(@voteLines) {
+					# read parameters from the array
+
 					my $tokenPrefix = shift @voteLines;
 					my $voteFileHash   = shift @voteLines;
 					my $voteBallotTime = shift @voteLines;
@@ -986,37 +1062,55 @@ sub IndexTextFile { # indexes one text file into database
 					my $voteCsrf = shift @voteLines;
 					#shift @voteLines;
 
+					# add a record to the vote table
 					if ($isSigned) {
+						# include author's key if message is signed
 						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $gpgKey);
 					} else {
 						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue);
 					}
 
+					# add a 'hasvote' tag to item being voted on
 					DBAddVoteRecord($voteFileHash, $addedTime, 'hasvote');
 
+					# set voted-on item as parent of current item
 					DBAddItemParent($gitHash, $voteFileHash);
 
-					#$message .= "\nAt $ballotTime, a vote of \"$voteValue\" on the item $fileHash.";
+					# replace token in message with a (slightly) more descriptive string
 					my $reconLine = "$tokenPrefix/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
-					# $message =~ s/$reconLine/[$voteValue] (vote on $fileHash)/g;
-					# $message =~ s/$reconLine/[Vote on $fileHash at $ballotTime: $voteValue]/g;
 					$message =~ s/$reconLine/>>$voteFileHash\n[$voteValue]/g;
 
+					# remove token from $detokenedMessage
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddPageTouch('item', $voteFileHash);
-
+					# give this item 'vote' tag, to indicate it contains vote(s)
 					DBAddVoteRecord ($gitHash, $addedTime, 'vote');
 
-					DBAddPageTouch('tag', 'vote');
+					# add page_touch records so that appropriate pages are refreshed
+					DBAddPageTouch('item', $voteFileHash); # item
+					DBAddPageTouch('tag', 'vote'); # page of items with 'vote' tag
+					DBAddPageTouch('tag', 'hasvote'); # page of items with 'hasvote' tag
+					DBAddPageTouch('tag', $voteValue); # the listing page of the tag itself
 
+					# if the vote value is 'remove', perform appropriate operations
 					if ($voteValue eq 'remove') {
+						WriteLog('Found request to remove file');
+
+						# find the author of the item in question.
+						# this will help us determine whether the request can be fulfilled
 						my $voteItemAuthor = DBGetItemAuthor($voteFileHash) || '';
 
-						if ($gpgKey && (IsAdmin($gpgKey) || ($gpgKey eq $voteItemAuthor))) {
-							WriteLog('Found post requesting remove of file');
-
-							#todo there are bugs here somewhere, messages are not removed completely
+						# at this time only signed requests to remove are honored
+						if (
+							$gpgKey # is signed
+								&&
+							(
+								IsAdmin($gpgKey) # signed by admin
+									|| # OR
+								($gpgKey eq $voteItemAuthor) # signed by same as author
+							)
+						) {
+							WriteLog('Found seemingly valid request to remove file');
 
 							AppendFile('log/deleted.log', $voteFileHash);
 							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
@@ -1048,6 +1142,8 @@ sub IndexTextFile { # indexes one text file into database
 							}
 
 							#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
+						} else {
+							WriteLog('Request to remove file was not found to be valid');
 						}
 					}
 				}
