@@ -1,5 +1,5 @@
 #!/bin/sh
 
-#call touched.pl
+#call update.pl
 
-perl touched.pl
+perl update.pl
