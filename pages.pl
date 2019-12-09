@@ -2674,6 +2674,16 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	my $idAdminForm = GetTemplate('form/id_admin.template');
 	$idPage =~ s/\$formIdAdmin/$idAdminForm/g;
 
+	my $noJsInformation = '<noscript>' . GetWindowTemplate(
+		'Without JavaScript',
+		'',
+		'',
+		'<tr class=content><td>' . GetTemplate('no_js.template') . '</td></tr>',
+		'Ready'
+	) . '</noscript>';
+
+	$idPage =~ s/\$noJsInformation/$noJsInformation/g;
+
 	if (GetConfig('admin/gpg/use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
 		$idPage =~ s/\$gpg2Algochoices/$gpg2Choices/;
@@ -2938,6 +2948,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 		WriteLog("update.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
 
 		my $tagPage = GetReadPage('tag', $tagName);
+
 		PutHtmlFile('html/top/' . $tagName . '.html', $tagPage);
 	}
 	#

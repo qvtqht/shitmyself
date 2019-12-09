@@ -17,6 +17,34 @@
 
 <!-- -->
 
+<h3>Expert Mode Overview</h3>
+
+	<p>
+		To send message:<br>
+		* Write message in text file<br>
+		* Submit it (e.g. using <tt>curl</tt>) to <tt>/post.html</tt>
+	</p>
+
+	<p>
+		To create profile:<br>
+		* Use <tt>gpg --gen-key</tt> to generate key<br>
+		* Export your public key using <tt>--gpg --armor --export</tt><br>
+		* Submit (e.g. using <tt>curl</tt>) to <tt>/post.html</tt>.<br>
+	</p>
+
+	<p>
+		To post using profile:<br>
+		* Use <tt>gpg --clearsign</tt> to sign your text file<br>
+		* Submit to <tt>/post.html</tt>.<br>
+	</p>
+
+	<p>
+		* Refer to <a href="/manual.html">Manual</a> for token syntax.<br>
+	</p>
+
+
+<!-- -->
+
 <h3>Terminology and Notation</h3>
 
 <p><b>epoch time</b></p>

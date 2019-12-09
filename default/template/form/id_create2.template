@@ -42,12 +42,7 @@
 						Show advanced options
 					</label>
 
-
 					<span id=creaIdAdv style="display:none" class=advanced>
-
-					<p id=tos class=advanced>
-						$termsOfService
-					</p>
 
 					<p>
 						<label for=bits>Algorithm:
@@ -58,33 +53,12 @@
 								<option value=4096>rsa4096 (very slow)</option>
 				$gpg2Algochoices
 							</select>
-						</label><br><br>
-
+						</label><br>
 					</p>
 
-					<p id=abc>
-						* Generate a profile, also known as key pair<br>
-						* Store your <b>private key</b> in your browser/device<br>
-						* Publish your <b>public key</b>, including your name<br>
-						* RSA 512 and 1024 are easy to break<br>
-						* RSA 2048 and 4096 may be slow or not work at all<br>
-						* Non-RSA algorithms may not work with older PGP<br>
+					<p id=tos>
+						$termsOfService
 					</p>
-
-					<label for=creaIdExpC><input type=checkbox id=creaIdExpC onchange="document.getElementById('creaIdExp').style.display=(this.checked ? 'block' : 'none')"> Expert mode</label>
-				
-					<span id=creaIdExp style="display:none">
-						<p>
-							* Disable JavaScript<br>
-							* Use gpg at the command line<br>
-							* Write your own frontend<br>
-						</p>
-						<p>
-							Refer to Manual for more information.
-						</p>
-					</span>
-				
-					</span>
 				</td>
 			</tr>
 
