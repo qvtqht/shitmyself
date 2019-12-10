@@ -120,11 +120,15 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 
 sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	my $pageNumber = shift;
+	my $itemCount = shift;
 
 	my $pageLimit = GetConfig('page_limit');
-	
+
 	my $pageStart = $pageNumber * $pageLimit + 1;
 	my $pageEnd = $pageNumber * $pageLimit + $pageLimit;
+	if ($pageEnd > $itemCount) {
+		$pageEnd = $itemCount;
+	}
 	my $pageCaption = $pageStart . '-' . $pageEnd;
 
 	state $pageLinkTemplate;
@@ -213,82 +217,91 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 }
 
 sub GetPageLinks { # returns html for pagination links
-# $currentPageNumber = current page  
-	state $pageLinks;
+# $currentPageNumber = current page
 
-	my $currentPageNumber = shift;
+	my $currentPageNumber = shift; #
 
-	my $pageLimit = GetConfig('page_limit');
-	
+	state $pageLinks; # stores generated links html in case we need them again
+
+	my $pageLimit = GetConfig('page_limit'); # number of items per page
+
+	my $itemCount = DBGetItemCount(); # item count
+
 	WriteLog("GetPageLinks($currentPageNumber)");
 
+	# check if we've generated the html already, if so, use it
 	if (defined($pageLinks)) {
-		WriteLog("GetPageLinks: \$pageLinks already exists, doing a quickie");
+		WriteLog("GetPageLinks: \$pageLinks already exists, doing search and replace");
 
-		my $currentPageTemplate = GetPageLink($currentPageNumber);
+		my $currentPageTemplate = GetPageLink($currentPageNumber, $itemCount);
 		
 		my $currentPageStart = $currentPageNumber * $pageLimit;
 		my $currentPageEnd = $currentPageNumber * $pageLimit + $pageLimit;
+		if ($currentPageEnd > $itemCount) {
+			$currentPageEnd = $itemCount;
+		}
 		my $currentPageCaption = $currentPageStart . '-' . $currentPageEnd;
 
-		my $pageLinksFinal = $pageLinks;
-		$pageLinksFinal =~ s/$currentPageTemplate/<b>$currentPageCaption<\/b> /g;
+		my $pageLinksReturn = $pageLinks; # make a copy of $pageLinks which we'll modify
 
-		return $pageLinksFinal;
-	}
+		$pageLinksReturn =~ s/$currentPageTemplate/<b>$currentPageCaption<\/b> /g;
+		# replace current page link with highlighted one
 
-	#my $itemCount = DBGetItemCount("item_type = 'text'");
-	my $itemCount = DBGetItemCount();
+		return $pageLinksReturn;
+	} else {
 
-	WriteLog("GetPageLinks: \$itemCount = $itemCount");
+		# we've ended up here because we haven't generated $pageLinks yet
 
-	$pageLinks = "";
+		WriteLog("GetPageLinks: \$itemCount = $itemCount");
 
-	my $lastPageNum = ceil($itemCount / $pageLimit);
+		$pageLinks = "";
 
-	#	my $beginExpando;
-	#	my $endExpando;
-	#
-	#	if ($lastPageNum > 15) {
-	#		if ($currentPageNumber < 5) {
-	#			$beginExpando = 0;
-	#		} elsif ($currentPageNumber < $lastPageNum - 5) {
-	#			$beginExpando = $currentPageNumber - 2;
-	#		} else {
-	#			$beginExpando = $lastPageNum - 5;
-	#		}
-	#
-	#		if ($currentPageNumber < $lastPageNum - 5) {
-	#			$endExpando = $lastPageNum - 2;
-	#		} else {
-	#			$endExpando = $currentPageNumber;
-	#		}
-	#	}
+		my $lastPageNum = ceil($itemCount / $pageLimit);
 
-	if ($itemCount > $pageLimit) {
-		#		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
-		for (my $i = 0; $i < $lastPageNum; $i++) {
-			my $pageLinkTemplate;
-			#			if ($i == $currentPageNumber) {
-			#				$pageLinkTemplate = "<b>" . $i . "</b>";
-			#			} else {
-			$pageLinkTemplate = GetPageLink($i);
-			#			}
+		#	my $beginExpando;
+		#	my $endExpando;
+		#
+		#	if ($lastPageNum > 15) {
+		#		if ($currentPageNumber < 5) {
+		#			$beginExpando = 0;
+		#		} elsif ($currentPageNumber < $lastPageNum - 5) {
+		#			$beginExpando = $currentPageNumber - 2;
+		#		} else {
+		#			$beginExpando = $lastPageNum - 5;
+		#		}
+		#
+		#		if ($currentPageNumber < $lastPageNum - 5) {
+		#			$endExpando = $lastPageNum - 2;
+		#		} else {
+		#			$endExpando = $currentPageNumber;
+		#		}
+		#	}
 
-			$pageLinks .= $pageLinkTemplate;
+		if ($itemCount > $pageLimit) {
+			#		for (my $i = $lastPageNum - 1; $i >= 0; $i--) {
+			for (my $i = 0; $i < $lastPageNum; $i++) {
+				my $pageLinkTemplate;
+				#			if ($i == $currentPageNumber) {
+				#				$pageLinkTemplate = "<b>" . $i . "</b>";
+				#			} else {
+				$pageLinkTemplate = GetPageLink($i, $itemCount);
+				#			}
+
+				$pageLinks .= $pageLinkTemplate;
+			}
 		}
+
+		my $frame = GetTemplate('pagination.template');
+
+		$frame =~ s/\$paginationLinks/$pageLinks/;
+
+		$pageLinks = $frame;
+
+		# up to this point, we are building the in-memory template for the pagination links
+		# once it is stored in $pageLinks, which is a static ("state") variable,
+		# GetPageLinks() returns at the top, and does not reach here.
+		return GetPageLinks($currentPageNumber);
 	}
-
-	my $frame = GetTemplate('pagination.template');
-
-	$frame =~ s/\$paginationLinks/$pageLinks/;
-
-	$pageLinks = $frame;
-
-	# up to this point, we are building the in-memory template for the pagination links
-	# once it is stored in $pageLinks, which is a static ("state") variable,
-	# GetPageLinks() returns at the top, and does not reach here.
-	return GetPageLinks($currentPageNumber);
 }
 
 sub GetEventsPage { # returns html for events page
@@ -1242,12 +1255,6 @@ sub GetPageFooter { # returns html for page footer
 	return $txtFooter;
 }
 
-my $primaryColor;
-my $secondaryColor;
-my $backgroundColor;
-my $textColor;
-my $linkColor = '';
-
 sub GetThemeColor {
 	my $colorName = shift;
 	chomp $colorName;
@@ -1295,13 +1302,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $txtIndex = "";
 
-	$primaryColor = GetThemeColor('primary');
-	$secondaryColor = GetThemeColor('secondary');
-	$backgroundColor = GetThemeColor('background');
-	$textColor = GetThemeColor('text');
-	$linkColor = GetThemeColor('link');
+	my $primaryColor = GetThemeColor('primary');
+	my $secondaryColor = GetThemeColor('secondary');
+	my $backgroundColor = GetThemeColor('background');
+	my $textColor = GetThemeColor('text');
+	my $linkColor = GetThemeColor('link');
 
-	
 	#my $primaryColor = '#'.$primaryColorChoices[0];
 	#my $secondaryColor = '#f0fff0';
 	my $neutralColor = '#202020';
@@ -1372,7 +1378,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $menuItems = '';
 
 	#todo replace with config/menu/*
-	$menuItems .= GetMenuItem("/", 'Read');
+	$menuItems .= GetMenuItem("/", 'Home');
 	$menuItems .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
 	$menuItems .= GetMenuItem("/events.html", 'Events');
@@ -2092,7 +2098,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $pageTitle = GetConfig('home_title');
 
-	my $htmlStart = GetPageHeader($pageTitle, $pageTitle);
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, GetString('page_intro/itemlist'));
 	
 	$txtIndex .= $htmlStart;
 
