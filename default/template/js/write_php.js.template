@@ -13,19 +13,21 @@ function commentOnChange(t, formId) {
 // some servers support up to 5-6K
 //
 // also shows/hides warning message, lblWriteLengthWarning
-
 	var strFormMode = 'GET';
 	var strWarnDisplay = 'none';
 
 	if (t.value.length <= 1024) {
 		if (intCommentOnChange != 1) {
 			intCommentOnChange = 1;
+
+			strFormMode = 'GET';
+			strWarnDisplay = 'none';
 		} else {
 			return;
 		}
 	} else {
-		if (intCommentOnChange != 0) {
-			intCommentOnChange = 0;
+		if (intCommentOnChange != 2) {
+			intCommentOnChange = 2;
 
 			strFormMode = 'POST';
 			strWarnDisplay = 'block';
