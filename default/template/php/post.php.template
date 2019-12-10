@@ -5,7 +5,7 @@
 */
 
 function WriteLog($text) { // writes to debug log if enabled
-	if (1) { // use this to toggle output
+	if (0) { // use this to toggle output
 		print (htmlspecialchars($text) . "<br>\n");
 	}
 }
@@ -137,8 +137,6 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			;
 
 		file_put_contents($fileHtmlPath, $commentHtml);
-
-		sleep(1);
 
 		if (!file_exists($scriptDir . 'cron.lock')) {
 			WriteLog('cron.lock no exist, trying index.pl');
