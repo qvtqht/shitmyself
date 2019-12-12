@@ -47,8 +47,8 @@ function signVote(t, token) { // signs a vote from referenced vote button
 		if (!privkey) {
 		// if there is no private key, just do a basic unsigned vote;
 			t.enabled = false;
-			t.style.backgroundColor = '#408040'; //#todo
-			t.style.color = '#408040'; //#todo
+			t.style.backgroundColor = '$colorSuccessVoteUnsigned'; //#todo
+			t.style.color = '$colorSuccessVoteUnsigned'; //#todo
 			t.style.borderRadius = '5pt'; //#todo
 	
 			if (PingUrl(t.href)) {
@@ -58,8 +58,8 @@ function signVote(t, token) { // signs a vote from referenced vote button
 		// there is a private key
 			// first, change the button's appearance, for maximum responsiveness
 			t.enabled = false;
-			t.style.backgroundColor = '#8080c0'; //#todo
-			t.style.color = '#8080c0';
+			t.style.backgroundColor = '$colorSuccessVoteSigned'; //#todo
+			t.style.color = '$colorSuccessVoteSigned';
 			t.style.borderRadius = '5pt'; //#todo
 
 			// load the private key into openpgp

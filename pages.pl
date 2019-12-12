@@ -809,28 +809,30 @@ sub GetHtmlLink {
 }
 
 sub GetItemVoteButtons { # get vote buttons for item in html form
-# $fileHash = item's file hash
-# $tagset (optional) use a particular tagset instead of item's default
-	my $fileHash = shift;
-	my $tagSet = shift;
+	my $fileHash = shift; # item's file hash
+	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
 
 	WriteLog('GetItemVoteButtons(' . ($fileHash?$fileHash:'-') . ', ' . ($tagSet?$tagSet:'-') . ')');
 
 	#todo sanity checks
 
-	my @quickVotesList;
+	my @quickVotesList; # this will hold all the tag buttons we want to display
 
 	my %voteTotals = DBGetItemVoteTotals($fileHash);
 
 	WriteLog('GetItemVoteButtons(' . scalar(%voteTotals) . ')');
 	
 	if ($tagSet) {
+		# if $tagSet is specified, just use that list of tags
 		my $quickVotesForTagSet = GetConfig('tagset/' . $tagSet);
 		if ($quickVotesForTagSet) {
 			push @quickVotesList, split("\n", $quickVotesForTagSet);
 		}
 	} else {
+		# otherwise it must be calculated
 		my $quickVotesForTags;
+
+
 
 		foreach my $voteTag (keys %voteTotals) {
 			$quickVotesForTags = GetConfig('tagset/' . $voteTag);
@@ -839,11 +841,7 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 			}
 		}
 
-		$quickVotesForTags = GetConfig('tagset/' . 'all');
-		if ($quickVotesForTags) {
-			unshift @quickVotesList, split("\n", $quickVotesForTags);
-		}
-
+		# all items will have a 'flag' button
 		push @quickVotesList, 'flag';
 
 		my %dedupe = map { $_, 1 } @quickVotesList;
@@ -1666,37 +1664,72 @@ sub GetStatsPage { # returns html for stats page
 }
 
 sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
-	my $html = shift;
-	my @scriptNames = @_;
+	my $html = shift;     # html we're going to inject into
+	my @scriptNames = @_; # array of names of script templates (minus the .js.template suffix)
 
-	my $scriptsText = '';
-	my $scriptsComma = '';
+	my $scriptsText = '';  # will contain all the js we want to inject
+	my $scriptsComma = ''; # separator between scripts, will be set to \n\n after first script
+
+	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
 	if (GetConfig('clock')) {
+		# if clock is enabled, automatically add it
 		push @scriptNames, 'clock';
 	}
 
 	if (GetConfig('admin/force_profile')) {
+		# if force_profile is enabled, automatically add it
 		push @scriptNames, 'force_profile';
 	}
 
+	# loop through all the scripts
 	foreach my $script (@scriptNames) {
+		# only inject each script once, otherwise move on
+		if (defined($scriptsDone{$script})) {
+			next;
+		} else {
+			$scriptsDone{$script} = 1;
+		}
+
+		# separate each script with \n\n
 		if (!$scriptsComma) {
 			$scriptsComma = "\n\n";
 		} else {
 			$scriptsText .= $scriptsComma;
 		}
 
-		#todo does there need to be a warning here if script content contains > character,
-		# which is incompatible with mosaic's html comment syntax?
+		my $scriptTemplate = GetTemplate("js/$script.js.template");
 
-		$scriptsText .= GetTemplate("js/$script.js.template");
+		if ($script eq 'voting') {
+			# for voting.js we need to fill in some theme colors
+			my $colorSuccessVoteUnsigned = GetConfig('theme/color_success_vote_unsigned');
+			my $colorSuccessVoteSigned = GetConfig('theme/color_success_vote_signed');
+
+			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
+			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+		}
+
+		if (index($scriptTemplate, '>') > -1) {
+			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
+			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+		}
+
+		# add to the snowball of javascript
+		$scriptsText .= $scriptTemplate;
 	}
 
+	# get the wrapper, i.e. <script>$javascript</script>
 	my $scriptInject = GetTemplate('scriptinject.template');
+	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g;
 
-	$html =~ s/<\/body>/$scriptInject<\/body>/;
+	if (index($html, '</body>') > -1) {
+		# replace it into html, right before the closing </body> tag
+		$html =~ s/<\/body>/$scriptInject<\/body>/;
+	} else {
+		# if there was no </body> tag, just append at the end
+		$html .= "\n\n" . $scriptInject;
+	}
 
 	return $html;
 }
@@ -2349,6 +2382,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/clock.html", $clockTestPage);
 
 	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
+	if (GetConfig('clock')) {
+		$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
+	}
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
 
 	# Profile page
