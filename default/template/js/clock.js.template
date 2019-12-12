@@ -1,43 +1,21 @@
 // == begin clock.js
 
-function setclock() {
-	var d = new Date();
-	var n = d.getTime();
-	n = Math.ceil(n/1000);
-	
-	if (document.getElementById) {
-		var clockContainer = document.getElementById('clockContainer');
-//		if (clockContainer) {
-//			clockContainer.style.display = 'inline';
-//		}
+function setClock() {
+	if (document.frmTopMenu) {
+		if (document.frmTopMenu.txtClock) {
+			if (document.frmTopMenu.txtClock.value) {
+				var d = new Date();
+				var n = d.getTime();
+				n = Math.ceil(n/1000);
 
-		var clock =	document.getElementById('clock');
-		if (clock) {
-//					var myDate = Date();
-//					var humanTime = '<small' + String.fromCharCode(62) + '' + myDate + '</small' + String.fromCharCode(62) + '';
-//
-//					clock.innerHTML = humanTime + '<br' + String.fromCharCode(62) + '' + n;
-			clock.innerHTML = n;
-			
-			
-//
-//				if (clock.style.display == 'none') {
-//					clock.style.display = 'float';
-//				}
-//			clock.style.display = 'inline';
-
-			setTimeout(setclock, 500); //#todo only do this if clock is visible ; restart clock if becomes visible again
+				document.frmTopMenu.txtClock.value = n;
+			}
 		}
 	}
 
-	if (document.frmClock) {
-		if (document.frmClock.txtClock) {
-			document.frmClock.txtClock.value = n;
-			document.frmClock.txtClock.innerHTML = n;
-		}
-	}
+	var timeoutClock2 = window.setTimeout('setClock()', 500);
 }
 
-setTimeout(setclock, 500);
+var timeoutClock = window.setTimeout('setClock()', 500);
 
 // == end clock.js

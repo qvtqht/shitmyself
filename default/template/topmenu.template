@@ -1,4 +1,5 @@
 <!-- topmenu.template -->
+<form name=frmTopMenu id=frmTopMenu>
 <font face=arial>
 	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog width=100%>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
@@ -13,7 +14,7 @@
 					$menuItems
 				</p>
 			</td>
-			<td class=clockContainer align=right style="border: 1pt inset $colorWindow;">
+			<td class=clockContainer align=right>
 				$clock
 			</td>
 		</tr>
@@ -25,5 +26,6 @@
 		</tr>
 	</table>
 </font>
+</form>
 <!-- / topmenu.template -->
 
