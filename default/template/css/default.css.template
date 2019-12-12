@@ -122,3 +122,8 @@ div.txt {
 textarea {
 	border: 2pt inset $colorWindow;
 }
+
+#txtClock {
+	background-color: $colorWindow;
+	border: 1px inset $colorWindow;
+}
