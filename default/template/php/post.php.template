@@ -126,12 +126,14 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 						ENT_QUOTES|ENT_SUBSTITUTE,
 						"UTF-8"
 					)
-				)
+				),
+				0
 			)
 		;
 
 		$commentHtml =
 			'<html><body>The following message has been received, and is being processed:</p><hr>' .
+			"\n" . 
 			$commentHtml .
 			'</body></html>';
 			;
