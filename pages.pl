@@ -152,15 +152,19 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	my $windowBody = shift;
 	my $windowStatus = shift;
 
+	my $contentColumnCount = 0;
+
 	my $windowTemplate = GetTemplate('window/standard.template');
 
 	if ($windowTitle) {
-		$windowTemplate =~ s/\$windowTitle/$windowTitle/g;
-	} else {
-		$windowTemplate =~ s/$windowTitle//g;
-	}
+		my $windowTitlebar = GetTemplate('window/titlebar.template');
+		$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
+		$windowTitlebar = $windowTitlebar;
 
-	my $contentColumnCount = 0;
+		$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
+	} else {
+		$windowTemplate =~ s/\$windowTitlebar//g;
+	}
 
 	if ($windowMenubarContent) {
 		my $windowMenubar = GetTemplate('window/menubar.template');
@@ -210,7 +214,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	if ($contentColumnCount) {
 		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
 	} else {
-		$windowTemplate =~ s/\ colspan=$contentColumnCount//g;
+		$windowTemplate =~ s/\ colspan=\$contentColumnCount//g;
 	}
 
 	return $windowTemplate;
@@ -643,6 +647,10 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	$file{'vote_buttons'} = 1;
 	$file{'format_avatars'} = 1;
 
+	if (!$file{'item_title'}) {
+		$file{'item_title'} = 'Untitled';
+	}
+
 	my $itemTemplate = GetItemTemplate(\%file);
 
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
@@ -956,7 +964,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		if (!$file{'item_title'}) {
 			#hack #todo
-			$file{'item_title'} = 'Untitled';
+			#$file{'item_title'} = 'Untitled';
+			$file{'item_title'} = '';
 		}
 
 		if ($file{'remove_token'}) {
@@ -1244,7 +1253,7 @@ sub GetPageFooter { # returns html for page footer
 
 	my $ssiFooter;
 	if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/footer_timestamp')) {
-		$ssiFooter = '<p class=advanced><font color="#808080"><small>' . GetTimestampElement(trim(GetTemplate('ssi/print_date.ssi.template'))) . '</small></font></p>'; #todo templatify
+		$ssiFooter = '<p class=advanced><font color="' . GetThemeColor('text') . '"><small>' . GetTimestampElement(trim(GetTemplate('ssi/print_date.ssi.template'))) . '</small></font></p>'; #todo templatify
 	} else {
 		$ssiFooter = '';
 	}
@@ -1253,11 +1262,17 @@ sub GetPageFooter { # returns html for page footer
 	return $txtFooter;
 }
 
-sub GetThemeColor {
+sub GetThemeColor { # returns theme color from config/theme/
 	my $colorName = shift;
 	chomp $colorName;
 
-	my @colorChoices = split("\n", GetConfig('theme/color_' . $colorName));
+	my $colorConfigContent = GetConfig('theme/color_' . $colorName);
+	if (!$colorConfigContent) {
+		WriteLog("WARNING! GetThemeColor: Color lookup failed for [" . $colorName . '] missing');
+		return 'red';
+	}
+
+	my @colorChoices = split("\n", $colorConfigContent);
 
 	my $color = @colorChoices[int(rand(@colorChoices))];
 
@@ -1305,14 +1320,19 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $backgroundColor = GetThemeColor('background');
 	my $textColor = GetThemeColor('text');
 	my $linkColor = GetThemeColor('link');
+	my $vlinkColor = GetThemeColor('vlink');
+	my $colorInputBackground = GetThemeColor('input_background');
+	my $colorInputText = GetThemeColor('input_text');
+
+	my $colorTagNegative = GetThemeColor('tag_negative');
+	my $colorTagPositive = GetThemeColor('tag_positive');
+
+	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+	my $colorVoterOrange = GetThemeColor('voter_orange');
 
 	#my $primaryColor = '#'.$primaryColorChoices[0];
 	#my $secondaryColor = '#f0fff0';
-	my $neutralColor = '#202020';
-	my $disabledColor = '#c0c0c0';
-	my $disabledTextColor = '#808080';
-	my $orangeColor = '#f08000'; #FFA500
-	my $highlightColor = '#ffffc0';
 	my $styleSheet = GetStylesheet();
 
 #
@@ -1401,15 +1421,18 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
 	$htmlStart =~ s/\$linkColor/$linkColor/g;
+	$htmlStart =~ s/\$vlinkColor/$vlinkColor/g;
 	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
 	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
 	$htmlStart =~ s/\$backgroundColor/$backgroundColor/g;
 	$htmlStart =~ s/\$textColor/$textColor/g;
-	$htmlStart =~ s/\$disabledColor/$disabledColor/g;
-	$htmlStart =~ s/\$disabledTextColor/$disabledTextColor/g;
-	$htmlStart =~ s/\$orangeColor/$orangeColor/g;
-	$htmlStart =~ s/\$neutralColor/$neutralColor/g;
-	$htmlStart =~ s/\$highlightColor/$highlightColor/g;
+	$htmlStart =~ s/\$colorTagNegative/$colorTagNegative/g;
+	$htmlStart =~ s/\$colorTagPositive/$colorTagPositive/g;
+	$htmlStart =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+	$htmlStart =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
+	$htmlStart =~ s/\$colorVoterOrange/$colorVoterOrange/g;
+	$htmlStart =~ s/\$colorInputBackground/$colorInputBackground/g;
+	$htmlStart =~ s/\$colorInputText/$colorInputText/g;
 	$htmlStart =~ s/\$clock/$clock/g;
 	$htmlStart =~ s/\$introText/$introText/g;
 
@@ -1577,6 +1600,8 @@ sub GetTopItemsPage { # returns page with top items listing
 #		my $columnHeadings = 'Title,Score,Replied,Author';
 		my $columnHeadings = '';
 
+
+
 		$itemListingWrapper = GetWindowTemplate(
 			'Top Threads',
 			'<a href="/write.html">New Topic</a>',
@@ -1729,6 +1754,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	} else {
 		# if there was no </body> tag, just append at the end
 		$html .= "\n\n" . $scriptInject;
+		WriteLog('InjectJs(): WARNING! $html does not contain </body>');
 	}
 
 	return $html;
@@ -2110,7 +2136,7 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 		$menuItem = GetTemplate('menuitem.template');
 	}
 
-	my $color = '#' . substr(md5_hex($caption), 0, 6);
+my $color = '#' . substr(md5_hex($caption), 0, 6);
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
@@ -2131,7 +2157,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $pageTitle = GetConfig('home_title');
 
-	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, GetString('page_intro/itemlist'));
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, GetString('page_intro/item_list'));
 	
 	$txtIndex .= $htmlStart;
 
@@ -2284,8 +2310,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 		$indexPage .= GetWindowTemplate('No Items', '', '', $infoMessage, 'Ready');
 
 		$indexPage .= GetPageFooter();
-		
-		InjectJs($indexPage, qw('profile'));
+
+		$indexPage = InjectJs($indexPage, qw(profile prefs));
 
 		PutHtmlFile('html/index.html', $indexPage);
 		PutHtmlFile('html/index0.html', $indexPage);
@@ -2451,7 +2477,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'Manual',
 			'', #menubar
 			'', #columns
-			'<tr class=body bgcolor=white><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
 			'Ready'
 		);
 
@@ -2477,7 +2503,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'Advanced Manual',
 			'<p>', #menubar
 			'', #columns
-			'<tr class=body bgcolor=white><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
 			'Ready'
 		);
 
@@ -2546,6 +2572,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
+
+		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
+		PutFile('html/cookie.php', $cookiePhpTemplate);
 	}
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 

@@ -53,7 +53,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			var elemVoter = document.getElementsByClassName('voter');
 
 			for (var i = 0; i < elemVoter.length; i++) {
-				SetElementVisible(elemVoter[i], displayVoter, 0, '3pt solid orange');
+				SetElementVisible(elemVoter[i], displayVoter, 0, '3pt solid ' + colorVoterOrange);
 			}
 		}
 
@@ -64,7 +64,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		var bgColor = 'initial';
 		if (GetPrefs('advanced_highlight') == 1) { // check value of advanced_highlight preference
-			bgColor = '#ffe0e0'; // advanced_highlight
+			bgColor = colorHighlightAdvanced; // advanced_highlight
 		}
 
 		if (force || showAdvancedLastAction != displayValue) {
@@ -84,7 +84,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		bgColor = 'initial';
 		if (GetPrefs('beginner_highlight') == 1) { // check value of beginner preference
-			bgColor = '#f0f0d0'; // beginner_highlight
+			bgColor = colorHighlightBeginner; // beginner_highlight
 		}
 
 		if (force || showBeginnerLastAction != displayValue) {

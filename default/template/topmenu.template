@@ -21,7 +21,7 @@
 
 		<tr class=beginner>
 			<td colspan=2 class=beginner>
-				$introText
+				<p>$introText
 			</td>
 		</tr>
 	</table>

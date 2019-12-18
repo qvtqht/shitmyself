@@ -9,14 +9,14 @@ body {
 .tag-troll, 
 .tag-spam, 
 .tag-abuse {
-	color: #ee0000;
+	color: $colorTagNegative;
 }
 
 /* positive (green) tags */
 .tag-accept, 
 .tag-friend, 
 .tag-attend {
-	color: #00a000;
+	color: $colorTagPositive;
 }
 
 /* special tags */
@@ -46,14 +46,7 @@ div.txt {
 	padding-left: 1em;
 }
 .admin {
-	background: repeating-linear-gradient(
-		135deg,
-		#ffffd0,
-		#ffffd0 10px,
-		#fffff0 10px,
-		#fffff0 20px
-	);
-	border-radius: 8pt;
+	/* #todo */
 }
 
 /* sign out button */
@@ -126,4 +119,18 @@ textarea {
 #txtClock {
 	background-color: $colorWindow;
 	border: 1px inset $colorWindow;
+}
+
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+
+button, input[type=button], input[type=submit], input[type=checkbox] {
+	background-color: $colorWindow;
+	color: $textColor;
+}
+
+fieldset {
+	border-color: $secondaryColor;
 }

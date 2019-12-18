@@ -1,0 +1,18 @@
+<?
+	$cookie = 0;
+
+	if ($_COOKIE['test']) {
+		if ($_COOKIE['cookie']) {
+			$cookie = $_COOKIE['cookie'];
+		}
+
+		if (!$cookie) {
+			$cookie = substr(md5(rand()), 16);
+			setcookie('cookie', $cookie);
+		}
+	} else {
+		setcookie('test', '1');
+	}
+
+
+?>

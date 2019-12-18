@@ -11,8 +11,15 @@
 $styleSheet
 -->
 </style>
+<script>
+<!--
+var colorHighlightBeginner = '$colorHighlightBeginner';
+var colorHighlightAdvanced = '$colorHighlightAdvanced';
+var colorVoterOrange = '$colorVoterOrange';
+//-->
+</script>
 </head>
-<body link="$linkColor" text="$textColor" bgcolor="$backgroundColor">
+<body link="$linkColor" vlink="$vlinkColor" text="$textColor" bgcolor="$backgroundColor">
 <img src="/p.gif" height=1 width=1>
 $topMenu
 <main id=maincontent><a name=maincontent></a>

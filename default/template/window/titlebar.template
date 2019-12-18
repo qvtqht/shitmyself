@@ -1,0 +1,5 @@
+<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+	<td colspan=$contentColumnCount>
+		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
+	</td>
+</tr>
