@@ -1,3 +1,8 @@
+Simplify vote/tag tokens
+	Human readable
+	Machine readable
+	only the hash and the tag text are really needed
+
 #bug with PHP enabled, replies create a dupe
 	Dupe contains >> token at the bottom (from access log)
 	Other copy does not (from PHP)
@@ -72,8 +77,6 @@ Add Event page
 Events Page
 	Split into Current, Upcoming, Past events
 	Fix no-js display of dates in future (currently just 01:00
-
-#todo if 0 items index0.html (Queue) is missing
 
 Tags page with 0 tags
 
@@ -189,6 +192,7 @@ setcontent/abcde/abcd2
 setcontent/{hash of 404 url}/{hash of content}
 
 #bug nn4 js=on vote links do not work (js error)
+crypto.js and openpgp.js includes cause errors in nn4
 
 Figure out how to fix hasvote dupes in vote table
 	Probably need to differentiate votes and system tags
