@@ -79,6 +79,10 @@ sub GetStylesheet { # returns style template based on config
 		# add style for color avatars if that's the setting
 	}
 
+	if (GetThemeAttribute('additional.css')) {
+		$style .= "\n" . GetThemeAttribute('additional.css');
+	}
+
 	return $style;
 }
 
@@ -1262,18 +1266,13 @@ sub GetPageFooter { # returns html for page footer
 	return $txtFooter;
 }
 
-sub GetThemeColor { # returns theme color from config/theme/
+sub GetThemeColor {
 	my $colorName = shift;
 	chomp $colorName;
 
-	# default theme
-	my $themeName = 'theme.friday29';
+	$colorName = 'color_' . $colorName;
 
-	my $colorConfigContent = GetConfig($themeName . '/color_' . $colorName);
-	if (!$colorConfigContent) {
-		WriteLog("WARNING! GetThemeColor: Color lookup failed for [" . $colorName . '] missing');
-		return 'red';
-	}
+	my $colorConfigContent = GetThemeAttribute($colorName);
 
 	my @colorChoices = split("\n", $colorConfigContent);
 
@@ -1284,6 +1283,18 @@ sub GetThemeColor { # returns theme color from config/theme/
 	}
 
 	return $color;
+}
+
+sub GetThemeAttribute { # returns theme color from config/theme/
+	my $attributeName = shift;
+	chomp $attributeName;
+
+	# default theme
+	my $themeName = 'theme.dark';
+
+	my $attributeValue = GetConfig($themeName . '/' . $attributeName);
+
+	return $attributeValue;
 }
 
 sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
