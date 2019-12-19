@@ -133,7 +133,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 
 		$commentHtml =
 			'<html><body>The following message has been received, and is being processed:</p><hr>' .
-			"\n" . 
+			"\n" .
 			$commentHtml .
 			'</body></html>';
 			;
@@ -229,7 +229,7 @@ if ($_GET) {
 		$fileUrlPath = ProcessNewComment($comment);
 	}
 }
-		
+
 $html = file_get_contents('post.html');
 
 if (isset($fileUrlPath) && $fileUrlPath) {
