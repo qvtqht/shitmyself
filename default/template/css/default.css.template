@@ -1,7 +1,7 @@
 body {
 	font-family: helvetica;
 	font-size: default;
-	background-color: $backgroundColor;
+	background-color: $colorBackground;
 }
 
 /* negative (red) tags */
@@ -88,11 +88,11 @@ div.txt {
 }
 
 #eventLocation, #eventBrcLocation {
-	background-color: $rowBgColor0;
+	background-color: $colorRow0Bg;
 	padding: 5pt;
 }
 #eventDate {
-	background-color: $rowBgColor1;
+	background-color: $colorRow1Bg;
 	padding: 5pt;
 }
 
@@ -118,7 +118,9 @@ textarea {
 
 #txtClock {
 	background-color: $colorWindow;
-	border: 1px inset $colorWindow;
+	border: 1pt inset $colorWindow;
+	font-family: monospace;
+	font-weight: default;
 }
 
 input[type=text], input[type=password], select, option, textarea {
@@ -128,9 +130,9 @@ input[type=text], input[type=password], select, option, textarea {
 
 button, input[type=button], input[type=submit], input[type=checkbox] {
 	background-color: $colorWindow;
-	color: $textColor;
+	color: $colorText;
 }
 
 fieldset {
-	border-color: $secondaryColor;
+	border-color: $colorSecondary;
 }

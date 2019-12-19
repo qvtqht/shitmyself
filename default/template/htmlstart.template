@@ -19,7 +19,7 @@ var colorVoterOrange = '$colorVoterOrange';
 //-->
 </script>
 </head>
-<body link="$linkColor" vlink="$vlinkColor" text="$textColor" bgcolor="$backgroundColor">
+<body link="$colorLink" vlink="$colorVlink" text="$colorText" bgcolor="$colorBackground">
 <img src="/p.gif" height=1 width=1>
 $topMenu
 <main id=maincontent><a name=maincontent></a>

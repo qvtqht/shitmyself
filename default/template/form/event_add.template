@@ -20,7 +20,7 @@
 			</tr>
 
 			<tr class=location>
-				<td class=content bgcolor="$rowBgColor0">
+				<td class=content bgcolor="$colorRow0Bg">
 					<p id=eventLocation>
 						<label for=event_location>
 							<b>Location:</b>
@@ -44,7 +44,7 @@
 			</tr>
 
 			<tr class=date>
-				<td class=content bgcolor="$rowBgColor1">
+				<td class=content bgcolor="$colorRow1Bg">
 					<p id=eventDate>
 						<b>Date</b><br>
 
@@ -166,7 +166,7 @@
 				</td>
 			</tr>
 
-			<tr class=details bgcolor="$rowBgColor0">
+			<tr class=details bgcolor="$colorRow0Bg">
 				<td>
 					<p>
 						<label for=event_details>
@@ -178,7 +178,7 @@
 				</td>
 			</tr>
 
-			<tr class=details bgcolor="$rowBgColor1">
+			<tr class=details bgcolor="$colorRow1Bg">
 				<td>
 					<p>
 						<label for=event_name><b>Event Name</b><br>
@@ -189,10 +189,10 @@
 				</td>
 			</tr>
 
-			<tr class=details bgcolor="#ffeecc">
+			<tr class=details bgcolor="$colorWindow">
 				<td>
 					<p id=eventCreate>
-						<input value="Create Event" type="submit" style="cursor: click; background-color: #cc8000" id=eventCreateButton><br>
+						<input value="Create Event" type="submit" style="cursor: click;" id=eventCreateButton><br>
 						Please press button to send
 					</p>
 

@@ -325,17 +325,17 @@ sub GetEventsPage { # returns html for events page
 	my $eventsItemsList = '';
 
 	my $rowBgColor = '';
-	my $rowBgColor0 = GetConfig('theme/color_row_0');
-	my $rowBgColor1 = GetConfig('theme/color_row_1');
+	my $colorRow0Bg = GetThemeColor('row_0');
+	my $colorRow1Bg = GetThemeColor('row_1');
 
 	while (@eventsArray) {
 		my $event = shift @eventsArray;
 
 		#alternating row colors hack
-		if ($rowBgColor eq $rowBgColor0) {
-			$rowBgColor = $rowBgColor1;
+		if ($rowBgColor eq $colorRow0Bg) {
+			$rowBgColor = $colorRow1Bg;
 		} else {
-			$rowBgColor = $rowBgColor0;
+			$rowBgColor = $colorRow0Bg;
 		}
 
 		my $eventItemHash = $event->{'file_hash'};
@@ -1266,7 +1266,10 @@ sub GetThemeColor { # returns theme color from config/theme/
 	my $colorName = shift;
 	chomp $colorName;
 
-	my $colorConfigContent = GetConfig('theme/color_' . $colorName);
+	# default theme
+	my $themeName = 'theme.friday29';
+
+	my $colorConfigContent = GetConfig($themeName . '/color_' . $colorName);
 	if (!$colorConfigContent) {
 		WriteLog("WARNING! GetThemeColor: Color lookup failed for [" . $colorName . '] missing');
 		return 'red';
@@ -1315,12 +1318,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $txtIndex = "";
 
-	my $primaryColor = GetThemeColor('primary');
-	my $secondaryColor = GetThemeColor('secondary');
-	my $backgroundColor = GetThemeColor('background');
-	my $textColor = GetThemeColor('text');
-	my $linkColor = GetThemeColor('link');
-	my $vlinkColor = GetThemeColor('vlink');
+	my $colorPrimary = GetThemeColor('primary');
+	my $colorSecondary = GetThemeColor('secondary');
+	my $colorBackground = GetThemeColor('background');
+	my $colorText = GetThemeColor('text');
+	my $colorLink = GetThemeColor('link');
+	my $colorVlink = GetThemeColor('vlink');
 	my $colorInputBackground = GetThemeColor('input_background');
 	my $colorInputText = GetThemeColor('input_text');
 
@@ -1331,8 +1334,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
 	my $colorVoterOrange = GetThemeColor('voter_orange');
 
-	#my $primaryColor = '#'.$primaryColorChoices[0];
-	#my $secondaryColor = '#f0fff0';
 	my $styleSheet = GetStylesheet();
 
 #
@@ -1420,12 +1421,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
-	$htmlStart =~ s/\$linkColor/$linkColor/g;
-	$htmlStart =~ s/\$vlinkColor/$vlinkColor/g;
-	$htmlStart =~ s/\$primaryColor/$primaryColor/g;
-	$htmlStart =~ s/\$secondaryColor/$secondaryColor/g;
-	$htmlStart =~ s/\$backgroundColor/$backgroundColor/g;
-	$htmlStart =~ s/\$textColor/$textColor/g;
+	$htmlStart =~ s/\$colorLink/$colorLink/g;
+	$htmlStart =~ s/\$colorVlink/$colorVlink/g;
+	$htmlStart =~ s/\$colorPrimary/$colorPrimary/g;
+	$htmlStart =~ s/\$colorSecondary/$colorSecondary/g;
+	$htmlStart =~ s/\$colorBackground/$colorBackground/g;
+	$htmlStart =~ s/\$colorText/$colorText/g;
 	$htmlStart =~ s/\$colorTagNegative/$colorTagNegative/g;
 	$htmlStart =~ s/\$colorTagPositive/$colorTagPositive/g;
 	$htmlStart =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
@@ -1534,8 +1535,8 @@ sub GetTopItemsPage { # returns page with top items listing
 		my $itemListings = '';
 
 		my $rowBgColor = '';
-		my $rowBgColor0 = GetConfig('theme/color_row_0');
-		my $rowBgColor1 = GetConfig('theme/color_row_1');
+		my $colorRow0Bg = GetThemeColor('row_0');
+		my $colorRow1Bg = GetThemeColor('row_1');
 
 		my $itemCount = scalar(@topItems);
 
@@ -1544,10 +1545,11 @@ sub GetTopItemsPage { # returns page with top items listing
 			#todo don't need to do this every time
 
 			#alternating row colors hack
-			if ($rowBgColor eq $rowBgColor0) {
-				$rowBgColor = $rowBgColor1;
+			if ($rowBgColor eq $colorRow0Bg) {
+				$rowBgColor = $colorRow1Bg;
 			} else {
-				$rowBgColor = $rowBgColor0;
+
+				$rowBgColor = $colorRow0Bg;
 			}
 
 			my $itemRef = shift @topItems;
@@ -1727,8 +1729,8 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 
 		if ($script eq 'voting') {
 			# for voting.js we need to fill in some theme colors
-			my $colorSuccessVoteUnsigned = GetConfig('theme/color_success_vote_unsigned');
-			my $colorSuccessVoteSigned = GetConfig('theme/color_success_vote_signed');
+			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
+			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
 
 			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
@@ -2708,11 +2710,11 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs event_add fresh profile));
 
-	my $rowBgColor0 = GetConfig('theme/color_row_0');
-	my $rowBgColor1 = GetConfig('theme/color_row_1');
+	my $colorRow0Bg = GetThemeColor('row_0');
+	my $colorRow1Bg = GetThemeColor('row_1');
 
-	$txtIndex =~ s/\$rowBgColor0/$rowBgColor0/g;
-	$txtIndex =~ s/\$rowBgColor1/$rowBgColor1/g;
+	$txtIndex =~ s/\$colorRow0Bg/$colorRow0Bg/g;
+	$txtIndex =~ s/\$colorRow1Bg/$colorRow1Bg/g;
 
 	return $txtIndex;
 }

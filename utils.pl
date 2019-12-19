@@ -581,7 +581,7 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 		$avatar = "";
 	}
 
-	my $colorUsername = GetConfig('theme/color_username');
+	my $colorUsername = GetThemeColor('username');
 	$avatar =~ s/\$colorUsername/$colorUsername/g;
 
 	$avatarCache{$gpgKey} = $avatar;
@@ -977,19 +977,20 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 #		}
 #	}
 
-	my $colorTitlebarText = GetConfig('theme/color_titlebar_text');#
+	my $colorTitlebarText = GetThemeColor('titlebar_text');#
 	$colorTitlebarText =~ s/^([0-9a-fA-F]{6})$/#$1/;#
 	$content =~ s/\$colorTitlebarText/$colorTitlebarText/g;#
 
-	my $colorTitlebar = GetConfig('theme/color_titlebar');#
+	my $colorTitlebar = GetThemeColor('titlebar');#
 	$colorTitlebar =~ s/^([0-9a-fA-F]{6})$/#$1/;#
 	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
-	my $borderDialog = GetConfig('theme/border_dialog');
+	# border_color can contain full border definition, even though it's a "color"
+	my $borderDialog = GetThemeColor('border_dialog');
 	$borderDialog =~ s/^([0-9a-fA-F]{6})$/#$1/;
 	$content =~ s/\$borderDialog/$borderDialog/g;
 
-	my $colorWindow = GetConfig('theme/color_window');
+	my $colorWindow = GetThemeColor('window');
 	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
 	$content =~ s/\$colorWindow/$colorWindow/g;
 

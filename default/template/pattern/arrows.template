@@ -1,7 +1,7 @@
 background:
-linear-gradient(45deg, $primaryColor 45pt, transparent 45pt)64pt 64pt,
-linear-gradient(45deg, $primaryColor 45pt, transparent 45pt,transparent 91pt, $secondaryColor 91pt, $secondaryColor 135pt, transparent 135pt),
-linear-gradient(-45deg, $primaryColor 23pt, transparent 23pt, transparent 68pt,$primaryColor 68pt,$primaryColor 113pt,transparent 113pt,transparent 158pt,$primaryColor 158pt);
-background-color:$secondaryColor;
+linear-gradient(45deg, $colorPrimary 45pt, transparent 45pt)64pt 64pt,
+linear-gradient(45deg, $colorPrimary 45pt, transparent 45pt,transparent 91pt, $colorSecondary 91pt, $colorSecondary 135pt, transparent 135pt),
+linear-gradient(-45deg, $colorPrimary 23pt, transparent 23pt, transparent 68pt,$colorPrimary 68pt,$colorPrimary 113pt,transparent 113pt,transparent 158pt,$colorPrimary 158pt);
+background-color:$colorSecondary;
 background-size: 128pt 128pt;
 /* Copyright (c) 2011 Lea Verou, http://lea.verou.me/ */
