@@ -2514,7 +2514,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $tfmPageWindow = GetWindowTemplate(
 			'Advanced Manual',
-			'<p>', #menubar
+			'', #menubar
 			'', #columns
 			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
 			'Ready'
