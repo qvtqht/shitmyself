@@ -7,7 +7,7 @@
 
 		<tr class=body>
 			<td class=content colspan=2>
-				<p class="$itemClass">$itemText</p>
+				<p class="$itemClass">$itemText<br></p>
 			</td>
 		</tr>
 
