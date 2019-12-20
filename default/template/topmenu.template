@@ -1,5 +1,5 @@
 <!-- topmenu.template -->
-<form name=frmTopMenu id=frmTopMenu>
+<form name=frmTopMenu id=frmTopMenu action="/post.html">
 <font face=arial>
 	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog width=100%>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
