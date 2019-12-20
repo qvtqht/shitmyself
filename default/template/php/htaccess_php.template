@@ -1,2 +1,3 @@
 RewriteEngine On
 RewriteRule ^post\.html?(.+) /post.php?$1
+RewriteRule ^write\.html?(.+) /write.php?$1

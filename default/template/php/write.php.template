@@ -1,0 +1,32 @@
+<?php
+
+$html = file_get_contents('write.html');
+
+if (0) { // unsafe debug mode
+	$debugInfo =
+		(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '-') .
+		"\n" .
+		"\n" .
+		'Host: ' .
+		(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '-') .
+		"\n" .
+		'Self: ' .
+		(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '-') .
+		"\n" .
+		'Accept: ' .
+		(isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : '-') .
+		"\n" .
+		'Encoding: ' .
+		(isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : '-') .
+		"\n" .
+		'Language: ' .
+		(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '-') .
+		"\n";
+
+	$debugInfo = htmlspecialchars($debugInfo);
+
+	$html = str_replace('</textarea>', $debugInfo . '</textarea>', $html);
+//	$html = $debugInfo;
+}
+
+print($html);

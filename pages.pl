@@ -1290,7 +1290,8 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	chomp $attributeName;
 
 	# default theme
-	my $themeName = 'theme.dark';
+#	my $themeName = 'theme.dark';
+	my $themeName = 'theme.win95';
 
 	my $attributeValue = GetConfig($themeName . '/' . $attributeName);
 
@@ -1807,6 +1808,10 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey);
 		my $authorVoteButtons = GetItemVoteButtons($authorKey, 'author');
+
+		if (!$authorVoteButtons) {
+			$authorVoteButtons = '-';
+		}
 
 		my $authorLink = "/author/" . $authorKey . "/";
 
@@ -2585,6 +2590,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
+
+		my $writePhpTemplate = GetTemplate('php/write.php.template');
+		PutFile('html/write.php', $writePhpTemplate);
 
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
 		PutFile('html/cookie.php', $cookiePhpTemplate);
