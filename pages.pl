@@ -2028,7 +2028,11 @@ sub GetReadPage { # generates page with item listing based on parameters
 			$authorFriendTemplate =~ s/\$authorFriendAvatar/$authorFriendAvatar/g;
 
 			# append it to list of friends html
-			$authorFriends .= $authorFriendTemplate
+			$authorFriends .= $authorFriendTemplate;
+		}
+
+		if (!$authorFriends) {
+			$authorFriends = '(has no friends)';
 		}
 
 		# wrap list of friends in wrapper
