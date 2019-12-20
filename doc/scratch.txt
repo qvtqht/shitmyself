@@ -1,4 +1,14 @@
-127.0.0.1 localhost:3000 - [25/Aug/2019:18:49:30 -0400] 
+
+<!-- >
+<b>Attention Mosaic Users!</b><br>
+To submit a message, put it into the address field, like so:<br>
+Example: http://www.example.com/<b>your+message+here</b><br>
+(Use a plus sign (+) instead of spaces.)<br>
+This workaround is necessary because Mosaic does not support HTML forms.
+-->
+
+
+127.0.0.1 localhost:3000 - [25/Aug/2019:18:49:30 -0400]
 
 "GET /event.html? HTTP/1.1" 200 17423 "
 
