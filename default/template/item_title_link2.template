@@ -1,11 +1,9 @@
-<!-- itemtitlelink.template -->
+<!-- item_title_link2.template -->
 <tr bgcolor=$colorTitlebar class=titlebar style="border:0;">
 	<td>
 		<b>
-			<!--<span class=icon style="color: white; background-color: $borderColor; border: 1pt solid gray; border-radius: 8pt;">... </span>-->
-			<!--<font style="padding-left: 3pt;" color=white>$itemTitle</font>-->
 			<font color=$colorTitlebarText>$itemTitle</font>
 		</b>
 	</td>
 </tr>
-<!-- / itemtitlelink.template -->
+<!-- / item_title_link2.template -->
