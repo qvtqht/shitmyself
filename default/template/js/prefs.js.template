@@ -9,6 +9,8 @@ function ShowControlsByClassName() { // shows or hides elements based on class n
 
 function SetElementVisible(element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
 // also sets background color
+// used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
+
 	if (bgColor) {
 		element.style.backgroundColor = bgColor;
 	}
@@ -18,7 +20,10 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 		element.style.borderRadius = '3pt';
 	}
 
-	if (displayValue == 'initial' && element.nodeName == 'P') {
+	// depending on element type, we set different display style
+	// block, table-row, table-cell, or default of 'initial' #todo may be a bug here
+
+	if (displayValue == 'initial' && (element.nodeName == 'P' || element.nodeName == 'FIELDSET')) {
 		element.style.display = 'block';
 	} else if (displayValue == 'initial' && element.nodeName == 'TR') {
 		element.style.display = 'table-row';
@@ -26,7 +31,7 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 		if (element.innerHTML != '') {
 			element.style.display = 'table-cell';
 		} else {
-			element.style.display = 'none'; // empty table cells display = none
+			element.style.display = 'none'; // empty table cells display = none #todo explain why?
 		}
 	} else {
 		element.style.display = displayValue;
