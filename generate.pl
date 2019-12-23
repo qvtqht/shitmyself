@@ -176,17 +176,13 @@ PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
 
 WriteIndexPages();
 
-WriteMessage("GetVotesPage()...");
-my $votesPage = GetVotesPage();
-PutHtmlFile("html/tags.html", $votesPage); #todo are they tags or votes?
+WriteMessage("GetTagsPage()...");
+my $tagsPage = GetTagsPage();
+PutHtmlFile("html/tags.html", $tagsPage);
 
 WriteMessage("GetEventsPage()...");
 my $eventsPage = GetEventsPage();
 PutHtmlFile("html/events.html", $eventsPage);
-
-WriteMessage("GetTagsPage()....");
-my $tagsAlphaPage = GetTagsPage();
-PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
 
 WriteMessage("GetScoreboardPage()...");
 my $scoreboardPage = GetScoreboardPage();

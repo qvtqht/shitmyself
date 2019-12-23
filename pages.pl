@@ -20,13 +20,6 @@ require './sqlite.pl';
 
 my $HTMLDIR = "html";
 
-sub PopulateColors {
-	my $theme = 'default';
-	
-	my $clockColor = ''; 
-	
-}
-
 sub GenerateDialogPage { # generates page with dialog
 	# #todo:
 	# home
@@ -62,6 +55,8 @@ sub GenerateDialogPage { # generates page with dialog
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 
 			$pageTemplate .= GetPageFooter();
+
+			$pageTemplate = InjectJs($pageTemplate, qw(profile));
 
 			return $pageTemplate;
 		}
@@ -419,18 +414,28 @@ sub GetEventsPage { # returns html for events page
 
 }
 
-sub GetVotesPage { # returns html for tags listing page (sorted by number of uses)
-	#todo rewrite this more pretty
+sub GetTagsPage { # returns html for tags listing page (sorted by number of uses)
+# $title = title of page
+# $titleHtml = title of page, html-formatted
+# $orderBy = order by clause passed to DBGetVoteCounts()
+
 	my $txtIndex = "";
 
-	my $title = 'Tags';
-	my $titleHtml = 'Tags';
+	my $title = shift || 'Tags';
+	chomp $title;
+
+	my $titleHtml = shift || 'Tags';
+	chomp $titleHtml;
+
+	my $orderBy = shift || '';
+	chomp $orderBy;
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'tags');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $voteCounts = DBGetVoteCounts();
+	my $voteCounts;
+	$voteCounts = DBGetVoteCounts($orderBy);
 
 	my @voteCountsArray = @{$voteCounts};
 
@@ -444,14 +449,14 @@ sub GetVotesPage { # returns html for tags listing page (sorted by number of use
 
 		my $tag = shift @voteCountsArray;
 
-		my $tagName = @{$tag}[0];
+		my $tagName = @{$tag}[0]; #todo assoc-array
 		my $tagCount = @{$tag}[1];
 
 		my $tagInfo = '';
 		if ($tagInfo = GetConfig('string/en/tag_info/'.$tagName)) {
 			#great
 		} else {
-			$tagInfo = '';
+			$tagInfo = '*';
 		}
 
 		my $voteItemLink = "/top/" . $tagName . ".html";
@@ -463,8 +468,6 @@ sub GetVotesPage { # returns html for tags listing page (sorted by number of use
 
 		$voteItems .= $voteItemTemplate;
 	}
-
-#	$txtIndex .= '<p><b>Popular</b> <a href="/tags_alpha.html">Alphabetical</a></p>';
 
 	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
 
@@ -475,111 +478,6 @@ sub GetVotesPage { # returns html for tags listing page (sorted by number of use
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs profile));
 
 	return $txtIndex;
-}
-
-sub GetTagsPage { # returns html for tags listing page (alphabetically sorted)
-	#todo rewrite this more pretty
-	my $txtIndex = "";
-
-	my $title = 'Tags Alphabetical';
-	my $titleHtml = 'Tags Alphabetical';
-
-	$txtIndex = GetPageHeader($title, $titleHtml, 'tags');
-
-	$txtIndex .= GetTemplate('maincontent.template');
-
-	my $voteCounts = DBGetVoteCounts('ORDER BY vote_value'); #todo sql shouldn't be here
-
-	my @voteCountsArray = @{$voteCounts};
-
-	my $voteItemsWrapper = GetTemplate('tag_listing_wrapper.template');
-
-	my $voteItems = '';
-
-	while (@voteCountsArray) {
-		my $voteItemTemplate = GetTemplate('tag_listing.template');
-		#todo don't need to do this every time
-
-		my $tag = shift @voteCountsArray;
-
-		my $tagName = @{$tag}[0];
-		my $tagCount = @{$tag}[1];
-
-		my $tagInfo = '';
-		if ($tagInfo = GetConfig('string/en/tag_info/'.$tagName)) {
-			#great
-		} else {
-			$tagInfo = '';
-		}
-
-		my $voteItemLink = "/top/" . $tagName . ".html";
-
-		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
-		$voteItemTemplate =~ s/\$tagName/$tagName/g;
-		$voteItemTemplate =~ s/\$tagInfo/$tagInfo/g;
-		$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
-
-		$voteItems .= $voteItemTemplate;
-	}
-
-#	$txtIndex .= '<p><a href="/tags.html">Popular</a> <b>Alphabetical</b></p>';
-	#todo this should not be part of maincontent
-
-	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
-
-	$txtIndex .= $voteItemsWrapper;
-
-	$txtIndex .= GetPageFooter();
-
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs));
-
-	return $txtIndex;
-}
-
-#sub GetItemTemplateFromHash { # takes a hash, returns an item in html format
-##todo sanity checks etc
-#	my $itemHash = shift;
-#	my $templateName = shift;
-#
-#	my $itemTemplate = '';
-#
-#	if (IsSha1($itemHash)) {
-#
-#		my %queryParams;
-#		$queryParams{'where_clause'} = "WHERE file_hash IN('$itemHash')";
-#
-#		my @files = DBGetItemList(\%queryParams);
-#
-#		WriteLog(Data::Dumper->Dump(@files));
-#		
-#		sleep 10;
-#		
-##			my $thisItem = @files[0];
-##			$thisItem{'template_name' = 'item/item-small.template';
-##
-#		#$itemTemplate = GetItemTemplate($files[0]);
-#	#		} else {
-#	#			$itemTemplate = GetHtmlLink($itemHash);
-#	#		}
-#	#		return $itemTemplate;
-#	#	} else {
-#	#		WriteLog("Warning! GetItemTemplateFromHash called with improper parameter!");
-#	#		return '[item could not be displayed]';
-#		}
-#	#
-#	#	WriteLog("Something is terribly wrong! GetItemTemplateFromHash");
-#	#	return '[aaaaahhhh!!!]';
-#	
-#	return $itemTemplate;
-#}
-#
-sub GetThreadPage { # returns page with entire discussion thread for a top-level item (incomplete)
-	my $threadParent = shift;
-	if (!IsItem($threadParent)) {
-		return;
-	}
-	
-	
 }
 
 sub GetItemPage {	# returns html for individual item page. %file as parameter
@@ -1291,9 +1189,15 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 
 	# default theme
 #	my $themeName = 'theme.dark';
-	my $themeName = 'theme.win95';
+#	my $themeName = 'theme.win95';
 
-	my $attributeValue = GetConfig($themeName . '/' . $attributeName);
+	my $themeName = GetConfig('html/theme');
+
+	my $attributePath = $themeName . '/' . $attributeName;
+
+	my $attributeValue = GetConfig($attributePath) || '';
+
+	WriteLog('GetThemeAttribute: ' . $attributeName . ' -> ' . $attributePath . ' -> ' . $attributeValue);
 
 	return $attributeValue;
 }
@@ -1399,7 +1303,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	#top menu
 						  
 	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
-	my $noJsIndicator = '<noscript><strike><a href="/profile.html">Profile</a></strike></noscript>';
+	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
 
 	my $adminKey = GetAdminKey();
@@ -1421,7 +1325,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
-	$menuItems .= GetMenuItem("/manual.html", 'Help');
+	$menuItems .= GetMenuItem("/help.html", 'Help');
 
 	$menuItems .= $identityLink;
 	$menuItems .= $noJsIndicator;
@@ -2179,7 +2083,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $pageTitle = GetConfig('home_title');
 
-	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, GetString('page_intro/item_list'));
+	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
 	
 	$txtIndex .= $htmlStart;
 
@@ -3094,11 +2998,11 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	#
 	# tags page
 	elsif ($pageType eq 'tags') {
-		my $votesPage = GetVotesPage();
-		PutHtmlFile("html/tags.html", $votesPage);
+		my $tagsPage = GetTagsPage('Tags', 'Tags', '');
+		PutHtmlFile("html/tags.html", $tagsPage);
 
-		my $tagsAlphaPage = GetTagsPage();
-		PutHtmlFile("html/tags_alpha.html", $tagsAlphaPage);
+		my $votesPage = GetTagsPage('Votes', 'Votes', 'ORDER BY vote_value');
+		PutHtmlFile("html/votes.html", $votesPage);
 	}
 	#
 	# events page
