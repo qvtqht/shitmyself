@@ -131,44 +131,42 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			)
 		;
 
-		$commentHtml =
-			'<html><body>The following message has been received, and is being processed:</p><hr>' .
-			"\n" .
-			$commentHtml .
-			'</body></html>';
-			;
+		if (!file_exists($fileHtmlPath)) {
+			$commentHtmlTemplate = GetTemplate('item_processing.template');
+			$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
 
-		file_put_contents($fileHtmlPath, $commentHtml);
-
-		if (!file_exists($scriptDir . 'cron.lock')) {
-			WriteLog('cron.lock no exist, trying index.pl');
-
-			if (file_exists($scriptDir . '/index.pl')) {
-				WriteLog('index.pl found, calling');
-
-				WriteLog('cd "' . $scriptDir . '" ; perl ./index.pl "' . $filePath . '"');
-
-//				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
-			}
-
-			if (file_exists($scriptDir . '/touched.pl')) {
-				WriteLog('touched.pl found, calling');
-
-				WriteLog('cd "' . $scriptDir . '" ; perl ./touched.pl');
-
-//				WriteLog(`cd "$scriptDir" ; perl ./touched.pl`);
-			}
-
-			if (file_exists($scriptDir . '/update.pl')) {
-				WriteLog('update.pl found, calling');
-
-				WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl');
-
-				WriteLog(`cd "$scriptDir" ; perl ./update.pl`);
-			}
-		} else {
-
+			file_put_contents($fileHtmlPath, $commentHtmlTemplate);
 		}
+
+//		if (!file_exists($scriptDir . 'cron.lock')) {
+//			WriteLog('cron.lock no exist, trying index.pl');
+//
+//			if (file_exists($scriptDir . '/index.pl')) {
+//				WriteLog('index.pl found, calling');
+//
+//				WriteLog('cd "' . $scriptDir . '" ; perl ./index.pl "' . $filePath . '"');
+//
+////				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
+//			}
+//
+//			if (file_exists($scriptDir . '/touched.pl')) {
+//				WriteLog('touched.pl found, calling');
+//
+//				WriteLog('cd "' . $scriptDir . '" ; perl ./touched.pl');
+//
+////				WriteLog(`cd "$scriptDir" ; perl ./touched.pl`);
+//			}
+//
+//			if (file_exists($scriptDir . '/update.pl')) {
+//				WriteLog('update.pl found, calling');
+//
+//				WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl');
+//
+//				WriteLog(`cd "$scriptDir" ; perl ./update.pl`);
+//			}
+//		} else {
+//
+//		}
 		
 		if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
 			$referer = $_SERVER['HTTP_REFERER'];
@@ -212,10 +210,25 @@ if ($_POST) {
 
 if ($_GET) {
 	WriteLog('$_GET');
+
+	WriteLog(print_r($_GET, 1));
+
 	if (isset($_GET['comment'])) {
 		$comment = $_GET['comment'];
 	} else {
-		$comment = '';
+		if (isset($_GET['txtClock'])) {
+			$comment = $_GET['txtClock'];
+		} else {
+			if (isset($_GET['?comment'])) {
+				$comment = $_GET['?comment'];
+			} else {
+				if (isset($_GET['?txtClock'])) {
+					$comment = $_GET['?txtClock'];
+				} else {
+					$comment = '';
+				}
+			}
+		}
 	}
 	
 	if (isset($_GET['replyto']) && $_GET['replyto']) {
@@ -228,6 +241,26 @@ if ($_GET) {
 	if ($comment) {
 		$fileUrlPath = ProcessNewComment($comment);
 	}
+}
+
+function GetConfig($configKey) {
+	$configDir = '../config/';
+	$defaultDir = '../default/';
+
+	if (file_exists($configDir . $configKey)) {
+		$configValue = file_get_contents($configDir . $configKey);
+	} elseif (file_exists($defaultDir . $configKey)) {
+		copy ($defaultDir . $configKey, $configDir . $configKey);
+		$configValue = file_get_contents($configDir . $configKey);
+	} else {
+		$configValue = '';
+	}
+
+	return $configValue;
+}
+
+function GetTemplate($templateKey) {
+	return GetConfig('template/' . $templateKey);
 }
 
 $html = file_get_contents('post.html');
