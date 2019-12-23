@@ -2,28 +2,43 @@
 
 $html = file_get_contents('write.html');
 
-if (0) { // unsafe debug mode
+function GetConfig($configKey) {
+	$configDir = '../config/';
+	$defaultDir = '../default/';
+
+	if (file_exists($configDir . $configKey)) {
+		$configValue = file_get_contents($configDir . $configKey);
+	} elseif (file_exists($defaultDir . $configKey)) {
+		copy ($defaultDir . $configKey, $configDir . $configKey);
+		$configValue = file_get_contents($configDir . $configKey);
+	} else {
+		$configValue = '';
+	}
+
+	return $configValue;
+}
+
+if (GetConfig('admin/php/write_form_prefill_browser_survey')) {
 	$debugInfo =
-		(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '-') .
+		('Browser Survey') .
 		"\n" .
+		"\n" .
+		(isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($_SERVER['HTTP_USER_AGENT']) : '-') .
 		"\n" .
 		'Host: ' .
-		(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '-') .
+		(isset($_SERVER['HTTP_HOST']) ? htmlspecialchars($_SERVER['HTTP_HOST']) : '-') .
 		"\n" .
 		'Self: ' .
-		(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '-') .
+		(isset($_SERVER['PHP_SELF']) ? htmlspecialchars($_SERVER['PHP_SELF']) : '-') .
 		"\n" .
 		'Accept: ' .
-		(isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : '-') .
+		(isset($_SERVER['HTTP_ACCEPT']) ? htmlspecialchars($_SERVER['HTTP_ACCEPT']) : '-') .
 		"\n" .
 		'Encoding: ' .
-		(isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : '-') .
+		(isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? htmlspecialchars($_SERVER['HTTP_ACCEPT_ENCODING']) : '-') .
 		"\n" .
 		'Language: ' .
-		(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '-') .
-		"\n";
-
-	$debugInfo = htmlspecialchars($debugInfo);
+		(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']) : '-');
 
 	$html = str_replace('</textarea>', $debugInfo . '</textarea>', $html);
 //	$html = $debugInfo;
