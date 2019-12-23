@@ -472,12 +472,20 @@ function makePrivateKey(username, bits) {
 	}
 }
 
-function sharePubKey() {
+function sharePubKey() { // shares current user's public key via injected form and iframe
 	var pubKey = getPublicKey();
+
+	var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
+	ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
+	ifrSharePubKey.setAttribute("height", "11");
+	ifrSharePubKey.setAttribute("width", "11");
+	// #todo pre-createElement browsers
+	document.body.appendChild(ifrSharePubKey);
 
 	var form = document.createElement('form');
 	form.setAttribute("action", "/post.html");
 	form.setAttribute("method", "get");
+	form.setAttribute("target", "ifrSharePubKey");
 
 	var txtComment = document.createElement('input');
 	txtComment.setAttribute("type", "hidden");
