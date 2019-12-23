@@ -1,3 +1,19 @@
+Render everything in doc/ as items
+	List them under /help.html
+
+#bug when replying, duplicate replies are posted
+	cause: perl and php will generate different messages
+		cause: php doesn't strip >> or replyto token
+			solution: ensure php strips it too
+
+Content-Length can cause problem
+	If full page fails to download, browser may return error
+	Typically sent with static html files
+	How to disable it?
+
+There should be a setting to avoid setting colors for the user
+	Instead of theme colors
+
 Simplify vote/tag tokens
 	Human readable
 	Machine readable

@@ -1,3 +1,22 @@
+User Study, date unknown
+========================
+
+Feedback from user study
+
+I find that I have nothing to say
+	Display random writing prompt
+
+It's better to say nothing at times
+	Create a button for this
+
++ Share ideas
+  learn something
+
+- arguing
+
+Did you look it up?
+
+
 Test Install on fresh Fedora 31
 ===============================
 git
