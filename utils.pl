@@ -859,6 +859,10 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 	my $content = shift;
 	my $binMode = shift;
 
+	if (!defined($content)) {
+		return;
+	}
+
 #	if (!$content) {
 #		return;
 #	}
