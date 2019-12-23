@@ -77,9 +77,6 @@
 									<textarea cols=61 rows=16 id=privatekey autocomplete=off spellcheck=false onfocus="setTimeout(function() {document.formprivkey.privatekey.setSelectionRange(0, 9999);}, 1);"></textarea>
 									<br><br>
 									<input type=button id=restoreid value="Restore Profile" onclick="saveId();sharePubKey();">
-
-									<input type=button class=rmid id=rmid value="Sign Out" onclick="buttonSignOut(this)">
-
 								</p>
 							</span>
 						</span>
