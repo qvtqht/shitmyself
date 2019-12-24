@@ -12,12 +12,11 @@
 			<tr class=body>
 				<td class=content>
 					<fieldset>
+						<legend>Create New Message<br></legend>
+
 						<span id=writeintro></span>
 
-						<legend>Comment <label for="comment" class=beginner>
-							(To create a new topic, write paragraphs.)
-							<br>
-						</label></legend>
+						<label for="comment" class=beginner>Enter some text to share.<br></label>
 
 						<textarea
 							class=txtarea
@@ -38,13 +37,21 @@
 						<p id=lblWriteLengthWarning class=warning style="display: none">
 							Warning: Long messages are less reliable.
 						</p>
+					</fieldset>
 
-						<p class=advanced>
+					<fieldset>
+						<legend>Authorship<br></legend>
+
+						<p>
 							<label for=aanon><input checked id=aanon type=radio name=a value=anon> Post Anonymously</label><br>
 							<span id=userRadio></span>
 						</p>
+					</fieldset>
 
-						<p class=advanced>
+					<fieldset class=advanced>
+						<legend>Advanced Settings<br></legend>
+
+						<p>
 							<label for=debug><input type=checkbox id=debug name=debug> Include debugging information</label><br>
 							<label for=recfing><input type=checkbox id=recfing name=recfing> Notarize device fingerprint</label><br>
 							<label for=rectime><input type=checkbox id=rectime name=rectime> Notarize submission timestamp</label>
