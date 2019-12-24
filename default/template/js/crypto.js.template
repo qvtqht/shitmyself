@@ -213,7 +213,7 @@ function insertPubKey() {
 	}
 }
 
-function getPublicKey() { // gets current user's cached public key from localstorage
+function getPublicKey() { // returns current user's stored public key from localstorage
 	var publicKey = localStorage.getItem("publickey");
 	if (publicKey === null || publicKey.length === 0) {
 		return null;
