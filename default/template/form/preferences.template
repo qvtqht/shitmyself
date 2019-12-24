@@ -46,13 +46,13 @@
 						<p>
 							<label for=chkBeginner>
 								<input type=checkbox id=chkBeginner name=chkBeginner onchange="saveCheckbox(0, this, 'beginner');">
-								Show beginner hints
+								Show hints
 							</label>
 							<br>
 							<span class=beginner>
 								<label for=chkBeginnerHighlight>
 									<input type=checkbox id=chkBeginnerHighlight name=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');">
-									Highlight beginner hints
+									Highlight hints
 								</label>
 								<br>
 							</span>

@@ -27,8 +27,9 @@
 							<span id=locm style="display:none; font-family: sans-serif;">
 								<input type=button value="Undo" style="background-color: #c08000; color: white;" onclick="undoSignout();" id="btnUndo">
 								<span class=beginner><br>
-								<br><b>Signed out.</b><br>
-								Last chance to undo.</span>
+								<br><b>You have signed out!</b><br>
+								You can undo for a 10 seconds<br>
+								or until you close this window.</span>
 							</span>
 
 							<span>
@@ -58,8 +59,8 @@
 							</p>
 
 							<p>
-								<label for=chkBeginner><input type=checkbox id=chkBeginner onchange="saveCheckbox(0, this, 'beginner');"> Display beginner hints</label><br>
-								<span class=beginner>&nbsp; &nbsp; <label for=chkBeginnerHighlight><input type=checkbox id=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight beginner hints</label></span>
+								<label for=chkBeginner><input type=checkbox id=chkBeginner onchange="saveCheckbox(0, this, 'beginner');"> Show hints</label><br>
+								<span class=beginner>&nbsp; &nbsp; <label for=chkBeginnerHighlight><input type=checkbox id=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');"> Highlight hints</label></span>
 							</p>
 
 							<p id=def>
