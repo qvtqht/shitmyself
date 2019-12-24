@@ -1,3 +1,6 @@
+#bug crypto.js and openpgp.js are requested multiple times
+	reproduced with Preferences page
+
 Render everything in doc/ as items
 	List them under /help.html
 
