@@ -135,6 +135,19 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			$commentHtmlTemplate = GetTemplate('item_processing.template');
 			$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
 
+			$themeName = trim(GetConfig('html/theme'));
+
+			WriteLog('$themeName = ' . $themeName);
+
+			$colorWindow = GetConfig($themeName . '/color_window');
+			$colorText = GetConfig($themeName . '/color_text');
+
+			WriteLog('$colorText = ' . $colorText);
+			WriteLog('$colorWindow = ' . $colorWindow);
+
+			$commentHtmlTemplate = str_replace('$colorWindow', $colorWindow, $commentHtmlTemplate);
+			$commentHtmlTemplate = str_replace('$colorText', $colorText, $commentHtmlTemplate);
+
 			file_put_contents($fileHtmlPath, $commentHtmlTemplate);
 		}
 
@@ -255,6 +268,8 @@ function GetConfig($configKey) {
 	} else {
 		$configValue = '';
 	}
+
+	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '")');
 
 	return $configValue;
 }

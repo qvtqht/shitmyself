@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
-<body>
+<body bgcolor="$colorWindow" text="$colorText">
 The following message has been received, and is being processed:</p><hr>
 $commentHtml
 </body>
