@@ -11,7 +11,7 @@ use Data::Dumper;
 #use Devel::StackTrace;
 
 use File::Basename qw( fileparse );
-use File::Path qw( make_path );
+use File::Path qw( make_path ); ## todo replace this with own version which is not fragile
 use File::Spec;
 
 use Date::Parse;
@@ -191,8 +191,8 @@ sub EnsureSubdirs { # ensures that subdirectories for a file exist
 		$fullPath = File::Spec->catfile($fullPath, $file);
 	}
 
-	if ( !-d $dirs ) {
-		make_path $dirs or die "Failed to create path: $dirs";
+	if ( !-d $dirs && !-e $dirs ) {
+		make_path $dirs or WriteLog("Failed to create path: $dirs");
 	}
 }
 
@@ -658,7 +658,7 @@ sub GetConfig { # gets configuration value based for $key
 #
 	state %configLookup;
 
-	if ($configLookup{$configName}) {
+	if (exists($configLookup{$configName})) {
 		WriteLog('$configLookup already contains value, returning that...');
 		WriteLog('$configLookup{$configName} is ' . $configLookup{$configName});
 
@@ -982,20 +982,15 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 #	}
 
 	my $colorTitlebarText = GetThemeColor('titlebar_text');#
-	$colorTitlebarText =~ s/^([0-9a-fA-F]{6})$/#$1/;#
 	$content =~ s/\$colorTitlebarText/$colorTitlebarText/g;#
 
 	my $colorTitlebar = GetThemeColor('titlebar');#
-	$colorTitlebar =~ s/^([0-9a-fA-F]{6})$/#$1/;#
 	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
-	# border_color can contain full border definition, even though it's a "color"
-	my $borderDialog = GetThemeColor('border_dialog');
-	$borderDialog =~ s/^([0-9a-fA-F]{6})$/#$1/;
+	my $borderDialog = GetThemeAttribute('color_border_dialog'); #todo rename it in all themes and then here
 	$content =~ s/\$borderDialog/$borderDialog/g;
 
 	my $colorWindow = GetThemeColor('window');
-	$colorWindow =~ s/^([0-9a-fA-F]{6})$/#$1/;
 	$content =~ s/\$colorWindow/$colorWindow/g;
 
 	PutFile($file, $content);
