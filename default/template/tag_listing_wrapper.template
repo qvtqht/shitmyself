@@ -7,12 +7,6 @@
 			</td>
 		</tr>
 
-		<tr class=menubar>
-			<td colspan=3>
-				<p><a href="/help.html">Help</a>
-			</td>
-		</tr>
-	
 		<tr>
 			<th align=left><a href="/votes.html">Tag</a></th>
 			<th align=left><a href="/tags.html">Count</a></th>
