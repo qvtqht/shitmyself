@@ -20,9 +20,6 @@ function GetConfig($configKey) {
 
 if (GetConfig('admin/php/write_form_prefill_browser_survey')) {
 	$debugInfo =
-		('Browser Survey') .
-		"\n" .
-		"\n" .
 		(isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($_SERVER['HTTP_USER_AGENT']) : '-') .
 		"\n" .
 		'Host: ' .
