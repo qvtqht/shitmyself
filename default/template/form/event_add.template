@@ -193,7 +193,7 @@
 				<td>
 					<p id=eventCreate>
 						<input value="Create Event" type="submit" style="cursor: click;" id=eventCreateButton><br>
-						Please press button to send
+						<span class=beginner>Please press button to send</span>
 					</p>
 
 					<p>
