@@ -337,16 +337,24 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		WriteLog("Check admin/accept_404_url_text...");
 		if (GetConfig('admin/accept_404_url_text')) {
 			#If the request was met with a 404
-			if ($status eq '404') {
-				# If there is no $submitPrefix found
-				if (!defined($submitPrefix)) {
-					WriteLog("No submitPrefix found, but a 404 was...");
-					# Just add the whole URL text as an item, as long as admin_accept_url_text is on
-					$submitPrefix = '/';
+			if ($status eq '404' || (GetConfig('admin/lighttpd/enable') && !-e ('html' . $file))) {
+				# this workaround is for lighttpd,
+				# which returns 200 instead of 404 when handler
+				# is specified because it's stupid
 
-					WriteLog('$submitPrefix = /');
+				if (!GetConfig('admin/accept_404_url_text_reduce_spam') || index(substr($file, 1), '/') == -1) {
+					# This check is to reduce spam from clients trying to access deleted pages
 
-					$addTo404Log = 1;
+					if (!defined($submitPrefix)) {
+						# If there is no $submitPrefix found already
+						WriteLog("No submitPrefix found, but a 404 was...");
+						# Just add the whole URL text as an item, as long as admin_accept_url_text is on
+						$submitPrefix = '/';
+
+						WriteLog('$submitPrefix = /');
+
+						$addTo404Log = 1;
+					}
 				}
 			}
 		}
