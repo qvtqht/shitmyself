@@ -14,7 +14,6 @@ $styleSheet
 <!--
 var colorHighlightBeginner = '$colorHighlightBeginner';
 var colorHighlightAdvanced = '$colorHighlightAdvanced';
-var colorVoterOrange = '$colorVoterOrange';
 //-->
 </script>
 </head>
