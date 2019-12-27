@@ -1,9 +1,3 @@
-body {
-	font-family: helvetica;
-	font-size: default;
-	background-color: $colorBackground;
-}
-
 /* negative (red) tags */
 .tag-flag, 
 .tag-troll, 

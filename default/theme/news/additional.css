@@ -1,0 +1,12 @@
+body {
+	font: family: Verdana, Geneva, sans-serif;
+}
+fieldset {
+	border-color: $colorSecondary;
+}
+link {
+	text-decoration: none;
+}
+input    { font-family:monospace; font-size:10pt; }
+input[type="submit"], input[type="button"] { font-family:Verdana, Geneva, sans-serif; }
+textarea { font-family:monospace; font-size:10pt; }
