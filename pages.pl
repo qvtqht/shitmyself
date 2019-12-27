@@ -1176,6 +1176,11 @@ sub GetThemeColor {
 
 	my $color = @colorChoices[int(rand(@colorChoices))];
 
+	if (!defined($color)) {
+		$color = 'red';
+		WriteLog("GetThemeColor: WARNING: Value for $colorName not found");
+	}
+
 	if ($color =~ m/^[0-9a-fA-F]{6}$/) {
 		$color = '#' . $color;
 	}
@@ -1193,13 +1198,14 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 
 	my $themeName = GetConfig('html/theme');
 
-	my $attributePath = $themeName . '/' . $attributeName;
+	my $attributePath = 'theme/' . $themeName . '/' . $attributeName;
+	#todo sanity checks
 
 	my $attributeValue = GetConfig($attributePath) || '';
 
 	WriteLog('GetThemeAttribute: ' . $attributeName . ' -> ' . $attributePath . ' -> ' . $attributeValue);
 
-	return $attributeValue;
+	return trim($attributeValue);
 }
 
 sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
@@ -1248,7 +1254,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
 	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-	my $colorVoterOrange = GetThemeColor('voter_orange');
 
 	my $styleSheet = GetStylesheet();
 
@@ -1347,7 +1352,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$colorTagPositive/$colorTagPositive/g;
 	$htmlStart =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
 	$htmlStart =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
-	$htmlStart =~ s/\$colorVoterOrange/$colorVoterOrange/g;
 	$htmlStart =~ s/\$colorInputBackground/$colorInputBackground/g;
 	$htmlStart =~ s/\$colorInputText/$colorInputText/g;
 	$htmlStart =~ s/\$clock/$clock/g;
@@ -2414,6 +2418,32 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		$tfmPage = InjectJs($tfmPage, qw(avatar prefs profile));
 
 		PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
+
+	}
+
+	{
+		# Help page
+		my $tfmPage = GetPageHeader("Help", "Help", 'help');
+
+		$tfmPage .= GetTemplate('maincontent.template');
+
+		my $tfmPageContent = GetTemplate('page/help.template');
+
+		my $tfmPageWindow = GetWindowTemplate(
+			'Help',
+			'', #menubar
+			'', #columns
+			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			'Ready'
+		);
+
+		$tfmPage .= $tfmPageWindow;
+
+		$tfmPage .= GetPageFooter();
+
+		$tfmPage = InjectJs($tfmPage, qw(avatar prefs profile));
+
+		PutHtmlFile("$HTMLDIR/help.html", $tfmPage);
 
 	}
 
