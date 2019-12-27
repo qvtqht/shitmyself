@@ -1,0 +1,128 @@
+Things end users care about but programmers don't
+Instadeq Team 2019-12-09 20:03
+(And we agree with them, but our tools make it really hard to provide)
+
+Colors
+Change color of things
+Nice default color palette
+Use my preferred color palette
+Use this color from here
+Import/export color themes
+Some words or identifiers should always have a specific color
+The same thing should have the same color everywhere
+Good contrast
+Automatic contrast of text if I pick a dark/light background
+Automatically generate color for large number of items
+All the colors should belong to the same palette
+Don't generate colors that are hard to tell apart
+Don't place similar colors close to each other
+Don't use the background color on things
+
+Formatting
+Apply basic formatting to text
+Align text
+Use the fonts I use in Office
+WYSIWYG editor that behaves like Word
+Number alignment
+Number/date formatting to the right locale
+Decimal formatting to the right/fixed number of decimal places
+No weird .0000004 formatting anywhere
+No .00 for integers
+Emoji support
+
+Themes
+Dark theme
+My Theme
+Company Branding
+Put the logo in places
+My logo on the Login Page
+
+Integrations
+Integrate with system accounts
+Use accounts/permissions from Active Directory
+Import from Excel/CSV
+Import from email/email attachment
+Export to Excel
+Export to PDF/Image
+Record a short video
+As a GIF
+Send as email
+Send as email periodically
+Send as PDF attachment on an email
+Import/attach images
+Crop before upload
+Compress
+Change Format
+Use image as background but stretch the right way
+Notifications on the app
+On apps on my phone
+By SMS
+On our systems
+On my mail
+
+UX
+Good error handling
+Good error descriptions
+Translated error messages
+Tell me what to do to solve an error
+Tell me what this does before I click on it
+Support touch gestures and mouse
+Keyboard shortcuts
+Customizable
+Undo everywhere
+Multiple undo
+Recover deleted things
+Ask before deleting
+Copy and paste
+Templates
+Detailed and up to date guides in text with screenshots at each step and highlights
+And in Video
+Screenshots that stay up to date as the product evolves
+That are in sync with the version I'm using
+That adapt to my custom setup
+Up to date and detailed documentation
+Translated to my language
+Sorting everywhere
+Natural sort
+Sort by multiple criteria
+Filter everywhere
+Fuzzy filtering
+Case sensitive/insensitive filtering
+Filter by multiple/complex criteria
+Track what is used where and warn me when deleting
+Optional cascade deletion
+Native and simple date picker on every platform
+Sorted lists/selects (by the label!)
+Natural Sorting
+Dropdowns with filtering but that behave like the native controls
+Preview things
+Consistent button ordering/labels
+Consistent capitalization
+Progress bars for slow/async operations
+Responsive UI during slow operations
+Disabling buttons during slow operations
+Handling double clicks on things that should be clicked once
+Clear indication of what can be clicked
+
+Compatibility
+Deploy on exotic configurations/platforms
+Deploy on old/unsupported versions
+Deploy on what we have
+Deploy/Run without internet connection
+Handle Excel, CSV, JSON, XML
+Handle malformed versions of all of the above
+Handle (guess) dates with no timezone
+Handle ambiguous/changing date formats
+Integrate with obscure/outdated software/format
+It should work on my old android phone browser/IE 11
+
+Unicode
+Handle inputs with unknown and variable encodings
+Operations
+Easy to install
+Easy to update
+Easy to backup
+Easy to recover
+Works with the database and version we use
+Can be mounted on a path that is not the root of the domain
+

@@ -1,0 +1,21 @@
+$array[-1]
+
+each is only hashes, not arrays, until perl 5.12
+
+&func -- standard way to call a sub
+
+Learning Perl 
+7th Edition
+P 24
+example typo in hello\nthere escaping
+mid-page
+
+while(defined($_=<STDIN>)) {
+	print;
+}
+
+perl -MEncode -le "print for Encode->encodings(':all')"
+
+open BEDROCK, '>encoding(iso-8859-1', $fileName;
+
+

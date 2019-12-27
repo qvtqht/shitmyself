@@ -1,0 +1,36 @@
+Portable and Durable
+	All forum data is stored as plain text files, improving durability
+	Archives of entire store of forum data can be downloaded by anyone
+	The entire forum, or parts of it, can be cloned and re-hosted
+	Accounts are portable, and can be used across different forums
+	Data is not tied to service provider.
+
+Accessibile
+	Hike aims to be accessible to all humans and machines, regardless of hardware, software, and configuration.
+	Hike will bend over backwards to accomodate every known and testable browser, with and without JS.
+	Support for lovable classics such as Netscape, Explorer, Opera, Mosaic, Lynx.
+	If you're using a screen reader, there are accomodations.
+	Mouse-free qutebrowser and Vimium users should not have issues.
+	If you prefer to use telnet, it will be easier than with most websites.
+	Registration is not required to participate.
+	Personal information and being human are not required to register.
+
+Transparent
+	Everything posted to the community is viewable and verifiable
+	Voting logs are transparent and auditable
+	Web of trust ensures that untrustworthy votes can be detected
+	Meta-moderation is possible by voting on the votes, and so on.
+	Voting analysis easily reveals most valuable content
+
+Text-art Friendly
+	Text-art is accomodated by switching to a monospace font and preserving whitespace
+	To enable text-art mode, just tag an item as "textart".
+
+User-empowering
+	User "account", aka the private key, remains in user's possession and control
+	Same account can be used on multiple servers, communities, etc., without need for "federation"
+	Account access is controlled with encryption, not centrally
+
+Advertising, Spam, and Censorship Resistant
+	Avoids becoming a spam and advertising target by making over-growth more difficult.
+	User-centric operation allows easy migration in case of unwelcome changes.

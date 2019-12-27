@@ -1,3 +1,26 @@
+Bug: There's a duplicate <a name=maincontent> on home page
+
+Problem
+=======
+Whole install can be clobbered by setting a value on a directory
+
+Safe mode:
+	If any kind of error occurs
+		Rename txt dir
+			Create new blank txt dir
+				Avoid adding anything to it, but maybe one small message on what just happened?
+				Provide zip file of previous directory?
+					Maybe just on the first try, as this can cause an error as well
+
+
+Side-quest
+==========
+Report bug to lighttpd team
+	Bug is that directory listings cause JS error in NN3 and other pre-=== browsers
+		There's probably no huge need to use that operator there
+			Maybe investigate if anything else would cause error?
+				Submit patch?
+
 #bug crypto.js and openpgp.js are requested multiple times
 	reproduced with Preferences page
 
