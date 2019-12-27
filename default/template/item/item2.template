@@ -6,7 +6,7 @@
 		$quickVoteButtonGroup
 
 		<tr class=body>
-			<td class=content colspan=2>
+			<td class=content>
 				<p class="$itemClass">$itemText<br></p>
 			</td>
 		</tr>
