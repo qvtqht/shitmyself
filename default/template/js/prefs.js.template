@@ -58,7 +58,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			var elemVoter = document.getElementsByClassName('voter');
 
 			for (var i = 0; i < elemVoter.length; i++) {
-				SetElementVisible(elemVoter[i], displayVoter, 0, '3pt solid ' + colorVoterOrange);
+				SetElementVisible(elemVoter[i], displayVoter, 0, 0);
 			}
 		}
 
