@@ -22,7 +22,6 @@
 						<label for=chkWantToVote>
 							<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
 							Willing to moderate
-							<span class=voter>:-)</span>
 						</label>
 					</p>
 					</fieldset>
