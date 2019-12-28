@@ -53,7 +53,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
 		WriteLog(file_get_contents($fileName));
 
-        $hash = sha1_file($fileName);
+		$hash = sha1_file($fileName);
 		
 		WriteLog('ProcessNewComment: $hash = ' . $hash);
 
@@ -212,8 +212,10 @@ if ($_POST) {
 	if (isset($_POST['replyto']) && $_POST['replyto']) {
 		$replyTo = $_POST['replyto']; 
 		$replyToToken = '>>' . $replyTo;
-		
-		$comment .= "\n\n" . $replyToToken;
+
+		if (!preg_match('/\>\>' . $replyTo . '/', $comment)) {
+			$comment .= "\n\n" . $replyToToken;
+		}
 	}
 
 	if ($comment) {
@@ -248,7 +250,9 @@ if ($_GET) {
 		$replyTo = $_GET['replyto']; 
 		$replyToToken = '>>' . $replyTo;
 
-		$comment .= "\n\n" . $replyToToken;
+		if (!preg_match('/\>\>' . $replyTo . '/', $comment)) {
+			$comment .= "\n\n" . $replyToToken;
+		}
 	}
 
 	if ($comment) {
