@@ -320,7 +320,6 @@ sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to
 }
 
 sub GetString { # Returns string from config/string/en/..., with special rules:
-# If contents of file are multiple lines, returns one of the lines, randomly
 # #todo look up locale, not hard-coded to en
 	my $stringKey = shift;
 
@@ -339,12 +338,7 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 	}
 
 	if (defined($strings{$stringKey})) {
-		my @stringLines = split("\n", $strings{$stringKey});
-		my $randomNumber = int(rand(@stringLines));
-		my $randomLine = $stringLines[$randomNumber];
-
-		return $randomLine;
-		#return $strings{$stringKey};
+		return $strings{$stringKey};
 	}
 }
 

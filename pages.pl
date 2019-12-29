@@ -1121,60 +1121,20 @@ sub GetItemTemplate { # returns HTML for outputting one item
 sub GetPageFooter { # returns html for page footer
 	my $txtFooter = GetTemplate('htmlend.template');
 
-#	my $disclaimer = GetConfig('string/en/disclaimer') . "\n" . GetConfig('string/ru/disclaimer');
-	my $disclaimer = GetConfig('string/en/disclaimer');
+	my $disclaimer = GetString('disclaimer');
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
-
-	my $timeBuilt = GetTime();
-
-	my $timestamp = strftime('%F %T', localtime($timeBuilt));
-	my $myVersion = GetMyVersion();
-	#my $gpgVersion = GetGpgMajorVersion();
-
-	my $versionPageUrl = '/' . substr($myVersion, 0, 2) . '/' . substr($myVersion, 2, 2) . '/' . $myVersion . '.html';
-
-	my $myVersionPrettyLink = '<a href="' . $versionPageUrl . '">' . substr($myVersion, 0, 8) . '..' . '</a>';
-
-	#todo templatify
-	my $footer = "<span class=advanced><span class=beginner>Printed: </span>" . GetTimestampElement($timeBuilt) . " ; <span class=beginner>Version </span>$myVersionPrettyLink</span> ; ";
-
-	my $footerMenuTemplate = '';
-
-	#footer menu
-	$footerMenuTemplate .= GetMenuItem("/stats.html", 'Status');
-#	$footerMenuTemplate .= GetMenuItem("/top/admin.html", 'Admin');
-	$footerMenuTemplate .= GetMenuItem("/data.html", 'Data');
-	$footerMenuTemplate .= GetMenuItem("/index0.html", 'Queue');
-	$footerMenuTemplate .= GetMenuItem("/tags.html", GetString('menu/tags'));
-	$footerMenuTemplate .= GetMenuItem("/manual.html", GetString('menu/manual'));
-
-	$footer .= $footerMenuTemplate;
-
-	$txtFooter =~ s/\$footer/$footer/;
-
-	my $ssiFooter;
-	if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/footer_timestamp')) {
-		$ssiFooter = '<p class=advanced><font color="' . GetThemeColor('text') . '"><small>' . GetTimestampElement(trim(GetTemplate('ssi/print_date.ssi.template'))) . '</small></font></p>'; #todo templatify
-	} else {
-		$ssiFooter = '';
-	}
-	$txtFooter =~ s/\$ssiFooter/$ssiFooter/;
 
 	return $txtFooter;
 }
 
-sub GetThemeColor {
+sub GetThemeColor { # returns theme color based on html/theme
 	my $colorName = shift;
 	chomp $colorName;
 
 	$colorName = 'color_' . $colorName;
 
-	my $colorConfigContent = GetThemeAttribute($colorName);
-
-	my @colorChoices = split("\n", $colorConfigContent);
-
-	my $color = @colorChoices[int(rand(@colorChoices))];
+	my $color = GetThemeAttribute($colorName);
 
 	if (!defined($color)) {
 		$color = 'red';
@@ -1314,12 +1274,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/", 'Home');
 	$menuItems .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
-	$menuItems .= GetMenuItem("/events.html", 'Events');
+#	$menuItems .= GetMenuItem("/events.html", 'Events');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors');
 	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
 	$menuItems .= GetMenuItem("/prefs.html", 'Settings');
 	$menuItems .= GetMenuItem("/stats.html", 'Status');
-	$menuItems .= GetMenuItem("/tags.html", 'Tags');
+#	$menuItems .= GetMenuItem("/tags.html", 'Tags');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
