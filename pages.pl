@@ -1297,13 +1297,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
-	
-	#
-#	if (GetConfig('funstuff/js_clock')) {
-#		my $jsClock = Get
-#		$htmlStart =~ s/\$putClockHere/$putClockHere/g;
-#
-#	}
 
 	#top menu
 						  
@@ -1612,6 +1605,7 @@ sub GetStatsPage { # returns html for stats page
 
 sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	my $html = shift;     # html we're going to inject into
+
 	my @scriptNames = @_; # array of names of script templates (minus the .js.template suffix)
 
 	my $scriptsText = '';  # will contain all the js we want to inject
