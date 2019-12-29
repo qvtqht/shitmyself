@@ -1,67 +1,54 @@
 // == begin fresh.js
 var freshClient;
+var timeoutFresh;
 
 function corsc() { // callback for requesting HEAD for current page
+	var clock = document.getElementById('txtClock');
 	if(this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
 		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
-		
+
+		document.title = document.title + eTag;
+
 		if (eTag) { // if etag header has a value
 			if (window.lastEtag) { // if we already saved one
 				if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
 					// still fresh, no change
 				} else { // etag was different from last one we saw
-					if (!window.etagChangeCounter) {
-						window.etagChangeCounter = 1;
-					} else {
-					  window.etagChangeCounter++;
-					}
-					// for some reason, it changes the first time... 
-					// so use a counter to ignore the first one
-			  
-					if (1 < window.etagChangeCounter) { // second change or more
-						// actual change has happened
-
-					if (window.GetPrefs) { // reload the page, if user prefers it
-						if (GetPrefs('notify_on_change')) {
-							//location.reload();
-						}
-					}
-
-					// below is changing clock's appearance from green to yellow					
-					var clock = document.getElementById('clock');
+					// below is changing clock's appearance
 					if (clock) {
-						clock.style.color='yellow';
-						
-						var clockContainer = document.getElementById('clockContainer');
-						if (clockContainer) {
-							clockContainer.style.backgroundColor='#404000';
-						}
+						clock.style.color = '#008000';
 					}
-					
-					// disable AmIFresh, no reason to keep running it
-					freshTimeout = -1;
-	
-					// code below is experiment to load the page in background, 
-					// and then replace the current dom with it
-					//		 			var client2 = new XMLHttpRequest();
-					//		 			client2.open("GET", window.location);
-					//
-					//		 			client2.onreadystagechange = function() {
-					//		 				if (this.readyState == 4) {
-					//			 				document.replaceChild(client2.responseText, document.documentElement);
-					//		 				}
-					//		 			}
+//
+//					//code below is experiment to load the page in background,
+//					//and then replace the current dom with it
+//					var client2 = new XMLHttpRequest();
+//					client2.open("GET", window.location);
+//
+//					client2.onreadystagechange = function() {
+//						if (this.readyState == 4) {
+//							document.replaceChild(client2.responseText, document.documentElement);
+//						}
+//					}
 				}
+
+				window.lastEtag = eTag;
+			} else {
+				window.lastEtag = eTag;
 			}
-			window.lastEtag = eTag;
-		} else {
-			window.lastEtag = eTag;
 		}
-	 }
-  }
+
+		if (clock) {
+			clock.style.backgroundColor = '#cccccc';
+		}
+	}
 }
 
 function CheckIfFresh() {
+	var clock = document.getElementById('txtClock');
+	if (clock) {
+		clock.style.backgroundColor = '#88ee00';
+	}
+
 	var mypath = window.mypath;
 
 	if (!mypath) {
@@ -77,29 +64,38 @@ function CheckIfFresh() {
 	freshClient.send();
 }
 
-var freshTimeout = 0;
+var intFreshTimeout = 0;
 
 function AmIFresh() {
-	if (freshTimeout < 0) {
+	if (intFreshTimeout < 0) {
 		return;
 	}
 
+	if (timeoutFresh) {
+		clearTimeout(timeoutFresh);
+	}
+
 	if (window.XMLHttpRequest) {
-		if (!freshTimeout) {
-			freshTimeout = 1000;
+		if (!intFreshTimeout) {
+			intFreshTimeout = 1000;
 		} else {
 			CheckIfFresh();
 		}
 
-		freshTimeout = freshTimeout * 2;
+		intFreshTimeout = intFreshTimeout * 1.5;
 		
-		if (15000 < freshTimeout) {
-			freshTimeout = 15000;
+		if (5000 < intFreshTimeout) {
+			intFreshTimeout = 5000;
 		} 
 		
-		setTimeout(AmIFresh, freshTimeout);
+		timeoutFresh = setTimeout(AmIFresh, intFreshTimeout);
 	}
 }
 
-AmIFresh();
+if (window.GetPrefs) {
+	if (GetPrefs('notify_on_change') == 1) { // check value of want_to_vote preference
+		AmIFresh();
+	}
+}
+
 // == end fresh.js

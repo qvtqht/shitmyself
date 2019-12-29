@@ -4,6 +4,8 @@ var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 var showVoterLastAction = '';
 
+var timerShowAdvanced;
+
 function ShowControlsByClassName() { // shows or hides elements based on class name match
 }
 
@@ -100,12 +102,29 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			}
 			showBeginnerLastAction = displayValue;
 		}
+
+		if (window.timeoutFresh) {
+			if (GetPrefs('notify_on_change')) {
+				if (timeoutFresh) {
+					// we're good
+				} else {
+					AmIFresh();
+				}
+			} else {
+				if (timeoutFresh) {
+					clearTimeout(timeoutFresh);
+				}
+			}
+		}
 	}
 	
 	setAva(); // #todo caching similar to above 
 
 	if (!force) {
-		setTimeout(ShowAdvanced, 3000);
+		if (timerShowAdvanced) {
+			clearTimeout(timerShowAdvanced);
+		}
+		timerShowAdvanced = setTimeout(ShowAdvanced, 3000);
 	}
 }
 
@@ -189,7 +208,8 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 		prefKey == 'beginner_highlight' ||
 		prefKey == 'advanced_highlight' ||
 		prefKey == 'display_username' ||
-		prefKey == 'want_to_vote'
+		prefKey == 'want_to_vote' ||
+		prefKey == 'notify_on_change'
 	) {
 		ShowAdvanced(1);
 	}
