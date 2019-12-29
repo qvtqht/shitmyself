@@ -1,9 +1,9 @@
 <!-- help.template -->
 
-<h1>Help Page</h1>
+<p>Links to documentation:</p>
 
-<!-- -->
-
-<p>Test</p>
+<p><a href="/manual.html">Manual</a></p>
+<p><a href="/manual_advanced.html">Advanced Manual</a></p>
+<p><a href="/data.html">Data</a></p>
 
 <!-- / help.template -->
