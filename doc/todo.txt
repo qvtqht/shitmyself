@@ -23,6 +23,7 @@ Report bug to lighttpd team
 
 #bug crypto.js and openpgp.js are requested multiple times
 	reproduced with Preferences page
+openpgp.js should not be requested on browsers which don't support it
 
 Render everything in doc/ as items
 	List them under /help.html
@@ -56,7 +57,7 @@ Resolve issues with missing modules. Add everything to lib/ dir
 #todo #bug IE4 voting buttons do not work
 
 #todo #bug IE4 pages have js errors:
-    Settings
+	Settings
 
 Create token which allows a new item to "overwrite" an item
 	Perhaps only admin or original author?
@@ -187,10 +188,10 @@ Installer/dependency installer
 		which yum
 			install fedora modules
 Add number of unprocessed text files to stats page
- 
+
 Add 404 handler for apache
 	Add config for it
- 
+
 After rebuild/upgrade, have setting which notifies
 	This server was recently rebuilt, still updating
 		Remove message when update = 0
@@ -514,8 +515,8 @@ whenever a new pubkey is posted
 			should be re-checked
 
 claim_admin token
-  if older than 30 days and/or approved by admin
-  	make admin
+	if older than 30 days and/or approved by admin
+		make admin
 
 publish rss for notification apps
 
@@ -644,11 +645,11 @@ If logged in
 SERVER MESSAGE SIGNING
 ======================
 Does server.key.txt exist?
-   No:
-      generate gen-key-script
-      Generate key with gpg --unattended
-   Yes:
-      Sign message with it
+	No:
+		generate gen-key-script
+		Generate key with gpg --unattended
+	Yes:
+		Sign message with it
 
 FILE TYPE SUPPORT
 =================
@@ -666,20 +667,6 @@ Other filetypes that can be supported
 	doc
 	xls
 	and so on
-
-ACCESSIBILITY FROM LIMITED DEVICES
-==================================
-1) Add PHP script for instant update triggers
-   config/generate_php_hooks
-   template/htaccess
-   template/submit.php
-   template/index.php
-2) Submit items via URL without any additional prefix
-   * e.g. http://qdb.us/text.goes.here
-   * test if spaces work in GTr
-3) Set up short URLs to accept input (for live version)
-4) Make UI smaller
-5) Make links for voting so that form submission not required
 
 Consider changing background color based on time of day?
 
@@ -815,8 +802,6 @@ rebuilding everything twice is a good way of maintaining integrity
 
 forgot to add conversions to user pages
 
-some pages (author pages?) are still in a different func
-
 mod_security can interfere with some signed posts #known
 
 Some of the buttons can probably be made full width
@@ -830,9 +815,6 @@ Sometimes on Android the button push is cancelled by the keyboard retract #bug
       Press the "Post" button
          Expected: Posted
          Actual: First tab is usually ignored
-
-Fix the vote/tag links
-   Js: implement
 
 curl
     add to tree

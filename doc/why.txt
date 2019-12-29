@@ -1,36 +1,36 @@
 Portable and Durable
-	All forum data is stored as plain text files, improving durability
-	Archives of entire store of forum data can be downloaded by anyone
-	The entire forum, or parts of it, can be cloned and re-hosted
-	Accounts are portable, and can be used across different forums
-	Data is not tied to service provider.
+	All forum data is stored as plain text files, improving durability and archivability.
+	Archives all data, or just segments, can be downloaded and replicated by anyone.
+	Can be cloned and re-hosted, with portable user accounts usable across all copies.
+	Data is housed by the service provider without lock-down.
 
-Accessibile
-	Hike aims to be accessible to all humans and machines, regardless of hardware, software, and configuration.
-	Hike will bend over backwards to accomodate every known and testable browser, with and without JS.
-	Support for lovable classics such as Netscape, Explorer, Opera, Mosaic, Lynx.
+Accessible
+	Aims to be accessible to all beings, regardless of hardware, software, or configuration.
+	Will bend over backwards to accomodate every known and testable client.
+	Support for lovable classics such as Netscape, Internet Explorer, Opera, Mosaic, Lynx.
+	Tested with text-based browsers, including Lynx, Links, and w3m.
+	JavaScript adds convenience, but is completely optional for all features.
 	If you're using a screen reader, there are accomodations.
-	Mouse-free qutebrowser and Vimium users should not have issues.
+	Mouse-free users of qutebrowser, Vimium, and similar, are accomodated.
 	If you prefer to use telnet, it will be easier than with most websites.
 	Registration is not required to participate.
 	Personal information and being human are not required to register.
 
 Transparent
 	Everything posted to the community is viewable and verifiable
-	Voting logs are transparent and auditable
-	Web of trust ensures that untrustworthy votes can be detected
+	Voting logs are transparent, auditable, and trustable (Kevin Bacon)
 	Meta-moderation is possible by voting on the votes, and so on.
-	Voting analysis easily reveals most valuable content
+	Best content (and friends) for each user can be found with vote comparison.
+	Ballot stuffing and other abuse easily detectable with data analysis.
 
-Text-art Friendly
-	Text-art is accomodated by switching to a monospace font and preserving whitespace
+Art-friendly
+	Text-art is accomodated with a monospace font and by preserving whitespace layout
 	To enable text-art mode, just tag an item as "textart".
 
 User-empowering
-	User "account", aka the private key, remains in user's possession and control
-	Same account can be used on multiple servers, communities, etc., without need for "federation"
-	Account access is controlled with encryption, not centrally
+	User "account", aka the private key, remains in user's possession and control.
+	Identity can be used across multiple servers, communities, etc., without requiring "federation".
 
 Advertising, Spam, and Censorship Resistant
 	Avoids becoming a spam and advertising target by making over-growth more difficult.
-	User-centric operation allows easy migration in case of unwelcome changes.
+	User-centric operation allows easy migration in case of undesirable changes.
