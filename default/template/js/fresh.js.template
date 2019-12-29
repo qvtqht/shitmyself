@@ -16,17 +16,6 @@ function corsc() { // callback for requesting HEAD for current page
 					if (clock) {
 						clock.style.color = '#008000';
 					}
-//
-//					//code below is experiment to load the page in background,
-//					//and then replace the current dom with it
-//					var client2 = new XMLHttpRequest();
-//					client2.open("GET", window.location);
-//
-//					client2.onreadystagechange = function() {
-//						if (this.readyState == 4) {
-//							document.replaceChild(client2.responseText, document.documentElement);
-//						}
-//					}
 				}
 
 				window.lastEtag = eTag;
