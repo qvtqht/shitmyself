@@ -2928,7 +2928,7 @@ sub MakeDataPage { # returns html for /data.html
 
 	$dataPage .= GetTemplate('maincontent.template');
 
-	my $dataPageTemplate = GetTemplate('data.template');
+	my $dataPageContents = GetTemplate('data.template');
 
 	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
 	my $sizeSqliteZip = -s "$HTMLDIR/index.sqlite3.zip";
@@ -2943,10 +2943,14 @@ sub MakeDataPage { # returns html for /data.html
 		$sizeSqliteZip = 0;
 	}
 
-	$dataPageTemplate =~ s/\$sizeHikeZip/$sizeHikeZip/g;
-	$dataPageTemplate =~ s/\$sizeSqliteZip/$sizeSqliteZip/g;
+	$dataPageContents =~ s/\$sizeHikeZip/$sizeHikeZip/g;
+	$dataPageContents =~ s/\$sizeSqliteZip/$sizeSqliteZip/g;
 
-	$dataPage .= $dataPageTemplate;
+	$dataPageContents = '<tr><td>' . $dataPageContents . '</td></tr>';#todo this should be in a template somewhere
+
+	my $dataPageWindow = GetWindowTemplate('Data', '', '', $dataPageContents, 'Ready');
+
+	$dataPage .= $dataPageWindow;
 
 	$dataPage .= GetPageFooter();
 
