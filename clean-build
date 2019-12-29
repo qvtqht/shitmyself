@@ -21,4 +21,4 @@ rm log/log.log
 
 rm -rf html/txt/.git
 mkdir -p html/txt
-time ./build.sh
+time ./build.pl
