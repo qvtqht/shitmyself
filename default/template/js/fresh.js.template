@@ -7,8 +7,6 @@ function corsc() { // callback for requesting HEAD for current page
 	if(this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
 		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
 
-		document.title = document.title + eTag;
-
 		if (eTag) { // if etag header has a value
 			if (window.lastEtag) { // if we already saved one
 				if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
