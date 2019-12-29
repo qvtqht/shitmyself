@@ -8,7 +8,7 @@ function getPositionCallback(position) {
 		}
 	}
 }
- 
+
 function insertGeo() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
