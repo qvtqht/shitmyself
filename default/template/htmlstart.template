@@ -20,5 +20,4 @@ var colorHighlightAdvanced = '$colorHighlightAdvanced';
 <body link="$colorLink" vlink="$colorVlink" text="$colorText" bgcolor="$colorWindow">
 <img src="/p.gif" alt="." height=1 width=1>
 $topMenu
-<main id=maincontent><a name=maincontent></a>
 <p>
