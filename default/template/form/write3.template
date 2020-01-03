@@ -35,7 +35,12 @@
 						</p>
 
 						<p id=lblWriteLengthWarning class=warning style="display: none">
-							Warning: Long messages are less reliable.
+							<span class=beginner>
+								Long messages are less reliable than short ones.
+							</span>
+							<span class=advanced>
+								Switched form to POST method, which is a less reliable delivery method than GET.
+							</span>
 						</p>
 					</fieldset>
 
