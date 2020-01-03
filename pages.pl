@@ -199,6 +199,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	}
 
 	if ($windowBody) {
+		# todo there should be some flag to wrap <tr class=content><td> around this, otherwise there's html in the perl
 		$windowTemplate =~ s/\$windowBody/$windowBody/g;
 	} else {
 		$windowTemplate =~ s/\$windowBody//g;
@@ -1157,6 +1158,12 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 #	my $themeName = 'theme.win95';
 
 	my $themeName = GetConfig('html/theme');
+	if (substr($themeName, 0, 6) eq 'theme.') {
+	# compatibility
+		if (length($themeName) > 6) {
+			$themeName = substr($themeName, 6);
+		}
+	}
 
 	my $attributePath = 'theme/' . $themeName . '/' . $attributeName;
 	#todo sanity checks
@@ -1274,12 +1281,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/", 'Home');
 	$menuItems .= GetMenuItem("/write.html", GetString('menu/write'));
 	$menuItems .= GetMenuItem("/top.html", 'Topics');
-#	$menuItems .= GetMenuItem("/events.html", 'Events');
+	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors');
 	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
 	$menuItems .= GetMenuItem("/prefs.html", 'Settings');
 	$menuItems .= GetMenuItem("/stats.html", 'Status');
-#	$menuItems .= GetMenuItem("/tags.html", 'Tags');
+	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
