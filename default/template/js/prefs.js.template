@@ -23,7 +23,7 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 	}
 
 	// depending on element type, we set different display style
-	// block, table-row, table-cell, or default of 'initial' #todo may be a bug here
+	// block, table-row, table-cell, or default of 'initial'
 
 	if (displayValue == 'initial' && (element.nodeName == 'P' || element.nodeName == 'FIELDSET')) {
 		element.style.display = 'block';
