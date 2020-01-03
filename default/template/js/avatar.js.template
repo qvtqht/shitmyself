@@ -1,4 +1,5 @@
 // == begin avatar.js
+
 function setAva() { // sets avatar widgets (and italicizes Profile link)
 	var myidBox = document.getElementById('myid'); // displays username (if preference is set)
 	var signinBox = document.getElementById('signin'); // Profile link
@@ -13,13 +14,8 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 			var myFp = localStorage.getItem('fingerprint');
 
 			if (window.location.pathname == '/author/' + myFp + '/') {
-			// #todo factor this out, as it should only be on /author/.. pages 
 				var itsYou = document.getElementById('itsyou');
 				itsYou.innerHTML = 'This is you!';
-
-//				var parentNode = document.getElementById('maincontent');
-
-//				parentNode.insertBefore(itsYou, parentNode.firstChild);
 			}
 
 			if (window.GetPrefs) {
@@ -55,7 +51,7 @@ if (window.localStorage && document.getElementById) {
 	setAva();
 }
 
-function getAvatar() { // retrieve previously built avatar from localstore (already in html form)
+function getAvatar() { // retrieve previously built avatar from localstorage (already in html form)
 	var myAvatar = localStorage.getItem("avatar");
 	if (!myAvatar || myAvatar.length == 0) {
 		return '';
