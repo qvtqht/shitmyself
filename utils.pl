@@ -1374,12 +1374,12 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 	my $keyExpired = 0;
 
-	my $gitHash = GetFileHash($filePath);
+	my $fileHash = GetFileHash($filePath);
 
-	if ($gitHash) {
+	if ($fileHash) {
 
 		my $cachePath;
-		$cachePath = "./cache/" . GetMyVersion() . "/gpg/$gitHash.cache";
+		$cachePath = "./cache/" . GetMyVersion() . "/gpg/$fileHash.cache";
 
 		my %returnValues;
 
@@ -1614,7 +1614,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 			$returnValues{'key'} = $gpg_key;
 			$returnValues{'alias'} = $alias;
 			$returnValues{'keyExpired'} = $keyExpired;
-			$returnValues{'gitHash'} = $gitHash;
+			$returnValues{'gitHash'} = $fileHash;
 			$returnValues{'verifyError'} = $verifyError;
 
 			store \%returnValues, $cachePath;
@@ -1628,7 +1628,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 	} else {
 		die;
 
-		WriteLog('GpgParse fail! no $gitHash');
+		WriteLog('GpgParse fail! no $fileHash');
 
 		WriteLog("===END GPG PARSE===");
 
