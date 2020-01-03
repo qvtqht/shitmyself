@@ -31,8 +31,8 @@ function getPrivateKey() { // get private key from local storage
 }
 
 function buttonSignOut(t) { // sign out button is clicked. displays undo countdown or signs out completely, emptying trash 
-	if (window.iii) { // iii is state of signout (1 if already clicked)
-		logOut(t); //
+	if (window.signOutButtonStatus) {
+		logOut(t);
 	} else {
 		window.privKeyTrash = getPrivateKey();
 
@@ -40,7 +40,8 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 
 		document.getElementById('locm').style.display='inline';
 		t.style.backgroundColor='red';
-		t.style.color='white';window.iii=1
+		t.style.color='white';
+		window.signOutButtonStatus = 1;
 
 		window.confct = 11;
 		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
@@ -63,12 +64,6 @@ function undoSignout() {
 
 	var signinBox = document.getElementById('signin');
 	signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
-
-//	var logo = document.getElementById('logo');
-//	if (logo) {
-//		logo.href = '/author/' + fingerprint
-//	} #todo
-
 }
 
 function signoutCounterDecrement() {
@@ -105,7 +100,7 @@ function signoutCounterDecrement() {
 function disarmSignoutButton(t) {
 	t.style.backgroundColor = '$colorWindow';
 	t.style.color = 'red';
-	window.iii = 0;
+	window.signOutButtonStatus = 0;
 	window.privKeyTrash = '';
 	document.getElementById('locm').style.display='none';
 }
@@ -340,7 +335,6 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {
-//					myId2.innerHTML = getAvatar();
 					myId2.innerHTML = '<a href="/author/' + myFp + '/">' + getAvatar() + '</a>'; //todo remove hardcoding of url
 				}
 
