@@ -858,7 +858,7 @@ sub IndexTextFile { # indexes one text file into database
 
 		# brc/2:00/AA
 		# brc/([2-10]:[00-59])/([0A-Z]{1-2})
-		if ($message) {
+		if (GetConfig('brc/enable') && $message) {
 			my @burningManLines = ($message =~ m/^brc\/([0-9]{1,2}):([0-9]{0,2})\/([0A-Z]{1,2})/mg );
 
 			if (@burningManLines) {
