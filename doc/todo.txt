@@ -1,3 +1,7 @@
+Bug: When vouch/ is used, the first time the item is added
+	a duplicate entry in vote_weight is added
+		This is cleared during next rebuild
+
 Bug: There's a duplicate <a name=maincontent> on home page
 
 Problem
@@ -49,6 +53,8 @@ Simplify vote/tag tokens
 #bug with PHP enabled, replies create a dupe
 	Dupe contains >> token at the bottom (from access log)
 	Other copy does not (from PHP)
+
+Rename "beginner" to "hint" or something even better
 
 <script language="JavaScript1.3">
 
@@ -189,9 +195,6 @@ Installer/dependency installer
 			install fedora modules
 Add number of unprocessed text files to stats page
 
-Add 404 handler for apache
-	Add config for it
-
 After rebuild/upgrade, have setting which notifies
 	This server was recently rebuilt, still updating
 		Remove message when update = 0
@@ -249,7 +252,6 @@ cleanup stale items
 	items older than y days
 		and no "keep" votes
 	what else?
-
 what else to clean up?
 
 generate.pl
@@ -859,3 +861,4 @@ Add support for messages with multiple ENC_TOs
    Limit to 5? 10?
    List all of them on details page
 Add support for public key included inside signed message
+
