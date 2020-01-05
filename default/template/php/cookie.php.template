@@ -44,12 +44,12 @@
 			if (md5($cookie . '/' . $secret) != $checksum) {
 				unset($cookie);
 				setcookie('cookie');
-//				header('Location: /profile.html');
+				header('Location: /profile.html?' + time());
 			}
 		} else {
 			if (isset($_GET['request']) && $_GET['request'] == $commandRegister) {
 				setcookie('test', '1');
-//				header('Location: /profile.html');
+				header('Location: /profile.html?' + time());
 			}
 		}
 	}
