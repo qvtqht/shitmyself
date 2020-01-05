@@ -1,7 +1,3 @@
-admin/queue_rebuild_interval
-how frequently the Queue (all items) pages are rebuilt, in seconds
-default: 86400 (1 day)
-
 admin/access_log_path
 this is where access.pl will look for the access log from the web server.
 default: log/access.log

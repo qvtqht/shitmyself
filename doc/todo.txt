@@ -1,3 +1,13 @@
+Add timestamp to session cookie
+	To allow time limit for cookie validity
+		This will also require rewriting the cookie now and then
+
+HASHTAG VOTES SHOULD APPLY TO PARENT ITEMS
+If item is a reply
+	If contains hashtag
+		Hashtag vote applies to parent
+
+
 Bug: When vouch/ is used, the first time the item is added
 	a duplicate entry in vote_weight is added
 		This is cleared during next rebuild
@@ -214,10 +224,6 @@ Handling text file removal
 	Find deleted files via git
 	Remove item page
 	Rebuild all associated pages
-
-If item is a reply
-	If contains hashtag
-		Hashtag vote applies to parent
 
 Add one-click Bump button to top menu
 
