@@ -6,7 +6,7 @@
 	$commandRegister = 'Register';
 	$commandUnregister = 'Sign Out';
 
-	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
+//	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
 
 	if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 		setcookie('test');
