@@ -1299,6 +1299,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
 	$menuItems .= GetMenuItem("/help.html", 'Help');
+	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 
 	$menuItems .= $identityLink;
 	$menuItems .= $noJsIndicator;
@@ -2737,7 +2738,7 @@ sub GetIdentityPage2 { #todo rename GetProfilePage?
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+#	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
 
 	return $txtIndex;
 }
