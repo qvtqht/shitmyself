@@ -1,8 +1,7 @@
 <?php
 
-
 function WriteLog($text) { // writes to debug log if enabled
-	if (0) { // use this to toggle output
+	if (1) { // use this to toggle output
 		print ('<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n");
 	}
 }
