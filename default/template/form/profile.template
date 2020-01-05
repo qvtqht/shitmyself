@@ -1,4 +1,4 @@
-<!-- identity.template -->
+<!-- profile.template -->
 
 $noJsInformation
 
@@ -10,4 +10,4 @@ $formIdCreate
 
 $formIdAdmin
 
-<!-- / identity.template -->
+<!-- / profile.template -->

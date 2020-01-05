@@ -1,14 +1,12 @@
 <?php
 /*
-	this is php shim for accepting submissions
-	replaces post.html if admin/php/enabled
+	php shim for accepting submissions
+	proxies post.html if admin/php/enabled is on
 */
 
-function WriteLog($text) { // writes to debug log if enabled
-	if (0) { // use this to toggle output
-		print (htmlspecialchars($text) . "<br>\n");
-	}
-}
+//error_reporting(E_ALL);
+
+include_once('utils.php');
 
 function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
@@ -19,44 +17,65 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 	if (isset($comment) && $comment) {
 		WriteLog('ProcessNewComment: $comment exists');
 
+		// remember current working directory, we'll need it later
 		$pwd = getcwd();
-		
 		WriteLog('$pwd = ' . $pwd);
-		
+
+		// script directory is one level up from current directory,
+		// which we expect to be called "html"
 		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
-		
 		WriteLog('$scriptDir = ' . $scriptDir);
 
-		// $txtDir
+		// $txtDir is where the text files live, in html/txt
 		$txtDir = $pwd . '/txt/';
-		
 		WriteLog('$txtDir = ' . $txtDir);
 
-		// $htmlDir
+		// $htmlDir is the same as current directory
 		$htmlDir = $pwd . '/';
-		
 		WriteLog('$htmlDir = ' . $htmlDir);
-		
+
+		// find hash of the comment text
+		// it will not be the same as sha1 of the file for some mysterious reason, #todo
+		// but we will use it for now.
 		$hash = sha1($comment);
-		
 		WriteLog('$comment = ' . $comment); 
 		WriteLog('$hash = ' . $hash);
-		
+
+		// generate a temporary filename based on the temporary hash
 		$fileName = $txtDir . $hash . '.txt';
-		
 		WriteLog('$fileName = ' . $fileName);
-		
+
+		$signatureSeparator = "\n-- \n";
+
+		if (GetConfig('admin/logging/record_cookie') && $_COOKIE['cookie']) {
+			$comment .= $signatureSeparator;
+			$signatureSeparator = "\n";
+
+			$comment .= 'Cookie: ' . $_COOKIE['cookie'];
+		}
+
+		if (GetConfig('admin/logging/record_http_host') && $_SERVER['HTTP_HOST']) {
+			$comment .= $signatureSeparator;
+			$signatureSeparator = "\n";
+
+			$comment .= 'Host: ' . $_SERVER['HTTP_HOST'];
+		}
+
+
+		// save the file as ".tmp" and then rename
 		file_put_contents($fileName . '.tmp', $comment);
 
 		rename($fileName . '.tmp', $fileName);
-		
+
 		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
 		WriteLog(file_get_contents($fileName));
 
+		// now we can get the "proper" hash,
+		// which is for some reason different from sha1($comment), as noted above
 		$hash = sha1_file($fileName);
-		
 		WriteLog('ProcessNewComment: $hash = ' . $hash);
 
+		// hash-named files are stored under /ab/cd/ two-level directory prefix
 		{ // create prefix subdirectories under txt/
 			if (!file_exists($txtDir . substr($hash, 0, 2))) {
 				mkdir($txtDir . substr($hash, 0, 2));
@@ -66,7 +85,6 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 				mkdir($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
 			}
 		}
-
 		{ // create prefix subdirectories under ./ (html/)
 			if (!file_exists('./' .substr($hash, 0, 2))) {
 				mkdir('./' . substr($hash, 0, 2));
@@ -77,38 +95,39 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			}
 		}
 
-		// generate path for new txt file
-		$filePath = 
-			$txtDir . 
-			substr($hash, 0, 2) . 
-			'/' . 
-			substr($hash, 2, 2) . 
-			'/' . 
+		// path for new txt file
+		$filePath =
+			$txtDir .
+			substr($hash, 0, 2) .
+			'/' .
+			substr($hash, 2, 2) .
+			'/' .
 			$hash . '.txt'
 		;
 
-		// generate path for new html file
-		$fileHtmlPath = 
+		// path for new html file
+		$fileHtmlPath =
 			'./' .
-			substr($hash, 0, 2) . 
-			'/' . 
-			substr($hash, 2, 2) . 
-			'/' . 
+			substr($hash, 0, 2) .
+			'/' .
+			substr($hash, 2, 2) .
+			'/' .
 			$hash . '.html'
 		;
 
-		// generate path for client-side path to html file
-		$fileUrlPath = 
+		// path for client's (browser's) path to html file
+		$fileUrlPath =
 			'/' .
-			substr($hash, 0, 2) . 
-			'/' . 
-			substr($hash, 2, 2) . 
-			'/' . 
+			substr($hash, 0, 2) .
+			'/' .
+			substr($hash, 2, 2) .
+			'/' .
 			$hash . '.html'
 		;
 
 		// save new post to txt file
 		file_put_contents($filePath, $comment);
+		// this could probably just be a rename() #todo
 
 		// escape comment for output as html
 		$commentHtml =
@@ -131,23 +150,34 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			)
 		;
 
+		// check if html file already exists. if it does, leave it alone
 		if (!file_exists($fileHtmlPath)) {
+			// template for temporary placeholder for html file
+			// overwritten later by update.pl
 			$commentHtmlTemplate = GetTemplate('item_processing.template');
-			$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
 
+			// get theme name from config and associated background and foreground colors
 			$themeName = trim(GetConfig('html/theme'));
-
 			WriteLog('$themeName = ' . $themeName);
-
-			$colorWindow = GetConfig($themeName . '/color_window');
-			$colorText = GetConfig($themeName . '/color_text');
-
-			WriteLog('$colorText = ' . $colorText);
+			// color values
+			$colorWindow = GetConfig('theme/' . $themeName . '/color_window');
+			$colorText = GetConfig('theme/' . $themeName . '/color_text');
 			WriteLog('$colorWindow = ' . $colorWindow);
+			WriteLog('$colorText = ' . $colorText);
 
+			// replace placeholders with colors in template
 			$commentHtmlTemplate = str_replace('$colorWindow', $colorWindow, $commentHtmlTemplate);
 			$commentHtmlTemplate = str_replace('$colorText', $colorText, $commentHtmlTemplate);
 
+			// insert html-ized comment into template
+			$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
+
+			// here we do gpg stuff, it's nothing for now
+			//$gpgStuff = GpgParse($filePath);##
+			//WriteLog('$gpgStuff: ' . print_r($gpgStuff, 1));##
+//			$commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
+
+			// store file
 			file_put_contents($fileHtmlPath, $commentHtmlTemplate);
 		}
 
@@ -160,14 +190,14 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			// #todo uncomment this once this script is working
 	//		header('Location: /write.html');
 		}
-		
+
 		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 	}
 
 	if ($pwd) {
 		WriteLog(`cd $pwd`);
 	}
-	
+
 	return $fileUrlPath;
 }
 
@@ -189,7 +219,12 @@ if ($_POST) {
 	}
 
 	if ($comment) {
-		$fileUrlPath = ProcessNewComment($comment);
+		if ($comment == 'Update') {
+			DoUpdate();
+			$fileUrlPath = '';
+		} else {
+			$fileUrlPath = ProcessNewComment($comment);
+		}
 	}
 }
 
@@ -226,30 +261,13 @@ if ($_GET) {
 	}
 
 	if ($comment) {
-		$fileUrlPath = ProcessNewComment($comment);
+		if ($comment == 'Update') {
+			DoUpdate();
+			$fileUrlPath = '';
+		} else {
+			$fileUrlPath = ProcessNewComment($comment);
+		}
 	}
-}
-
-function GetConfig($configKey) {
-	$configDir = '../config/';
-	$defaultDir = '../default/';
-
-	if (file_exists($configDir . $configKey)) {
-		$configValue = file_get_contents($configDir . $configKey);
-	} elseif (file_exists($defaultDir . $configKey)) {
-		copy ($defaultDir . $configKey, $configDir . $configKey);
-		$configValue = file_get_contents($configDir . $configKey);
-	} else {
-		$configValue = '';
-	}
-
-	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '")');
-
-	return $configValue;
-}
-
-function GetTemplate($templateKey) {
-	return GetConfig('template/' . $templateKey);
 }
 
 $html = file_get_contents('post.html');

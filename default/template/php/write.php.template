@@ -2,23 +2,11 @@
 
 $html = file_get_contents('write.html');
 
-function GetConfig($configKey) {
-	$configDir = '../config/';
-	$defaultDir = '../default/';
-
-	if (file_exists($configDir . $configKey)) {
-		$configValue = file_get_contents($configDir . $configKey);
-	} elseif (file_exists($defaultDir . $configKey)) {
-		copy ($defaultDir . $configKey, $configDir . $configKey);
-		$configValue = file_get_contents($configDir . $configKey);
-	} else {
-		$configValue = '';
-	}
-
-	return $configValue;
+if (file_exists('utils.php')) {
+	include_once('utils.php');
 }
 
-if (GetConfig('admin/php/write_form_prefill_browser_survey')) {
+if (function_exists('GetConfig') && GetConfig('admin/php/write_form_prefill_browser_survey')) {
 	$debugInfo =
 		(isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($_SERVER['HTTP_USER_AGENT']) : '-') .
 		"\n" .

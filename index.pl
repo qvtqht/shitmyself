@@ -176,11 +176,11 @@ sub GetFileHashPath { # Returns text file's standardized path given its filename
 #						$message =~ s/$reconLine/[Server discovered $itemHash at $itemAddedTime.]/g;
 #						$detokenedMessage =~ s/$reconLine//g;
 #
-#						DBAddItemParent($gitHash, $itemHash);
+#						DBAddItemParent($fileHash, $itemHash);
 #
 #						DBAddPageTouch('item', $itemHash);
 #
-#						DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
+#						DBAddVoteRecord($fileHash, $addedTime, 'timestamp');
 #
 #						DBAddPageTouch('tag', 'timestamp');
 #					}
@@ -276,10 +276,11 @@ sub IndexTextFile { # indexes one text file into database
 	my $txt = "";           # original text inside file
 	my $message = "";       # outputted text after parsing
 	my $isSigned = 0;       # was this item signed?
+	my $hasCookie = 0;
 
 	my $addedTime;          # time added, epoch format
 	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
-	my $gitHash;            # git's hash of file blob, used as identifier
+	my $fileHash;            # git's hash of file blob, used as identifier
 	my $isAdmin = 0;        # was this posted by admin?
 
 	# author's attributes
@@ -297,8 +298,8 @@ sub IndexTextFile { # indexes one text file into database
 
 #	if (substr(lc($file), length($file) -4, 4) eq ".jpg") {
 #		my $itemName = 'image...';
-#		my $gitHash = GetFileHash($file);
-#		DBAddItem ($file, $itemName, '',      $gitHash, 'jpg');
+#		my $fileHash = GetFileHash($file);
+#		DBAddItem($file, $itemName, '',      $fileHash, 'jpg');
 #	} #aug29
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
@@ -315,7 +316,7 @@ sub IndexTextFile { # indexes one text file into database
 		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
 		
 		$alias = $gpgResults{'alias'}; # alias of signer (from public key)
-		$gitHash = $gpgResults{'gitHash'}; # hash provided by git for the file
+		$fileHash = $gpgResults{'gitHash'}; # hash provided by git for the file
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; # 
 
 		if (GetConfig('admin/gpg/capture_stderr_output')) {
@@ -349,12 +350,12 @@ sub IndexTextFile { # indexes one text file into database
 		# get the file's added time.
 
 		# debug output
-		WriteLog('... $file = ' . $file . ', $gitHash = ' . $gitHash);
+		WriteLog('... $file = ' . $file . ', $fileHash = ' . $fileHash);
 
 		# if the file is present in deleted.log, get rid of it and its page, return
-		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $gitHash) {
+		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 			# write to log
-			WriteLog("... $gitHash exists in deleted.log, removing $file");
+			WriteLog("... $fileHash exists in deleted.log, removing $file");
 
 			# unlink the file itself
 			if (-e $file) {
@@ -362,11 +363,11 @@ sub IndexTextFile { # indexes one text file into database
 			}
 
 			# find the html file and unlink it too
-			#my $htmlFilename = 'html/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+			#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . ".html";
 
-			WriteLog('$gitHash = ' . $gitHash);
+			WriteLog('$fileHash = ' . $fileHash);
 
-			my $htmlFilename = GetHtmlFilename($gitHash);
+			my $htmlFilename = GetHtmlFilename($fileHash);
 
 			if ($htmlFilename) {
 				$htmlFilename = 'html/' . $htmlFilename;
@@ -428,7 +429,7 @@ sub IndexTextFile { # indexes one text file into database
 		# it was posted by admin
 			$isAdmin = 1;
 
-			DBAddVoteRecord($gitHash, $addedTime, 'admin');
+			DBAddVoteRecord($fileHash, $addedTime, 'admin');
 
 			DBAddPageTouch('tag', 'admin');
 
@@ -449,7 +450,7 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		if ($alias) {
-			DBAddKeyAlias ($gpgKey, $alias, $gitHash);
+			DBAddKeyAlias ($gpgKey, $alias, $fileHash);
 			
 			UnlinkCache('avatar/' . $gpgKey);
 			UnlinkCache('avatar.color/' . $gpgKey);
@@ -468,6 +469,23 @@ sub IndexTextFile { # indexes one text file into database
 
 		my $itemName = TrimPath($file);
 
+		if ($message) {
+			#look for cookies
+			my @cookieLines = ( $message =~ m/^Cookie:\s(.+)/mg );
+
+			if (@cookieLines) {
+				while (@cookieLines) {
+					my $cookieValue = shift @cookieLines;
+
+					$hasCookie = $cookieValue; #only the last cookie is counted
+
+					my $reconLine = "Cookie: $cookieValue";
+
+					$detokenedMessage =~ s/$reconLine//;
+				}
+			}
+		}
+
 		# look for quoted message ids
 		if ($message) {
 			# >> token
@@ -478,8 +496,8 @@ sub IndexTextFile { # indexes one text file into database
 					my $parentHash = shift @replyLines;
 
 					if (IsSha1($parentHash)) {
-						DBAddItemParent($gitHash, $parentHash);
-						DBAddVoteRecord($gitHash, $addedTime, 'reply');
+						DBAddItemParent($fileHash, $parentHash);
+						DBAddVoteRecord($fileHash, $addedTime, 'reply');
 					}
 
 					my $reconLine = ">>$parentHash";
@@ -510,7 +528,7 @@ sub IndexTextFile { # indexes one text file into database
 					my $hashTag = shift @hashTags;
 
 					if ($hashTag) { #todo add sanity checks here
-						DBAddVoteRecord($gitHash, $addedTime, $hashTag);
+						DBAddVoteRecord($fileHash, $addedTime, $hashTag);
 
 						DBAddPageTouch('tag', $hashTag);
 
@@ -532,8 +550,7 @@ sub IndexTextFile { # indexes one text file into database
 
 					PutFile('html/txt/upgrade_' . $time . '.txt', $upgradeNow);
 
-#					PutConfig('upgrade_now', time());
-					AppendFile('log/deleted.log', $gitHash);
+					AppendFile('log/deleted.log', $fileHash);
 				}
 			}
 		}
@@ -558,7 +575,7 @@ sub IndexTextFile { # indexes one text file into database
 				if (@setConfigLines) {
 					#my $lineCount = @setConfigLines / 3;
 
-					if ($isSigned) {
+					if ($isSigned) { #todo this is a mistake, unsigned should be able to config if allowed above
 						while (@setConfigLines) {
 							my $configAction = shift @setConfigLines;
 							my $configKey = shift @setConfigLines;
@@ -611,13 +628,13 @@ sub IndexTextFile { # indexes one text file into database
 									)
 								) # condition 1
 								{
-									DBAddVoteRecord($gitHash, $addedTime, 'config');
+									DBAddVoteRecord($fileHash, $addedTime, 'config');
 
 									if ($configAction eq 'resetconfig') {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $gitHash);
+										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
 										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
 									} else {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $gitHash);
+										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
 										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
 									}
 
@@ -644,7 +661,7 @@ sub IndexTextFile { # indexes one text file into database
 			# look for vouch, which adds a voting vouch for a user
 			# vouch/F82FCD75AAEF7CC8/20
 
-			if (IsAdmin($gpgKey) || $isSigned) {
+			if (IsAdmin($gpgKey) || $isSigned) { # todo allow non-admin vouch from vouched
 				my @weightLines = ( $message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg );
 
 				if (@weightLines) {
@@ -669,7 +686,7 @@ sub IndexTextFile { # indexes one text file into database
 							DBAddPageTouch('scores', 0);
 						}
 
-						DBAddVoteRecord($gitHash, $addedTime, 'vouch');
+						DBAddVoteRecord($fileHash, $addedTime, 'vouch');
 
 						DBAddPageTouch('tag', 'vouch');
 					}
@@ -711,11 +728,11 @@ sub IndexTextFile { # indexes one text file into database
 							$message =~ s/$reconLine/[Server discovered $itemHash at $itemAddedTime.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
-							DBAddItemParent($gitHash, $itemHash);
+							DBAddItemParent($fileHash, $itemHash);
 
 							DBAddPageTouch('item', $itemHash);
 
-							DBAddVoteRecord($gitHash, $addedTime, 'timestamp');
+							DBAddVoteRecord($fileHash, $addedTime, 'timestamp');
 
 							DBAddPageTouch('tag', 'timestamp');
 						}
@@ -758,14 +775,14 @@ sub IndexTextFile { # indexes one text file into database
 							$message =~ s/$reconLine/[Item $itemHash was added by $itemAddedBy.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
-							DBAddItemParent($gitHash, $itemHash);
+							DBAddItemParent($fileHash, $itemHash);
 
-							DBAddItemClient($gitHash, $itemAddedBy);
+							DBAddItemClient($fileHash, $itemAddedBy);
 						}
 
 						#DBAddVoteWeight('flush');
 
-						DBAddVoteRecord($gitHash, $addedTime, 'device');
+						DBAddVoteRecord($fileHash, $addedTime, 'device');
 
 						DBAddPageTouch('tag', 'device');
 					}
@@ -802,12 +819,12 @@ sub IndexTextFile { # indexes one text file into database
 							$message =~ s/$reconLine/[Item $itemHash was added with SHA512 hash $itemSha512Shortened.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
-							DBAddItemParent($gitHash, $itemHash);
+							DBAddItemParent($fileHash, $itemHash);
 						}
 
 						#DBAddVoteWeight('flush');
 
-						DBAddVoteRecord($gitHash, $addedTime, 'sha');
+						DBAddVoteRecord($fileHash, $addedTime, 'sha');
 
 						DBAddPageTouch('tag', 'sha');
 					}
@@ -838,9 +855,9 @@ sub IndexTextFile { # indexes one text file into database
 #					my $long = shift @latLongLines;
 #
 #					if ($isSigned) {
-#						DBAddLatLongRecord($gitHash, $lat, $long, $gpgKey);
+#						DBAddLatLongRecord($fileHash, $lat, $long, $gpgKey);
 #					} else {
-#						DBAddLatLongRecord($gitHash, $lat, $long);
+#						DBAddLatLongRecord($fileHash, $lat, $long);
 #					}
 #				}
 #			}
@@ -896,12 +913,12 @@ sub IndexTextFile { # indexes one text file into database
 					$detokenedMessage =~ s/$reconLine//g;
 
 					if ($isSigned) {
-						DBAddBrcRecord($gitHash, $aveHours, $aveMinutes, $streetLetter, $gpgKey);
+						DBAddBrcRecord($fileHash, $aveHours, $aveMinutes, $streetLetter, $gpgKey);
 					} else {
-						DBAddBrcRecord($gitHash, $aveHours, $aveMinutes, $streetLetter);
+						DBAddBrcRecord($fileHash, $aveHours, $aveMinutes, $streetLetter);
 					}
 
-					DBAddVoteRecord ($gitHash, $addedTime, 'brc');
+					DBAddVoteRecord ($fileHash, $addedTime, 'brc');
 
 					DBAddPageTouch('tag', 'brc');
 				}
@@ -927,9 +944,9 @@ sub IndexTextFile { # indexes one text file into database
 					WriteLog("About to DBAddLocationRecord() ... $latValue, $longValue");
 
 					if ($isSigned) {
-						DBAddLocationRecord($gitHash, $latValue, $longValue, $gpgKey);
+						DBAddLocationRecord($fileHash, $latValue, $longValue, $gpgKey);
 					} else {
-						DBAddLocationRecord($gitHash, $latValue, $longValue);
+						DBAddLocationRecord($fileHash, $latValue, $longValue);
 					}
 
 					my $reconLine = "latlong/$latValue,$longValue";
@@ -938,7 +955,7 @@ sub IndexTextFile { # indexes one text file into database
 
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddVoteRecord ($gitHash, $addedTime, 'location');
+					DBAddVoteRecord ($fileHash, $addedTime, 'location');
 
 					DBAddPageTouch('tag', 'location');
 				}
@@ -964,9 +981,9 @@ sub IndexTextFile { # indexes one text file into database
 					my $eventDuration = shift @eventLines;
 
 					if ($isSigned) {
-						DBAddEventRecord($gitHash, $eventTime, $eventDuration, $gpgKey);
+						DBAddEventRecord($fileHash, $eventTime, $eventDuration, $gpgKey);
 					} else {
-						DBAddEventRecord($gitHash, $eventTime, $eventDuration);
+						DBAddEventRecord($fileHash, $eventTime, $eventDuration);
 					}
 
 					my $reconLine = "event/$eventTime/$eventDuration";
@@ -1017,7 +1034,7 @@ sub IndexTextFile { # indexes one text file into database
 
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddVoteRecord ($gitHash, $addedTime, 'event');
+					DBAddVoteRecord ($fileHash, $addedTime, 'event');
 
 					DBAddPageTouch('tag', 'event');
 
@@ -1067,14 +1084,18 @@ sub IndexTextFile { # indexes one text file into database
 						# include author's key if message is signed
 						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $gpgKey);
 					} else {
-						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue);
+						if ($hasCookie) {
+							DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $hasCookie);
+						} else {
+							DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue);
+						}
 					}
 
 					# add a 'hasvote' tag to item being voted on
 					DBAddVoteRecord($voteFileHash, $addedTime, 'hasvote');
 
 					# set voted-on item as parent of current item
-					DBAddItemParent($gitHash, $voteFileHash);
+					DBAddItemParent($fileHash, $voteFileHash);
 
 					# replace token in message with a (slightly) more descriptive string
 					my $reconLine = "$tokenPrefix/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
@@ -1084,7 +1105,7 @@ sub IndexTextFile { # indexes one text file into database
 					$detokenedMessage =~ s/$reconLine//g;
 
 					# give this item 'vote' tag, to indicate it contains vote(s)
-					DBAddVoteRecord ($gitHash, $addedTime, 'vote');
+					DBAddVoteRecord ($fileHash, $addedTime, 'vote');
 
 					# add page_touch records so that appropriate pages are refreshed
 					DBAddPageTouch('item', $voteFileHash); # item
@@ -1154,7 +1175,7 @@ sub IndexTextFile { # indexes one text file into database
 
 		# if $alias is set, means this is a pubkey
 		if ($alias) {
-			DBAddVoteRecord ($gitHash, $addedTime, 'pubkey');
+			DBAddVoteRecord ($fileHash, $addedTime, 'pubkey');
 			# add the "pubkey" tag
 
 			DBAddPageTouch('tag', 'pubkey');
@@ -1170,7 +1191,7 @@ sub IndexTextFile { # indexes one text file into database
 			$detokenedMessage = trim($detokenedMessage);
 
 			if ($detokenedMessage eq '') {
-				DBAddVoteRecord($gitHash, $addedTime, 'notext');
+				DBAddVoteRecord($fileHash, $addedTime, 'notext');
 
 				DBAddPageTouch('tag', 'notext');
 			} else {
@@ -1194,14 +1215,14 @@ sub IndexTextFile { # indexes one text file into database
 							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
 						}
 
-						DBAddTitle($gitHash, $title);
+						DBAddTitle($fileHash, $title);
 
 						DBAddTitle('flush'); #todo refactor this out
 
-						DBAddVoteRecord($gitHash, $addedTime, 'hastitle');
+						DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
 					}
 
-					DBAddVoteRecord($gitHash, $addedTime, 'hastext');
+					DBAddVoteRecord($fileHash, $addedTime, 'hastext');
 
 					DBAddPageTouch('tag', 'hastext');
 				} else {
@@ -1211,7 +1232,7 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		if ($message) {
-			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$fileHash";
 			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
 		} else {
@@ -1219,25 +1240,29 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		if ($isSigned) {
-			DBAddItem ($file, $itemName, $gpgKey, $gitHash, 'txt', $verifyError);
+			DBAddItem($file, $itemName, $gpgKey, $fileHash, 'txt', $verifyError);
 		} else {
-			DBAddItem ($file, $itemName, '',      $gitHash, 'txt', $verifyError);
+			if ($hasCookie) {
+				DBAddItem($file, $itemName, $hasCookie, $fileHash, 'txt', $verifyError);
+			} else {
+				DBAddItem($file, $itemName, '', $fileHash, 'txt', $verifyError);
+			}
 		}
 
 		DBAddPageTouch('top', 1);
 
 		if ($hasParent == 0) {
-#			DBAddVoteRecord($gitHash, $addedTime, 'hasparent');
+#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
 #		} else {
-			DBAddVoteRecord($gitHash, $addedTime, 'topic');
+			DBAddVoteRecord($fileHash, $addedTime, 'topic');
 		}
 
-		DBAddPageTouch('item', $gitHash);
+		DBAddPageTouch('item', $fileHash);
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			$isAdmin = 1;
 
-			DBAddVoteRecord($gitHash, $addedTime, 'admin');
+			DBAddVoteRecord($fileHash, $addedTime, 'admin');
 
 			DBAddPageTouch('tag', 'admin');
 		}
@@ -1246,6 +1271,10 @@ sub IndexTextFile { # indexes one text file into database
 			DBAddKeyAlias('flush');
 
 			DBAddPageTouch('author', $gpgKey);
+
+			DBAddPageTouch('scores', 1);
+		} elsif ($hasCookie) {
+			DBAddPageTouch('author', $hasCookie);
 
 			DBAddPageTouch('scores', 1);
 		}

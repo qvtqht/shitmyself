@@ -851,6 +851,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $gpgKey = $file{'author_key'}; # author's fingerprint
 
 		my $isTextart = 0; # if textart, need extra formatting
+		my $isSurvey = 0; # if survey, need extra formatting
 
 		my $alias; # stores author's alias / name
 		my $isAdmin = 0; # author is admin? (needs extra styles)
@@ -899,12 +900,19 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				if ($thisTag eq 'textart') {
 					$isTextart = 1; # set isTextart to 1 if 'textart' tag is present
 				}
+				if ($thisTag eq 'survey') {
+					$isSurvey = 1; # set $isSurvey to 1 if 'survey' tag is present
+				}
 			}
 		}
 
 		if ($isTextart) {
 			# if textart, format with extra spacing to preserve character arrangement
 			$message = TextartForWeb($message);
+		} elsif ($isSurvey) {
+			# if survey, format with text fields for answers
+			$message = SurveyForWeb($message);
+			$message = 'poop';
 		} else {
 			# if not textart, just escape html characters
 			$message = FormatForWeb($message);
@@ -1280,12 +1288,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	#todo replace with config/menu/*
 	$menuItems .= GetMenuItem("/", 'Home');
 	$menuItems .= GetMenuItem("/write.html", GetString('menu/write'));
-	$menuItems .= GetMenuItem("/top.html", 'Topics');
+#	$menuItems .= GetMenuItem("/top.html", 'Topics');
 	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
-	$menuItems .= GetMenuItem("/authors.html", 'Authors');
+	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
 	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
-	$menuItems .= GetMenuItem("/prefs.html", 'Settings');
-	$menuItems .= GetMenuItem("/stats.html", 'Status');
+	$menuItems .= GetMenuItem("/settings.html", 'Settings');
+	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
@@ -2303,14 +2311,18 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
 	}
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
+#
+#	# Profile page
+	my $identityPage = GetIdentityPage();
+	PutHtmlFile("$HTMLDIR/gpg.html", $identityPage);
 
 	# Profile page
-	my $identityPage = GetIdentityPage();
-	PutHtmlFile("$HTMLDIR/profile.html", $identityPage);
+	my $identityPage2 = GetIdentityPage2();
+	PutHtmlFile("$HTMLDIR/profile.html", $identityPage2);
 
 	# Preferences page
 	my $prefsPage = GetPrefsPage();
-	PutHtmlFile("$HTMLDIR/prefs.html", $prefsPage);
+	PutHtmlFile("$HTMLDIR/settings.html", $prefsPage);
 
 	# Target page for the submit page
 	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
@@ -2495,6 +2507,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
 		PutFile('html/cookie.php', $cookiePhpTemplate);
+
+		my $profilePhpTemplate = GetTemplate('php/profile.php.template');
+		PutFile('html/profile.php', $profilePhpTemplate);
+
+		my $utilsPhpTemplate = GetTemplate('php/utils.php.template');
+		PutFile('html/utils.php', $utilsPhpTemplate);
 	}
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
@@ -2647,7 +2665,7 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $idPage = GetTemplate('form/identity.template');
+	my $idPage = GetTemplate('form/profile.template');
 
 	my $idCreateForm = GetTemplate('form/id_create2.template');
 	my $prefillUsername = GetConfig('prefill_username');
@@ -2696,7 +2714,35 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 	return $txtIndex;
 }
 
-sub GetPrefsPage { # returns html for preferences page (/prefs.html)
+sub GetIdentityPage2 { #todo rename GetProfilePage?
+	my $txtIndex = "";
+
+	my $title = "Profile";
+	my $titleHtml = "Profile";
+
+	$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $profileWindowContents = GetTemplate('form/profile2.template');
+	my $profileWindow = GetWindowTemplate(
+		'Profile',
+		'<a class=advanced href="/gpg.html">Authentication</a>',
+		'',
+		'<tr class=content><td>' . $profileWindowContents . '</td></tr>',
+		'Ready'
+	);
+
+	$txtIndex .= $profileWindow;
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+
+	return $txtIndex;
+}
+
+sub GetPrefsPage { # returns html for preferences page (/settings.html)
 	my $txtIndex = "";
 
 	my $title = "Preferences";

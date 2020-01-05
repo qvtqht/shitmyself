@@ -1,4 +1,8 @@
+<!-- just_posted.template -->
+
 <a href="$fileUrlPath">
 	<span class=beginner>See what you just posted</span>
 	<!--<b class=advanced>$fileUrlPath<br><br></b>-->
 </a>
+
+<!-- / just_posted.template -->

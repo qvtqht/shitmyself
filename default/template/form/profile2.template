@@ -1,0 +1,21 @@
+<!-- profile2.template -->
+
+<form action="profile.html">
+
+<fieldset>
+
+	<legend>Cookies</legend>
+
+	<p>Handle: <span id=handle>$handle</span>
+
+	<p>Fingerprint: <span id=fingerprint>$fingerprint</span>
+
+	<p>
+		<input type=submit name=request value="Register">
+		<input type=submit name=request value="Sign Out">
+
+</fieldset>
+
+</form>
+
+<!-- / profile2.template -->

@@ -49,6 +49,46 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
+sub WriteLog {  # Writes timestamped message to console (stdout) AND log/log.log
+	# Only if debug mode is enabled
+	if (-e 'config/admin/debug') {
+		my $text = shift;
+
+		if (!$text) {
+			$text = '(empty string)';
+		}
+
+		chomp $text;
+
+		my $timestamp = GetTime();
+
+		AppendFile("log/log.log", $timestamp . " " . $text);
+
+		if (-e 'config/admin/prev_build_duration') {
+			state $prevBuildDuration;
+			$prevBuildDuration = $prevBuildDuration || trim(GetFile('config/admin/prev_build_duration'));
+			#bug here
+
+			if ($prevBuildDuration) {
+				state $buildBegin;
+				$buildBegin = $buildBegin || trim(GetFile('config/admin/build_begin'));
+
+				my $approximateProgress = (GetTime() - $buildBegin) / $prevBuildDuration * 100;
+#				print '(~' . $approximateProgress . '%) ' . $timestamp . " " . $text . "\n";
+			} else {
+#				print $timestamp . " " . $text . "\n";
+			}
+		} else {
+#			print $timestamp . " " . $text . "\n";
+		}
+
+		return 1;
+	}
+
+	return 0;
+}
+
+
 # capture gpg's stderr output if capture_stderr_output is set
 # the value of $gpgStderr will be appended to gpg commands in GpgParse()
 # this block should be moved into GpgParse() probably
@@ -322,11 +362,20 @@ sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to
 sub GetString { # Returns string from config/string/en/..., with special rules:
 # #todo look up locale, not hard-coded to en
 	my $stringKey = shift;
+	my $language = shift;
+
+	if (!$language) {
+		$language = GetConfig('language');
+	}
+
+	if (!$language) {
+		$language = 'en';
+	}
 
 	state %strings;
 
 	if (!defined($strings{$stringKey})) {
-		my $string = GetConfig('string/en/'.$stringKey);
+		my $string = GetConfig('string/' . $language . '/'.$stringKey);
 
 		if ($string) {
 			chomp ($string);
@@ -896,6 +945,76 @@ sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused
 
 }
 
+sub str_replace {
+	my $string = shift;
+#	return $string;
+	my $old = shift;
+	my $new = shift;
+
+	if (!$old || !$new || !$string) {
+		return 'str_replace failed due to one of the parameters missing!'; #todo make some kind of gesture
+	}
+
+	if (index($new, $old)) {
+		WriteLog('str_replace: $new contains $old, this won\'t do');
+		return $string;
+	}
+
+	my $i;
+	while (($i = index($string, $old)) != -1) {
+		substr($string, $i, length($old)) = $new;
+	}
+
+
+	#
+#	WriteLog('str_replace("' . $string . '", "' . $old . '", "' . $new . '")');
+#
+#	my $i = index($string, $old);
+#	if ($i != -1) {
+#		if ($i > 0) {
+#			$string = substr($string, 0, $i) . $new . substr($string, $i + length($old));
+#		} else {
+#			$string = $new . substr($string, length($old));
+#		}
+#		$string = str_replace($string, $old, $new, $recursionLevel);
+#	}
+
+	return $string;
+}
+
+sub ReplaceStrings {
+	my $content = shift;
+	my $newLanguage = shift;
+
+	if (!$newLanguage) {
+		$newLanguage = GetConfig('language');
+	}
+
+	my $contentStripped = $content;
+	$contentStripped =~ s/\<[^>]+\>/<>/sg;
+	my @contentStrings = split('<>', $contentStripped);
+
+	foreach my $string (@contentStrings) {
+		$string = trim($string);
+
+		if ($string && length($string) >= 5) {
+			my $stringHash = md5_hex($string);
+
+			WriteLog('ReplaceStrings, replacing ' . $string . ' (' . $stringHash . ')');
+
+			my $newString = GetConfig('string/' . $newLanguage . '/' . $stringHash);
+
+			if ($newString) {
+				$content = str_replace($content, $string, $newString);
+			} else {
+				PutConfig('string/' . $newLanguage . '/' . $stringHash, $string);
+			}
+		}
+	}
+
+	return $content;
+}
+
 sub PutHtmlFile { # writes content to html file, with special rules; parameters: $file, $content
 # the special rules are:
 # * if config/admin/html/ascii_only is set, all non-ascii characters are stripped from output to file
@@ -914,9 +1033,18 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	if (!$content) {
 		$content = '';
 	}
-	
-	my $relativizeUrls = GetConfig('html/relativize_urls');
 
+	# controls whether linked urls are converted to relative format
+	# meaning they go from e.g. /write.html to ./write.html
+	# this breaks the 404 page links so disable that for now
+	my $relativizeUrls = GetConfig('html/relativize_urls');
+	if (TrimPath($file) eq '404') {
+		$relativizeUrls = 0;
+	}
+
+	# keeps track of whether home page has been written at some point
+	# this value is returned if $file is 'check_homepage'
+	# then we can write the default homepage in its place
 	state $homePageWritten;
 	if (!defined($homePageWritten)) {
 		$homePageWritten = 0;
@@ -926,8 +1054,9 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	}
 
 	WriteLog("PutHtmlFile($file), \$content)");
-	#WriteLog("===begin \$content===\n$content\n===");
 
+	# $stripNonAscii remembers value of admin/html/ascii_only
+	# this might be duplicate work
 	state $stripNonAscii;
 	if (!defined($stripNonAscii)) {
 		$stripNonAscii = GetConfig('admin/html/ascii_only');
@@ -939,19 +1068,30 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		}
 	}
 
+	# if $stripNonAscii is on, strip all non-ascii characters from the output
+	# in the future, this can, perhaps, for example, convert unicode-cyrillic to ascii-cyrillic
 	if ($stripNonAscii == 1) {
 		WriteLog( '$stripNonAscii == 1');
 		$content =~ s/[^[:ascii:]]//g;
 	}
-	
+
+	# convert urls to relative if $relativizeUrls is set
 	if ($relativizeUrls == 1) {
+		# only the following *exact* formats are converted
+		# thus it is important to maintain this exact format throughout the html and js templates
 		# src="/
 		# href="/
 		# .src = '/
 		# .location = '/
 
+		# first we determine how many levels deep our current file is
+		# we do this by counting slashes in $file
 		my $count = ($file =~ s/\//\//g);
-		
+
+		# then we build the path prefix.
+		# the same prefix is used on all links
+		# this can be done more efficiently on a per-link basis
+		# but most subdirectory-located files are of the form /aa/bb/aabbcc....html anyway
 		my $subDir;
 		if ($count == 1) {
 			$subDir = './';
@@ -959,33 +1099,33 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 			$subDir = '../' x ($count - 1);
 		}
 
+		# here is where we do substitutions
+		# it may be wiser to use str_replace here
 		$content =~ s/src="\//src="$subDir/ig;
 		$content =~ s/href="\//href="$subDir/ig;
 		$content =~ s/\.src = '\//.src = '$subDir/ig;
 		$content =~ s/\.location = '\//.location = '$subDir/ig;
 	}
 
-#	if (GetConfig('admin/debug')) {
-#		WriteLog("PutHtmlFile: $file ; comparing new content to old");
-#		my $oldContent = GetFile($file);
-#		if ($oldContent eq $content) {
-#			WriteLog('$oldContent matches $content');
-#		} else {
-#			WriteLog('$oldContent doesn\'t match $content');
-#		}
-#	}
-
+	# fill in colors
 	my $colorTitlebarText = GetThemeColor('titlebar_text');#
 	$content =~ s/\$colorTitlebarText/$colorTitlebarText/g;#
 
 	my $colorTitlebar = GetThemeColor('titlebar');#
 	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
-	my $borderDialog = GetThemeAttribute('color_border_dialog'); #todo rename it in all themes and then here
+	my $borderDialog = GetThemeAttribute('color_border_dialog');
+	# todo rename it in all themes and then here
+	# not actually a color, but the entire border definition
 	$content =~ s/\$borderDialog/$borderDialog/g;
 
 	my $colorWindow = GetThemeColor('window');
 	$content =~ s/\$colorWindow/$colorWindow/g;
+
+	# #internationalization #i18n
+	if (GetConfig('language') ne 'en') {
+		$content = ReplaceStrings($content);
+	}
 
 	PutFile($file, $content);
 
@@ -1005,12 +1145,13 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		system ('sort log/404.log | uniq > log/404.log.uniq ; mv log/404.log.uniq log/404.log');
 
 		# store log file in static variable for future 
-		state $log404; 
+		state $log404;
 		if (!$log404) {
 			$log404 = GetFile('log/404.log');
 		}
 
 		# if hash is found in 404 log, we will fill in the html page
+		# pretty sure this code doesn't work #todo
 		if ($log404 =~ m/$itemHash/) {
 			my $aliasUrl = GetItemMessage($itemHash); # url is stored inside message
 
@@ -1024,7 +1165,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 }
 
 sub GetFileAsHashKeys { # returns file as hash of lines
-# currently not used, not sure what it was for   
+# currently not used, can be used for detecting matching lines later
 	my $fileName = shift;
 
 	my @lines = split('\n', GetFile($fileName));
@@ -1039,7 +1180,8 @@ sub GetFileAsHashKeys { # returns file as hash of lines
 }
 
 
-sub AppendFile { # Appends to file; $file (path), $content to append
+sub AppendFile { # appends something to a file; $file, $content to append
+# mainly used for writing to log files
 	my $file = shift;
 	my $content = shift;
 
@@ -1049,7 +1191,7 @@ sub AppendFile { # Appends to file; $file (path), $content to append
 	}
 }
 
-sub trim { # trims whitespace from beginning and end of string
+sub trim { # trims whitespace from beginning and end of $string
 	my $s = shift;
 
 	if (defined($s)) {
@@ -1154,7 +1296,7 @@ sub GetFileSizeHtml { # takes file size as number, and returns html-formatted hu
 	return $fileSizeString;
 }
 
-sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), 0 otherwise 
+sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwise returns 0
 	my $key = shift;
 
 	if (!$key) {
@@ -1739,43 +1881,31 @@ sub TextartForWeb { # replaces some spaces with &nbsp; to preserve text-based la
 	return $text;
 }
 
-sub WriteLog {  # Writes timestamped message to console (stdout) AND log/log.log
-# Only if debug mode is enabled
-	if (-e 'config/admin/debug') {
-		my $text = shift;
+sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
 
-		if (!$text) {
-			$text = '(empty string)';
-		}
-
-		chomp $text;
-
-		my $timestamp = GetTime();
-
-		AppendFile("log/log.log", $timestamp . " " . $text);
-
-		if (-e 'config/admin/prev_build_duration') {
-			state $prevBuildDuration;
-			$prevBuildDuration = $prevBuildDuration || trim(GetFile('config/admin/prev_build_duration'));
-			#bug here
-
-			if ($prevBuildDuration) {
-				state $buildBegin;
-				$buildBegin = $buildBegin || trim(GetFile('config/admin/build_begin'));
-
-				my $approximateProgress = (GetTime() - $buildBegin) / $prevBuildDuration * 100;
-				print '(~' . $approximateProgress . '%) ' . $timestamp . " " . $text . "\n";
-			} else {
-				print $timestamp . " " . $text . "\n";
-			}
-		} else {
-			print $timestamp . " " . $text . "\n";
-		}
-
-		return 1;
+	if (!$text) {
+		return '';
 	}
 
-	return 0;
+	my $i = 0;
+
+	$text = HtmlEscape($text);
+	$text =~ s/\n /<br>&nbsp;/g;
+	$text =~ s/^ /&nbsp;/g;
+	$text =~ s/  / &nbsp;/g;
+	$text =~ s/\n/<br>\n/g;
+#	$text =~ s/<br>/'<br><input type=text size=80 name=txt'.$i++.'><br>'/ge;
+
+	#htmlspecialchars(
+	## nl2br(
+	## str_replace(
+	## '  ', ' &nbsp;',
+	# htmlspecialchars(
+	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
+	#));?><?=$tt_c?></description>
+
+	return $text;
 }
 
 sub WriteMessage { # Writes timestamped message to console (stdout)
@@ -1907,8 +2037,8 @@ sub ServerSign { # Signs a given file with the server's key
 		# should start with $gpgCommand
 #		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 #		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		WriteLog("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\" $gpgStderr");
-		system("$gpgCommand --batch --yes --default-key $serverKeyId --clearsign \"$file\" $gpgStderr");
+		WriteLog("$gpgCommand --batch --yes --u $serverKeyId --clearsign \"$file\" $gpgStderr");
+		system("$gpgCommand --batch --yes --u $serverKeyId --clearsign \"$file\" $gpgStderr");
 
 		if (-e "$file.asc") {
 			WriteLog("Sign appears successful, rename .asc file to .txt");

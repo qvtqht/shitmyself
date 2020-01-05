@@ -1,0 +1,15 @@
+<?php
+
+$html = file_get_contents('profile.html');
+
+include('cookie.php');
+
+if (isset($cookie) && $cookie) {
+	$html = str_replace('$fingerprint', $cookie, $html);
+	$html = str_replace('$handle', 'Anonymous', $html);
+} else {
+	$html = str_replace('$fingerprint', '(none)', $html);
+	$html = str_replace('$handle', '(none)', $html);
+}
+
+print($html);

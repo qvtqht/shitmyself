@@ -1,18 +1,53 @@
-<?
+<?php
 	$cookie = 0;
 
-	if ($_COOKIE['test']) {
-		if ($_COOKIE['cookie']) {
-			$cookie = $_COOKIE['cookie'];
-		}
+	include_once('utils.php');
 
-		if (!$cookie) {
-			$cookie = substr(md5(rand()), 16);
-			setcookie('cookie', $cookie);
-		}
+	$commandRegister = 'Register';
+	$commandUnregister = 'Sign Out';
+
+	if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
+		setcookie('test');
+		setcookie('cookie');
+		setcookie('checksum');
+
+		WriteLog('all cookies unset');
 	} else {
-		setcookie('test', '1');
+		if (isset($_COOKIE['test']) && $_COOKIE['test']) {
+			WriteLog('test cookie found');
+
+			if (isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
+				$cookie = $_COOKIE['cookie'];
+			}
+
+			if (isset($_COOKIE['checksum']) && $_COOKIE['checksum']) {
+				$checksum = $_COOKIE['checksum'];
+			}
+
+			WriteLog('$cookie = ' . (isset($cookie) ? $cookie : '(unset)') . '; $checksum= ' . (isset($checksum) ? $checksum : '(unset)'));
+
+			$secret = GetConfig('admin/secret');
+
+			if (!$cookie) {
+				WriteLog('$cookie not found, creating new one...');
+
+				$cookie = strtoupper(substr(md5(rand()), 16));
+
+				$checksum = md5($cookie . '/' . $secret);
+
+				setcookie('cookie', $cookie);
+				setcookie('checksum', $checksum);
+			}
+
+			if (md5($cookie . '/' . $secret) != $checksum) {
+				unset($cookie);
+				setcookie('cookie');
+				header('Location: /profile.html');
+			}
+		} else {
+			if (isset($_GET['request']) && $_GET['request'] == $commandRegister) {
+				setcookie('test', '1');
+				header('Location: /profile.html');
+			}
+		}
 	}
-
-
-?>

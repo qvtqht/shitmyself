@@ -1,0 +1,221 @@
+<?php
+
+
+function WriteLog($text) { // writes to debug log if enabled
+	if (0) { // use this to toggle output
+		print ('<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n");
+	}
+}
+
+function GetMyVersion() { // returns current git commit id
+	static $myVersion;
+
+	if ($myVersion) {
+		return $myVersion;
+	}
+
+	$myVersion = `git rev-parse HEAD`;
+
+	$myVersion = trim($myVersion);
+
+	return $myVersion;
+}
+
+function index($string, $needle) { // emulates perl's index(), returning -1 instead of false
+	$strpos = strpos($string, $needle);
+	if ($strpos === false) {
+		return -1;
+	} else {
+		return $strpos;
+	}
+}
+
+function length($string) { // emulates perl's length()
+	return strlen($string);
+}
+
+function GpgParse($filePath) {
+	$gpgCommand = 'gpg2';
+	$gpgStderr = '';
+
+	if (GetConfig('admin/gpg/capture_stderr_output')) {
+    	$gpgStderr = '2>&1';
+    } else {
+    	if (GetConfig('admin/debug')) {
+    		$gpgStderr = '';
+    	} else {
+    		$gpgStderr = ' 2>/dev/null';
+    	}
+    }
+
+	WriteLog('GpgParse(' . $filePath . ')');
+
+	if (file_exists($filePath)) {
+		WriteLog('GpgParse: File exists');
+
+		$txt = file_get_contents($filePath);
+
+		$fileHash = sha1_file($filePath);
+
+		$message = $txt;
+
+		if ($fileHash) {
+			WriteLog('GpgParse: $fileHash = ' . $fileHash);
+
+			$cachePath = "./cache/" . GetMyVersion() . "/gpg/$fileHash.php.cache";
+
+			$returnValues = array();
+
+			if (file_exists($cachePath)) {
+				WriteLog('GpgParse: ' . $cachePath . ' exists');
+				$returnValues = unserialize(file_get_contents($cachePath));
+			} else {
+				WriteLog('GpgParse: beginning search...');
+
+				$gpgMessageHeader = "-----BEGIN PGP SIGNED MESSAGE-----"; // Signed messages header
+				$gpgPubkeyHeader = "-----BEGIN PGP PUBLIC KEY BLOCK-----"; // Public key header
+				$gpgEncryptedHeader = "-----BEGIN PGP MESSAGE-----"; // Encrypted message header
+
+				$trimmedTxt = trim($txt);
+
+                if (strpos($txt, $gpgMessageHeader) !== false) {
+                	WriteLog('GpgParse: $gpgMessageHeader found');
+
+					$gpgResult = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
+					WriteLog('$gpgResult = ' . "$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
+					WriteLog('$gpgResult: ' . $gpgResult);
+
+					$key_id_prefix = '';
+					$key_id_suffix = '';
+
+					$verifyError = 0;
+
+					if (index($gpgResult, "[GNUPG:] GOODSIG ") >= 0) {
+						$key_id_prefix = "[GNUPG:] GOODSIG ";
+						$key_id_suffix = " ";
+					}
+
+					$keyExpired = 0;
+					if (index($gpgResult, "[GNUPG:] EXPKEYSIG ") >= 0) {
+						$key_id_prefix = "[GNUPG:] EXPKEYSIG ";
+						$key_id_suffix = " ";
+
+						$keyExpired = 1;
+					}
+
+					WriteLog('$key_id_prefix = ' . $key_id_prefix);
+					WriteLog('$key_id_suffix = ' . $key_id_suffix);
+
+					if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
+						// Extract the key fingerprint from GPG's output.
+						$gpg_key = substr($gpgResult, index($gpgResult, $key_id_prefix) + length($key_id_prefix));
+						$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
+
+						WriteLog("$gpgCommand --decrypt \"$filePath\" $gpgStderr");
+
+						$message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
+
+						$isSigned = 1;
+					}
+
+					$returnValues['isSigned'] = $isSigned;
+					$returnValues['text'] = $txt;
+					$returnValues['message'] = $message;
+					$returnValues['key'] = $gpg_key;
+//					$returnValues['alias'] = $alias;
+					$returnValues['keyExpired'] = $keyExpired;
+					$returnValues['gitHash'] = $fileHash;
+					$returnValues['verifyError'] = $verifyError;
+
+					file_put_contents($cachePath, serialize($returnValues));
+
+					return $returnValues;
+                }
+			}
+		} else {
+			WriteLog('GpgParse(' . $filePath . ') -- could not get file hash');
+		}
+	} else {
+		WriteLog('GpgParse(' . $filePath . ') -- file does not exist');
+		return '';
+	}
+}
+
+function DoUpdate() {
+	$pwd = getcwd();
+
+	WriteLog('$pwd = ' . $pwd);
+
+	$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
+
+	WriteLog('$scriptDir = ' . $scriptDir);
+
+	if (file_exists($scriptDir . '/update.pl')) {
+		WriteLog('update.pl found, calling');
+		WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl');
+
+		WriteLog(`cd "$scriptDir" ; perl ./update.pl`);
+
+		WriteLog('cd "' . $pwd . '"');
+
+		WriteLog(`cd "$pwd"`);
+	}
+
+//		if (!file_exists($scriptDir . 'cron.lock')) {
+//			WriteLog('cron.lock no exist, trying index.pl');
+//
+//			if (file_exists($scriptDir . '/index.pl')) {
+//				WriteLog('index.pl found, calling');
+//
+//				WriteLog('cd "' . $scriptDir . '" ; perl ./index.pl "' . $filePath . '"');
+//
+////				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
+//			}
+//
+//			if (file_exists($scriptDir . '/touched.pl')) {
+//				WriteLog('touched.pl found, calling');
+//
+//				WriteLog('cd "' . $scriptDir . '" ; perl ./touched.pl');
+//
+////				WriteLog(`cd "$scriptDir" ; perl ./touched.pl`);
+//			}
+
+//		} else {
+//
+//		}
+
+}
+
+function GetConfig($configKey) { // get value for config value $configKey
+// config is stored in config/
+// if not found in config/ it looks in default/
+// if it is in default/, it is copied to config/
+	$configDir = '../config/'; // config is stored here
+	$defaultDir = '../default/'; // defaults are stored here
+
+	WriteLog('GetConfig('.$configKey.'); $configDir = "' . $configDir . '", $defaultDir = "' . $defaultDir . '", pwd = "' . getcwd() . '"');
+
+	WriteLog('Checking in ' . $configDir . $configKey );
+
+	if (file_exists($configDir . $configKey)) {
+		WriteLog('found in config/');
+		$configValue = file_get_contents($configDir . $configKey);
+	} elseif (file_exists($defaultDir . $configKey)) {
+		WriteLog('found in default/');
+		copy ($defaultDir . $configKey, $configDir . $configKey); // copy to config/
+		$configValue = file_get_contents($configDir . $configKey);
+	} else {
+		// otherwise return empty string
+		WriteLog('returning empty string');
+		$configValue = '';
+	}
+
+	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '")');
+	// notify log of what we found
+
+	return $configValue;
+}
+
+function GetTemplate($templateKey) {
+	return GetConfig('template/' . $templateKey);
+}
