@@ -6,6 +6,8 @@
 	$commandRegister = 'Register';
 	$commandUnregister = 'Sign Out';
 
+	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
+
 	if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 		setcookie('test');
 		setcookie('cookie');
@@ -42,12 +44,12 @@
 			if (md5($cookie . '/' . $secret) != $checksum) {
 				unset($cookie);
 				setcookie('cookie');
-				header('Location: /profile.html');
+//				header('Location: /profile.html');
 			}
 		} else {
 			if (isset($_GET['request']) && $_GET['request'] == $commandRegister) {
 				setcookie('test', '1');
-				header('Location: /profile.html');
+//				header('Location: /profile.html');
 			}
 		}
 	}
