@@ -38,9 +38,6 @@
 							<span class=beginner>
 								Long messages are less reliable than short ones.<br>
 							</span>
-							<span class=advanced><span class=beginner>
-								Switched form method from GET to POST.<br>
-							</span></span>
 						</p>
 					</fieldset>
 
