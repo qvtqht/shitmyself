@@ -1,5 +1,7 @@
 <!-- stats2.template -->
 
+<form action="/post.html">
+
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
@@ -12,7 +14,7 @@
 			<td class=content>
 				<fieldset>
 					<p>Built: $lastBuildTime
-					<p>Updated: $lastUpdateTime
+					<p>Updated: $lastUpdateTime <input type=submit name=comment value="Update" class=advanced>
 					<p><a href="/index0.html">Indexed</a>: $itemCount
 					<p class=advanced><a href="/txt/">Total</a>: $filesLeft
 					<p><a href="/authors.html">Authors</a>: $authorCount
