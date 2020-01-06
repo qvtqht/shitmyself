@@ -1299,8 +1299,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
 	$menuItems .= GetMenuItem("/help.html", 'Help');
-	$menuItems .= GetMenuItem("/profile.html", 'Profile');
-
+#	$menuItems .= GetMenuItem("/profile.html", 'Profile');
+#
 	$menuItems .= $identityLink;
 	$menuItems .= $noJsIndicator;
 
@@ -2728,7 +2728,7 @@ sub GetIdentityPage2 { #todo rename GetProfilePage?
 	my $profileWindowContents = GetTemplate('form/profile2.template');
 	my $profileWindow = GetWindowTemplate(
 		'Profile',
-		'<a class=advanced href="/gpg.html">Authentication</a>',
+		'<a class=advanced href="/gpg.html">Signatures</a>',
 		'',
 		'<tr class=content><td>' . $profileWindowContents . '</td></tr>',
 		'Ready'
@@ -2738,7 +2738,7 @@ sub GetIdentityPage2 { #todo rename GetProfilePage?
 
 	$txtIndex .= GetPageFooter();
 
-#	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+	$txtIndex = InjectJs($txtIndex, qw(prefs profile avatar));
 
 	return $txtIndex;
 }
