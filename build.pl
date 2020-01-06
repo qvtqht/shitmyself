@@ -121,9 +121,9 @@ if (GetConfig('admin/lighttpd/enable')) {
 	BuildMessage('$lighttpdConf = GetLighttpdConfig()');
 	my $lighttpdConf = GetLighttpdConfig();
 	
-	BuildMessage('===== beg $lighttpdConf =====');
-	BuildMessage($lighttpdConf);
-	BuildMessage('===== end $lighttpdConf =====');
+	WriteLog('===== beg $lighttpdConf =====');
+	WriteLog($lighttpdConf);
+	WriteLog('===== end $lighttpdConf =====');
 	
 	BuildMessage('PutFile(\'config/lighttpd.conf\', $lighttpdConf);');
 	PutFile('config/lighttpd.conf', $lighttpdConf);
