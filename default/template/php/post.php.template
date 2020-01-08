@@ -47,7 +47,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 
 		$signatureSeparator = "\n-- \n";
 
-		if (GetConfig('admin/logging/record_cookie') && $_COOKIE['cookie']) {
+		if (GetConfig('admin/logging/record_cookie') && isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
 			$comment .= $signatureSeparator;
 			$signatureSeparator = "\n";
 
