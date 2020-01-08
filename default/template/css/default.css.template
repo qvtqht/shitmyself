@@ -16,13 +16,13 @@
 /* special tags */
 .tag-textart {
 	font-family: monospace;
-	font-size: default;
+	font-size: 1em;
 }
 
 /* regular text */
 .txt {
 	font-family: tahoma;
-	font-size: default;
+	font-size: 1em;
 }
 
 /* textart items get monospace font */
@@ -100,7 +100,6 @@ div.txt {
 .dialog {
 	border: $borderDialog;
 	background-color: $colorWindow;
-	spacing: 5pt;
 }
 
 .statusbar td {
@@ -110,12 +109,6 @@ textarea {
 	border: 2pt inset $colorWindow;
 }
 
-#txtClock {
-	background-color: $colorWindow;
-	border: 1pt inset $colorWindow;
-	font-family: monospace;
-	font-weight: default;
-}
 
 input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
