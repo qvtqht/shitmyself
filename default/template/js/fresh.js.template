@@ -75,12 +75,13 @@ function AmIFresh() {
 			intFreshTimeout = 5000;
 		} 
 		
-		timeoutFresh = setTimeout(AmIFresh, intFreshTimeout);
+		timeoutFresh = setTimeout('AmIFresh', intFreshTimeout);
 	}
 }
 
 if (window.GetPrefs) {
-	if (GetPrefs('notify_on_change') == 1) { // check value of want_to_vote preference
+	var needNotify = GetPrefs('notify_on_change') || 0;
+	if (needNotify == 1) { // check value of want_to_vote preference
 		AmIFresh();
 	}
 }
