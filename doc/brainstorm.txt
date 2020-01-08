@@ -1,3 +1,180 @@
+Nation
+======
+Goals
+Security
+Justice System
+Infrastructure
+Economy
+
+Identity Page
+=============
+Cookie: ABC
+Handle: John
+Fingerprint: DEF
+Alias: John
+Device: Netscape/4.5
+
+
+#survey tag
+every line becomes a question
+except ones which begin with #
+
+Headers
+=======
+From:
+Subject:
+Date:
+Tags:
+IP:
+
+
+Kit
+===
+3x Pi2
+3x Netw
+3x SD 64 fast
+
+
+
+blockchainy stuff
+=================
+if (GetConfig(blockchain/enablle)) {
+	my $lastHash = `tail -n 1 blockchain.txt`;
+	AppendFile(..., $newFileHash . "\n" . hash($lastHash . $newFileHash));
+
+Configurations
+==============
+Forum
+Community
+Rule-making authority
+Nation
+Society
+
+
+Search
+======
+Rate limit to avoid Dos
+Full text search through all text with grep
+Elastic Search?
+Offload to Google, Yandex, DDG
+
+===========================
+
+Auth Matrix
+===========
+PHP
+=====================
+GPG            No-GPG
+===            ======
+GPG FP         cookie
+with Cookie       +
+for backup     server-sign
+
+Static
+=====================
+GPG      No-GPG
+===      ======
+FP       set cookie with js
+         append cookie to requests
+         cookie can also be captured with ssi rewrites
+
+NoJS
+====
+Always anon, unsigned
+	Optional FP
+		by useragent
+		by ip
+		language
+		accept
+		setalias/John --> adds FP when saving file
+
+===========================
+
+Other Header Ideas
+==================
+By-Signer:
+By-Cookie:
+By-Client:
+By-Alias:
+By-Handle:
+
+
+Test Script/Form
+================
+"Headers" (footers actually)
+Browser Name: Netscape Navigator 3.04 Gold
+String Version: 3.04 Gold
+Num-Version: 3.04
+Browser Configuration: JS on/off Other:
+----------------
+(appearance 0-5)
+Write New Post
+View Topics List
+View Thread
+Vote on Item
+Reply to Item
+Sign In (Cookie)
+Sign In (GPG)
+Show/Hide Advanced
+Clock
+
+
+Name Resolution
+===============
+GPG? Y : GPG
+ N
+Cookie? Y : Cookie
+ N
+Useragent+IP
+
+
+build.pl
+The following config values differ from defaults:
+The following config values were looked up during build:
+Not looked up during build:
+
+Yavista is a social search engine
+What you search here becomes public (with a short delay)
+Search: [ ]]]
+Previous searches:
+foo bar bzaadz f [comments] [replay] [flag/delete]
+
+
+How feasible is it to perform cash tracking and path rebuilding
+Based on all bills being counted every 3-5 cycles, every time deposited in bank by retailer
+
+
+Call for Prayer
+	Those in need
+	etc
+
+
+[x] verified human
+[x] verified bot
+
+
+(Advanced)
+Client Information
+Server-Side Client Fingerprint
+Client-Side Client Fingerprint
+Server-Side Server Fingerprint
+Client-Side Server Fingerprint
+
+
+config/list/badwords
+The following words are discouraged on this board, and thus carry a score penalty for their use.
+Attempts to circumvent this scoring system will result in administrative action by the operator.
+democrat
+republican
+homeless
+rich
+poor
+cuck
+faggot
+nigger
+boomer
+
+
 Java-PGP for Netscape 2.0-3.0?
 
 Hash each line

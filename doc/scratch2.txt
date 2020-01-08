@@ -35,3 +35,19 @@ SELECT page_name, page_param, touch_time, (page_name in ('index', 'rss', 'scores
 		WHERE touch_time >= 1567032513
 		ORDER BY priority_page desc, touch_time
 		LIMIT 50;
+
+
+
+
+// called from write.html#inspubkey
+// used for sharing the stored public key automatically
+function insertPubKey() {
+	var comment = document.getElementById("comment");
+	if (comment) {
+		var pubkey = getPublicKey();
+
+		if (pubkey) {
+			comment.value = pubkey;
+		}
+	}
+}

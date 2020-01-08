@@ -1,3 +1,6 @@
+Allow vouching by non-admin users
+	Establish vouch chain
+
 Add timestamp to session cookie
 	To allow time limit for cookie validity
 		This will also require rewriting the cookie now and then
