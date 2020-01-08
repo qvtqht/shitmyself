@@ -14,6 +14,7 @@ rm -rf html/rss.xml html/rss.txt
 rm -rf config/template/*
 rm -rf config/string/*
 rm -rf config/theme/*
+rm -rf config/admin/my_version
 find html -type d -empty -delete
 
 touch html/post.html
