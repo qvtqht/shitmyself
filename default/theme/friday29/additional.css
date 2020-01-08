@@ -1,5 +1,5 @@
 body {
 	font-family: helvetica;
-	font-size: default;
+	font-size: 1em;
 	background-color: $colorBackground;
 }
