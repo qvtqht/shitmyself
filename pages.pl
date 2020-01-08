@@ -10,6 +10,7 @@ use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
 use File::Copy;
+use Cwd qw(cwd);
 
 #use List::Uniq ':all';
 
@@ -679,8 +680,8 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		$replyForm =~ s/\$prefillText/$prefillText/g;
 
 		if (GetConfig('admin/php/enable')) {
-			my $postHtml = 'post.html';
-			$replyForm =~ s/$postHtml/post.php/;
+#			my $postHtml = 'post.html';
+#			$replyForm =~ s/$postHtml/post.php/;
 		}
 
 		$txtIndex .= $replyForm;
@@ -700,13 +701,13 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar formencode prefs fresh voting profile write_buttons timestamps));
-
-	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh voting profile write_buttons timestamps));
+#
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
-}
+} # GetItemPage()
 
 sub GetHtmlLink { 
 #todo this doesn't work with orgnaize off
@@ -1223,6 +1224,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $colorVlink = GetThemeColor('vlink');
 	my $colorInputBackground = GetThemeColor('input_background');
 	my $colorInputText = GetThemeColor('input_text');
+	my $colorRow0Bg = GetThemeColor('row_0');
+	my $colorRow1Bg = GetThemeColor('row_1');
 
 	my $colorTagNegative = GetThemeColor('tag_negative');
 	my $colorTagPositive = GetThemeColor('tag_positive');
@@ -1275,34 +1278,34 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	#top menu
 						  
-	my $identityLink = '<span id="signin"></span> <span class="myid" id=myid></span> ';
-	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
+	my $identityLink = '<span id="signin"><a href="/profile.html">Profile</a></span> <span class="myid" id=myid></span> ';
+#	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
 
 	my $adminKey = GetAdminKey();
 
-	my $topMenuTemplate = GetTemplate('topmenu.template');
+	my $topMenuTemplate = GetTemplate('topmenu2.template');
 	
 	my $menuItems = '';
 
 	#todo replace with config/menu/*
-	$menuItems .= GetMenuItem("/", 'Home');
-	$menuItems .= GetMenuItem("/write.html", GetString('menu/write'));
-#	$menuItems .= GetMenuItem("/top.html", 'Topics');
-	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
-	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
-	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
-	$menuItems .= GetMenuItem("/settings.html", 'Settings');
-	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
-	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
+	$menuItems .= GetMenuItem("/", 'Read');
+	$menuItems .= GetMenuItem("/write.html", 'Write');
+	$menuItems .= GetMenuItem("/settings.html", 'etc.');
+#	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
+#	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
+#	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
+#	$menuItems .= GetMenuItem("/settings.html", 'Settings');
+#	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+#	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
 #	}
-	$menuItems .= GetMenuItem("/help.html", 'Help');
+#	$menuItems .= GetMenuItem("/help.html", 'Help');
 #	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 #
-	$menuItems .= $identityLink;
-	$menuItems .= $noJsIndicator;
+#	$menuItems .= $identityLink;
+#	$menuItems .= $noJsIndicator;
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	
@@ -1325,6 +1328,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$colorInputText/$colorInputText/g;
 	$htmlStart =~ s/\$clock/$clock/g;
 	$htmlStart =~ s/\$introText/$introText/g;
+	$htmlStart =~ s/\$colorRow0Bg/$colorRow0Bg/g;
+	$htmlStart =~ s/\$colorRow1Bg/$colorRow1Bg/g;
 
 
 	if (GetConfig('logo/enabled')) {
@@ -1509,6 +1514,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(prefs voting timestamps profile avatar));
+#	$txtIndex = InjectJs($txtIndex, qw(prefs));
 
 	return $txtIndex;
 }
@@ -2036,7 +2042,7 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 		$menuItem = GetTemplate('menuitem.template');
 	}
 
-my $color = '#' . substr(md5_hex($caption), 0, 6);
+	my $color = '#' . substr(md5_hex($caption), 0, 6);
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
@@ -2222,7 +2228,8 @@ sub GetLighttpdConfig {
 	my $conf = GetTemplate('lighttpd/lighttpd.conf.template');
 	print $conf;
 	
-	my $pwd = `pwd`;
+#	my $pwd = `pwd`;
+	my $pwd = cwd();
 	chomp $pwd; # get rid of tailing newline
 	
 	my $docRoot = $pwd . '/' . 'html' . '/';
@@ -2483,7 +2490,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	if (GetConfig('admin/php/enable')) {
 	#if php/enabled, then use post.php instead of post.html
 	#todo add rewrites for this
-		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
+#		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
 	}
 	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 	
@@ -2559,12 +2566,12 @@ sub GetWritePage { # returns html for write page
 
 	if (GetConfig('admin/php/enable')) {
 	#if php module is enabled, change the form target to post.php
-		my $postHtml = 'post.html'; 
+#		my $postHtml = 'post.html';
 		# on a separate line because 
 		# putting it into the regex would require escaping the period,
 		# would in turn would mean that searching for "post.html" in the codebase would not find this line
 		
-		$submitForm =~ s/$postHtml/post.php/;
+#		$submitForm =~ s/$postHtml/post.php/;
 
 		# this is how autosave would work
 		# $submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
@@ -2578,8 +2585,6 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= $submitForm;
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
-		$txtIndex .=
-
 		my $itemCounts = GetTemplate('form/itemcount.template');
 
 		$itemCounts =~ s/\$itemCount/$itemCount/g;
@@ -2707,8 +2712,8 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
 
-	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+#	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="if (window.identityOnload) { identityOnload(); }" /;
 
@@ -2746,10 +2751,10 @@ sub GetIdentityPage2 { #todo rename GetProfilePage?
 sub GetPrefsPage { # returns html for preferences page (/settings.html)
 	my $txtIndex = "";
 
-	my $title = "Preferences";
-	my $titleHtml = "Preferences";
+	my $title = "Settings";
+	my $titleHtml = "Settings";
 
-	$txtIndex = GetPageHeader($title, $titleHtml, 'preferences');
+	$txtIndex = GetPageHeader($title, $titleHtml, 'settings');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
@@ -2761,8 +2766,8 @@ sub GetPrefsPage { # returns html for preferences page (/settings.html)
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
 
-	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="PrefsOnload();" /;
 

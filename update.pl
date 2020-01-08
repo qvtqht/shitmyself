@@ -10,6 +10,8 @@ use strict;
 use warnings FATAL => 'all';
 use utf8;
 use 5.010;
+use Cwd qw(cwd);
+
 
 sub GetTime2() { # returns epoch time
 # this is identical to GetTime() in utils.pl
@@ -19,7 +21,8 @@ sub GetTime2() { # returns epoch time
 }
 
 # We'll use pwd for for the install root dir
-my $SCRIPTDIR = `pwd`;
+#my $SCRIPTDIR = `pwd`;
+my $SCRIPTDIR = cwd();
 chomp $SCRIPTDIR;
 
 print GetTime2() . " Begin requires\n";

@@ -15,6 +15,7 @@ use HTML::Entities qw(decode_entities);
 use URI::Encode qw(uri_decode);
 use Digest::SHA qw(sha512_hex);
 use POSIX qw( mktime );
+use Cwd qw(cwd);
 use Date::Parse;
 
 #use POSIX::strptime qw( strptime );
@@ -22,7 +23,8 @@ use Date::Parse;
 ## CONFIG AND SANITY CHECKS ##
 
 # We'll use pwd for for the install root dir
-my $SCRIPTDIR = `pwd`;
+#my $SCRIPTDIR = `pwd`;
+my $SCRIPTDIR = cwd();
 chomp $SCRIPTDIR;
 
 if (!-e './utils.pl') {
@@ -46,10 +48,12 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 # Wherever there is a post.html and board.nfo exists
 
 
-my @submitReceivers = `find html/ | grep post.html`; #todo this is a hack
+#my @submitReceivers = `find html/ | grep post.html`; #todo this is a hack
+my @submitReceivers;
 
 #push @submitReceivers, 'html/write.html';
 push @submitReceivers, 'html/post.php';
+push @submitReceivers, 'html/post.html';
 
 foreach (@submitReceivers) {
 	s/^html\//\//;

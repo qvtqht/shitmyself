@@ -10,7 +10,10 @@
 
 			<tr class=menubar>
 				<td>
-					<p><a href=# onclick="ResetPrefs()">Reset to Defaults</a>
+					<p>
+						<a href=# onclick="ResetPrefs()">Reset</a>;
+						<a href="/profile.html">Profile</a>;
+						<a href="/gpg.html">Signature</a>;
 				</td>
 			</tr>
 
