@@ -31,14 +31,14 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 				signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + '<i' + String.fromCharCode(62) + 'Profile</i' + String.fromCharCode(62) + '</a' + String.fromCharCode(62) + '';
 			}
 
-			if (!window.openpgp) {
+			if (!window.openpgp && window.getElementById && window.localStorage) {
 				var script = document.createElement('script');
 				script.src = '/openpgp.js';
 				script.async = false; // This is required for synchronous execution
 				document.head.appendChild(script);
 			}
 
-			if (!window.setAvatar) {
+			if (!window.setAvatar && window.getElementById && window.localStorage) {
 				var script2 = document.createElement('script');
 				script2.src = '/crypto.js';
 				script2.async = false; // This is required for synchronous execution
