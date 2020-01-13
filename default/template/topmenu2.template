@@ -1,5 +1,5 @@
 <!-- topmenu2.template -->
-<form action="/post.html" name="frmTopMenu">
+<form action="/stats.html" name="frmTopMenu">
 <small><a href="#maincontent">Skip to main content</a></small> $clock <span class=myid></span>
 <h1>$menuItems</h1>
 <p class=beginner>$introText</p>

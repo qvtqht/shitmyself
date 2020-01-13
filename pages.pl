@@ -702,9 +702,9 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh voting profile write_buttons timestamps));
-#
-#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+
+	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
 } # GetItemPage()
@@ -1291,7 +1291,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	#todo replace with config/menu/*
 	$menuItems .= GetMenuItem("/", 'Read');
 	$menuItems .= GetMenuItem("/write.html", 'Write');
-	$menuItems .= GetMenuItem("/settings.html", 'etc.');
+	$menuItems .= GetMenuItem("/etc.html", 'etc.');
 #	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
 #	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
 #	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
@@ -2328,9 +2328,13 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $identityPage2 = GetIdentityPage2();
 	PutHtmlFile("$HTMLDIR/profile.html", $identityPage2);
 
+	# Settings page
+	my $settingsPage = GetPrefsPage();
+	PutHtmlFile("$HTMLDIR/settings.html", $settingsPage);
+
 	# Preferences page
-	my $prefsPage = GetPrefsPage();
-	PutHtmlFile("$HTMLDIR/settings.html", $prefsPage);
+	my $etcPage = GetEtcPage();
+	PutHtmlFile("$HTMLDIR/etc.html", $etcPage);
 
 	# Target page for the submit page
 	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
@@ -2661,7 +2665,7 @@ sub GetEventAddPage { # get html for /event.html
 	return $txtIndex;
 }
 
-sub GetIdentityPage { #todo rename GetProfilePage?
+sub GetIdentityPage { # gpg-based identity
 	my $txtIndex = "";
 
 	my $title = "Profile";
@@ -2712,15 +2716,15 @@ sub GetIdentityPage { #todo rename GetProfilePage?
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
 
-#	my $scriptsInclude = '<script src="/zalgo.js"></script><script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="if (window.identityOnload) { identityOnload(); }" /;
 
 	return $txtIndex;
 }
 
-sub GetIdentityPage2 { #todo rename GetProfilePage?
+sub GetIdentityPage2 { # cookie-based identity #todo rename function
 	my $txtIndex = "";
 
 	my $title = "Profile";
@@ -2770,6 +2774,32 @@ sub GetPrefsPage { # returns html for preferences page (/settings.html)
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	$txtIndex =~ s/<body /<body onload="PrefsOnload();" /;
+
+	return $txtIndex;
+}
+
+sub GetEtcPage { # returns html for etc page (/etc.html)
+	my $txtIndex = "";
+
+	my $title = "Etc";
+	my $titleHtml = "Etc";
+
+	$txtIndex = GetPageHeader($title, $titleHtml, 'etc');
+
+	$txtIndex .= GetTemplate('maincontent.template');
+
+	my $prefsPage = GetTemplate('etc.template');
+
+	$txtIndex .= $prefsPage;
+
+	$txtIndex .= GetPageFooter();
+
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+
+#	$txtIndex =~ s/<body /<body onload="PrefsOnload();" /;
 
 	return $txtIndex;
 }
