@@ -47,7 +47,9 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
 
 		var signinBox = document.getElementById('signin');
-		signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+		if (signinBox) {
+			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+		}
 
 		setTimeout(function(){
 			signoutCounterDecrement();
