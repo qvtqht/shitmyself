@@ -107,10 +107,14 @@ function showHideForms() { // shows and hides the register and logged in forms
 			}
 	
 			var signinBox = document.getElementById('signin');
-			signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + 'Profile</a' + String.fromCharCode(62);
+			if (signinBox) {
+				signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + 'Profile</a' + String.fromCharCode(62);
+			}
 
 			var myidBox = document.getElementById('myid');
-			myidBox.innerHTML = '';
+			if (myidBox) {
+				myidBox.innerHTML = '';
+			}
 		}
 	
 		// hide the loading screen if it can be found
