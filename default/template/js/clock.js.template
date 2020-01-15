@@ -13,7 +13,7 @@ function setClock() {
 		}
 	}
 
-	var timeoutClock2 = window.setTimeout('setClock()', 500);
+	timeoutClock = window.setTimeout('setClock()', 500);
 }
 
 var timeoutClock = window.setTimeout('setClock()', 500);
