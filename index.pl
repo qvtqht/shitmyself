@@ -78,7 +78,8 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 	}
 }
 
-sub GetPathFromHash {
+sub GetPathFromHash { # gets path of text file based on hash
+# relies on config/admin/organize_files = 1
 	my $fileHash = shift;
 	chomp $fileHash;
 
