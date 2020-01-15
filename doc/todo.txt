@@ -1,3 +1,16 @@
+Settings don't always take effect in other tabs via timer
+
+RSS
+	put fingerprint into author field
+	Add date field
+
+Setting for large font size
+	Default on "mobile"
+
+Union square style clock ...
+	HHMMSSnnn .
+		60-SS 60-MM 24-HH
+
 Allow vouching by non-admin users
 	Establish vouch chain
 
