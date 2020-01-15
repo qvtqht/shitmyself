@@ -50,14 +50,14 @@ sub GenerateDialogPage { # generates page with dialog
 			my $pageTemplate;
 			$pageTemplate = '';
 
-			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, 'default'); #GetTemplate('htmlstart.template');
+			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('htmlstart.template');
 
 			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, 'Ready');
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 
 			$pageTemplate .= GetPageFooter();
 
-			$pageTemplate = InjectJs($pageTemplate, qw(profile));
+			$pageTemplate = InjectJs($pageTemplate, qw(profile settings));
 
 			return $pageTemplate;
 		}
@@ -410,7 +410,7 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar fresh prefs timestamps voting profile));
+	$txtPage = InjectJs($txtPage, qw(avatar fresh settings timestamps voting profile));
 
 	return $txtPage;
 
@@ -477,7 +477,7 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings profile));
 
 	return $txtIndex;
 }
@@ -701,7 +701,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs fresh voting profile write_buttons timestamps));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings fresh voting profile write_buttons timestamps));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1284,25 +1284,25 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $adminKey = GetAdminKey();
 
-	my $topMenuTemplate = GetTemplate('topmenu2.template');
+	my $topMenuTemplate = GetTemplate('topmenu.template');
 	
 	my $menuItems = '';
 
 	#todo replace with config/menu/*
 	$menuItems .= GetMenuItem("/", 'Read');
 	$menuItems .= GetMenuItem("/write.html", 'Write');
-	$menuItems .= GetMenuItem("/etc.html", 'etc.');
-#	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
-#	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
-#	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
-#	$menuItems .= GetMenuItem("/settings.html", 'Settings');
-#	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
-#	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
-#	if ($adminKey) {
-#		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 1);
-#	}
+	$menuItems .= GetMenuItem("/etc.html", 'More');
+	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
+	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
+	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
+	$menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
+	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
+	if ($adminKey) {
+		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
+	}
 #	$menuItems .= GetMenuItem("/help.html", 'Help');
-#	$menuItems .= GetMenuItem("/profile.html", 'Profile');
+	$menuItems .= GetMenuItem("/profile.html", 'Profile', 'advanced');
 #
 #	$menuItems .= $identityLink;
 #	$menuItems .= $noJsIndicator;
@@ -1500,7 +1500,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 		$itemListingWrapper = GetWindowTemplate(
 			'Top Threads',
-			'<a href="/write.html">New Topic</a>',
+			'<a href="/write.html">New Topic</a><br>',
 			$columnHeadings,
 			$itemListings,
 			$statusText
@@ -1513,8 +1513,8 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(prefs voting timestamps profile avatar));
-#	$txtIndex = InjectJs($txtIndex, qw(prefs));
+	$txtIndex = InjectJs($txtIndex, qw(settings voting timestamps profile avatar));
+#	$txtIndex = InjectJs($txtIndex, qw(settings));
 
 	return $txtIndex;
 }
@@ -1580,7 +1580,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar fresh prefs timestamps pingback profile));
+	$statsPage = InjectJs($statsPage, qw(avatar fresh settings timestamps pingback profile));
 
 	return $statsPage;
 }
@@ -1733,7 +1733,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps profile voting));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings timestamps profile voting));
 
 	return $txtIndex;
 }
@@ -2011,9 +2011,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(avatar prefs timestamps voting profile));
+		$txtIndex = InjectJs($txtIndex, qw(avatar settings timestamps voting profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile));
+		$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile));
 	}
 
 	return $txtIndex;
@@ -2143,7 +2143,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Close html
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs voting profile fresh timestamps));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile fresh timestamps));
 
 	return $txtIndex;
 }
@@ -2211,15 +2211,17 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 #		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
 
-		my $infoMessage = '<tr><td><p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p></td></tr>';
+		my $infoMessage = '<tr><td><p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p><br></td></tr>';
 
 		$indexPage .= GetWindowTemplate('No Items', '', '', $infoMessage, 'Ready');
 
 		$indexPage .= GetPageFooter();
 
-		$indexPage = InjectJs($indexPage, qw(profile prefs));
+		$indexPage = InjectJs($indexPage, qw(profile settings avatar));
 
-		PutHtmlFile('html/index.html', $indexPage);
+		if (GetConfig('home_page_auto')) {
+			PutHtmlFile('html/index.html', $indexPage);
+		}
 		PutHtmlFile('html/index0.html', $indexPage);
 	}
 }
@@ -2329,7 +2331,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/profile.html", $identityPage2);
 
 	# Settings page
-	my $settingsPage = GetPrefsPage();
+	my $settingsPage = GetSettingsPage();
 	PutHtmlFile("$HTMLDIR/settings.html", $settingsPage);
 
 	# Preferences page
@@ -2348,7 +2350,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$postPage .= GetPageFooter();
 
-	$postPage = InjectJs($postPage, qw(avatar post prefs));
+	$postPage = InjectJs($postPage, qw(avatar post settings));
 
 	$postPage =~ s/<body /<body onload="makeRefLink();" /;
 	
@@ -2400,7 +2402,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetPageFooter();
 
-		$tfmPage = InjectJs($tfmPage, qw(avatar prefs profile));
+		$tfmPage = InjectJs($tfmPage, qw(avatar settings profile));
 
 		PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -2426,7 +2428,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetPageFooter();
 
-		$tfmPage = InjectJs($tfmPage, qw(avatar prefs profile));
+		$tfmPage = InjectJs($tfmPage, qw(avatar settings profile));
 
 		PutHtmlFile("$HTMLDIR/help.html", $tfmPage);
 
@@ -2452,7 +2454,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetPageFooter();
 
-		$tfmPage = InjectJs($tfmPage, qw(avatar prefs));
+		$tfmPage = InjectJs($tfmPage, qw(avatar settings));
 
 		PutHtmlFile("$HTMLDIR/manual_advanced.html", $tfmPage);
 	}
@@ -2469,7 +2471,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$tokensPage .= GetPageFooter();
 
-	$tokensPage = InjectJs($tokensPage, qw(avatar prefs));
+	$tokensPage = InjectJs($tokensPage, qw(avatar settings));
 
 	PutHtmlFile("$HTMLDIR/manual_tokens.html", $tokensPage);
 
@@ -2501,8 +2503,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Write avatar javasript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
 
-	# Write prefs javasript
-	PutHtmlFile("$HTMLDIR/prefs.js", GetTemplate('js/prefs.js.template'));
+	# Write settings javasript
+	PutHtmlFile("$HTMLDIR/settings.js", GetTemplate('js/settings.js.template'));
 	PutHtmlFile("$HTMLDIR/prefstest.html", GetTemplate('js/prefstest.template'));
 
 
@@ -2598,11 +2600,11 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetPageFooter();
 
 	if (GetConfig('php/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile));
+		$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write write_php prefs profile));
+		$txtIndex = InjectJs($txtIndex, qw(avatar write write_php settings profile));
 	}
-#	$txtIndex = InjectJs($txtIndex, qw(avatar write prefs profile geo));
+#	$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
 
 	# add call to writeOnload to page
 	$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
@@ -2654,7 +2656,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar prefs event_add fresh profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings event_add fresh profile));
 
 	my $colorRow0Bg = GetThemeColor('row_0');
 	my $colorRow1Bg = GetThemeColor('row_1');
@@ -2714,7 +2716,7 @@ sub GetIdentityPage { # gpg-based identity
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
 
 	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -2747,12 +2749,13 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(prefs profile avatar));
+	$txtIndex = InjectJs($txtIndex, qw(settings profile avatar));
+#	$txtIndex = InjectJs($txtIndex, qw(settings profile2));
 
 	return $txtIndex;
 }
 
-sub GetPrefsPage { # returns html for preferences page (/settings.html)
+sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $txtIndex = "";
 
 	my $title = "Settings";
@@ -2762,18 +2765,18 @@ sub GetPrefsPage { # returns html for preferences page (/settings.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $prefsPage = GetTemplate('form/preferences.template');
+	my $settingsPage = GetTemplate('form/settings.template');
 
-	$txtIndex .= $prefsPage;
+	$txtIndex .= $settingsPage;
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
-	$txtIndex =~ s/<body /<body onload="PrefsOnload();" /;
+	$txtIndex =~ s/<body /<body onload="SettingsOnload();" /;
 
 	return $txtIndex;
 }
@@ -2788,18 +2791,19 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $prefsPage = GetTemplate('etc.template');
+	my $etcPageContent = '<tr class=content><td>' . GetTemplate('etc.template') . '</td></tr>';
+	my $etcPageWindow = GetWindowTemplate('Etc', '', '', $etcPageContent, 'Ready');
 
-	$txtIndex .= $prefsPage;
+	$txtIndex .= $etcPageWindow;
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile prefs));
+	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
-#	$txtIndex =~ s/<body /<body onload="PrefsOnload();" /;
+#	$txtIndex =~ s/<body /<body onload="SettingsOnload();" /;
 
 	return $txtIndex;
 }
@@ -2941,7 +2945,7 @@ sub GetVersionPage { # returns html with version information for $version (git c
 
 	$txtPageHtml .= GetPageFooter();
 
-	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar fresh prefs));
+	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar fresh settings));
 
 	return $txtPageHtml;
 }
@@ -3003,7 +3007,7 @@ sub MakeDataPage { # returns html for /data.html
 
 	$dataPage .= GetPageFooter();
 
-	$dataPage = InjectJs($dataPage, qw(avatar prefs profile));
+	$dataPage = InjectJs($dataPage, qw(avatar settings profile));
 
 	PutHtmlFile("$HTMLDIR/data.html", $dataPage);
 }

@@ -1,4 +1,4 @@
-// == begin prefs.js
+// == begin settings.js
 
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
@@ -6,25 +6,26 @@ var showVoterLastAction = '';
 
 var timerShowAdvanced;
 
-function ShowControlsByClassName() { // shows or hides elements based on class name match
-}
-
 function SetElementVisible(element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
 // also sets background color
 // used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
 
 	if (bgColor) {
+		// background color
+		if (bgColor == 'initial') {
+			bgColor = '$colorWindow';
+		}
 		element.style.backgroundColor = bgColor;
 	}
 
 	if (borderStyle) {
+		// border style
 		element.style.border = borderStyle;
 		element.style.borderRadius = '3pt';
 	}
 
 	// depending on element type, we set different display style
 	// block, table-row, table-cell, or default of 'initial'
-
 	if (displayValue == 'initial' && (element.nodeName == 'P' || element.nodeName == 'FIELDSET')) {
 		element.style.display = 'block';
 	} else if (displayValue == 'initial' && element.nodeName == 'TR') {
@@ -36,6 +37,9 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 			element.style.display = 'none'; // empty table cells display = none #todo explain why?
 		}
 	} else {
+		if (displayValue == 'initial') {
+			displayValue = 'inline';
+		}
 		element.style.display = displayValue;
 	}
 
@@ -104,21 +108,18 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 		}
 
 		if (window.timeoutFresh) {
+			if (timeoutFresh) {
+				clearTimeout(timeoutFresh);
+			}
 			if (GetPrefs('notify_on_change')) {
-				if (timeoutFresh) {
-					// we're good
-				} else {
-					AmIFresh();
-				}
-			} else {
-				if (timeoutFresh) {
-					clearTimeout(timeoutFresh);
-				}
+				AmIFresh();
 			}
 		}
 	}
-	
-	setAva(); // #todo caching similar to above 
+
+	if (window.setAva) {
+		setAva(); // #todo caching similar to above
+	}
 
 	if (!force) {
 		if (timerShowAdvanced) {
@@ -128,23 +129,10 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 	}
 }
 
-function PrefsTest() { //sets an item into localstorage prefs
-	SetPrefs('test', '123'); //set key 'test' to value '123
-
-	//alert('tst');
-
-	var a = GetPrefs('test'); // get value of key 'test'
-
-	alert(a); // display alert with value of key
-
-	return 0; // done
-}
-
 function GetPrefs(prefKey) { // get prefs value from localstorage
-// prefKey = preference key for key-value pair
-// needs optimizing #todo
 	if (window.localStorage) {
 		var currentPrefs = localStorage.getItem('prefs1');
+
 		var prefsObj;
 		if (currentPrefs) {
 			prefsObj = JSON.parse(currentPrefs);
@@ -307,7 +295,7 @@ if (document.getElementById) {
 
 function ResetPrefs() {
 	if (window.localStorage) {
-		if (confirm('Reset all preferences to their defaults?')) {
+		if (confirm('Reset all settings to their defaults?')) {
 			localStorage.removeItem('prefs1');
 
 			ShowAdvanced(1);
@@ -317,9 +305,9 @@ function ResetPrefs() {
 	}
 }
 
-function PrefsOnload() { // onload function for preferences page
+function SettingsOnload() { // onload function for preferences page
 	// show and hide page form as necessary
 	showHideForms();
 }
 
-// == end prefs.js
+// == end settings.js
