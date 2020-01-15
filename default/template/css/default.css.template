@@ -119,3 +119,7 @@ button, input[type=button], input[type=submit], input[type=checkbox] {
 	background-color: $colorWindow;
 	color: $colorText;
 }
+
+#txtClock {
+	border: 1pt inset $colorWindow;
+}
