@@ -16,7 +16,7 @@
 					<p>Built: $lastBuildTime
 					<p>Updated: $lastUpdateTime <input type=submit name=comment value="Update" class=advanced>
 					<p><a href="/index0.html">Indexed</a>: $itemCount
-					<p class=advanced><a href="/txt/">Total</a>: $filesLeft
+					<p class=advanced><a href="/data.html">Total</a>: $filesLeft
 					<p><a href="/authors.html">Authors</a>: $authorCount
 					<p>Operator: $admin
 					<p class=advanced>Server: $server
