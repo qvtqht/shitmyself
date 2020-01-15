@@ -51,3 +51,8 @@ function insertPubKey() {
 		}
 	}
 }
+
+
+delete from item where file_hash not in (select file_hash from vote_weighed where vote_value not in ('hastext', 'hastitle', 'flag'));
+
+select * from item_flat where file_hash not in (select file_hash from vote_weighed where vote_value not in ('hastext', 'hastitle', 'flag'));
