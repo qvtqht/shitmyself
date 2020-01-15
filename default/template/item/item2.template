@@ -13,10 +13,10 @@
 
 		<tr bgcolor="$colorWindow" class=statusbar>
 			<td style="border: 1pt inset $colorWindow">
-				<a href="$permalinkHtml">$addedTime</a>
+				<a href="$permalinkHtml">$addedTime</a>;
 				$authorLink
-				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt></a>
-				<a href="$permalinkHtml#reply" class=beginner>reply($replyCount)</a>
+				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt>;</a>
+				<a href="$permalinkHtml#reply" class=beginner>reply($replyCount);</a>
 				$itemFlagButton
 			</td>
 		</tr>
