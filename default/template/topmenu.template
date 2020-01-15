@@ -1,5 +1,5 @@
 <!-- topmenu.template -->
-<form name=frmTopMenu id=frmTopMenu action="/post.html">
+<form name=frmTopMenu id=frmTopMenu>
 <font face=arial>
 	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog width=100%>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
@@ -10,9 +10,9 @@
 
 		<tr class=body>
 			<td class=content width="99%">
-				<p>
+				<h3>
 					$menuItems
-				</p>
+				</h3>
 			</td>
 			<td class=clockContainer align=right>
 				$clock
