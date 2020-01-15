@@ -1,7 +1,7 @@
 <!-- topmenu2.template -->
 <form action="/stats.html" name="frmTopMenu">
 <small><a href="#maincontent">Skip to main content</a></small> $clock <span class=myid></span>
-<h1>$menuItems</h1>
+<h3>$menuItems</h3>
 <p class=beginner>$introText</p>
 </form>
 <!-- / topmenu2.template -->
