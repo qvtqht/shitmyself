@@ -54,6 +54,7 @@ my @submitReceivers;
 #push @submitReceivers, 'html/write.html';
 push @submitReceivers, 'html/post.php';
 push @submitReceivers, 'html/post.html';
+push @submitReceivers, 'html/stats.html';
 
 foreach (@submitReceivers) {
 	s/^html\//\//;
