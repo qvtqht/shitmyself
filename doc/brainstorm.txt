@@ -1,3 +1,9 @@
+Auto-download links which have handlers
+	youtube and other video
+	twitter
+	etc
+
+
 Nation
 ======
 Goals

@@ -1,3 +1,9 @@
+Profile refactor
+	Cookie-auth should work for non-JS browsers
+	Factor out new-JS code into separate template
+	Set cookie via server after private key is set locally
+
+
 Settings don't always take effect in other tabs via timer
 
 RSS
