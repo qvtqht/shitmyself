@@ -1,8 +1,17 @@
 <!-- etc.template -->
-<h1><a href="/settings.html">Settings*</a></h1>
-<h1><a href="/profile.html">Cookie Profile</a></h1>
-<h1><a href="/gpg.html">GPG Profile*</a></h1>
-<h1><a href="/top.html">Read Top Threads</a></h1>
-<h1><a href="/write.html">Write Something</a></h1>
-<h1><a href="/index0.html">Cracker Barrel</a></h1>
+
+<h3><a href="/settings.html">Settings*</a>, become a moderator</h3>
+
+<h3><a href="/profile.html">Profile</a>: sign in, sign out, register</h3>
+
+<h3><a href="/authors.html">Authors</a>, aka users who have written</h3>
+
+<h3><a href="/tags.html">Tags</a>, for finding things by category</h3>
+
+<h3><a href="/index0.html">Compost</a>, a feed of all activity</h3>
+
+<h3><a href="/stats.html">Status</a>, last update time and other information</h3>
+
+<h3><a href="/data.html">Data</a>, for nerds, archivists, and their friends</h3>
+
 <!--/ etc.template -->
