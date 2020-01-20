@@ -1042,6 +1042,8 @@ sub DBGetVoteCounts { # Get total vote counts by tag value
 			COUNT(vote_value) AS vote_count
 		FROM
 			vote
+		WHERE
+			file_hash IN (SELECT file_hash FROM item)
 		GROUP BY
 			vote_value
 		$orderBy;
