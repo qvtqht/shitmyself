@@ -1,7 +1,7 @@
 // == begin crypto2.js
 
 function MakeKey() {
-	alert('DEBUG: MakeKey() begin');
+//	alert('DEBUG: MakeKey() begin');
 	var openpgp = window.openpgp;
 
 	if (openpgp) {

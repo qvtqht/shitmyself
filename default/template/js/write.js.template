@@ -8,19 +8,11 @@ function writeOnload() { // onload handler for write page
 
 function writeSubmit() { // called when user submits write form
 	if (window.getPrivateKey && window.signMessage) {
-		alert(0);
-
 		if (getPrivateKey()) {
-			alert(1);
-
 			signMessage();
-
-			alert(3);
 
 			return false; // return false to cancel form submission
 		}
-	} else {
-		alert(2);
 	}
 
 	return true;
