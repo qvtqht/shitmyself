@@ -1,18 +1,18 @@
 <!-- profile2.template -->
 
-<form action="profile.html">
+<form action="/profile.html">
 
 <fieldset>
 
-	<legend>Cookies</legend>
+	<legend>Registration</legend>
 
 	<p>Handle: <span id=handle>$handle</span>
 
 	<p>Fingerprint: <span id=fingerprint>$fingerprint</span>
 
 	<p>
-		<input type=submit name=request value="Register">
-		<input type=submit name=request value="Sign Out">
+		<input type=submit name=request onclick="if (window.btnReg_Click) { return btnReg_Click(this); }" id="btnReg" value="Register">
+		<input type=submit name=request onclick="if (window.btnSignout_Click) { return btnSignout_Click(this); }" id="btnSignout" value="Sign Out">
 
 </fieldset>
 
