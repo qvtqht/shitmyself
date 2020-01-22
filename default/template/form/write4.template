@@ -1,0 +1,57 @@
+<!--# write4.template #-->
+
+<form action="/post.html" id=compose class=submit name=submit>
+	<font face=arial>
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+				<td>
+					<font color=$colorTitlebarText><b>New Message</b></font>
+				</td>
+			</tr>
+
+			<tr class=body>
+				<td class=content>
+					<fieldset>
+						<span id=writeintro></span>
+
+						<noscript>
+							<p>
+								If you are submitting a long text, please click here.
+							</p>
+						</noscript>
+
+						<label for="comment" class=beginner>Enter some text to share.<br></label>
+
+						<textarea
+							class=txtarea
+							id=comment
+							title="Enter some text to share here."
+							rows=9
+							cols=32
+							name=comment
+							autofocus
+							onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); } else { alert('commentOnChange() not found'); }"
+							onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); } else { alert('commentOnChange() not found'); }"
+						>$initText</textarea><br>
+
+						<p>
+							<input
+								type=submit
+								onclick="this.value = 'Please wait...'; if (window.writeSubmit) { return writeSubmit(); }"
+								value="Send Message"
+								id=addtext
+								style="width: 100%"
+							>
+						</p>
+
+						<span class=beginner>
+							<p id=lblWriteLengthWarning class=warning style="display: none">
+							</p>
+						</span>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+	</font>
+</form>
+<!--# / write4.template #-->
