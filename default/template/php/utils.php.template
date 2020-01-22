@@ -13,7 +13,11 @@ function GetMyVersion() { // returns current git commit id
 		return $myVersion;
 	}
 
-	$myVersion = `git rev-parse HEAD`;
+	$myVersion = GetConfig('admin/my_version');
+
+	if (!$myVersion) {
+		$myVersion = `git rev-parse HEAD`;
+	}
 
 	$myVersion = trim($myVersion);
 
@@ -198,9 +202,11 @@ function GetConfig($configKey) { // get value for config value $configKey
 
 	if (file_exists($configDir . $configKey)) {
 		WriteLog('found in config/');
+
 		$configValue = file_get_contents($configDir . $configKey);
 	} elseif (file_exists($defaultDir . $configKey)) {
 		WriteLog('found in default/');
+
 		copy ($defaultDir . $configKey, $configDir . $configKey); // copy to config/
 		$configValue = file_get_contents($configDir . $configKey);
 	} else {
@@ -208,6 +214,8 @@ function GetConfig($configKey) { // get value for config value $configKey
 		WriteLog('returning empty string');
 		$configValue = '';
 	}
+
+	$configValue = trim($configValue); // remove trailing \n and any other whitespace
 
 	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '")');
 	// notify log of what we found
