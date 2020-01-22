@@ -4,9 +4,12 @@
 	include_once('utils.php');
 
 	$commandRegister = 'Register';
+	$commandRegister2 = 'Please wait...';
 	$commandUnregister = 'Sign Out';
 
 //	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
+
+	$cookieYear = time()+60*60*24*365;
 
 	if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 		setcookie('test');
@@ -18,12 +21,26 @@
 		if (isset($_COOKIE['test']) && $_COOKIE['test']) {
 			WriteLog('test cookie found');
 
-			if (isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
-				$cookie = $_COOKIE['cookie'];
-			}
+			if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) {
+				WriteLog('test cookie override!');
 
-			if (isset($_COOKIE['checksum']) && $_COOKIE['checksum']) {
-				$checksum = $_COOKIE['checksum'];
+				$cookie = $_COOKIE['test'];
+//				setcookie('cookie', $cookie, $cookieYear, '/');
+				setcookie('cookie', $cookie);
+
+				$secret = GetConfig('admin/secret');
+
+				$checksum = md5($cookie . '/' . $secret);
+//				setcookie('checksum', $checksum, $cookieYear, '/');
+				setcookie('checksum', $checksum);
+			} else {
+				if (isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
+					$cookie = $_COOKIE['cookie'];
+				}
+
+				if (isset($_COOKIE['checksum']) && $_COOKIE['checksum']) {
+					$checksum = $_COOKIE['checksum'];
+				}
 			}
 
 			WriteLog('$cookie = ' . (isset($cookie) ? $cookie : '(unset)') . '; $checksum= ' . (isset($checksum) ? $checksum : '(unset)'));
@@ -37,6 +54,8 @@
 
 				$checksum = md5($cookie . '/' . $secret);
 
+//				setcookie('cookie', $cookie, $cookieYear, '/');
+//				setcookie('checksum', $checksum, $cookieYear, '/');
 				setcookie('cookie', $cookie);
 				setcookie('checksum', $checksum);
 			}
@@ -47,7 +66,7 @@
 				header('Location: /profile.html?' . time());
 			}
 		} else {
-			if (isset($_GET['request']) && $_GET['request'] == $commandRegister) {
+			if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2)) {
 				setcookie('test', '1');
 				header('Location: /profile.html?' . time());
 			}
