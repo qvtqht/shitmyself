@@ -45,6 +45,8 @@ function commentOnChange(t, formId) {
 
 		var warning = document.getElementById('lblWriteLengthWarning');
 		if (warning) {
+			var ltChar = String.fromCharCode(62);
+			warning.innerHTML = 'Long message mode.<br' + ltChar;
 			warning.style.display = strWarnDisplay;
 		}
 	}
