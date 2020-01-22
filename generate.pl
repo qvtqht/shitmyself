@@ -26,53 +26,54 @@ WriteLog ("GetReadPage()...");
 #my $indexText = GetReadPage();
 
 #PutHtmlFile("$HTMLDIR/index.html", $indexText);
+{
+	WriteLog ("Author pages...");
 
-WriteLog ("Author pages...");
+	my @authors = DBGetAuthorList();
+	#my @authors = ();
 
-my @authors = DBGetAuthorList();
-#my @authors = ();
+	WriteLog('@authors: ' . scalar(@authors));
 
-WriteLog('@authors: ' . scalar(@authors));
+	my $authorInterval = 3600;
 
-my $authorInterval = 3600;
+	my $authorsCount = scalar(@authors);
+	my $authorsIndex = 0;
 
-my $authorsCount = scalar(@authors);
-my $authorsIndex = 0;
+	foreach my $hashRef (@authors) {
+		my $key = $hashRef->{'key'};
 
-foreach my $hashRef (@authors) {
-	my $key = $hashRef->{'key'};
+		WriteLog('Making stuff for author: ' . $hashRef->{'key'});
 
-	WriteLog('Making stuff for author: ' . $hashRef->{'key'});
+		my $lastTouch = GetCache("key/$key");
+		if ($lastTouch && $lastTouch + $authorInterval > GetTime()) {
+			#WriteLog("I already did $key recently, too lazy to do it again");
+			#next;
+			#todo uncomment
+		}
 
-	my $lastTouch = GetCache("key/$key");
-	if ($lastTouch && $lastTouch + $authorInterval > GetTime()) {
-		#WriteLog("I already did $key recently, too lazy to do it again");
-		#next;
-		#todo uncomment
+		WriteLog("$HTMLDIR/author/$key");
+
+		if (!-e "$HTMLDIR/author") {
+			mkdir("$HTMLDIR/author");
+		}
+
+		if (!-e "$HTMLDIR/author/$key") {
+			mkdir("$HTMLDIR/author/$key");
+		}
+
+		$authorsIndex++;
+		my $percent = ($authorsIndex / $authorsCount * 100);
+
+		WriteMessage("GetReadPage (author) $authorsIndex / $authorsCount ( $percent % ) $key");
+
+		my $authorIndex = GetReadPage('author', $key);
+
+		WriteLog("$HTMLDIR/author/$key/index.html");
+
+		PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
+
+		PutCache("key/$key", GetTime());
 	}
-
-	WriteLog("$HTMLDIR/author/$key");
-
-	if (!-e "$HTMLDIR/author") {
-		mkdir("$HTMLDIR/author");
-	}
-
-	if (!-e "$HTMLDIR/author/$key") {
-		mkdir("$HTMLDIR/author/$key");
-	}
-
-	$authorsIndex++;
-	my $percent = ($authorsIndex / $authorsCount * 100);
-
-	WriteMessage("GetReadPage (author) $authorsIndex / $authorsCount ( $percent % ) $key");
-
-	my $authorIndex = GetReadPage('author', $key);
-
-	WriteLog("$HTMLDIR/author/$key/index.html");
-
-	PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
-
-	PutCache("key/$key", GetTime());
 }
 
 my %queryParams;
