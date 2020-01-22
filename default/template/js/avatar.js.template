@@ -4,11 +4,13 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 	var myidBox = document.getElementById('myid'); // displays username (if preference is set)
 	var signinBox = document.getElementById('signin'); // Profile link
 
+	var lt = String.fromCharCode(62);
+
 	if (myidBox && signinBox && window.localStorage) { // check for elements and features
 		var myAvatar = localStorage.getItem('avatar');
 
 		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + 'Profile</a' + String.fromCharCode(62) + '';
+			signinBox.innerHTML = '<a href="/profile.html"' + lt + 'Profile</a' + lt + '';
 		} else {
 		    signinBox.innerHTML = '';
 			var myFp = localStorage.getItem('fingerprint');
@@ -20,25 +22,25 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 
 			if (window.GetPrefs) {
 				if (GetPrefs('display_username')) {
-					myidBox.innerHTML = '<a href="/profile.html" class=avatar' + String.fromCharCode(62) + myAvatar + '</a' + String.fromCharCode(62);
+					myidBox.innerHTML = '<a href="/profile.html" class=avatar' + lt + myAvatar + '</a' + lt;
 					signinBox.innerHTML = '';
 				} else {
 					myidBox.innerHTML = '';
-					signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + '<i' + String.fromCharCode(62) + 'Profile</i' + String.fromCharCode(62) + '</a' + String.fromCharCode(62) + '';
+					signinBox.innerHTML = '<a href="/profile.html"' + lt + '<i' + lt + 'Profile</i' + lt + '</a' + lt + '';
 				}
 			} else {
 				myidBox.innerHTML = '';
-				signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + '<i' + String.fromCharCode(62) + 'Profile</i' + String.fromCharCode(62) + '</a' + String.fromCharCode(62) + '';
+				signinBox.innerHTML = '<a href="/profile.html"' + lt + '<i' + lt + 'Profile</i' + lt + '</a' + lt + '';
 			}
 
-			if (!window.openpgp && window.getElementById && window.localStorage) {
+			if (!window.openpgp && document.getElementById && window.localStorage && window.Promise) {
 				var script = document.createElement('script');
 				script.src = '/openpgp.js';
 				script.async = false; // This is required for synchronous execution
 				document.head.appendChild(script);
 			}
 
-			if (!window.setAvatar && window.getElementById && window.localStorage) {
+			if (!window.setAvatar && document.getElementById && window.localStorage) {
 				var script2 = document.createElement('script');
 				script2.src = '/crypto.js';
 				script2.async = false; // This is required for synchronous execution
