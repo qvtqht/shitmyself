@@ -1,14 +1,16 @@
 <!-- etc.template -->
 
-<h3><a href="/settings.html">Settings*</a>, become a moderator</h3>
+<h3><a href="/settings.html">Settings</a>, become a moderator</h3>
 
 <h3><a href="/profile.html">Profile</a>: sign in, sign out, register</h3>
 
-<h3><a href="/authors.html">Authors</a>, aka users who have written</h3>
+<h3><a href="/authors.html">Authors/Users</a>, aka users who have written</h3>
 
-<h3><a href="/tags.html">Tags</a>, for finding things by category</h3>
+<h3><a href="/events.html">Events</a>, for things which have a date</h3>
 
-<h3><a href="/index0.html">Compost</a>, a feed of all activity</h3>
+<h3><a href="/tags.html">Tags/Topics</a></h3>
+
+<h3><a href="/index0.html">Compost</a></h3>
 
 <h3><a href="/stats.html">Status</a>, last update time and other information</h3>
 

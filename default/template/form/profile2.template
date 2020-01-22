@@ -6,9 +6,11 @@
 
 	<legend>Registration</legend>
 
-	<p>Handle: <span id=handle>$handle</span>
+	<p>Handle: <span id=lblHandle>$handle</span>
 
-	<p>Fingerprint: <span id=fingerprint>$fingerprint</span>
+	<p>Fingerprint: <span id=lblFingerprint>$fingerprint</span>
+
+	<p>Signing: <span id=lblSigningIndicator>No</span></p>
 
 	<p>
 		<input type=submit name=request onclick="if (window.btnReg_Click) { return btnReg_Click(this); }" id="btnReg" value="Register">

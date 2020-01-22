@@ -30,8 +30,8 @@
 							cols=32
 							name=comment
 							autofocus
-							onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); } else { alert('commentOnChange() not found'); }"
-							onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); } else { alert('commentOnChange() not found'); }"
+							onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
+							onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 						>$initText</textarea><br>
 
 						<p>

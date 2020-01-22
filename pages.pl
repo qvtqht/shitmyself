@@ -703,8 +703,8 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar settings fresh voting profile write_buttons timestamps));
 
-	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
 } # GetItemPage()
@@ -1292,17 +1292,26 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/", 'Read');
 	$menuItems .= GetMenuItem("/write.html", 'Write');
 	$menuItems .= GetMenuItem("/etc.html", 'More');
-	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
-	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
-	$menuItems .= GetMenuItem("/index0.html", GetString('menu/queue'), 'voter');
+
 	$menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
-	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
+	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
-	if ($adminKey) {
-		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
-	}
-#	$menuItems .= GetMenuItem("/help.html", 'Help');
+	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
+	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile', 'advanced');
+#	if ($adminKey) {
+#		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
+#	}
+##	$menuItems .= GetMenuItem("/help.html", 'Help');
+#	$menuItems .= GetMenuItem("/profile.html", 'Sign In', 'beginner');
+#	$menuItems .= GetMenuItem("/profile.html", 'Register', 'beginner');
+
+
+#	$menuItems .= GetMenuItem("/profile.html", 'Log On', 'beginner');
+#	$menuItems .= GetMenuItem("/profile.html", 'Sign Up', 'beginner');
+#	$menuItems .= GetMenuItem("/profile.html", 'Account', 'beginner');
 #
 #	$menuItems .= $identityLink;
 #	$menuItems .= $noJsIndicator;
@@ -2038,6 +2047,8 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 		$menuItem = GetTemplate('menuitem-advanced.template');
 	} elsif ($className eq 'voter') {
 		$menuItem = GetTemplate('menuitem-voter.template');
+	} elsif ($className eq 'beginner') {
+		$menuItem = GetTemplate('menuitem-beginner.template');
 	} else {
 		$menuItem = GetTemplate('menuitem.template');
 	}
@@ -2334,7 +2345,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $settingsPage = GetSettingsPage();
 	PutHtmlFile("$HTMLDIR/settings.html", $settingsPage);
 
-	# Preferences page
+	# More page
 	my $etcPage = GetEtcPage();
 	PutHtmlFile("$HTMLDIR/etc.html", $etcPage);
 
@@ -2496,10 +2507,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	if (GetConfig('admin/php/enable')) {
 	#if php/enabled, then use post.php instead of post.html
 	#todo add rewrites for this
+	#rewrites have been added for this, so it's commented out for now, but could still be an option in the future
 #		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
 	}
 	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
-	
+
+	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
+	PutHtmlFile("$HTMLDIR/crypto2.js", $crypto2JsTemplate);
+
 	# Write avatar javasript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
 
@@ -2567,8 +2582,7 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $submitForm = GetTemplate('form/write3.template');
-	#my $submitForm = GetTemplate('form/write.template');
+	my $submitForm = GetTemplate('form/write4.template');
 
 	if (GetConfig('admin/php/enable')) {
 	#if php module is enabled, change the form target to post.php
@@ -2739,7 +2753,8 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 	my $profileWindowContents = GetTemplate('form/profile2.template');
 	my $profileWindow = GetWindowTemplate(
 		'Profile',
-		'<a class=advanced href="/gpg.html">Signatures</a>',
+		'',
+#		'<a class=advanced href="/gpg.html">Signatures</a>',
 		'',
 		'<tr class=content><td>' . $profileWindowContents . '</td></tr>',
 		'Ready'
@@ -2749,8 +2764,13 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings profile avatar));
-#	$txtIndex = InjectJs($txtIndex, qw(settings profile2));
+	$txtIndex = InjectJs($txtIndex, qw(settings profile2));
+
+	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
+
+	#
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
 }
@@ -2784,15 +2804,15 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 sub GetEtcPage { # returns html for etc page (/etc.html)
 	my $txtIndex = "";
 
-	my $title = "Etc";
-	my $titleHtml = "Etc";
+	my $title = "More";
+	my $titleHtml = "More";
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'etc');
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	my $etcPageContent = '<tr class=content><td>' . GetTemplate('etc.template') . '</td></tr>';
-	my $etcPageWindow = GetWindowTemplate('Etc', '', '', $etcPageContent, 'Ready');
+	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, 'Ready');
 
 	$txtIndex .= $etcPageWindow;
 

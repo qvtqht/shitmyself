@@ -1,0 +1,27 @@
+// == begin utils.js
+
+// begin html escape hack (credit stacko)
+// todo make this work without createElement
+var escapeTA = document.createElement('textarea');
+function escapeHTML(html) {
+	escapeTA.textContent = html;
+	return escapeTA.innerHTML;
+}
+function unescapeHTML(html) {
+	escapeTA.innerHTML = html;
+	return escapeTA.textContent;
+}
+// end html escape hack
+
+function UrlExists(url) { // checks if url exists
+// todo use async
+// todo how to do pre-xhr browsers?
+	if (window.XMLHttpRequest) {
+		var http = new XMLHttpRequest();
+		http.open('HEAD', url, false);
+		http.send();
+		return (http.status == 200);
+	}
+}
+
+// == end utils.js

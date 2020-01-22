@@ -1,0 +1,95 @@
+// begin profile2.js.template
+//
+//if (window.localStorage && window.Promise) {
+//
+//}
+
+if (!window.openpgp && document.getElementById && window.localStorage && window.Promise) {
+	//alert('DEBUG: loading openpgp.js');
+
+	var script = document.createElement('script');
+	script.src = '/openpgp.js';
+	script.async = false; // This is required for synchronous execution
+	document.head.appendChild(script);
+
+	//alert('DEBUG: finished loading openpgp.js');
+} else {
+	//alert('DEBUG: not loading openpgp.js; window.openpgp = ' + window.openpgp + ' document.getElementById = ' + document.getElementById + ' window.localStorage = ' + window.localStorage + ' window.Promise = ' + window.Promise);
+}
+
+
+if (!window.MakeKey && document.getElementById && window.localStorage) {
+	//alert('DEBUG: loading crypto2.js');
+
+	var script2 = document.createElement('script');
+	script2.src = '/crypto2.js';
+	script2.async = false; // This is required for synchronous execution
+	document.head.appendChild(script2);
+
+	//alert('DEBUG: finished loading crypto.js');
+} else {
+	alert('DEBUG: not loading crypto2.js; ' +
+		' window.MakeKey = ' + window.MakeKey +
+		' document.getElementById = ' + document.getElementById +
+		' window.localStorage = ' + window.localStorage
+	);
+}
+
+
+function btnReg_Click(t) { // event for 'Register' button's click
+// t is button's this
+	alert('DEBUG: btnReg_Click() begin');
+
+	if (t) {
+		// if button exists, change its caption
+		t.value = 'Please wait...';
+	}
+
+	if (window.localStorage && window.Promise) {
+		// minimum features check
+
+		alert('DEBUG: btnReg_Click: localStorage and Promise feature check pass');
+
+		if (window.MakeKey) {
+			alert('DEBUG: btnReg_Click: window.MakeKey exists');
+
+			var intKeyGenResult = MakeKey();
+
+			return intKeyGenResult;
+		}
+
+	} else {
+		return true;
+	}
+
+	return true;
+}
+
+function ProfileOnLoad() {
+	alert('DEBUG: ProfileOnLoad() begin');
+
+	var lblSigningIndicator;
+	if (document.getElementById) {
+		alert('DEBUG: ProfileOnLoad: document.getElementById = ' + document.getElementById);
+
+		lblSigningIndicator = document.getElementById('lblSigningIndicator');
+
+		if (lblSigningIndicator) {
+			alert('DEBUG: ProfileOnLoad: lblSigningIndicator = ' + lblSigningIndicator);
+
+			if (window.getPrivateKey) {
+				alert('DEBUG: ProfileOnLoad: window.getPrivateKey = ' + window.getPrivateKey);
+
+				var pk = getPrivateKey();
+
+				if (pk) {
+					alert('DEBUG: ProfileOnLoad: pk = ' + pk);
+
+					lblSigningIndicator.innerHTML = 'Yes';
+				}
+			}
+		}
+	}
+}
+
+// end profile2.js.template

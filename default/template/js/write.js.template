@@ -1,10 +1,29 @@
 // == begin write.js
 
-function writeOnload() {
-// this is a handler for browsers who don't know how to download .js files but support javascript
-	if (window.writeOnload2) {
-		writeOnload2();
+function writeOnload() { // onload handler for write page
+	if (window.signMessage) {
+
 	}
+}
+
+function writeSubmit() { // called when user submits write form
+	if (window.getPrivateKey && window.signMessage) {
+		alert(0);
+
+		if (getPrivateKey()) {
+			alert(1);
+
+			signMessage();
+
+			alert(3);
+
+			return false; // return false to cancel form submission
+		}
+	} else {
+		alert(2);
+	}
+
+	return true;
 }
 
 // == end write.js

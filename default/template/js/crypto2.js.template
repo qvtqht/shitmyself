@@ -1,0 +1,89 @@
+// == begin crypto2.js
+
+function MakeKey() {
+	alert('DEBUG: MakeKey() begin');
+	var openpgp = window.openpgp;
+
+	if (openpgp) {
+		// if openpgp is loaded, proceed with client-side key generation
+
+		// defaults for testing #todo
+		var bits = 512;
+		var username = 'Anonymous';
+
+		openpgp.initWorker({path:'openpgp.worker.js'});
+
+		var options;
+		if (bits == 512 || bits == 1024 || bits == 2048 || bits == 4096) {
+			options = {
+				userIds: [{ name: username }],
+				numBits: bits,
+				passphrase: ''
+			};
+		} else {
+			options = {
+				userIds: [{ name: username }],
+				curve: bits,
+				passphrase: ''
+			};
+		}
+
+		openpgp.config.show_version = false;
+		openpgp.config.show_comment = false;
+
+		openpgp.generateKey(options).then(
+			function(key) {
+				var privkey = key.privateKeyArmored; // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
+				var pubkey = key.publicKeyArmored;   // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
+				var revocationCertificate = key.revocationCertificate; // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
+
+				openpgp.key.readArmored(privkey);
+
+				// read it into pgp object
+				var privKeyObj = openpgp.key.readArmored(privkey);;
+
+				// get the public key out of it
+				var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+				// store the armored version into localstorage
+				var pubkey = pubKeyObj.armor();
+
+				// get the fingerprint as uppercase hex and store it
+				var myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+
+				// get username out of key
+				var myUsername = pubKeyObj.users[0].userId.userid;
+
+				window.localStorage.setItem('privatekey', privkey);
+				window.localStorage.setItem('publickey', pubkey);
+				window.localStorage.setItem('fingerprint', myFingerprint);
+
+				document.cookie = "test=" + myFingerprint;
+
+				window.location = '/profile.html?' + myFingerprint;
+			}
+		);
+
+		return false;
+	}
+
+	return true;
+}
+
+function getPrivateKey() { // get private key from local storage
+// returns null otherwise
+	if (window.localStorage) {
+		var privateKey = localStorage.getItem("privatekey");
+
+		if (privateKey === null || privateKey.length === 0) {
+			return null;
+		} else {
+			return privateKey;
+		}
+	} else {
+		return null;
+	}
+}
+
+// == end crypto2.js
+
