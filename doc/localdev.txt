@@ -1,19 +1,40 @@
-How I do local dev on this.
+How I do local dev on this thing:
 
-I have a Fedora LXDE VM.
+===
 
-Onto it, I have installed the necessary packages:
+I have a Fedora LXDE VM. Onto it, I have installed the following packages:
 
-*
+perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
+(also in README)
 
-I have also installed IntelliJ IDEA Community, with most of the install options disabled, except for Git and GitHub support.
-
+I have also installed IntelliJ IDEA Community Edition, with most of the install options disabled, except for Git and GitHub support.
 I let it install the Perl support plugin (many thanks to Alexandr Evstigneev).
 
-To "build" the html site, I run "./clean-build"
+===
+
+To "build" the html site, I run "./clean-build". This deletes a lot of things in config, beware.
 
 To start the http server, I use "./lighttpd.sh". The site is then accessible at http://localhost:3000/
 
 To keep the site updating as I interact with it, I run "./loop.pl", which just keeps running update.pl in a loop.
 
+===
 
+Debugging
+=========
+
+Perl
+There is a config file in config/admin/default.
+Unlike other settings, the value of the file is not checked, and its presence enables debug mode.
+In debug mode any calls to WriteLog are output to both stdout and log/log.log
+
+PHP
+In utils.php, there is a function called WriteLog()
+In this function, there is an if statement of the form "if (0) {"
+To enable debugging, change the 0 to a 1.
+Note: Debug output may interfere with cookies
+
+JavaScript
+Some of the JS has statements beginning with "alert('DEBUG:"
+To disable, global search and replace "alert('DEBUG:" with "//alert('DEBUG:"
+To enable, do the opposite

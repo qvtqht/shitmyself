@@ -1,8 +1,16 @@
+Unbreak
+	Profile page
+	Write page
+	Voting
+
 Profile refactor
 	Cookie-auth should work for non-JS browsers
-	Factor out new-JS code into separate template
+	Factor out nuJS code into separate template
 	Set cookie via server after private key is set locally
 
+Space-wrap long strings in topics list
+
+#bug "Long message mode" displayed in NN3
 
 Settings don't always take effect in other tabs via timer
 
@@ -101,6 +109,7 @@ Create token which allows a new item to "overwrite" an item
 	Perhaps only admin or original author?
 
 Netscape 2.0 and 3.0 js errors
+Netscape 3.0 tries to download javascript files
 
 Warning when write content becomes close to too long for GET
 
@@ -890,3 +899,16 @@ Add support for messages with multiple ENC_TOs
    List all of them on details page
 Add support for public key included inside signed message
 
+
+Rewrite clock value in php
+
+Hints are not un/highlighted after page load
+
+Voting links cause crash in Mosaic 2.0 and 1.0
+
+#bug Reset settings (with js) does not change checkbox values to their defaults
+
+#bug cookie auth no worky in nn4.80
+
+PHP handler for event.html
+	Set date pre-set to current

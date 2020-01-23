@@ -629,3 +629,11 @@ NoScript button
 Split message into lines
 	average line length = paragraph
 	smaller than average = heading
+
+
+Can some JS be included as base64 and decoded after loading?
+	This can be used to selectively enable it for newer browsers
+
+For pre-form browsers, can registration be accomplished with
+	Links
+	Link re-writing (like WebSphere)
