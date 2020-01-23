@@ -64,6 +64,8 @@ function signVote(t, token) { // signs a vote from referenced vote button
 					AmIFresh();
 				}
 			}
+
+			return false;
 		} else {
 		// there is a private key
 			// first, change the button's appearance, for maximum responsiveness
@@ -98,11 +100,13 @@ function signVote(t, token) { // signs a vote from referenced vote button
 
 			// sign the voting token and send to post.html when finished
 			openpgp.sign(options).then(signCallback);
+
+			return false;
 		}
 	}
 
-	// return false so that calling link does not go to its target
-	return false;
+	// return true so that calling link goes to its target
+	return true;
 }
 
 // == end voting.js
