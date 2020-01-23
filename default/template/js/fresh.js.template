@@ -2,7 +2,7 @@
 var freshClient;
 var timeoutFresh;
 
-function corsc() { // callback for requesting HEAD for current page
+function freshCallback() { // callback for requesting HEAD for current page
 	var clock = document.getElementById('txtClock');
 	if(this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
 		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
@@ -46,7 +46,7 @@ function CheckIfFresh() {
 	freshClient = new XMLHttpRequest();
 	freshClient.open("HEAD", mypath, true);
 
-	freshClient.onreadystatechange = corsc;
+	freshClient.onreadystatechange = freshCallback;
 
 	freshClient.send();
 }
