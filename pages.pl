@@ -42,10 +42,7 @@ sub GenerateDialogPage { # generates page with dialog
 		if ($pageName eq '404') {
 			$pageTitle = '404 Message Received';
 
-			$windowContents  = '';
-			$windowContents .= '<tr><td class=body>';
-			$windowContents .= GetTemplate('404.template');
-			$windowContents .= '</td></tr>';
+			$windowContents = GetTemplate('404.template');
 
 			my $pageTemplate;
 			$pageTemplate = '';
@@ -200,7 +197,10 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	}
 
 	if ($windowBody) {
-		# todo there should be some flag to wrap <tr class=content><td> around this, otherwise there's html in the perl
+		if (index(lc($windowBody), '<tr') == -1) {
+			$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
+		}
+
 		$windowTemplate =~ s/\$windowBody/$windowBody/g;
 	} else {
 		$windowTemplate =~ s/\$windowBody//g;
@@ -1651,6 +1651,10 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
 		}
 
+		if (GetConfig('admin/debug_javascript')) {
+			$scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
+		}
+
 		# add to the snowball of javascript
 		$scriptsText .= $scriptTemplate;
 	}
@@ -2227,7 +2231,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 #		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
 
-		my $infoMessage = '<tr><td><p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p><br></td></tr>';
+		my $infoMessage = '<p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p><br>';
 
 		$indexPage .= GetWindowTemplate('No Items', '', '', $infoMessage, 'Ready');
 
@@ -2410,7 +2414,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'Manual',
 			'', #menubar
 			'', #columns
-			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			$tfmPageContent,
 			'Ready'
 		);
 
@@ -2436,7 +2440,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'Help',
 			'', #menubar
 			'', #columns
-			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			$tfmPageContent,
 			'Ready'
 		);
 
@@ -2462,7 +2466,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'Advanced Manual',
 			'', #menubar
 			'', #columns
-			'<tr class=body><td>'.$tfmPageContent.'</td></tr>', #todo unhack
+			$tfmPageContent,
 			'Ready'
 		);
 
@@ -2718,7 +2722,7 @@ sub GetIdentityPage { # gpg-based identity
 		'Without JavaScript',
 		'',
 		'',
-		'<tr class=content><td>' . GetTemplate('no_js.template') . '</td></tr>',
+		GetTemplate('no_js.template'),
 		'Ready'
 	) . '</noscript>';
 
@@ -2761,7 +2765,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 		'',
 #		'<a class=advanced href="/gpg.html">Signatures</a>',
 		'',
-		'<tr class=content><td>' . $profileWindowContents . '</td></tr>',
+		$profileWindowContents,
 		'Ready'
 	);
 
@@ -2816,7 +2820,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $etcPageContent = '<tr class=content><td>' . GetTemplate('etc.template') . '</td></tr>';
+	my $etcPageContent = GetTemplate('etc.template');
 	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, 'Ready');
 
 	$txtIndex .= $etcPageWindow;
@@ -3024,7 +3028,7 @@ sub MakeDataPage { # returns html for /data.html
 	$dataPageContents =~ s/\$sizeHikeZip/$sizeHikeZip/g;
 	$dataPageContents =~ s/\$sizeSqliteZip/$sizeSqliteZip/g;
 
-	$dataPageContents = '<tr><td>' . $dataPageContents . '</td></tr>';#todo this should be in a template somewhere
+	$dataPageContents = $dataPageContents;
 
 	my $dataPageWindow = GetWindowTemplate('Data', '', '', $dataPageContents, 'Ready');
 
