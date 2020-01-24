@@ -1421,55 +1421,58 @@ sub GetVoterTemplate { # returns html for voter checkboxes
 sub GetTopItemsPage { # returns page with top items listing
 	WriteLog("GetTopItemsPage()");
 
-	my $txtIndex = '';
+	my $htmlOutput = ''; # stores the html
 
 	my $title = 'Topics';
 	my $titleHtml = 'Topics';
 
-	$txtIndex = GetPageHeader($title, $titleHtml, 'top');
+	$htmlOutput = GetPageHeader($title, $titleHtml, 'top'); # <html><head>...</head><body>
+	$htmlOutput .= GetTemplate('maincontent.template'); # where "skip to main content" goes
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	my @topItems = DBGetTopItems(); # get top items from db
 
-	my @topItems = DBGetTopItems();
-							 
-	if (scalar(@topItems)) {
+	my $itemCount = scalar(@topItems);
+
+	if ($itemCount) {
+	# at least one item returned
+
 		my $itemListingWrapper = GetTemplate('item_listing_wrapper2.template');
 
 		my $itemListings = '';
 
-		my $rowBgColor = '';
-		my $colorRow0Bg = GetThemeColor('row_0');
-		my $colorRow1Bg = GetThemeColor('row_1');
-
-		my $itemCount = scalar(@topItems);
+		my $rowBgColor = ''; # stores current value of alternating row color
+		my $colorRow0Bg = GetThemeColor('row_0'); # color 0
+		my $colorRow1Bg = GetThemeColor('row_1'); # color 1
 
 		while (@topItems) {
 			my $itemTemplate = GetTemplate('item_listing.template');
-			#todo don't need to do this every time
+			# it's ok to do this every time because GetTemplate already stores it in a static
+			# alternative is to store it in another variable above
 
-			#alternating row colors hack
+			#alternate row color
 			if ($rowBgColor eq $colorRow0Bg) {
 				$rowBgColor = $colorRow1Bg;
 			} else {
-
 				$rowBgColor = $colorRow0Bg;
 			}
 
-			my $itemRef = shift @topItems;
-			my %item = %{$itemRef};
+			my $itemRef = shift @topItems; # reference to hash containing item
+			my %item = %{$itemRef}; # hash containing item data
 
 			my $itemKey = $item{'file_hash'};
-			my $itemTitle = $item{'item_title'};
 			my $itemScore = $item{'item_score'};
 			my $authorKey = $item{'author_key'};
+
 			my $itemLastTouch = DBGetItemLatestAction($itemKey);
 
+			my $itemTitle = $item{'item_title'};
 			if (trim($itemTitle) eq '') {
+				# if title is empty, use the item's hash
 				$itemTitle = '(' . $itemKey . ')';
 			}
+			$itemTitle = HtmlEscape($itemTitle);
 
 			my $itemLink = GetHtmlFilename($itemKey);
-			$itemTitle = HtmlEscape($itemTitle);
 
 			my $authorAvatar;
 			if ($authorKey) {
@@ -1481,6 +1484,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			
 			$itemLastTouch = GetTimestampElement($itemLastTouch);
 
+			# populate item template
 			$itemTemplate =~ s/\$link/$itemLink/g;
 			$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
 			$itemTemplate =~ s/\$itemScore/$itemScore/g;
@@ -1488,6 +1492,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			$itemTemplate =~ s/\$itemLastTouch/$itemLastTouch/g;
 			$itemTemplate =~ s/\$rowBgColor/$rowBgColor/g;
 
+			# add to main html
 			$itemListings .= $itemTemplate;
 		}
 
@@ -1505,8 +1510,6 @@ sub GetTopItemsPage { # returns page with top items listing
 #		my $columnHeadings = 'Title,Score,Replied,Author';
 		my $columnHeadings = '';
 
-
-
 		$itemListingWrapper = GetWindowTemplate(
 			'Top Threads',
 			'<a href="/write.html">New Topic</a><br>',
@@ -1515,17 +1518,19 @@ sub GetTopItemsPage { # returns page with top items listing
 			$statusText
 		);
 
-		$txtIndex .= $itemListingWrapper;
+		$htmlOutput .= $itemListingWrapper;
 	} else {
-		$txtIndex .= GetTemplate('item/no_items.template');
+	# no items returned, use 'no items' template
+		$htmlOutput .= GetTemplate('item/no_items.template');
 	}
 
-	$txtIndex .= GetPageFooter();
+	$htmlOutput .= GetPageFooter(); # </body></html>
 
-	$txtIndex = InjectJs($txtIndex, qw(settings voting timestamps profile avatar));
-#	$txtIndex = InjectJs($txtIndex, qw(settings));
+	# add necessary js
+	$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamps profile avatar));
+#	$htmlOutput = InjectJs($htmlOutput, qw(settings));
 
-	return $txtIndex;
+	return $htmlOutput;
 }
 
 sub GetStatsPage { # returns html for stats page
