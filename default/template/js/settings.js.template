@@ -78,14 +78,14 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			bgColor = colorHighlightAdvanced; // advanced_highlight
 		}
 
-		if (force || showAdvancedLastAction != displayValue) {
+		if (force || showAdvancedLastAction != (displayValue + bgColor)) {
 			// thank you stackoverflow
 			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array #todo nn3 compat
 			for (var i = 0; i < divsToHide.length; i++) {
 				//divsToHide[i].style.visibility = "hidden"; // or
 				SetElementVisible(divsToHide[i], displayValue, bgColor, 0);
 			}
-			showAdvancedLastAction = displayValue;
+			showAdvancedLastAction = displayValue + bgColor;
 		}
 
 		displayValue = 'initial'; // show by default
@@ -98,13 +98,13 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			bgColor = colorHighlightBeginner; // beginner_highlight
 		}
 
-		if (force || showBeginnerLastAction != displayValue) {
+		if (force || showBeginnerLastAction != displayValue + bgColor) {
 			var divsToShow = document.getElementsByClassName('beginner');//#todo nn3 compat
 
 			for (var i = 0; i < divsToShow.length; i++) {
 				SetElementVisible(divsToShow[i], displayValue, bgColor, 0);
 			}
-			showBeginnerLastAction = displayValue;
+			showBeginnerLastAction = displayValue + bgColor;
 		}
 
 		if (window.timeoutFresh) {
@@ -205,95 +205,7 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 	return 1;
 }
 
-if (document.getElementById) {
-// below is code which sets the checked state of preference checkboxes
-// based on preference state
-	var pane;
-
-	// advanced checkbox of current profile pane
-	pane = document.getElementById('curIdAdv');
-	if (pane && GetPrefs('show_advanced') == 1) {
-		var chkAdvanced = document.getElementById('chkShowAdvanced');
-		if (chkAdvanced) {
-			chkAdvanced.checked = 1;
-		}
-
-		chkAdvanced = document.getElementById('chkShowAdvanced2');
-		if (chkAdvanced) {
-			chkAdvanced.checked = 1;
-		}
-
-		saveCheckbox('curIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
-	}
-
-	// current profile pane (advanced section)
-	pane = document.getElementById('curIdAdv');
-	if (pane) {
-		//beginner checkbox
-		if (GetPrefs('beginner') == 1) {
-			var cb = document.getElementById('chkBeginner');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-
-		//want_to_vote checkbox
-		if (GetPrefs('want_to_vote') == 1) {
-			var cb = document.getElementById('chkWantToVote');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-
-		// beginner_highlight checkbox
-		if (GetPrefs('beginner_highlight') == 1) {
-			var cb = document.getElementById('chkBeginnerHighlight');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-
-		// advanced_highlight checkbox
-		if (GetPrefs('advanced_highlight') == 1) {
-			var cb = document.getElementById('advancedHighlight');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-		
-		// display username checkbox
-		if (GetPrefs('display_username') == 1) {
-			var cb = document.getElementById('displayUsername');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-		
-		// reload pages if changed checkbox
-		if (GetPrefs('notify_on_change') == 1) {
-			var cb = document.getElementById('chkNotifyOnChange');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-	}
-
-	// create profile pane
-	pane = document.getElementById('creaIdAdv');
-	if (pane) {
-		if (GetPrefs('show_advanced') == 1) {
-			var cb = document.getElementById('chkShowAdvanced');
-			if (cb) {
-				cb.checked = 1;
-				saveCheckbox('creaIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
-			}
-		}
-	}
-
-	ShowAdvanced(0); // call ShowAdvanced
-}
-
-function ResetPrefs() {
+function ResetSettings() {
 	if (window.localStorage) {
 		if (confirm('Reset all settings to their defaults?')) {
 			localStorage.removeItem('prefs1');
@@ -306,8 +218,97 @@ function ResetPrefs() {
 }
 
 function SettingsOnload() { // onload function for preferences page
-	// show and hide page form as necessary
-	showHideForms();
+	//alert('DEBUG: SettingsOnload() begin');
+
+	if (document.getElementById) {
+	// below is code which sets the checked state of preference checkboxes
+	// based on preference state
+		var pane;
+
+		// advanced checkbox of current profile pane
+		pane = document.getElementById('curIdAdv');
+		if (pane && GetPrefs('show_advanced') == 1) {
+			var chkAdvanced = document.getElementById('chkShowAdvanced');
+			if (chkAdvanced) {
+				chkAdvanced.checked = 1;
+			}
+
+			chkAdvanced = document.getElementById('chkShowAdvanced2');
+			if (chkAdvanced) {
+				chkAdvanced.checked = 1;
+			}
+
+			saveCheckbox('curIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
+		}
+
+		// current profile pane (advanced section)
+		pane = document.getElementById('curIdAdv');
+		if (pane) {
+			//beginner checkbox
+			if (GetPrefs('beginner') == 1) {
+				var cb = document.getElementById('chkBeginner');
+				if (cb) {
+					cb.checked = 1;
+				}
+			}
+
+			//want_to_vote checkbox
+			if (GetPrefs('want_to_vote') == 1) {
+				var cb = document.getElementById('chkWantToVote');
+				if (cb) {
+					cb.checked = 1;
+				}
+			}
+
+			// beginner_highlight checkbox
+			if (GetPrefs('beginner_highlight') == 1) {
+				var cb = document.getElementById('chkBeginnerHighlight');
+				if (cb) {
+					cb.checked = 1;
+				}
+			}
+
+			// advanced_highlight checkbox
+			if (GetPrefs('advanced_highlight') == 1) {
+				var cb = document.getElementById('advancedHighlight');
+				if (cb) {
+					cb.checked = 1;
+				}
+			}
+
+			// display username checkbox
+			if (GetPrefs('display_username') == 1) {
+				var cb = document.getElementById('displayUsername');
+				if (cb) {
+					cb.checked = 1;
+				}
+			}
+
+			// reload pages if changed checkbox
+			if (GetPrefs('notify_on_change') == 1) {
+				var cb = document.getElementById('chkNotifyOnChange');
+				if (cb) {
+					cb.checked = 1;
+				}
+			}
+		}
+
+		// create profile pane
+		pane = document.getElementById('creaIdAdv');
+		if (pane) {
+			if (GetPrefs('show_advanced') == 1) {
+				var cb = document.getElementById('chkShowAdvanced');
+				if (cb) {
+					cb.checked = 1;
+					saveCheckbox('creaIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
+				}
+			}
+		}
+
+		ShowAdvanced(0); // call ShowAdvanced
+	}
+
+	ShowAdvanced(1);
 }
 
 // == end settings.js

@@ -11,7 +11,7 @@
 			<tr class=menubar>
 				<td>
 					<p>
-						<a href=# onclick="ResetPrefs()">Reset</a>;
+						<a href=# onclick="ResetSettings()">Reset</a>;
 						<a href="/profile.html">Profile</a>;
 						<a href="/gpg.html">Signature</a>;
 				</td>
