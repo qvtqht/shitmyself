@@ -306,20 +306,20 @@ sub IndexTextFile { # indexes one text file into database
 #	} #aug29
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
-		my %gpgResults =  GpgParse($file);
+		my %gpgResults = GpgParse($file);
 
 		# see what gpg says about the file.
 		# if there is no gpg content, the attributes are still populated as possible
 
-		$txt = $gpgResults{'text'}; # contents of the text file
-		$message = $gpgResults{'message'}; # message which will be displayed once tokes are processed
+		$txt = $gpgResults{'text'};          # contents of the text file
+		$message = $gpgResults{'message'};   # message which will be displayed once tokes are processed
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
-		$gpgKey = $gpgResults{'key'}; # if it is signed, fingerprint of signer
-		
+		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
+
 		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
-		
-		$alias = $gpgResults{'alias'}; # alias of signer (from public key)
-		$fileHash = $gpgResults{'gitHash'}; # hash provided by git for the file
+
+		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
+		$fileHash = $gpgResults{'gitHash'};                # hash provided by git for the file
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; # 
 
 		if (GetConfig('admin/gpg/capture_stderr_output')) {
@@ -328,7 +328,8 @@ sub IndexTextFile { # indexes one text file into database
 			}
 		}
 
-		if (IsServer($gpgKey)) { #todo
+		if (IsServer($gpgKey)) {
+			#todo
 			push @allowedActions, 'addedtime';
 			push @allowedActions, 'addedby';
 		}
@@ -341,7 +342,8 @@ sub IndexTextFile { # indexes one text file into database
 
 		if ($gpgKey) {
 			WriteLog("\$gpgKey = $gpgKey");
-		} else {
+		}
+		else {
 			WriteLog("\$gpgKey = false");
 		}
 
@@ -374,7 +376,7 @@ sub IndexTextFile { # indexes one text file into database
 
 			if ($htmlFilename) {
 				$htmlFilename = 'html/' . $htmlFilename;
-	
+
 				if (-e $htmlFilename) {
 					unlink($htmlFilename);
 				}
@@ -387,7 +389,8 @@ sub IndexTextFile { # indexes one text file into database
 		WriteLog("... " . $gpgResults{'gitHash'});
 		if ($addedTime) {
 			WriteLog("... \$addedTime = $addedTime");
-		} else {
+		}
+		else {
 			WriteLog("... \$addedTime is not set");
 		}
 
@@ -429,7 +432,7 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
-		# it was posted by admin
+			# it was posted by admin
 			$isAdmin = 1;
 
 			DBAddVoteRecord($fileHash, $addedTime, 'admin');
@@ -442,19 +445,19 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		if ($isSigned && $gpgKey) {
-		# it was signed and there's a gpg key
+			# it was signed and there's a gpg key
 			DBAddAuthor($gpgKey);
 
 			DBAddPageTouch('author', $gpgKey);
-			
+
 			DBAddPageTouch('scores', 0);
 
 			DBAddPageTouch('stats', 0);
 		}
 
 		if ($alias) {
-			DBAddKeyAlias ($gpgKey, $alias, $fileHash);
-			
+			DBAddKeyAlias($gpgKey, $alias, $fileHash);
+
 			UnlinkCache('avatar/' . $gpgKey);
 			UnlinkCache('avatar.color/' . $gpgKey);
 			UnlinkCache('pavatar/' . $gpgKey);
@@ -472,9 +475,9 @@ sub IndexTextFile { # indexes one text file into database
 
 		my $itemName = TrimPath($file);
 
-		if ($message) {
+		if (GetConfig('admin/token/cookie') && $message) {
 			#look for cookies
-			my @cookieLines = ( $message =~ m/^Cookie:\s(.+)/mg );
+			my @cookieLines = ($message =~ m/^Cookie:\s(.+)/mg);
 
 			if (@cookieLines) {
 				while (@cookieLines) {
@@ -490,12 +493,12 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		# look for quoted message ids
-		if ($message) {
+		if (GetConfig('admin/token/reply') && $message) {
 			# >> token
-			my @replyLines = ( $message =~ m/^\>\>([0-9a-f]{40})/mg );
+			my @replyLines = ($message =~ m/^\>\>([0-9a-f]{40})/mg);
 
 			if (@replyLines) {
-				while(@replyLines) {
+				while (@replyLines) {
 					my $parentHash = shift @replyLines;
 
 					if (IsSha1($parentHash)) {
@@ -504,9 +507,9 @@ sub IndexTextFile { # indexes one text file into database
 					}
 
 					my $reconLine = ">>$parentHash";
-					
+
 					$message =~ s/$reconLine/$reconLine/;
-					
+
 					#$message =~ s/$reconLine/[In response to message $parentHash]/;
 					# replace with itself, no change needed
 
@@ -520,22 +523,23 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		# look for hash tags
-		if ($message) {
+		if (GetConfig('admin/token/hashtag') && $message) {
 			WriteLog("... check for hashtags");
-			my @hashTags = ( $message =~ m/\#([a-zA-Z0-9]+)/mg );
+			my @hashTags = ($message =~ m/\#([a-zA-Z0-9]+)/mg);
 
 			if (@hashTags) {
 				WriteLog("... hashtag(s) found");
 
-				while(@hashTags) {
+				while (@hashTags) {
 					my $hashTag = shift @hashTags;
 
-					if ($hashTag) { #todo add sanity checks here
+					if ($hashTag) {
+						#todo add sanity checks here
 						DBAddVoteRecord($fileHash, $addedTime, $hashTag);
 
 						DBAddPageTouch('tag', $hashTag);
 
-#						my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
+						#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
 
 						#todo
 					}
@@ -544,7 +548,7 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		# look for 'upgrade_now' token
-		if ($message) {
+		if (GetConfig('admin/token/upgrade_now') && $message) {
 			if (IsAdmin($gpgKey)) {
 				if (trim($message) eq 'upgrade_now') {
 					my $time = GetTime();
@@ -559,15 +563,15 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		#look for setconfig and resetconfig
-		if ($message) {
+		if (GetConfig('admin/token/setconfig') && $message) {
 			if (IsAdmin($gpgKey) || GetConfig('admin/anyone_can_config') || GetConfig('admin/signed_can_config')) {
 				# preliminary conditions
 
-				my @setConfigLines = ( $message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg );
+				my @setConfigLines = ($message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg);
 
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 
-				my @resetConfigLines = ( $message =~ m/^(resetconfig)\/([a-z0-9\/_]+)/mg );
+				my @resetConfigLines = ($message =~ m/^(resetconfig)\/([a-z0-9\/_]+)/mg);
 
 				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
 
@@ -585,14 +589,16 @@ sub IndexTextFile { # indexes one text file into database
 							my $configValue;
 							if ($configAction eq 'setconfig') {
 								$configValue = shift @setConfigLines;
-							} else {
+							}
+							else {
 								$configValue = 'reset';
 							}
 
 							my $reconLine;
 							if ($configAction eq 'setconfig') {
 								$reconLine = "setconfig/$configKey=$configValue";
-							} else {
+							}
+							else {
 								$reconLine = "resetconfig/$configKey";
 							}
 
@@ -600,12 +606,12 @@ sub IndexTextFile { # indexes one text file into database
 
 								WriteLog(
 									'ConfigKeyValid() passed! ' .
-									$reconLine .
-									'; IsAdmin() = ' . IsAdmin($gpgKey) .
-									'; isSigned = ' . $isSigned .
-									'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
-									'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
-									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
+										$reconLine .
+										'; IsAdmin() = ' . IsAdmin($gpgKey) .
+										'; isSigned = ' . $isSigned .
+										'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
+										'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
+										'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
 								);
 
 								if
@@ -614,21 +620,21 @@ sub IndexTextFile { # indexes one text file into database
 										IsAdmin($gpgKey)
 									)
 										||
-									( # ... or it can't be under admin/
-										substr(lc($configKey), 0, 5) ne 'admin'
-									)
-										&&
-									( # not admin, but may be allowed to edit key ...
-										( # if signed and signed editing allowed
-											$isSigned
-												&&
-											GetConfig('admin/signed_can_config')
+										( # ... or it can't be under admin/
+											substr(lc($configKey), 0, 5) ne 'admin'
 										)
-											||
-										( # ... or if anyone is allowed to edit
-											GetConfig('admin/anyone_can_config')
-										)
-									)
+											&&
+											(     # not admin, but may be allowed to edit key ...
+												( # if signed and signed editing allowed
+													$isSigned
+														&&
+														GetConfig('admin/signed_can_config')
+												)
+													||
+													( # ... or if anyone is allowed to edit
+														GetConfig('admin/anyone_can_config')
+													)
+											)
 								) # condition 1
 								{
 									DBAddVoteRecord($fileHash, $addedTime, 'config');
@@ -636,20 +642,23 @@ sub IndexTextFile { # indexes one text file into database
 									if ($configAction eq 'resetconfig') {
 										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
 										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
-									} else {
+									}
+									else {
 										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
 										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
 									}
 
 									$detokenedMessage =~ s/$reconLine//g;
 
-								} else {
+								}
+								else {
 
 									$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not allowed.]/g;
 									$detokenedMessage =~ s/$reconLine//g;
 
 								}
-							} else {
+							}
+							else {
 								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
 								$detokenedMessage =~ s/$reconLine//g;
 							}
@@ -660,18 +669,19 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		#look for vouch
-		if ($message) {
+		if (GetConfig('admin/token/vouch') && $message) {
 			# look for vouch, which adds a voting vouch for a user
 			# vouch/F82FCD75AAEF7CC8/20
 
-			if (IsAdmin($gpgKey) || $isSigned) { # todo allow non-admin vouch from vouched
-				my @weightLines = ( $message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg );
+			if (IsAdmin($gpgKey) || $isSigned) {
+				# todo allow non-admin vouch from vouched
+				my @weightLines = ($message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg);
 
 				if (@weightLines) {
 					my $lineCount = @weightLines / 2;
 
 					if ($isSigned) {
-						while(@weightLines) {
+						while (@weightLines) {
 							my $voterId = shift @weightLines;
 							my $voterWt = shift @weightLines;
 							#my $voterAvatar = GetAvatar($voterId);
@@ -697,18 +707,18 @@ sub IndexTextFile { # indexes one text file into database
 			}
 		}
 
-		if ($message) {
+		if (GetConfig('admin/token/addedtime') && $message) {
 			# look for addedtime, which adds an added time for an item
 			# #token
 			# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911
 
-			my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
+			my @addedLines = ($message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg);
 
 			if (@addedLines) {
-				WriteLog (". addedtime token found!");
+				WriteLog(". addedtime token found!");
 				my $lineCount = @addedLines / 2;
 
-				while(@addedLines) {
+				while (@addedLines) {
 					WriteLog("... \@addedLines");
 					my $itemHash = shift @addedLines;
 					my $itemAddedTime = shift @addedLines;
@@ -725,7 +735,7 @@ sub IndexTextFile { # indexes one text file into database
 						WriteLog("... isSigned");
 						if (IsServer($gpgKey)) {
 							WriteLog("... isServer");
-							
+
 							$validated = 1;
 
 							$message =~ s/$reconLine/[Server discovered $itemHash at $itemAddedTime.]/g;
@@ -740,7 +750,7 @@ sub IndexTextFile { # indexes one text file into database
 							DBAddPageTouch('tag', 'timestamp');
 						}
 					}
-					
+
 					if (!$validated) {
 						$message =~ s/$reconLine/[Claim that $itemHash was added at $itemAddedTime.]/g;
 						$detokenedMessage =~ s/$reconLine//g;
@@ -753,18 +763,18 @@ sub IndexTextFile { # indexes one text file into database
 
 		# look for addedby, which adds an added time for an item token
 		# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
-		if ($message) {
-			my @addedByLines = ( $message =~ m/^addedby\/([0-9a-f]{40})\/([0-9a-f]{32})/mg );
+		if (GetConfig('admin/token/addedby') && $message) {
+			my @addedByLines = ($message =~ m/^addedby\/([0-9a-f]{40})\/([0-9a-f]{32})/mg);
 
 			if (@addedByLines) {
-				WriteLog (". addedby token found!");
+				WriteLog(". addedby token found!");
 				my $lineCount = @addedByLines / 2;
 
 				if ($isSigned) {
 					WriteLog("... isSigned");
 					if (IsServer($gpgKey)) {
 						WriteLog("... isServer");
-						while(@addedByLines) {
+						while (@addedByLines) {
 							WriteLog("... \@addedByLines");
 							my $itemHash = shift @addedByLines;
 							my $itemAddedBy = shift @addedByLines;
@@ -795,18 +805,18 @@ sub IndexTextFile { # indexes one text file into database
 
 		# look for sha512 tokens, which adds a sha512 hash for an item token
 		# sha512/766053fcfb4e835c4dc2770e34fd8f644f276305/07a1fdc887e71547178dc45b115eac83bc86c4a4a34f8fc468dc3bda0738a47a49bd27a3428b28a0419a5bd2bf926f1ac43964c7614e1cce9438265c008c4cd3
-		if ($message) {
-			my @sha512Lines = ( $message =~ m/^sha512\/([0-9a-f]{40})\/([0-9a-f]{128})/mg );
+		if (GetConfig('admin/token/sha512') && $message) {
+			my @sha512Lines = ($message =~ m/^sha512\/([0-9a-f]{40})\/([0-9a-f]{128})/mg);
 
 			if (@sha512Lines) {
-				WriteLog (". sha512 token found!");
+				WriteLog(". sha512 token found!");
 				my $lineCount = @sha512Lines / 2;
 
 				if ($isSigned) {
 					WriteLog("... isSigned");
 					if (IsServer($gpgKey)) {
 						WriteLog("... isServer");
-						while(@sha512Lines) {
+						while (@sha512Lines) {
 							WriteLog("... \@sha512Lines");
 							my $itemHash = shift @sha512Lines;
 							my $itemSha512 = shift @sha512Lines;
@@ -819,7 +829,7 @@ sub IndexTextFile { # indexes one text file into database
 
 							my $itemSha512Shortened = substr($itemSha512, 0, 16) . '...';
 
-							$message =~ s/$reconLine/[Item $itemHash was added with SHA512 hash $itemSha512Shortened.]/g;
+							$message =~ s/$reconLine/[Item $itemHash was added with SHA512 hash.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
 							DBAddItemParent($fileHash, $itemHash);
@@ -834,37 +844,37 @@ sub IndexTextFile { # indexes one text file into database
 				}
 			}
 		}
-#
-#		# look for latlong tokens
-#		# 40.6905529,-73.9406216
-#		# -40.6905529,73.9406216
-#		# 40,-73
-#		# -73,40
-#		# 40/-73
-#
-#		if ($message) {
-#			# get any matching token lines
-#			my @latLongLines = ( $message =~ m/^latlong\/(-?[0-9]+\.?[0-9]+?)[\/,](-?[0-9]+\.?[0-9]+?)/mg );
-#			#
-#
-#			if (@latLongLines) {
-#				my $lineCount = @latLongLines / 2;
-#				#todo assert no remainder
-#
-#				WriteLog("... DBAddLatLong \$lineCount = $lineCount");
-#
-#				while (@latLongLines) {
-#					my $lat = shift @latLongLines;
-#					my $long = shift @latLongLines;
-#
-#					if ($isSigned) {
-#						DBAddLatLongRecord($fileHash, $lat, $long, $gpgKey);
-#					} else {
-#						DBAddLatLongRecord($fileHash, $lat, $long);
-#					}
-#				}
-#			}
-#		}
+		#
+		#		# look for latlong tokens
+		#		# 40.6905529,-73.9406216
+		#		# -40.6905529,73.9406216
+		#		# 40,-73
+		#		# -73,40
+		#		# 40/-73
+		#
+		#		if ($message) {
+		#			# get any matching token lines
+		#			my @latLongLines = ( $message =~ m/^latlong\/(-?[0-9]+\.?[0-9]+?)[\/,](-?[0-9]+\.?[0-9]+?)/mg );
+		#			#
+		#
+		#			if (@latLongLines) {
+		#				my $lineCount = @latLongLines / 2;
+		#				#todo assert no remainder
+		#
+		#				WriteLog("... DBAddLatLong \$lineCount = $lineCount");
+		#
+		#				while (@latLongLines) {
+		#					my $lat = shift @latLongLines;
+		#					my $long = shift @latLongLines;
+		#
+		#					if ($isSigned) {
+		#						DBAddLatLongRecord($fileHash, $lat, $long, $gpgKey);
+		#					} else {
+		#						DBAddLatLongRecord($fileHash, $lat, $long);
+		#					}
+		#				}
+		#			}
+		#		}
 
 		# point/x,y
 		# line/x1,y1/x2,y2
@@ -878,8 +888,8 @@ sub IndexTextFile { # indexes one text file into database
 
 		# brc/2:00/AA
 		# brc/([2-10]:[00-59])/([0A-Z]{1-2})
-		if (GetConfig('brc/enable') && $message) {
-			my @burningManLines = ($message =~ m/^brc\/([0-9]{1,2}):([0-9]{0,2})\/([0A-Z]{1,2})/mg );
+		if (GetConfig('admin/token/brc') && GetConfig('brc/enable') && $message) {
+			my @burningManLines = ($message =~ m/^brc\/([0-9]{1,2}):([0-9]{0,2})\/([0A-Z]{1,2})/mg);
 
 			if (@burningManLines) {
 				my $lineCount = @burningManLines / 3;
@@ -903,25 +913,27 @@ sub IndexTextFile { # indexes one text file into database
 					}
 
 					my $reconLine = "brc/$aveHours:$aveMinutes/$streetLetter";
-					
+
 					my $streetLetterFormatted = '';
 					if ($streetLetter eq '0') {
 						$streetLetterFormatted = 'Esplanade';
-					} else {
+					}
+					else {
 						$streetLetterFormatted = $streetLetter;
-					} 
-					
+					}
+
 					$message =~ s/$reconLine/[BRC Location: $aveHours:$aveMinutes at $streetLetter]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
 					if ($isSigned) {
 						DBAddBrcRecord($fileHash, $aveHours, $aveMinutes, $streetLetter, $gpgKey);
-					} else {
+					}
+					else {
 						DBAddBrcRecord($fileHash, $aveHours, $aveMinutes, $streetLetter);
 					}
 
-					DBAddVoteRecord ($fileHash, $addedTime, 'brc');
+					DBAddVoteRecord($fileHash, $addedTime, 'brc');
 
 					DBAddPageTouch('tag', 'brc');
 				}
@@ -931,9 +943,9 @@ sub IndexTextFile { # indexes one text file into database
 
 		# look for location (latlong) tokens
 		# latlong/44.1234567,-44.433435454
-		if ($message) {
+		if (GetConfig('admin/token/latlong') && $message) {
 			# get any matching token lines
-			my @latlongLines = ( $message =~ m/^latlong\/(\-?[0-9]{1,2}\.[0-9]{0,9}),(\-?[0-9]{1,2}\.[0-9]{0,9})/mg );
+			my @latlongLines = ($message =~ m/^latlong\/(\-?[0-9]{1,2}\.[0-9]{0,9}),(\-?[0-9]{1,2}\.[0-9]{0,9})/mg);
 			#                                   prefix   /lat     /long
 
 			if (@latlongLines) {
@@ -948,7 +960,8 @@ sub IndexTextFile { # indexes one text file into database
 
 					if ($isSigned) {
 						DBAddLocationRecord($fileHash, $latValue, $longValue, $gpgKey);
-					} else {
+					}
+					else {
 						DBAddLocationRecord($fileHash, $latValue, $longValue);
 					}
 
@@ -958,7 +971,7 @@ sub IndexTextFile { # indexes one text file into database
 
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddVoteRecord ($fileHash, $addedTime, 'location');
+					DBAddVoteRecord($fileHash, $addedTime, 'location');
 
 					DBAddPageTouch('tag', 'location');
 				}
@@ -968,9 +981,9 @@ sub IndexTextFile { # indexes one text file into database
 
 		# look for event tokens
 		# event/1551234567/3600
-		if ($message) {
+		if (GetConfig('admin/token/event') && $message) {
 			# get any matching token lines
-			my @eventLines = ( $message =~ m/^event\/([0-9]+)\/([0-9]+)/mg );
+			my @eventLines = ($message =~ m/^event\/([0-9]+)\/([0-9]+)/mg);
 			#                                 prefix/time     /duration
 
 			if (@eventLines) {
@@ -985,7 +998,8 @@ sub IndexTextFile { # indexes one text file into database
 
 					if ($isSigned) {
 						DBAddEventRecord($fileHash, $eventTime, $eventDuration, $gpgKey);
-					} else {
+					}
+					else {
 						DBAddEventRecord($fileHash, $eventTime, $eventDuration);
 					}
 
@@ -1005,13 +1019,16 @@ sub IndexTextFile { # indexes one text file into database
 							if ($eventDurationText >= 24) {
 								$eventDurationText = $eventDurationText / 24;
 								$eventDurationText = $eventDurationText . " days";
-							} else {
+							}
+							else {
 								$eventDurationText = $eventDurationText . " hours";
 							}
-						} else {
+						}
+						else {
 							$eventDurationText = $eventDurationText . " minutes";
 						}
-					} else {
+					}
+					else {
 						$eventDurationText = $eventDurationText . " seconds";
 					}
 
@@ -1037,7 +1054,7 @@ sub IndexTextFile { # indexes one text file into database
 
 					$detokenedMessage =~ s/$reconLine//g;
 
-					DBAddVoteRecord ($fileHash, $addedTime, 'event');
+					DBAddVoteRecord($fileHash, $addedTime, 'event');
 
 					DBAddPageTouch('tag', 'event');
 
@@ -1047,16 +1064,16 @@ sub IndexTextFile { # indexes one text file into database
 		}
 
 		# look for vote tokens
-		if ($message) {
+		if (GetConfig('admin/token/vote') && $message) {
 			# here we look for two formats, prefixed with vote/ and addvote/
 			# experimental compatibility
 
-			my @voteLines = ( $message =~ m/^(vote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
+			my @voteLines = ($message =~ m/^(vote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg);
 			#                                prefix  /file hash      /time     /tag      /csrf
 
 			#vote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
 
-			my @addVoteLines = ( $message =~ m/^(addvote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg );
+			my @addVoteLines = ($message =~ m/^(addvote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg);
 			#                                    prefix   /file hash      /time     /tag      /csrf
 
 			# join the two arrays of matches together
@@ -1066,19 +1083,19 @@ sub IndexTextFile { # indexes one text file into database
 				my $lineCount = @voteLines / 5;
 				#todo assert no remainder
 
-#				if ($isSigned) {
-#					$message = "$gpgKey is adding $lineCount votes:\n" . $message;
-#				} else {
-#					$message = "A mysterious stranger is adding $lineCount votes:\n" . $message;
-#				}
+				#				if ($isSigned) {
+				#					$message = "$gpgKey is adding $lineCount votes:\n" . $message;
+				#				} else {
+				#					$message = "A mysterious stranger is adding $lineCount votes:\n" . $message;
+				#				}
 
-				while(@voteLines) {
+				while (@voteLines) {
 					# read parameters from the array
 
 					my $tokenPrefix = shift @voteLines;
-					my $voteFileHash   = shift @voteLines;
+					my $voteFileHash = shift @voteLines;
 					my $voteBallotTime = shift @voteLines;
-					my $voteValue  = shift @voteLines;
+					my $voteValue = shift @voteLines;
 					my $voteCsrf = shift @voteLines;
 					#shift @voteLines;
 
@@ -1086,10 +1103,12 @@ sub IndexTextFile { # indexes one text file into database
 					if ($isSigned) {
 						# include author's key if message is signed
 						DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $gpgKey);
-					} else {
+					}
+					else {
 						if ($hasCookie) {
 							DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $hasCookie);
-						} else {
+						}
+						else {
 							DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue);
 						}
 					}
@@ -1108,13 +1127,13 @@ sub IndexTextFile { # indexes one text file into database
 					$detokenedMessage =~ s/$reconLine//g;
 
 					# give this item 'vote' tag, to indicate it contains vote(s)
-					DBAddVoteRecord ($fileHash, $addedTime, 'vote');
+					DBAddVoteRecord($fileHash, $addedTime, 'vote');
 
 					# add page_touch records so that appropriate pages are refreshed
 					DBAddPageTouch('item', $voteFileHash); # item
-					DBAddPageTouch('tag', 'vote'); # page of items with 'vote' tag
-					DBAddPageTouch('tag', 'hasvote'); # page of items with 'hasvote' tag
-					DBAddPageTouch('tag', $voteValue); # the listing page of the tag itself
+					DBAddPageTouch('tag', 'vote');         # page of items with 'vote' tag
+					DBAddPageTouch('tag', 'hasvote');      # page of items with 'hasvote' tag
+					DBAddPageTouch('tag', $voteValue);     # the listing page of the tag itself
 
 					# if the vote value is 'remove', perform appropriate operations
 					if ($voteValue eq 'remove') {
@@ -1128,11 +1147,11 @@ sub IndexTextFile { # indexes one text file into database
 						if (
 							$gpgKey # is signed
 								&&
-							(
-								IsAdmin($gpgKey) # signed by admin
-									|| # OR
-								($gpgKey eq $voteItemAuthor) # signed by same as author
-							)
+								(
+									IsAdmin($gpgKey)                 # signed by admin
+										||                           # OR
+										($gpgKey eq $voteItemAuthor) # signed by same as author
+								)
 						) {
 							WriteLog('Found seemingly valid request to remove file');
 
@@ -1141,14 +1160,15 @@ sub IndexTextFile { # indexes one text file into database
 							my $htmlFilename = 'html/' . GetHtmlFilename($voteFileHash);
 							if (-e $htmlFilename) {
 								WriteLog($htmlFilename . ' exists, calling unlink()');
-								unlink ($htmlFilename);
-							} else {
+								unlink($htmlFilename);
+							}
+							else {
 								WriteLog($htmlFilename . ' does NOT exist, very strange');
 							}
 
 							if (-e $file) {
 								#todo unlink the file represented by $voteFileHash, not $file
-								
+
 								if (!GetConfig('admin/logging/record_remove_action')) {
 									# this removes the remove call itself
 									WriteLog($file . ' exists, calling unlink()');
@@ -1161,12 +1181,14 @@ sub IndexTextFile { # indexes one text file into database
 									unlink($votedFileHashPath);
 								}
 
-							} else {
+							}
+							else {
 								WriteLog($file . ' does NOT exist, very strange');
 							}
 
 							#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
-						} else {
+						}
+						else {
 							WriteLog('Request to remove file was not found to be valid');
 						}
 					}
@@ -1178,7 +1200,7 @@ sub IndexTextFile { # indexes one text file into database
 
 		# if $alias is set, means this is a pubkey
 		if ($alias) {
-			DBAddVoteRecord ($fileHash, $addedTime, 'pubkey');
+			DBAddVoteRecord($fileHash, $addedTime, 'pubkey');
 			# add the "pubkey" tag
 
 			DBAddPageTouch('tag', 'pubkey');
@@ -1186,7 +1208,7 @@ sub IndexTextFile { # indexes one text file into database
 
 			DBAddPageTouch('author', $gpgKey);
 			# add a touch to the author page
-			
+
 			UnlinkCache('avatar/' . $gpgKey);
 			UnlinkCache('avatar.color/' . $gpgKey);
 			UnlinkCache('pavatar/' . $gpgKey);
@@ -1198,43 +1220,40 @@ sub IndexTextFile { # indexes one text file into database
 
 				DBAddPageTouch('tag', 'notext');
 			} else {
-				if ($detokenedMessage) {
-					my $firstEol = index($detokenedMessage, "\n");
+				my $firstEol = index($detokenedMessage, "\n");
 
-					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
+				my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
 
-					if ($firstEol == -1) {
-						if (length($detokenedMessage) > 1) {
-							$firstEol = length($detokenedMessage);
-						}
+				if ($firstEol == -1) {
+					if (length($detokenedMessage) > 1) {
+						$firstEol = length($detokenedMessage);
 					}
-
-					if ($firstEol >= 0) {
-						my $title = '';
-
-						if ($firstEol <= $titleLengthCutoff) {
-							$title = substr($detokenedMessage, 0, $firstEol);
-						} else {
-							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
-						}
-
-						DBAddTitle($fileHash, $title);
-
-						DBAddTitle('flush'); #todo refactor this out
-
-						DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
-					}
-
-					DBAddVoteRecord($fileHash, $addedTime, 'hastext');
-
-					DBAddPageTouch('tag', 'hastext');
-				} else {
-					
 				}
+
+				if ($firstEol >= 0) {
+					my $title = '';
+
+					if ($firstEol <= $titleLengthCutoff) {
+						$title = substr($detokenedMessage, 0, $firstEol);
+					} else {
+						$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
+					}
+
+					DBAddTitle($fileHash, $title);
+
+					DBAddTitle('flush'); #todo refactor this out
+
+					DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+				}
+
+				DBAddVoteRecord($fileHash, $addedTime, 'hastext');
+
+				DBAddPageTouch('tag', 'hastext');
 			}
 		}
 
 		if ($message) {
+			# cache the processed message text
 			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$fileHash";
 			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
@@ -1242,12 +1261,16 @@ sub IndexTextFile { # indexes one text file into database
 			WriteLog('... I was going to save $messageCacheName, but $message is blank!');
 		}
 
+		# below we call DBAddItem, which accepts an author key
 		if ($isSigned) {
+			# If message is signed, use the signer's key
 			DBAddItem($file, $itemName, $gpgKey, $fileHash, 'txt', $verifyError);
 		} else {
 			if ($hasCookie) {
+				# Otherwise, if there is a cookie, use the cookie
 				DBAddItem($file, $itemName, $hasCookie, $fileHash, 'txt', $verifyError);
 			} else {
+				# Otherwise add with an empty author key
 				DBAddItem($file, $itemName, '', $fileHash, 'txt', $verifyError);
 			}
 		}
