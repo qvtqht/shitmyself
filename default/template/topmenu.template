@@ -10,9 +10,9 @@
 
 		<tr class=body>
 			<td class=content width="99%">
-				<h3>
+				<big><b>
 					$menuItems
-				</h3>
+				</b></big>
 			</td>
 			<td class=clockContainer align=right>
 				$clock
@@ -28,4 +28,3 @@
 </font>
 </form>
 <!-- / topmenu.template -->
-
