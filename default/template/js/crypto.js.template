@@ -1,36 +1,32 @@
 // == begin crypto.js
 
-var loading = document.getElementById('loading');
-if (loading) {
-//	loading.style.display = 'none';
-	loading.innerHTML = '<br><br>Loading...<br><br><br>';
-}
-
 // these are used to globally store the user's fingerprint and username
 var myFingerprint = '';
 var myUsername = '';
 
-// performs logout by removing stored private key
-function logOut(t) {
-	if (t) {
-		disarmSignoutButton(t);
-	}
-	logOut2();
-}
+// window.confct holds the remaining seconds before the undo button disappears
 
 function getPrivateKey() { // get private key from local storage
 // returns null otherwise
+	if (window.localStorage) {
+		var privateKey = localStorage.getItem("privatekey");
 
-	var privateKey = localStorage.getItem("privatekey");
-
-	if (privateKey === null || privateKey.length === 0) {
-		return null;
+		if (privateKey === null || privateKey.length === 0) {
+			return null;
+		} else {
+			return privateKey;
+		}
 	} else {
-		return privateKey;
+		return null;
 	}
 }
 
-function buttonSignOut(t) { // sign out button is clicked. displays undo countdown or signs out completely, emptying trash 
+function buttonSignOut(t) { // sign out button is clicked. t is button's this
+// depending on window.signOutButtonStatus,
+// displays undo countdown or signs out completely, emptying trash
+// #todo move this function to profile.js
+	var lt = String.fromCharCode(62);
+
 	if (window.signOutButtonStatus) {
 		logOut(t);
 	} else {
@@ -48,16 +44,16 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 
 		var signinBox = document.getElementById('signin');
 		if (signinBox) {
-			signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+			signinBox.innerHTML = '<a href="/profile.html"' + lt + 'Profile</a' + lt;
 		}
 
-		setTimeout(function(){
-			signoutCounterDecrement();
-		}, 1000);
+		signoutCounterDecrement();
+		// this function will set a timer to call itself until undo period ends
 	}
 }
 
-function undoSignout() {
+function undoSignout(t) { // undo signout, if possible
+// #todo move this function to profile.js
 	setPrivateKey(window.privKeyTrash);
 	saveId();
 
@@ -134,79 +130,22 @@ function logOut2() {
 		avatar.innerHTML = '';
 	}
 
-	// remove the displayed avatar on the page
-	avatar = document.getElementById("myAvatar");
-	if (avatar) {
-		avatar.innerHTML = '';
+	var privateKey = 0;
+
+	if (window.localStorage) {
+		privateKey = localStorage.getItem("privatekey");
 	}
 
-	// show and hide the correct forms on the page, if applicable
-	showHideForms();
+	return privateKey;
 }
 
-function removeStoredKeys() { // remove login-related stored keys
-	// remove the keys
-	window.localStorage.removeItem("privatekey");
-	window.localStorage.removeItem("publickey");
-	window.localStorage.removeItem("fingerprint");
-	window.localStorage.removeItem("avatar");
-}
-
-// begin html escape hack (credit stacko)
-var escapeTA = document.createElement('textarea');
-function escapeHTML(html) {
-	escapeTA.textContent = html;
-	return escapeTA.innerHTML;
-}
-function unescapeHTML(html) {
-	escapeTA.innerHTML = html;
-	return escapeTA.textContent;
-}
-// end html escape hack
-
-
-// copy to clipboard i found, doesn't work on iphone
-function fallbackCopyTextToClipboard(textareaId) {
-  var textArea = document.getElementById(textareaId);
-  textArea.focus();
-  textArea.select();
-
-  try {
-	var successful = document.execCommand('copy');
-	var msg = successful ? 'successful' : 'unsuccessful';
-//	console.log('Fallback: Copying text command was ' + msg);
-  } catch (err) {
-//	console.error('Fallback: Oops, unable to copy', err);
-  }
-}
-
-// copy to clipboard i found, doesn't work on iphone
-function copyTextToClipboard(textareaId) {
-  var textbox = document.getElementById(textareaId);
-  var text = textbox.value;
-
-  if (!navigator.clipboard) {
-	fallbackCopyTextToClipboard(textareaId);
-	return;
-  }
-  navigator.clipboard.writeText(text).then(function() {
-//	console.log('Async: Copying to clipboard was successful!');
-  }, function(err) {
-//	console.error('Async: Could not copy text: ', err);
-  });
-}
-
-
-// called from write.html#inspubkey
-// used for sharing the stored public key automatically
-function insertPubKey() {
-	var comment = document.getElementById("comment");
-	if (comment) {
-		var pubkey = getPublicKey();
-
-		if (pubkey) {
-			comment.value = pubkey;
-		}
+function removeStoredKeys() { // log out
+	if (window.localStorage) {
+		var ls = window.localStorage;
+		ls.removeItem('privatekey');
+		ls.removeItem('publickey');
+		ls.removeItem('fingerprint');
+		ls.removeItem('avatar');
 	}
 }
 
@@ -243,7 +182,7 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 		// store it to localstorage
 		setPrivateKey(privkey);
 
-		if (!window.openpgp) {
+		if (!window.openpgp && document.getElementById && window.localStorage && window.Promise) {
 			var script = document.createElement('script');
 			script.src = '/openpgp.js';
 			script.async = false; // This is required for synchronous execution
@@ -272,40 +211,11 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 		// get username out of key
 		myUsername = pubKeyObj.users[0].userId.userid;
 
-		var color1 = myFingerprint.substr(0, 6);
-		var color2 = myFingerprint.substr(3, 6);
-		var color3 = myFingerprint.substr(6, 6);
-		var color4 = myFingerprint.substr(9, 6);
-
-		var avatar = '';
-
-//		var char1 = myFingerprint.substr(12, 1);
-//		var char2 = myFingerprint.substr(13, 1);
-//		var char3 = myFingerprint.substr(14, 1);
-
-		//char1 = hexToChar(char1);
-		//char2 = hexToChar(char2);
-		//char3 = hexToChar(char3);
-		//char4 = hexToChar(char4);
-
-		var char1 = '*';
-		var char2 = '*';
-
 		avatar = ''
 			+ '<span class=avatar>'
 			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
 			+ '</span>';
 
-//		avatar = ''
-//			+ '<span class=avatar style="background-color: #' + color1 + '">'
-//			+ '<span class=icon>'
-//			+ '<font color="#' + color2 + '">' + char1 + '</font>'
-//			+ '<font color="#' + color3 + '">' + char2 + '</font>'
-//			//+ '<font color="#' + color4 + '">' + char3 + '</font>'
-//			+ '</span>'
-//			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
-//			+ '</span>';
-//
 		setAvatar(avatar);
 
 		// if there is a myid box, populate it appropriately
@@ -316,7 +226,10 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 
 			if (myAvatar == null || myAvatar.length == 0) {
 				if ( !document.getElementById("privatekey")) {
-					signinBox.innerHTML = '<a href="/profile.html">Profile</a>';
+					if (signinBox) {
+						var ltChar = String.fromCharCode(62);
+						signinBox.innerHTML = '<a href="/profile.html"' + ltChar + 'Profile</a' + ltChar + '';
+					}
 				}
 			} else {
 				//signinBox.innerHTML = '';
@@ -327,12 +240,18 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 				if (window.GetPrefs) {
 					if (GetPrefs('display_username')) {
 						myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
-						signinBox.innerHTML = '';
-					} else {			
-						signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+						if (signinBox) {
+							signinBox.innerHTML = '';
+						}
+					} else {
+						if (signinBox) {
+							signinBox.innerHTML = '<a href="/profile.html"' + ltChar + '<i' + ltChar + 'Profile</i' + ltChar + '</a' + ltChar;
+						}
 					}
 				} else {
-					signinBox.innerHTML = '<a href="/profile.html"><i>Profile</i></a>';
+					if (signinBox) {
+						signinBox.innerHTML = '<a href="/profile.html"' + ltChar + '<i' + ltChar + 'Profile</i' + ltChar + '</a' + ltChar;
+					}
 				}
 
 				var myId2 = document.getElementById('myId2');
@@ -424,7 +343,7 @@ function makePrivateKey(username, bits) {
 			if (cSb) {
 				cSb.disabled = 1;
 			}
-			
+
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
 
@@ -442,11 +361,11 @@ function makePrivateKey(username, bits) {
 					}
 
 					saveId();
-					
+
 					setPublicKey(key.publicKeyArmored);
 
 					sharePubKey();
-					
+
 //					sharePubKey();
 
 //					var btnSharePubkey = document.getElementById('btnSharePub');
@@ -468,45 +387,6 @@ function makePrivateKey(username, bits) {
 	}
 }
 
-function sharePubKey() { // shares current user's public key via injected form and iframe
-	var pubKey = getPublicKey();
-
-	var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
-	ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
-	ifrSharePubKey.setAttribute("height", "11");
-	ifrSharePubKey.setAttribute("width", "11");
-	// #todo pre-createElement browsers
-	document.body.appendChild(ifrSharePubKey);
-
-	var form = document.createElement('form');
-	form.setAttribute("action", "/post.html");
-	form.setAttribute("method", "get");
-	form.setAttribute("target", "ifrSharePubKey");
-
-	var txtComment = document.createElement('input');
-	txtComment.setAttribute("type", "hidden");
-	txtComment.setAttribute("value", pubKey);
-	txtComment.setAttribute("name", "comment");
-
-	form.appendChild(txtComment);
-	document.getElementsByTagName('body')[0].appendChild(form);
-
-	document.body.appendChild(form);
-
-	form.submit();
-
-/////
-//	window.open('/write.html#inspubkey', '_self');
-
-/////
-//	var iframe = document.createElement("iframe");
-//	iframe.src = '/write.html#inspubkey';
-//	iframe.name = "inspubkey"
-//	iframe.style.display = 'none';
-//	document.body.appendChild(iframe);
-
-}
-
 function makeKeyFromInputs() {
 	var privkey = getPrivateKey();
 
@@ -520,134 +400,6 @@ function makeKeyFromInputs() {
 	makePrivateKey(user, bits);
 
 	return 0;
-}
-
-function insPubKey() {
-	var pubkey = getPublicKey();
-
-	if (pubkey) {
-		var textbox = document.getElementById('comment');
-
-		if (textbox) {
-			if (pubkey) {
-				textbox.value = pubkey;
-
-				var writeIntro = document.getElementById('writeintro');
-				if (writeIntro) {
-					writeIntro.innerHTML = '<p class=writeinfo>Your public key is now being shared with the server. Please wait a moment...</p>';
-				}
-
-				var composeForm = document.getElementById('compose');
-				if (composeForm) {
-					composeForm.submit();
-				}
-			}
-		}
-	}
-}
-
-function insProfileTemplate() {
-	var pubkey = getPublicKey();
-
-	if (pubkey) {
-		var textbox = document.getElementById('comment');
-
-		if (textbox) {
-			if (pubkey) {
-				var writeIntro = document.getElementById('writeintro');
-				if (writeIntro) {
-					writeIntro.innerHTML = '<p class=writeinfo>This post will replace your current profile, if there is one set for you, as long as you take care to retain the header and footer.</p>';
-				}
-
-				textbox.value = '-----BEGIN PROFILE-----\n\n[This is just a template. All information is optional to provide. Edit and format as you like.]\n\nName: \n\nSelf-summary:\n\nFavorite Books:\n\nFavorite Quotes:\n\nContact Information:\n\n-----END PROFILE-----' ;
-			}
-		}
-	}
-}
-
-
-
-function insVotes() {
-	var vv = localStorage.getItem('vvvv');
-
-	if (vv) {
-		var textbox = document.getElementById('comment');
-
-		if (textbox) {
-			textbox.value = vv;
-			localStorage.removeItem('vvvv');
-
-			var writeIntro = document.getElementById('writeintro');
-			if (writeIntro) {
-				writeIntro.innerHTML = '<p class=writeinfo><b>Important: Press the Post button to register your votes.</b> You can also comment on a separate line from the command(s). Thank you for taking the time!</p>';
-			}
-		}
-	}
-}
-
-function UrlExists(url) {
-	var http = new XMLHttpRequest();
-	http.open('HEAD', url, false);
-	http.send();
-	return (http.status==200);
-}
-
-function writeOnload2() {
-	if (window.location.hash) {
-		if (window.location.hash == '#inspubkey') {
-			insPubKey();
-		}
-		if (window.location.hash == '#insvotes') {
-			insVotes();
-		}
-		if (window.location.hash == '#profile') {
-			insProfileTemplate();
-		}
-	}
-	if (window.localStorage && window.localStorage.getItem('writesmall')) {
-	    var writebox = document.getElementById('comment');
-	    if (writebox) {
-	        writebox.value = localStorage.getItem('writesmall');
-	        localStorage.removeItem('writesmall');
-	    }
-	}
-	if (document.getElementById) {
-		var writeAdvL = document.getElementById('writeAdvL');
-		if (writeAdvL) {
-			writeAdvL.style.display = 'inline';
-		}
-		var userRadio = document.getElementById('userRadio');
-//		alert(userRadio);
-		if (userRadio) {
-			if (window.getAvatar) {
-				if (getAvatar()) {
-					userRadio.innerHTML = '<label for=asign><input id=asign type=radio name=a value=sign> Sign as ' + getAvatar() + '</label>';
-					//}
-					var asign = document.getElementById('asign');
-					if (asign) {
-						asign.checked = 1;
-						asign.checked = true;
-					}
-					//userRadio.innerHTML = '...';
-				} else {
-					userRadio.innerHTML = 'Sign in to post under identity.';
-				}
-			}
-		}
-	}
-}
-
-function writeSubmit() {
-	if (document.forms['compose'].aanon.checked) {
-		return true;
-	} else if (document.forms['compose'].asign.checked) {
-		signMessage();
-		return false;
-	} else {
-//		console.log('neither anonymous nor signed option is checked. this should not happen under normal circumstances. submitting anyway!');
-		return true;
-		// this should not happen
-	}
 }
 
 function signForm(formId) {
@@ -790,6 +542,68 @@ function signMessage() {
 		composeForm.submit();
 	}
 
+}
+
+function writeOnload2() {
+	if (window.location.hash) {
+		if (window.location.hash == '#inspubkey') {
+			insPubKey();
+		}
+		if (window.location.hash == '#insvotes') {
+			insVotes();
+		}
+		if (window.location.hash == '#profile') {
+			insProfileTemplate();
+		}
+	}
+	if (window.localStorage && window.localStorage.getItem('writesmall')) {
+	    var writebox = document.getElementById('comment');
+	    if (writebox) {
+	        writebox.value = localStorage.getItem('writesmall');
+	        localStorage.removeItem('writesmall');
+	    }
+	}
+	if (document.getElementById) {
+		var writeAdvL = document.getElementById('writeAdvL');
+		if (writeAdvL) {
+			writeAdvL.style.display = 'inline';
+		}
+		var userRadio = document.getElementById('userRadio');
+//		alert(userRadio);
+		if (userRadio) {
+			if (window.getAvatar) {
+				if (getAvatar()) {
+					userRadio.innerHTML = '<label for=asign><input id=asign type=radio name=a value=sign> Sign as ' + getAvatar() + '</label>';
+					//}
+					var asign = document.getElementById('asign');
+					if (asign) {
+						asign.checked = 1;
+						asign.checked = true;
+					}
+					//userRadio.innerHTML = '...';
+				} else {
+					userRadio.innerHTML = 'Sign in to post under identity.';
+				}
+			}
+		}
+	}
+}
+//
+//function writeSubmit() {
+//	if (document.forms['compose'].aanon.checked) {
+//		return true;
+//	} else if (document.forms['compose'].asign.checked) {
+//		signMessage();
+//		return false;
+//	} else {
+////		console.log('neither anonymous nor signed option is checked. this should not happen under normal circumstances. submitting anyway!');
+//		return true;
+//		// this should not happen
+//	}
+//}
+
+function cryptoJs() {
+	return 1;
 }
 
 

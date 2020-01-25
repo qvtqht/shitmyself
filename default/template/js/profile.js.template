@@ -1,8 +1,54 @@
 // == begin profile.js
 
+if (!window.openpgp && document.getElementById && window.localStorage && window.Promise) {
+	//alert('DEBUG: loading openpgp.js');
+
+	var script = document.createElement('script');
+	script.src = '/openpgp.js';
+	script.async = false; // This is required for synchronous execution
+	document.head.appendChild(script);
+
+	//alert('DEBUG: finished loading openpgp.js');
+
+} else {
+	//alert('DEBUG: not loading openpgp.js; window.openpgp = ' + window.openpgp + ' document.getElementById = ' + document.getElementById + ' window.localStorage = ' + window.localStorage + ' window.Promise = ' + window.Promise);
+}
+
+if (!window.cryptoJs && document.getElementById && window.localStorage) {
+	//alert('DEBUG: loading crypto.js');
+
+	var script2 = document.createElement('script');
+	script2.src = '/crypto.js';
+	script2.async = false; // This is required for synchronous execution
+	document.head.appendChild(script2);
+
+	//alert('DEBUG: finished loading crypto.js');
+
+} else {
+//	alert('DEBUG: not loading crypto.js; ' + 'window.cryptoJs = ' + window.cryptoJs + ' document.getElementById = ' + document.getElementById + 'window.localStorage = ' + window.localStorage );
+}
+
+
+if (document.getElementById) {
+	var loading = document.getElementById('loading');
+	if (loading) {
+	//	loading.style.display = 'none';
+		var ltChar = String.fromCharCode(62);
+		loading.innerHTML = '<br' + ltChar + '<br' + ltChar + 'Loading...<br' + ltChar + '<br' + ltChar + '<br' + ltChar + ''; //todo fix this
+	}
+}
+
+// performs logout by removing stored private key
+function logOut(t) {
+	if (t) {
+		disarmSignoutButton(t);
+	}
+	logOut2();
+}
+
 function getUserFp() { // retrieve stored user fingerprint from localstorage
 	if (window.localStorage) {
-		var fingerprint = localStorage.getItem("fingerprint");
+		var fingerprint = localStorage.getItem('fingerprint');
 		if (!fingerprint) {
 //		if (fingerprint === null || fingerprint.length === 0) {
 			return null;
@@ -35,7 +81,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 	
 			var formAdmin = document.getElementById('formAdminId');
 			if (formAdmin) {
-				if (getUserFp() == '$currentAdminId') {
+				if (getUserFp() == '$currentAdminId') { // #todo populate this
 					formAdmin.style.display = 'block';
 				}
 			}
@@ -59,6 +105,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 					}
 					if (signinBox) {
 						signinBox.innerHTML = '';
+
 					}
 				} else {
 					if (myidBox) {			
@@ -76,15 +123,19 @@ function showHideForms() { // shows and hides the register and logged in forms
 					}
 				}
 			} else {
-				myidBox.innerHTML = '';
-				signinBox.innerHTML =
-					'<a href="/profile.html"' +
-					String.fromCharCode(62) +
-					'<i' + String.fromCharCode(62) +
-					'Profile</i' +
-					String.fromCharCode(62) +
-					'</a' +
-					String.fromCharCode(62);
+				if (myidBox) {
+					myidBox.innerHTML = '';
+				}
+				if (signinBox) {
+					signinBox.innerHTML =
+						'<a href="/profile.html"' +
+						String.fromCharCode(62) +
+						'<i' + String.fromCharCode(62) +
+						'Profile</i' +
+						String.fromCharCode(62) +
+						'</a' +
+						String.fromCharCode(62);
+				}
 			}
 		} else {
 		// else means user is not logged in
@@ -134,56 +185,233 @@ function showHideForms() { // shows and hides the register and logged in forms
 showHideForms(); // call showHideForms()
 
 function identityOnload() { // onload function for identity page (aka profile page)
-	var pk = getPrivateKey();
+	if (window.getPrivateKey) {
+		var pk = getPrivateKey();
 
-	// is there a private key?
-	if (pk) {
-		// if there's a private key, populate private key textbox
-		var textbox = document.getElementById("privatekey");
+		// is there a private key?
+		if (pk) {
+			// if there's a private key, populate private key textbox
+			var textbox = document.getElementById("privatekey");
 
-		// if it exists
-		if (textbox) {
-			textbox.value = pk;
+			// if it exists
+			if (textbox) {
+				textbox.value = pk;
+			}
 		}
-	}
 
-	// if there's a public key, and a public key textbox, populate it
-	var pubk = getPublicKey();
-	if (pubk) {
-		var textboxPub = document.getElementById("publickey");
+		// if there's a public key, and a public key textbox, populate it
+		var pubk = getPublicKey();
+		if (pubk) {
+			var textboxPub = document.getElementById("publickey");
 
-		if (textboxPub) {
-			textboxPub.value = pubk;
+			if (textboxPub) {
+				textboxPub.value = pubk;
+			}
 		}
-	}
 
-	// if there's a pk, do a saveId() to populate displayed info
-	if (pk) {
-		saveId();
-	}
-
-	// if there's a textbox for a name, populate it with the default
-	// the default is set in config/prefill_user_name
-	// and then templated in where $prefillUsername is
-	var nametext = document.getElementById("name");
-	if (nametext) {
-		if (nametext.value == '') {
-			nametext.value = '';
+		// if there's a pk, do a saveId() to populate displayed info
+		if (pk) {
+			saveId();
 		}
-	}
 
-	// show and hide identity page forms as necessary
-	showHideForms();
+		// if there's a textbox for a name, populate it with the default
+		// the default is set in config/prefill_user_name
+		// and then templated in where $prefillUsername is
+		var nametext = document.getElementById("name");
+		if (nametext) {
+			if (nametext.value == '') {
+				nametext.value = '';
+			}
+		}
 
-	// here we do the same thing we did above, checking for #logout and #signout? #strange #todo
-	// disabled
-	if (0 && window.location.hash) {
-		if (window.location.hash == '#logout' || window.location.hash == '#signout') {
-			if (getPrivateKey()) {
-				logOut();
+		// show and hide identity page forms as necessary
+		showHideForms();
+
+		// here we do the same thing we did above, checking for #logout and #signout? #strange #todo
+		// disabled
+		if (0 && window.location.hash) {
+			if (window.location.hash == '#logout' || window.location.hash == '#signout') {
+				if (getPrivateKey()) {
+					logOut();
+				}
 			}
 		}
 	}
+}
+
+function sharePubKey() { // shares current user's public key via injected form and iframe
+	var pubKey = getPublicKey();
+
+	var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
+	ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
+//	ifrSharePubKey.setAttribute("height", "11");
+//	ifrSharePubKey.setAttribute("width", "11");
+	// #todo pre-createElement browsers
+	document.body.appendChild(ifrSharePubKey);
+
+	var form = document.createElement('form');
+	form.setAttribute("action", "/post.html");
+	form.setAttribute("method", "get");
+	form.setAttribute("target", "ifrSharePubKey");
+
+	var txtComment = document.createElement('input');
+	txtComment.setAttribute("type", "hidden");
+	txtComment.setAttribute("value", pubKey);
+	txtComment.setAttribute("name", "comment");
+
+	form.appendChild(txtComment);
+	document.getElementsByTagName('body')[0].appendChild(form);
+
+	document.body.appendChild(form);
+
+	form.submit();
+
+/////
+//	window.open('/write.html#inspubkey', '_self');
+
+/////
+//	var iframe = document.createElement("iframe");
+//	iframe.src = '/write.html#inspubkey';
+//	iframe.name = "inspubkey"
+//	iframe.style.display = 'none';
+//	document.body.appendChild(iframe);
+
+}
+
+function buttonSignOut(t) { // sign out button is clicked. displays undo countdown or signs out completely, emptying trash
+	if (window.signOutButtonArmed) {
+		logOut(t);
+	} else {
+		window.privKeyTrash = getPrivateKey();
+
+		removeStoredKeys();
+
+		document.getElementById('locm').style.display='inline';
+		t.style.backgroundColor='red';
+		t.style.color='white';
+		window.signOutButtonArmed = 1;
+
+		window.confct = 11;
+		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
+
+		var signinBox = document.getElementById('signin');
+		if (signinBox) {
+			var ltChar = String.fromCharCode(62);
+			signinBox.innerHTML = '<a href="/profile.html"' + ltChar + 'Profile</a' + ltChar;
+		}
+
+		setTimeout('signoutCounterDecrement', 1000);
+	}
+}
+
+
+function buttonSignOut(t) { // sign out button is clicked. displays undo countdown or signs out completely, emptying trash
+	if (window.signOutButtonArmed) {
+		logOut(t);
+	} else {
+		window.privKeyTrash = getPrivateKey();
+
+		removeStoredKeys();
+
+		document.getElementById('locm').style.display='inline';
+		t.style.backgroundColor='red';
+		t.style.color='white';
+		window.signOutButtonArmed = 1;
+
+		window.confct = 11;
+		document.getElementById('btnUndo').value = 'Undo? ' + window.confct;
+
+		var signinBox = document.getElementById('signin');
+		if (signinBox) {
+			var ltChar = String.fromCharCode(62);
+			signinBox.innerHTML = '<a href="/profile.html"' + ltChar + 'Profile</a' + ltChar + '';
+		}
+
+		setTimeout('signoutCounterDecrement', 1000);
+	}
+}
+
+function undoSignout(t) {
+	setPrivateKey(window.privKeyTrash);
+	saveId();
+
+	t = document.getElementById('rmid');
+	disarmSignoutButton(t);
+
+	var signinBox = document.getElementById('signin');
+	if (signinBox) {
+		var ltChar = String.fromCharCode(62);
+		signinBox.innerHTML = '<a href="/profile.html"' + ltChar + '<i' + ltChar + 'Profile</i' + ltChar + '</a' + ltChar;
+	}
+}
+
+function signoutCounterDecrement() {
+	var ct = window.confct;
+
+	if (!window.privKeyTrash) {
+		return;
+	}
+
+	if (ct) {
+		if (isNaN(ct)) {
+			// nothing
+		} else {
+			if (0 < ct) {
+				window.confct = (ct - 1);
+				bu = document.getElementById('btnUndo');
+				bu.value = "Undo? " + ct;
+
+				setTimeout('signoutCounterDecrement', 1000);
+			}
+		}
+	} else if (ct == 0) {
+		var rmid = document.getElementById('rmid');
+		buttonSignOut(rmid);
+		logOut2();
+		disarmSignoutButton(rmid);
+		window.privKeyTrash = '';
+		showHideForms();
+	}
+}
+
+function disarmSignoutButton(t) { // returns signout button to its regular state (not red)
+	t.style.backgroundColor = '$colorWindow';
+	t.style.color = 'red';
+	window.signOutButtonArmed = 0;
+	window.privKeyTrash = '';
+	document.getElementById('locm').style.display='none';
+}
+
+
+function logOut2() { // performs the logout duties
+	removeStoredKeys();
+
+	// clear the private key textbox if it can be found
+	var textbox = document.getElementById("privatekey");
+	if (textbox) {
+		textbox.value = '';
+	}
+
+	// clear the public key textbox if it can be found
+	textbox = document.getElementById("publickey");
+	if (textbox) {
+		textbox.value = '';
+	}
+
+	// remove displayed avatar at the top of the page
+	var avatar = document.getElementById("myid");
+	if (avatar) {
+		avatar.innerHTML = '';
+	}
+
+	// remove the displayed avatar on the page
+	avatar = document.getElementById("myAvatar");
+	if (avatar) {
+		avatar.innerHTML = '';
+	}
+
+	// show and hide the correct forms on the page, if applicable
+	showHideForms();
 }
 
 // == end profile.js

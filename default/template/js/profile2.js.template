@@ -28,13 +28,18 @@ if (!window.MakeKey && document.getElementById && window.localStorage) {
 
 	//alert('DEBUG: finished loading crypto.js');
 } else {
-//	alert('DEBUG: not loading crypto2.js; ' +
-//		' window.MakeKey = ' + window.MakeKey +
-//		' document.getElementById = ' + document.getElementById +
-//		' window.localStorage = ' + window.localStorage
-//	);
+//	alert('DEBUG: not loading crypto2.js; ' + ' window.MakeKey = ' + window.MakeKey + ' document.getElementById = ' + document.getElementById + ' window.localStorage = ' + window.localStorage );
 }
 
+function btnSignout_Click(t) { // event for 'Register' button's click
+	alert('DEBUG: btnSignout_Click begin');
+
+	if (window.localStorage) {
+		alert('DEBUG: localStorage exists');
+	}
+
+	return true;
+}
 
 function btnReg_Click(t) { // event for 'Register' button's click
 // t is button's this
@@ -42,16 +47,16 @@ function btnReg_Click(t) { // event for 'Register' button's click
 
 	if (t) {
 		// if button exists, change its caption
-		t.value = 'Please wait...';
+		t.value = 'Wait...';
 	}
 
 	if (window.localStorage && window.Promise) {
 		// minimum features check
 
-//		alert('DEBUG: btnReg_Click: localStorage and Promise feature check pass');
+		//alert('DEBUG: btnReg_Click: localStorage and Promise feature check pass');
 
 		if (window.MakeKey) {
-//			alert('DEBUG: btnReg_Click: window.MakeKey exists');
+		//alert('DEBUG: btnReg_Click: window.MakeKey exists');
 
 			var intKeyGenResult = MakeKey();
 
@@ -66,24 +71,24 @@ function btnReg_Click(t) { // event for 'Register' button's click
 }
 
 function ProfileOnLoad() {
-//	alert('DEBUG: ProfileOnLoad() begin');
+//alert('DEBUG: ProfileOnLoad() begin');
 
 	var lblSigningIndicator;
 	if (document.getElementById) {
-//		alert('DEBUG: ProfileOnLoad: document.getElementById = ' + document.getElementById);
+		//alert('DEBUG: ProfileOnLoad: document.getElementById = ' + document.getElementById);
 
 		lblSigningIndicator = document.getElementById('lblSigningIndicator');
 
 		if (lblSigningIndicator) {
-//			alert('DEBUG: ProfileOnLoad: lblSigningIndicator = ' + lblSigningIndicator);
+			//alert('DEBUG: ProfileOnLoad: lblSigningIndicator = ' + lblSigningIndicator);
 
 			if (window.getPrivateKey) {
-//				alert('DEBUG: ProfileOnLoad: window.getPrivateKey = ' + window.getPrivateKey);
+				//alert('DEBUG: ProfileOnLoad: window.getPrivateKey = ' + window.getPrivateKey);
 
 				var pk = getPrivateKey();
 
 				if (pk) {
-//					alert('DEBUG: ProfileOnLoad: pk = ' + pk);
+					//alert('DEBUG: ProfileOnLoad: pk = ' + pk);
 
 					lblSigningIndicator.innerHTML = 'Yes';
 				}
