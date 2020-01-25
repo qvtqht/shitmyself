@@ -1340,7 +1340,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$colorRow0Bg/$colorRow0Bg/g;
 	$htmlStart =~ s/\$colorRow1Bg/$colorRow1Bg/g;
 
-
 	if (GetConfig('logo/enabled')) {
 		$htmlStart =~ s/\$logoText/$logoText/g;
 	} else {
@@ -1618,6 +1617,8 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 		# if force_profile is enabled, automatically add it
 		push @scriptNames, 'force_profile';
 	}
+
+	#todo output list of all the scripts we're about to include
 
 	# loop through all the scripts
 	foreach my $script (@scriptNames) {
