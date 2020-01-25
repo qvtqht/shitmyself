@@ -1,6 +1,6 @@
 // begin write_php.js
 
-var intCommentOnChange = 0;
+var intCommentOnChangeLastValue = 0;
 
 function commentOnChange(t, formId) {
 // changes form's method from get to post
@@ -12,41 +12,51 @@ function commentOnChange(t, formId) {
 // 1024 is a relatively safe value
 // some servers support up to 5-6K
 //
+// works down to netscape 3.04, but not 2.02
+//
 // also shows/hides warning message, lblWriteLengthWarning
+// this part requires getElementById()
 
-	var strFormMode = 'GET';
-	var strWarnDisplay = 'none';
+	if (intCommentOnChangeLastValue <= 1024 && t.value.length <= 1024) {
+		return;
+	}
+
+	if (intCommentOnChangeLastValue > 1024 && t.value.length > 1024) {
+		return;
+	}
+	intCommentOnChangeLastValue = t.value.length;
+
+	var strFormMode;
+	var strWarnDisplay;
+	var strInnerHtml;
 
 	if (t.value.length <= 1024) {
-		if (intCommentOnChange != 1) {
-			intCommentOnChange = 1;
-
-			strFormMode = 'GET';
-			strWarnDisplay = 'none';
-		} else {
-			return;
-		}
+		strFormMode = 'GET';
+		strWarnDisplay = 'none';
+		strInnerHtml = 'Long message mode.<br' + ltChar
 	} else {
-		if (intCommentOnChange != 2) {
-			intCommentOnChange = 2;
+		strFormMode = 'POST';
+		strWarnDisplay = 'block';
+		strInnerHtml = '';
+	}
 
-			strFormMode = 'POST';
-			strWarnDisplay = 'block';
-		} else {
-			return;
+	if (document.forms) {
+		var form = document.forms[formId];
+		if (form) {
+			form.method = strFormMode;
 		}
 	}
 
 	if (document.getElementById) {
-		var form = document.getElementById(formId);
-		if (form) {
-			form.setAttribute('method', strFormMode);
-		}
+//		var form = document.getElementById(formId);
+//		if (form && form.setAttribute) {
+//    		form.setAttribute('method', strFormMode);
+//		}
 
 		var warning = document.getElementById('lblWriteLengthWarning');
 		if (warning) {
 			var ltChar = String.fromCharCode(62);
-			warning.innerHTML = 'Long message mode.<br' + ltChar;
+			warning.innerHTML = strInnerHtml;
 			warning.style.display = strWarnDisplay;
 		}
 	}
