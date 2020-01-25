@@ -1,6 +1,6 @@
 <!--# write4.template #-->
 
-<form action="/post.html" id=compose class=submit name=submit>
+<form action="/post.html" id=compose class=submit name=compose>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
