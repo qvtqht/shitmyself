@@ -22,15 +22,4 @@ function formToText(formId) {
 	}
 }
 
-function gotoInsVotes() {
-	window.open('/write.html#insvotes','_self');
-}
-
-if (document.getElementById) {
-	var pau = document.getElementById('voteAsUser');
-	if (pau) {
-		pau.innerHTML = '<input type=button onclick="formToText(this.form.id); gotoInsVotes();" value="Add Signature"' + String.fromCharCode(62);
-		//'((input type=button onclick="formToText(this.form.id)" value="Enqueue"))';
-	}
-}
 // == end formencode.js
