@@ -13,7 +13,7 @@
 	<p>Signing: <span id=lblSigningIndicator>No</span></p>
 
 	<p>
-		<input type=submit name=request onclick="if (window.btnReg_Click) { return btnReg_Click(this); }" id="btnReg" value="Register">
+		<input type=submit name=request onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id="btnRegister" value="Register">
 		<input type=submit name=request onclick="if (window.btnSignout_Click) { return btnSignout_Click(this); }" id="btnSignout" value="Sign Out">
 
 </fieldset>
