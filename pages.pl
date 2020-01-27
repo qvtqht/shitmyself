@@ -2397,6 +2397,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	#$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
+	$okPage = InjectJs($okPage, qw(settings));
+
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
@@ -2776,7 +2778,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex = InjectJs($txtIndex, qw(settings profile2));
 
-	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
+	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); } else { alert('DEBUG: ProfileOnLoad not found!'); }" /;
 
 	#
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
