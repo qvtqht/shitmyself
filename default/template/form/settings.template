@@ -1,5 +1,5 @@
 <!-- preferences.template -->
-<form id=formPreferences name=formPreferences style="display:none">
+<form id=formPreferences name=formPreferences>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
@@ -19,6 +19,8 @@
 
 			<tr class=body>
 				<td class=content>
+					<noscript><p><b>Note: This page requires JavaScript.</b></p></noscript>
+
 					<fieldset>
 					<legend>Moderation</legend>
 					<p>
