@@ -85,5 +85,14 @@ function getPrivateKey() { // get private key from local storage
 	}
 }
 
-// == end crypto2.js
+function removeStoredKeys2() {
+	if (window.localStorage) {
+		var ls = window.localStorage;
+		ls.removeItem('privatekey');
+		ls.removeItem('publickey');
+		ls.removeItem('fingerprint');
+		ls.removeItem('avatar');
+	}
+}
 
+// == end crypto2.js
