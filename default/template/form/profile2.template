@@ -1,6 +1,6 @@
 <!-- profile2.template -->
 
-<form action="/profile.html">
+<form action="/profile.html" name=frmProfile>
 
 <fieldset>
 
@@ -10,7 +10,7 @@
 
 	<p>Fingerprint: <span id=lblFingerprint>$fingerprint</span>
 
-	<p>Signing: <span id=lblSigningIndicator>No</span></p>
+	<p>Certificate: <span id=lblSigningIndicator>No</span></p>
 
 	<p>
 		<input type=submit name=request onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id="btnRegister" value="Register">
