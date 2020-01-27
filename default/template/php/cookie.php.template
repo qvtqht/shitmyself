@@ -5,6 +5,7 @@
 
 	$commandRegister = 'Register';
 	$commandRegister2 = 'Please wait...';
+	$commandRegister3 = 'Wait...';
 	$commandUnregister = 'Sign Out';
 
 //	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
@@ -66,7 +67,7 @@
 				header('Location: /profile.html?' . time());
 			}
 		} else {
-			if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2)) {
+			if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
 				setcookie('test', '1');
 				header('Location: /profile.html?' . time());
 			}
