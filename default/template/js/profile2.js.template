@@ -18,7 +18,7 @@ if (!window.openpgp && document.head && document.head.appendChild && document.ge
 }
 
 
-if (!window.MakeKey && document.getElementById && window.localStorage) {
+if (!window.MakeKey && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading crypto2.js');
 
 	var script2 = document.createElement('script');

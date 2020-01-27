@@ -14,7 +14,7 @@ if (!window.openpgp && document.head && document.head.appendChild && document.ge
 	//alert('DEBUG: not loading openpgp.js; window.openpgp = ' + window.openpgp + ' document.getElementById = ' + document.getElementById + ' window.localStorage = ' + window.localStorage + ' window.Promise = ' + window.Promise);
 }
 
-if (!window.cryptoJs && document.getElementById && window.localStorage) {
+if (!window.cryptoJs && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading crypto.js');
 
 	var script2 = document.createElement('script');
