@@ -4,7 +4,7 @@
 //
 //}
 
-if (!window.openpgp && document.head && document.getElementById && window.localStorage && window.Promise) {
+if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage && window.Promise) {
 	//alert('DEBUG: loading openpgp.js');
 
 	var script = document.createElement('script');
@@ -31,7 +31,7 @@ if (!window.MakeKey && document.getElementById && window.localStorage) {
 //	alert('DEBUG: not loading crypto2.js; ' + ' window.MakeKey = ' + window.MakeKey + ' document.getElementById = ' + document.getElementById + ' window.localStorage = ' + window.localStorage );
 }
 
-function btnSignout_Click(t) { // event for 'Register' button's click
+function btnSignout_Click(t) { // event for 'Sign Out' button's click
 	alert('DEBUG: btnSignout_Click begin');
 
 	if (window.localStorage) {

@@ -40,7 +40,7 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 				document.head.appendChild(script);
 			}
 
-			if (!window.setAvatar && document.getElementById && window.localStorage) {
+			if (!window.setAvatar && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 				var script2 = document.createElement('script');
 				script2.src = '/crypto.js';
 				script2.async = false; // This is required for synchronous execution
