@@ -43,7 +43,7 @@ function signCallback (signed) {
 function signVote(t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
 // token = full voting token, in the format vote/$fileHash/$ballotTime/$voteValue/$checksum
-	if (document.getElementById) {
+	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
 		var privkey = getPrivateKey();
@@ -68,7 +68,8 @@ function signVote(t, token) { // signs a vote from referenced vote button
 			return false;
 		} else {
 		// there is a private key
-			// first, change the button's appearance, for maximum responsiveness
+
+			// change the button's appearance, for appearance of responsiveness
 			t.enabled = false;
 			t.style.backgroundColor = '$colorSuccessVoteSigned'; //#todo
 			t.style.color = '$colorSuccessVoteSigned';
@@ -79,21 +80,10 @@ function signVote(t, token) { // signs a vote from referenced vote button
 
 			var options;
 
-//			options = OptionsDefault();
-
-			// set the options
-//
-//			options = {
-//				data: token, // input as String (or Uint8Array)
-//				privateKeys: [privKeyObj] // for signing
-//			};
-
 			options = new Object();
 
 			options.data = token;
 			options.privateKeys = privKeyObj;
-
-//			alert();
 
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
