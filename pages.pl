@@ -221,6 +221,18 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	return $windowTemplate;
 }
 
+sub InjectBodyOnload { #injects <body onload event into supplied html
+	my $html = shift; #page event is to be added to
+	my $onLoad = shift; #javascript to go inside onload=""
+
+	my $onLoadTemplate = '<body onload="' . $onLoad . '" ';
+	my $onLoadNeedle = '<body ';
+
+	$html =~ s/$onLoadNeedle/$onLoadTemplate/;
+
+	return $html;
+}
+
 sub GetPageLinks { # returns html for pagination links
 # $currentPageNumber = current page
 
@@ -686,17 +698,6 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 		$txtIndex .= $replyForm;
 	}
-
-	if ($file{'vote_buttons'} && GetConfig('enable_checkboxes')) {
-		my $ballotTime = GetTime();
-		my $voterTemplate .= GetTemplate("form/itemvote.template");
-
-		my $voterButtons = GetVoterTemplate($fileHash, $ballotTime);
-		$voterTemplate =~ s/\$voterButtons/$voterButtons/g;
-
-		$txtIndex .= $voterTemplate;
-	}
-
 
 	# end page with footer
 	$txtIndex .= GetPageFooter();
@@ -1353,70 +1354,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	return $txtIndex;
 }
 
-sub GetVoterTemplate { # returns html for voter checkboxes
-	my $fileHash = shift;
-	my $ballotTime = shift;
-
-	chomp $fileHash;
-	chomp $ballotTime;
-
-	#todo move this to GetConfig()
-	if (!-e "config/admin/secret") {
-		my $randomHash = GetRandomHash();
-
-		PutConfig("admin/secret", $randomHash);
-	}
-	my $mySecret = GetConfig("admin/secret");
-
-	state $voteButtonsTemplate;
-
-	if (!defined($voteButtonsTemplate)) {
-		my @tagsListList = qw(tags tags2 johari nohari rhetoric emotions flags);
-		my @voteValues;
-
-		foreach (@tagsListList) {
-			if (scalar(@voteValues)) {
-				push @voteValues, '--';
-			}
-			my $tagsList = GetConfig("list/$_");
-			chomp $tagsList;
-			push @voteValues, split("\n", $tagsList);
-		}
-
-		foreach my $tag (@voteValues) {
-			if ($tag eq '--') {
-				$voteButtonsTemplate .= "<hr>\n";
-				next;
-			}
-			my $buttonTemplate = GetTemplate("votecheck.template");
-
-			my $class = "pos";
-
-			$buttonTemplate =~ s/\$voteValue/$tag/g;
-			$buttonTemplate =~ s/\$voteValueCaption/$tag/g;
-			$buttonTemplate =~ s/\$class/$class/g;
-
-			$voteButtonsTemplate .= $buttonTemplate;
-		}
-	}
-
-	if ($fileHash && $ballotTime) {
-		my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
-
-		my $voteButtons = $voteButtonsTemplate;
-		
-		my $fileHashShort = substr($fileHash, 0, 8);
-		
-		$voteButtons =~ s/\$fileHashShort/$fileHashShort/g;
-		$voteButtons =~ s/\$fileHash/$fileHash/g;
-		$voteButtons =~ s/\$ballotTime/$ballotTime/g;
-		$voteButtons =~ s/\$checksum/$checksum/g;
-
-		return $voteButtons;
-	}
-}
-
-
 sub GetTopItemsPage { # returns page with top items listing
 	WriteLog("GetTopItemsPage()");
 
@@ -1618,7 +1555,8 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 		push @scriptNames, 'force_profile';
 	}
 
-	#todo output list of all the scripts we're about to include
+	#output list of all the scripts we're about to include
+	my $scriptNamesList = join(' ', @scriptNames);
 
 	# loop through all the scripts
 	foreach my $script (@scriptNames) {
@@ -1664,6 +1602,8 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	my $scriptInject = GetTemplate('scriptinject.template');
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g;
+
+	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
 	if (index($html, '</body>') > -1) {
 		# replace it into html, right before the closing </body> tag
@@ -2284,28 +2224,12 @@ sub GetLighttpdConfig {
 	return $conf;
 }
 
-sub MakeFormPages { #generates and writes all 'form' pages (doesn't do anything atm)
-}
-
-#sub GetUserInitPage {
-#	my $userInitPage = GetTemplate('user_init.template');
-#	$userInitPage = InjectJs($userInitPage, 'user_init');
-#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-#	$userInitPage =~ s/<\/body>/$scriptsInclude<\/body>/;
-#
-#	return $userInitPage;
-#}
-#
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 	WriteLog('MakeSummaryPages() BEGIN');
 	
 	PutHtmlFile("$HTMLDIR/test.html", GetTemplate('test.template'));
 
-#	# User Init page
-#	my $userInitPage = GetUserInitPage();
-#	PutHtmlFile("$HTMLDIR/user_init.html", $userInitPage);
-#
 	# Submit page
 	my $submitPage = GetWritePage();
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
@@ -2326,15 +2250,13 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/jstest2.html", $jsTest2Page);
 
 	my $jsTest3Page = GetTemplate('js/test3.js.template');
-#	$jsTest3Page = InjectJs($jsTest3Page, qw(sha512.js));
 	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
 
-	my $clockTest = GetTemplate('clock2.template');
+	my $clockTest = GetTemplate('clock.template');
 	my $clockTestPage = '<html><body>';
 	$clockTestPage .= $clockTest;
 	$clockTestPage .= '</body></html>';
 	$clockTestPage = InjectJs($clockTestPage, qw(clock));
-#	$jsTest3Page = InjectJs($jsTest3Page, qw(sha512.js));
 	PutHtmlFile("$HTMLDIR/clock.html", $clockTestPage);
 
 	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
@@ -2381,19 +2303,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	
 	
 	# Ok page
-#	my $okPage = GetTemplate('action_ok.template');
-	my $okPage;# = GetTemplate('action_ok.template');
+	my $okPage;
 
-	$okPage .= GetPageHeader('OK', 'OK', 'default'); #GetTemplate('htmlstart.template');
+	$okPage .= GetPageHeader('OK', 'OK', 'default');
 
-	my $windowContents = GetTemplate('action_ok2.template');
+	my $windowContents = GetTemplate('action_ok.template');
 
 	$okPage .= GetWindowTemplate('Data Received', '', '', $windowContents, 'Ready');
-	#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 
 	$okPage .= GetPageFooter();
 
-#	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 
 	#$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
 
@@ -2778,7 +2698,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex = InjectJs($txtIndex, qw(settings profile2));
 
-	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); } else { alert('DEBUG: ProfileOnLoad not found!'); }" /;
+	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
 
 	#
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
