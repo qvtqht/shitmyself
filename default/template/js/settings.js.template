@@ -311,4 +311,6 @@ function SettingsOnload() { // onload function for preferences page
 	ShowAdvanced(1);
 }
 
+ShowAdvanced(0); // #todo replace with body.onload ?
+
 // == end settings.js
