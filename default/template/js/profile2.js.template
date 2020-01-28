@@ -32,23 +32,25 @@ if (!window.MakeKey && document.head && document.head.appendChild && document.ge
 }
 
 function btnSignout_Click(t) { // event for 'Sign Out' button's click
-	alert('DEBUG: btnSignout_Click begin');
+	//alert('DEBUG: btnSignout_Click begin');
 
 	if (window.localStorage) {
-		alert('DEBUG: localStorage exists');
+		//alert('DEBUG: localStorage is true');
+
+		var ls = window.localStorage;
+		ls.removeItem('privatekey');
+		ls.removeItem('publickey');
+		ls.removeItem('fingerprint');
+		ls.removeItem('avatar');
+
 	}
 
 	return true;
 }
 
 function btnRegister_Click(t) { // event for 'Register' button's click
-// t is button's this
-//	alert('DEBUG: btnRegister_Click() begin');
-
-	if (t) {
-		// if button exists, change its caption
-		t.value = 'Wait...';
-	}
+// t is clicked button's "this" object
+	//alert('DEBUG: btnRegister_Click() begin');
 
 	if (window.localStorage && window.Promise) {
 		// minimum features check
@@ -56,7 +58,7 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
 
 		if (window.MakeKey) {
-		//alert('DEBUG: btnRegister_Click: window.MakeKey exists');
+			//alert('DEBUG: btnRegister_Click: window.MakeKey exists');
 
 			var intKeyGenResult = MakeKey();
 
