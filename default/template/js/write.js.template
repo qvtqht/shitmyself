@@ -1,6 +1,31 @@
 // == begin write.js
 
 function writeOnload() { // onload handler for write page
+	//alert('DEBUG: writeOnload() begin');
+
+	if (window.location.hash) {
+		//alert('DEBUG: window.location.hash');
+
+		if (window.location.hash == '#inspubkey') {
+			//alert('DEBUG: #inspubkey found');
+
+			if (window.getPublicKey) {
+				//alert('DEBUG: window.getPublicKey exists');
+
+				var pubKey = getPublicKey();
+
+				if (pubKey) {
+					//alert('DEBUG: pubKey is true, inserting it into comment');
+
+					var comment = document.getElementById('comment');
+
+					if (comment) {
+						comment.value = pubKey;
+					}
+				}
+			}
+		}
+	}
 	if (window.signMessage) {
 
 	}
