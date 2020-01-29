@@ -33,8 +33,8 @@ if (document.getElementById) {
 	var loading = document.getElementById('loading');
 	if (loading) {
 	//	loading.style.display = 'none';
-		var ltChar = String.fromCharCode(62);
-		loading.innerHTML = '<br' + ltChar + '<br' + ltChar + 'Loading...<br' + ltChar + '<br' + ltChar + '<br' + ltChar + ''; //todo fix this
+		var gt = String.fromCharCode(62);
+		loading.innerHTML = '<br' + gt + '<br' + gt + 'Loading...<br' + gt + '<br' + gt + '<br' + gt + ''; //todo fix this
 	}
 }
 
@@ -63,6 +63,8 @@ function showHideForms() { // shows and hides the register and logged in forms
 // depending on the currently logged in status
 // 	logged in =  create id is hidden, current id is displayed
 // 	logged out = create id is shown, current id is hidden
+
+	var gt = String.fromCharCode(62);
 
 	if (document.getElementById) { // more graceful "support" for nn3, nn4
 		// if user fingerprint exists
@@ -94,11 +96,9 @@ function showHideForms() { // shows and hides the register and logged in forms
 					if (myidBox) {
 						if (window.myAvatar) {
 							myidBox.innerHTML =
-								'<a href="/profile.html" class=avatar' +
-								String.fromCharCode(62) +
+								'<a href="/profile.html" class=avatar' + gt +
 								myAvatar +
-								'</a' +
-								String.fromCharCode(62);
+								'</a' +	lt;
 						} else {
 							myidBox.innerHTML = '';
 						}
@@ -113,13 +113,10 @@ function showHideForms() { // shows and hides the register and logged in forms
 					}
 					if (signinBox) {
 						signinBox.innerHTML =
-							'<a href="/profile.html"' +
-							String.fromCharCode(62) + '<i' +
-							String.fromCharCode(62) +
-							'Profile</i' +
-							String.fromCharCode(62) +
-							'</a' +
-							String.fromCharCode(62);
+							'<a href="/profile.html"' + gt +
+							'<i' + gt +
+							'Profile</i' + gt +
+							'</a' + gt;
 					}
 				}
 			} else {
@@ -128,13 +125,10 @@ function showHideForms() { // shows and hides the register and logged in forms
 				}
 				if (signinBox) {
 					signinBox.innerHTML =
-						'<a href="/profile.html"' +
-						String.fromCharCode(62) +
-						'<i' + String.fromCharCode(62) +
-						'Profile</i' +
-						String.fromCharCode(62) +
-						'</a' +
-						String.fromCharCode(62);
+						'<a href="/profile.html"' + gt +
+						'<i' + gt +
+						'Profile</i' + gt +
+						'</a' + gt;
 				}
 			}
 		} else {
@@ -159,7 +153,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 	
 			var signinBox = document.getElementById('signin');
 			if (signinBox) {
-				signinBox.innerHTML = '<a href="/profile.html"' + String.fromCharCode(62) + 'Profile</a' + String.fromCharCode(62);
+				signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 			}
 
 			var myidBox = document.getElementById('myid');
@@ -185,7 +179,7 @@ function showHideForms() { // shows and hides the register and logged in forms
 showHideForms(); // call showHideForms()
 
 function identityOnload() { // onload function for identity page (aka profile page)
-	if (window.getPrivateKey) {
+	if (window.getPrivateKey && document.getElementById) {
 		var pk = getPrivateKey();
 
 		// is there a private key?
@@ -296,8 +290,8 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 
 		var signinBox = document.getElementById('signin');
 		if (signinBox) {
-			var ltChar = String.fromCharCode(62);
-			signinBox.innerHTML = '<a href="/profile.html"' + ltChar + 'Profile</a' + ltChar;
+			var gt = String.fromCharCode(62);
+			signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 		}
 
 		setTimeout('signoutCounterDecrement', 1000);
@@ -323,8 +317,8 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 
 		var signinBox = document.getElementById('signin');
 		if (signinBox) {
-			var ltChar = String.fromCharCode(62);
-			signinBox.innerHTML = '<a href="/profile.html"' + ltChar + 'Profile</a' + ltChar + '';
+			var gt = String.fromCharCode(62);
+			signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 		}
 
 		setTimeout('signoutCounterDecrement', 1000);
@@ -340,8 +334,8 @@ function undoSignout(t) {
 
 	var signinBox = document.getElementById('signin');
 	if (signinBox) {
-		var ltChar = String.fromCharCode(62);
-		signinBox.innerHTML = '<a href="/profile.html"' + ltChar + '<i' + ltChar + 'Profile</i' + ltChar + '</a' + ltChar;
+		var gt = String.fromCharCode(62);
+		signinBox.innerHTML = '<a href="/profile.html"' + gt + '<i' + gt + 'Profile</i' + gt + '</a' + gt;
 	}
 }
 
