@@ -1,6 +1,6 @@
 // == begin profile.js
 
-if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage && window.Promise) {
+if (!window.openpgp && document.head && document.head.appendChild && document.createElement && document.getElementById && window.localStorage && window.Promise) {
 	//alert('DEBUG: loading openpgp.js');
 
 	var script = document.createElement('script');
@@ -25,7 +25,7 @@ if (!window.cryptoJs && document.head && document.head.appendChild && document.g
 	//alert('DEBUG: finished loading crypto.js');
 
 } else {
-//	alert('DEBUG: not loading crypto.js; ' + 'window.cryptoJs = ' + window.cryptoJs + ' document.getElementById = ' + document.getElementById + 'window.localStorage = ' + window.localStorage );
+	//alert('DEBUG: not loading crypto.js; ' + 'window.cryptoJs = ' + window.cryptoJs + ' document.getElementById = ' + document.getElementById + 'window.localStorage = ' + window.localStorage );
 }
 
 
@@ -64,9 +64,9 @@ function showHideForms() { // shows and hides the register and logged in forms
 // 	logged in =  create id is hidden, current id is displayed
 // 	logged out = create id is shown, current id is hidden
 
-	var gt = String.fromCharCode(62);
+	if (document.getElementById && String.fromCharCode) { // more graceful "support" for nn3, nn4
+		var gt = String.fromCharCode(62);
 
-	if (document.getElementById) { // more graceful "support" for nn3, nn4
 		// if user fingerprint exists
 		if (getUserFp()) {
 			//current id form, show it

@@ -1,7 +1,7 @@
 // == begin avatar.js
 
 function setAva() { // sets avatar widgets (and italicizes Profile link)
-	if (document.getElementById) {
+	if (document.getElementById && String.fromCharCode) {
 		var myidBox = document.getElementById('myid'); // displays username (if preference is set)
 		var signinBox = document.getElementById('signin'); // Profile link
 

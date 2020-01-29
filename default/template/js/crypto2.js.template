@@ -1,7 +1,7 @@
 // == begin crypto2.js
 
 function MakeKey() {
-//	alert('DEBUG: MakeKey() begin');
+	//alert('DEBUG: MakeKey() begin');
 	var openpgp = window.openpgp;
 
 	var gt = String.fromCharCode(62)
@@ -56,16 +56,15 @@ function MakeKey() {
 				// get username out of key
 				var myUsername = pubKeyObj.users[0].userId.userid;
 
-				avatar = ''
+				var avatar = ''
 					+ '<span class=avatar' + gt +
 					+ '<span class=username' + gt + escapeHTML(myUsername) + '</span' + gt +
 					+ '</span' + gt;
 
-				setAvatar(avatar);
-
 				window.localStorage.setItem('privatekey', privkey);
 				window.localStorage.setItem('publickey', pubkey);
 				window.localStorage.setItem('fingerprint', myFingerprint);
+				window.localStorage.setItem('avatar', avatar);
 
 				document.cookie = "test=" + myFingerprint;
 

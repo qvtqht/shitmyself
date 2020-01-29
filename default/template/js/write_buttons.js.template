@@ -12,7 +12,9 @@ if (window.getUserFp) {
 			actName = 'Reply as ';
 		}
 		if (sp) {
-			sp.innerHTML = '<button onclick="this.value = \'Please wait... (click to try again)\'; if (window.signMessage) { signMessage(); }"' + String.fromCharCode(62) + actName + getAvatar() + '</button' + String.fromCharCode(62);
+			var gt = String.fromCharCode(62);
+
+			sp.innerHTML = '<button onclick="this.value = \'Please wait... (click to try again)\'; if (window.signMessage) { signMessage(); }"' + gt + actName + getAvatar() + '</button' + gt;
 		}
 	}
 }
