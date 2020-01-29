@@ -45,17 +45,16 @@ function showtime() {
 	}
 
 	if (clockStyle == 2) {
-
-
-
 		var now = new Date();
 		var hours = now.getHours();
 		var minutes = now.getMinutes();
 		var seconds = now.getSeconds();
 
-		var milliseconds = Math.floor(Math.random() * 999);
+		var milliseconds = '000';
 		if (window.getMilliseconds) {
 			milliseconds = now.getMilliseconds();
+		} else if (Math.floor && Math.random) {
+			milliseconds = Math.floor(Math.random() * 999)
 		}
 
 		var hoursR = 23 - hours;
@@ -114,7 +113,7 @@ input {
 
 <BODY onLoad="startclock()">
 <FORM NAME="clock" onSubmit="0">
-   <INPUT TYPE="text" NAME="face" SIZE=15 VALUE ="">
+   <INPUT TYPE="text" NAME="face" SIZE=20 VALUE ="">
 </FORM>
 </BODY>
 
