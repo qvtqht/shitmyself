@@ -1,50 +1,52 @@
 // == begin avatar.js
 
 function setAva() { // sets avatar widgets (and italicizes Profile link)
-	var myidBox = document.getElementById('myid'); // displays username (if preference is set)
-	var signinBox = document.getElementById('signin'); // Profile link
+	if (document.getElementById) {
+		var myidBox = document.getElementById('myid'); // displays username (if preference is set)
+		var signinBox = document.getElementById('signin'); // Profile link
 
-	var lt = String.fromCharCode(62);
+		var gt = String.fromCharCode(62);
 
-	if (myidBox && signinBox && window.localStorage) { // check for elements and features
-		var myAvatar = localStorage.getItem('avatar');
+		if (myidBox && signinBox && window.localStorage) { // check for elements and features
+			var myAvatar = localStorage.getItem('avatar');
 
-		if (myAvatar == null || myAvatar.length == 0) {
-			signinBox.innerHTML = '<a href="/profile.html"' + lt + 'Profile</a' + lt + '';
-		} else {
-		    signinBox.innerHTML = '';
-			var myFp = localStorage.getItem('fingerprint');
+			if (myAvatar == null || myAvatar.length == 0) {
+				signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt + '';
+			} else {
+				signinBox.innerHTML = '';
+				var myFp = localStorage.getItem('fingerprint');
 
-			if (window.location.pathname == '/author/' + myFp + '/') {
-				var itsYou = document.getElementById('itsyou');
-				itsYou.innerHTML = 'This is you!';
-			}
+				if (window.location.pathname == '/author/' + myFp + '/') {
+					var itsYou = document.getElementById('itsyou');
+					itsYou.innerHTML = 'This is you!';
+				}
 
-			if (window.GetPrefs) {
-				if (GetPrefs('display_username')) {
-					myidBox.innerHTML = '<a href="/profile.html" class=avatar' + lt + myAvatar + '</a' + lt;
-					signinBox.innerHTML = '';
+				if (window.GetPrefs) {
+					if (GetPrefs('display_username')) {
+						myidBox.innerHTML = '<a href="/profile.html" class=avatar' + gt + myAvatar + '</a' + gt;
+						signinBox.innerHTML = '';
+					} else {
+						myidBox.innerHTML = '';
+						signinBox.innerHTML = '<a href="/profile.html"' + gt + '<i' + gt + 'Profile</i' + gt + '</a' + gt + '';
+					}
 				} else {
 					myidBox.innerHTML = '';
-					signinBox.innerHTML = '<a href="/profile.html"' + lt + '<i' + lt + 'Profile</i' + lt + '</a' + lt + '';
+					signinBox.innerHTML = '<a href="/profile.html"' + gt + '<i' + gt + 'Profile</i' + gt + '</a' + gt + '';
 				}
-			} else {
-				myidBox.innerHTML = '';
-				signinBox.innerHTML = '<a href="/profile.html"' + lt + '<i' + lt + 'Profile</i' + lt + '</a' + lt + '';
-			}
 
-			if (!window.openpgp && document.head && document.getElementById && window.localStorage && window.Promise) {
-				var script = document.createElement('script');
-				script.src = '/openpgp.js';
-				script.async = false; // This is required for synchronous execution
-				document.head.appendChild(script);
-			}
+				if (!window.openpgp && document.head && document.getElementById && window.localStorage && window.Promise) {
+					var script = document.createElement('script');
+					script.src = '/openpgp.js';
+					script.async = false; // This is required for synchronous execution
+					document.head.appendChild(script);
+				}
 
-			if (!window.setAvatar && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
-				var script2 = document.createElement('script');
-				script2.src = '/crypto.js';
-				script2.async = false; // This is required for synchronous execution
-				document.head.appendChild(script2);
+				if (!window.setAvatar && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
+					var script2 = document.createElement('script');
+					script2.src = '/crypto.js';
+					script2.async = false; // This is required for synchronous execution
+					document.head.appendChild(script2);
+				}
 			}
 		}
 	}
