@@ -2158,14 +2158,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 				$indexPage = GetIndexPage(\@ft);
 			}
 
-			if ($i < $lastPage-1) {
-				PutHtmlFile("html/index$i.html", $indexPage);
-			} else {
-				if (GetConfig('home_page_auto')) {
-					PutHtmlFile("html/index.html", $indexPage);
-				}
-				PutHtmlFile("html/index$i.html", $indexPage);
-			}
+			PutHtmlFile("html/index$i.html", $indexPage);
 		}
 	} else {
 		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'), 'home_empty');
@@ -2180,9 +2173,6 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar));
 
-		if (GetConfig('home_page_auto')) {
-			PutHtmlFile('html/index.html', $indexPage);
-		}
 		PutHtmlFile('html/index0.html', $indexPage);
 	}
 }
@@ -2196,7 +2186,7 @@ sub GetLighttpdConfig {
 	chomp $pwd; # get rid of tailing newline
 	
 	my $docRoot = $pwd . '/' . 'html' . '/';
-	my $serverPort = GetConfig('admin/lighttpd/port') || 3000;
+	my $serverPort = GetConfig('admin/lighttpd/port') || 2784;
 	
 	$conf =~ s/\$serverDocumentRoot/$docRoot/;
 	$conf =~ s/\$serverPort/$serverPort/;
@@ -2252,7 +2242,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $jsTest3Page = GetTemplate('js/test3.js.template');
 	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
 
-	my $clockTest = GetTemplate('clock.template');
+	my $clockTest = '<form>'.GetTemplate('clock.template').'</form>';
 	my $clockTestPage = '<html><body>';
 	$clockTestPage .= $clockTest;
 	$clockTestPage .= '</body></html>';
@@ -2696,7 +2686,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings profile2));
+	$txtIndex = InjectJs($txtIndex, qw(utils settings profile2));
 
 	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
 
@@ -2774,10 +2764,10 @@ sub GetRssFile { # returns rss feed for current site
 		$feedContainerTemplate = $asciiHeader . substr($feedContainerTemplate, length($unicodeHeader));
 	}
 
-	my $baseUrl = 'http://localhost:3000/';
+	my $baseUrl = 'http://localhost:2784/';
 
 	my $feedTitle = GetConfig('home_title');
-	my $feedLink = GetConfig('admin/my_domain'); # default = http://localhost:3000/
+	my $feedLink = GetConfig('admin/my_domain'); # default = http://localhost:2784/
 	my $feedDescription = 'site_description';
 	my $aboutUrl = $baseUrl;
 	
@@ -2786,7 +2776,7 @@ sub GetRssFile { # returns rss feed for current site
 	#%a, %d %b %Y %H:%M +:%S %Z
 	
 	if (!$feedLink) {
-		$feedLink = 'localhost:3000';
+		$feedLink = 'localhost:2784';
 	}
 	$feedLink = 'http://' . $feedLink;
 
@@ -2827,7 +2817,7 @@ sub GetRssFile { # returns rss feed for current site
 		my $fileName = $file->{'file_path'};
 		my $itemPubDate = $file->{'add_timestamp'};
 		my $itemTitle = $file->{'item_title'};
-		my $itemLink = 'http://localhost:3000/' . GetHtmlFilename($fileHash);
+		my $itemLink = 'http://localhost:2784/' . GetHtmlFilename($fileHash);
 		my $itemAbout = $itemLink;
 		my $itemGuid = $itemLink;
 		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});

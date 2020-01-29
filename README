@@ -36,7 +36,7 @@ generate.pl
 
 lighttpd.pl
 	starts a local instance of lighttpd to serve the website
-	http://localhost:3000/
+	http://localhost:2784/
 	lighttpd.conf, included
 
 update.pl
