@@ -610,7 +610,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 		my $eventAction = '/action/event.html?';
 		if (substr($file, 0, length($eventAction)) eq $eventAction) {
-			#			http://localhost:3000/post.html
+			#			http://localhost:2784/post.html
 			#		x		?event_name=event_name
 			#		x		&brc_ave=9:55
 			#		x		&brc_street=Q
@@ -776,7 +776,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 		my $voteAction = '/action/vote2.html?';
 		if (substr($file, 0, length($voteAction)) eq $voteAction) {
-			#				http://localhost:3000/action/vote2.html?
+			#				http://localhost:2784/action/vote2.html?
 			#					vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
 			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Finformative%2F435fcd62a628d7b918e243fe97912d7b=on
 			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ffriendly%2F435fcd62a628d7b918e243fe97912d7b=on
