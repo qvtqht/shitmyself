@@ -31,16 +31,14 @@ function writeOnload() { // onload handler for write page
 	}
 }
 
-function writeSubmit() { // called when user submits write form
+function writeSubmit(t) { // called when user submits write form
 	//alert('DEBUG: writeSubmit() begin');
 	if (window.getPrivateKey && window.signMessage) {
 		//alert('DEBUG: window.getPrivateKey && window.signMessage test passed');
 		if (getPrivateKey()) {
 			//alert('DEBUG: getPrivateKey() is true, writeSubmit() Calling signMessage()');
 
-			signMessage();
-
-			return false; // return false to cancel form submission
+			return signMessage();
 			// once the message is signed, callback will submit the form
 		} else {
 			//alert('DEBUG: no private key, basic submit');

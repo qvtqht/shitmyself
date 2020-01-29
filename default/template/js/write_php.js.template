@@ -30,10 +30,12 @@ function commentOnChange(t, formId) {
 	var strWarnDisplay;
 	var strInnerHtml;
 
+	var gt = String.fromCharCode(62);
+
 	if (t.value.length <= 1024) {
 		strFormMode = 'GET';
 		strWarnDisplay = 'none';
-		strInnerHtml = 'Long message mode.<br' + ltChar
+		strInnerHtml = 'Long message mode.<br' + gt;
 	} else {
 		strFormMode = 'POST';
 		strWarnDisplay = 'block';
@@ -55,7 +57,6 @@ function commentOnChange(t, formId) {
 
 		var warning = document.getElementById('lblWriteLengthWarning');
 		if (warning) {
-			var ltChar = String.fromCharCode(62);
 			warning.innerHTML = strInnerHtml;
 			warning.style.display = strWarnDisplay;
 		}

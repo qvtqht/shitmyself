@@ -37,8 +37,9 @@
 						<p>
 							<input
 								type=submit
-								onclick="this.value = 'Please wait...'; if (window.writeSubmit) { return writeSubmit(); }"
+								onclick="this.value = 'Please wait...'; if (window.writeSubmit) { return writeSubmit(this); }"
 								value="Send Message"
+								name=addtext
 								id=addtext
 								style="width: 100%"
 							>
