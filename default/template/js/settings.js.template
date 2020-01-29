@@ -178,7 +178,7 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 
 	// this will look for pane with id=id and show/hide it if it exists
 	// used on the profile page
-	if (id) {
+	if (document.getElementById && id) {
 		var pane = document.getElementById(id);
 		if (pane) {
 			pane.style.display=(ths.checked ? 'block' : 'none')
