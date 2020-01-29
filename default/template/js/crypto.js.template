@@ -25,7 +25,7 @@ function buttonSignOut(t) { // sign out button is clicked. t is button's this
 // depending on window.signOutButtonStatus,
 // displays undo countdown or signs out completely, emptying trash
 // #todo move this function to profile.js
-	var lt = String.fromCharCode(62);
+	var gt = String.fromCharCode(62);
 
 	if (window.signOutButtonStatus) {
 		logOut(t);
@@ -44,7 +44,7 @@ function buttonSignOut(t) { // sign out button is clicked. t is button's this
 
 		var signinBox = document.getElementById('signin');
 		if (signinBox) {
-			signinBox.innerHTML = '<a href="/profile.html"' + lt + 'Profile</a' + lt;
+			signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 		}
 
 		signoutCounterDecrement();
@@ -173,6 +173,8 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 // only if there's a private key textbox,
 // not much validation currently #todo
 
+	var gt = String.fromCharCode(62);
+
 	// look for textbox
 	var textbox = document.getElementById("privatekey");
 
@@ -212,9 +214,9 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 		myUsername = pubKeyObj.users[0].userId.userid;
 
 		avatar = ''
-			+ '<span class=avatar>'
-			+ '<span class=username>' + escapeHTML(myUsername) + '</span>'
-			+ '</span>';
+			+ '<span class=avatar' + gt +
+			+ '<span class=username' + gt + escapeHTML(myUsername) + '</span' + gt +
+			+ '</span' + gt;
 
 		setAvatar(avatar);
 
@@ -228,7 +230,7 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 				if ( !document.getElementById("privatekey")) {
 					if (signinBox) {
 						var ltChar = String.fromCharCode(62);
-						signinBox.innerHTML = '<a href="/profile.html"' + ltChar + 'Profile</a' + ltChar + '';
+						signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 					}
 				}
 			} else {
@@ -239,24 +241,24 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 				//myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
 				if (window.GetPrefs) {
 					if (GetPrefs('display_username')) {
-						myidBox.innerHTML = '<a href="/profile.html" class=avatar>' + myAvatar + '</a>';
+						myidBox.innerHTML = '<a href="/profile.html" class=avatar' + gt + myAvatar + '</a' + gt;
 						if (signinBox) {
 							signinBox.innerHTML = '';
 						}
 					} else {
 						if (signinBox) {
-							signinBox.innerHTML = '<a href="/profile.html"' + ltChar + '<i' + ltChar + 'Profile</i' + ltChar + '</a' + ltChar;
+							signinBox.innerHTML = '<a href="/profile.html"' + gt + '<i' + gt + 'Profile</i' + gt + '</a' + gt;
 						}
 					}
 				} else {
 					if (signinBox) {
-						signinBox.innerHTML = '<a href="/profile.html"' + ltChar + '<i' + ltChar + 'Profile</i' + ltChar + '</a' + ltChar;
+						signinBox.innerHTML = '<a href="/profile.html"' + gt + '<i' + gt + 'Profile</i' + gt + '</a' + gt;
 					}
 				}
 
 				var myId2 = document.getElementById('myId2');
 				if (myId2) {
-					myId2.innerHTML = '<a href="/author/' + myFp + '/">' + getAvatar() + '</a>'; //todo remove hardcoding of url
+					myId2.innerHTML = '<a href="/author/' + myFp + '/"' + gt + getAvatar() + '</a' + gt; //todo remove hardcoding of url
 				}
 
 				var myIdProfile = document.getElementById('myIdProfile');
@@ -476,13 +478,19 @@ function signForm(formId) {
 //}
 
 function signMessage() {
+	//alert('DEBUG: signMessage() begin');
+
 	var privkey = getPrivateKey();
 
 	if (privkey) {
+		//alert('DEBUG: signMessage: privkey is true');
+
 		var textbox = document.getElementById('comment');
 		var composeForm = document.getElementById('compose');
 
 		if (textbox && composeForm) {
+			//alert('DEBUG: signMessage: textbox && composeForm is true');
+
 //			textbox.style.color = '#00ff00';
 //			textbox.style.backgroundColor = '#c0c000';
 
@@ -495,9 +503,17 @@ function signMessage() {
 			// #todo change color of textbox when message is properly signed
 
 			if (message.trim().substring(0, 34) == ('-----BEGIN PGP SIGNED MESSAGE-----')) {
-				return;
+				//alert('DEBUG: signMessage: message is already signed, returning');
+
+				return true;
 			}
 			
+			if (message.trim().substring(0, 36) == ('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+				//alert('DEBUG: signMessage: message contains public key, returning');
+
+				return true;
+			}
+
 			var replyTo = document.getElementById('replyto');
 
 			if (replyTo) {
@@ -532,16 +548,18 @@ function signMessage() {
 				textbox.value = signed.data;
 				composeForm.submit();
 			});
+
+			return false;
 		}
+
+		return true;
 	} else {
 		// this is an edge case
 		// user signed out in another window, but wants to sign in this one
 		// signing is no longer possible, so just submit to be on safe side
-		
-		//alert('No identity defined, cannot sign.');
-		composeForm.submit();
 	}
 
+	return true;
 }
 
 function writeOnload2() {
