@@ -22,3 +22,8 @@ Remember to clean-build after updating default/
 	#todo rename to html.epoch and default.epoch or something
 	Remove the zip files to save space
 		How to check if needed? Total space?
+
+Long messages without JS may cause URI too long error
+	With JS, the form is automatically switched to POST
+	There needs to be a warning and another page
+	Maybe the default page should have a one-liner textbox

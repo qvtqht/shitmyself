@@ -336,7 +336,6 @@ default/template/event/event_list2.template
 default/template/event/brc_location.template
 default/template/event/event_item.template
 default/template/support.template
-default/template/action_ok2.template
 default/template/lighttpd
 default/template/lighttpd/lighttpd.conf.template
 default/template/lighttpd/lighttpd_php.conf.template
@@ -485,7 +484,6 @@ default/language
 default/intro_text
 default/prefill_username
 default/style_vote_buttons
-default/home_page_auto
 default/item_long_threshold
 default/site_name
 default/tagset

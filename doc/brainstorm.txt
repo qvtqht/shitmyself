@@ -1,3 +1,8 @@
+Break apart large perl scripts into modules
+	By tag/functinoality
+
+PHP post-processing to strip table tags, js, css by user setting request
+
 Auto-download links which have handlers
 	youtube and other video
 	twitter
