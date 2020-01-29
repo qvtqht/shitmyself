@@ -5,8 +5,7 @@
 	<input type=submit id=submit value="Send Unsigned"> <span id=signAndPost></span>
 </form>
 
-<script language=javascript>
-<!--
+<script language=javascript><!--
 function pushmessage() {
 	var comment = document.getElementById('comment');
 	if (comment) {

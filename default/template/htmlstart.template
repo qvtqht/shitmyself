@@ -10,8 +10,7 @@
 $styleSheet
 -->
 </style>
-<script>
-<!--
+<script><!--
 var colorHighlightBeginner = '$colorHighlightBeginner';
 var colorHighlightAdvanced = '$colorHighlightAdvanced';
 //-->
