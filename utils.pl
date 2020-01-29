@@ -2037,8 +2037,8 @@ sub ServerSign { # Signs a given file with the server's key
 		# should start with $gpgCommand
 #		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
 #		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		WriteLog("$gpgCommand --batch --yes --u $serverKeyId --clearsign \"$file\" $gpgStderr");
-		system("$gpgCommand --batch --yes --u $serverKeyId --clearsign \"$file\" $gpgStderr");
+		WriteLog("$gpgCommand --batch --yes -u $serverKeyId --clearsign \"$file\" $gpgStderr");
+		system("$gpgCommand --batch --yes -u $serverKeyId --clearsign \"$file\" $gpgStderr");
 
 		if (-e "$file.asc") {
 			WriteLog("Sign appears successful, rename .asc file to .txt");
