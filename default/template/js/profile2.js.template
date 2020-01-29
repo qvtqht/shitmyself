@@ -62,6 +62,8 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 
 			var intKeyGenResult = MakeKey();
 
+			//alert('DEBUG: btnRegister_Click: intKeyGenResult = ' + intKeyGenResult);
+
 			return intKeyGenResult;
 		}
 
