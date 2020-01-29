@@ -16,13 +16,13 @@
 /* special tags */
 .tag-textart {
 	font-family: monospace;
-	font-size: 1em;
+	font-size: 14pt;
 }
 
 /* regular text */
 .txt {
 	font-family: tahoma;
-	font-size: 1em;
+	font-size: 14pt;
 }
 
 /* textart items get monospace font */
