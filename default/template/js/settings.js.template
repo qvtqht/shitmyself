@@ -125,7 +125,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 		if (timerShowAdvanced) {
 			clearTimeout(timerShowAdvanced);
 		}
-		timerShowAdvanced = setTimeout(ShowAdvanced, 3000);
+		timerShowAdvanced = setTimeout('ShowAdvanced', 3000);
 	}
 }
 
