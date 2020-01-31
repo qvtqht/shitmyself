@@ -105,10 +105,6 @@ div.txt {
 .statusbar td {
 	border: 1pt inset $colorWindow;
 }
-textarea {
-	border: 2pt inset $colorWindow;
-}
-
 
 input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
