@@ -125,7 +125,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 		if (timerShowAdvanced) {
 			clearTimeout(timerShowAdvanced);
 		}
-		timerShowAdvanced = setTimeout('ShowAdvanced', 3000);
+		timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
 	}
 }
 
@@ -190,6 +190,7 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 
 	// if checkbox is one of these four, call ShowAdvanced(1)
 	// this will display or hide things based on settings
+	// this if statement can probably removed without much performance penalty #todo
 	if (
 		prefKey == 'show_advanced' ||
 		prefKey == 'beginner' ||
@@ -212,7 +213,7 @@ function ResetSettings() {
 
 			ShowAdvanced(1);
 
-			location.reload(); //#todo make this not necessary
+			//location.reload(); //#todo make this not necessary
 		}
 	}
 }

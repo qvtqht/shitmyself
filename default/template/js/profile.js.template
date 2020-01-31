@@ -294,7 +294,7 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 			signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 		}
 
-		setTimeout('signoutCounterDecrement', 1000);
+		setTimeout('signoutCounterDecrement()', 1000);
 	}
 }
 
@@ -321,7 +321,7 @@ function buttonSignOut(t) { // sign out button is clicked. displays undo countdo
 			signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt;
 		}
 
-		setTimeout('signoutCounterDecrement', 1000);
+		setTimeout('signoutCounterDecrement()', 1000);
 	}
 }
 
@@ -355,7 +355,7 @@ function signoutCounterDecrement() {
 				bu = document.getElementById('btnUndo');
 				bu.value = "Undo? " + ct;
 
-				setTimeout('signoutCounterDecrement', 1000);
+				setTimeout('signoutCounterDecrement()', 1000);
 			}
 		}
 	} else if (ct == 0) {

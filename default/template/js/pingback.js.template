@@ -8,5 +8,5 @@ function ReportSelfUrl() {
 	}
 }
 
-setTimeout(ReportSelfUrl, 5000);
+setTimeout('ReportSelfUrl()', 5000);
 // == end pingback.js

@@ -75,7 +75,7 @@ function AmIFresh() {
 			intFreshTimeout = 5000;
 		} 
 		
-		timeoutFresh = setTimeout('AmIFresh', intFreshTimeout);
+		timeoutFresh = setTimeout('AmIFresh()', intFreshTimeout);
 	}
 }
 
