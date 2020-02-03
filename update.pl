@@ -37,6 +37,7 @@ my $locked = 0;
 if ($lockTime) {
 	if ($currentTime - 1800 < $lockTime) {
 		WriteLog('Quitting due to lock file');
+		WriteMessage('Quitting due to lock file');
 		$locked = 1;
 	} else {
 		WriteLog('Lock file exists, but old. Continuing.');
