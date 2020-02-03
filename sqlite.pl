@@ -1273,7 +1273,7 @@ sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ to
 	my $key = shift;
 
 	if ($key eq 'flush') {
-		WriteLog("DbAddVoteWeight(flush)");
+		WriteLog("DBAddVoteWeight(flush)");
 
 		if ($query) {
 			$query .= ';';
@@ -1294,6 +1294,8 @@ sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ to
 	}
 
 	my $weight = shift;
+
+	WriteLog('DBAddVoteWeight(' . $key . ', ' . $weight . ')');
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO vote_weight(key, vote_weight) VALUES ";
