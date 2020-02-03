@@ -1143,7 +1143,7 @@ sub GetThemeColor { # returns theme color based on html/theme
 	my $colorName = shift;
 	chomp $colorName;
 
-	$colorName = 'color_' . $colorName;
+	$colorName = 'color/' . $colorName;
 
 	my $color = GetThemeAttribute($colorName);
 
@@ -1970,9 +1970,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(avatar settings timestamps voting profile));
+		$txtIndex = InjectJs($txtIndex, qw(itsyou settings timestamps voting profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile));
+		$txtIndex = InjectJs($txtIndex, qw(settings voting timestamps profile));
 	}
 
 	return $txtIndex;
@@ -2437,10 +2437,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
 	PutHtmlFile("$HTMLDIR/crypto2.js", $crypto2JsTemplate);
 
-	# Write avatar javasript
+	# Write avatar javascript
 	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
 
-	# Write settings javasript
+	# Write settings javascript
 	PutHtmlFile("$HTMLDIR/settings.js", GetTemplate('js/settings.js.template'));
 	PutHtmlFile("$HTMLDIR/prefstest.html", GetTemplate('js/prefstest.template'));
 

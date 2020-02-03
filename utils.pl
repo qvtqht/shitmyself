@@ -1114,7 +1114,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	my $colorTitlebar = GetThemeColor('titlebar');#
 	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
-	my $borderDialog = GetThemeAttribute('color_border_dialog');
+	my $borderDialog = GetThemeAttribute('color/border_dialog');
 	# todo rename it in all themes and then here
 	# not actually a color, but the entire border definition
 	$content =~ s/\$borderDialog/$borderDialog/g;

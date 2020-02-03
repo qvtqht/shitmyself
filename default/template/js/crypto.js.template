@@ -160,6 +160,7 @@ function getPublicKey() { // returns current user's stored public key from local
 
 // puts generated html avatar into localstorage
 function setAvatar(avatar) {
+	//alert('DEBUG: setAvatar(' + avatar + ')');
 	window.localStorage.setItem("avatar", avatar);
 }
 
@@ -213,10 +214,7 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 		// get username out of key
 		myUsername = pubKeyObj.users[0].userId.userid;
 
-		avatar = ''
-			+ '<span class=avatar' + gt +
-			+ '<span class=username' + gt + escapeHTML(myUsername) + '</span' + gt +
-			+ '</span' + gt;
+		avatar = escapeHTML(myUsername);
 
 		setAvatar(avatar);
 
