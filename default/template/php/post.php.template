@@ -160,8 +160,8 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			$themeName = trim(GetConfig('html/theme'));
 			WriteLog('$themeName = ' . $themeName);
 			// color values
-			$colorWindow = GetConfig('theme/' . $themeName . '/color_window');
-			$colorText = GetConfig('theme/' . $themeName . '/color_text');
+			$colorWindow = GetConfig('theme/' . $themeName . '/color/window');
+			$colorText = GetConfig('theme/' . $themeName . '/color/text');
 			WriteLog('$colorWindow = ' . $colorWindow);
 			WriteLog('$colorText = ' . $colorText);
 
