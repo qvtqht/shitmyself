@@ -13,10 +13,7 @@
 	function setcookie2($key, $value) {
 		$date = new Datetime('+2 years');
 
-        WriteLog($date->format('C'));
-		WriteLog($date->format(DateTime::COOKIE));
-
-		$cookieDate = $date->format('C');
+		$cookieDate = $date->format(DateTime::COOKIE);
 
 		Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/');
 	}
