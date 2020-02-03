@@ -1,9 +1,17 @@
 <?php
 
 function WriteLog($text) { // writes to debug log if enabled
-	if (0) { // use this to toggle output
-		print ('<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n");
+	static $logText;
+
+	if (!$logText) {
+		$logText = '';
 	}
+
+	if (!$text) {
+		return $logText;
+	}
+
+	$logText .= '<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n";
 }
 
 function GetMyVersion() { // returns current git commit id
