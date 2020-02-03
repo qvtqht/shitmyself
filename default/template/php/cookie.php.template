@@ -27,13 +27,13 @@
 
 				$cookie = $_COOKIE['test'];
 //				setcookie('cookie', $cookie, $cookieYear, '/');
-				setcookie('cookie', $cookie);
+				setcookie('cookie', $cookie, $cookieYear, '/');
 
 				$secret = GetConfig('admin/secret');
 
 				$checksum = md5($cookie . '/' . $secret);
 //				setcookie('checksum', $checksum, $cookieYear, '/');
-				setcookie('checksum', $checksum);
+				setcookie('checksum', $checksum, $cookieYear, '/');
 			} else {
 				if (isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
 					$cookie = $_COOKIE['cookie'];
@@ -57,8 +57,8 @@
 
 //				setcookie('cookie', $cookie, $cookieYear, '/');
 //				setcookie('checksum', $checksum, $cookieYear, '/');
-				setcookie('cookie', $cookie);
-				setcookie('checksum', $checksum);
+				setcookie('cookie', $cookie, $cookieYear, '/');
+				setcookie('checksum', $checksum, $cookieYear, '/');
 			}
 
 			if (md5($cookie . '/' . $secret) != $checksum) {
@@ -70,7 +70,7 @@
 			}
 		} else {
 			if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
-				setcookie('test', '1');
+				setcookie('test', '1', $cookieYear, '/');
 				//header('Location: /profile.html?' . time());
 			}
 		}
