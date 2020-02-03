@@ -8,6 +8,17 @@
 
 include_once('utils.php');
 
+$stopTimeConfig = GetConfig('admin/stop');
+if ($stopTimeConfig) {
+	if ($stopTimeConfig > time()) {
+		if (isset($_COOKIE['test'])) {
+		} else {
+			print 'Emergency brake has been pulled. Posting is temporarily offline to unregistered visitors.';
+			exit;
+		}
+	}
+}
+
 function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
@@ -202,9 +213,12 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 }
 
 $fileUrlPath = '';
+$replyTo = '';
+$replyToToken = '';
 
 if ($_POST) {
 	WriteLog('$_POST');
+
 	if (isset($_POST['comment'])) {
 		$comment = $_POST['comment'];
 	}
@@ -212,19 +226,6 @@ if ($_POST) {
 	if (isset($_POST['replyto']) && $_POST['replyto']) {
 		$replyTo = $_POST['replyto']; 
 		$replyToToken = '>>' . $replyTo;
-
-		if (!preg_match('/\>\>' . $replyTo . '/', $comment)) {
-			$comment .= "\n\n" . $replyToToken;
-		}
-	}
-
-	if ($comment) {
-		if ($comment == 'Update') {
-			DoUpdate();
-			$fileUrlPath = '';
-		} else {
-			$fileUrlPath = ProcessNewComment($comment);
-		}
 	}
 }
 
@@ -250,23 +251,35 @@ if ($_GET) {
 			}
 		}
 	}
-	
+
 	if (isset($_GET['replyto']) && $_GET['replyto']) {
 		$replyTo = $_GET['replyto']; 
 		$replyToToken = '>>' . $replyTo;
+	}
+}
 
-		if (!preg_match('/\>\>' . $replyTo . '/', $comment)) {
+if ($comment) {
+	if ($comment == 'Update') {
+		DoUpdate();
+		$fileUrlPath = '';
+
+	} elseif (strtolower($comment) == 'stop') {
+		$stopTime = time();
+		$stopTimeConfig = GetConfig('admin/stop');
+		if ($stopTimeConfig > $stopTime) {
+			$stopTime = $stopTimeConfig;
+		}
+		$stopTime += 30;
+		file_put_contents('../config/admin/stop', $stopTime); //#todo PutConfig()
+		if ($stopTime > time()) {
+			print('Stop request received. Site will remain offline for uncookied users for ' . ($stopTime - time()) . ' seconds.');
+		}
+	} else {
+		if ($replyTo && !preg_match('/\>\>' . $replyTo . '/', $comment)) {
 			$comment .= "\n\n" . $replyToToken;
 		}
-	}
 
-	if ($comment) {
-		if ($comment == 'Update') {
-			DoUpdate();
-			$fileUrlPath = '';
-		} else {
-			$fileUrlPath = ProcessNewComment($comment);
-		}
+		$fileUrlPath = ProcessNewComment($comment);
 	}
 }
 

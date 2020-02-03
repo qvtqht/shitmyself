@@ -1,10 +1,21 @@
 <?php
 
-$html = file_get_contents('write.html');
-
 if (file_exists('utils.php')) {
 	include_once('utils.php');
 }
+
+$stopTimeConfig = GetConfig('admin/stop');
+if ($stopTimeConfig) {
+	if ($stopTimeConfig > time()) {
+		if (isset($_COOKIE['test'])) {
+		} else {
+			print 'Emergency brake has been pulled. Posting is temporarily offline to unregistered visitors.';
+			exit;
+		}
+	}
+}
+
+$html = file_get_contents('write.html');
 
 if (function_exists('GetConfig') && GetConfig('admin/php/write_form_prefill_browser_survey')) {
 	$debugInfo =
