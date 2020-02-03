@@ -62,14 +62,16 @@
 			}
 
 			if (md5($cookie . '/' . $secret) != $checksum) {
+				WriteLog('Checksum mis-match! Expected ' . md5($cookie . '/' . $secret) . ', found ' . $checksum);
+
 				unset($cookie);
 				setcookie('cookie');
-				header('Location: /profile.html?' . time());
+				//header('Location: /profile.html?' . time());
 			}
 		} else {
 			if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
 				setcookie('test', '1');
-				header('Location: /profile.html?' . time());
+				//header('Location: /profile.html?' . time());
 			}
 		}
 	}
