@@ -75,30 +75,54 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 }
 
 function ProfileOnLoad() {
-//alert('DEBUG: ProfileOnLoad() begin');
+	//alert('DEBUG: ProfileOnLoad() begin');
 
 	var lblSigningIndicator;
 	if (document.getElementById) {
 		//alert('DEBUG: ProfileOnLoad: document.getElementById = ' + document.getElementById);
 
-		lblSigningIndicator = document.getElementById('lblSigningIndicator');
+		if (window.getPrivateKey && window.localStorage) {
+			//alert('DEBUG: ProfileOnLoad: window.getPrivateKey = ' + window.getPrivateKey);
 
-		if (lblSigningIndicator) {
-			//alert('DEBUG: ProfileOnLoad: lblSigningIndicator = ' + lblSigningIndicator);
+			var pk = getPrivateKey();
 
-			if (window.getPrivateKey) {
-				//alert('DEBUG: ProfileOnLoad: window.getPrivateKey = ' + window.getPrivateKey);
+			if (pk) {
+				//alert('DEBUG: pk = GetPrivateKey() = ' + pk);
 
-				var pk = getPrivateKey();
+				lblSigningIndicator = document.getElementById('lblSigningIndicator');
 
-				if (pk) {
-					//alert('DEBUG: ProfileOnLoad: pk = ' + pk);
-
+				if (lblSigningIndicator) {
+					var gt = String.fromCharCode(62);
 					lblSigningIndicator.innerHTML = 'Yes';
+				}
+
+				lblHandle = document.getElementById('lblHandle');
+
+				if (lblHandle) {
+					var strHandle = localStorage.getItem('avatar');
+					if (strHandle) {
+						lblHandle.innerHTML = strHandle;
+					}
 				}
 			}
 		}
 	}
 }
+
+
+if (document.cookie) {
+	//alert('DEBUG: cookie=' + document.cookie);
+} else {
+	//alert('DEBUG: document.cookie missing');
+	if (window.localStorage) {
+		//alert('DEBUG: window.localStorage exists');
+		var fp = localStorage.getItem('fingerprint');
+		if (fp) {
+			//alert('DEBUG: fp exists, setting cookie via js');
+			document.cookie = 'test=' + fp;
+		}
+	}
+}
+
 
 // end profile2.js.template
