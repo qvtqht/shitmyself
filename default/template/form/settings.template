@@ -18,64 +18,64 @@
 
 			<tr class=body>
 				<td class=content>
-					<noscript><p><b>Note: This page requires JavaScript.</b></p></noscript>
+					<noscript><p><b>Note: Requires JavaScript <br>until further notice.</b></p></noscript>
 
 					<fieldset>
-					<legend>Moderation</legend>
-					<p>
-						<label for=chkWantToVote>
-							<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
-							Willing to moderate
-						</label>
-					</p>
+						<legend>Moderation</legend>
+						<p>
+							<label for=chkWantToVote>
+								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
+								Willing to moderate
+							</label>
+						</p>
 					</fieldset>
 
 					<fieldset>
-					<legend>
-					<label for=chkShowAdvanced>
-						<input type=checkbox id=chkShowAdvanced name=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
-						Show advanced options
-					</label>
-					</legend>
-
-					<label for=advancedHighlight class=advanced>
-						<br>
-						<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
-						Highlight advanced options
-					</label>
-
-
-					<span id=curIdAdv style="display:none">
-						<p>
-							<label for=chkBeginner>
-								<input type=checkbox id=chkBeginner name=chkBeginner onchange="saveCheckbox(0, this, 'beginner');">
-								Show hints
+						<legend>
+							<label for=chkShowAdvanced>
+								<input type=checkbox id=chkShowAdvanced name=chkShowAdvanced onchange="saveCheckbox('curIdAdv', this, 'show_advanced');">
+								Show advanced options
 							</label>
+						</legend>
+
+						<label for=advancedHighlight class=advanced>
 							<br>
-							<span class=beginner>
-								<label for=chkBeginnerHighlight>
-									<input type=checkbox id=chkBeginnerHighlight name=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');">
-									Highlight hints
+							<input type=checkbox id=advancedHighlight name=advancedHighlight onChange="saveCheckbox(0, this, 'advanced_highlight');">
+							Highlight advanced options
+						</label>
+
+
+						<span id=curIdAdv style="display:none">
+							<p>
+								<label for=chkBeginner>
+									<input type=checkbox id=chkBeginner name=chkBeginner onchange="saveCheckbox(0, this, 'beginner');">
+									Show hints
 								</label>
 								<br>
-							</span>
-						</p>
+								<span class=beginner>
+									<label for=chkBeginnerHighlight>
+										<input type=checkbox id=chkBeginnerHighlight name=chkBeginnerHighlight onChange="saveCheckbox(0, this, 'beginner_highlight');">
+										Highlight hints
+									</label>
+									<br>
+								</span>
+							</p>
 
-						<p>
-							<label for=displayUsername>
-								<input type=checkbox id=displayUsername name=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
-								Display username in top menu
-							</label>
-						</p>
-						
-						<p>
-							<label for=chkNotifyOnChange>
-								<input type=checkbox id=chkNotifyOnChange name=chkNotifyOnChange onchange="saveCheckbox(0, this, 'notify_on_change');">
-								Notify if page has changed
-							</label>
-						</p>
-				
-					</span>
+							<p>
+								<label for=displayUsername>
+									<input type=checkbox id=displayUsername name=displayUsername onchange="saveCheckbox(0, this, 'display_username');">
+									Display username in top menu
+								</label>
+							</p>
+
+							<p>
+								<label for=chkNotifyOnChange>
+									<input type=checkbox id=chkNotifyOnChange name=chkNotifyOnChange onchange="saveCheckbox(0, this, 'notify_on_change');">
+									Notify if page has changed
+								</label>
+							</p>
+
+						</span>
 					</fieldset>
 				</td>
 			</tr>
