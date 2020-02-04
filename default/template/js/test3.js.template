@@ -114,6 +114,11 @@ input {
 <BODY onLoad="startclock()">
 <FORM NAME="clock" onSubmit="0">
    <INPUT TYPE="text" NAME="face" SIZE=20 VALUE ="">
+
+   <BR>
+
+   <INPUT TYPE="button" VALUE="Start" onClick="startclock()">
+   <INPUT TYPE="button" VALUE="Stop" onClick="stopclock()">
 </FORM>
 </BODY>
 
