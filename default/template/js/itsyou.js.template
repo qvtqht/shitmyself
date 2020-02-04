@@ -1,10 +1,14 @@
 // == begin itsyou.js
 
-var myFp = localStorage.getItem('fingerprint');
+if (window.localStorage && document.getElementById) {
+	var myFp = localStorage.getItem('fingerprint');
 
-if (window.location.pathname == '/author/' + myFp + '/') {
-	var itsYou = document.getElementById('itsyou');
-	itsYou.innerHTML = 'This is you!';
+	if (window.location.pathname == '/author/' + myFp + '/') {
+		var itsYou = document.getElementById('itsyou');
+		itsYou.innerHTML = 'This is you!';
+	}
+} else {
+	//alert('DEBUG: need fallback for older browsers here');
 }
 
 // == end itsyou.js
