@@ -42,7 +42,7 @@ function signCallback (signed) {
 
 function signVote(t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
-// token = full voting token, in the format vote/$fileHash/$ballotTime/$voteValue/$checksum
+// token = full voting token, in the format vote/fileHash/ballotTime/voteValue/checksum
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
