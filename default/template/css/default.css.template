@@ -1,22 +1,16 @@
 /* negative (red) tags */
-.tag-flag, 
-.tag-troll, 
-.tag-spam, 
+.tag-flag,
+.tag-troll,
+.tag-spam,
 .tag-abuse {
 	color: $colorTagNegative;
 }
 
 /* positive (green) tags */
-.tag-accept, 
-.tag-friend, 
+.tag-accept,
+.tag-friend,
 .tag-attend {
 	color: $colorTagPositive;
-}
-
-/* special tags */
-.tag-textart {
-	font-family: monospace;
-	font-size: 14pt;
 }
 
 /* regular text */
@@ -31,11 +25,12 @@
 	font-size: 12pt;
 }
 
-div.reply {
+div.reply { /* this creates indented effect for sub-replies */
 	margin-left: 2%;
 	padding-left: 3em;
 	width: 98%;
 }
+
 div.txt {
 	padding-left: 1em;
 }
@@ -77,7 +72,7 @@ div.txt {
 	border-radius: 5pt;
 }
 
-.menu, .titlebar { 
+.menu, .titlebar {
 	$headerBackgroundPattern
 }
 
@@ -91,7 +86,7 @@ div.txt {
 }
 
 #cSb {
-	font-weight: bold; 
+	font-weight: bold;
 }
 .advanced, .beginner {
 	border-radius: 3pt;
