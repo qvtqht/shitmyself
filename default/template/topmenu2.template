@@ -1,7 +1,24 @@
 <!-- topmenu2.template -->
-<form action="/stats.html" name="frmTopMenu">
-<small><a href="#maincontent">Skip to main content</a></small> $clock <span class=myid></span>
-<h3>$menuItems</h3>
-<p class=beginner>$introText</p>
+<form action="" name="frmTopMenu">
+	<table class=dialog>
+		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+			<td colspan=2><small>
+				<a href="#maincontent"><font color=$colorTitlebarText><b><small>Skip to main content</small></b></font></a>
+			</small></td>
+		</tr>
+		<tr>
+			<td>
+				<big style="padding:5pt">$menuItems</big>
+			</td>
+			<td align=right>
+				$clock
+			</td>
+		</tr>
+		<tr class=beginner>
+			<td colspan=2>
+				<p>$introText</p>
+			</td>
+		</tr>
+	</table>
 </form>
 <!-- / topmenu2.template -->
