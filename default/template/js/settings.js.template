@@ -231,15 +231,15 @@ function modeChange(ab) {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
 			SetPrefs('beginner', 1);
-			SetPrefs('want_to_vote', 0);
+			SetPrefs('want_to_vote', 1);
 			SetPrefs('notify_on_change', 1);
 		} else if (ab == 'C') {
-			SetPrefs('show_advanced', 1);
+			SetPrefs('show_advanced', 0);
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
 			SetPrefs('want_to_vote', 1);
-			SetPrefs('notify_on_change', 1);
+			SetPrefs('notify_on_change', 0);
 		}
 	}
 }
@@ -252,85 +252,14 @@ function SettingsOnload() { // onload function for preferences page
 	// based on preference state
 		var pane;
 
-		// advanced checkbox of current profile pane
-		pane = document.getElementById('curIdAdv');
-		if (pane && GetPrefs('show_advanced') == 1) {
-			var chkAdvanced = document.getElementById('chkShowAdvanced');
-			if (chkAdvanced) {
-				chkAdvanced.checked = 1;
-			}
 
-			chkAdvanced = document.getElementById('chkShowAdvanced2');
-			if (chkAdvanced) {
-				chkAdvanced.checked = 1;
-			}
-
-			saveCheckbox('curIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
-		}
-
-		// current profile pane (advanced section)
-		pane = document.getElementById('curIdAdv');
-		if (pane) {
-			//beginner checkbox
-			if (GetPrefs('beginner') == 1) {
-				var cb = document.getElementById('chkBeginner');
-				if (cb) {
-					cb.checked = 1;
-				}
-			}
-
-			//want_to_vote checkbox
-			if (GetPrefs('want_to_vote') == 1) {
-				var cb = document.getElementById('chkWantToVote');
-				if (cb) {
-					cb.checked = 1;
-				}
-			}
-
-			// beginner_highlight checkbox
-			if (GetPrefs('beginner_highlight') == 1) {
-				var cb = document.getElementById('chkBeginnerHighlight');
-				if (cb) {
-					cb.checked = 1;
-				}
-			}
-
-			// advanced_highlight checkbox
-			if (GetPrefs('advanced_highlight') == 1) {
-				var cb = document.getElementById('advancedHighlight');
-				if (cb) {
-					cb.checked = 1;
-				}
-			}
-
-			// display username checkbox
-			if (GetPrefs('display_username') == 1) {
-				var cb = document.getElementById('displayUsername');
-				if (cb) {
-					cb.checked = 1;
-				}
-			}
-
-			// reload pages if changed checkbox
-			if (GetPrefs('notify_on_change') == 1) {
-				var cb = document.getElementById('chkNotifyOnChange');
-				if (cb) {
-					cb.checked = 1;
-				}
+		if (GetPrefs('want_to_vote') == 1) {
+			var cb = document.getElementById('chkWantToVote');
+			if (cb) {
+				cb.checked = 1;
 			}
 		}
 
-		// create profile pane
-		pane = document.getElementById('creaIdAdv');
-		if (pane) {
-			if (GetPrefs('show_advanced') == 1) {
-				var cb = document.getElementById('chkShowAdvanced');
-				if (cb) {
-					cb.checked = 1;
-					saveCheckbox('creaIdAdv', document.getElementById('chkShowAdvanced'), 'show_advanced');
-				}
-			}
-		}
 
 		ShowAdvanced(0); // call ShowAdvanced
 	}
