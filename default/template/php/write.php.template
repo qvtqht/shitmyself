@@ -17,7 +17,8 @@ if ($stopTimeConfig) {
 
 $html = file_get_contents('write.html');
 
-if (function_exists('GetConfig') && GetConfig('admin/php/write_form_prefill_browser_survey')) {
+//if (function_exists('GetConfig') && GetConfig('admin/php/write_form_prefill_browser_survey')) {
+if (function_exists('GetConfig') && isset($_GET['report']) && $_GET['report']) {
 	$debugInfo =
 		(isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($_SERVER['HTTP_USER_AGENT']) : '-') .
 		"\n" .
