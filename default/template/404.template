@@ -4,6 +4,18 @@
 
 <p>Explanation: This page does not exist... yet.</p>
 
+<form action=/post.html>
+	<label for=comment>
+		<b></b><big>What were you looking for?</big></b><br>
+		<input type=text size=42 id=comment name=comment value="I was looking for kittens...">
+	</label>
+	<input type=submit value=Send>
+</form>
+
+<noscript><p>Please use your browser's Back button to return to the previous page.</p></noscript>
+
+<h2><a href="#" onclick="if (window.history && window.history.back) { window.history.back(); return false; }">Back</a></h2>
+
 <h2><a href="/">Home Page</a></h2>
 
 <h2><a href="/help.html">Help</a></h2>
