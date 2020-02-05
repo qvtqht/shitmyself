@@ -1285,7 +1285,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $adminKey = GetAdminKey();
 
-	my $topMenuTemplate = GetTemplate('topmenu.template');
+	my $topMenuTemplate = GetTemplate('topmenu2.template');
 	
 	my $menuItems = '';
 
