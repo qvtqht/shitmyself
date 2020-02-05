@@ -925,7 +925,7 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 		if ($binMode) {
 			binmode $fileHandle, ':utf8';
 		}
-		print $fileHandle $content;
+		print $fileHandle $content; #todo wide character error here
 		close $fileHandle;
 	}
 }

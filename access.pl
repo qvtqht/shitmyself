@@ -558,7 +558,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							}
 
 							if (GetConfig('admin/logging/record_sha512')) {
-								my $fileSha512 = sha512_hex($message);
+								my $fileSha512 = sha512_hex($message); #todo fix wide character error here
 
 								$addedMessage .= "sha512/$fileHash/$fileSha512\n";
 							}
