@@ -167,12 +167,6 @@ function showHideForms() { // shows and hides the register and logged in forms
 		if (loading) {
 			loading.style.display = 'none';
 		}
-
-		// display the preferences screen if it can be found
-		var prefsForm = document.getElementById('formPreferences');
-		if (prefsForm) {
-			prefsForm.style.display = 'block';
-		}
 	}
 }
 
