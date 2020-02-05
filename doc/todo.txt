@@ -1,3 +1,30 @@
+Make vouching easier and more visible
+	Add vouch button which does correct thing to user profiles
+	Display user's vouch status when displaying post
+	Potentially hide non-vouched posts as a feature
+
+Pages which have lists of posts should also have a zip file
+	Author page
+	Tags page
+
+Dillo
+	<form> requires action=
+	<font> cannot contain <table>
+
+#bug On nn3, without a titlebar and table borders, a title-less post looks strange at the top of the Compost page
+
+RSS
+	Fix hard-coded host in URLs
+	put fingerprint into author field
+	Add date field
+
+
+Fix relativize urls on 404 page #bug
+	1. go to /ab/cd
+	2. click any link on 404 page
+	current solution provides a fix which doesn't work if site is hosted in a subdirectory
+	the actual solution is ... ???
+
 Unbreak
 	Profile page
 	Write page
@@ -10,20 +37,9 @@ Profile refactor
 
 Space-wrap long strings in topics list
 
-#bug "Long message mode" displayed in NN3
-
-Settings don't always take effect in other tabs via timer
-
-RSS
-	put fingerprint into author field
-	Add date field
 
 Setting for large font size
 	Default on "mobile"
-
-Union square style clock ...
-	HHMMSSnnn .
-		60-SS 60-MM 24-HH
 
 Allow vouching by non-admin users
 	Establish vouch chain
@@ -912,3 +928,6 @@ Voting links cause crash in Mosaic 2.0 and 1.0
 
 PHP handler for event.html
 	Set date pre-set to current
+
+#bug on iOS, the ticking clock causes the "paste" command to be inaccessible
+	When a textarea is held down, the Paste command appears briefly, but disappears as soon as the page needs to refresh

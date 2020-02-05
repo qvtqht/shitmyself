@@ -1,24 +1,23 @@
-Portable and Durable
-	All forum data is stored as plain text files, improving durability and archivability.
-	Archives all data, or just segments, can be downloaded and replicated by anyone.
-	Can be cloned and re-hosted, with portable user accounts usable across all copies.
+Portable
+	All forum data is stored as plain text files, improving archivability.
 	Data is housed by the service provider without lock-down.
 
+Durable
+	Archives all data, or just segments, can be downloaded and replicated by anyone.
+	Can be cloned and re-hosted, with portable user accounts usable across all copies.
+
 Accessible
-	Aims to be accessible to all beings, regardless of hardware, software, or configuration.
-	Will bend over backwards to accommodate every known and testable client.
-	Support for lovable classics such as Netscape, Internet Explorer, Opera, Mosaic, Lynx.
-	Tested with text-based browsers, including Lynx, Links, and w3m.
-	JavaScript adds convenience, but is completely optional for all features.
-	If you're using a screen reader, there are accommodations.
-	Mouse-free users of qutebrowser, Vimium, and similar, are accommodated.
-	If you prefer to use telnet, it will be easier than with most websites.
-	Registration is not required to participate.
-	Personal information and being human are not required to register.
+	Accessible to all beings, regardless of hardware, software, or configuration.
+	Bends over backwards to accommodate every known and testable client.
+	Tested with hundreds of different browsers and configurations.
+	Full support for text-mode, no-JS, screen-readers, mouse-free, etc.
+	Using telnet will be easier than with most websites.
+	Registration is optional, unless operator changes default configuration.
 
 Securable
-	No script execution needs to be done by web server, for smaller attack surface.
-	Optional PHP extensions for trading off some security for immediate updates.
+	Can be operated as a static HTML website, for smaller attack surface.
+	(In this case, updates are pulled out of access.log intermittently.)
+	Optional PHP module for trading off some security for immediate updates.
 
 Transparent
 	Everything posted to the community is viewable and verifiable
@@ -28,12 +27,11 @@ Transparent
 	Ballot stuffing and other abuse easily detectable with data analysis.
 
 Art-friendly
-	Text-art is accomodated with a monospace font and by preserving whitespace layout
-	To enable text-art mode, just tag an item as "textart".
+	Text-art is accomodated with a monospace font and preserving whitespace layout.
 
 User-empowering
 	User "account", aka the private key, remains in user's possession and control.
-	Identity can be used across multiple servers, communities, etc., without requiring "federation".
+	Identity can be used across multiple servers without "federation".
 
 Advertising, Spam, and Censorship Resistant
 	Avoids becoming a spam and advertising target by making over-growth more difficult.

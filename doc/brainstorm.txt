@@ -1,3 +1,16 @@
+server-side preferences:
+Willing to moderate = show/hide elements by class (strip out of html)
+Show advanced options = same
+Highlight advanced options = modify elements by class
+Show hints = same1
+Highlight hints = same2
+Display username in top menu = fill-in
+Notify if page has changed = ???
+
+Should no-cache be applied to profile.html?
+
+Client-side JS UI preferences can be carefully pre-rendered by PHP
+
 Break apart large perl scripts into modules
 	By tag/functinoality
 
@@ -7,7 +20,6 @@ Auto-download links which have handlers
 	youtube and other video
 	twitter
 	etc
-
 
 Nation
 ======
