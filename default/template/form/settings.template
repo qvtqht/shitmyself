@@ -17,8 +17,8 @@
 
 						<nobr>
 							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { modeChange('A'); }">
-							<input type=submit name=ui value="Hard" onclick="if (window.modeChange) { modeChange('B'); }">
-							<input type=submit name=ui value="Moderate" onclick="if (window.modeChange) { modeChange('C'); }">
+							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { modeChange('B'); }">
+							<input type=submit name=ui value="Mini" onclick="if (window.modeChange) { modeChange('C'); }">
 						</nobr>
 					</fieldset>
 
