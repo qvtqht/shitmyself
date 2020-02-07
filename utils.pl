@@ -1134,7 +1134,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	# change the title to home_title while at it
 	if ($file eq GetConfig('home_page')) {
 		my $homePageTitle = GetConfig('home_title');
-		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle ($1)<\/title>/;
+		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle<\/title>/;
 		PutFile ('html/index.html', $content);
 		$homePageWritten = 1;
 	}
