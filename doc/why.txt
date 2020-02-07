@@ -1,3 +1,5 @@
+Why Use This?
+
 Portable
 	All forum data is stored as plain text files, improving archivability.
 	Data is housed by the service provider without lock-down.
