@@ -14,11 +14,6 @@
 				$clock
 			</td>
 		</tr>
-		<tr class=beginner>
-			<td colspan=2>
-				<p>$introText</p>
-			</td>
-		</tr>
 	</table>
 </form>
 <!-- / topmenu2.template -->
