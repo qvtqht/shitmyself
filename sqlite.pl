@@ -1035,28 +1035,25 @@ sub DBGetVoteCounts { # Get total vote counts by tag value
 		$orderBy = 'ORDER BY vote_count DESC';
 	}
 
-	#todo make this by item, not vote count
 	my $query = "
 		SELECT
 			vote_value,
-			COUNT(vote_value) AS vote_count
-		FROM
-			vote
+			vote_count
+		FROM (
+			SELECT
+				vote_value,
+				COUNT(vote_value) AS vote_count
+			FROM
+				vote
+			WHERE
+				file_hash IN (SELECT file_hash FROM item)
+			GROUP BY
+				vote_value
+		)
 		WHERE
-			file_hash IN (SELECT file_hash FROM item)
-		GROUP BY
-			vote_value
+			vote_count >= 3
 		$orderBy;
 	";
-
-#todo
-#	my @resultsArray = ();
-#
-#	while (my $row = $sth->fetchrow_hashref()) {
-#		push @resultsArray, $row;
-#	}
-#
-#	return @resultsArray;
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
@@ -2207,7 +2204,8 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 			item_title != '' AND 
 			parent_count = 0 AND 
 			',' || tags_list || ',' NOT LIKE '%,changelog,%' 
-			AND  ',' || tags_list || ',' NOT LIKE '%flag%'
+			AND  ',' || tags_list || ',' NOT LIKE '%,flag,%'
+			AND  ',' || tags_list || ',' LIKE '%,hastitle,%'
 	"; #todo remove hardcoding here
 
 	# not sure what this is supposed to be for...
