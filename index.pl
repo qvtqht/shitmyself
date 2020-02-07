@@ -522,7 +522,7 @@ sub IndexTextFile { # indexes one text file into database
 			$hasParent = 1;
 		}
 
-		# look for hash tags
+		# look for hash tags aka hashtags
 		if (GetConfig('admin/token/hashtag') && $message) {
 			WriteLog("... check for hashtags");
 			my @hashTags = ($message =~ m/\#([a-zA-Z0-9]+)/mg);
