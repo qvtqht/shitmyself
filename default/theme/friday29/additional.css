@@ -4,5 +4,5 @@ body {
 	background-color: $colorBackground;
 }
 .dialog {
-	box-shadow: 8pt 8pt 8pt #405060;
+	box-shadow: 5pt 5pt 5pt #aabbcc;
 }
