@@ -1835,7 +1835,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
-		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/;
+		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/g;
 		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
 		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
 		$authorInfoTemplate =~ s/\$itemCount/$itemCount/;
@@ -2464,6 +2464,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $utilsPhpTemplate = GetTemplate('php/utils.php.template');
 		PutFile('html/utils.php', $utilsPhpTemplate);
+
+		my $routePhpTemplate = GetTemplate('php/route.php.template');
+		PutFile('html/route.php', $routePhpTemplate);
 	}
 	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
@@ -2764,7 +2767,9 @@ sub GetRssFile { # returns rss feed for current site
 		$feedContainerTemplate = $asciiHeader . substr($feedContainerTemplate, length($unicodeHeader));
 	}
 
-	my $baseUrl = 'http://localhost:2784/';
+	my $myHost = GetConfig('admin/rss_host');
+
+	my $baseUrl = 'http://' . $myHost . '/';
 
 	my $feedTitle = GetConfig('home_title');
 	my $feedLink = GetConfig('admin/my_domain'); # default = http://localhost:2784/
@@ -2776,7 +2781,7 @@ sub GetRssFile { # returns rss feed for current site
 	#%a, %d %b %Y %H:%M +:%S %Z
 	
 	if (!$feedLink) {
-		$feedLink = 'localhost:2784';
+		$feedLink = $myHost;
 	}
 	$feedLink = 'http://' . $feedLink;
 
@@ -2817,7 +2822,7 @@ sub GetRssFile { # returns rss feed for current site
 		my $fileName = $file->{'file_path'};
 		my $itemPubDate = $file->{'add_timestamp'};
 		my $itemTitle = $file->{'item_title'};
-		my $itemLink = 'http://localhost:2784/' . GetHtmlFilename($fileHash);
+		my $itemLink = 'http://' . $myHost . '/' . GetHtmlFilename($fileHash);
 		my $itemAbout = $itemLink;
 		my $itemGuid = $itemLink;
 		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});
