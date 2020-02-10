@@ -5,34 +5,50 @@ function writeOnload() { // onload handler for write page
 
 	if (document.getElementById) {
 
+        var pubKey;
+        if (window.getPublicKey) {
+        	//alert('DEBUG: window.getPublicKey exists');
+
+        	pubKey = getPublicKey();
+        }
+
+        if (pubKey) {
+			if (document.getElementById('addtext')) {
+				document.getElementById('addtext').value = 'Sign Message and Send';
+			}
+
+			if (document.getElementById('spanSignAs')) {
+				var gt = String.fromCharCode(62);
+				if (window.getAvatar) {
+					document.getElementById('spanSignAs').innerHTML = '<p' + gt + '[x] Sign message as ' + getAvatar() + '</p' + gt;
+				} else {
+					document.getElementById('spanSignAs').innerHTML = '<p' + gt + '[x] Sign message as logged in user</p' + gt;
+				}
+			}
+        }
+
         if (window.location.hash) {
             //alert('DEBUG: window.location.hash' = window.location.hash);
 
             if (window.location.hash == '#inspubkey') {
                 //alert('DEBUG: #inspubkey found');
 
-                if (window.getPublicKey) {
-                    //alert('DEBUG: window.getPublicKey exists');
+				if (pubKey) {
+					//alert('DEBUG: pubKey is true, inserting it into comment');
 
-                    var pubKey = getPublicKey();
+					var comment = document.getElementById('comment');
 
-                    if (pubKey) {
-                        //alert('DEBUG: pubKey is true, inserting it into comment');
+					if (comment) {
+						comment.value = pubKey;
+					}
 
-                        var comment = document.getElementById('comment');
+					var compose = document.getElementById('compose');
 
-                        if (comment) {
-                            comment.value = pubKey;
-                        }
-
-                        var compose = document.getElementById('compose');
-
-                        if (compose) {
-                            if (compose.submit) {
-                                compose.submit();
-                            }
-                        }
-                    }
+					if (compose) {
+						if (compose.submit) {
+							compose.submit();
+						}
+					}
                 }
             }
         }
