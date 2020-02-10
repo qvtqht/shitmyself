@@ -9,6 +9,12 @@
 				</td>
 			</tr>
 
+			<tr class=menubar>
+				<td>
+					<a href=/write.html?report=client>Report browser information</a>
+				</td>
+			</tr>
+
 			<tr class=body>
 				<td class=content>
 					<fieldset>
@@ -33,6 +39,8 @@
 							onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 							onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 						>$initText</textarea><br>
+
+						<span id=spanSignAs></span>
 
 						<p>
 							<input
