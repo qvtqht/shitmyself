@@ -225,22 +225,23 @@ function modeChange(ab) {
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 1);
 			SetPrefs('beginner_highlight', 1);
-			SetPrefs('want_to_vote', 0);
 			SetPrefs('notify_on_change', 1);
 		} else if (ab == 'B') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
 			SetPrefs('beginner', 1);
-			SetPrefs('want_to_vote', 1);
 			SetPrefs('notify_on_change', 1);
 		} else if (ab == 'C') {
 			SetPrefs('show_advanced', 0);
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
-			SetPrefs('want_to_vote', 1);
 			SetPrefs('notify_on_change', 0);
 		}
+
+		ShowAdvanced(1);
+
+		return false;
 	}
 }
 

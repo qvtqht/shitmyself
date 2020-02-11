@@ -18,7 +18,7 @@ if ($stopTimeConfig) {
 $html = file_get_contents('write.html');
 
 //if (function_exists('GetConfig') && GetConfig('admin/php/write_form_prefill_browser_survey')) {
-if (function_exists('GetConfig') && isset($_GET['report']) && $_GET['report']) {
+if (isset($_GET['report']) && $_GET['report'] == 'client') {
 	$debugInfo =
 		(isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($_SERVER['HTTP_USER_AGENT']) : '-') .
 		"\n" .
@@ -35,10 +35,23 @@ if (function_exists('GetConfig') && isset($_GET['report']) && $_GET['report']) {
 		(isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? htmlspecialchars($_SERVER['HTTP_ACCEPT_ENCODING']) : '-') .
 		"\n" .
 		'Language: ' .
-		(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']) : '-');
+		(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']) : '-')
+	;
 
 	$html = str_replace('</textarea>', $debugInfo . '</textarea>', $html);
 //	$html = $debugInfo;
+}
+
+if (isset($_GET['vouch']) && $_GET['vouch']) {
+	$vouchValue = $_GET['vouch'];
+	$vouchToken =
+		'vouch/' . $vouchValue . '/100' .
+		"\n" .
+		"\n" .
+		"I vouch for this author."
+	;
+
+	$html = str_replace('</textarea>', $vouchToken . '</textarea>' , $html);
 }
 
 print($html);

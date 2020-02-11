@@ -5,7 +5,13 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
-					<font color=$colorTitlebarText><b>New Message</b></font>
+					<font color=$colorTitlebarText><b>New Message</b></font><br>
+				</td>
+			</tr>
+
+			<tr class=menubar>
+				<td>
+					<a href=/write.html?report=client>Report browser information</a>
 				</td>
 			</tr>
 
@@ -33,6 +39,8 @@
 							onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 							onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 						>$initText</textarea><br>
+
+						<span id=spanSignAs></span>
 
 						<p>
 							<input

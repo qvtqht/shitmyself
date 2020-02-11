@@ -21,7 +21,7 @@ function commentOnChange(t, formId) {
 		return;
 	}
 
-	if (intCommentOnChangeLastValue > 1024 && t.value.length > 1024) {
+	if (1024 < intCommentOnChangeLastValue && 1024 < t.value.length) {
 		return;
 	}
 	intCommentOnChangeLastValue = t.value.length;
