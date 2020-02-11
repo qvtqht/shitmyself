@@ -7,3 +7,6 @@ body {
 fieldset {
 	border-color: $colorSecondary;
 }
+.dialog {
+	box-shadow: 0 0 10pt #335555;
+}
