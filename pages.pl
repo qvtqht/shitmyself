@@ -2736,7 +2736,22 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
+	my $menuItems = '';
+
+	#todo move html to template
+	$menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
+
 	my $etcPageContent = GetTemplate('etc.template');
+
+	$etcPageContent =~ s/\$etcMenuItems/$menuItems/;
+
 	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, 'Ready');
 
 	$txtIndex .= $etcPageWindow;
