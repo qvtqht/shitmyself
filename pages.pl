@@ -64,6 +64,11 @@ sub GenerateDialogPage { # generates page with dialog
 }
 
 sub GetStylesheet { # returns style template based on config
+	state $styleSheet;
+	if ($styleSheet) {
+		return $styleSheet;
+	}
+
 	my $style = GetTemplate('css/default.css.template');
 	# baseline style
 
@@ -76,7 +81,9 @@ sub GetStylesheet { # returns style template based on config
 		$style .= "\n" . GetThemeAttribute('additional.css');
 	}
 
-	return $style;
+	$styleSheet = $style;
+
+	return $styleSheet;
 }
 
 sub GetAuthorLink { # returns avatar'ed link for an author id
@@ -761,7 +768,9 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 		@quickVotesList = keys %dedupe;
 	}
 
-	my $styleSheet = GetStylesheet();
+	my $styleSheet = GetStylesheet(); # for looking up which vote buttons need a class=
+	# if they're listed in the stylesheet, they have an additional style defined, so add a class= below
+	# the class name is tag-foo
 
 	my $tagButtons = '';
 	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
