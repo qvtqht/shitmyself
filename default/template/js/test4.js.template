@@ -1,0 +1,21 @@
+<HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function BodyOnLoad() {
+	document.write(navigator.userAgent);
+}
+//-->
+</SCRIPT>
+
+<style type="text/css">
+<!--
+
+// -->
+</style>
+
+</HEAD>
+
+<BODY onLoad="BodyOnLoad()">
+
+</BODY>
+

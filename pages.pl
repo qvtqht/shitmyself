@@ -2251,6 +2251,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $jsTest3Page = GetTemplate('js/test3.js.template');
 	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
 
+	my $jsTest4Page = GetTemplate('js/test4.js.template');
+	PutHtmlFile("$HTMLDIR/jstest4.html", $jsTest4Page);
+
 	my $clockTest = '<form>'.GetTemplate('clock.template').'</form>';
 	my $clockTestPage = '<html><body>';
 	$clockTestPage .= $clockTest;
