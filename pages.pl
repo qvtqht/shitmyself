@@ -64,6 +64,11 @@ sub GenerateDialogPage { # generates page with dialog
 }
 
 sub GetStylesheet { # returns style template based on config
+	state $styleSheet;
+	if ($styleSheet) {
+		return $styleSheet;
+	}
+
 	my $style = GetTemplate('css/default.css.template');
 	# baseline style
 
@@ -76,7 +81,9 @@ sub GetStylesheet { # returns style template based on config
 		$style .= "\n" . GetThemeAttribute('additional.css');
 	}
 
-	return $style;
+	$styleSheet = $style;
+
+	return $styleSheet;
 }
 
 sub GetAuthorLink { # returns avatar'ed link for an author id
@@ -761,7 +768,9 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 		@quickVotesList = keys %dedupe;
 	}
 
-	my $styleSheet = GetStylesheet();
+	my $styleSheet = GetStylesheet(); # for looking up which vote buttons need a class=
+	# if they're listed in the stylesheet, they have an additional style defined, so add a class= below
+	# the class name is tag-foo
 
 	my $tagButtons = '';
 	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
@@ -2242,6 +2251,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $jsTest3Page = GetTemplate('js/test3.js.template');
 	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
 
+	my $jsTest4Page = GetTemplate('js/test4.js.template');
+	PutHtmlFile("$HTMLDIR/jstest4.html", $jsTest4Page);
+
 	my $clockTest = '<form>'.GetTemplate('clock.template').'</form>';
 	my $clockTestPage = '<html><body>';
 	$clockTestPage .= $clockTest;
@@ -2736,7 +2748,22 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
+	my $menuItems = '';
+
+	#todo move html to template
+	$menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
+	$menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
+
 	my $etcPageContent = GetTemplate('etc.template');
+
+	$etcPageContent =~ s/\$etcMenuItems/$menuItems/;
+
 	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, 'Ready');
 
 	$txtIndex .= $etcPageWindow;

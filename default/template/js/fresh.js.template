@@ -2,6 +2,14 @@
 var freshClient;
 var timeoutFresh;
 
+var clockBaselineColor;
+if (!clockBaselineColor && document.getElementById) {
+	var clock = document.getElementById('txtClock');
+	if (clock) {
+		clockBaselineColor = clock.style.color;
+	}
+}
+
 function freshCallback() { // callback for requesting HEAD for current page
 	var clock = document.getElementById('txtClock');
 	if(this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
@@ -14,7 +22,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 				} else { // etag was different from last one we saw
 					// below is changing clock's appearance
 					if (clock) {
-						clock.style.color = '#008000';
+						clock.style.color = '#808080'; //#todo templatize this color
 					}
 				}
 
@@ -24,8 +32,8 @@ function freshCallback() { // callback for requesting HEAD for current page
 			}
 		}
 
-		if (clock) {
-			clock.style.backgroundColor = '#cccccc';
+		if (clock) { // reset
+			clock.style.backgroundColor = clockBaselineColor;
 		}
 	}
 }
@@ -33,7 +41,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 function CheckIfFresh() {
 	var clock = document.getElementById('txtClock');
 	if (clock) {
-		clock.style.backgroundColor = '#88ee00';
+		clock.style.backgroundColor = '#88ee00'; //#todo templatize
 	}
 
 	var mypath = window.mypath;

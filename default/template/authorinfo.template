@@ -9,7 +9,7 @@
 
 		<tr class=menubar>
 			<td colspan=2>
-				<p>$profileVoteButtons
+				<a href="/write.html?vouch=$fingerprint">Vouch</a>
 			</td>
 		</tr>
 
