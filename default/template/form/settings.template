@@ -10,17 +10,17 @@
 
 			<tr class=body>
 				<td class=content>
-					<noscript><p><b>Note: This page needs JavaScript <br>until further notice.</b></p></noscript>
 
 					<fieldset>
 						<legend>Interface</legend>
 
 						<nobr>
 							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('A'); }">
-							<input type=submit name=ui value="Adv." onclick="if (window.modeChange) { return modeChange('B'); }">
+							<input type=submit name=ui value="Extras" onclick="if (window.modeChange) { return modeChange('B'); }">
 							<input type=submit name=ui value="Admin" onclick="if (window.modeChange) { return modeChange('C'); }">
 						</nobr>
 					</fieldset>
+
 
 					<fieldset>
 						<legend>Moderation</legend>
