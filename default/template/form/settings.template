@@ -16,9 +16,9 @@
 						<legend>Interface</legend>
 
 						<nobr>
-							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('A'); }">
-							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { return modeChange('B'); }">
-							<input type=submit name=ui value="Mini" onclick="if (window.modeChange) { return modeChange('C'); }">
+							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('A'); }">
+							<input type=submit name=ui value="Adv." onclick="if (window.modeChange) { return modeChange('B'); }">
+							<input type=submit name=ui value="Admin" onclick="if (window.modeChange) { return modeChange('C'); }">
 						</nobr>
 					</fieldset>
 
