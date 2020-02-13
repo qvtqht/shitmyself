@@ -6,3 +6,10 @@ body {
 .dialog {
 	box-shadow: 5pt 5pt 5pt #aabbcc;
 }
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
+}

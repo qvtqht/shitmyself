@@ -8,5 +8,12 @@ link {
 	text-decoration: none;
 }
 input    { font-family:monospace; font-size:10pt; }
-input[type="submit"], input[type="button"] { font-family:Verdana, Geneva, sans-serif; }
 textarea { font-family:monospace; font-size:10pt; }
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+	font-family: Verdana, Geneva, sans-serif;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
+}

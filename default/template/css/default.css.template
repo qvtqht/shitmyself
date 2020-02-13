@@ -100,17 +100,3 @@ div.txt {
 .statusbar td {
 	border: 1pt inset $colorWindow;
 }
-
-input[type=text], input[type=password], select, option, textarea {
-	background-color: $colorInputBackground;
-	color: $colorInputText;
-}
-
-button, input[type=button], input[type=submit], input[type=checkbox] {
-	background-color: $colorWindow;
-	color: $colorText;
-}
-
-#txtClock {
-	border: 1pt inset $colorWindow;
-}

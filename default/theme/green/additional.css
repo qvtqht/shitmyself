@@ -3,7 +3,13 @@ body {
 	font-size: 14pt;
 	background-color: $colorBackground;
 }
-
 fieldset {
 	border-color: $colorSecondary;
+}
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
 }

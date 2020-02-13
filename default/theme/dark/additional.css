@@ -8,5 +8,17 @@ fieldset {
 	border-color: $colorSecondary;
 }
 .dialog {
-	box-shadow: 0 0 10pt #335555;
+	box-shadow: 0 0 15pt #335555;
+}
+button, input[type=button], input[type=submit], input[type=checkbox] {
+	background-color: $colorWindow;
+	color: $colorText;
+	border-color: #808080;
+}
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
 }

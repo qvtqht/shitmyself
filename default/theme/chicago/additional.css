@@ -3,6 +3,19 @@ body {
 	font-size: 14pt;
 	background-color: $colorBackground;
 }
+input {
+	border-color: blue;
+}
 .dialog {
 	box-shadow: 5pt 5pt 5pt #405050;
+}
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
+}
+@media (prefers-color-scheme: dark) {
+
 }
