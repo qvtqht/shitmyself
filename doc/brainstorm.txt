@@ -1,3 +1,11 @@
+"Federation"
+============
+this would allow a cookie id to jump from one server to another, insecurely
+user clicks button
+	server gives user a temporary secret string
+		server sends a signed hash of temporary secret string to target server
+			user connects to target server and provides tss
+
 server-side preferences:
 Willing to moderate = show/hide elements by class (strip out of html)
 Show advanced options = same
