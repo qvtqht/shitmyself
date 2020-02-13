@@ -1268,7 +1268,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	#$styleSheet =~ s/\w\w/ /g;
 
 	my $clock = '';
-	if (GetConfig('clock')) {
+	if (GetConfig('html/clock')) {
 		$clock = GetTemplate('clock.template');
 
 		my $currentTime = GetTime();
@@ -1301,14 +1301,14 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	#todo replace with config/menu/*
 	$menuItems .= GetMenuItem("/", 'Read');
 	$menuItems .= GetMenuItem("/write.html", 'Write');
+	$menuItems .= GetMenuItem("/settings.html", 'Settings');
+	$menuItems .= GetMenuItem("/stats.html", 'Status');
 	$menuItems .= GetMenuItem("/etc.html", 'More');
 
-	$menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
 	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
 	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
-	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile', 'advanced');
 #	if ($adminKey) {
@@ -1554,7 +1554,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
-	if (GetConfig('clock')) {
+	if (GetConfig('html/clock')) {
 		# if clock is enabled, automatically add it
 		push @scriptNames, 'clock';
 	}
@@ -2262,7 +2262,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/clock.html", $clockTestPage);
 
 	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
-	if (GetConfig('clock')) {
+	if (GetConfig('html/clock')) {
 		$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
 	}
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
