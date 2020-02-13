@@ -44,21 +44,22 @@ WriteLog ("GetReadPage()...");
 
 		WriteLog('Making stuff for author: ' . $hashRef->{'key'});
 
-		my $lastTouch = GetCache("key/$key");
-		if ($lastTouch && $lastTouch + $authorInterval > GetTime()) {
-			#WriteLog("I already did $key recently, too lazy to do it again");
-			#next;
-			#todo uncomment
-		}
-
-		WriteLog("$HTMLDIR/author/$key");
+		WriteLog("Ensure $HTMLDIR/author/$key exists...");
 
 		if (!-e "$HTMLDIR/author") {
 			mkdir("$HTMLDIR/author");
 		}
 
+		if (!-e "$HTMLDIR/author") {
+			WriteLog("Something went wrong with creating $HTMLDIR/author");
+		}
+
 		if (!-e "$HTMLDIR/author/$key") {
 			mkdir("$HTMLDIR/author/$key");
+		}
+
+		if (!-e "$HTMLDIR/author/$key") {
+			WriteLog("Something went wrong with creating $HTMLDIR/author/$key");
 		}
 
 		$authorsIndex++;
