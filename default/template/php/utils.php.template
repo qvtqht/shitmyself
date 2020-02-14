@@ -11,6 +11,7 @@ function WriteLog($text) { // writes to debug log if enabled
 		return $logText;
 	}
 
+    //#todo sanity check for $text being a string
 	$logText .= '<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n";
 }
 
