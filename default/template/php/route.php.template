@@ -4,29 +4,52 @@
 //	// exit
 //}
 
-print_r($_GET);
+//print_r($_GET);
+
+include_once('utils.php');
+
+if (1/0) {
+    // disabled
+}
 
 if ($_GET) {
-    print_r($_GET);
+    WriteLog(print_r($_GET, 1));
 
     if (isset($_GET['path'])) {
         $path = $_GET['path'];
+        $pathFull = realpath('.'.$path);
 
-        print($path);
-        print(realpath('.'.$path));
+//        WriteLog($path);
+//        WriteLog(realpath('.'.$path));
 
+        $pathSelf = $_SERVER['PHP_SELF'];
 
+        $pathSelfReal = realpath('.'.$pathSelf);
 
-        if ($path) {
-            $path = '.' . $path;
-            if (file_exists($path)) {
-                $html = file_get_contents($path);
+        $pathValidRoot = substr($pathSelfReal, 0, strlen($pathSelfReal) - strlen($pathSelf));
+
+        WriteLog ('$pathValidRoot = ' . $pathValidRoot . ';');
+        WriteLog ('$pathFull = ' . $pathFull . ';');
+        WriteLog ('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
+
+        if (substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot) {
+            if ($path) {
+                $path = '.' . $path;
+                if (file_exists($path)) {
+                    $html = file_get_contents($path);
+                }
             }
+        } else {
+            //WriteLog ('not sure what to say to that...');
+            $html = '404'; //#todo template and header
         }
+
     }
 
     print $html;
 }
+
+print WriteLog('');
 //
 //if (isset($_GET['path']) && $_GET['path']) {
 //	$path = $_GET['path'];

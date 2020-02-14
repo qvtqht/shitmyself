@@ -12,5 +12,6 @@ fastcgi.server = (
 url.rewrite = (
 	"post.html\??(.+)?" => "/post.php?$1",
 	"write.html\??(.+)?" => "/write.php?$1",
-	"profile.html\??(.+)?" => "/profile.php?$1"
+	"profile.html\??(.+)?" => "/profile.php?$1",
+#	"(.+\.html)\??(.+)" => "/route.php?path=$1&query=$2"
 )
