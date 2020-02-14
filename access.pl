@@ -479,6 +479,13 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					# hardcoded path
 					my $pathedFilename = './html/txt/' . $filename;
 
+					if (GetConfig('admin/logging/record_http_host')) {
+						# append "signature" to file if record_http_host is enabled
+						if ($logName) {
+							$message .= "\n-- \nHost: " . $logName;
+						}
+					}
+
 					# Try to write to the file, exit if we can't
 					if (PutFile($pathedFilename, $message)) {
 						if (GetConfig('admin/organize_files')) {
@@ -532,7 +539,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							PutFile($debugFilename, $debugInfo);
 						}
 
-						# Begin logging section
+                        # Begin logging section
 						if (
 							GetServerKey() # there should be a server key, otherwise do not log
 								&& 
