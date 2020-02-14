@@ -86,13 +86,12 @@ function ProfileOnLoad() {
 
 			var pk = getPrivateKey();
 
+            lblSigningIndicator = document.getElementById('lblSigningIndicator');
+
 			if (pk) {
 				//alert('DEBUG: pk = GetPrivateKey() = ' + pk);
 
-				lblSigningIndicator = document.getElementById('lblSigningIndicator');
-
 				if (lblSigningIndicator) {
-					var gt = String.fromCharCode(62);
 					lblSigningIndicator.innerHTML = 'Yes';
 				}
 
@@ -104,6 +103,22 @@ function ProfileOnLoad() {
 						lblHandle.innerHTML = strHandle;
 					}
 				}
+			} else {
+			    //alert('DEBUG: pk = false')
+			    if (lblSigningIndicator) {
+			        //alert('DEBUG: lblSigningIndicator = true');
+			        if (window.openpgp) {
+    			        //alert('DEBUG: window.openpgp = true');
+
+					    lblSigningIndicator.innerHTML = 'Available';
+                    } else {
+                        //alert('DEBUG: window.openpgp = false');
+
+                        lblSigningIndicator.innerHTML = 'Nope';
+                    }
+			    } else {
+			        //alert('DEBUG: lblSigningIndicator = false');
+			    }
 			}
 		}
 	}
