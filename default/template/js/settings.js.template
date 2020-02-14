@@ -85,6 +85,10 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 				//divsToHide[i].style.visibility = "hidden"; // or
 				SetElementVisible(divsToHide[i], displayValue, bgColor, 0);
 			}
+			var clock = document.getElementById('txtClock');
+			if (clock) {
+			    SetElementVisible(clock, displayValue, bgColor, 0);
+			}
 			showAdvancedLastAction = displayValue + bgColor;
 		}
 
@@ -165,7 +169,11 @@ function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefVa
 		var newPrefsString = JSON.stringify(prefsObj);
 
 		localStorage.setItem('prefs1', newPrefsString);
+
+		return 0;
 	}
+
+	return 1;
 }
 
 function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles affected elements
@@ -218,8 +226,10 @@ function ResetSettings() {
 	}
 }
 
-function modeChange(ab) {
-	if (window.SetPrefs) {
+function modeChange(ab) { // updates several settings to change to "ui mode" (beginner, advanced, etc.)
+    //alert('DEBUG: modeChange(' + ab + ')');
+
+	if (window.localStorage && window.SetPrefs) {
 		if (ab == 'A') {
 			SetPrefs('show_advanced', 0);
 			SetPrefs('advanced_highlight', 0);
@@ -230,19 +240,30 @@ function modeChange(ab) {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
 			SetPrefs('beginner', 1);
+			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
 		} else if (ab == 'C') {
-			SetPrefs('show_advanced', 0);
+			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
-			SetPrefs('notify_on_change', 0);
+			SetPrefs('notify_on_change', 1);
+
+			if (window.getPublicKey && getPublicKey()) {
+			    return true;
+			}
 		}
 
 		ShowAdvanced(1);
 
+        //alert('DEBUG: window.SetPrefs was found, and ShowAdvanced(1) was called');
+
 		return false;
 	}
+
+	//alert('DEBUG: returning true');
+
+	return true;
 }
 
 function SettingsOnload() { // onload function for preferences page
