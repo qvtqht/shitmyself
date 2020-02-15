@@ -1,3 +1,7 @@
+Server-assisted compatibility mode for NN2/3 with document.write() ?
+
+<noscript style=display:none>may be useful for something
+
 "Federation"
 ============
 this would allow a cookie id to jump from one server to another, insecurely

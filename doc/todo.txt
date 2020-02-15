@@ -1,3 +1,5 @@
+Smooth the flow of registering and sharing public key
+
 Make vouching easier and more visible
 	Add vouch button which does correct thing to user profiles
 	Display user's vouch status when displaying post

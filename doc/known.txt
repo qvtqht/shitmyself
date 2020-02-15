@@ -1,9 +1,16 @@
 Known Issues
 ============
+Cookie-based auth and localstorage+OpenPGP-based auth are not perfectly synced up
+    In particular if localstorage is used, then JS is disabled and logged out, then JS is re-enabled, there's weirdness.
+
+When Cookie: and/or Host: footer is added to a message, this may cause the message
+to be duplicated when competing processes write different files.
+    post.php (which adds files immediately when server receives request) supports adding both headers
+    access.pl (which adds files by reading them from the web server's access.log) only supports Host:, but not Cookie:
+        The solution is to probably hash the file without its signature and use that as an id, or just the primary id
 
 I don't know how to package libs correctly so that they are part of the repo, but do not conflict with the installed system libs.
-
-	I think it has something to do with some kind of binary attachments that come with the .pm files 
+	I think it has something to do with some kind of binary attachments that come with the .pm files
 	and/or version conflicts
 
 config/admin/server_key_id
