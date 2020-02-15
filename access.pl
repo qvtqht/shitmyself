@@ -782,6 +782,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		}
 
 		my $voteAction = '/action/vote2.html?';
+        WriteLog('access.pl: $voteAction = ' . $voteAction);
+
+		WriteLog('access.pl: ' . substr($file, 0, length($voteAction)) . ' eq ' . $voteAction);
+
 		if (substr($file, 0, length($voteAction)) eq $voteAction) {
 			#				http://localhost:2784/action/vote2.html?
 			#					vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
@@ -798,12 +802,14 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 			#						urldecode
 			#						parse as a vote record
 			#
-			WriteLog("/action/vote2.html");
+			WriteLog("access.pl: /action/vote2.html");
 
 			# everything after ?
 			my $votesQuery = substr($file, index($file, '?') + 1);
 
-			# split by &
+            WriteLog('$votesQuery = ' . $votesQuery);
+
+            # split by &
 			my @voteAtoms = split('&', $votesQuery);
 			my $newFile = '';
 
