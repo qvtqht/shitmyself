@@ -45,7 +45,7 @@ if (isset($_GET['report']) && $_GET['report'] == 'client') {
 if (isset($_GET['vouch']) && $_GET['vouch']) {
 	$vouchValue = $_GET['vouch'];
 	$vouchToken =
-		'vouch/' . $vouchValue . '/100' .
+		'vouch/' . $vouchValue . '/31337' .
 		"\n" .
 		"\n" .
 		"I vouch for this author."
