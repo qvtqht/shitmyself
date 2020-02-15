@@ -272,7 +272,7 @@ if ($comment) {
 		$stopTime += 30;
 		file_put_contents('../config/admin/stop', $stopTime); //#todo PutConfig()
 		if ($stopTime > time()) {
-			print('Stop request received. Site will remain offline for uncookied users for ' . ($stopTime - time()) . ' seconds.');
+			print('Stop request received. Uncookied users won\'t be able to post for ' . ($stopTime - time()) . ' seconds.');
 		}
 	} else {
 		if ($replyTo && !preg_match('/\>\>' . $replyTo . '/', $comment)) {
