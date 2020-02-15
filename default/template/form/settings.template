@@ -16,7 +16,7 @@
 
 						<nobr>
 							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('A'); }">
-							<input type=submit name=ui value="Extras" onclick="if (window.modeChange) { return modeChange('B'); }">
+							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { return modeChange('B'); }">
 							<input class="advanced" type=submit name=ui value="Admin" onclick="if (window.modeChange) { return modeChange('C'); }">
 						</nobr>
 					</fieldset>
@@ -32,8 +32,10 @@
 						</p>
 					</fieldset>
 
-					<fieldset>
-						<p><a href="/write.html?report=client">Tell forum your browser!</a></p>
+					<fieldset class=advanced>
+						<legend>Get Social</legend>
+
+						<p><a href="/write.html?report=client">Tell us about your browser!</a></p>
 					</fieldset>
 				</td>
 			</tr>
