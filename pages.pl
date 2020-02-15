@@ -1310,7 +1310,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
-	$menuItems .= GetMenuItem("/profile.html", 'Profile', 'advanced');
+	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
 #	}
