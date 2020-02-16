@@ -1,3 +1,10 @@
+Trigger for change in html/theme setting
+    Basically schedule everything to be re-generated
+
+default/menu/default=read,write,settings,...
+default/menu/advanced=events,compost,...
+default/menu/voter=compost
+
 Smooth the flow of registering and sharing public key
 
 Make vouching easier and more visible
