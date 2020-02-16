@@ -37,6 +37,12 @@
 
 						<p><a href="/write.html?report=client">Tell us about your browser!</a></p>
 					</fieldset>
+
+					<fieldset class=admin>
+						<legend>Admin</legend>
+
+						<p></p>
+					</fieldset>
 				</td>
 			</tr>
 
