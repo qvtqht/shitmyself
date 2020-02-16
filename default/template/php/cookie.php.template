@@ -11,7 +11,7 @@
 
 //	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
 
-	function setcookie2($key, $value) {
+	function setcookie2($key, $value) { //wrapper for setcookie() which sets cookie with parameters
 	    if (0) {
 		    WriteLog('setcookie2(' . $key . ',' . $value . ')');
 		    setcookie($key, $value);
@@ -24,7 +24,7 @@
         }
 	}
 
-	function unsetcookie2($key) {
+	function unsetcookie2($key) { // wrapper for setcookie() to remove a cookie
 	    if (0) {
             WriteLog('unsetcookie2(' . $key . ')');
             setcookie($key);
