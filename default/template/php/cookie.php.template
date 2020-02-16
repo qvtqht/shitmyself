@@ -7,23 +7,36 @@
 	$commandRegister2 = 'Please wait...';
 	$commandRegister3 = 'Wait...';
 	$commandUnregister = 'Sign Out';
+	// #technically all the commands stuff should be in profile.php
 
 //	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
 
 	function setcookie2($key, $value) {
-		WriteLog('setcookie2(' . $key . ',' . $value . ')');
-//		$date = new Datetime('+2 years');
-//
-//		$cookieDate = $date->format(DateTime::COOKIE);
-//
-//		Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/');
-		setcookie($key, $value);
+	    if (0) {
+		    WriteLog('setcookie2(' . $key . ',' . $value . ')');
+		    setcookie($key, $value);
+        } else {
+//    		$date = new Datetime('+2 years');
+//    		$cookieDate = $date->format(DateTime::COOKIE);
+//    		Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/');
+
+            setcookie($key, $value, time()+86400, '/'); //#todo ie3 compat
+        }
+	}
+
+	function unsetcookie2($key) {
+	    if (0) {
+            WriteLog('unsetcookie2(' . $key . ')');
+            setcookie($key);
+        } else {
+            setcookie($key, '', time()-86400, '/');
+        }
 	}
 
 	if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
-		setcookie('test');
-		setcookie('cookie');
-		setcookie('checksum');
+		unsetcookie2('test');
+		unsetcookie2('cookie');
+		unsetcookie2('checksum');
 
 		WriteLog('all cookies unset');
 	} else {
@@ -71,7 +84,7 @@
 				WriteLog('Checksum mis-match! Expected ' . md5($cookie . '/' . $secret) . ', found ' . $checksum);
 
 				unset($cookie);
-				setcookie('cookie');
+				unsetcookie2('cookie');
 				//header('Location: /profile.html?' . time());
 			}
 		} else {
