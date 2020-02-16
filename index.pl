@@ -488,6 +488,14 @@ sub IndexTextFile { # indexes one text file into database
 					my $reconLine = "Cookie: $cookieValue";
 
 					$detokenedMessage =~ s/$reconLine//;
+
+					DBAddAuthor($cookieValue);
+
+					DBAddPageTouch('author', $cookieValue);
+
+					DBAddPageTouch('scores', 0);
+
+					DBAddPageTouch('stats', 0);
 				}
 			}
 		}
