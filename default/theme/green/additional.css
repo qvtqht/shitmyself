@@ -10,6 +10,12 @@ input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
 	color: $colorInputText;
 }
+button, input[type=button], input[type=submit], input[type=checkbox] {
+	background-color: $colorWindow;
+	color: $colorText;
+	border-color: #808080;
+	box-shadow: 0 0 5pt #335555;
+}
 #txtClock {
 	border: 1pt inset $colorWindow;
 }
