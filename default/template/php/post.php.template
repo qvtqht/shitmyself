@@ -262,7 +262,7 @@ if ($comment) {
 	if ($comment == 'Update') {
 		DoUpdate();
 		$fileUrlPath = '';
-
+	    Header('Location: /stats.html?' . time()); //#todo make work with relativize links
 	} elseif (strtolower($comment) == 'stop') {
 		$stopTime = time();
 		$stopTimeConfig = GetConfig('admin/stop');
