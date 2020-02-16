@@ -121,4 +121,3 @@ input {
    <INPUT TYPE="button" VALUE="Stop" onClick="stopclock()">
 </FORM>
 </BODY>
-

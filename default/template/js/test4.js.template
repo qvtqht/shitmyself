@@ -22,6 +22,8 @@ function BodyOnLoad() {
 
 <script><!--
 document.write('<p>' + navigator.userAgent + '</p>');
+document.write('<p>window.localStorage:' + window.localStorage + '</p>');
+document.write('<p>document.getElementsByClassName:' + document.getElementsByClassName + '</p>');
 // --></script>
 
 </BODY>
