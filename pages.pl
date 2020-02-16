@@ -1478,9 +1478,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	return $htmlOutput;
 }
 
-sub GetStatsPage { # returns html for stats page
-	my $statsPage;
-
+sub GetStatsTable() {
 	my $itemCount = DBGetItemCount();
 	my $authorCount = DBGetAuthorCount();
 
@@ -1492,11 +1490,9 @@ sub GetStatsPage { # returns html for stats page
 
 	my $versionFull = GetMyVersion();
 	my $versionShort = substr($versionFull, 0, 8);
-	
+
 	###
 
-	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
-	
 	my $statsTable = GetTemplate('stats2.template');
 
 	if ($adminId) {
@@ -1504,7 +1500,7 @@ sub GetStatsPage { # returns html for stats page
 	} else {
 		$statsTable =~ s/\$admin/(Not defined)/;
 	}
-						 
+
 	if ($serverId) {
 		$statsTable =~ s/\$server/$serverLink/;
 	} else {
@@ -1518,7 +1514,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$lastUpdateTime = GetTimestampElement($lastUpdateTime);
 	$statsTable =~ s/\$lastUpdateTime/$lastUpdateTime/;
-##
+	##
 	my $lastBuildTime = GetConfig('admin/build_end');
 	if (!defined($lastBuildTime) || !$lastBuildTime) {
 		$lastBuildTime = 0;
@@ -1535,6 +1531,15 @@ sub GetStatsPage { # returns html for stats page
 	$statsTable =~ s/\$authorCount/$authorCount/;
 	$statsTable =~ s/\$filesLeft/$filesLeft/;
 
+	return $statsTable;
+}
+
+sub GetStatsPage { # returns html for stats page
+	my $statsPage;
+
+	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
+
+	my $statsTable = GetStatsTable();
 	$statsPage .= $statsTable;
 
 	$statsPage .= GetPageFooter();
@@ -2723,8 +2728,10 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	my $settingsPage = GetTemplate('form/settings.template');
-
 	$txtIndex .= $settingsPage;
+
+	my $statsTable = GetStatsTable();
+	$txtIndex .= $statsTable;
 
 	$txtIndex .= GetPageFooter();
 
