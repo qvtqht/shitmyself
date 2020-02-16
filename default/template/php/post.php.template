@@ -272,7 +272,7 @@ if ($comment) {
 		$stopTime += 30;
 		file_put_contents('../config/admin/stop', $stopTime); //#todo PutConfig()
 		if ($stopTime > time()) {
-			print('Stop request received. Uncookied users won\'t be able to post for ' . ($stopTime - time()) . ' seconds.');
+			print("Stop request received. Users without cookie won't be able to post for " . ($stopTime - time()) . ' seconds.');
 		}
 	} else {
 		if ($replyTo && !preg_match('/\>\>' . $replyTo . '/', $comment)) {
@@ -280,6 +280,15 @@ if ($comment) {
 		}
 
 		$fileUrlPath = ProcessNewComment($comment);
+
+        // if user is submitting a public key, chances are
+        // they just registered, so lazily redirect them
+        // to the profile page instead.
+        // #todo relative url support
+        // #todo better flow for registration -> profile page
+		if (strpos($comment, 'PUBLIC KEY BLOCK')) {
+		    Header('Location: /profile.html');
+		}
 	}
 }
 
