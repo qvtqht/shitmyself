@@ -471,7 +471,15 @@ sub GetTemplate { # returns specified template from HTML directory
 		WriteLog("GetTemplate: template/$filename does not exist, exiting");
 	}
 
-	my $template = GetConfig('template/' . $filename);
+	my $themeName = GetConfig('html/theme');
+	my $themePath = 'theme/' . $themeName . '/template/' . $filename;
+
+	my $template = '';
+	if (GetConfig($themePath)) {
+		$template = GetConfig($themePath);
+	} else {
+		$template = GetConfig('template/' . $filename);
+	}
 
 	$template .= "\n";
 
