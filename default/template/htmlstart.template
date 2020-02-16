@@ -10,11 +10,6 @@
 $styleSheet
 -->
 </style>
-<script><!--
-var colorHighlightBeginner = '$colorHighlightBeginner';
-var colorHighlightAdvanced = '$colorHighlightAdvanced';
-//-->
-</script>
 </head>
 <body link="$colorLink" vlink="$colorVlink" text="$colorText" bgcolor="$colorWindow">
 <img src="/p.gif" alt="." height=1 width=1>

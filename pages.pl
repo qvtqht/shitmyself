@@ -1240,9 +1240,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $colorTagNegative = GetThemeColor('tag_negative');
 	my $colorTagPositive = GetThemeColor('tag_positive');
 
-	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
-	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-
 	my $styleSheet = GetStylesheet();
 
 #
@@ -1341,8 +1338,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$colorText/$colorText/g;
 	$htmlStart =~ s/\$colorTagNegative/$colorTagNegative/g;
 	$htmlStart =~ s/\$colorTagPositive/$colorTagPositive/g;
-	$htmlStart =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
-	$htmlStart =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
 	$htmlStart =~ s/\$colorInputBackground/$colorInputBackground/g;
 	$htmlStart =~ s/\$colorInputText/$colorInputText/g;
 	$htmlStart =~ s/\$clock/$clock/g;
@@ -1552,6 +1547,10 @@ sub GetStatsPage { # returns html for stats page
 sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	my $html = shift;     # html we're going to inject into
 
+	if (!GetConfig('admin/js/enable')) {
+		return $html;
+	}
+
 	my @scriptNames = @_; # array of names of script templates (minus the .js.template suffix)
 
 	my $scriptsText = '';  # will contain all the js we want to inject
@@ -1597,6 +1596,14 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 
 			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+		}
+		if ($script eq 'settings') {
+			# for settings.js we also need to fill in some theme colors
+			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+
+			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
 		}
 
 		if (index($scriptTemplate, '>') > -1) {

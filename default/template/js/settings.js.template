@@ -3,6 +3,7 @@
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 var showVoterLastAction = '';
+var showAdminLastAction = '';
 
 var timerShowAdvanced;
 
@@ -68,6 +69,19 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			}
 		}
 
+		var displayAdmin = 'none'; // not voting by default
+		if (GetPrefs('show_admin') == 1) { // check value of show_admin preference
+			displayAdmin = 'initial'; // display
+		}
+
+		if (force || showAdminLastAction != displayAdmin) {
+			var elemAdmin = document.getElementsByClassName('admin');
+
+			for (var i = 0; i < elemAdmin.length; i++) {
+				SetElementVisible(elemAdmin[i], displayAdmin, 0, 0);
+			}
+		}
+
 		var displayValue = 'none'; // hide by default
 		if (GetPrefs('show_advanced') == 1) { // check value of show_advanced preference
 			displayValue = 'initial'; // display
@@ -75,7 +89,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		var bgColor = 'initial';
 		if (GetPrefs('advanced_highlight') == 1) { // check value of advanced_highlight preference
-			bgColor = colorHighlightAdvanced; // advanced_highlight
+			bgColor = '$colorHighlightAdvanced'; // advanced_highlight
 		}
 
 		if (force || showAdvancedLastAction != (displayValue + bgColor)) {
@@ -99,7 +113,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 
 		bgColor = 'initial';
 		if (GetPrefs('beginner_highlight') == 1) { // check value of beginner preference
-			bgColor = colorHighlightBeginner; // beginner_highlight
+			bgColor = '$colorHighlightBeginner'; // beginner_highlight
 		}
 
 		if (force || showBeginnerLastAction != displayValue + bgColor) {
@@ -206,6 +220,7 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 		prefKey == 'advanced_highlight' ||
 		prefKey == 'display_username' ||
 		prefKey == 'want_to_vote' ||
+		prefKey == 'show_admin' ||
 		prefKey == 'notify_on_change'
 	) {
 		ShowAdvanced(1);
@@ -236,18 +251,22 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 			SetPrefs('beginner', 1);
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
+			SetPrefs('show_admin', 0);
 		} else if (ab == 'B') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
 			SetPrefs('beginner', 1);
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
+            SetPrefs('show_admin', 0);
+
 		} else if (ab == 'C') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
 			SetPrefs('notify_on_change', 1);
+            SetPrefs('show_admin', 1);
 
 			if (window.getPublicKey && getPublicKey()) {
 			    return true;
