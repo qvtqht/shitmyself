@@ -2309,7 +2309,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$postPage = InjectJs($postPage, qw(avatar post settings));
 
-	$postPage =~ s/<body /<body onload="makeRefLink();" /;
+	if (GetConfig('admin/js/enable')) {
+		$postPage =~ s/<body /<body onload="makeRefLink();" /;
+	}
 	
 	WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
 
@@ -2570,7 +2572,9 @@ sub GetWritePage { # returns html for write page
 #	$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
 
 	# add call to writeOnload to page
-	$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
+	}
 
 	return $txtIndex;
 }
@@ -2681,10 +2685,12 @@ sub GetIdentityPage { # gpg-based identity
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
 
-	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+	if (GetConfig('admin/js/enable')) {
+		my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
-	$txtIndex =~ s/<body /<body onload="if (window.identityOnload) { identityOnload(); }" /;
+		$txtIndex =~ s/<body /<body onload="if (window.identityOnload) { identityOnload(); }" /;
+	}
 
 	return $txtIndex;
 }
@@ -2715,7 +2721,9 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex = InjectJs($txtIndex, qw(utils settings profile2));
 
-	$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
+	}
 
 	#
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
@@ -2743,11 +2751,9 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
-
-#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
-
-	$txtIndex =~ s/<body /<body onload="SettingsOnload();" /;
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
+	}
 
 	return $txtIndex;
 }
@@ -2789,7 +2795,9 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
-#	$txtIndex =~ s/<body /<body onload="SettingsOnload();" /;
+	# if (GetConfig('admin/js/enable')) {
+	#	$txtIndex =~ s/<body /<body onload="SettingsOnload();" /;
+	# }
 
 	return $txtIndex;
 }
