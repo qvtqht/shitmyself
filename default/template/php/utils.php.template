@@ -233,5 +233,12 @@ function GetConfig($configKey) { // get value for config value $configKey
 }
 
 function GetTemplate($templateKey) {
-	return GetConfig('template/' . $templateKey);
+    $themeName = GetConfig('html/theme');
+    $themePath = 'theme/' . $themeName . '/template/' . $templateKey;
+
+    if (GetConfig($themePath)) {
+        return GetConfig($themePath);
+    } else {
+	    return GetConfig('template/' . $templateKey);
+    }
 }
