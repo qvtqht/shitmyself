@@ -2745,9 +2745,6 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $settingsPage = GetTemplate('form/settings.template');
 	$txtIndex .= $settingsPage;
 
-	my $statsTable = GetStatsTable();
-	$txtIndex .= $statsTable;
-
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
