@@ -1,3 +1,5 @@
+nn3, nn2 #bug cannot register again after clicking sign out
+
 Trigger for change in html/theme setting
     Basically schedule everything to be re-generated
 
@@ -940,3 +942,5 @@ PHP handler for event.html
 
 #bug on iOS, the ticking clock causes the "paste" command to be inaccessible
 	When a textarea is held down, the Paste command appears briefly, but disappears as soon as the page needs to refresh
+
+Generate version page for each version mentioned in changelog
