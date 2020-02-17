@@ -920,10 +920,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if ($isTextart) {
 			# if textart, format with extra spacing to preserve character arrangement
 			$message = TextartForWeb($message);
-		} elsif ($isSurvey) {
-			# if survey, format with text fields for answers
-			$message = SurveyForWeb($message);
-			$message = 'poop';
+		# } elsif ($isSurvey) {
+		# 	# if survey, format with text fields for answers
+		# 	$message = SurveyForWeb($message);
 		} else {
 			# if not textart, just escape html characters
 			$message = FormatForWeb($message);
@@ -1240,6 +1239,9 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $colorTagNegative = GetThemeColor('tag_negative');
 	my $colorTagPositive = GetThemeColor('tag_positive');
 
+	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+
 	my $styleSheet = GetStylesheet();
 
 #
@@ -1344,6 +1346,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$introText/$introText/g;
 	$htmlStart =~ s/\$colorRow0Bg/$colorRow0Bg/g;
 	$htmlStart =~ s/\$colorRow1Bg/$colorRow1Bg/g;
+	$htmlStart =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+	$htmlStart =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
 
 	if (GetConfig('logo/enabled')) {
 		$htmlStart =~ s/\$logoText/$logoText/g;
@@ -1671,6 +1675,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorLastSeen = $author{'last_seen'};
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey);
+
 		my $authorVoteButtons = GetItemVoteButtons($authorKey, 'author');
 
 		if (!$authorVoteButtons) {
@@ -2037,29 +2042,30 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Called from WriteIndexPages() and generate.pl
 	# Should probably be replaced with GetReadPage()
 
-	my $filesArrayReference = shift;
-	my @files = @$filesArrayReference;
-	my $currentPageNumber = shift;
+	my $filesArrayReference = shift; # array of hash refs which contains items
+	my @files = @$filesArrayReference; # de-reference
+	my $currentPageNumber = shift; # for pagination links, determines which one is bolded
 
-	my $txtIndex = "";
+	my $html = ""; # html output
 
 	my $pageTitle = GetConfig('home_title');
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
-	
-	$txtIndex .= $htmlStart;
+
+	$html .= $htmlStart;
 
 	if (defined($currentPageNumber)) {
-		$txtIndex .= GetPageLinks($currentPageNumber);
+		#pagination links
+		$html .= GetPageLinks($currentPageNumber);
 	}
 
-	$txtIndex .= '<p>';
+	$html .= '<p>';
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$html .= GetTemplate('maincontent.template');
 
-	my $itemList = '';
+	my $itemList = ''; # the "filling" part of the page, with all the items templated
 
-	my $itemComma = '';
+	my $itemComma = ''; # separator between items
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
@@ -2109,25 +2115,25 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		}
 	}
 
-	$txtIndex .= $itemList;
+	$html .= $itemList;
 
-	$txtIndex .= '<p>';
+	$html .= '<p>';
 
 	#	$txtIndex .= GetTemplate('voteframe.template');
 
 	if (defined($currentPageNumber)) {
-		$txtIndex .= GetPageLinks($currentPageNumber);
+		$html .= GetPageLinks($currentPageNumber);
 	}
 
 	# Add javascript warning to the bottom of the page
-	$txtIndex .= GetTemplate("jswarning.template");
+	$html .= GetTemplate("jswarning.template");
 
 	# Close html
-	$txtIndex .= GetPageFooter();
+	$html .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile fresh timestamps));
+	$html = InjectJs($html, qw(avatar settings voting profile fresh timestamps));
 
-	return $txtIndex;
+	return $html;
 }
 
 sub WriteIndexPages { # writes the queue pages (index0-n.html)
