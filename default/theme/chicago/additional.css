@@ -19,3 +19,6 @@ input[type=text], input[type=password], select, option, textarea {
 @media (prefers-color-scheme: dark) {
 
 }
+.beginner {
+    background-color: #f0f0d0;
+}
