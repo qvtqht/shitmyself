@@ -1,5 +1,7 @@
 // == begin event_add.js
 function UpdateTimeString() {
+    //alert('DEBUG: UpdateTimeString()');
+
 	var year = document.forms['addevent'].year.value;
 	var month = document.forms['addevent'].month.value;
 	var day = document.forms['addevent'].day.value;
@@ -34,7 +36,5 @@ function UpdateTimeString() {
 	dd = Math.ceil(dd / 1000);
 
 	document.forms['addevent'].date_epoch.value = dd;
-
-
 }
 // == end event_add.js
