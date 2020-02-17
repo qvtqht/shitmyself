@@ -58,11 +58,11 @@ sub SqliteMakeTables() { # creates sqlite schema
 		key UNIQUE,
 		alias,
 		fingerprint,
-		pubkey_file_hash
+		file_hash
 	)");
 
 	# vote_weight
-	SqliteQuery2("CREATE TABLE vote_weight(key, vote_weight)");
+	SqliteQuery2("CREATE TABLE vote_weight(key, vote_weight, file_hash)");
 
 	# item
 	SqliteQuery2("CREATE TABLE item(
@@ -331,7 +331,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
 			COUNT(item_flat.file_hash) AS item_count,
-			author_alias.pubkey_file_hash AS pubkey_file_hash
+			author_alias.file_hash AS file_hash
 		FROM
 			author 
 			LEFT JOIN author_weight
@@ -343,7 +343,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 			LEFT JOIN item_flat
 				ON (author.key = item_flat.author_key)
 		GROUP BY
-			author.key, author_alias.alias, pubkey_file_hash
+			author.key, author_alias.alias, author_alias.file_hash
 	");
 }
 
@@ -569,6 +569,8 @@ sub DBGetLatestConfig { # Returns everything from config_latest view
 sub SqliteGetValue { # Returns the first column from the first row returned by sqlite $query
 	my $query = shift;
 	chomp $query;
+
+	WriteLog('SqliteGetValue: ' . $query);
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
@@ -1157,7 +1159,7 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 	my $pubkeyFileHash = shift;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO author_alias(key, alias, pubkey_file_hash) VALUES ";
+		$query = "INSERT OR REPLACE INTO author_alias(key, alias, file_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
@@ -1291,17 +1293,18 @@ sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ to
 	}
 
 	my $weight = shift;
+	my $fileHash = shift;
 
-	WriteLog('DBAddVoteWeight(' . $key . ', ' . $weight . ')');
+	WriteLog('DBAddVoteWeight(' . $key . ', ' . $weight . ', ' . $fileHash . ')');
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO vote_weight(key, vote_weight) VALUES ";
+		$query = "INSERT OR REPLACE INTO vote_weight(key, vote_weight, file_hash) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= '(?, ?)';
-	push @queryParams, $key, $weight;
+	$query .= '(?, ?, ?)';
+	push @queryParams, $key, $weight, $fileHash;
 }
 
 sub DBAddEventRecord { # add event record to database; $gitHash, $eventTime, $eventDuration, $signedBy
@@ -2084,7 +2087,7 @@ sub DBGetAuthorPublicKeyHash { # Returns the hash/identifier of the file contain
 	$key = SqliteEscape($key);
 
 	if ($key) { #todo fix non-param sql
-		my $query = "SELECT MAX(author_alias.pubkey_file_hash) AS pubkey_file_hash FROM author_alias WHERE key = '$key'";
+		my $query = "SELECT MAX(author_alias.file_hash) AS file_hash FROM author_alias WHERE key = '$key'";
 		$authorPubKeyCache{$key} = SqliteGetValue($query);
 		return $authorPubKeyCache{$key};
 	} else {

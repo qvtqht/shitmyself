@@ -700,7 +700,7 @@ sub IndexTextFile { # indexes one text file into database
 							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
-							DBAddVoteWeight($voterId, $voterWt);
+							DBAddVoteWeight($voterId, $voterWt, $fileHash);
 
 							DBAddPageTouch('author', $voterId);
 
