@@ -35,7 +35,10 @@ div.txt {
 	padding-left: 1em;
 }
 .admin {
-	/* #todo */
+	color: red;
+}
+.signed {
+    border-color: gold;
 }
 
 /* sign out button */
