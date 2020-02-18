@@ -7,46 +7,54 @@
 //print_r($_GET);
 
 include_once('utils.php');
+//
+//if (1/0) {
+//    // disabled
+//}
 
-if (1/0) {
-    // disabled
-}
+if (GetConfig('admin/php/route_enable')) { # route_enable is on
+    if ($_GET) {
+        WriteLog(print_r($_GET, 1));
 
-if ($_GET) {
-    WriteLog(print_r($_GET, 1));
+        if (isset($_GET['path'])) {
+            $path = $_GET['path'];
+            WriteLog('$path = ' . $path);
+            $pathFull = realpath('.'.$path);
 
-    if (isset($_GET['path'])) {
-        $path = $_GET['path'];
-        $pathFull = realpath('.'.$path);
+            $pathSelf = $_SERVER['PHP_SELF'];
+            $pathSelfReal = realpath('.'.$pathSelf);
+            $pathValidRoot = substr($pathSelfReal, 0, strlen($pathSelfReal) - strlen($pathSelf));
+            WriteLog ('$pathValidRoot = ' . $pathValidRoot . ';');
+            WriteLog ('$pathFull = ' . $pathFull . ';');
+            WriteLog ('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
 
-//        WriteLog($path);
-//        WriteLog(realpath('.'.$path));
+            if (substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot) {
+            // mitigate directory traversal?
+                WriteLog('$path = "' . $path . '"');
+                if ($path) {
+                    $pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
+                    if (file_exists($pathRel)) {
+                        if ($path == '/settings.html') {
+                            if (isset($_GET['chkWantToVote']) && isset($_GET['query']) && $_GET['query'] == 'ui=Admin') {
+                                include_once('cookie.php');
+                                WriteLog('$cookie = ' . $cookie);
+                            }
+                        }
 
-        $pathSelf = $_SERVER['PHP_SELF'];
-
-        $pathSelfReal = realpath('.'.$pathSelf);
-
-        $pathValidRoot = substr($pathSelfReal, 0, strlen($pathSelfReal) - strlen($pathSelf));
-
-        WriteLog ('$pathValidRoot = ' . $pathValidRoot . ';');
-        WriteLog ('$pathFull = ' . $pathFull . ';');
-        WriteLog ('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
-
-        if (substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot) {
-            if ($path) {
-                $path = '.' . $path;
-                if (file_exists($path)) {
-                    $html = file_get_contents($path);
+                        $html = file_get_contents($pathRel);
+                    }
                 }
+            } else {
+                //WriteLog ('not sure what to say to that...');
+                $html = '404'; //#todo template and header
             }
-        } else {
-            //WriteLog ('not sure what to say to that...');
-            $html = '404'; //#todo template and header
+
         }
 
+        print $html;
     }
-
-    print $html;
+} else {
+    WriteLog('config/admin/php/route_enable = false');
 }
 
 print WriteLog('');
