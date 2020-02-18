@@ -232,7 +232,8 @@ function GetConfig($configKey) { // get value for config value $configKey
 	return $configValue;
 }
 
-function GetTemplate($templateKey) {
+function GetTemplate($templateKey) { // get template from config tree
+// looks in theme directory first, so config/theme/ > default/theme/ > config/ > default/
     $themeName = GetConfig('html/theme');
     $themePath = 'theme/' . $themeName . '/template/' . $templateKey;
 
