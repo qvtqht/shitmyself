@@ -56,16 +56,24 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		$fileName = $txtDir . $hash . '.txt';
 		WriteLog('$fileName = ' . $fileName);
 
+        // standard signature separator
 		$signatureSeparator = "\n-- \n";
 
 		if (GetConfig('admin/logging/record_cookie') && isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
-			$comment .= $signatureSeparator;
-			$signatureSeparator = "\n";
+		    // if there's a cookie variable and cookie logging is enabled
+		    if (index($comment, 'PGP SIGNED MESSAGE') == -1 || GetConfig('admin/logging/record_cookie_when_signed')) {
+		        // don't add cookie if message appears signed. this is a temporary measure to mitigate duplicate messages
+		        // because access.pl doesn't know how to save cookies yet. record_cookie_when_signed=0 by default
 
-			$comment .= 'Cookie: ' . $_COOKIE['cookie'];
+                $comment .= $signatureSeparator;
+                $signatureSeparator = "\n";
+
+                $comment .= 'Cookie: ' . $_COOKIE['cookie'];
+            }
 		}
 
 		if (GetConfig('admin/logging/record_http_host') && $_SERVER['HTTP_HOST']) {
+		    // record host if it's enabled
 			$comment .= $signatureSeparator;
 			$signatureSeparator = "\n";
 
@@ -75,7 +83,6 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 
 		// save the file as ".tmp" and then rename
 		file_put_contents($fileName . '.tmp', $comment);
-
 		rename($fileName . '.tmp', $fileName);
 
 		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
