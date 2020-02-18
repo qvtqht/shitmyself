@@ -25,7 +25,7 @@ sub GetTime2() { # returns epoch time
 my $SCRIPTDIR = cwd();
 chomp $SCRIPTDIR;
 
-print GetTime2() . " Begin requires\n";
+# WriteLog ('Begin requires');
 
 require './utils.pl';
 
@@ -50,7 +50,7 @@ if (!$locked) {
 	require './access.pl';
 	require './pages.pl';
 	
-	print GetTime() . " End requires\n";
+	# WriteLog('End requires');
 	
 	WriteLog('update.pl begin');
 	
@@ -297,9 +297,12 @@ if (!$locked) {
 	
 	WriteLog("======update.pl DONE! ======");
 	WriteLog("Items/files processed: $filesProcessed");
-	print("Items/files processed: $filesProcessed\n");
 	WriteLog("Pages processed: $pagesProcessed");
-	print("Pages processed: $pagesProcessed\n");
+
+	if ($filesProcessed > 0) {
+		print("Items/files processed: $filesProcessed\n");
+		print("Pages processed: $pagesProcessed\n");
+	}
 }
 
 1;
