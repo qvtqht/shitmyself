@@ -1163,6 +1163,9 @@ sub IndexTextFile { # indexes one text file into database
 							WriteLog('Found seemingly valid request to remove file');
 
 							AppendFile('log/deleted.log', $voteFileHash);
+
+							DBDeleteItemReferences($voteFileHash);
+
 							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
 							my $htmlFilename = 'html/' . GetHtmlFilename($voteFileHash);
 							if (-e $htmlFilename) {
