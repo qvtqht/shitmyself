@@ -48,7 +48,7 @@
 					<p id=eventDate>
 						<b>Date</b><br>
 
-						<select name="month" onchange="UpdateTimeString()">
+						<select name="month" onchange="if (window.UpdateTimeString) { UpdateTimeString() }">
 							<option value="1">January</option>
 							<option value="2">February</option>
 							<option value="3">March</option>
@@ -63,7 +63,7 @@
 							<option value="12">December</option>
 						</select>
 
-						<select name="day" onchange="UpdateTimeString()">
+						<select name="day" onchange="if (window.UpdateTimeString) { UpdateTimeString() }">
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -97,7 +97,7 @@
 							<option value="31">31</option>
 						</select>
 
-						<select name="year" onchange="UpdateTimeString()">
+						<select name="year" onchange="if (window.UpdateTimeString) { UpdateTimeString() }">
 							<option value="2017">2017</option>
 							<option value="2018">2018</option>
 							<option value="2019">2019</option>
@@ -117,7 +117,7 @@
 
 						<b>Time</b><br>
 
-						<select name="hour" onchange="UpdateTimeString()">
+						<select name="hour" onchange="if (window.UpdateTimeString) { UpdateTimeString() }">
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -132,7 +132,7 @@
 							<option value="12">12</option>
 						</select>
 
-						<select name="minute" onchange="UpdateTimeString()">
+						<select name="minute" onchange="if (window.UpdateTimeString) { UpdateTimeString() }">
 							<option value="0">00</option>
 							<option value="5">05</option>
 							<option value="10">10</option>
@@ -147,7 +147,7 @@
 							<option value="55">55</option>
 						</select>
 
-						<select name="am_pm" onchange="UpdateTimeString()">
+						<select name="am_pm" onchange="if (window.UpdateTimeString) { UpdateTimeString() }">
 							<option value="0">AM</option>
 							<option value="1">PM</option>
 						</select>
