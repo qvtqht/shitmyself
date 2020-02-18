@@ -1,3 +1,7 @@
+Options for loggig cookie with access.pl
+    --> ssi?
+    --> php can write cookie to log/cookie.log along with some kind of identifier which can be connected back?
+
 When a file is archived from an article copy-paste
     Lines containing junk content can be removed by hash
 

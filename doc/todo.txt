@@ -1,3 +1,20 @@
+
+HASHTAG VOTES SHOULD APPLY TO PARENT ITEMS
+If item is a reply
+	If contains hashtag
+		Hashtag vote applies to parent
+Implementation:
+    Stupid way
+        1. Index and store all hash tags for given file_hash
+        2. Integrate into item_view page if it's top-level
+    Smarter way
+        1. Create a view which does it automatically for parent-level items
+    3.
+
+Views
+    Outputs: html listing, rss, zip, pdf, epub, docx, rtf, txt
+
+
 nn3, nn2 #bug cannot register again after clicking sign out
 
 Trigger for change in html/theme setting
@@ -58,12 +75,6 @@ Allow vouching by non-admin users
 Add timestamp to session cookie
 	To allow time limit for cookie validity
 		This will also require rewriting the cookie now and then
-
-HASHTAG VOTES SHOULD APPLY TO PARENT ITEMS
-If item is a reply
-	If contains hashtag
-		Hashtag vote applies to parent
-
 
 Bug: When vouch/ is used, the first time the item is added
 	a duplicate entry in vote_weight is added
