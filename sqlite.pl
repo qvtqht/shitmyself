@@ -149,11 +149,11 @@ sub SqliteMakeTables() { # creates sqlite schema
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
 
 	# config
-	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, source_item);");
+	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, file_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp, reset_flag);");
 	SqliteQuery2("
 		CREATE VIEW config_latest AS
-		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag, source_item FROM config GROUP BY key ORDER BY timestamp DESC
+		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag, file_hash FROM config GROUP BY key ORDER BY timestamp DESC
 	;");
 
 
@@ -771,7 +771,7 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	my $sourceItem = shift;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO config(key, value, timestamp, reset_flag, source_item) VALUES ";
+		$query = "INSERT OR REPLACE INTO config(key, value, timestamp, reset_flag, file_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
@@ -971,6 +971,35 @@ sub DBDeletePageTouch { # deletes page_touch entry ;  $pageName, $pageParam
 	  SqliteQuery2($query, @queryParams); 
 }
 
+sub DBDeleteItemReferences { # delete all references to item from tables
+	my $hash = shift;
+	if (!IsSha1($hash)) {
+		return;
+	}
+
+	#todo queue all pages in item_page ;
+
+	#todo item_page should have all the child items for replies
+
+	#file_hash
+	my @tables = qw(added_by added_time author_alias config item item_attribute item_title vote vote_weight);
+
+	foreach (@tables) {
+		my $query = "DELETE FROM $_ WHERE file_hash = '$hash'";
+		SqliteQuery2($query);
+	}
+
+	#item_hash
+	my @tables2 = qw(brc event item_page item_parent location);
+
+	foreach (@tables2) {
+		my $query = "DELETE FROM $_ WHERE item_hash = '$hash'";
+		SqliteQuery2($query);
+	}
+
+	#todo any successes deleting stuff should result in a refresh for the affected page
+}
+
 sub DBAddPageTouch { # Adds an entry to page_touch table
 # page_touch table is used for determining which pages need to be refreshed
 # DBAddPageTouch is called from IndexTextFile to schedule updates for pages affected by a newly indexed item
@@ -1053,7 +1082,7 @@ sub DBGetVoteCounts { # Get total vote counts by tag value
 				vote_value
 		)
 		WHERE
-			vote_count >= 3
+			vote_count >= 1
 		$orderBy;
 	";
 
