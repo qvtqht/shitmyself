@@ -1,12 +1,12 @@
 <!-- topmenu2.template -->
 <form action="" name="frmTopMenu">
-	<table class=dialog>
+	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2><small>
 				<a href="#maincontent"><font color=$colorTitlebarText><b><small>Skip to main content</small></b></font></a>
 			</small></td>
 		</tr>
-		<tr>
+		<tr bgcolor=$colorWindow class=menubar>
 			<td>
 				<big style="padding:5pt">$menuItems</big>
 			</td>
