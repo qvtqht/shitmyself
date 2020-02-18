@@ -700,15 +700,14 @@ sub IndexTextFile { # indexes one text file into database
 							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
 							$detokenedMessage =~ s/$reconLine//g;
 
+                            # add record to vote weight table
 							DBAddVoteWeight($voterId, $voterWt, $fileHash);
-
 							DBAddPageTouch('author', $voterId);
-
 							DBAddPageTouch('scores', 0);
 						}
 
+                        # tag item as having a vouch action
 						DBAddVoteRecord($fileHash, $addedTime, 'vouch');
-
 						DBAddPageTouch('tag', 'vouch');
 					}
 				}
