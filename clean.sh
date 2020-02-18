@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/usr/bin/bash
 
 rm -v cron.lock
 rm -rfv cache
