@@ -22,4 +22,24 @@ input[type=text], input[type=password], select, option, textarea {
 }
 #txtClock {
 	border: 1pt inset $colorWindow;
+	color: #8080c0;
+}
+.dialog {
+	border-radius: 5pt;
+	background-color: $colorWindow;
+	font-family: tahoma, helvetica, arial, sans-serif;
+	font-size: 10pt;
+}
+.statusbar td {
+	border: 1pt inset $colorWindow;
+}
+textarea {
+    font-family: serif;
+    font-size: 12pt;
+}
+fieldset {
+    border-radius: 3pt;
+}
+.titlebar, .titlebar td {
+    border-radius: 3pt;
 }

@@ -88,15 +88,4 @@ div.txt {
 #cSb {
 	font-weight: bold;
 }
-.advanced, .beginner {
-	border-radius: 3pt;
-}
 
-.dialog {
-	border: $borderDialog;
-	background-color: $colorWindow;
-}
-
-.statusbar td {
-	border: 1pt inset $colorWindow;
-}

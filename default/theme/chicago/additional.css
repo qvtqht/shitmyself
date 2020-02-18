@@ -22,3 +22,19 @@ input[type=text], input[type=password], select, option, textarea {
 .beginner {
     background-color: #f0f0d0;
 }
+.dialog {
+	border: $borderDialog;
+	background-color: $colorWindow;
+	font-family: tahoma, helvetica, arial, sans-serif;
+	font-size: 10pt;
+}
+.statusbar td {
+	border: 1pt inset $colorWindow;
+}
+textarea {
+    font-family: serif;
+    font-size: 12pt;
+}
+fieldset {
+    border-radius: 3pt;
+}
