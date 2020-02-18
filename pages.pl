@@ -877,6 +877,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		# get formatted/post-processed message for this item
 		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
+		WriteLog($message);
+
 		if (!$file{'item_title'}) {
 			#hack #todo
 			#$file{'item_title'} = 'Untitled';
@@ -917,18 +919,22 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			}
 		}
 
-		if ($isTextart) {
-			# if textart, format with extra spacing to preserve character arrangement
-			$message = TextartForWeb($message);
 		# } elsif ($isSurvey) {
 		# 	# if survey, format with text fields for answers
 		# 	$message = SurveyForWeb($message);
+
+		if ($isTextart) {
+			# if textart, format with extra spacing to preserve character arrangement
+			$message = TextartForWeb($message);
 		} else {
 			# if not textart, just escape html characters
+			WriteLog('GetItemTemplate: calling FormatForWeb');
 			$message = FormatForWeb($message);
 		}
 
-		#$message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
+		WriteLog('GetItemTemplate: $message is: ' . $message);
+
+		# $message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
 
 		# if any references to other items, replace with link to item
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
@@ -1059,6 +1065,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		if ($isTextart) {
 			$itemText = '<tt><code>' . $message . '</code></tt>';
+		}
+
+		if ($isAdmin) {
+			$itemText = '<font color=red>' . $message . '</font>';
 		}
 
 		my $replyLink = $permalinkHtml . '#reply'; #todo this doesn't need the url before #reply if it is on the item's page
@@ -1266,7 +1276,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	#$styleSheet =~ s/\w\w/ /g;
 
-	my $clock = '';
+	my $clock = '*';
 	if (GetConfig('html/clock')) {
 		$clock = GetTemplate('clock.template');
 
@@ -1305,7 +1315,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/etc.html", 'More');
 
 	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
-	$menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
+	# $menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
@@ -1858,6 +1868,14 @@ sub GetReadPage { # generates page with item listing based on parameters
 		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash, 'pubkey');
 		
 		$authorLastSeen = GetTimestampElement($authorLastSeen);
+
+        if (!$authorDescription) {
+            $authorDescription = '*';
+        }
+
+        if (!$publicKeyHash) {
+            $publicKeyHash = '*';
+        }
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
@@ -2776,7 +2794,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 	#todo move html to template
 	$menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
