@@ -1844,6 +1844,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 		my $publicKeyHashHtml = '';
 		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
 			$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
+		} else {
+			$publicKeyHashHtml = '*';
 		}
 		
 		if (IsServer($authorKey)) {
@@ -1887,10 +1889,10 @@ sub GetReadPage { # generates page with item listing based on parameters
 		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 		$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 		$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;
-		if ($publicKeyHash) {
+		if ($publicKeyHashHtml) {
 			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
 		} else {
-			$authorInfoTemplate =~ s/\$publicKeyHash//g;
+			$authorInfoTemplate =~ s/\$publicKeyHash/*/g;
 		}
 
 
@@ -2540,6 +2542,31 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	WriteLog('MakeSummaryPages() END');
 }
 
+sub GetWriteForm {
+	my $writeForm = GetTemplate('form/write4.template');
+
+	if (GetConfig('admin/php/enable')) {
+		#if php module is enabled, change the form target to post.php
+		#		my $postHtml = 'post.html';
+		# on a separate line because
+		# putting it into the regex would require escaping the period,
+		# would in turn would mean that searching for "post.html" in the codebase would not find this line
+
+		#		$submitForm =~ s/$postHtml/post.php/;
+
+		# this is how autosave would work
+		# $submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
+	}
+
+	my $initText = '';
+
+	# these are not present in the template
+	$writeForm =~ s/\$extraFields/poop/g;
+	$writeForm =~ s/\$initText/$initText/g;
+
+	return $writeForm;
+}
+
 sub GetWritePage { # returns html for write page
 	# $txtIndex stores html page output
 	my $txtIndex = "";
@@ -2557,27 +2584,9 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $submitForm = GetTemplate('form/write4.template');
+	my $writeForm = GetWriteForm();
 
-	if (GetConfig('admin/php/enable')) {
-	#if php module is enabled, change the form target to post.php
-#		my $postHtml = 'post.html';
-		# on a separate line because 
-		# putting it into the regex would require escaping the period,
-		# would in turn would mean that searching for "post.html" in the codebase would not find this line
-		
-#		$submitForm =~ s/$postHtml/post.php/;
-
-		# this is how autosave would work
-		# $submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
-	}
-
-	my $initText = '';
-
-	$submitForm =~ s/\$extraFields//g;
-	$submitForm =~ s/\$initText/$initText/g;
-
-	$txtIndex .= $submitForm;
+	$txtIndex .= $writeForm;
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		my $itemCounts = GetTemplate('form/itemcount.template');
