@@ -1899,11 +1899,14 @@ sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based lay
 	my $i = 0;
 
 	$text = HtmlEscape($text);
-	$text =~ s/\n /<br>&nbsp;/g;
+	# $text =~ s/\n /<br>&nbsp;/g;
 	$text =~ s/^ /&nbsp;/g;
 	$text =~ s/  / &nbsp;/g;
-	$text =~ s/\n/<br>\n/g;
-#	$text =~ s/<br>/'<br><input type=text size=80 name=txt'.$i++.'><br>'/ge;
+	# $text =~ s/\n/<br>\n/g;
+	# $text =~ s/<br>/'<br><input type=text size=80 name=txt'.$i++.'><br>'/ge;
+	# $text =~ s/<br>/<br><br>/g;
+	$text = '<textarea cols=80 rows=24>'.$text.'</textarea>';
+	$text = '<form action=/post.html>'.$text.'<br><input type=submit value=Send></form>';
 
 	#htmlspecialchars(
 	## nl2br(
