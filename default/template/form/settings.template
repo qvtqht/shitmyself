@@ -12,18 +12,19 @@
 				<td class=content>
 
 					<fieldset>
-						<legend>Interface</legend>
+						<legend>Interface<br></legend>
 
-						<nobr>
+						<p><nobr>
 							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('A'); }">
 							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { return modeChange('B'); }">
-							<input class="advanced" type=submit name=ui value="Admin" onclick="if (window.modeChange) { return modeChange('C'); }">
-						</nobr>
+						</nobr></p>
 					</fieldset>
 
+					<p>
 
 					<fieldset>
-						<legend>Moderation</legend>
+						<legend>Moderation<br></legend>
+
 						<p>
 							<label for=chkWantToVote>
 								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
@@ -33,15 +34,27 @@
 					</fieldset>
 
 					<fieldset class=advanced>
-						<legend>Get Social</legend>
-
-						<p><a href="/write.html?report=client">Tell us about your browser!</a></p>
+						<legend>Get Social<br></legend>
+						<p>
+							<a href="/write.html?report=client">Tell us about your browser!</a>
+						</p>
 					</fieldset>
 
 					<fieldset class=admin>
 						<legend>Admin</legend>
-
-						<p></p>
+						<p>
+							<label for=optTheme>theme:
+								<select name=optTheme id=optTheme>
+									<option value=friday29>friday29</option>
+									<option value=chicago>chicago</option>
+									<option value=dark>dark</option>
+									<option value=green>green</option>
+									<option value=news>news</option>
+									<option value=union>union</option>
+								</select>
+							</label>
+							<input type=submit value=Save name=save>
+						</p>
 					</fieldset>
 				</td>
 			</tr>
@@ -51,7 +64,6 @@
 					Ready
 				</td>
 			</tr>
-
 		</table>
 	</font>
 </form>
