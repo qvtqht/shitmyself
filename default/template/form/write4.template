@@ -9,6 +9,12 @@
 				</td>
 			</tr>
 
+			<tr class=menubar>
+				<td>
+					<p><a href="/write.html?report=client">Report browser information</a>
+				</td>
+			</tr>
+
 			<tr class=body>
 				<td class=content>
 					<fieldset>
