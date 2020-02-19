@@ -2,4 +2,4 @@ RewriteEngine On
 RewriteRule ^post\.html??(.+)? /post.php [QSA]
 RewriteRule ^write\.html??(.+)? /write.php [QSA]
 RewriteRule ^profile\.html??(.+)? /profile.php [QSA]
-#RewriteRule ^(.+\.html)\??(.+) /route.php [QSA]
+RewriteRule ^(.+\.html)\??(.+) /route.php [QSA]
