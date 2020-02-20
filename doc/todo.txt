@@ -1,3 +1,9 @@
+Netscape 4.80 user-set font size is overridden by site #issue #bug #accessibility
+    Probably need to get rid of fixed font sizes
+
+"reply anonyomusly" is not true if cookie set #bug
+
+Basic calendar view 
 
 access.pl:
     vote2.html
@@ -889,18 +895,6 @@ forgot to add conversions to user pages
 
 mod_security can interfere with some signed posts #known
 
-Some of the buttons can probably be made full width
-   To make them easier to press on mobile
-
-Sometimes on Android the button push is cancelled by the keyboard retract #bug
-   Or something like that
-      Load page
-      Press Write
-      Fill in message
-      Press the "Post" button
-         Expected: Posted
-         Actual: First tab is usually ignored
-
 curl
     add to tree
         add timestamp
@@ -948,13 +942,9 @@ Add support for public key included inside signed message
 
 Rewrite clock value in php
 
-Hints are not un/highlighted after page load
-
 Voting links cause crash in Mosaic 2.0 and 1.0
 
 #bug Reset settings (with js) does not change checkbox values to their defaults
-
-#bug cookie auth no worky in nn4.80
 
 PHP handler for event.html
 	Set date pre-set to current
