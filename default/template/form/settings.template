@@ -17,6 +17,7 @@
 						<p><nobr>
 							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('A'); }">
 							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { return modeChange('B'); }">
+							<input type=submit class=advanced name=ui value="Admin" onclick="if (window.modeChange) { return modeChange('C'); }">
 						</nobr></p>
 					</fieldset>
 
@@ -28,15 +29,8 @@
 						<p>
 							<label for=chkWantToVote>
 								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
-								Willing to moderate
+								Moderator
 							</label>
-						</p>
-					</fieldset>
-
-					<fieldset class=advanced>
-						<legend>Get Social<br></legend>
-						<p>
-							<a href="/write.html?report=client">Tell us about your browser!</a>
 						</p>
 					</fieldset>
 
@@ -44,7 +38,7 @@
 						<legend>Admin</legend>
 						<p>
 							<label for=optTheme>theme:
-								<select name=optTheme id=optTheme>
+								<select name=setconfig/html/theme id=optTheme>
 									<option value=friday29>friday29</option>
 									<option value=chicago>chicago</option>
 									<option value=dark>dark</option>
