@@ -11,7 +11,7 @@
 		$windowBody
 
 		<tr class=statusbar>
-			<td style="border: 1pt inset $colorWindow; padding: 2pt;" colspan=$contentColumnCount>
+			<td colspan=$contentColumnCount>
 				$windowStatus
 			</td>
 		</tr>
