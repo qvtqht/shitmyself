@@ -47,6 +47,41 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 	return 1;
 }
 
+function ShowAll(t) {
+    if (window.localStorage && document.getElementsByClassName) {
+        var display;
+        if (t.innerHTML == 'More') {
+            display = 'initial';
+            t.innerHTML = 'Less';
+        } else {
+            display = 'none';
+            t.innerHTML = 'More';
+        }
+
+        var elements = document.getElementsByClassName('advanced');
+        for (var i = 0; i < elements.length; i++) {
+            SetElementVisible(elements[i], display, '$colorHighlightAdvanced', 0);
+        }
+        elements = document.getElementsByClassName('beginner');
+        for (var i = 0; i < elements.length; i++) {
+            SetElementVisible(elements[i], display, '$colorHighlightBeginner', 0);
+        }
+        elements = document.getElementsByClassName('voter');
+        for (var i = 0; i < elements.length; i++) {
+            SetElementVisible(elements[i], display, 0, 0);
+        }
+
+        if (timerShowAdvanced) {
+            clearTimeout(timerShowAdvanced);
+        }
+        timerShowAdvanced = setTimeout('ShowAdvanced(1);', 10000);
+
+        return false;
+    }
+
+    return true;
+}
+
 function ShowAdvanced(force) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
@@ -246,7 +281,6 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
             SetPrefs('show_admin', 0);
-
 		} else if (ab == 'C') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 0);
@@ -254,10 +288,6 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 			SetPrefs('beginner_highlight', 0);
 			SetPrefs('notify_on_change', 1);
             SetPrefs('show_admin', 1);
-
-			if (window.getPublicKey && getPublicKey()) {
-			    return true;
-			}
 		}
 
 		ShowAdvanced(1);
