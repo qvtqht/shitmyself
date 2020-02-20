@@ -15,4 +15,5 @@ input[type=text], input[type=password], select, option, textarea {
 }
 .statusbar td {
 	border: 0;
+    padding: 2pt;
 }
