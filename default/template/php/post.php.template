@@ -317,3 +317,8 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 }
 
 print($html);
+
+if (GetConfig('admin/php/update_on_post')) {
+    WriteLog(`cd .. ; ./update.pl`);
+}
+
