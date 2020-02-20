@@ -243,3 +243,15 @@ function GetTemplate($templateKey) { // get template from config tree
 	    return GetConfig('template/' . $templateKey);
     }
 }
+
+function AddMessage($message) { //adds message to queue, which can be passed to next page load
+    if ($message == '') {
+        // generate message id
+        // write message to cache
+        // return cache id
+    }
+
+    // static $messages array
+
+    // push message to array
+}
