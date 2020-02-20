@@ -34,7 +34,7 @@ div.reply { /* this creates indented effect for sub-replies */
 div.txt {
 	padding-left: 1em;
 }
-.admin {
+.byadmin {
 	color: red;
 }
 .signed {

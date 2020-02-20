@@ -988,7 +988,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 		if ($isAdmin) {
 			# if item is signed by an admin, add "admin" css class
-			$itemClass .= ' admin';
+			$itemClass .= ' byadmin';
 		}
 		if ($isTextart) {
 			# if item is textart, add "item-textart" css class
@@ -1311,8 +1311,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/", 'Read');
 	$menuItems .= GetMenuItem("/write.html", 'Write');
 	$menuItems .= GetMenuItem("/settings.html", 'Settings');
-	$menuItems .= GetMenuItem("/stats.html", 'Status');
-	$menuItems .= GetMenuItem("/etc.html", 'More');
+	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
 
 	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
 	# $menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
@@ -1320,7 +1319,10 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile');
-#	if ($adminKey) {
+
+    $menuItems .= GetMenuItem("/etc.html", 'More');
+
+    #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
 #	}
 ##	$menuItems .= GetMenuItem("/help.html", 'Help');
@@ -1754,7 +1756,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	# #todo figure out why this is needed here
 
 	if (defined($pageType)) {
-		#$pageType can be 'author', 'tag
+		#$pageType can be 'author', 'tag'
 		if ($pageType eq 'author') {
 			$pageParam = shift;
 			$authorKey = $pageParam;
