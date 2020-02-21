@@ -11,7 +11,9 @@
 
 			<tr class=menubar>
 				<td>
-					<p><a href="/write.html?report=client">Browser Report</a> | <a href="/write.html?#inspubkey">Share Profile</a>
+					<p class=advanced>
+						<a href="/write.html?report=client">Browser</a>;
+						<a href="/write.html?#inspubkey">Profile</a>
 				</td>
 			</tr>
 
