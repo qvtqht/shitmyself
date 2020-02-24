@@ -1224,13 +1224,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	if (!defined($logoText)) {
 		$logoText = GetConfig('logo/logo_text');
 		if (!$logoText) {
-			#$logoText = random_emoji();
-			#$logoText = encode_entities($logoText, '^\n\x20-\x25\x27-\x7e');
-			#$logoText = "*"
 			$logoText = '';
 		}
-		#$logoText = FormatForWeb($logoText);
-		#$logoText = HtmlEscape($logoText);
 	}
 
 	my $txtIndex = "";
@@ -1254,27 +1249,17 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $styleSheet = GetStylesheet();
 
-#
-#	my @availablePatterns = glob('template/pattern/*.template');
-#	my $randomNumber = int(rand(@availablePatterns));
-#	my $patternName = $availablePatterns[$randomNumber];
-#	$patternName =~ s/^template\///;
-
-	#my $patternName = 'pattern/bokeh.template';
 	my $patternName = trim(GetConfig('header_pattern'));
 	my $introText = trim(GetString('page_intro/' . $pageType));
 	if (!$introText) {
 		$introText = trim(GetString('page_intro/default'));
 	}
-#	$patternName = GetConfig('header_pattern');
 
 	# this is for the css pattern that's displayed in the background of the top menu
 	my $headerBackgroundPattern = GetTemplate($patternName);
 	WriteLog("$headerBackgroundPattern");
 	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
 	WriteLog($styleSheet);
-
-	#$styleSheet =~ s/\w\w/ /g;
 
 	my $clock = '*';
 	if (GetConfig('html/clock')) {
@@ -1310,7 +1295,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	#todo replace with config/menu/*
 	$menuItems .= GetMenuItem("/", 'Read');
 	$menuItems .= GetMenuItem("/write.html", 'Write');
-	$menuItems .= GetMenuItem("/settings.html", 'Settings');
+	$menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
 	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
 
 	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
@@ -1320,7 +1305,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 
-    $menuItems .= GetMenuItem("/etc.html", 'More');
+    #$menuItems .= GetMenuItem("/etc.html", 'More');
 
     #	if ($adminKey) {
 #		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
@@ -2131,7 +2116,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$itemList = $itemList . $itemComma . $itemTemplate;
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr size=8>';
+				$itemComma = '<hr>';
 #				$itemComma = '<p>';
 			}
 		}
@@ -2741,7 +2726,15 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	my $profileWindowContents = GetTemplate('form/profile2.template');
-	my $profileWindow = GetWindowTemplate(
+
+    if (GetConfig('admin/gpg/use_gpg2')) {
+        my $gpg2Choices = GetTemplate('gpg2.choices.template');
+        $profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
+    } else {
+        $profileWindowContents =~ s/\$gpg2Algochoices//;
+    }
+
+    my $profileWindow = GetWindowTemplate(
 		'Profile',
 		'',
 #		'<a class=advanced href="/gpg.html">Signatures</a>',
