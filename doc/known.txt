@@ -45,3 +45,5 @@ Long messages without JS may cause URI too long error
 	With JS, the form is automatically switched to POST
 	There needs to be a warning and another page
 	Maybe the default page should have a one-liner textbox
+
+Mosaic and IE4 experience frequent crashes

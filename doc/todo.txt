@@ -1,3 +1,13 @@
+On profile page, the page intro should reflect logged in status
+    You are signed in as Anonyomus
+    You are not signed in
+    etc
+
+(checkmark) this text has been verified via vouch-web
+
+red tag links sohuld also be red without css
+    <font color=red>
+
 Netscape 4.80 user-set font size is overridden by site #issue #bug #accessibility
     Probably need to get rid of fixed font sizes
 
