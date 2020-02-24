@@ -9,7 +9,8 @@
 		<tr bgcolor=$colorWindow class=menubar>
 			<td>
 				<big style="padding:5pt">$menuItems</big>
-				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>
+				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>/
+				<a href="/help.html">Help</a>
 			</td>
 			<td align=right>
 				$clock
