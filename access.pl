@@ -248,10 +248,14 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 		# useragent is last. everything that is not the values we have pulled out so far
 		# is the useragent.
-		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 10;
+		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 11;
 		$userAgent = substr($line, $notUseragentLength);
+		chomp($userAgent);
+		$userAgent = trim($userAgent);
 
 		WriteLog('ProcessAccessLog: $date = ' . $date);
+
+		AppendFile('log/useragent.log', $userAgent);
 
 		my $errorTrap = 0;
 
