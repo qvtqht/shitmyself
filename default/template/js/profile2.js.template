@@ -74,6 +74,29 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 	return true;
 }
 
+function AddPrivateKeyLink() {
+    if (window.getPrivateKey) {
+	    var privateKey = getPrivateKey();
+	    if (privateKey) {
+	        var fieldset = document.getElementById('fldRegistration');
+	        if (fieldset && document.createElement) {
+	            var linkP = document.createElement('p');
+
+	            var linkA = document.createElement('a');
+	            linkA.setAttribute('class', 'advanced');
+	            linkA.setAttribute('href', '#');
+	            linkA.setAttribute('onclick', 'if (window.ShowPrivateKey) { ShowPrivateKey(); }');
+	            linkA.innerHTML = 'show private key';
+
+	            linkP.appendChild(linkA);
+
+//	            linkP.innerHTML = '<a class=advanced href=# onclick="if (window.ShowPrivateKey) { ShowPrivateKey(); }">show private key</a>';
+	            fieldset.appendChild(linkP);
+            }
+	    }
+    }
+}
+
 function ProfileOnLoad() {
 	//alert('DEBUG: ProfileOnLoad() begin');
 
@@ -93,6 +116,8 @@ function ProfileOnLoad() {
 
 				if (lblSigningIndicator) {
 					lblSigningIndicator.innerHTML = 'Yes';
+
+					AddPrivateKeyLink();
 				}
 
 				lblHandle = document.getElementById('lblHandle');
@@ -122,6 +147,50 @@ function ProfileOnLoad() {
 			}
 		}
 	}
+}
+
+function ShowPrivateKey() { // displays private key in textarea
+    //alert('DEBUG: ShowPrivateKey: enter');
+    if (document.getElementById) {
+        //alert('DEBUG: ShowPrivateKey: document.getElementById is true');
+
+        var txtPrivateKey = document.getElementById('txtPrivateKey');
+        if (txtPrivateKey) {
+            //alert('DEBUG: ShowPrivateKey: txtPrivateKey is true');
+
+            if (txtPrivateKey.style.display == 'none') {
+                //alert('DEBUG: style is none, set to block');
+                txtPrivateKey.style.display = 'block';
+            } else {
+                //alert('DEBUG: style is block, set to none');
+                txtPrivateKey.style.display = 'none';
+            }
+
+            return false;
+        }
+    }
+
+    if (window.getPrivateKey) {
+	    var privateKey = getPrivateKey();
+	    if (privateKey && document.createElement) {
+	        var txtPrivKey = document.createElement('textarea');
+	        txtPrivKey.setAttribute('cols', 80);
+	        txtPrivKey.setAttribute('rows', 24);
+	        txtPrivKey.setAttribute('id', 'txtPrivateKey');
+	        txtPrivKey.innerHTML = privateKey;
+
+	        var fldRegistration = document.getElementById('fldRegistration');
+	        if (fldRegistration) {
+    	        fldRegistration.appendChild(txtPrivKey);
+	        } else {
+    	        document.body.appendChild(txtPrivKey);
+            }
+
+	        txtPrivKey.focus();
+
+	        return false;
+	    }
+    }
 }
 
 
