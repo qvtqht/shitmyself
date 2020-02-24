@@ -57,9 +57,8 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
     WriteLog('config/admin/php/route_enable = false');
 }
 
-if (file_exists('../config/admin/php/debug')) {
-    print WriteLog('');
-}
+print WriteLog('');
+
 //
 //if (isset($_GET['path']) && $_GET['path']) {
 //	$path = $_GET['path'];
