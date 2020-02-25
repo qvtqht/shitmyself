@@ -1,0 +1,76 @@
+What "Basics" means
+===================
+Load every page
+Write new topic
+Reply to existing topic
+Vote on item
+
+Opera 12.14
+===========
+[x] Basics
+[x] Cookie auth
+[x] JS voting buttons
+[x] JS modular UI
+[ ] OpenPGP and signing
+[x] JS clock
+[ ] JS fresh.js
+
+Netscape 4.80
+=============
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[x] JS clock
+[ ] JS fresh.js
+
+SeaMonkey 2.49.5
+================
+[x] Basics
+[x] Cookie auth
+[x] JS voting buttons
+[x] JS modular UI
+[x] OpenPGP and signing
+[x] JS clock
+[x] JS fresh.js
+
+Midori 9.0
+==========
+[x] Basics
+[x] Cookie auth
+[x] JS voting buttons
+[x] JS modular UI
+[x] OpenPGP and signing
+[x] JS clock
+[x] JS fresh.js
+
+Opera 3.62
+==========
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[x] JS clock
+[ ] JS fresh.js
+
+Netscape 3.04 Gold
+==================
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[x] JS clock
+[ ] JS fresh.js
+
+Lynx 2.8.9rel.1 (08 Jul 2018)
+=============================
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[ ] JS clock
+[ ] JS fresh.js

@@ -1,3 +1,9 @@
+Alternate auth method: http-auth
+
+#bug tag pages are not generated initially
+    hastitle
+    reply
+
 On profile page, the page intro should reflect logged in status
     You are signed in as Anonyomus
     You are not signed in
