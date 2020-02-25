@@ -49,6 +49,14 @@
 							</label>
 							<input type=submit value=Save name=save>
 						</p>
+						<p>
+							<label for=chkUpgrade>
+								<input type=checkbox id=chkUpgrade name=chkUpgrade>
+								Upgrade?
+							</label>
+
+							<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
+						</p>
 					</fieldset>
 				</td>
 			</tr>
