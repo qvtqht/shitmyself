@@ -2,7 +2,8 @@
 var freshClient;
 var timeoutFresh;
 
-var clockBaselineColor;
+var clockBaselineColor; // color the clock started out at when the page loaded
+
 if (!clockBaselineColor && document.getElementById) {
 	var clock = document.getElementById('txtClock');
 	if (clock) {
@@ -11,9 +12,20 @@ if (!clockBaselineColor && document.getElementById) {
 }
 
 function freshCallback() { // callback for requesting HEAD for current page
+    //alert('DEBUG: freshCallback() begins');
+
 	var clock = document.getElementById('txtClock');
-	if(this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
+
+	//alert('DEBUG: freshCallback() clock = ' + clock);
+
+	//alert('DEBUG: freshCallback() this.readyState = ' + this.readyState);
+
+	if (1 || this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
+	    //alert('DEBUG: freshCallback() this.readyState == this.HEADERS_RECEIVED');
+
 		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
+
+		//alert('DEBUG: eTag = ' + eTag);
 
 		if (eTag) { // if etag header has a value
 			if (window.lastEtag) { // if we already saved one
@@ -33,9 +45,13 @@ function freshCallback() { // callback for requesting HEAD for current page
 		}
 
 		if (clock) { // reset
+		    //alert('DEBUG: freshCallback() setting clock.style.backgroundColor = clockBaselineColor');
+
 			clock.style.backgroundColor = clockBaselineColor;
 		}
 	}
+
+	//alert('DEBUG: freshCallback() ends');
 }
 
 function CheckIfFresh() {
@@ -93,5 +109,7 @@ if (window.GetPrefs) {
 		AmIFresh();
 	}
 }
+
+//alert('DEBUG: fresh.js');
 
 // == end fresh.js
