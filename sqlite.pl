@@ -169,6 +169,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 #	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(128, 'event');");
 #	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(256, 'markdown');");
 
+	### VIEWS BELOW ############################################
 
 	# parent_count view
 	SqliteQuery2("
@@ -183,14 +184,6 @@ sub SqliteMakeTables() { # creates sqlite schema
 	");
 
 	SqliteQuery2("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
-
-
-#	SqliteQuery2("
-#		CREATE VIEW added_time2 AS
-#			SELECT
-#
-#
-#	;");
 
 	SqliteQuery2("
 		CREATE VIEW vote_weighed AS
