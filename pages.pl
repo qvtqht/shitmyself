@@ -2045,6 +2045,18 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 	return $menuItem;
 }
 
+sub GetMenuItemByKey {
+	my $key = shift;
+	chomp($key);
+
+	my $class = 'advanced';
+	if ($key eq 'index' || $key eq 'write' || $key eq 'settings') {
+		$class = 0;
+	}
+
+	return GetMenuItem("/$key.html", $key, $class);
+}
+
 sub GetIndexPage { # returns html for an index page, given an array of hash-refs containing item information
 	# Called from WriteIndexPages() and generate.pl
 	# Should probably be replaced with GetReadPage()
