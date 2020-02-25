@@ -4,6 +4,7 @@ Load every page
 Write new topic
 Reply to existing topic
 Vote on item
+Update button on Stats page
 
 Opera 12.14
 ===========
@@ -74,3 +75,24 @@ Lynx 2.8.9rel.1 (08 Jul 2018)
 [ ] OpenPGP and signing
 [ ] JS clock
 [ ] JS fresh.js
+
+Links 2.20.2 (text mode)
+========================
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[ ] JS clock
+[ ] JS fresh.js
+
+w3m/0.5.3+git20180125
+=====================
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[ ] JS clock
+[ ] JS fresh.js
+
