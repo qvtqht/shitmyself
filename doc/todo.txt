@@ -1,3 +1,7 @@
+Many pages crash in Mosaic 3.0 Win
+
+#bug Wine IE8 clock ticks only on post.html, not other pages
+
 Alternate auth method: http-auth
 
 #bug tag pages are not generated initially
