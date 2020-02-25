@@ -2232,11 +2232,11 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 
 	$whereClause = "
 		WHERE 
-			item_title != '' AND 
+			(item_title != '' OR ',' || tags_list || ',' LIKE '%,agree,%') AND
 			parent_count = 0 AND 
-			',' || tags_list || ',' NOT LIKE '%,changelog,%' 
-			AND  ',' || tags_list || ',' NOT LIKE '%,flag,%'
-			AND  ',' || tags_list || ',' LIKE '%,hastitle,%'
+			',' || tags_list || ',' NOT LIKE '%,meta,%' AND
+			',' || tags_list || ',' NOT LIKE '%,changelog,%' AND
+			',' || tags_list || ',' NOT LIKE '%,flag,%'
 	"; #todo remove hardcoding here
 
 	# not sure what this is supposed to be for...
@@ -2252,7 +2252,7 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 			item_flat
 		$whereClause
 		ORDER BY
-			item_score DESC, add_timestamp DESC
+			add_timestamp DESC
 		LIMIT 50;
 	";
 
