@@ -429,7 +429,7 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar fresh settings timestamps voting profile));
+	$txtPage = InjectJs($txtPage, qw(avatar settings timestamps voting profile));
 
 	return $txtPage;
 
@@ -709,7 +709,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings fresh voting profile write_buttons timestamps));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile write_buttons timestamps));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1540,7 +1540,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar fresh settings timestamps pingback profile));
+	$statsPage = InjectJs($statsPage, qw(avatar settings timestamps pingback profile));
 
 	return $statsPage;
 }
@@ -1562,6 +1562,11 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	if (GetConfig('html/clock')) {
 		# if clock is enabled, automatically add it
 		push @scriptNames, 'clock';
+	}
+
+	if (1 || GetConfig('html/fresh_js')) {
+		# if clock is enabled, automatically add it
+		push @scriptNames, 'fresh';
 	}
 
 	if (GetConfig('admin/force_profile')) {
@@ -2655,7 +2660,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings event_add fresh profile));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings event_add profile));
 
 	my $colorRow0Bg = GetThemeColor('row_0');
 	my $colorRow1Bg = GetThemeColor('row_1');
@@ -2787,7 +2792,7 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
+	$txtIndex = InjectJs($txtIndex, qw(avatar profile settings));
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
 	}
@@ -2978,7 +2983,7 @@ sub GetVersionPage { # returns html with version information for $version (git c
 
 	$txtPageHtml .= GetPageFooter();
 
-	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar fresh settings));
+	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar settings));
 
 	return $txtPageHtml;
 }
