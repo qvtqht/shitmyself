@@ -1,6 +1,9 @@
 Known Issues
 ============
 
+When rebuilding site, the config settings are re-applied one by one as the items are indexed
+    This means, for example, theme values set with setconfig/html/theme will change, and you may see different themes applied on some pages
+
 Content returned via PHP shims has different headers
     there is no etag or time-created
     gzip is not used, so filesize is bigger

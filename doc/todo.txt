@@ -1,3 +1,5 @@
+#bug theme/color/username remains at old setting in cache after config value change
+
 Many pages crash in Mosaic 3.0 Win
 
 #bug Wine IE8 clock ticks only on post.html, not other pages
