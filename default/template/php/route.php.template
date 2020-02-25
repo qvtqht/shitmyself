@@ -41,6 +41,12 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                             }
                         }
 
+                        if (isset($_GET['chkUpgrade']) && isset($_GET['btnUpgrade'])) {
+                            WriteLog('Upgrade requested');
+
+                            //WriteLog(`/home/ily/hike/upgrade.pl`);
+                        }
+
                         $html = file_get_contents($pathRel);
                     }
                 }
