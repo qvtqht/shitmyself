@@ -96,3 +96,12 @@ w3m/0.5.3+git20180125
 [ ] JS clock
 [ ] JS fresh.js
 
+OffByOne 3.5.d
+==============
+[x] Basics
+[x] Cookie auth
+[ ] JS voting buttons
+[ ] JS modular UI
+[ ] OpenPGP and signing
+[ ] JS clock
+[ ] JS fresh.js

@@ -1,3 +1,8 @@
+post-processing option:
+    replace links with submit buttons
+        can enhnace keyboard accessibilty in safari and offbyone browser
+        other browsers also favor form controls over links for tab navigation
+
 Options for loggig cookie with access.pl
     --> ssi?
     --> php can write cookie to log/cookie.log along with some kind of identifier which can be connected back?
