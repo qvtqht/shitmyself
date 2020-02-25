@@ -19,7 +19,8 @@ function writeOnload() { // onload handler for write page
 
             var spanInsPubKey = document.getElementById('spanInsPubKey')
 			if (spanInsPubKey) {
-			    spanInsPubKey.innerHTML = '<a href="/write.html?#inspubkey">Profile</a>';
+	            var gt = String.fromCharCode(62);
+			    spanInsPubKey.innerHTML = '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt;
 			}
 
 			if (document.getElementById('spanSignAs')) {
