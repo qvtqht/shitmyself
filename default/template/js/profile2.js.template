@@ -90,7 +90,6 @@ function AddPrivateKeyLink() {
 
 	            linkP.appendChild(linkA);
 
-//	            linkP.innerHTML = '<a class=advanced href=# onclick="if (window.ShowPrivateKey) { ShowPrivateKey(); }">show private key</a>';
 	            fieldset.appendChild(linkP);
             }
 	    }
