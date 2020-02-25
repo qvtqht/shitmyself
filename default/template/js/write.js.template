@@ -17,6 +17,11 @@ function writeOnload() { // onload handler for write page
 				document.getElementById('addtext').value = 'Sign Message and Send';
 			}
 
+            var spanInsPubKey = document.getElementById('spanInsPubKey')
+			if (spanInsPubKey) {
+			    spanInsPubKey.innerHTML = '<a href="/write.html?#inspubkey">Profile</a>';
+			}
+
 			if (document.getElementById('spanSignAs')) {
 				var gt = String.fromCharCode(62);
 				if (window.getAvatar) {

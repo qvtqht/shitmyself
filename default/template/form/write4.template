@@ -13,7 +13,7 @@
 				<td>
 					<p class=advanced>
 						<a href="/write.html?report=client">Browser</a>;
-						<a href="/write.html?#inspubkey">Profile</a>
+						<span id=spanInsPubKey></span>
 				</td>
 			</tr>
 
