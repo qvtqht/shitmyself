@@ -1234,11 +1234,11 @@ sub IndexTextFile { # indexes one text file into database
 
 				my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
 
-				if ($firstEol == -1) {
-					if (length($detokenedMessage) > 1) {
-						$firstEol = length($detokenedMessage);
-					}
-				}
+				# if ($firstEol == -1) {
+				# 	if (length($detokenedMessage) > 1) {
+				# 		$firstEol = length($detokenedMessage);
+				# 	}
+				# }
 
 				if ($firstEol >= 0) {
 					my $title = '';
