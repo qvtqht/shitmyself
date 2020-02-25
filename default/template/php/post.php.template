@@ -308,7 +308,7 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 		copy ('../default/template/php/just_posted.template', '../config/template/php/just_posted.template');
 		$postedMessage = file_get_contents('../default/template/php/just_posted.template');
 	} else {
-		$postedMessage = '<a href="' . $fileUrlPath . '" class=beginner>See what you just posted.</a><br><br>';
+		$postedMessage = '<a href="' . $fileUrlPath . '">See what you just posted.</a><br><br>';
 	}
 
 	$postedMessage = str_replace('$fileUrlPath', $fileUrlPath, $postedMessage); 
