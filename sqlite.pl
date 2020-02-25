@@ -144,6 +144,12 @@ sub SqliteMakeTables() { # creates sqlite schema
 		);
 	");
 
+	SqliteQuery2("
+		CREATE TABLE user_agent(
+			user_agent_string
+		);
+	");
+
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER);");
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
