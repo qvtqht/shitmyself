@@ -12,7 +12,7 @@
                 <p>Thank you!
 				<p><a href="/">You're welcome.</a>
 				<p><b><span id=retRef></span></b>
-				<p><span class=advanced><!-- submitted_text --></span>
+				<p><span><!-- submitted_text --></span>
 				<p><br>
 			</td>
 		</tr>
