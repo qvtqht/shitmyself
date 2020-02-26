@@ -1418,7 +1418,12 @@ sub GetTopItemsPage { # returns page with top items listing
 			my $authorAvatar;
 			if ($authorKey) {
 #				$authorAvatar = GetPlainAvatar($authorKey);
-				$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
+				my $authorLink = GetAuthorLink($authorKey, 1);
+				if ($authorLink) {
+					$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
+				} else {
+					$authorAvatar = '';
+				}
 			} else {
 				$authorAvatar = '';
 			}
@@ -1618,7 +1623,8 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 		}
 
 		if (GetConfig('admin/debug_javascript')) {
-			$scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
+			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
+			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
 		}
 
 		# add to the snowball of javascript
@@ -1676,7 +1682,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorWeight = $author{'author_weight'} || 1;
 		my $authorLastSeen = $author{'last_seen'};
 		my $authorItemCount = $author{'item_count'};
-		my $authorAvatar = GetHtmlAvatar($authorKey);
+		my $authorAvatar = GetHtmlAvatar($authorKey) || $authorKey;
 
 		my $authorVoteButtons = GetItemVoteButtons($authorKey, 'author');
 
