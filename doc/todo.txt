@@ -214,21 +214,10 @@ Vacuum old items
 			admin
 			vouch
 
-
-#bug Page indicators show incorrect number of last item
-	1-150 151-300 <--- 300 should be e.g. 253
-
-#bug tags page counts all tags, including ones applied to non-existing items
-	This may be a feature, but tag pages without any items return 404
-		So maybe non-existing items referenced in votes should be reflected somehow
-
-Add messaging for unverified user fingerprints (no pubkey, but has messages claiming to be from that ID)
-	Figure out how to avoid spoofing
-
-Implement client-side hide/show of class=admin elements
+Implement client-side hide/show of class=admin elements x
 	Determine admin state by reading variable or array which is embedded in html pages
 
-Add Event page
+Event page
 	Add end date fields
 		or duration?
 			for advanced users
@@ -300,20 +289,19 @@ and (',' || item_flat.tags_list || ',')  not like '%,accept,%'
 and (',' || item_flat.tags_list || ',')  not like '%,pubkey,%' 
 and (',' || item_flat.tags_list || ',')  not like '%,reply,%';
 
-#bug After an item is deleted, an empty page is re-generated, without any content, but with header, footer, and title!
-
 Installer/dependency installer
 	which gpg
 		which apt-get
 			install debian modules
 		which yum
 			install fedora modules
+
 Add number of unprocessed text files to stats page
 
 After rebuild/upgrade, have setting which notifies
 	This server was recently rebuilt, still updating
 		Remove message when update = 0
-	
+
 #bug on Authors page
 	The first time new author appears, their author is not colorized nor has an alias
 

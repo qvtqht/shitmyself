@@ -6,13 +6,21 @@ Reply to existing topic
 Vote on item
 Update button on Stats page
 
+What the symbols mean
+=====================
+[x] Working
+[ ] Untested
+[o] Not working, not expected to work
+[-] Not working, fix possible
+[~] Works partially
+
 Opera 12.14
 ===========
 [x] Basics
 [x] Cookie auth
 [x] JS voting buttons
 [x] JS modular UI
-[ ] OpenPGP and signing
+[-] OpenPGP and signing
 [x] JS clock
 [ ] JS fresh.js
 
@@ -137,3 +145,13 @@ Mosaic 3.0 for Windows
 [o] OpenPGP and signing
 [o] JS clock (only on post.html)
 [o] JS fresh.js
+
+Netscape 2.0
+============
+[x] Basics
+[~] Cookie auth (bugs, but works)
+[o] JS voting buttons
+[o] JS modular UI
+[o] OpenPGP and signing
+[x] JS clock
+[ ] JS fresh.js
