@@ -658,6 +658,9 @@ sub IndexTextFile { # indexes one text file into database
 
 									$detokenedMessage =~ s/$reconLine//g;
 
+									if ($configKey eq 'html/theme') {
+										# unlink cache/avatar.plain
+									}
 								}
 								else {
 
