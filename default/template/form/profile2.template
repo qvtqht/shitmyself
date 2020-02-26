@@ -15,21 +15,6 @@
 	<p>
 		<input type=submit name=request onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id="btnRegister" value="Register">
 		<input type=submit name=request onclick="if (window.btnSignout_Click) { return btnSignout_Click(this); }" id="btnSignout" value="Sign Out">
-
-	<p class=advanced>
-		<label for=bits>
-			OpenPGP:
-			<select name=bits id=bits title=Algorithm>
-				<option value=512>rsa512 (fast, insecure)</option>
-				<option value=1024>rsa1024 (slow)</option>
-				<option value=2048>rsa2048 (slow)</option>
-				<option value=4096>rsa4096 (very slow)</option>
-				$gpg2Algochoices
-			</select>
-		</label>
-
-		<br>
-	</p>
 </fieldset>
 
 </form>
