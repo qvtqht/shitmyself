@@ -222,7 +222,6 @@ sub SqliteMakeTables() { # creates sqlite schema
 					ON (vote.file_hash = item.file_hash)
 			GROUP BY
 				item.file_hash
-
 	");
 
 	SqliteQuery2("
