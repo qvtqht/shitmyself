@@ -194,15 +194,19 @@ if (!$locked) {
 			# organize files aka rename to hash-based path
 				my $fileHashPath = GetFileHashPath($file);
 
-				WriteLog('update.pl: $fileHashPath = ' . $fileHashPath);
-				
-				if ($fileHashPath && $file ne $fileHashPath) {
-					WriteLog('update.pl: renaming ' . $file . ' to ' . $fileHashPath);
-					rename($file, $fileHashPath);
-					
-					if (-e $fileHashPath) {
-						$file = $fileHashPath;
+				if ($fileHashPath) {
+					WriteLog('update.pl: $fileHashPath = ' . $fileHashPath);
+
+					if ($fileHashPath && $file ne $fileHashPath) {
+						WriteLog('update.pl: renaming ' . $file . ' to ' . $fileHashPath);
+						rename($file, $fileHashPath);
+
+						if (-e $fileHashPath) {
+							$file = $fileHashPath;
+						}
 					}
+				} else {
+					WriteLog('update.pl: $fileHashPath is missing');
 				}
 			}
 
