@@ -85,6 +85,7 @@ function AddPrivateKeyLink() {
 	            var linkA = document.createElement('a');
 	            linkA.setAttribute('class', 'advanced');
 	            linkA.setAttribute('href', '#');
+	            linkA.setAttribute('id', 'linkShowPrivateKey');
 	            linkA.setAttribute('onclick', 'if (window.ShowPrivateKey) { ShowPrivateKey(); }');
 	            linkA.innerHTML = 'show private key';
 
@@ -165,6 +166,15 @@ function ShowPrivateKey() { // displays private key in textarea
                 txtPrivateKey.style.display = 'none';
             }
 
+            var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
+            if (linkShowPrivateKey) {
+                if (txtPrivateKey.style.display == 'none') {
+                    linkShowPrivateKey.innerHTML = 'show private key';
+                } else {
+                    linkShowPrivateKey.innerHTML = 'hide private key';
+                }
+            }
+
             return false;
         }
     }
@@ -183,6 +193,11 @@ function ShowPrivateKey() { // displays private key in textarea
     	        fldRegistration.appendChild(txtPrivKey);
 	        } else {
     	        document.body.appendChild(txtPrivKey);
+            }
+
+            var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
+            if (linkShowPrivateKey) {
+                linkShowPrivateKey.innerHTML = 'hide private key';
             }
 
 	        txtPrivKey.focus();
