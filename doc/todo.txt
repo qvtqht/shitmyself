@@ -1,3 +1,10 @@
+Need to connect instances without introducing a bunch of spam
+	Need to store hash of message's hash without signature?
+
+Home page shuld have useful things on it
+	Adjust sort
+	?
+
 #bug theme/color/username remains at old setting in cache after config value change
 
 Many pages crash in Mosaic 3.0 Win
