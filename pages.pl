@@ -1203,6 +1203,55 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	return trim($attributeValue);
 }
 
+sub FillThemeColors {
+    my $html = shift;
+	chomp($html);
+
+	my $colorPrimary = GetThemeColor('primary');
+	$html =~ s/\$colorPrimary/$colorPrimary/g;
+
+	my $colorSecondary = GetThemeColor('secondary');
+	$html =~ s/\$colorSecondary/$colorSecondary/g;
+
+	my $colorBackground = GetThemeColor('background');
+	$html =~ s/\$colorBackground/$colorBackground/g;
+
+	my $colorText = GetThemeColor('text');
+	$html =~ s/\$colorText/$colorText/g;
+
+	my $colorLink = GetThemeColor('link');
+	$html =~ s/\$colorLink/$colorLink/g;
+
+	my $colorVlink = GetThemeColor('vlink');
+	$html =~ s/\$colorVlink/$colorVlink/g;
+
+	my $colorInputBackground = GetThemeColor('input_background');
+	$html =~ s/\$colorInputBackground/$colorInputBackground/g;
+
+	my $colorInputText = GetThemeColor('input_text');
+	$html =~ s/\$colorInputText/$colorInputText/g;
+
+	my $colorRow0Bg = GetThemeColor('row_0');
+	$html =~ s/\$colorRow0Bg/$colorRow0Bg/g;
+
+	my $colorRow1Bg = GetThemeColor('row_1');
+	$html =~ s/\$colorRow1Bg/$colorRow1Bg/g;
+
+	my $colorTagNegative = GetThemeColor('tag_negative');
+	$html =~ s/\$colorTagNegative/$colorTagNegative/g;
+
+	my $colorTagPositive = GetThemeColor('tag_positive');
+	$html =~ s/\$colorTagPositive/$colorTagPositive/g;
+
+	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+	$html =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
+
+	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+	$html =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+
+	return $html;
+}
+
 sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
 	my $title = shift; # page title
 	my $titleHtml = shift; # formatted page title
@@ -1229,23 +1278,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	}
 
 	my $txtIndex = "";
-
-	my $colorPrimary = GetThemeColor('primary');
-	my $colorSecondary = GetThemeColor('secondary');
-	my $colorBackground = GetThemeColor('background');
-	my $colorText = GetThemeColor('text');
-	my $colorLink = GetThemeColor('link');
-	my $colorVlink = GetThemeColor('vlink');
-	my $colorInputBackground = GetThemeColor('input_background');
-	my $colorInputText = GetThemeColor('input_text');
-	my $colorRow0Bg = GetThemeColor('row_0');
-	my $colorRow1Bg = GetThemeColor('row_1');
-
-	my $colorTagNegative = GetThemeColor('tag_negative');
-	my $colorTagPositive = GetThemeColor('tag_positive');
-
-	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
 
 	my $styleSheet = GetStylesheet();
 
@@ -1305,23 +1337,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 
-    #$menuItems .= GetMenuItem("/etc.html", 'More');
-
-    #	if ($adminKey) {
-#		$menuItems .= GetMenuItem('/author/' . $adminKey . '/', 'Admin', 'advanced');
-#	}
-##	$menuItems .= GetMenuItem("/help.html", 'Help');
-#	$menuItems .= GetMenuItem("/profile.html", 'Sign In', 'beginner');
-#	$menuItems .= GetMenuItem("/profile.html", 'Register', 'beginner');
-
-
-#	$menuItems .= GetMenuItem("/profile.html", 'Log On', 'beginner');
-#	$menuItems .= GetMenuItem("/profile.html", 'Sign Up', 'beginner');
-#	$menuItems .= GetMenuItem("/profile.html", 'Account', 'beginner');
-#
-#	$menuItems .= $identityLink;
-#	$menuItems .= $noJsIndicator;
-
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	
 	$htmlStart =~ s/\$topMenu/$topMenuTemplate/g;
@@ -1329,22 +1344,9 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
-	$htmlStart =~ s/\$colorLink/$colorLink/g;
-	$htmlStart =~ s/\$colorVlink/$colorVlink/g;
-	$htmlStart =~ s/\$colorPrimary/$colorPrimary/g;
-	$htmlStart =~ s/\$colorSecondary/$colorSecondary/g;
-	$htmlStart =~ s/\$colorBackground/$colorBackground/g;
-	$htmlStart =~ s/\$colorText/$colorText/g;
-	$htmlStart =~ s/\$colorTagNegative/$colorTagNegative/g;
-	$htmlStart =~ s/\$colorTagPositive/$colorTagPositive/g;
-	$htmlStart =~ s/\$colorInputBackground/$colorInputBackground/g;
-	$htmlStart =~ s/\$colorInputText/$colorInputText/g;
+
 	$htmlStart =~ s/\$clock/$clock/g;
 	$htmlStart =~ s/\$introText/$introText/g;
-	$htmlStart =~ s/\$colorRow0Bg/$colorRow0Bg/g;
-	$htmlStart =~ s/\$colorRow1Bg/$colorRow1Bg/g;
-	$htmlStart =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
-	$htmlStart =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
 
 	if (GetConfig('logo/enabled')) {
 		$htmlStart =~ s/\$logoText/$logoText/g;
@@ -1352,7 +1354,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 		$htmlStart =~ s/\$logoText/$logoText/g;
 	}
 
-	# end top menu
+	$htmlStart = FillThemeColors($htmlStart);
 
 	$txtIndex .= $htmlStart;
 
