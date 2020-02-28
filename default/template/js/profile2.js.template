@@ -150,7 +150,7 @@ function ProfileOnLoad() {
 }
 
 function ShowPrivateKey() { // displays private key in textarea
-    //alert('DEBUG: ShowPrivateKey: enter');
+    //alert('DEBUG: ShowPrivateKey() begin');
     if (document.getElementById) {
         //alert('DEBUG: ShowPrivateKey: document.getElementById is true');
 
