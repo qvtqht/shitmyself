@@ -953,7 +953,7 @@ sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused
 
 }
 
-sub str_replace {
+sub str_replace { # $string, $old, $new  (copies php's str_replace)
 	my $string = shift;
 #	return $string;
 	my $old = shift;
@@ -1029,7 +1029,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 # * if $file matches config/home_page, the output is also written to html/index.html
 #   also keeps track of whether home page has been written, and returns the status of it
 #   if $file is 'check_homepage'
-#      
+
 	my $file = shift;
 	my $content = shift;
 	my $itemHash = shift; #optional
@@ -1135,6 +1135,18 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		$content = ReplaceStrings($content);
 	}
 
+	my $bodyAttr = GetThemeAttribute('tag/body');
+	if ($bodyAttr) {
+		# print $bodyAttr;
+		# print '@@@@@@';
+		# sleep 5;
+		# die;
+		#
+		# $content =~ s/\<body/<body $bodyAttr/ig;
+		$content =~ s/\<body/<body $bodyAttr/i;
+		#$content = str_replace($content, '<body ', '<body ' . $bodyAttr);
+	}
+
 	PutFile($file, $content);
 
 	# this is a special hook for generating index.html, aka the home page
@@ -1146,7 +1158,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		PutFile ('html/index.html', $content);
 		$homePageWritten = 1;
 	}
-	
+
 	# filling in 404 pages, using 404.log
 	if ($itemHash) {
 		# clean up the log file
