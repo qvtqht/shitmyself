@@ -26,9 +26,11 @@ function writeOnload() { // onload handler for write page
 			if (document.getElementById('spanSignAs')) {
 				var gt = String.fromCharCode(62);
 				if (window.getAvatar) {
-					document.getElementById('spanSignAs').innerHTML = '<p' + gt + '[x] Sign message as ' + getAvatar() + '</p' + gt;
+					document.getElementById('spanSignAs').innerHTML =
+					    '<p' + gt + '[x] Sign message as ' + getAvatar() + '</p' + gt;
 				} else {
-					document.getElementById('spanSignAs').innerHTML = '<p' + gt + '[x] Sign message as logged in user</p' + gt;
+					document.getElementById('spanSignAs').innerHTML =
+					    '<p' + gt + '[x] Sign message as logged in user</p' + gt;
 				}
 			}
         }
