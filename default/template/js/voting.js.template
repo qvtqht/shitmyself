@@ -93,6 +93,15 @@ function signVote(t, token) { // signs a vote from referenced vote button
 
 			return false;
 		}
+	} else {
+//	    if (document.images) {
+//	        var myUrl = window.location;
+//	    	document.images[0].src = '/post.html?mydomain=' + myUrl;
+//
+//	    	alert('DEBUG: t = ' + t);
+//
+//	    	return false;
+//	    }
 	}
 
 	// return true so that calling link goes to its target
