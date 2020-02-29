@@ -1571,7 +1571,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 		push @scriptNames, 'clock';
 	}
 
-	if (1 || GetConfig('html/fresh_js')) {
+	if (GetConfig('html/fresh_js')) {
 		# if clock is enabled, automatically add it
 		push @scriptNames, 'fresh';
 	}
@@ -1602,6 +1602,13 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 
 		my $scriptTemplate = GetTemplate("js/$script.js.template");
 
+		if (!$scriptTemplate) {
+			WriteLog("InjectJs: WARNING: Missing script contents for $script");
+			if (GetConfig('admin/debug')) {
+				die('InjectJs: Missing script contents');
+			}
+		}
+
 		if ($script eq 'voting') {
 			# for voting.js we need to fill in some theme colors
 			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
@@ -1610,6 +1617,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
 		}
+
 		if ($script eq 'settings') {
 			# for settings.js we also need to fill in some theme colors
 			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
@@ -1625,8 +1633,12 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 		}
 
 		if (GetConfig('admin/debug_javascript')) {
+			#uncomment all javascript debug alert statements
+			#and replace them with confirm()'s which stop on no/cancel
+			#
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
-			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
+			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
+			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 		}
 
 		# add to the snowball of javascript
@@ -2273,11 +2285,33 @@ sub GetLighttpdConfig {
 	return $conf;
 }
 
+sub MakeJsTestPages {
+	my $jsTestPage = GetTemplate('js/test.js.template');
+	PutHtmlFile("$HTMLDIR/jstest.html", $jsTestPage);
+
+	my $jsTest2Page = GetTemplate('js/test2.js.template');
+	#	$jsTest2Page = InjectJs($jsTest2Page, qw(sha512.js));
+	PutHtmlFile("$HTMLDIR/jstest2.html", $jsTest2Page);
+
+	my $jsTest3Page = GetTemplate('js/test3.js.template');
+	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
+
+	my $jsTest4Page = GetTemplate('js/test4.js.template');
+	PutHtmlFile("$HTMLDIR/jstest4.html", $jsTest4Page);
+
+
+	my $jsTest1 = GetTemplate('test/jstest1/test.template');
+	$jsTest1 = InjectJs($jsTest1, qw(jstest1));
+	PutHtmlFile("$HTMLDIR/jstest1.html", $jsTest1);
+}
+
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 	WriteLog('MakeSummaryPages() BEGIN');
 	
 	PutHtmlFile("$HTMLDIR/test.html", GetTemplate('test.template'));
+
+	MakeJsTestPages();
 
 	# Submit page
 	my $submitPage = GetWritePage();
@@ -2290,19 +2324,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Stats page
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
-
-	my $jsTestPage = GetTemplate('js/test.js.template');
-	PutHtmlFile("$HTMLDIR/jstest.html", $jsTestPage);
-
-	my $jsTest2Page = GetTemplate('js/test2.js.template');
-#	$jsTest2Page = InjectJs($jsTest2Page, qw(sha512.js));
-	PutHtmlFile("$HTMLDIR/jstest2.html", $jsTest2Page);
-
-	my $jsTest3Page = GetTemplate('js/test3.js.template');
-	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
-
-	my $jsTest4Page = GetTemplate('js/test4.js.template');
-	PutHtmlFile("$HTMLDIR/jstest4.html", $jsTest4Page);
 
 	my $clockTest = '<form>'.GetTemplate('clock.template').'</form>';
 	my $clockTestPage = '<html><body>';

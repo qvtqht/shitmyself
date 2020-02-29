@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <title>jstest1</title>
+    </head>
+    <body>
+        <form name=frmTest id=frmTest action="/post.html">
+            <textarea onkeydown="translitKey(event);" cols=80 rows=24 id=txtTranslit></textarea>
+<!--            <input type="text" onkeydown="translitKey(event);" id=txtTranslit>-->
+
+            <input
+                type=submit
+                onclick="if(window.RunTest || RunTest) { return RunTest() } else { alert('window.RunTest was false'); return false; }"
+                value="Run Test"
+            >
+
+            <br>
+
+            <input type=text name=txtFormTestForms size=80>
+            <input type=text name=txtFormTestForms size=80>
+            <input type=text name=txtFormTestForms size=80>
+            <input type=text name=txtFormTestForms size=80>
+        </form>
+    </body>
+</html>

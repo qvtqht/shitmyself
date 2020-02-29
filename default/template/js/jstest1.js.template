@@ -1,0 +1,134 @@
+function translitKey(e) {
+    var nl = '$';
+
+    var key = '$';
+
+    if (0 && e.key) {
+        key = e.key;
+    } else if (e.keyCode) {
+        key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
+    }
+
+    if (e.ctrlKey || e.metaKey) {
+        return;
+    }
+
+    if (e.altKey) {
+        if (e.key == 'e') {
+            nl = "ё";
+        } else if (e.key == 'E') {
+            nl = 'Ё';
+        } else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
+            nl = e.key;
+        } else {
+            return;
+        }
+    } else {
+        var keysEn =
+            "`-=" +
+            "~_+" +
+            "qwertyuiop[]\\" +
+            "QWERTYUIOP{}|" +
+            "asdfghjkl" +
+            "ASDFGHJKL" +
+            "zxcvbnm" +
+            "ZXCVBNM"
+        ;
+        var keysRu =
+            "щьъ" +
+            "Щ-=" +
+            "яшертыуиопюжэ" +
+            "ЯШЕРТЫУИОПЮЖэ" +
+            "асдфгчйкл" +
+            "АСДФГЧЙКЛ" +
+            "зхцвбнм" +
+            "ЗХЦВБНМ"
+        ;
+
+        //document.write('<pre>' + keysEn + "\n" + keysRu + '</pre>');
+
+        if (keysEn.length != keysRu.length) {
+            //alert('DEBUG: onKeyDown(e) Warning: length mismatch')
+        }
+
+        if (e.key) {
+            for (var i = 0; i < keysEn.length; i++) {
+                if (e.key == keysEn.substr(i, 1)) {
+                    //alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
+                    nl = keysRu.substr(i, 1);
+
+                    break;
+                }
+            }
+        }
+    }
+
+    if (nl == '$') {
+        return;
+    }
+
+    e.preventDefault();
+
+    //alert('DEBUG: e.preventDefault() was called');
+
+    var txt;
+
+    if (document.getElementById) {
+        var txt = document.getElementById('txtTranslit');
+    } else {
+        if (document.forms) {
+            var form = document.forms['frmTest'];
+            if (form) {
+                txt = form.txtTranslit;
+                if (txt) {
+                    alert(1);
+                }
+            }
+        }
+    }
+
+    if (txt) {
+        txt.value = txt.value + nl;
+    } else {
+        //alert('DEBUG: where is text field huh?');
+    }
+}
+
+function RunTest() {
+	//alert('DEBUG: RunTest() begins');
+
+	//document.write('<form><input type=submit></form>');
+
+    var frmTestForms = document.forms['frmTest'];
+    if (frmTestForms) {
+        //alert('DEBUG: frmTestForms = document.forms[frmTest] = ' + frmTestForms);
+    } else {
+        //alert('DEBUG: frmTestForms was false');
+    }
+
+    var frmTestDot = document.frmTest;
+    if (frmTestDot) {
+        //alert('DEBUG: frmTest = document.frmTestDot = ' + frmTestDot);
+    } else {
+        //alert('DEBUG: frmTestForms was false');
+    }
+
+    if (document.getElementById) {
+        var frmTestGebi = document.getElementById('frmTest');
+        if (frmTestGebi) {
+            //alert('DEBUG: frmTestGebi = document.getElementById(frmTest) = ' + frmTestGebi);
+        } else {
+            //alert('DEBUG: frmTestGebi was false');
+        }
+    } else {
+        //alert('DEBUG: document.getElementById was false');
+    }
+//
+//    if (1) {
+//        document.getElementById('txtFormTestForms').value = "document.forms['frmTest'] : " + (frmTestForms ? 'yes' : 'no');
+//    }
+
+	return false;
+}
+
+//document.body.onkeyup='alert(keycode)';
