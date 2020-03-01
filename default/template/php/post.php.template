@@ -316,9 +316,12 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 	$html = str_replace('<!-- submitted_text -->', $postedMessage, $html);
 }
 
-print($html);
-
 if (GetConfig('admin/php/update_on_post')) {
     WriteLog(`cd .. ; ./update.pl`);
+
+    Header('Location: ' . $fileUrlPath);
+} else {
+    print($html);
 }
+
 
