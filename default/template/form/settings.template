@@ -27,6 +27,8 @@
 						<legend>Moderation<br></legend>
 
 						<p>
+							<span class=beginner>:<br></span>
+
 							<label for=chkWantToVote>
 								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
 								Moderator
@@ -37,6 +39,8 @@
 					<fieldset class=admin>
 						<legend>Admin</legend>
 						<p>
+							<span class=beginner>Set site-wide appearance and colors:<br></span>
+
 							<label for=optTheme>theme:
 								<select name=setconfig/html/theme id=optTheme>
 									<option value=friday29>friday29</option>
@@ -50,12 +54,33 @@
 							<input type=submit value=Save name=save>
 						</p>
 						<p>
+							<span class=beginner>Upgrade to latest version:<br></span>
 							<label for=chkUpgrade>
 								<input type=checkbox id=chkUpgrade name=chkUpgrade>
-								Upgrade?
+								Upgrade
 							</label>
 
 							<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
+						</p>
+						<p>
+							<span class=beginner>Flush anything not marked for keeping:<br></span>
+
+							<label for=chkFlush>
+								<input type=checkbox id=chkFlush name=chkFlush>
+								Flush
+							</label>
+
+							<input type=submit name=btnFlush id=btnFlush value=Flush>
+						</p>
+						<p>
+							<span class=beginner>Overthrow current operator/top moderator<br></span>
+
+							<label for=chkOverthrow>
+								<input type=checkbox id=chkOverthrow name=chkOverthrow>
+								Overthrow
+							</label>
+
+							<input type=submit name=btnOverthrow id=btnOverthrow value=Overthrow>
 						</p>
 					</fieldset>
 				</td>
