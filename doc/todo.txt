@@ -1,3 +1,6 @@
+Make all elements be a bright color like orange when they have focus
+    (using css)
+
 Need to connect instances without introducing a bunch of spam
 	Need to store hash of message's hash without signature?
 
