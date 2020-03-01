@@ -1,5 +1,5 @@
 <!-- clock.template -->
 <span>
-	<input style="text-align:center; background-color: $colorWindow" type=text size=11 name=txtClock id=txtClock value="$currentTime">
+	<input style="text-align: center; background-color: $colorWindow" type=text size=11 name=txtClock id=txtClock value="$currentTime">
 </span>
 <!-- / clock.template -->
