@@ -63,7 +63,7 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
     WriteLog('config/admin/php/route_enable = false');
 }
 
-print WriteLog('');
+print '<br>' . WriteLog('');
 
 //
 //if (isset($_GET['path']) && $_GET['path']) {
