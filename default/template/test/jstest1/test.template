@@ -8,8 +8,10 @@
     </head>
     <body>
         <form name=frmTest id=frmTest action="/post.html">
-            <textarea onkeydown="translitKey(event);" cols=80 rows=24 id=txtTranslit></textarea>
+            <textarea onkeydown="translitKey(event, this);" cols=80 rows=24 id=txtTranslit name=comment></textarea>
 <!--            <input type="text" onkeydown="translitKey(event);" id=txtTranslit>-->
+
+            <input type=submit value=Send>
 
             <input
                 type=submit
