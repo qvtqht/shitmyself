@@ -2151,6 +2151,35 @@ sub DeleteFile { #delete file with specified file hash (incomplete)
 	}
 }
 
+sub GetItemEasyFind { #returns Easyfind strings for item
+	WriteLog('GetItemEasyFind()');
+
+
+	my $itemHash = shift;
+	if (!$itemHash) {
+		return;
+	}
+
+	chomp $itemHash;
+
+	if (!IsItem($itemHash)) {
+		return;
+	}
+
+	WriteLog("GetItemEasyFind($itemHash)");
+
+	my @easyFindArray;
+
+	while ($itemHash) {
+		push @easyFindArray, substr($itemHash, 0, 4);
+		$itemHash = substr($itemHash, 4);
+	}
+
+	my $easyFindString = join(' ', @easyFindArray);
+
+	return $easyFindString;
+}
+
 sub GetItemMessage { # retrieves item's message using cache or file path
 # $itemHash, $filePath
 
