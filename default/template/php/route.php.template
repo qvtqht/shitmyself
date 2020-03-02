@@ -41,10 +41,22 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                             }
                         }
 
-                        if (isset($_GET['chkUpgrade']) && isset($_GET['btnUpgrade'])) {
+                        if (
+                            isset($_GET['chkUpgrade']) &&
+                            isset($_GET['btnUpgrade'])
+                        )
+                        {
                             WriteLog('Upgrade requested');
 
                             //WriteLog(`/home/ily/hike/upgrade.pl`);
+                        }
+
+                        if (
+                            isset($_GET['chkOverthrow']) &&
+                            isset($_GET['btnOverthrow'])
+                            )
+                        {
+                            WriteLog('Overthrow requested');
                         }
 
                         $html = file_get_contents($pathRel);
