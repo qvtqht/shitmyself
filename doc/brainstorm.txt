@@ -1,3 +1,5 @@
+When displaying integer timestamps, colorize the first x digits which match current time
+
 How to inject templates into JS where JS needs to insert it into page?
     May be better handled with .createElement() instead of using innerHTML
 

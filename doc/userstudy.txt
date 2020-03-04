@@ -1,3 +1,18 @@
+User study, 1583338000
+======================
+There's still a bug on the profile page where the displayed fingerprint is not updated upon key generation
+    JS should monitor and update
+
+The word Register needs to appear.
+    User got to registration by going to Help page, which worked well
+
+The public key sharing process after registration and return to Profile page really needs to be fixed/improved
+
+Profile page needs "You have just registtered" "You have signed out" etc messaging
+    Also, maybe more change in appearance when changing from unregistered to registered
+
+"Cutting out the hole in the donut" as a concept when transitioning from central to group authority
+
 User Study, date unknown
 ========================
 
