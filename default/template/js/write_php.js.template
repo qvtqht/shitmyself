@@ -17,20 +17,30 @@ function commentOnChange(t, formId) {
 // also shows/hides warning message, lblWriteLengthWarning
 // this part requires getElementById()
 
+    //alert('DEBUG: commentOnChange() begin');
+
 	if (intCommentOnChangeLastValue <= 1024 && t.value.length <= 1024) {
+	    //alert('DEBUG: commentOnChange() intCommentOnChangeLastValue <= 1024 && t.value.length <= 1024, return');
+
 		return;
 	}
 
 	if (1024 < intCommentOnChangeLastValue && 1024 < t.value.length) {
+	    //alert('DEBUG: commentOnChange() 1024 < intCommentOnChangeLastValue && 1024 < t.value.length, return');
+
 		return;
 	}
+
 	intCommentOnChangeLastValue = t.value.length;
+
+	//alert('DEBUG: intCommentOnChangeLastValue = t.value.length = ' + t.value.length);
 
 	var strFormMode;
 	var strWarnDisplay;
 	var strInnerHtml;
 
 	var gt = String.fromCharCode(62);
+//    var gt = '';
 
 	if (t.value.length <= 1024) {
 		strFormMode = 'GET';
