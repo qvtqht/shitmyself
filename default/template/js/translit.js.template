@@ -1,0 +1,167 @@
+// begin translit.js.template
+
+function translitKey(e, t) { // replaces pressed key with russian letter
+// called via textarea or input's onkeydown event
+
+    if (e.ctrlKey || e.metaKey) {
+    // do nothing if ctrl or meta key is pressed down
+    // alt is not here because there are several alt combinations
+        return;
+    }
+
+    var nl = '$'; // new letter
+
+    var key = '$'; // pressed key
+
+    if (0 && e.key) {
+    // for browsers which return event.key
+        key = e.key;
+    } else if (e.keyCode) {
+    // older browsers only return event.keyCode
+        key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
+    }
+
+    if (e.altKey) {
+    // alt key combinations are few
+        if (e.key == 'e') {
+            nl = "ё";
+        } else if (e.key == 'E') {
+            nl = 'Ё';
+        } else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
+            nl = e.key;
+        } else {
+            return;
+        }
+    } else {
+        var keysEn =
+            "`-=" +
+            "~_+" +
+            "qwertyuiop[]\\" +
+            "QWERTYUIOP{}|" +
+            "asdfghjkl" +
+            "ASDFGHJKL" +
+            "zxcvbnm" +
+            "ZXCVBNM"
+        ;
+
+        var keysRu =
+            "щьъ" +
+            "Щ-=" +
+            "яшертыуиопюжэ" +
+            "ЯШЕРТЫУИОПЮЖЭ" +
+            "асдфгчйкл" +
+            "АСДФГЧЙКЛ" +
+            "зхцвбнм" +
+            "ЗХЦВБНМ"
+        ;
+
+        if (keysEn.length != keysRu.length) {
+            //alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
+        }
+
+        if (e.key) {
+            for (var i = 0; i < keysEn.length; i++) {
+                if (e.key == keysEn.substr(i, 1)) {
+                    //alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
+                    nl = keysRu.substr(i, 1);
+
+                    break;
+                }
+            }
+        }
+    }
+
+    if (nl == '$') {
+    // new letter was never changed from $ character,
+    // which is not part of the possible outputs,
+    // so we do not need to replace the input.
+        return;
+    }
+
+    // we're doing it, we're overriding the user's keypress
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+
+    //alert('DEBUG: e.preventDefault() was called');
+
+    var txt = t;
+
+// this block of code may still come in handy.
+// it finds the textbox by element id instead of using the one passed into the function
+//    if (!txt) {
+//        if (document.getElementById) {
+//            var txt = document.getElementById('txtTranslit');
+//        } else {
+//            if (document.forms) {
+//                var form = document.forms['frmTest'];
+//                if (form) {
+//                    txt = form.txtTranslit;
+//                }
+//            }
+//        }
+//    }
+
+    if (txt) {
+    // append the text to the textbox
+    // dont bother with looking for pointer location or selection
+        txt.value = txt.value + nl;
+        //replaceSelectedText(txt, nl);
+    } else {
+        //alert('DEBUG: no text field');
+    }
+}
+
+/////////////////////////////
+// below code is not in use and doesn't work
+//////////////////////////////
+
+
+function getInputSelection(el) {
+    var start = 0, end = 0, normalizedValue, range,
+        textInputRange, len, endRange;
+
+    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
+        start = el.selectionStart;
+        end = el.selectionEnd;
+    } else {
+        range = document.selection.createRange();
+
+        if (range && range.parentElement() == el) {
+            len = el.value.length;
+            normalizedValue = el.value.replace(/\r\n/g, "\n");
+
+            // Create a working TextRange that lives only in the input
+            textInputRange = el.createTextRange();
+            textInputRange.moveToBookmark(range.getBookmark());
+
+            // Check if the start and end of the selection are at the very end
+            // of the input, since moveStart/moveEnd doesn't return what we want
+            // in those cases
+            endRange = el.createTextRange();
+            endRange.collapse(false);
+
+            if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
+                start = end = len;
+            } else {
+                start = -textInputRange.moveStart("character", -len);
+                start += normalizedValue.slice(0, start).split("\n").length - 1;
+
+                if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
+                    end = len;
+                } else {
+                    end = -textInputRange.moveEnd("character", -len);
+                    end += normalizedValue.slice(0, end).split("\n").length - 1;
+                }
+            }
+        }
+    }
+}
+
+function replaceSelectedText(el, text) {
+    var sel = getInputSelection(el), val = el.value;
+    el.value = val.slice(0, sel.start) + text + val.slice(sel.end);
+}
+
+
+// end translit.js.template
