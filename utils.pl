@@ -2171,8 +2171,11 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	my @easyFindArray;
 
 	while ($itemHash) {
-		push @easyFindArray, substr($itemHash, 0, 4);
-		$itemHash = substr($itemHash, 4);
+		my $fragment = substr($itemHash, 0, 5);
+		if ($fragment =~ m/[a-f]/) {
+			push @easyFindArray, $fragment;
+		}
+		$itemHash = substr($itemHash, 5);
 	}
 
 	my $easyFindString = join(' ', @easyFindArray);
