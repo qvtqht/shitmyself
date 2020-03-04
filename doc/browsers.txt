@@ -155,3 +155,16 @@ Netscape 2.0
 [o] OpenPGP and signing
 [x] JS clock
 [ ] JS fresh.js
+
+Internet Explorer 5.5
+=====================
+[x] Basics
+[x] Cookie auth
+[x] JS clock
+
+Internet Explorer 6.0
+=====================
+[x] Basics
+[x] Cookie auth
+[x] JS clock
+

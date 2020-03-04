@@ -1,6 +1,11 @@
+Move css from default.css into theme
+    Except for certain things
+
+Facilitate removal of votes by ip address of voter
+
 When returning to a form with a button which turns to "please wait" when clicked
     The button's caption should already be reset, ideally (via document/body.onunload?)
-    Or should be reset as soon as possible
+        Or should be reset as soon as possible
 
 Make all elements be a bright color like orange when they have focus
     (using css)
