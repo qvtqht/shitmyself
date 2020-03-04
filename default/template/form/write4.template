@@ -13,6 +13,7 @@
 				<td>
 					<p class=advanced>
 						<a href="/write.html?report=client">Browser</a>;
+						<a href="/write.html?russian=1">Russian</a>;
 						<span id=spanInsPubKey></span>
 				</td>
 			</tr>
@@ -65,4 +66,5 @@
 		</table>
 	</font>
 </form>
+
 <!--# / write4.template #-->

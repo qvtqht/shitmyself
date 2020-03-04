@@ -20,7 +20,7 @@ function writeOnload() { // onload handler for write page
             var spanInsPubKey = document.getElementById('spanInsPubKey')
 			if (spanInsPubKey) {
 	            var gt = String.fromCharCode(62);
-			    spanInsPubKey.innerHTML = '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt;
+			    spanInsPubKey.innerHTML = '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
 			}
 
 			if (document.getElementById('spanSignAs')) {
@@ -80,8 +80,7 @@ function writeSubmit(t) { // called when user submits write form
 			//alert('DEBUG: no private key, basic submit');
 		}
 	} else {
-		//alert('DEBUG: window.getPrivateKey: ' . window.getPrivateKey);
-		//alert('DEBUG: window.signMessage: ' . window.signMessage);
+		//alert('DEBUG: window.getPrivateKey: ' + window.getPrivateKey + '; window.signMessage: ' + window.signMessage);
 	}
 
 	return true;
