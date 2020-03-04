@@ -2231,7 +2231,7 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 
 	$whereClause = "
 		WHERE 
-			(item_title != '' OR ',' || tags_list || ',' LIKE '%,agree,%') AND
+			(item_title != '' OR ',' || tags_list || ',' LIKE '%,approve,%') AND
 			parent_count = 0 AND 
 			',' || tags_list || ',' NOT LIKE '%,meta,%' AND
 			',' || tags_list || ',' NOT LIKE '%,changelog,%' AND
