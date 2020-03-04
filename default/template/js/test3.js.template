@@ -51,7 +51,7 @@ function showtime() {
 		var seconds = now.getSeconds();
 
 		var milliseconds = '000';
-		if (window.getMilliseconds) {
+		if (now.getMilliseconds) {
 			milliseconds = now.getMilliseconds();
 		} else if (Math.floor && Math.random) {
 			milliseconds = Math.floor(Math.random() * 999)

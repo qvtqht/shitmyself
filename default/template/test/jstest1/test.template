@@ -5,26 +5,88 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
         <title>jstest1</title>
+
+        <style type="text/css">
+            <!--
+                input {
+                    box-shadow: 3pt 3pt 5pt cyan;
+                }
+            -->
+        </style>
     </head>
     <body>
+        <noscript><p>JavaScript appears to be disabled. These tests will not work without it.</p></noscript>
+
+        <p>Warning: This page may crash browser.</p>
+
         <form name=frmTest id=frmTest action="/post.html">
-            <textarea onkeydown="translitKey(event, this);" cols=80 rows=24 id=txtTranslit name=comment></textarea>
-<!--            <input type="text" onkeydown="translitKey(event);" id=txtTranslit>-->
-
-            <input type=submit value=Send>
-
             <input
                 type=submit
                 onclick="if(window.RunTest || RunTest) { return RunTest() } else { alert('window.RunTest was false'); return false; }"
                 value="Run Test"
             >
 
-            <br>
+            <p>
+                navigator.userAgent:
+                <input type=text name=txtNavigatorUserAgent size=80>
+            </p>
 
-            <input type=text name=txtFormTestForms size=80>
-            <input type=text name=txtFormTestForms size=80>
-            <input type=text name=txtFormTestForms size=80>
-            <input type=text name=txtFormTestForms size=80>
+            <hr>
+
+            <p>
+                window.localStorage:
+                <input type=text name=txtWindowLocalStorage size=11>
+            </p>
+
+            <p>
+                Date.getMilliseconds:
+                <input type=text name=txtDateGetMilliseconds size=11>
+            </p>
+
+            <p>
+                window.history:
+                <input type=text name=txtWindowHistory size=11>
+            </p>
+
+            <p>
+                window.XMLHttpRequest:
+                <input type=text name=txtWindowXmlHttpRequest size=11>
+            </p>
+
+            <p>
+                window.Promise:
+                <input type=text name=txtWindowPromise size=11>
+            </p>
+
+            <p>
+                navigator.language:
+                <input type=text name=txtNavigatorLanguage size=11>
+            </p>
+
+            <p>
+                document.layers:
+                <input type=text name=txtDocumentLayers size=11>
+            </p>
+
+            <p>
+                document.all:
+                <input type=text name=txtDocumentAll size=11>
+            </p>
+
+            <p>
+                document.getElementsByClassName:
+                <input type=text name=txtDocumentGetElementsByClassName size=11>
+            </p>
+
+            <p>
+                document.getElementById:
+                <input type=text name=txtDocumentGetElementById size=11>
+            </p>
+
+            <p>
+                String.fromCharCode:
+                <input type=text name=txtStringFromCharCode size=11>
+            </p>
         </form>
     </body>
 </html>
