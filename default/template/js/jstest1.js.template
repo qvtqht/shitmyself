@@ -48,6 +48,8 @@ function RunTest() {
     document.frmTest.txtDocumentAll.value = document.all ? 'Yes' : 'No';
 
     document.frmTest.txtStringFromCharCode.value = String.fromCharCode ? 'Yes' : 'No';
+
+    document.frmTest.txtNavigatorJavaEnabled.value = navigator.javaEnabled ? (navigator.javaEnabled() ? 'Yes' : 'No') : 'undefined';
 //
 //    if (1) {
 //        document.getElementById('txtFormTestForms').value = "document.forms['frmTest'] : " + (frmTestForms ? 'yes' : 'no');

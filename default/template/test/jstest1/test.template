@@ -87,6 +87,10 @@
                 String.fromCharCode:
                 <input type=text name=txtStringFromCharCode size=11>
             </p>
+            <p>
+                navigator.javaEnabled():
+                <input type=text name=txtNavigatorJavaEnabled size=11>
+            </p>
         </form>
     </body>
 </html>
