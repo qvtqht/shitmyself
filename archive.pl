@@ -3,16 +3,18 @@
 my $date = `date +%s`;
 chomp $date;
 
-if (!-e archive) {
+if (!-e 'archive') {
 	mkdir 'archive';
 }
 
-system("mkdir archive/$date");
-system("mv html archive/$date");
-system("cp -r config archive/$date");
-system("mv log archive/$date");
-system("rm cron.lock");
+if (-d 'archive') {
+	system("mkdir archive/$date");
+	system("mv html archive/$date");
+	system("cp -r config archive/$date");
+	system("mv log archive/$date");
+	system("rm cron.lock");
 
-system("mkdir html");
-system("mkdir html/txt");
-system("echo \"archived at $date\" > html/txt/archived_$date\.txt");
+	system("mkdir html");
+	system("mkdir html/txt");
+	system("echo \"archived at $date\" > html/txt/archived_$date\.txt");
+}
