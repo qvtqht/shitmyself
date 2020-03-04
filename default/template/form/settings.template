@@ -27,7 +27,7 @@
 						<legend>Moderation<br></legend>
 
 						<p>
-							<span class=beginner>:<br></span>
+							<span class=beginner>Display voting and moderation options:<br></span>
 
 							<label for=chkWantToVote>
 								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
