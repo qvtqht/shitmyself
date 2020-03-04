@@ -57,6 +57,19 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                             )
                         {
                             WriteLog('Overthrow requested');
+
+                            if (GetConfig('admin/allow_deop')) {
+                                WriteLog('Overthrow conditions met');
+
+                                if (file_exists('../admin.key')) {
+                                    unlink('../admin.key');
+                                    WriteLog('Overthrow successful');
+                                } else {
+                                    WriteLog('Overthrow already in effect: admin.key missing');
+                                }
+                            } else {
+                                WriteLog('Overthrow conditions not met');
+                            }
                         }
 
                         $html = file_get_contents($pathRel);
