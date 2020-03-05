@@ -74,12 +74,37 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 	return true;
 }
 
+function getUserFp() { // retrieve stored user fingerprint from localstorage
+	if (window.localStorage) {
+		var fingerprint = localStorage.getItem('fingerprint');
+		if (!fingerprint) {
+//		if (fingerprint === null || fingerprint.length === 0) {
+			return null;
+		} else {
+			return fingerprint;
+		}
+	}
+}
+
 function AddPrivateKeyLink() {
     if (window.getPrivateKey) {
 	    var privateKey = getPrivateKey();
 	    if (privateKey) {
 	        var fieldset = document.getElementById('fldRegistration');
 	        if (fieldset && document.createElement) {
+	            var pProfileLink = document.createElement('p');
+
+	            var aProfile = document.createElement('a');
+	            aProfile.setAttribute('class', 'advanced');
+	            aProfile.setAttribute('href', '/author/' + getUserFp());
+	            aProfile.setAttribute('id', 'adsfad');
+	            aProfile.innerHTML = 'go to profile';
+
+	            pProfileLink.appendChild(aProfile);
+
+	            fieldset.appendChild(pProfileLink);
+
+
 	            var linkP = document.createElement('p');
 
 	            var linkA = document.createElement('a');
