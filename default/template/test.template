@@ -28,11 +28,11 @@
 		</td>
 	</tr>
 	
-	<tr bgcolor=#c0c0c0 class=statusbar>
-		<td style="border: 1pt inset #c0c0c0">
+	<tr class=statusbar>
+		<td>
 			<p>Posted by <b>Admin</b> at 1571247455
 		</td>
-		<td align=right style="border: 1pt inset #c0c0c0">
+		<td align=right>
 			<p>Score: 123414
 		</td>
 	</tr>
@@ -70,7 +70,7 @@
 			</tr>
 
 			<tr class=statusbar>
-				<td style="border: 1pt inset #c0c0c0; padding: 2pt;">
+				<td>
 					Ready
 				</td>
 			</tr>

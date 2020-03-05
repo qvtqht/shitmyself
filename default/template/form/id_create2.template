@@ -63,7 +63,7 @@
 			</tr>
 
 			<tr bgcolor=$colorWindow class=statusbar>
-				<td style="border: 1pt inset $colorWindow; padding: 2pt;">
+				<td>
 					Ready
 				</td>
 			</tr>

@@ -22,8 +22,8 @@ $quickVoteButtonGroup
 			</td>
 		</tr>
 
-		<tr bgcolor="$colorWindow" class=statusbar>
-			<td style="border: 1pt inset $colorWindow">
+		<tr class=statusbar>
+			<td>
 				<a href="$permalinkHtml">$addedTime</a>
 				$authorLink
 				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt></a>
