@@ -18,5 +18,5 @@ input[type=text], input[type=password], select, option, textarea {
 	border: 1pt inset $colorWindow;
 }
 .statusbar td {
-    padding: 2pt
+    padding: 2pt;
 }
