@@ -1,18 +1,18 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 rm -v cron.lock
-rm -rfv cache
-rm -rfv html/*.html html/*/*.html html/*/*/*.html
-rm -rfv html/*.js html/*/*.js html/*/*/*.js
-rm -rfv html/*.php html/*/*.php html/*/*/*.php
-rm -rfv html/*.xml html/*/*.xml
-rm -rfv html/.htaccess
-rm -rfv html/*.zip
-rm -rfv html/rss.xml html/rss.txt
-rm -rfv config/template/*
-rm -rfv config/string/*
-rm -rfv config/theme/*
-rm -rfv config/admin/my_version
+rm -rf cache
+rm -rf html/*.html html/*/*.html html/*/*/*.html
+rm -rf html/*.js html/*/*.js html/*/*/*.js
+rm -rf html/*.php html/*/*.php html/*/*/*.php
+rm -rf html/*.xml html/*/*.xml
+rm -rf html/.htaccess
+rm -rf html/*.zip
+rm -rf html/rss.xml html/rss.txt
+rm -rf config/template/*
+rm -rf config/string/*
+rm -rf config/theme/*
+rm -rf config/admin/my_version
 find html -type d -empty -delete
 
 touch html/post.html
