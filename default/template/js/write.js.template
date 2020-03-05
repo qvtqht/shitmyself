@@ -19,12 +19,12 @@ function writeOnload() { // onload handler for write page
 
             var spanInsPubKey = document.getElementById('spanInsPubKey')
 			if (spanInsPubKey) {
-	            var gt = String.fromCharCode(62);
-			    spanInsPubKey.innerHTML = '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
+	            var gt = unescape('%3E');
+			    spanInsPubKey.innerHTML = '<span class=beginner><br>Re-upload your public </span><a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
 			}
 
 			if (document.getElementById('spanSignAs')) {
-				var gt = String.fromCharCode(62);
+				var gt = unescape('%3E');
 				if (window.getAvatar) {
 					document.getElementById('spanSignAs').innerHTML =
 					    '<p' + gt + '[x] Sign message as ' + getAvatar() + '</p' + gt;

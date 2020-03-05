@@ -39,14 +39,19 @@ function commentOnChange(t, formId) {
 	var strWarnDisplay;
 	var strInnerHtml;
 
-	var gt = String.fromCharCode(62);
-//    var gt = '';
+	//var gt = unescape('%3E');
+    //var gt = '';
+    var gt = unescape('%3E');
+
+    //alert('DEBUG: gt: ' + gt);
 
 	if (t.value.length <= 1024) {
+	    //alert('DEBUG: setting form method to GET');
 		strFormMode = 'GET';
 		strWarnDisplay = 'none';
 		strInnerHtml = 'Long message mode.<br' + gt;
 	} else {
+	    //alert('DEBUG: setting form method to POST');
 		strFormMode = 'POST';
 		strWarnDisplay = 'block';
 		strInnerHtml = '';

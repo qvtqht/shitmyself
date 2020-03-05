@@ -7,14 +7,14 @@ if (window.getUserFp) {
 	if (document.getElementById && getUserFp()) {
 		var sp = document.getElementById('signAndPost');
 		var actName = 'Post as ';
-		var gt = String.fromCharCode(62);
+		var gt = unescape('%3E');
 
 		if (!sp) {
 			sp = document.getElementById('replySignedContainer');
 			actName = 'Reply as ';
 		}
 		if (sp) {
-			var gt = String.fromCharCode(62);
+			var gt = unescape('%3E');
 
 			sp.innerHTML = '<button onclick="if (window.signMessage) { this.value = \'Please wait... (click to try again)\'; signMessage(); }"' + gt + actName + getAvatar() + '</button' + gt;
 		}
