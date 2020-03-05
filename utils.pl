@@ -1628,7 +1628,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 					WriteLog("Looking for returned alias in $_");
 
 					# gpg 1
-					if ($gpgCommand eq 'gpg' && !GetConfig('admin/gpg/use_gpg2')) {
+					if (($gpgCommand eq 'gpg' || $gpgCommand eq 'gpg1') && !GetConfig('admin/gpg/use_gpg2')) {
 						WriteLog('$gpgCommand is gpg');
 
 						if (substr($_, 0, 4) eq 'pub ') {
@@ -1689,8 +1689,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 					$message =~ s/\$name/$alias/g;
 					$message =~ s/\$fingerprint/$gpg_key/g;
 
-				}
-				else {
+				} else {
 					$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
 				}
 
