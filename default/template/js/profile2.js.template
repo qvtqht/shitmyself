@@ -105,6 +105,20 @@ function AddPrivateKeyLink() {
 	            fieldset.appendChild(pProfileLink);
 
 
+	            var pDownloadKey = document.createElement('p');
+
+	            var aDownloadKey = document.createElement('a');
+	            aDownloadKey.setAttribute('class', 'advanced');
+	            aDownloadKey.setAttribute('href', '#');
+	            aDownloadKey.setAttribute('id', 'linkDownloadPrivateKey');
+	            aDownloadKey.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { SavePrivateKeyAsTxt(); }');
+	            aDownloadKey.innerHTML = 'download private key';
+
+	            pDownloadKey.appendChild(aDownloadKey);
+
+	            fieldset.appendChild(pDownloadKey);
+
+
 	            var linkP = document.createElement('p');
 
 	            var linkA = document.createElement('a');
@@ -230,6 +244,13 @@ function ShowPrivateKey() { // displays private key in textarea
 	        return false;
 	    }
     }
+}
+
+function SavePrivateKeyAsTxt() {
+    var myFp = getUserFp();
+    var text = getPrivateKey();
+
+    DownloadAsTxt(myFp + '.txt', text);
 }
 
 
