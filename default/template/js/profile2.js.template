@@ -112,7 +112,7 @@ function AddPrivateKeyLink() {
 	            aDownloadKey.setAttribute('href', '#');
 	            aDownloadKey.setAttribute('id', 'linkDownloadPrivateKey');
 	            aDownloadKey.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { SavePrivateKeyAsTxt(); }');
-	            aDownloadKey.innerHTML = 'download private key';
+	            aDownloadKey.innerHTML = 'save private key';
 
 	            pDownloadKey.appendChild(aDownloadKey);
 
