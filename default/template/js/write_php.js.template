@@ -58,10 +58,11 @@ function commentOnChange(t, formId) {
 	}
 
 	if (document.forms) {
-		var form = document.forms[formId];
-		if (form) {
-			form.method = strFormMode;
-		}
+		document.forms[formId.method = strFormMode;
+//		var form = document.forms[formId];
+//		if (form) {
+//			form.method = strFormMode;
+//		}
 	}
 
 	if (document.getElementById) {
