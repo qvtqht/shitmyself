@@ -57,8 +57,8 @@ function commentOnChange(t, formId) {
 		strInnerHtml = '';
 	}
 
-	if (document.forms) {
-		document.forms[formId.method = strFormMode;
+	if (document.forms && document.forms[formId] && document.forms[formId].method) {
+		document.forms[formId].method = strFormMode;
 //		var form = document.forms[formId];
 //		if (form) {
 //			form.method = strFormMode;
