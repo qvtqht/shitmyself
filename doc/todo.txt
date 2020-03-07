@@ -1,3 +1,5 @@
+Make a chart comparing to other systems
+
 Move css from default.css into theme
     Except for certain things
 
