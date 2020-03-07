@@ -103,4 +103,54 @@ function removeStoredKeys2() {
 	}
 }
 
+function setPrivateKeyFromTxt(newKey) { // set the current private key and refresh the pubkey, fingerprint, and avatar too
+	var gt = String.fromCharCode(62);
+
+    //window.localStorage.setItem("privatekey", newKey);
+
+    if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage && window.Promise) {
+        var script = document.createElement('script');
+        script.src = '/openpgp.js';
+        script.async = false; // This is required for synchronous execution
+        document.head.appendChild(script);
+    }
+
+    var openpgp = window.openpgp;
+
+    openpgp.config.show_version = false;
+    openpgp.config.show_comment = false;
+
+    // read it into pgp object
+    var privKeyObj = openpgp.key.readArmored(newKey);
+
+    // get the public key out of it
+    var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+    // store the armored version into localstorage
+    var pubkey = pubKeyObj.armor();
+    window.localStorage.setItem("publickey", pubkey);
+
+    // get the fingerprint as uppercase hex and store it
+    var myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+
+    // get username out of key
+    var myUsername = pubKeyObj.users[0].userId.userid;
+
+    var gt = unescape('%3E');
+
+    var avatar = escapeHTML(myUsername);
+
+    var privkey = privKeyObj.privateKeyArmored;
+
+    window.localStorage.setItem('privatekey', privkey);
+    window.localStorage.setItem('publickey', pubkey);
+    window.localStorage.setItem('fingerprint', myFingerprint);
+    window.localStorage.setItem('avatar', avatar);
+
+    document.cookie = "test=" + myFingerprint;
+
+    //window.location = '/profile.html?' + myFingerprint;
+    window.location = '/write.html#inspubkey';
+}
+
 // == end crypto2.js
