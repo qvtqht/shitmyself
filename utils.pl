@@ -557,6 +557,8 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 			$avatarCacheDir = 'avatar.plain/';
 			$avatarTemplate = 'avatar2.template';
 		}
+		my $themeName = GetConfig('html/theme');
+		$avatarCacheDir .= $themeName . '/';
 	}
 
 	state %avatarCache;
