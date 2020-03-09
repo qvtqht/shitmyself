@@ -1,3 +1,5 @@
+If someone replies to something from another server, send the reply back to the origin server
+
 When displaying integer timestamps, colorize the first x digits which match current time
 
 How to inject templates into JS where JS needs to insert it into page?
