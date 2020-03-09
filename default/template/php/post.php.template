@@ -19,6 +19,8 @@ if ($stopTimeConfig) {
 	}
 }
 
+$redirected = 0; // tracks whether header('Location:...') has already been sent
+
 function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
@@ -287,14 +289,16 @@ if ($comment) {
 		}
 
 		$fileUrlPath = ProcessNewComment($comment);
+		if (!$redirected && strpos($comment, 'PUBLIC KEY BLOCK')) {
+            // if user is submitting a public key, chances are
+            // they just registered, so lazily redirect them
+            // to the profile page instead.
+            // #todo relative url support
+            // #todo better flow for registration -> profile page
 
-        // if user is submitting a public key, chances are
-        // they just registered, so lazily redirect them
-        // to the profile page instead.
-        // #todo relative url support
-        // #todo better flow for registration -> profile page
-		if (strpos($comment, 'PUBLIC KEY BLOCK')) {
 		    Header('Location: /profile.html');
+
+		    $redirected = 1;
 		}
 	}
 }
@@ -319,9 +323,12 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 if (GetConfig('admin/php/update_on_post')) {
     WriteLog(`cd .. ; ./update.pl`);
 
-    Header('Location: ' . $fileUrlPath);
-} else {
-    print($html);
+    if (!$redirected) {
+        Header('Location: ' . $fileUrlPath);
+
+        $redirected = 1;
+    }
 }
 
+print($html);
 
