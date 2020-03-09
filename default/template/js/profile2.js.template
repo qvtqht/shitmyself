@@ -89,10 +89,15 @@ function getUserFp() { // retrieve stored user fingerprint from localstorage
 function AddPrivateKeyLinks() {
     if (document.getElementById && window.getPrivateKey) {
 	    var privateKey = getPrivateKey();
+
 	    if (privateKey) {
 	        var fieldset = document.getElementById('fldRegistration');
 
 	        if (fieldset && document.createElement) {
+	            var hrDivider = document.createElement('hr');
+
+	            fieldset.appendChild(hrDivider);
+
 	            var pProfileLink = document.createElement('p');
 
 	            var aProfile = document.createElement('a');
@@ -119,7 +124,25 @@ function AddPrivateKeyLinks() {
 
 	            fieldset.appendChild(pSaveKeyAsTxt);
 
-	            var pLoadKeyFromTxt = document.createElement('p');
+
+	            var pShowPrivateKey = document.createElement('p');
+
+	            var aShowPrivateKey = document.createElement('a');
+	            aShowPrivateKey.setAttribute('class', 'advanced');
+	            aShowPrivateKey.setAttribute('href', '#');
+	            aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
+	            aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
+	            aShowPrivateKey.innerHTML = 'show private key';
+
+	            pShowPrivateKey.appendChild(aShowPrivateKey);
+
+	            fieldset.appendChild(pShowPrivateKey);
+            }
+	    } else {
+	        var fieldset = document.getElementById('fldRegistration');
+
+	        if (fieldset && document.createElement) {
+                var pLoadKeyFromTxt = document.createElement('p');
 
 //	            var aLoadKeyFromTxt = document.createElement('a');
 //	            aLoadKeyFromTxt.setAttribute('class', 'advanced');
@@ -133,25 +156,24 @@ function AddPrivateKeyLinks() {
                 fileLoadKeyFromText.setAttribute('type', 'file');
                 fileLoadKeyFromText.setAttribute('accept', 'text/plain');
                 fileLoadKeyFromText.setAttribute('onchange', 'openFile(event)');
+                fileLoadKeyFromText.setAttribute('style', 'display: none');
+                fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
+
+
+                var aLoadKeyFromText = document.createElement('a');
+                aLoadKeyFromText.setAttribute('class', 'advanced');
+                aLoadKeyFromText.setAttribute('href', '#');
+                aLoadKeyFromText.setAttribute('id', 'linkLoadPrivateKey');
+                aLoadKeyFromText.setAttribute('onclick', 'if (window.CallLoadPrivateKey) { return CallLoadPrivateKey(); }');
+                aLoadKeyFromText.innerHTML = 'load from file';
+
+                pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
+
 
 //	            pLoadKeyFromTxt.appendChild(aLoadKeyFromTxt);
 	            pLoadKeyFromTxt.appendChild(fileLoadKeyFromText);
 
 	            fieldset.appendChild(pLoadKeyFromTxt);
-
-//
-//	            var pShowPrivateKey = document.createElement('p');
-//
-//	            var aShowPrivateKey = document.createElement('a');
-//	            aShowPrivateKey.setAttribute('class', 'advanced');
-//	            aShowPrivateKey.setAttribute('href', '#');
-//	            aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
-//	            aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
-//	            aShowPrivateKey.innerHTML = 'show private key';
-//
-//	            pShowPrivateKey.appendChild(aShowPrivateKey);
-//
-//	            fieldset.appendChild(pShowPrivateKey);
             }
 	    }
     }
@@ -196,6 +218,8 @@ function ProfileOnLoad() {
     			        //alert('DEBUG: window.openpgp = true');
 
 					    lblSigningIndicator.innerHTML = 'Available';
+
+					    AddPrivateKeyLinks();
                     } else {
                         //alert('DEBUG: window.openpgp = false');
 
@@ -292,6 +316,14 @@ function SavePrivateKeyAsTxt() {
     var text = getPrivateKey();
 
     DownloadAsTxt(myFp + '.txt', text);
+}
+
+function CallLoadPrivateKey() {
+    var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
+
+    if (fileLoadKeyFromText) {
+        fileLoadKeyFromText.click();
+    }
 }
 
 if (document.cookie) {
