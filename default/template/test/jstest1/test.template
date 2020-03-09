@@ -17,8 +17,6 @@
     <body>
         <noscript><p>JavaScript appears to be disabled. These tests will not work without it.</p></noscript>
 
-        <p>Warning: This page may crash browser.</p>
-
         <form name=frmTest id=frmTest action="/post.html">
             <input
                 type=submit

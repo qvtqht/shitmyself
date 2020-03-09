@@ -3,23 +3,9 @@
 function RunTest() {
 	//alert('DEBUG: RunTest() begins');
 
-	//document.write('<form><input type=submit></form>');
-
-    var frmTestForms = document.forms['frmTest'];
-    if (frmTestForms) {
-        //alert('DEBUG: frmTestForms = document.forms[frmTest] = ' + frmTestForms);
-    } else {
-        //alert('DEBUG: frmTestForms was false');
-    }
-
-    var frmTestDot = document.frmTest;
-    if (frmTestDot) {
-        //alert('DEBUG: frmTest = document.frmTestDot = ' + frmTestDot);
-    } else {
-        //alert('DEBUG: frmTestForms was false');
-    }
-
     if (window.navigator) {
+       	//alert('DEBUG: window.navigator was true, looking for navigator.language and navigator.userAgent');
+
         document.frmTest.txtNavigatorLanguage.value = navigator.language;
         document.frmTest.txtNavigatorUserAgent.value = navigator.userAgent;
     }
@@ -50,14 +36,8 @@ function RunTest() {
     document.frmTest.txtStringFromCharCode.value = String.fromCharCode ? 'Yes' : 'No';
 
     document.frmTest.txtNavigatorJavaEnabled.value = navigator.javaEnabled ? (navigator.javaEnabled() ? 'Yes' : 'No') : 'undefined';
-//
-//    if (1) {
-//        document.getElementById('txtFormTestForms').value = "document.forms['frmTest'] : " + (frmTestForms ? 'yes' : 'no');
-//    }
 
 	return false;
 }
-
-//document.body.onkeyup='alert(keycode)';
 
 // end jstest1.js.template
