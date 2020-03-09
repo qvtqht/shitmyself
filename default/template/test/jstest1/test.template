@@ -19,7 +19,7 @@
 
         <form name=frmTest id=frmTest action="/post.html">
             <input
-                type=submit
+                type=button
                 onclick="if(window.RunTest || RunTest) { return RunTest() } else { alert('window.RunTest was false'); return false; }"
                 value="Run Test"
             >
