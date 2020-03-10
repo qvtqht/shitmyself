@@ -93,3 +93,6 @@ div.txt {
 	font-weight: bold;
 }
 
+*:focus {
+    background-color: orange;
+}
