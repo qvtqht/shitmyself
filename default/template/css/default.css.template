@@ -19,80 +19,40 @@ div.reply {
 	padding-left: 3em;
 }
 
-.rmid {
-/* sign out button */
-	color: red;
-}
-
 .item-textart {
 /* textart items get monospace font */
 	font-family: monospace;
 	font-size: 12pt;
 }
 
-/* regular text */
-.txt {
-	font-family: tahoma;
-	font-size: 14pt;
+.item-aolart {
+/* aol art in 10-point arial font */
+    font-family: Arial;
+    font-size: 10pt;
 }
-
 
 div.txt {
 	padding-left: 1em;
 }
+
 .byadmin {
+/* text by admin, displayed in red for users' sake */
 	color: red;
 }
+
 .signed {
+/* signed things are displayed in gold */
     border-color: gold;
 }
 
-/* loading */
-.loading {
-	text-align: center;
-	background-color: green;
-	color: gold;
-	font-size: xx-large;
-	font-weight: bold;
-	font-family: cursive;
-}
-
-#curIdAdv {
-	padding: 5pt;
-}
-
-#formprivkey {
-	display: none;
-	background-color: $colorWindow;
-	border: 5pt solid #ffa0a0;
-	padding: 5pt;
-	border-radius: 5pt;
-}
-
-#formAdminId {
-	background-color: #ffe080;
-	padding: 5pt;
-	border: 5pt solid #c08000;
-	border-radius: 5pt;
-}
-
-.menu, .titlebar {
-	$headerBackgroundPattern
-}
-
 #eventLocation, #eventBrcLocation {
+/* event form */
 	background-color: $colorRow0Bg;
 	padding: 5pt;
 }
+
 #eventDate {
+/* event form */
 	background-color: $colorRow1Bg;
 	padding: 5pt;
-}
-
-#cSb {
-	font-weight: bold;
-}
-
-*:focus {
-    background-color: orange;
 }
