@@ -2338,10 +2338,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
 	}
 	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
-#
-#	# Profile page
-	my $identityPage = GetIdentityPage();
-	PutHtmlFile("$HTMLDIR/gpg.html", $identityPage);
 
 	# Profile page
 	my $identityPage2 = GetIdentityPage2();
@@ -2507,8 +2503,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
 	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
 
-	# Write form javasript
-	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
+	# Write form javascript
+#	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
 #	my $prefillUsername = GetConfig('prefill_username') || '';
 #	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
 
