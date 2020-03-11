@@ -15,13 +15,16 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 
     var key = '$'; // pressed key
 
-    if (0 && e.key) {
+    if (e.key) {
     // for browsers which return event.key
+        //alert('DEBUG: translitKey: e.key is TRUE');
         key = e.key;
     } else if (e.keyCode) {
     // older browsers only return event.keyCode
+        //alert('DEBUG: translitKey: e.key is FALSE');
         key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
     }
+    //alert('DEBUG: key: ' + key);
 
     if (e.altKey) {
     // alt key combinations are few
@@ -37,7 +40,7 @@ function translitKey(e, t) { // replaces pressed key with russian letter
     } else {
         var keysEn =
             "`-=" +
-            "~_+" +
+            "~@_+" +
             "qwertyuiop[]\\" +
             "QWERTYUIOP{}|" +
             "asdfghjkl" +
@@ -48,7 +51,7 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 
         var keysRu =
             "щьъ" +
-            "Щ-=" +
+            "Щё-=" +
             "яшертыуиопюжэ" +
             "ЯШЕРТЫУИОПЮЖЭ" +
             "асдфгчйкл" +
