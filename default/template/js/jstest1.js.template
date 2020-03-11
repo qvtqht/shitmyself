@@ -56,8 +56,13 @@ function RunTest() {
 	//alert('DEBUG: Looking for window.history...');
 	document.frmTest.txtWindowHistory.value = !!window.history;
 
-	//alert('DEBUG: Looking for navigator.javaEnabled...');
-	document.frmTest.txtNavigatorJavaEnabled.value = !!navigator.javaEnabled ? (navigator.javaEnabled() ? 'true' : 'false') : 'undefined';
+	if (navigator.userAgent.indexOf('MSIE 6.') != -1) {
+	    //alert('DEBUG: Skipping navigator.javaEnabled, MSIE 6.');
+	    document.frmTest.txtStringFromCharCode.value = 'skipped';
+	} else {
+        //alert('DEBUG: Looking for navigator.javaEnabled...');
+        document.frmTest.txtNavigatorJavaEnabled.value = !!navigator.javaEnabled ? (navigator.javaEnabled() ? 'true' : 'false') : 'undefined';
+    }
 
 	//alert('DEBUG: Looking for document.layers...');
 	document.frmTest.txtDocumentLayers.value = !!document.layers;
