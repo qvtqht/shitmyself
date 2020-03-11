@@ -4,24 +4,28 @@ function writeOnload() { // onload handler for write page
 	//alert('DEBUG: writeOnload() begin');
 
 	if (document.getElementById) {
+	    //alert('DEBUG: writeOnload: document.getElementById is true');
 
-        var pubKey;
+
+        var pubKey = '';
         if (window.getPublicKey) {
         	//alert('DEBUG: window.getPublicKey exists');
 
         	pubKey = getPublicKey();
         }
 
-        if (pubKey) {
-			if (document.getElementById('addtext')) {
-				document.getElementById('addtext').value = 'Sign Message and Send';
-			}
+        var privKey = '';
+        if (window.getPrivateKey) {
+            //alert('DEBUG: window.getPrivateKey exists');
 
-            var spanInsPubKey = document.getElementById('spanInsPubKey')
-			if (spanInsPubKey) {
-	            var gt = unescape('%3E');
-			    spanInsPubKey.innerHTML = '<span class=beginner><br>Re-upload your public </span><a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
-			}
+            privKey = getPrivateKey();
+        }
+
+        //alert('DEBUG: privKey = ' + privKey);
+        //alert('DEBUG: pubKey = ' + pubKey);
+
+        if (privKey) {
+            //alert('DEBUG: privKey was true, adding options...');
 
 			if (document.getElementById('spanSignAs')) {
 				var gt = unescape('%3E');
@@ -32,6 +36,21 @@ function writeOnload() { // onload handler for write page
 					document.getElementById('spanSignAs').innerHTML =
 					    '<p' + gt + '[x] Sign message as logged in user</p' + gt;
 				}
+			}
+
+			if (document.getElementById('addtext')) {
+				document.getElementById('addtext').value = 'Sign Message and Send';
+			}
+
+        }
+
+        if (pubKey) {
+            //alert('DEBUG: pubKey was true, adding options...');
+
+            var spanInsPubKey = document.getElementById('spanInsPubKey')
+			if (spanInsPubKey) {
+	            var gt = unescape('%3E');
+			    spanInsPubKey.innerHTML = '<span class=beginner><br>Re-upload your public </span><a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
 			}
         }
 
@@ -57,9 +76,13 @@ function writeOnload() { // onload handler for write page
 							compose.submit();
 						}
 					}
+                } else {
+                    //alert('DEBUG: pubKey was false, this is unexpected. Giving up.');
                 }
             }
         }
+    } else {
+        //alert('DEBUG: writeOnload: document.getElementById was FALSE');
     }
 
 	if (window.signMessage) {
@@ -69,6 +92,7 @@ function writeOnload() { // onload handler for write page
 
 function writeSubmit(t) { // called when user submits write form
 	//alert('DEBUG: writeSubmit() begin');
+
 	if (window.getPrivateKey && window.signMessage) {
 		//alert('DEBUG: window.getPrivateKey && window.signMessage test passed');
 		if (getPrivateKey()) {
@@ -80,7 +104,7 @@ function writeSubmit(t) { // called when user submits write form
 			//alert('DEBUG: no private key, basic submit');
 		}
 	} else {
-		//alert('DEBUG: window.getPrivateKey: ' + window.getPrivateKey + '; window.signMessage: ' + window.signMessage);
+		//alert('DEBUG: Test Failed: window.getPrivateKey: ' + !!window.getPrivateKey + '; window.signMessage: ' + !!window.signMessage);
 	}
 
 	return true;
