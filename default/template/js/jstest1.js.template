@@ -3,40 +3,69 @@
 function RunTest() {
 	//alert('DEBUG: RunTest() begins');
 
-    if (window.navigator) {
-       	//alert('DEBUG: window.navigator was true, looking for navigator.language and navigator.userAgent');
+	//alert('DEBUG: Looking for document.getElementById...');
 
-        document.frmTest.txtNavigatorLanguage.value = navigator.language;
-        document.frmTest.txtNavigatorUserAgent.value = navigator.userAgent;
-    }
 
-    if (document.getElementById) {
-        document.frmTest.txtDocumentGetElementById.value = 'Yes';
-    } else {
-        document.frmTest.txtDocumentGetElementById.value = 'No';
-    }
+	if (window.navigator) {
+		//alert('DEBUG: window.navigator was true, looking for navigator.language and navigator.userAgent');
 
-    document.frmTest.txtWindowHistory.value = window.history ? 'Yes' : 'No';
+		document.frmTest.txtNavigatorUserAgent.value = navigator.userAgent;
+		document.frmTest.txtNavigatorLanguage.value = navigator.language;
+	}
 
-    document.frmTest.txtWindowLocalStorage.value = window.localStorage ? 'Yes' : 'No';
 
-    document.frmTest.txtWindowXmlHttpRequest.value = window.XMLHttpRequest ? 'Yes' : 'No';
+	// this is the most basic syntax for this file
+	// for brevity, the rest of the tests are done with !!foo.bar syntax
+	// i have not seen this cause an issue so far, it's very basic js
+	// if it's ever a problem, can be changed to this syntax
+	// even opera 3.62 is ok with it,
+	if (document.getElementById) {
+		document.frmTest.txtDocumentGetElementById.value = 'true';
+	} else {
+		document.frmTest.txtDocumentGetElementById.value = 'false';
+	}
 
-    document.frmTest.txtDocumentGetElementsByClassName.value = document.getElementsByClassName ? 'Yes' : 'No';
 
-    document.frmTest.txtWindowPromise.value = window.Promise ? 'Yes' : 'No';
+	//alert('DEBUG: Looking for document.getElementsByClassName...');
+	document.frmTest.txtDocumentGetElementsByClassName.value = !!document.getElementsByClassName;
 
-    document.frmTest.txtDocumentLayers.value = document.layers ? 'Yes' : 'No';
+	//alert('DEBUG: Looking for window.localStorage...');
+	document.frmTest.txtWindowLocalStorage.value = !!window.localStorage;
 
-    var now = new Date();
-    document.frmTest.txtDateGetMilliseconds.value = now.getMilliseconds ? 'Yes' : 'No';
+	//alert('DEBUG: Looking for window.Promise...');
+	document.frmTest.txtWindowPromise.value = !!window.Promise;
 
-    document.frmTest.txtDocumentAll.value = document.all ? 'Yes' : 'No';
+	//alert('DEBUG: Looking for window.unescape...');
+	document.frmTest.txtWindowUnescape.value = !!window.unescape;
 
-    document.frmTest.txtStringFromCharCode.value = String.fromCharCode ? 'Yes' : 'No';
+	//alert('DEBUG: Looking for window.XMLHttpRequest...');
+	document.frmTest.txtWindowXmlHttpRequest.value = !!window.XMLHttpRequest;
 
-    document.frmTest.txtNavigatorJavaEnabled.value = navigator.javaEnabled ? (navigator.javaEnabled() ? 'Yes' : 'No') : 'undefined';
+	if (navigator.userAgent.indexOf('Opera 3.') != -1) {
+		//alert('DEBUG: Skipping String.fromCharCode, Opera 3.');
+		document.frmTest.txtStringFromCharCode.value = 'skipped';
+	} else {
+		//alert('DEBUG: Looking for String.fromCharCode...');
+		document.frmTest.txtStringFromCharCode.value = !!String.fromCharCode;
+	}
 
+	//alert('DEBUG: Looking for Date.getMilliseconds...');
+	var now = new Date();
+	document.frmTest.txtDateGetMilliseconds.value = !!now.getMilliseconds;
+
+	//alert('DEBUG: Looking for window.history...');
+	document.frmTest.txtWindowHistory.value = !!window.history;
+
+	//alert('DEBUG: Looking for navigator.javaEnabled...');
+	document.frmTest.txtNavigatorJavaEnabled.value = !!navigator.javaEnabled ? (navigator.javaEnabled() ? 'true' : 'false') : 'undefined';
+
+	//alert('DEBUG: Looking for document.layers...');
+	document.frmTest.txtDocumentLayers.value = !!document.layers;
+
+	//alert('DEBUG: Looking for document.all...');
+	document.frmTest.txtDocumentAll.value = !!document.all;
+
+	//alert('DEBUG: Finished, returning.');
 	return false;
 }
 

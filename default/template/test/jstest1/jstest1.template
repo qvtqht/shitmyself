@@ -24,16 +24,53 @@
                 value="Run Test"
             >
 
+            <input type=submit value="Upload Results" onclick="return confirm('Send to server?');">
+
             <p>
                 navigator.userAgent:
                 <input type=text name=txtNavigatorUserAgent size=80>
             </p>
 
+            <p>
+                navigator.language:
+                <input type=text name=txtNavigatorLanguage size=11>
+            </p>
+
             <hr>
+
+            <p>
+                document.getElementById:
+                <input type=text name=txtDocumentGetElementById size=11>
+            </p>
+
+            <p>
+                document.getElementsByClassName:
+                <input type=text name=txtDocumentGetElementsByClassName size=11>
+            </p>
 
             <p>
                 window.localStorage:
                 <input type=text name=txtWindowLocalStorage size=11>
+            </p>
+
+            <p>
+                window.Promise:
+                <input type=text name=txtWindowPromise size=11>
+            </p>
+
+            <p>
+                window.unescape:
+                <input type=text name=txtWindowUnescape size=11>
+            </p>
+
+            <p>
+                window.XMLHttpRequest:
+                <input type=text name=txtWindowXmlHttpRequest size=11>
+            </p>
+
+            <p>
+                String.fromCharCode:
+                <input type=text name=txtStringFromCharCode size=11>
             </p>
 
             <p>
@@ -47,18 +84,8 @@
             </p>
 
             <p>
-                window.XMLHttpRequest:
-                <input type=text name=txtWindowXmlHttpRequest size=11>
-            </p>
-
-            <p>
-                window.Promise:
-                <input type=text name=txtWindowPromise size=11>
-            </p>
-
-            <p>
-                navigator.language:
-                <input type=text name=txtNavigatorLanguage size=11>
+                navigator.javaEnabled:
+                <input type=text name=txtNavigatorJavaEnabled size=11>
             </p>
 
             <p>
@@ -69,25 +96,6 @@
             <p>
                 document.all:
                 <input type=text name=txtDocumentAll size=11>
-            </p>
-
-            <p>
-                document.getElementsByClassName:
-                <input type=text name=txtDocumentGetElementsByClassName size=11>
-            </p>
-
-            <p>
-                document.getElementById:
-                <input type=text name=txtDocumentGetElementById size=11>
-            </p>
-
-            <p>
-                String.fromCharCode:
-                <input type=text name=txtStringFromCharCode size=11>
-            </p>
-            <p>
-                navigator.javaEnabled():
-                <input type=text name=txtNavigatorJavaEnabled size=11>
             </p>
         </form>
     </body>
