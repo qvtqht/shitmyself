@@ -2628,11 +2628,12 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetPageFooter();
 
 	if (GetConfig('php/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile));
+		$txtIndex = InjectJs($txtIndex, qw(avatar write translit settings profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write write_php settings profile));
+		$txtIndex = InjectJs($txtIndex, qw(avatar write translit write_php settings profile));
 	}
-#	$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
+	#$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
+	#$txtIndex = InjectJs($txtIndex, qw(clock));
 
 	# add call to writeOnload to page
 	if (GetConfig('admin/js/enable')) {
