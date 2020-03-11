@@ -25,7 +25,7 @@ div.reply {
 	font-size: 12pt;
 }
 
-.item-aolart {
+.tag-aolart {
 /* aol art in 10-point arial font */
     font-family: Arial;
     font-size: 10pt;
