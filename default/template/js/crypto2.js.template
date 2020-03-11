@@ -1,5 +1,9 @@
 // == begin crypto2.js
 
+// these are used to globally store the user's fingerprint and username
+var myFingerprint = '';
+var myUsername = '';
+
 function MakeKey() {
 	//alert('DEBUG: MakeKey() begin');
 	var openpgp = window.openpgp;
@@ -80,13 +84,44 @@ function MakeKey() {
 
 function getPrivateKey() { // get private key from local storage
 // returns null otherwise
+    //alert('DEBUG: getPrivateKey() begins');
+
 	if (window.localStorage) {
+	    //alert('DEBUG: getPrivateKey: window.localStorage is true, checking for localStorage.getItem(privatekey)');
+
 		var privateKey = localStorage.getItem("privatekey");
 
 		if (privateKey === null || privateKey.length === 0) {
+		    //alert('DEBUG: getPrivateKey: found nothing in localStorage');
+
 			return null;
 		} else {
+		    //alert('DEBUG: getPrivateKey: found something in localStorage: ' . privateKey);
+
 			return privateKey;
+		}
+	} else {
+		return null;
+	}
+}
+
+function getPublicKey() { // get public key from local storage
+// returns null otherwise
+    //alert('DEBUG: getPublicKey() begins');
+
+	if (window.localStorage) {
+	    //alert('DEBUG: getPublicKey: window.localStorage is true, checking for localStorage.getItem(publickey)');
+
+		var publicKey = localStorage.getItem("publickey");
+
+		if (publicKey === null || publicKey.length === 0) {
+		    //alert('DEBUG: getPublicKey: found nothing in localStorage');
+
+			return null;
+		} else {
+		    //alert('DEBUG: getPublicKey: found something in localStorage: ' . publicKey);
+
+			return publicKey;
 		}
 	} else {
 		return null;
@@ -142,7 +177,7 @@ function setPrivateKeyFromTxt(newKey) { // set the current private key and refre
 
     var privkey = privKeyObj.privateKeyArmored;
 
-    window.localStorage.setItem('privatekey', privkey);
+    window.localStorage.setItem('privatekey', newKey);
     window.localStorage.setItem('publickey', pubkey);
     window.localStorage.setItem('fingerprint', myFingerprint);
     window.localStorage.setItem('avatar', avatar);
@@ -152,5 +187,97 @@ function setPrivateKeyFromTxt(newKey) { // set the current private key and refre
     //window.location = '/profile.html?' + myFingerprint;
     window.location = '/write.html#inspubkey';
 }
+
+
+function signMessage() {
+	//alert('DEBUG: signMessage() begin');
+
+	var privkey = getPrivateKey();
+
+	if (privkey) {
+		//alert('DEBUG: signMessage: privkey is true');
+
+		var textbox = document.getElementById('comment');
+		var composeForm = document.getElementById('compose');
+
+		if (textbox && composeForm) {
+			//alert('DEBUG: signMessage: textbox && composeForm is true');
+
+//			textbox.style.color = '#00ff00';
+//			textbox.style.backgroundColor = '#c0c000';
+
+			var message = textbox.value;
+
+			// if the message already has the header,
+			//    assume it's already signed and return
+			// #todo make it also verify that it's signed before returning
+			// #todo some kind of *unobtrusive* indicator/confirmation/option
+			// #todo change color of textbox when message is properly signed
+
+			if (message.trim().substring(0, 34) == ('-----BEGIN PGP SIGNED MESSAGE-----')) {
+				//alert('DEBUG: signMessage: message is already signed, returning');
+
+				return true;
+			}
+
+			if (message.trim().substring(0, 36) == ('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+				//alert('DEBUG: signMessage: message contains public key, returning');
+
+				return true;
+			}
+
+			var replyTo = document.getElementById('replyto');
+
+			if (replyTo) {
+				var replyToId = replyTo.value;
+
+				if (replyToId) {
+					if (-1 < message.indexOf('>>' + replyToId)) {
+					} else {
+						message = '>>' + replyToId + '\n\n' + message;
+					}
+				}
+			}
+//
+			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+//
+//			privateKey.decrypt('hello');
+//
+//			var privKeyObj = (await openpgp.key.readArmored(privkey)).keys[0];
+//			await privKeyObj.decrypt(passphrase);
+//
+
+			options = {
+				data: message,                             // input as String (or Uint8Array)
+				privateKeys: [privKeyObj]                  // for signing
+			};
+
+			openpgp.config.show_version = false;
+
+			openpgp.config.show_comment = false;
+
+			openpgp.sign(options).then(function(signed) {
+				textbox.value = signed.data;
+				composeForm.submit();
+			});
+
+			return false;
+		}
+
+		return true;
+	} else {
+		// this is an edge case
+		// user signed out in another window, but wants to sign in this one
+		// signing is no longer possible, so just submit to be on safe side
+	}
+
+	return true;
+}
+
+
+function cryptoJs() {
+	return 1;
+}
+
 
 // == end crypto2.js
