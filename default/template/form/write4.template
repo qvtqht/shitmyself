@@ -11,10 +11,14 @@
 
 			<tr class=menubar>
 				<td>
-					<p class=advanced>
-						<span class=beginner><br>Share information about your </span><a href="/write.html?report=client">Browser</a>;
-						<span class=beginner><br>Enable keyboard transliteration for </span><a href="/write.html?russian=1">Russian</a>;
+					<span class=advanced>
+						<p>
+						<span class=beginner><br>Share information about your </span>
+						<a href="/write.html?report=client">Browser</a>;
+						<span class=beginner><br>Enable keyboard transliteration for </span>
+						<a href="/write.html?russian=1">Russian</a>;
 						<span id=spanInsPubKey></span>
+					</span>
 				</td>
 			</tr>
 
@@ -56,7 +60,14 @@
 							>
 						</p>
 
-						<span class=beginner>
+						<p>
+							<label for=chkRepublish>
+								<input type=checkbox name=republish id=chkRepublish>
+								Republish to other known sites
+							</label>
+						</p>
+
+						<span>
 							<p id=lblWriteLengthWarning class=warning style="display: none">
 							</p>
 						</span>
