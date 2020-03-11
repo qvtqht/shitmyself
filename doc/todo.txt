@@ -1,3 +1,6 @@
+For js browsers, make the .txt link expand into a textarea instead of going to txt file
+    ?
+
 curl template
 pgp command template
 
@@ -11,9 +14,6 @@ Facilitate removal of votes by ip address of voter
 When returning to a form with a button which turns to "please wait" when clicked
     The button's caption should already be reset, ideally (via document/body.onunload?)
         Or should be reset as soon as possible
-
-Make all elements be a bright color like orange when they have focus
-    (using css)
 
 Need to connect instances without introducing a bunch of spam
 	Need to store hash of message's hash without signature?
@@ -165,7 +165,6 @@ Report bug to lighttpd team
 
 #bug crypto.js and openpgp.js are requested multiple times
 	reproduced with Preferences page
-openpgp.js should not be requested on browsers which don't support it
 
 Render everything in doc/ as items
 	List them under /help.html
@@ -359,9 +358,6 @@ Prefill reply box with >>
 
 setcontent/abcde/abcd2
 setcontent/{hash of 404 url}/{hash of content}
-
-#bug nn4 js=on vote links do not work (js error)
-crypto.js and openpgp.js includes cause errors in nn4
 
 Figure out how to fix hasvote dupes in vote table
 	Probably need to differentiate votes and system tags

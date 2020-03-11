@@ -422,7 +422,6 @@ default/template/js/formencode.js.template
 default/template/js/clock.js.template
 default/template/js/shims.js.template
 default/template/js/fresh.js.template
-default/template/js/crypto.js.template
 default/template/js/screensaver.js.template
 default/template/js/write_buttons.js.template
 default/template/js/profile.js.template

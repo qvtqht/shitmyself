@@ -1,3 +1,9 @@
+With consent, jstest1 could send a ping at the beginning and end of test runs to figure out if any browsers crash
+
+Use /session/abce/ for no-cookie sessions
+    Rewrite everything to /
+
+
 If someone replies to something from another server, send the reply back to the origin server
 
 When displaying integer timestamps, colorize the first x digits which match current time
