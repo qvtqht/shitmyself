@@ -881,8 +881,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		if (!$file{'item_title'}) {
 			#hack #todo
-			#$file{'item_title'} = 'Untitled';
-			$file{'item_title'} = '';
+			$file{'item_title'} = 'Untitled';
+			#$file{'item_title'} = '';
 		}
 
 		if ($file{'remove_token'}) {
