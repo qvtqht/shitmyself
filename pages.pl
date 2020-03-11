@@ -711,7 +711,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile write_buttons timestamps));
 
-#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
@@ -1335,6 +1335,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
+	$menuItems .= GetMenuItem("/jstest1.html", 'Test', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
@@ -2300,7 +2301,7 @@ sub MakeJsTestPages {
 	PutHtmlFile("$HTMLDIR/jstest4.html", $jsTest4Page);
 
 
-	my $jsTest1 = GetTemplate('test/jstest1/test.template');
+	my $jsTest1 = GetTemplate('test/jstest1/jstest1.template');
 	$jsTest1 = InjectJs($jsTest1, qw(jstest1));
 	PutHtmlFile("$HTMLDIR/jstest1.html", $jsTest1);
 }
@@ -2517,7 +2518,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	#rewrites have been added for this, so it's commented out for now, but could still be an option in the future
 #		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
 	}
-	PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
+	#PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
 	PutHtmlFile("$HTMLDIR/crypto2.js", $crypto2JsTemplate);
