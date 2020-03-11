@@ -56,8 +56,8 @@ function RunTest() {
 	//alert('DEBUG: Looking for window.history...');
 	document.frmTest.txtWindowHistory.value = !!window.history;
 
-	if (navigator.userAgent.indexOf('MSIE 6.') != -1) {
-	    //alert('DEBUG: Skipping navigator.javaEnabled, MSIE 6.');
+	if (navigator.userAgent.indexOf('MSIE 6.') != -1 || navigator.userAgent.indexOf('MSIE 5.5') != -1) {
+	    //alert('DEBUG: Skipping navigator.javaEnabled, MSIE 6./5.5');
 	    document.frmTest.txtStringFromCharCode.value = 'skipped';
 	} else {
         //alert('DEBUG: Looking for navigator.javaEnabled...');
