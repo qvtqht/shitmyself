@@ -51,6 +51,15 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                             //WriteLog(`/home/ily/hike/upgrade.pl`);
                         }
 
+
+                        if (
+                            isset($_GET['chkFlush']) &&
+                            isset($_GET['btnFlush'])
+                        )
+                        {
+                            WriteLog('Flush requested');
+                        }
+
                         if (
                             isset($_GET['chkOverthrow']) &&
                             isset($_GET['btnOverthrow'])
