@@ -48,7 +48,7 @@ if (isset($_GET['vouch']) && $_GET['vouch']) {
 		'vouch/' . $vouchValue . '/31337' .
 		"\n" .
 		"\n" .
-		"I vouch for this author."
+		"I vouch for this author because ...\n\n"
 	;
 
 	$html = str_replace('</textarea>', $vouchToken . '</textarea>' , $html);
@@ -59,6 +59,8 @@ if (isset($_GET['russian']) && $_GET['russian']) {
     $html = str_replace('<textarea', '<textarea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $html);
 }
 
-$html = str_replace('</body>', WriteLog('') . '</body>', $html);
+if (GetConfig('admin/debug')) {
+    $html = str_replace('</body>', WriteLog('') . '</body>', $html);
+}
 
 print($html);
