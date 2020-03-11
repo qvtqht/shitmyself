@@ -43,7 +43,7 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 
 				if (!window.setAvatar && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 					var script2 = document.createElement('script');
-					script2.src = '/crypto.js';
+					script2.src = '/crypto2.js';
 					script2.async = false; // This is required for synchronous execution
 					document.head.appendChild(script2);
 				}

@@ -1,4 +1,11 @@
 <!-- settings.template -->
+<noscript>
+	<p>
+		Client-side settings require JavaScript...<br>
+		Aside from this page, the site should work for you.
+	</p>
+</noscript>
+
 <form id=frmSettings name=frmSettings>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
