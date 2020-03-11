@@ -15,17 +15,17 @@ if (!window.openpgp && document.head && document.head.appendChild && document.cr
 }
 
 if (!window.cryptoJs && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
-	//alert('DEBUG: loading crypto.js');
+	//alert('DEBUG: loading crypto2.js');
 
 	var script2 = document.createElement('script');
-	script2.src = '/crypto.js';
+	script2.src = '/crypto2.js';
 	script2.async = false; // This is required for synchronous execution
 	document.head.appendChild(script2);
 
-	//alert('DEBUG: finished loading crypto.js');
+	//alert('DEBUG: finished loading crypto2.js');
 
 } else {
-	//alert('DEBUG: not loading crypto.js; ' + 'window.cryptoJs = ' + window.cryptoJs + ' document.getElementById = ' + document.getElementById + 'window.localStorage = ' + window.localStorage );
+	//alert('DEBUG: not loading crypto2.js; ' + 'window.cryptoJs = ' + window.cryptoJs + ' document.getElementById = ' + document.getElementById + 'window.localStorage = ' + window.localStorage );
 }
 
 
