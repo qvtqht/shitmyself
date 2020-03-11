@@ -38,3 +38,16 @@ textarea {
 fieldset {
     border-radius: 3pt;
 }
+
+.txt {
+/* regular text */
+	font-family: tahoma;
+	font-size: 14pt;
+}
+
+a:focus{
+    color: red;
+}
+input:focus, textarea:focus {
+    background-color: orange;
+}
