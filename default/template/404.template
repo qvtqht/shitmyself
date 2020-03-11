@@ -9,7 +9,7 @@
 		<b></b><big>What were you looking for?</big></b><br>
 		<input type=text size=42 id=comment name=comment value="I was looking for kittens...">
 	</label>
-	<input type=submit value=Send>
+	<input type=submit value=Send onclick="this.value='Wait...'; return true;">
 </form>
 
 <noscript><p>Please use your browser's Back button to return to the previous page.</p></noscript>
