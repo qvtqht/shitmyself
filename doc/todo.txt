@@ -1,3 +1,13 @@
+#bug PHP-supplied http response headers cause Mosaic to crash
+    Static html pages work ok
+    Pages routed through PHP cause crash
+    Check headers for differences
+
+#bug IE11: window.Promise returns false, which causes openpgp to not load
+    openpgp does support ie11, and it used to work
+    Need to figure out which features the Promise polyfill depends on, and create a test for them
+
+
 For js browsers, make the .txt link expand into a textarea instead of going to txt file
     ?
 
