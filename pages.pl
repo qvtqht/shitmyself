@@ -578,6 +578,8 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
+	$file{'show_easyfind'} = 1;
+
 	# if this item has a child_count, we want to print all the child items below
 	if ($file{'child_count'}) {
 		# get item's children (replies) and store in @itemReplies
@@ -852,6 +854,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# item_title = title
 	# tags_list = comma-separated list of tags the item has
 	# is_textart = set <tt><code> tags for the message itself
+	# show_easyfind = show/hide easyfind words
 
 	# get %file hash from supplied parameters
 	my %file = %{shift @_};
@@ -892,7 +895,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 			$message =~ s/$file{'remove_token'}//g;
 			$message = trim($message);
-			
+
 			#todo there is a bug here, but it is less significant than the majority of cases
 			#  the bug is that it removes the token even if it is not by itself on a single line
 			#  this could potentially be mis-used to join together two pieces of a forbidden string
@@ -951,7 +954,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if ($file{'format_avatars'}) {
 			$message =~ s/([A-F0-9]{16})/GetHtmlAvatar($1)/eg;
 		}
-													 
+
 		if (
 			$isSigned
 				&&
@@ -1002,7 +1005,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		if ($gpgKey) {
 			# if theres a $gpgKey, set up related variables
-			
+
 			$authorUrl = "/author/$gpgKey/";
 			$authorAvatar = GetAvatar($gpgKey);
 
@@ -1010,7 +1013,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 			# generate $authorLink from template
 			$authorLink = GetTemplate('authorlink.template');
-			
+
 			$authorLink =~ s/\$authorUrl/$authorUrl/g;
 			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
@@ -1029,12 +1032,12 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
 		#		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 		#		$permalinkTxt =~ s/^\.//;
-													 
+
 		my $itemText = $message; # output for item's message (formatted text)
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
 		my $fileHashShort = substr($fileHash, 0, 8) . '..';
 		my $itemName; # item's 'name'
-		
+
 		if ($file{'display_full_hash'} && $file{'display_full_hash'} != 0) {
 			# if display_full_hash is set, display the item's entire hash for name
 			$itemName = $fileHash;
@@ -1049,7 +1052,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		my $addedTime = DBGetAddedTime($fileHash); #todo optimize
 		$addedTime = GetTimestampElement($addedTime);
-										  
+
 		if ($file{'item_title'}) {
 			my $itemTitleTemplate = GetTemplate('item_title_link2.template');
 
@@ -1088,6 +1091,13 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 		$itemTemplate =~ s/\$addedTime/$addedTime/g;
 		$itemTemplate =~ s/\$replyLink/$replyLink/g;
+
+		if ($file{'show_easyfind'}) {
+			my $itemEasyFind = GetItemEasyFind($fileHash);
+			$itemTemplate =~ s/\$itemEasyFind/EasyFind: $itemEasyFind/g;
+		} else {
+			$itemTemplate =~ s/\$itemEasyFind//g;
+		}
 
 		if ($replyCount) {
 			$itemTemplate =~ s/\$replyCount/$replyCount/g;
@@ -2535,6 +2545,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
 
+		my $testPhpTemplate = GetTemplate('php/test.php.template');
+		PutFile('html/test.php', $testPhpTemplate);
+
 		my $writePhpTemplate = GetTemplate('php/write.php.template');
 		PutFile('html/write.php', $writePhpTemplate);
 
@@ -2576,11 +2589,16 @@ sub GetWriteForm {
 	my $writeForm = GetTemplate('form/write4.template');
 
 	if (GetConfig('admin/php/enable')) {
+
+        ## changing the form target is no longer necessary thanks to mod_rewrite
+        ## this code may have to be reused later when we want to adapt to an environment
+        ## without mod_rewrite
+
 		#if php module is enabled, change the form target to post.php
 		#		my $postHtml = 'post.html';
 		# on a separate line because
 		# putting it into the regex would require escaping the period,
-		# would in turn would mean that searching for "post.html" in the codebase would not find this line
+		# and searching for "post.html" in the codebase would not find this line
 
 		#		$submitForm =~ s/$postHtml/post.php/;
 
@@ -2694,67 +2712,6 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex =~ s/\$colorRow0Bg/$colorRow0Bg/g;
 	$txtIndex =~ s/\$colorRow1Bg/$colorRow1Bg/g;
-
-	return $txtIndex;
-}
-
-sub GetIdentityPage { # gpg-based identity
-	my $txtIndex = "";
-
-	my $title = "Profile";
-	my $titleHtml = "Profile";
-
-	$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
-
-	$txtIndex .= GetTemplate('maincontent.template');
-
-	my $idPage = GetTemplate('form/profile.template');
-
-	my $idCreateForm = GetTemplate('form/id_create2.template');
-	my $prefillUsername = GetConfig('prefill_username');
-	my $termsOfService = FormatForWeb(GetConfig('string/en/tos'));
-	my $usernameMaxLength = GetConfig('');
-
-	$idCreateForm =~ s/\$prefillUsername/$prefillUsername/g;
-	$idCreateForm =~ s/\$termsOfService/$termsOfService/g;
-	$idCreateForm =~ s/\$usernameMaxLength/$usernameMaxLength/g;
-	$idPage =~ s/\$formIdCreate/$idCreateForm/g;
-
-	my $idCurrentForm = GetTemplate('form/id_current.template');
-	$idPage =~ s/\$formIdCurrent/$idCurrentForm/g;
-
-	my $idAdminForm = GetTemplate('form/id_admin.template');
-	$idPage =~ s/\$formIdAdmin/$idAdminForm/g;
-
-	my $noJsInformation = '<noscript>' . GetWindowTemplate(
-		'Without JavaScript',
-		'',
-		'',
-		GetTemplate('no_js.template'),
-		'Ready'
-	) . '</noscript>';
-
-	$idPage =~ s/\$noJsInformation/$noJsInformation/g;
-
-	if (GetConfig('admin/gpg/use_gpg2')) {
-		my $gpg2Choices = GetTemplate('gpg2.choices.template');
-		$idPage =~ s/\$gpg2Algochoices/$gpg2Choices/;
-	} else {
-		$idPage =~ s/\$gpg2Algochoices//;
-	}
-
-	$txtIndex .= $idPage;
-
-	$txtIndex .= GetPageFooter();
-
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
-
-	if (GetConfig('admin/js/enable')) {
-		my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-		$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
-
-		$txtIndex =~ s/<body /<body onload="if (window.identityOnload) { identityOnload(); }" /;
-	}
 
 	return $txtIndex;
 }
