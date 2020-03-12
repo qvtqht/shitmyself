@@ -18,6 +18,5 @@ find html -type d -empty -delete
 touch html/post.html
 rm -v log/log.log
 
-rm -rfv html/txt/.git
 mkdir -p html/txt
 
