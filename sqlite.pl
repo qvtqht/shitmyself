@@ -2233,11 +2233,23 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 		WHERE 
 			(item_title != '' OR ',' || tags_list || ',' LIKE '%,approve,%') AND
 			parent_count = 0 AND 
-			',' || tags_list || ',' NOT LIKE '%,meta,%' AND
-			',' || tags_list || ',' NOT LIKE '%,changelog,%' AND
-			',' || tags_list || ',' NOT LIKE '%,flag,%'
+			',' || tags_list || ','  LIKE '%,funny,%' OR
+			',' || tags_list || ','  LIKE '%,textart,%' OR
+			',' || tags_list || ','  LIKE '%,insightful,%' OR
+			',' || tags_list || ','  LIKE '%,good,%' OR
+			',' || tags_list || ','  LIKE '%,approve,%'
 	"; #todo remove hardcoding here
 
+	#
+	# $whereClause = "
+	# 	WHERE
+	# 		(item_title != '' OR ',' || tags_list || ',' LIKE '%,approve,%') AND
+	# 		parent_count = 0 AND
+	# 		',' || tags_list || ',' NOT LIKE '%,meta,%' AND
+	# 		',' || tags_list || ',' NOT LIKE '%,changelog,%' AND
+	# 		',' || tags_list || ',' NOT LIKE '%,flag,%'
+	# "; #todo remove hardcoding here
+	#
 	# not sure what this is supposed to be for...
 #	my $additionalWhereClause = shift;
 #	if ($additionalWhereClause) {
