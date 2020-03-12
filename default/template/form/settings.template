@@ -58,7 +58,7 @@
 									<option value=union>union</option>
 								</select>
 							</label>
-							<input type=submit value=Save name=save>
+							<input type=submit value=Set name=btnSetTheme>
 						</p>
 						<p>
 							<span class=beginner>Upgrade to latest version:<br></span>
