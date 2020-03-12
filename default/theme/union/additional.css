@@ -1,0 +1,19 @@
+body {
+	font-family: helvetica;
+	font-size: 14pt;
+	background-color: $colorBackground;
+}
+.dialog {
+	box-shadow: 5pt 5pt 5pt #aabbcc;
+}
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
+}
+.statusbar td {
+	border: 0;
+    padding: 2pt;
+}
