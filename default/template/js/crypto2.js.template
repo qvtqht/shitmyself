@@ -143,7 +143,7 @@ function setPrivateKeyFromTxt(newKey) { // set the current private key and refre
 
     //window.localStorage.setItem("privatekey", newKey);
 
-    if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage && window.Promise) {
+    if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
         var script = document.createElement('script');
         script.src = '/openpgp.js';
         script.async = false; // This is required for synchronous execution

@@ -185,7 +185,7 @@ function saveId() { // set the current private key and refresh the pubkey, finge
 		// store it to localstorage
 		setPrivateKey(privkey);
 
-		if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage && window.Promise) {
+		if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 			var script = document.createElement('script');
 			script.src = '/openpgp.js';
 			script.async = false; // This is required for synchronous execution

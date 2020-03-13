@@ -4,7 +4,7 @@
 //
 //}
 
-if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage && window.Promise) {
+if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading openpgp.js');
 
 	var script = document.createElement('script');
@@ -52,7 +52,7 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 // t is clicked button's "this" object
 	//alert('DEBUG: btnRegister_Click() begin');
 
-	if (window.localStorage && window.Promise) {
+	if (window.localStorage) {
 		// minimum features check
 
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
@@ -86,97 +86,74 @@ function getUserFp() { // retrieve stored user fingerprint from localstorage
 	}
 }
 
-function AddPrivateKeyLinks() {
-    if (document.getElementById && window.getPrivateKey) {
-	    var privateKey = getPrivateKey();
+function AddPrivateKeyLinks() { // adds save/load links to profile page if features are available
+// #todo make it so that this can be called repeatedly and hide/show appropriate links
 
-	    if (privateKey) {
-	        var fieldset = document.getElementById('fldRegistration');
+	if (document.getElementById && window.getPrivateKey) {
+		var privateKey = getPrivateKey();
+        var fieldset = document.getElementById('fldRegistration');
 
-	        if (fieldset && document.createElement) {
-	            var hrDivider = document.createElement('hr');
+        if (fieldset && document.createElement) {
+    		if (privateKey) {
+			    // add horizontal rule
+				var hrDivider = document.createElement('hr');
+				fieldset.appendChild(hrDivider);
 
-	            fieldset.appendChild(hrDivider);
+                // add [go to profile] link
+				var pProfileLink = document.createElement('p');
+				var aProfile = document.createElement('a');
+				aProfile.setAttribute('href', '/author/' + getUserFp());
+				aProfile.setAttribute('id', 'linkGoToProfile');
+				aProfile.innerHTML = 'go to profile';
+				pProfileLink.appendChild(aProfile);
+				fieldset.appendChild(pProfileLink);
 
-	            var pProfileLink = document.createElement('p');
+                // add [save as file] link
+				var pSaveKeyAsTxt = document.createElement('p');
+				var aSaveKeyAsTxt = document.createElement('a');
+				aSaveKeyAsTxt.setAttribute('href', '#');
+				aSaveKeyAsTxt.setAttribute('id', 'linkSavePrivateKey');
+				aSaveKeyAsTxt.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { return SavePrivateKeyAsTxt(); }');
+				aSaveKeyAsTxt.innerHTML = 'save as file';
+				pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
+				fieldset.appendChild(pSaveKeyAsTxt);
 
-	            var aProfile = document.createElement('a');
-	            aProfile.setAttribute('class', 'advanced');
-	            aProfile.setAttribute('href', '/author/' + getUserFp());
-	            aProfile.setAttribute('id', 'adsfad');
-	            aProfile.innerHTML = 'go to profile';
+				// add [show private key] link
+				var pShowPrivateKey = document.createElement('p');
+				var aShowPrivateKey = document.createElement('a');
+				aShowPrivateKey.setAttribute('class', 'advanced');
+				aShowPrivateKey.setAttribute('href', '#');
+				aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
+				aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
+				aShowPrivateKey.innerHTML = 'show private key';
+				pShowPrivateKey.appendChild(aShowPrivateKey);
+				fieldset.appendChild(pShowPrivateKey);
+			} else {
+				var pLoadKeyFromTxt = document.createElement('p');
 
-	            pProfileLink.appendChild(aProfile);
+				// file selector (hidden, activated by [load from file] link
+				var fileLoadKeyFromText = document.createElement('input');
+				fileLoadKeyFromText.setAttribute('type', 'file');
+				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
+				fileLoadKeyFromText.setAttribute('onchange', 'openFile(event)');
+				fileLoadKeyFromText.setAttribute('style', 'display: none');
+				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
 
-	            fieldset.appendChild(pProfileLink);
+				// add [load from file] link
+				var aLoadKeyFromText = document.createElement('a');
+				aLoadKeyFromText.setAttribute('class', 'advanced');
+				aLoadKeyFromText.setAttribute('href', '#');
+				aLoadKeyFromText.setAttribute('id', 'linkLoadPrivateKey');
+				aLoadKeyFromText.setAttribute('onclick', 'if (window.CallLoadPrivateKey) { return CallLoadPrivateKey(); }');
+				aLoadKeyFromText.innerHTML = 'load from file';
 
+				pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
+				pLoadKeyFromTxt.appendChild(fileLoadKeyFromText);
 
-	            var pSaveKeyAsTxt = document.createElement('p');
-
-	            var aSaveKeyAsTxt = document.createElement('a');
-	            aSaveKeyAsTxt.setAttribute('class', 'advanced');
-	            aSaveKeyAsTxt.setAttribute('href', '#');
-	            aSaveKeyAsTxt.setAttribute('id', 'linkSavePrivateKey');
-	            aSaveKeyAsTxt.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { return SavePrivateKeyAsTxt(); }');
-	            aSaveKeyAsTxt.innerHTML = 'save as file';
-
-	            pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
-
-	            fieldset.appendChild(pSaveKeyAsTxt);
-
-
-	            var pShowPrivateKey = document.createElement('p');
-
-	            var aShowPrivateKey = document.createElement('a');
-	            aShowPrivateKey.setAttribute('class', 'advanced');
-	            aShowPrivateKey.setAttribute('href', '#');
-	            aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
-	            aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
-	            aShowPrivateKey.innerHTML = 'show private key';
-
-	            pShowPrivateKey.appendChild(aShowPrivateKey);
-
-	            fieldset.appendChild(pShowPrivateKey);
-            }
-	    } else {
-	        var fieldset = document.getElementById('fldRegistration');
-
-	        if (fieldset && document.createElement) {
-                var pLoadKeyFromTxt = document.createElement('p');
-
-//	            var aLoadKeyFromTxt = document.createElement('a');
-//	            aLoadKeyFromTxt.setAttribute('class', 'advanced');
-//	            aLoadKeyFromTxt.setAttribute('href', '#');
-//	            aLoadKeyFromTxt.setAttribute('id', 'linkLoadPrivateKey');
-//	            aLoadKeyFromTxt.setAttribute('onclick', 'if (window.LoadPrivateKeyFromTxt) { return LoadPrivateKeyFromTxt(); }');
-//	            aLoadKeyFromTxt.innerHTML = 'load from file';
-                // <input type='file' accept='text/plain' onchange='openFile(event)'>
-
-                var fileLoadKeyFromText = document.createElement('input');
-                fileLoadKeyFromText.setAttribute('type', 'file');
-                fileLoadKeyFromText.setAttribute('accept', 'text/plain');
-                fileLoadKeyFromText.setAttribute('onchange', 'openFile(event)');
-                fileLoadKeyFromText.setAttribute('style', 'display: none');
-                fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
-
-
-                var aLoadKeyFromText = document.createElement('a');
-                aLoadKeyFromText.setAttribute('class', 'advanced');
-                aLoadKeyFromText.setAttribute('href', '#');
-                aLoadKeyFromText.setAttribute('id', 'linkLoadPrivateKey');
-                aLoadKeyFromText.setAttribute('onclick', 'if (window.CallLoadPrivateKey) { return CallLoadPrivateKey(); }');
-                aLoadKeyFromText.innerHTML = 'load from file';
-
-                pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
-
-
-//	            pLoadKeyFromTxt.appendChild(aLoadKeyFromTxt);
-	            pLoadKeyFromTxt.appendChild(fileLoadKeyFromText);
-
-	            fieldset.appendChild(pLoadKeyFromTxt);
-            }
-	    }
-    }
+				fieldset.appendChild(pLoadKeyFromTxt);
+			}
+		}
+	}
 }
 
 function ProfileOnLoad() {
@@ -191,7 +168,8 @@ function ProfileOnLoad() {
 
 			var pk = getPrivateKey();
 
-            lblSigningIndicator = document.getElementById('lblSigningIndicator');
+            // indicates whether openpgp signing is available
+			lblSigningIndicator = document.getElementById('lblSigningIndicator');
 
 			if (pk) {
 				//alert('DEBUG: pk = GetPrivateKey() = ' + pk);
@@ -211,119 +189,119 @@ function ProfileOnLoad() {
 					}
 				}
 			} else {
-			    //alert('DEBUG: pk = false')
-			    if (lblSigningIndicator) {
-			        //alert('DEBUG: lblSigningIndicator = true');
-			        if (window.openpgp) {
-    			        //alert('DEBUG: window.openpgp = true');
+				//alert('DEBUG: pk = false')
+				if (lblSigningIndicator) {
+					//alert('DEBUG: lblSigningIndicator = true');
+					if (window.openpgp) {
+						//alert('DEBUG: window.openpgp = true');
 
-					    lblSigningIndicator.innerHTML = 'Available';
+						lblSigningIndicator.innerHTML = 'Available';
 
-					    AddPrivateKeyLinks();
-                    } else {
-                        //alert('DEBUG: window.openpgp = false');
+						AddPrivateKeyLinks();
+					} else {
+						//alert('DEBUG: window.openpgp = false');
 
-                        lblSigningIndicator.innerHTML = 'Nope';
-                    }
-			    } else {
-			        //alert('DEBUG: lblSigningIndicator = false');
-			    }
+						lblSigningIndicator.innerHTML = 'Nope';
+					}
+				} else {
+					//alert('DEBUG: lblSigningIndicator = false');
+				}
 			}
 		}
 	}
 }
 
 function ShowPrivateKey() { // displays private key in textarea
-    //alert('DEBUG: ShowPrivateKey() begin');
-    if (document.getElementById) {
-        //alert('DEBUG: ShowPrivateKey: document.getElementById is true');
+	//alert('DEBUG: ShowPrivateKey() begin');
+	if (document.getElementById) {
+		//alert('DEBUG: ShowPrivateKey: document.getElementById is true');
 
-        var txtPrivateKey = document.getElementById('txtPrivateKey');
-        if (txtPrivateKey) {
-            //alert('DEBUG: ShowPrivateKey: txtPrivateKey is true');
+		var txtPrivateKey = document.getElementById('txtPrivateKey');
+		if (txtPrivateKey) {
+			//alert('DEBUG: ShowPrivateKey: txtPrivateKey is true');
 
-            if (txtPrivateKey.style.display == 'none') {
-                //alert('DEBUG: style is none, set to block');
-                txtPrivateKey.style.display = 'block';
-            } else {
-                //alert('DEBUG: style is block, set to none');
-                txtPrivateKey.style.display = 'none';
-            }
+			if (txtPrivateKey.style.display == 'none') {
+				//alert('DEBUG: style is none, set to block');
+				txtPrivateKey.style.display = 'block';
+			} else {
+				//alert('DEBUG: style is block, set to none');
+				txtPrivateKey.style.display = 'none';
+			}
 
-            var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
-            if (linkShowPrivateKey) {
-                if (txtPrivateKey.style.display == 'none') {
-                    linkShowPrivateKey.innerHTML = 'show private key';
-                } else {
-                    linkShowPrivateKey.innerHTML = 'hide private key';
-                }
-            }
+			var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
+			if (linkShowPrivateKey) {
+				if (txtPrivateKey.style.display == 'none') {
+					linkShowPrivateKey.innerHTML = 'show private key';
+				} else {
+					linkShowPrivateKey.innerHTML = 'hide private key';
+				}
+			}
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 
-    if (window.getPrivateKey) {
-	    var privateKey = getPrivateKey();
-	    if (privateKey && document.createElement) {
-	        var txtPrivKey = document.createElement('textarea');
-	        txtPrivKey.setAttribute('cols', 80);
-	        txtPrivKey.setAttribute('rows', 24);
-	        txtPrivKey.setAttribute('id', 'txtPrivateKey');
-	        txtPrivKey.innerHTML = privateKey;
+	if (window.getPrivateKey) {
+		var privateKey = getPrivateKey();
+		if (privateKey && document.createElement) {
+			var txtPrivKey = document.createElement('textarea');
+			txtPrivKey.setAttribute('cols', 80);
+			txtPrivKey.setAttribute('rows', 24);
+			txtPrivKey.setAttribute('id', 'txtPrivateKey');
+			txtPrivKey.innerHTML = privateKey;
 
-	        var fldRegistration = document.getElementById('fldRegistration');
-	        if (fldRegistration) {
-    	        fldRegistration.appendChild(txtPrivKey);
-	        } else {
-    	        document.body.appendChild(txtPrivKey);
-            }
+			var fldRegistration = document.getElementById('fldRegistration');
+			if (fldRegistration) {
+				fldRegistration.appendChild(txtPrivKey);
+			} else {
+				document.body.appendChild(txtPrivKey);
+			}
 
-            var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
-            if (linkShowPrivateKey) {
-                linkShowPrivateKey.innerHTML = 'hide private key';
-            }
+			var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
+			if (linkShowPrivateKey) {
+				linkShowPrivateKey.innerHTML = 'hide private key';
+			}
 
-	        txtPrivKey.focus();
+			txtPrivKey.focus();
 
-	        return false;
-	    }
-    }
+			return false;
+		}
+	}
 }
 
 function openFile(event) {
-    var input = event.target;
+	var input = event.target;
 
-    if (window.FileReader) {
-        reader = new FileReader();
+	if (window.FileReader) {
+		reader = new FileReader();
 
-        // this eval is for hiding the "=function(){}" syntax from incompatible browsers
-        // they shouldn't try to execute it because they don't make it here due to other tests
-        eval('reader.onload = function() { var text = reader.result; LoadPrivateKeyFromTxt(text); }');
-        reader.readAsText(input.files[0]);
-    }
+		// this eval is for hiding the "=function(){}" syntax from incompatible browsers
+		// they shouldn't try to execute it because they don't make it here due to other tests
+		eval('reader.onload = function() { var text = reader.result; LoadPrivateKeyFromTxt(text); }');
+		reader.readAsText(input.files[0]);
+	}
 }
 
 
 function LoadPrivateKeyFromTxt(text) {
-    if (window.setPrivateKeyFromTxt) {
-        setPrivateKeyFromTxt(text);
-    }
+	if (window.setPrivateKeyFromTxt) {
+		setPrivateKeyFromTxt(text);
+	}
 }
 
 function SavePrivateKeyAsTxt() {
-    var myFp = getUserFp();
-    var text = getPrivateKey();
+	var myFp = getUserFp();
+	var text = getPrivateKey();
 
-    DownloadAsTxt(myFp + '.txt', text);
+	DownloadAsTxt(myFp + '.txt', text);
 }
 
 function CallLoadPrivateKey() {
-    var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
+	var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
 
-    if (fileLoadKeyFromText) {
-        fileLoadKeyFromText.click();
-    }
+	if (fileLoadKeyFromText) {
+		fileLoadKeyFromText.click();
+	}
 }
 
 if (document.cookie) {

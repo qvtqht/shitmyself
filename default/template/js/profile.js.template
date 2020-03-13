@@ -1,6 +1,6 @@
 // == begin profile.js
 
-if (!window.openpgp && document.head && document.head.appendChild && document.createElement && document.getElementById && window.localStorage && window.Promise) {
+if (!window.openpgp && document.head && document.head.appendChild && document.createElement && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading openpgp.js');
 
 	var script = document.createElement('script');
