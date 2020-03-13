@@ -40,7 +40,7 @@ function translitKey(e, t) { // replaces pressed key with russian letter
     } else {
         var keysEn =
             "`-=" +
-            "~@_+" +
+            "~_+" +
             "qwertyuiop[]\\" +
             "QWERTYUIOP{}|" +
             "asdfghjkl" +
@@ -51,7 +51,7 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 
         var keysRu =
             "щьъ" +
-            "Щё-=" +
+            "Щ-=" +
             "яшертыуиопюжэ" +
             "ЯШЕРТЫУИОПЮЖЭ" +
             "асдфгчйкл" +
