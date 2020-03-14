@@ -20,7 +20,7 @@
         </style>
     </head>
     <body>
-        <noscript><p>JavaScript appears to be disabled. These tests will not work without it.</p></noscript>
+    <noscript><p><font color=#ff8000>JavaScript appears to be disabled. These tests will not work without it.</font></p></noscript>
 
         <form name=frmTest id=frmTest action="/post.html">
             <input
