@@ -45,7 +45,7 @@ fieldset {
 	font-size: 14pt;
 }
 
-a:focus{
+a:focus, a:active {
     color: red;
 }
 input:focus, textarea:focus {

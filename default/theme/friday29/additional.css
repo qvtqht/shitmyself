@@ -17,3 +17,9 @@ input[type=text], input[type=password], select, option, textarea {
 	border: 0;
     padding: 2pt;
 }
+a:focus, a:active {
+    background-color: orange;
+}
+input:focus, textarea:focus {
+    background-color: orange;
+}
