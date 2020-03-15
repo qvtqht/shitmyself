@@ -49,8 +49,9 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 	return 1;
 }
 
-function ShowAll(t) {
-    if (window.localStorage && document.getElementsByClassName) {
+function ShowAll(t) { // shows all elements, overriding settings
+// admin elements are excluded. only beginner, advanced, and voter class elements are shown
+    if (document.getElementsByClassName) {
         var display;
         display = 'initial';
 
