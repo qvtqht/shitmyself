@@ -490,6 +490,10 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 		$voteItems .= $voteItemTemplate;
 	}
 
+	if (!$voteItems) {
+		$voteItems = GetTemplate('tag_listing_empty.template');
+	}
+
 	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
 
 	$txtIndex .= $voteItemsWrapper;
