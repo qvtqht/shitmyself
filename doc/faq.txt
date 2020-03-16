@@ -1,0 +1,34 @@
+Why bother with supporting older browsers?
+
+One reason is that I want to create something lasting.
+By writing pages which could have been working for 25 years,
+I do not necessarily guarantee that today's code will last another 25,
+but I think it will make it more likely.
+
+Another reason is idealistic, in that I believe in the "write strict, parse loose" ideal of the WWW.
+I believe in interoperability, into bending over backwards for compatibility.
+
+A third reason is that it's just plain fun!
+I didn't set out to support every single browser in existence; My goals were more humble:
+I wanted accessibility for vision impaired, no-JS, slow connections,
+older devices which cannot be upgraded, average library, school, or homeless shelter computer.
+I also wanted it to be Tor-friendly, which has similar limitations.
+
+
+Do you think many people still use browsers like Mosaic, Netscape, Internet Explorer?
+
+I think that yes, they are occasionally used by people.
+
+Unlike more recent unsupported browsers, which are used primarily by people with an older device,
+these old browsers are used primarily by retro-computing hobbyists and the nostalgia-bound.
+
+I think their usage is very small today, but it will continue to rise, as people begin to realize the potential of retro-computing.
+I also think it is an issue of there being nothing out there to browse with them, but once there is a place to go, people will use them more.
+
+Each browser has its own feel, and I find many of them pleasant to use, much more than many of today's browsers.
+
+
+
+Support Lynx browser? Support Links, w3m, or other text-mode browsers?
+
+Yes, Lynx is supported.

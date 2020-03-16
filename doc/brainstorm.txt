@@ -1,3 +1,8 @@
+token to replace string with string
+    use as overlay to get extra information
+        addendum/ ?
+
+
 With consent, jstest1 could send a ping at the beginning and end of test runs to figure out if any browsers crash
 
 Use /session/abce/ for no-cookie sessions
@@ -10,6 +15,7 @@ When displaying integer timestamps, colorize the first x digits which match curr
 
 How to inject templates into JS where JS needs to insert it into page?
     May be better handled with .createElement() instead of using innerHTML
+        This still sort of creates the problem of mixing html and js?
 
 post-processing option:
     replace links with submit buttons

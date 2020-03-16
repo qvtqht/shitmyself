@@ -1,3 +1,6 @@
+
+
+
 #bug PHP-supplied http response headers cause Mosaic to crash
     Static html pages work ok
     Pages routed through PHP cause crash
@@ -6,7 +9,6 @@
 #bug IE11: window.Promise returns false, which causes openpgp to not load
     openpgp does support ie11, and it used to work
     Need to figure out which features the Promise polyfill depends on, and create a test for them
-
 
 For js browsers, make the .txt link expand into a textarea instead of going to txt file
     ?
@@ -264,16 +266,8 @@ Events Page
 	Split into Current, Upcoming, Past events
 	Fix no-js display of dates in future (currently just 01:00
 
-Tags page with 0 tags
-
 getElementById() polyfill for netscape
 	until better alternative
-
-Threaded pages
-	#bug reply count not shown for first level replies
-	Second level replies are not indented
-
-Add 404 hook for htaccess/Apache
 
 Add simple index page for txt/
 
@@ -285,8 +279,6 @@ Put infobox with all of the item's attributes on item details page
 
 sharePubKey() should not change the current page, if possible
 	Make it submit in teh background
-
-#bug 404 page links to non-existing pages if it is displayed on a sub-url
 
 Make an archive of 88x31 browser buttons and display ones which test OK
 
@@ -383,6 +375,9 @@ cleanup stale items
 	what else?
 what else to clean up?
 
+
+
+
 generate.pl
 update.pl
 	do not process all by default
@@ -391,12 +386,6 @@ update.pl
 	
 ====
 
-htaccess and lighttpd
-	if php=enabled
-		certain html files (if not all?) should be re-routed to php shim
-			example: post.html
-			vote2.html
-			
 Arrange files into subdirs by author key
 Rename them to title.txt, where appropriate
 
@@ -408,11 +397,6 @@ Prefs link appears for no-JS #bug #issue
 Use item_page table to remove/rebuild all pages containing deleted item
 
 JS-driven global new items indicator
-
-#bug
-Preferences page is blank if not logged in
-
-#bug new keys are not automatically being shared
 
 add "roles" for username
 	then every author with that username
