@@ -44,6 +44,70 @@ if ($lockTime) {
 	}
 }
 
+sub ProcessTextFile {
+	my $file = shift;
+
+	my $addedTime = GetTime2();
+
+	WriteLog('update.pl: $addedTime = ' . $addedTime);
+
+	# get file's hash from git
+	my $fileHash = GetFileHash($file);
+
+	WriteLog('update.pl: $fileHash = ' . $fileHash);
+
+	# if deletion of this file has been requested, skip
+	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+		unlink($file);
+		WriteLog("update.pl: $fileHash exists in deleted.log, file removed and skipped");
+		next;
+	}
+
+	if (GetConfig('admin/organize_files')) {
+		# organize files aka rename to hash-based path
+		my $fileHashPath = GetFileHashPath($file);
+
+		if ($fileHashPath) {
+			WriteLog('update.pl: $fileHashPath = ' . $fileHashPath);
+
+			if ($fileHashPath && $file ne $fileHashPath) {
+				WriteLog('update.pl: renaming ' . $file . ' to ' . $fileHashPath);
+				rename($file, $fileHashPath);
+
+				if (-e $fileHashPath) {
+					$file = $fileHashPath;
+				}
+			}
+		} else {
+			WriteLog('update.pl: $fileHashPath is missing');
+		}
+	}
+
+	if (!GetCache('indexed/' . $fileHash)) {
+		WriteLog('update.pl: ProcessTextFile (' . $file . ')');
+
+		IndexTextFile($file);
+
+		PutCache('indexed/' . $fileHash, 1);
+	}
+
+	# run commands to
+	#	  add changed file to git repo
+	#    commit the change with message 'hi' #todo
+	#    cd back to pwd
+
+
+	#		# below is for debugging purposes
+	#
+	#		my %queryParams;
+	#		$queryParams{'where_clause'} = "WHERE file_hash = '$fileHash'";
+	#
+	#		my @files = DBGetItemList(\%queryParams);
+	#
+	#		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
+
+}
+
 if (!$locked) {
 	require './sqlite.pl';
 	require './index.pl';
@@ -174,74 +238,8 @@ if (!$locked) {
 	
 		# If the file exists, and is not a directory, process it
 		if (-e $file && !-d $file) {
-			my $addedTime = GetTime2();
-
-			WriteLog('update.pl: $addedTime = ' . $addedTime);
-	
-			# get file's hash from git
-			my $fileHash = GetFileHash($file);
-
-			WriteLog('update.pl: $fileHash = ' . $fileHash);
-				
-			# if deletion of this file has been requested, skip
-			if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-				unlink($file);
-				WriteLog("update.pl: $fileHash exists in deleted.log, file removed and skipped");
-				next;
-			}
-
-			if (GetConfig('admin/organize_files')) {
-			# organize files aka rename to hash-based path
-				my $fileHashPath = GetFileHashPath($file);
-
-				if ($fileHashPath) {
-					WriteLog('update.pl: $fileHashPath = ' . $fileHashPath);
-
-					if ($fileHashPath && $file ne $fileHashPath) {
-						WriteLog('update.pl: renaming ' . $file . ' to ' . $fileHashPath);
-						rename($file, $fileHashPath);
-
-						if (-e $fileHashPath) {
-							$file = $fileHashPath;
-						}
-					}
-				} else {
-					WriteLog('update.pl: $fileHashPath is missing');
-				}
-			}
-
-			if (GetCache('indexed/' . $fileHash)) {
-				next;
-			}
-
-#			WriteLog('update.pl: DBAddAddedTimeRecord(' . $fileHash . ', ' . $addedTime . ')');
-			
-			# add a time_added record
-#			DBAddAddedTimeRecord($fileHash, $addedTime);
-
-			WriteLog('update.pl: IndexTextFile(' . $file . ')');
-
-			IndexTextFile($file);
-
-			PutCache('indexed/' . $fileHash, 1);
-
-			# Add to counter
+			ProcessTextFile($file);
 			$filesProcessed++;
-
-			# run commands to
-			#	  add changed file to git repo
-			#    commit the change with message 'hi' #todo
-			#    cd back to pwd
-
-	
-	#		# below is for debugging purposes
-	#
-	#		my %queryParams;
-	#		$queryParams{'where_clause'} = "WHERE file_hash = '$fileHash'";
-	#
-	#		my @files = DBGetItemList(\%queryParams);
-	#
-	#		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
 		} else {
 			# this should not happen
 			WriteLog("Error! $file doesn't exist!");
