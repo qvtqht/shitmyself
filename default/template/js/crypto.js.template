@@ -1,5 +1,10 @@
 // == begin crypto.js
 
+// this file depends on the following:
+// === operator
+// localStorage
+//
+
 // these are used to globally store the user's fingerprint and username
 var myFingerprint = '';
 var myUsername = '';
@@ -95,7 +100,7 @@ function signoutCounterDecrement() {
 	}
 }
 
-function disarmSignoutButton(t) {
+function disarmSignoutButton(t) { // return sign out button to its normal state
 	t.style.backgroundColor = '$colorWindow';
 	t.style.color = 'red';
 	window.signOutButtonStatus = 0;
