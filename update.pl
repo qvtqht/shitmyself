@@ -49,18 +49,19 @@ sub ProcessTextFile {
 
 	my $addedTime = GetTime2();
 
-	WriteLog('update.pl: $addedTime = ' . $addedTime);
+	WriteLog('ProcessTextFile: $addedTime = ' . $addedTime);
 
 	# get file's hash from git
 	my $fileHash = GetFileHash($file);
 
-	WriteLog('update.pl: $fileHash = ' . $fileHash);
+	WriteLog('ProcessTextFile: $fileHash = ' . $fileHash);
 
 	# if deletion of this file has been requested, skip
 	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 		unlink($file);
-		WriteLog("update.pl: $fileHash exists in deleted.log, file removed and skipped");
-		next;
+		WriteLog("ProcessTextFile: $fileHash exists in deleted.log, file removed and skipped");
+
+		return 0;
 	}
 
 	if (GetConfig('admin/organize_files')) {
@@ -68,10 +69,10 @@ sub ProcessTextFile {
 		my $fileHashPath = GetFileHashPath($file);
 
 		if ($fileHashPath) {
-			WriteLog('update.pl: $fileHashPath = ' . $fileHashPath);
+			WriteLog('ProcessTextFile: $fileHashPath = ' . $fileHashPath);
 
 			if ($fileHashPath && $file ne $fileHashPath) {
-				WriteLog('update.pl: renaming ' . $file . ' to ' . $fileHashPath);
+				WriteLog('ProcessTextFile: renaming ' . $file . ' to ' . $fileHashPath);
 				rename($file, $fileHashPath);
 
 				if (-e $fileHashPath) {
@@ -79,17 +80,19 @@ sub ProcessTextFile {
 				}
 			}
 		} else {
-			WriteLog('update.pl: $fileHashPath is missing');
+			WriteLog('ProcessTextFile: $fileHashPath is missing');
 		}
 	}
 
 	if (!GetCache('indexed/' . $fileHash)) {
-		WriteLog('update.pl: ProcessTextFile (' . $file . ')');
+		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ')');
 
 		IndexTextFile($file);
 
 		PutCache('indexed/' . $fileHash, 1);
 	}
+
+	return 1;
 
 	# run commands to
 	#	  add changed file to git repo
@@ -108,202 +111,210 @@ sub ProcessTextFile {
 
 }
 
-if (!$locked) {
-	require './sqlite.pl';
-	require './index.pl';
-	require './access.pl';
-	require './pages.pl';
-	
-	# WriteLog('End requires');
-	
-	WriteLog('update.pl begin');
-	
-	my %counter;
-	$counter{'access_log'} = 0;
-	$counter{'indexed_file'} = 0;
-
-	PutFile('cron.lock', $currentTime);
-	$lockTime = $currentTime;
-	
-	# store the last time we did this from config/admin/update/last_run
-	my $lastFlow = GetConfig('admin/update/last_run');
-	
-	if ($lastFlow) {
-		WriteLog('$lastFlow = ' . $lastFlow);
-	} else {
-		WriteLog('$lastFlow undefined');
-		$lastFlow = 0;
+my $arg1 = shift;
+if ($arg1) {
+	if (-e $arg1) {
+		ProcessTextFile($arg1);
 	}
+} else {
+	if (!$locked) {
+		require './sqlite.pl';
+		require './index.pl';
+		require './access.pl';
+		require './pages.pl';
 
-	my $pagesProcessed;
-	$pagesProcessed = BuildTouchedPages();
-	
-#	# get the path of access log, usually log/access.log
-#	my $accessLogPath = GetConfig('admin/access_log_path');
-#	WriteLog("\$accessLogPath = $accessLogPath");
-#
-	# this will store the new item count we get from access.log
-	my $newItemCount;
-	
-	# time limit
-	my $timeLimit = GetConfig('admin/update/limit_time');
-	my $startTime = GetTime2();
-	#todo validation
+		# WriteLog('End requires');
 
-	if ($timeLimit) {
-		$timeLimit = 60;
-	}
-	
-	my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
-	my @accessLogPaths;
-	if ($accessLogPathsConfig) {
-		@accessLogPaths = split("\n", $accessLogPathsConfig);
-	} else {
-		push @accessLogPaths, GetConfig('admin/access_log_path');
-	}
-	
-	#todo re-test this
-	foreach my $accessLogPath(@accessLogPaths) {
-		# Check to see if access log exists
-		if (-e $accessLogPath) {
-			#Process the access log (access.pl)
-			$newItemCount += ProcessAccessLog($accessLogPath, 0);
-	
-			WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
-	
-			$counter{'access_log'} += $newItemCount;
-		} else {
-			WriteLog("WARNING: Could not find $accessLogPath");
+		WriteLog('update.pl begin');
+
+		my %counter;
+		$counter{'access_log'} = 0;
+		$counter{'indexed_file'} = 0;
+
+		PutFile('cron.lock', $currentTime);
+		$lockTime = $currentTime;
+
+		# store the last time we did this from config/admin/update/last_run
+		my $lastFlow = GetConfig('admin/update/last_run');
+
+		if ($lastFlow) {
+			WriteLog('$lastFlow = ' . $lastFlow);
 		}
-	}
-
-	if (!-e 'html') {
-		system('mkdir html');
-	}
-	
-	if (!-d 'html') {
-		WriteLog('Problem!!! html is not a directory!');
-	}
-	
-	if (!-e 'html/txt') {
-		system('mkdir html/txt');
-	}
-	
-	if (!-d 'html/txt') {
-		WriteLog('Problem!!! html/txt is not a directory!');
-	}
-
-
-	# See if update/file_limit setting exists
-	# This limits the number of files to process per launch of update.pl
-	my $filesLimit = GetConfig('admin/update/limit_file');
-	if (!$filesLimit) {
-		WriteLog("WARNING: config/admin/update/limit_file missing!");
-		$filesLimit = 100;
-	}
-
-	my $findCommand;
-	my @files;
-
-	#prioritize files with a public key in them
-	$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
-	push @files, split("\n", `$findCommand`);
-
-	$findCommand = 'find html/txt | grep -i txt$';
-	push @files, split("\n", `$findCommand`);
-
-	my $filesProcessed = 0;
-
-
-	# Go through all the changed files
-	foreach my $file (@files) {
-		if ($filesProcessed >= $filesLimit) {
-			WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
-			last;
+		else {
+			WriteLog('$lastFlow undefined');
+			$lastFlow = 0;
 		}
-	
-		if ((GetTime2() - $startTime) > $timeLimit) {
-			WriteLog("Time limit reached, exiting loop");
-			last;
+
+		my $pagesProcessed;
+		$pagesProcessed = BuildTouchedPages();
+
+		#	# get the path of access log, usually log/access.log
+		#	my $accessLogPath = GetConfig('admin/access_log_path');
+		#	WriteLog("\$accessLogPath = $accessLogPath");
+		#
+		# this will store the new item count we get from access.log
+		my $newItemCount;
+
+		# time limit
+		my $timeLimit = GetConfig('admin/update/limit_time');
+		my $startTime = GetTime2();
+		#todo validation
+
+		if ($timeLimit) {
+			$timeLimit = 60;
 		}
-		
-		# Trim the file path
-		chomp $file;
-		$file = trim($file);
-		
-		# Log it
-		WriteLog('update.pl: $file = ' . $file);
-			
-		#todo add rss.txt addition
-	
-		# If the file exists, and is not a directory, process it
-		if (-e $file && !-d $file) {
-			ProcessTextFile($file);
-			$filesProcessed++;
-		} else {
-			# this should not happen
-			WriteLog("Error! $file doesn't exist!");
+
+		my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
+		my @accessLogPaths;
+		if ($accessLogPathsConfig) {
+			@accessLogPaths = split("\n", $accessLogPathsConfig);
 		}
-	}
+		else {
+			push @accessLogPaths, GetConfig('admin/access_log_path');
+		}
 
-	IndexTextFile('flush');
-	
-	WriteIndexedConfig();
-	
-	RemoveEmptyDirectories('./html/'); #includes txt/
-	#RemoveEmptyDirectories('./txt/');
+		#todo re-test this
+		foreach my $accessLogPath (@accessLogPaths) {
+			# Check to see if access log exists
+			if (-e $accessLogPath) {
+				#Process the access log (access.pl)
+				$newItemCount += ProcessAccessLog($accessLogPath, 0);
 
-	my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
-	my $filesLeft = `$filesLeftCommand`; #todo
+				WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
 
-	WriteLog('update.pl: $filesLeft = ' . $filesLeft);
+				$counter{'access_log'} += $newItemCount;
+			}
+			else {
+				WriteLog("WARNING: Could not find $accessLogPath");
+			}
+		}
 
-	PutConfig('admin/update/files_left', $filesLeft);
+		if (!-e 'html') {
+			system('mkdir html');
+		}
 
-	# if new items were added, re-make all the summary pages (top authors, new threads, etc)
-	if ($filesProcessed > 0) {
-		UpdateUpdateTime();
-		MakeSummaryPages();
-	#	WriteIndexPages();
-	}
+		if (!-d 'html') {
+			WriteLog('Problem!!! html is not a directory!');
+		}
+
+		if (!-e 'html/txt') {
+			system('mkdir html/txt');
+		}
+
+		if (!-d 'html/txt') {
+			WriteLog('Problem!!! html/txt is not a directory!');
+		}
 
 
-	# if anything has changed, redo the abyss index pages
-	#if ($newItemCount) {
+		# See if update/file_limit setting exists
+		# This limits the number of files to process per launch of update.pl
+		my $filesLimit = GetConfig('admin/update/limit_file');
+		if (!$filesLimit) {
+			WriteLog("WARNING: config/admin/update/limit_file missing!");
+			$filesLimit = 100;
+		}
+
+		my $findCommand;
+		my @files;
+
+		#prioritize files with a public key in them
+		$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
+		push @files, split("\n", `$findCommand`);
+
+		$findCommand = 'find html/txt | grep -i txt$';
+		push @files, split("\n", `$findCommand`);
+
+		my $filesProcessed = 0;
+
+		# Go through all the changed files
+		foreach my $file (@files) {
+			if ($filesProcessed >= $filesLimit) {
+				WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+				last;
+			}
+
+			if ((GetTime2() - $startTime) > $timeLimit) {
+				WriteLog("Time limit reached, exiting loop");
+				last;
+			}
+
+			# Trim the file path
+			chomp $file;
+			$file = trim($file);
+
+			# Log it
+			WriteLog('update.pl: $file = ' . $file);
+
+			#todo add rss.txt addition
+
+			# If the file exists, and is not a directory, process it
+			if (-e $file && !-d $file) {
+				$filesProcessed += ProcessTextFile($file);
+			}
+			else {
+				# this should not happen
+				WriteLog("Error! $file doesn't exist!");
+			}
+		}
+
+		IndexTextFile('flush');
+
+		WriteIndexedConfig();
+
+		RemoveEmptyDirectories('./html/'); #includes txt/
+		#RemoveEmptyDirectories('./txt/');
+
+		my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+		my $filesLeft = `$filesLeftCommand`; #todo
+
+		WriteLog('update.pl: $filesLeft = ' . $filesLeft);
+
+		PutConfig('admin/update/files_left', $filesLeft);
+
+		# if new items were added, re-make all the summary pages (top authors, new threads, etc)
+		if ($filesProcessed > 0) {
+			UpdateUpdateTime();
+			MakeSummaryPages();
+			#	WriteIndexPages();
+		}
+
+		# if anything has changed, redo the abyss index pages
+		#if ($newItemCount) {
 		#WriteIndexPages();
-	#}
-	
-	## rebuild abyss pages no more than once an hour (default/admin/abyss_rebuild_interval)
-	#my $lastAbyssRebuild = GetConfig('last_abyss');
-	#my $abyssRebuildInterval = GetConfig('admin/abyss_rebuild_interval');
-	#my $curTime = GetTime2();
-	#
-	#WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
-	#if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
-	#	$lastAbyssRebuild = 0;
-	#}
-	#if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
-	#	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
-	#	WriteIndexPages();
-	#	PutConfig('last_abyss', $curTime);
-	#}
+		#}
 
-	$pagesProcessed = BuildTouchedPages();
-	
-	# save current time in config/admin/update/last
-	my $newLastFlow = GetTime2();
-	WriteLog($newLastFlow);
-	PutConfig('admin/update/last', $newLastFlow);
-	
-	unlink('cron.lock');
-	
-	WriteLog("======update.pl DONE! ======");
-	WriteLog("Items/files processed: $filesProcessed");
-	WriteLog("Pages processed: $pagesProcessed");
+		## rebuild abyss pages no more than once an hour (default/admin/abyss_rebuild_interval)
+		#my $lastAbyssRebuild = GetConfig('last_abyss');
+		#my $abyssRebuildInterval = GetConfig('admin/abyss_rebuild_interval');
+		#my $curTime = GetTime2();
+		#
+		#WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
+		#if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
+		#	$lastAbyssRebuild = 0;
+		#}
+		#if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
+		#	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
+		#	WriteIndexPages();
+		#	PutConfig('last_abyss', $curTime);
+		#}
 
-	if ($filesProcessed > 0) {
-		print("Items/files processed: $filesProcessed\n");
-		print("Pages processed: $pagesProcessed\n");
+		$pagesProcessed = BuildTouchedPages();
+
+		# save current time in config/admin/update/last
+		my $newLastFlow = GetTime2();
+		WriteLog($newLastFlow);
+		PutConfig('admin/update/last', $newLastFlow);
+
+		unlink('cron.lock');
+
+		WriteLog("======update.pl DONE! ======");
+		WriteLog("Items/files processed: $filesProcessed");
+		WriteLog("Pages processed: $pagesProcessed");
+
+		if ($filesProcessed > 0) {
+			print("Items/files processed: $filesProcessed\n");
+			print("Pages processed: $pagesProcessed\n");
+		}
 	}
 }
 
