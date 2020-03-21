@@ -11,7 +11,7 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 // also sets background color
 // used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
 
-    //alert('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
+    // alert('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
 
 	if (bgColor) {
 		// background color
