@@ -3192,10 +3192,8 @@ sub BuildTouchedPages {
 		#		last;
 		#	}
 
-		# dereference @pageArray
+		# dereference @pageArray and get the 3 items in it
 		my @pageArray = @$page;
-
-		# get the 3 items in it
 		my $pageType = shift @pageArray;
 		my $pageParam = shift @pageArray;
 		my $touchTime = shift @pageArray;
