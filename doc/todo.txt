@@ -1,4 +1,11 @@
+#bug Currently update.pl is broken, only the first 100 files are imported
 
+#bug
+    create profile with local key
+    close browser (cookies lost)
+    open browser again, go to profile page
+        expected: handle and fingerprint populated
+        actual: handle is populated, but fingerprint is not
 
 
 #bug PHP-supplied http response headers cause Mosaic to crash
@@ -37,6 +44,8 @@ Home page shuld have useful things on it
 #bug theme/color/username remains at old setting in cache after config value change
 
 Many pages crash in Mosaic 3.0 Win
+    caused by headers added by php
+    turning off php solves the crashes
 
 #bug Wine IE8 clock ticks only on post.html, not other pages
 

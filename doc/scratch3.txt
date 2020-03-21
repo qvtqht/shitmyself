@@ -1,0 +1,70 @@
+notes from a talk
+
+a web which
+    lives everywhere and nowhere
+even if your favorite site goes down
+    on that particular hardware
+    still available
+
+wordpress wihch is decentralized
+    up to date for those connected
+
+"google box"
+
+software, data, publishing
+
+do not depend on one publisher
+
+journalism safe to write, safe to read
+
+how about ___ but decentralized
+
+not just open source, but decentralized
+
+
+goals:
+    normal browser
+    good names:
+    brewsteblog.dweb
+    snappy performance
+    user identities with differnet roles
+plus:
+    payments/tips
+    versions/archive
+
+javsacript as os does work
+
+
+===
+
+demo:
+decentralized internet archive.org
+
+dweb.archive.org
+
+
+
+ideas:
+
+bitcon address for signing
+normal browser
+good names
+snappy performance
+fun to post and comment
+user identities
+
+???
+
+
+
+reliable
+private
+fun
+
+
+lock the web open
+
+irrevocable openness and freedom
+
+
+part of how the actual system works

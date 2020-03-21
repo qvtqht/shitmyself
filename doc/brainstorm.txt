@@ -1,3 +1,22 @@
+adopt/ABCDE
+    creates entry in adopt table
+        adopt
+            parent_fingerprint
+            child_fingerprint
+    entries from adopted profiles show up in parent profiles
+
+create view vouched
+    select
+        author_hash
+        parent_id.vouched
+     from item
+
+
+crearte view author_vouched
+as slect author.author_id, parent.parent_author_id, parent.parent_vouched
+from
+
+
 token to replace string with string
     use as overlay to get extra information
         addendum/ ?
