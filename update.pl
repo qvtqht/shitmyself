@@ -12,6 +12,12 @@ use utf8;
 use 5.010;
 use Cwd qw(cwd);
 
+my $arg1 = shift;
+if ($arg1) {
+	print($arg1);
+} else {
+	print ('arg1 missing');
+}
 
 sub GetTime2() { # returns epoch time
 # this is identical to GetTime() in utils.pl
@@ -28,23 +34,14 @@ chomp $SCRIPTDIR;
 # WriteLog ('Begin requires');
 
 require './utils.pl';
+require './index.pl';
 
 my $lockTime = GetFile('cron.lock');
 my $currentTime = GetTime2();
 
 my $locked = 0;
 
-if ($lockTime) {
-	if ($currentTime - 1800 < $lockTime) {
-		WriteLog('Quitting due to lock file');
-		WriteMessage('Quitting due to lock file');
-		$locked = 1;
-	} else {
-		WriteLog('Lock file exists, but old. Continuing.');
-	}
-}
-
-sub ProcessTextFile {
+sub ProcessTextFile { #add new textfile to index
 	my $file = shift;
 
 	my $addedTime = GetTime2();
@@ -60,6 +57,8 @@ sub ProcessTextFile {
 	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 		unlink($file);
 		WriteLog("ProcessTextFile: $fileHash exists in deleted.log, file removed and skipped");
+
+		WriteLog('ProcessTextFile: return 0');
 
 		return 0;
 	}
@@ -90,9 +89,13 @@ sub ProcessTextFile {
 		IndexTextFile($file);
 
 		PutCache('indexed/' . $fileHash, 1);
+
+		WriteLog('ProcessTextFile: return 1');
+		return 1;
 	}
 
-	return 1;
+	WriteLog('ProcessTextFile: return 0');
+	return 0;
 
 	# run commands to
 	#	  add changed file to git repo
@@ -111,18 +114,15 @@ sub ProcessTextFile {
 
 }
 
-my $arg1 = shift;
-if ($arg1) {
-	if (-e $arg1) {
-		ProcessTextFile($arg1);
-	}
-} else {
-	if (!$locked) {
-		require './sqlite.pl';
-		require './index.pl';
-		require './access.pl';
-		require './pages.pl';
+if (!$arg1) {
+	print 'must supply filename or --all';
+} elsif ($arg1 eq '--all') {
+	require './sqlite.pl';
+	require './index.pl';
+	require './access.pl';
+	require './pages.pl';
 
+	if (!$locked) {
 		# WriteLog('End requires');
 
 		WriteLog('update.pl begin');
@@ -315,6 +315,26 @@ if ($arg1) {
 			print("Items/files processed: $filesProcessed\n");
 			print("Pages processed: $pagesProcessed\n");
 		}
+	}
+} elsif ($arg1) {
+	WriteLog('Found argument ' . $arg1);
+
+	if (-e $arg1) {
+		WriteLog('File ' . $arg1 . ' exists, calling ProcessTextFile()');
+
+		ProcessTextFile($arg1);
+
+		require './sqlite.pl';
+		require './index.pl';
+		require './access.pl';
+		require './pages.pl';
+
+		my $pagesProcessed = BuildTouchedPages();
+
+		unlink('cron.lock');
+	} else {
+		print('File ' . $arg1 . ' DOES NOT EXIST');
+		WriteLog('File ' . $arg1 . ' DOES NOT EXIST');
 	}
 }
 
