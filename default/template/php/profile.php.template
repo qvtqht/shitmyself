@@ -8,9 +8,10 @@ include_once('utils.php');
 if (isset($cookie) && $cookie) {
 	$html = str_replace('$fingerprint', $cookie, $html);
 	$html = str_replace('$handle', 'Anonymous', $html);
+	$html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Signed In</b></p></span>', $html);
 } else {
-	$html = str_replace('$fingerprint', '(none)', $html);
-	$html = str_replace('$handle', '(none)', $html);
+	$html = str_replace('$fingerprint', '(not signed in)', $html);
+	$html = str_replace('$handle', '(not signed in)', $html);
 }
 
 if (0 && function_exists('WriteLog')) {

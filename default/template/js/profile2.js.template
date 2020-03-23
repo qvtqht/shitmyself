@@ -86,15 +86,99 @@ function getUserFp() { // retrieve stored user fingerprint from localstorage
 	}
 }
 
+function sharePubKey() { // shares current user's public key via injected form and iframe
+    //alert('DEBUG: sharePubKey() begins');
+
+	var pubKey = getPublicKey();
+
+	//alert('DEBUG: sharePubKey: pubKey = ' + (pubKey ? pubKey : '(false)'));
+
+	if (pubKey) {
+	    //alert('DEBUG: sharePubKey: creating iframe');
+
+        var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
+        ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
+    //	ifrSharePubKey.setAttribute("height", "11");
+    //	ifrSharePubKey.setAttribute("width", "11");
+        // #todo pre-createElement browsers
+        document.body.appendChild(ifrSharePubKey);
+
+        //alert('DEBUG: sharePubKey: creating form');
+
+        var form = document.createElement('form');
+        form.setAttribute("action", "/post.html");
+        form.setAttribute("method", "get");
+        form.setAttribute("target", "ifrSharePubKey");
+
+        //alert('DEBUG: sharePubKey: creating input');
+
+        var txtComment = document.createElement('input');
+        txtComment.setAttribute("type", "hidden");
+        txtComment.setAttribute("value", pubKey);
+        txtComment.setAttribute("name", "comment");
+
+        //alert('DEBUG: sharePubKey: adding txtComment to form');
+
+        form.appendChild(txtComment);
+
+        //alert('DEBUG: sharePubKey: adding form to body');
+
+        //document.getElementsByTagName('body')[0].appendChild(form);
+
+        document.body.appendChild(form);
+
+        //alert('DEBUG: submitting form');
+
+        form.submit();
+
+        return false;
+    } else {
+        //alert('DEBUG: pubKey was FALSE');
+
+        return true;
+    }
+
+/////
+//	window.open('/write.html#inspubkey', '_self');
+
+/////
+//	var iframe = document.createElement("iframe");
+//	iframe.src = '/write.html#inspubkey';
+//	iframe.name = "inspubkey"
+//	iframe.style.display = 'none';
+//	document.body.appendChild(iframe);
+
+    //return 0;
+}
+
 function AddPrivateKeyLinks() { // adds save/load links to profile page if features are available
 // #todo make it so that this can be called repeatedly and hide/show appropriate links
+
+    //alert('DEBUG: AddPrivateKeyLinks() begin');
 
 	if (document.getElementById && window.getPrivateKey) {
 		var privateKey = getPrivateKey();
         var fieldset = document.getElementById('fldRegistration');
 
         if (fieldset && document.createElement) {
+            // file selector (hidden, activated by [load from file] link
+
+            //alert('DEBUG: AddPrivateKeyLinks: checks pass');
+
+            //alert('DEBUG: AddPrivateKeyLinks: creating file input...');
+
+            var fileLoadKeyFromText = document.createElement('input');
+            fileLoadKeyFromText.setAttribute('type', 'file');
+            fileLoadKeyFromText.setAttribute('accept', 'text/plain');
+            fileLoadKeyFromText.setAttribute('onchange', 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }');
+            //fileLoadKeyFromText.setAttribute('style', 'display: none');
+            fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
+
+            //alert('DEBUG: AddPrivateKeyLinks: check for privateKey');
+
     		if (privateKey) {
+    		    //alert('DEBUG: AddPrivateKeyLinks: privateKey: true');
+
 			    // add horizontal rule
 				var hrDivider = document.createElement('hr');
 				fieldset.appendChild(hrDivider);
@@ -112,6 +196,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				var pProfileShareLink = document.createElement('p');
 				var aProfileShare = document.createElement('a');
 				aProfileShare.setAttribute('href', '/write.html#inspubkey');
+				aProfileShare.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey() }');
 				aProfileShare.setAttribute('id', 'linkProfileShare');
 				aProfileShare.innerHTML = 'upload profile';
 				pProfileShareLink.appendChild(aProfileShare);
@@ -142,15 +227,9 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				pShowPrivateKey.appendChild(aShowPrivateKey);
 				fieldset.appendChild(pShowPrivateKey);
 			} else {
-				var pLoadKeyFromTxt = document.createElement('p');
+			    //alert('DEBUG: AddPrivateKeyLinks: privateKey: false');
 
-				// file selector (hidden, activated by [load from file] link
-				var fileLoadKeyFromText = document.createElement('input');
-				fileLoadKeyFromText.setAttribute('type', 'file');
-				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
-				fileLoadKeyFromText.setAttribute('onchange', 'openFile(event)');
-				fileLoadKeyFromText.setAttribute('style', 'display: none');
-				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
+				var pLoadKeyFromTxt = document.createElement('p');
 
 				// add [load from file] link
 				var aLoadKeyFromText = document.createElement('a');
@@ -283,6 +362,8 @@ function ShowPrivateKey() { // displays private key in textarea
 }
 
 function openFile(event) {
+    //alert('DEBUG: openFile() begin');
+
 	var input = event.target;
 
 	if (window.FileReader) {
@@ -311,6 +392,8 @@ function SavePrivateKeyAsTxt() {
 
 function CallLoadPrivateKey() {
 	var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
+
+	//alert('DEBUG: CallLoadPrivateKey: fileLoadKeyFromText: ' + !!fileLoadKeyFromText);
 
 	if (fileLoadKeyFromText) {
 		fileLoadKeyFromText.click();
