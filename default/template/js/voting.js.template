@@ -98,7 +98,7 @@ function signVote(t, token) { // signs a vote from referenced vote button
 //	        var myUrl = window.location;
 //	    	document.images[0].src = '/post.html?mydomain=' + myUrl;
 //
-//	    	alert('DEBUG: t = ' + t);
+//	    	//alert('DEBUG: t = ' + t);
 //
 //	    	return false;
 //	    }
