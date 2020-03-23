@@ -17,6 +17,18 @@
 
 			<tr class=body>
 				<td class=content>
+					<fieldset>
+						<legend>Voting<br></legend>
+
+						<p>
+							<label for=chkWantToVote>
+								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
+								I am <u>human</u> and I want to <u>vote</u>
+							</label>
+						</p>
+					</fieldset>
+
+					<p>
 
 					<fieldset>
 						<legend>Interface<br></legend>
@@ -29,19 +41,6 @@
 					</fieldset>
 
 					<p>
-
-					<fieldset>
-						<legend>Moderation<br></legend>
-
-						<p>
-							<span class=beginner>Display voting and moderation options:<br></span>
-
-							<label for=chkWantToVote>
-								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
-								Moderator
-							</label>
-						</p>
-					</fieldset>
 
 					<fieldset class=admin>
 						<legend>Admin</legend>
