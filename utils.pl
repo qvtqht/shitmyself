@@ -461,33 +461,44 @@ sub GetTemplate { # returns specified template from HTML directory
 
 	WriteLog("GetTemplate($filename)");
 
-	state %templateCache;
+	state %templateCache; #stores local memo cache of template
 
 	if ($templateCache{$filename}) {
+		#if already been looked up, return memo version
 		return $templateCache{$filename};
 	}
 
 	if (GetConfig('admin/debug') && !-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
-		WriteLog("GetTemplate: template/$filename does not exist, exiting");
+		# if template doesn't exist
+		# and we are in debug mode
+		# report the issue
+		WriteLog("GetTemplate: WARNING! template/$filename does not exist, exiting");
 	}
 
+	#information about theme
 	my $themeName = GetConfig('html/theme');
 	my $themePath = 'theme/' . $themeName . '/template/' . $filename;
 
 	my $template = '';
 	if (GetConfig($themePath)) {
+		#if current theme has this template, override default
 		$template = GetConfig($themePath);
 	} else {
+		#otherwise use regular template
 		$template = GetConfig('template/' . $filename);
 	}
 
+	# add \n to the end because it makes the resulting html look nicer
+	# and doesn't seem to hurt anything else
 	$template .= "\n";
 
 	if ($template) {
+		#if template contains something, cache it
 		$templateCache{$filename} = $template;
 		return $template;
 	} else {
-		WriteLog("WARNING! GetTemplate() returning empty string for $filename.");
+		#if result is blank, report it
+		WriteLog("GetTemplate: WARNING! GetTemplate() returning empty string for $filename.");
 		return '';
 	}
 }
@@ -860,7 +871,78 @@ sub GetTime() { # Returns time in epoch format.
 	return (time());
 }
 
-sub GetTitle { # Gets title for file (incomplete, currently does nothing) 
+
+sub GetClockFormattedTime() {
+	my $clockFormat = GetConfig('html/clock_format');
+
+	my $clockFormattedTime = GetTime();
+
+	if ($clockFormat eq 'union') {
+		my $time = GetTime();
+
+		#todo implement this, for now it's only js
+		#$clockFormattedTime = 'union_clock_format';
+		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
+		#
+		# var hours = now.getHours();
+		# var minutes = now.getMinutes();
+		# var seconds = now.getSeconds();
+		my $hours = strftime '%H', localtime $time;
+		my $minutes = strftime '%M', localtime $time;
+		my $seconds = strftime '%S', localtime $time;
+		#
+
+		my $milliseconds = '000'; #todo
+		# if (now.getMilliseconds) {
+		# 	milliseconds = now.getMilliseconds();
+		# } else if (Math.floor && Math.random) {
+		# 	milliseconds = Math.floor(Math.random() * 999)
+		# }
+		#
+		# var hoursR = 23 - hours;
+		# if (hoursR < 10) {
+		# 	hoursR = '0' + '' + hoursR;
+		# }
+		my $hoursR = 23 - $hours;
+		if ($hoursR < 10) {
+			$hoursR = '0' . $hoursR;
+		}
+
+		# var minutesR = 59 - minutes;
+		# if (minutesR < 10) {
+		# 	minutesR = '0' + '' + minutesR;
+		# }
+		my $minutesR = 59 - $minutes;
+		if ($minutesR < 10) {
+			$minutesR = '0' . $minutesR;
+		}
+
+		# var secondsR = 59 - seconds;
+		# if (secondsR < 10) {
+		# 	secondsR = '0' + '' + secondsR;
+		# }
+		my $secondsR = 59 - $seconds;
+		if ($secondsR < 10) {
+			$secondsR = '0' . $secondsR;
+		}
+
+		#
+		# if (milliseconds < 10) {
+		# 	milliseconds = '00' + '' + milliseconds;
+		# } else if (milliseconds < 100) {
+		# 	milliseconds = '0' + '' + milliseconds;
+		# }
+		#
+
+		$clockFormattedTime = $hours . $minutes . $seconds . $milliseconds . $secondsR . $minutesR . $hoursR;
+
+		# document.frmTopMenu.txtClock.value = timeValue;
+	}
+
+	return $clockFormattedTime;
+}
+
+sub GetTitle { # Gets title for file (incomplete, currently does nothing)
 	my $text = shift;
 
 	if (!$text) {
@@ -2261,5 +2343,58 @@ sub RemoveOldItems {
 		ORDER BY add_timestamp
 	";
 }
+
+sub GetFileHashPath { # Returns text file's standardized path given its filename
+    # e.g. /01/23/0123abcdef0123456789abcdef0123456789a.txt
+    # also creates its subdirectories, #todo fixme
+
+    my $file = shift;
+    # take parameter
+
+    WriteLog("GetFileHashPath(\$file = $file)");
+
+    # file should exist and not be a directory
+    if (!-e $file || -d $file) {
+        WriteLog("GetFileHashPath(): Validation failed for $file");
+        return;
+    }
+
+    if ($file) {
+        my $fileHash = GetFileHash($file);
+
+        my $fileHashPath = GetPathFromHash($fileHash);
+
+        return $fileHashPath;
+    }
+}
+
+sub GetPathFromHash { # gets path of text file based on hash
+	# relies on config/admin/organize_files = 1
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	if (!$fileHash) {
+		return;
+	}
+
+	if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
+		system('mkdir html/txt/' . substr($fileHash, 0, 2));
+	}
+
+	if (!-e 'html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
+		system('mkdir html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
+	}
+
+	my $fileHashSubDir = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2);
+
+	if ($fileHash) {
+		my $fileHashPath = 'html/txt/' . $fileHashSubDir . '/' . $fileHash . '.txt';
+
+		WriteLog("\$fileHashPath = $fileHashPath");
+
+		return $fileHashPath;
+	}
+}
+
 
 1;

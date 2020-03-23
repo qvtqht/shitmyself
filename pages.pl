@@ -1311,7 +1311,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	if (GetConfig('html/clock')) {
 		$clock = GetTemplate('clock.template');
 
-		my $currentTime = GetTime();
+		my $currentTime = GetClockFormattedTime();
 #
 #		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
 #			$currentTime = GetTemplate('clock_ssi.template');
@@ -2190,7 +2190,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Close html
 	$html .= GetPageFooter();
 
-	$html = InjectJs($html, qw(avatar settings voting profile fresh timestamps));
+	$html = InjectJs($html, qw(avatar settings voting profile timestamps));
 
 	return $html;
 }
@@ -2820,7 +2820,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar fresh profile settings));
+	$txtIndex = InjectJs($txtIndex, qw(avatar profile settings));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -3052,7 +3052,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	if ($pageType eq 'tag') {
 		my $tagName = $pageParam;
 
-		WriteLog("update.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
+		WriteLog("pages.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
 
 		my $tagPage = GetReadPage('tag', $tagName);
 

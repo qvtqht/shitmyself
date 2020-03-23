@@ -78,57 +78,6 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 	}
 }
 
-sub GetPathFromHash { # gets path of text file based on hash
-# relies on config/admin/organize_files = 1
-	my $fileHash = shift;
-	chomp $fileHash;
-
-	if (!$fileHash) {
-		return;
-	}
-
-	if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
-		system('mkdir html/txt/' . substr($fileHash, 0, 2));
-	}
-
-	if (!-e 'html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
-		system('mkdir html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
-	}
-
-	my $fileHashSubDir = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2);
-
-	if ($fileHash) {
-		my $fileHashPath = 'html/txt/' . $fileHashSubDir . '/' . $fileHash . '.txt';
-
-		WriteLog("\$fileHashPath = $fileHashPath");
-
-		return $fileHashPath;
-	}
-}
-
-sub GetFileHashPath { # Returns text file's standardized path given its filename
-# e.g. /01/23/0123abcdef0123456789abcdef0123456789a.txt
-# also creates its subdirectories, #todo fixme
-
-	my $file = shift;
-	# take parameter
-
-	WriteLog("GetFileHashPath(\$file = $file)");
-
-	# file should exist and not be a directory
-	if (!-e $file || -d $file) {
-		WriteLog("GetFileHashPath(): Validation failed for $file");
-		return;
-	}
-
-	if ($file) {
-		my $fileHash = GetFileHash($file);
-		
-		my $fileHashPath = GetPathFromHash($fileHash);
-		
-		return $fileHashPath;
-	}
-}
 #
 #sub IndexToken {
 #	my $message = shift;
