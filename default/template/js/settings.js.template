@@ -11,14 +11,14 @@ function SetElementVisible(element, displayValue, bgColor, borderStyle) { // set
 // also sets background color
 // used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
 
-    // alert('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
+    //alert ('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
 
 	if (bgColor) {
 		// background color
 		if (bgColor == 'initial') {
 			bgColor = '$colorWindow';
 		}
-		element.style.backgroundColor = bgColor;
+		//element.style.backgroundColor = bgColor;
 	}
 
 	if (borderStyle) {
@@ -132,10 +132,10 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 				//divsToHide[i].style.visibility = "hidden"; // or
 				SetElementVisible(divsToHide[i], displayValue, bgColor, 0);
 			}
-			var clock = document.getElementById('txtClock');
-			if (clock) {
-			    SetElementVisible(clock, displayValue, bgColor, 0);
-			}
+//			var clock = document.getElementById('txtClock');
+//			if (clock) {
+//			    SetElementVisible(clock, displayValue, bgColor, 0);
+//			}
 			showAdvancedLastAction = displayValue + bgColor;
 		}
 
@@ -275,7 +275,7 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 		} else if (ab == 'B') { // advanced
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
-			SetPrefs('beginner', 1);
+			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
             SetPrefs('show_admin', 0);
