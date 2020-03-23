@@ -1,8 +1,8 @@
 <HEAD>
 <SCRIPT LANGUAGE="JavaScript">
 <!--
-var timerID = null
-var timerRunning = false
+var timerID = null;
+var timerRunning = false;
 var clockStyle = 2;
 // 0 = epoch time
 // 1 = am/pm
@@ -10,33 +10,35 @@ var clockStyle = 2;
 
 function stopclock(){
 	if(timerRunning) {
-		clearTimeout(timerID)
+		clearTimeout(timerID);
 	}
-	timerRunning = false
+	timerRunning = false;
 }
 
 function startclock(){
 	// Make sure the clock is stopped
-	stopclock()
-	showtime()
+	stopclock();
+	showtime();
 }
 
 function showtime() {
 	var timeValue = '';
 
 	if (clockStyle == 1) {
+	    // am/pm
 
-		var now = new Date()
-		var hours = now.getHours()
-		var minutes = now.getMinutes()
-		var seconds = now.getSeconds()
-		var timeValue = "" + ((hours > 12) ? hours - 12 : hours)
-		timeValue += ((minutes < 10) ? ":0" : ":") + minutes
-		timeValue += ((seconds < 10) ? ":0" : ":") + seconds
-		timeValue += (hours >= 12) ? " P.M." : " A.M."
+		var now = new Date();
+		var hours = now.getHours();
+		var minutes = now.getMinutes();
+		var seconds = now.getSeconds();
+		var timeValue = "" + ((hours > 12) ? hours - 12 : hours);
+		timeValue += ((minutes < 10) ? ":0" : ":") + minutes;
+		timeValue += ((seconds < 10) ? ":0" : ":") + seconds;
+		timeValue += (hours >= 12) ? " P.M." : " A.M.";
 	}
 
 	if (clockStyle == 0) {
+	    // epoch time
 
 		var d = new Date();
 		var n = d.getTime();
@@ -45,6 +47,8 @@ function showtime() {
 	}
 
 	if (clockStyle == 2) {
+	    // union
+
 		var now = new Date();
 		var hours = now.getHours();
 		var minutes = now.getMinutes();
@@ -54,7 +58,7 @@ function showtime() {
 		if (now.getMilliseconds) {
 			milliseconds = now.getMilliseconds();
 		} else if (Math.floor && Math.random) {
-			milliseconds = Math.floor(Math.random() * 999)
+			milliseconds = Math.floor(Math.random() * 999);
 		}
 
 		var hoursR = 23 - hours;
@@ -89,9 +93,9 @@ function showtime() {
 		timeValue = hours + '' + minutes + '' + seconds + '' + milliseconds + '' + secondsR + '' + minutesR + '' + hoursR;
 	}
 
-	document.clock.face.value = timeValue
-	timerID = setTimeout("showtime()",100)
-	timerRunning = true
+	document.clock.face.value = timeValue;
+	timerID = setTimeout("showtime()", 1000);
+	timerRunning = true;
 }
 //-->
 </SCRIPT>
