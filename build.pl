@@ -150,9 +150,9 @@ my $statsPage = GetStatsPage();
 PutHtmlFile("html/stats.html", $statsPage);
 
 if (GetConfig('admin/build/update_after')) {
-	BuildMessage("system('perl update.pl')...");
+	BuildMessage("system('perl update.pl --all')...");
 	
-	system('perl update.pl');
+	system('perl update.pl --all');
 }
 	
 BuildMessage("Done!");
