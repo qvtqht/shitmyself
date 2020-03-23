@@ -6,14 +6,31 @@ body {
 .dialog {
 	box-shadow: 5pt 5pt 5pt #aabbcc;
 }
+#txtClock {
+    font-family: monospace;
+    font-size: 38pt;
+    color: #ff480b;
+    background-color: #100010;
+    text-align: center;
+    border: 0;
+}
 input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
 	color: $colorInputText;
+	font-family: helvetical, arial, sans-serif;
+	font-size: 18pt;
 }
-#txtClock {
-	border: 1pt inset $colorWindow;
+input {
+	font-family: helvetical, arial, sans-serif;
+	font-size: 18pt;
 }
 .statusbar td {
 	border: 0;
     padding: 2pt;
+}
+a:focus, a:active {
+    background-color: orange;
+}
+input:focus, textarea:focus {
+    background-color: orange;
 }

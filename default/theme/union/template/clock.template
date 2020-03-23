@@ -1,0 +1,10 @@
+<!-- clock.template -->
+<span>
+	<input
+		type=text
+		size=20
+		name=txtClock
+		id=txtClock
+		value="$currentTime">
+</span>
+<!-- / clock.template -->

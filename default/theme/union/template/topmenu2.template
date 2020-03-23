@@ -1,0 +1,23 @@
+<!-- topmenu2.template -->
+<form action="" name="frmTopMenu">
+	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+			<td><small>
+				<a href="#maincontent"><font color=$colorTitlebarText><b><small>Skip to main content</small></b></font></a>
+			</small></td>
+		</tr>
+		<tr class=clock>
+			<td align=center>
+				$clock
+			</td>
+		</tr>
+		<tr bgcolor=$colorWindow class=menubar>
+			<td><big>
+				<big style="padding:5pt">$menuItems</big>
+				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>/
+				<big><a href="/help.html">Help</a></big>
+			</big></td>
+		</tr>
+	</table>
+</form>
+<!-- / topmenu2.template -->
