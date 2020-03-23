@@ -6,6 +6,8 @@
 
 	<legend>Registration</legend>
 
+	<span id=spanSignedInStatus></span>
+
 	<p>Handle: <span id=lblHandle>$handle</span>
 
 	<p>Fingerprint: <span id=lblFingerprint>$fingerprint</span>
