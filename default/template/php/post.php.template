@@ -198,6 +198,8 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 //			$commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
 
 			// store file
+			WriteLog("file_put_contents($fileHtmlPath, $commentHtmlTemplate)");
+
 			file_put_contents($fileHtmlPath, $commentHtmlTemplate);
 		}
 
