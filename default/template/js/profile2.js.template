@@ -171,7 +171,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
             fileLoadKeyFromText.setAttribute('type', 'file');
             fileLoadKeyFromText.setAttribute('accept', 'text/plain');
             fileLoadKeyFromText.setAttribute('onchange', 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }');
-            //fileLoadKeyFromText.setAttribute('style', 'display: none');
+            fileLoadKeyFromText.setAttribute('style', 'display: none');
             fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
 
             //alert('DEBUG: AddPrivateKeyLinks: check for privateKey');
