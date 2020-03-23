@@ -89,6 +89,16 @@
             </p>
 
             <p>
+                <input type=text name=txtWindowSetTimeout size=11>
+                window.setTimeout
+            </p>
+
+            <p>
+                <input type=text name=txtWindowSetTimeoutReturn size=11>
+                window.setTimeout(...)
+            </p>
+
+            <p>
                 <input type=text name=txtNavigatorJavaEnabled size=11>
                 navigator.javaEnabled
             </p>
