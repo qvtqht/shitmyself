@@ -189,8 +189,6 @@ sub SqliteMakeTables() { # creates sqlite schema
 			item_hash
 	");
 
-	SqliteQuery2("CREATE VIEW item_last_bump AS SELECT file_hash, MAX(add_timestamp) add_timestamp FROM added_time GROUP BY file_hash;");
-
 	SqliteQuery2("
 		CREATE VIEW vote_weighed AS
 			SELECT
@@ -2231,13 +2229,8 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 
 	$whereClause = "
 		WHERE 
-			(item_title != '' OR ',' || tags_list || ',' LIKE '%,approve,%') AND
-			parent_count = 0 AND 
-			',' || tags_list || ','  LIKE '%,funny,%' OR
-			',' || tags_list || ','  LIKE '%,textart,%' OR
-			',' || tags_list || ','  LIKE '%,insightful,%' OR
-			',' || tags_list || ','  LIKE '%,good,%' OR
-			',' || tags_list || ','  LIKE '%,approve,%'
+			(',' || tags_list || ',' LIKE '%,approve,%')
+			AND (',' || tags_list || ',' NOT LIKE '%,flag,%')
 	"; #todo remove hardcoding here
 
 	#
