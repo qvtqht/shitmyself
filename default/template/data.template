@@ -1,8 +1,19 @@
 <!-- data.template -->
 
-<p>All data on this message board is freely available for download in the following, but not limited to, formats:</p>
+<p>Message board data:</p>
 
-<p><a href="/hike.zip">/hike.zip</a> ($sizeHikeZip)</p>
-<p><a href="/index.sqlite3.zip">/index.sqlite3.zip</a> ($sizeSqliteZip)</p>
+<p>
+    <a href="/archive/hike.zip">/hike.zip</a> ($sizeHikeZip)<br>
+    Contains all items as individual text files
+</p>
+
+<p>
+    <a href="/archive/index.sqlite3.zip">/index.sqlite3.zip</a> ($sizeSqliteZip)<br>
+    Contains index of items in SQLite database
+</p>
+
+<p>
+    <a href="/archive/approved.zip">Approved items only</a>
+</p>
 
 <!-- / data.template -->
