@@ -216,7 +216,13 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 	}
 
+    if (GetConfig('admin/php/update_on_post')) {
+        WriteLog("cd .. ; ./update.pl \"$filePath\"");
+        WriteLog(`cd .. ; ./update.pl "$filePath"`);
+    }
+
 	if ($pwd) {
+		WriteLog("cd $pwd");
 		WriteLog(`cd $pwd`);
 	}
 
@@ -322,15 +328,14 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 	$html = str_replace('<!-- submitted_text -->', $postedMessage, $html);
 }
 
-if (GetConfig('admin/php/update_on_post')) {
-    WriteLog(`cd .. ; ./update.pl`);
+if (!$redirected && $fileUrlPath) {
+    Header('Location: ' . $fileUrlPath);
 
-    if (!$redirected) {
-        Header('Location: ' . $fileUrlPath);
-
-        $redirected = 1;
-    }
+    $redirected = 1;
 }
 
 print($html);
 
+if (GetConfig('admin/debug')) {
+    print(WriteLog(''));
+}
