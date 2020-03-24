@@ -14,14 +14,14 @@ body {
     text-align: center;
     border: 0;
 }
-input[type=text], input[type=password], select, option, textarea {
+button, input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
 	color: $colorInputText;
-	font-family: helvetical, arial, sans-serif;
+	font-family: helvetica, arial, sans-serif;
 	font-size: 18pt;
 }
-input {
-	font-family: helvetical, arial, sans-serif;
+button, input {
+	font-family: helvetica, arial, sans-serif;
 	font-size: 18pt;
 }
 .statusbar td {
