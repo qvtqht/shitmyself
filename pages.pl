@@ -1426,7 +1426,8 @@ sub GetTopItemsPage { # returns page with top items listing
 			my $itemTitle = $item{'item_title'};
 			if (trim($itemTitle) eq '') {
 				# if title is empty, use the item's hash
-				$itemTitle = '(' . $itemKey . ')';
+				# $itemTitle = '(' . $itemKey . ')';
+				$itemTitle = 'Untitled';
 			}
 			$itemTitle = HtmlEscape($itemTitle);
 
