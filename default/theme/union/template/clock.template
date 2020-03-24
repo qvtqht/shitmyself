@@ -2,7 +2,7 @@
 <span>
 	<input
 		type=text
-		size=20
+		size=16
 		name=txtClock
 		id=txtClock
 		value="$currentTime">
