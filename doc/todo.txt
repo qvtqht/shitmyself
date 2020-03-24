@@ -1,3 +1,5 @@
+#todo make textareas nowrap in netscape 4, currently annoying
+
 #bug Currently update.pl is broken, only the first 100 files are imported
 
 #bug
