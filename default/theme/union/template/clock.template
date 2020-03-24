@@ -5,6 +5,7 @@
 		size=16
 		name=txtClock
 		id=txtClock
-		value="$currentTime">
+		value="$currentTime"
+	>
 </span>
 <!-- / clock.template -->
