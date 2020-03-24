@@ -20,7 +20,7 @@
 		<tr><td>score:</td><td>$authorScore</td></tr>
 		<tr><td>items:</td><td>$itemCount</td></tr>
 		<tr><td>description:</td><td>$authorDescription</td></tr>
-		<tr class=advanced><td>influence:</td><td>$authorWeight</td></tr>
+		<tr class=advanced><td>gravity:</td><td>$authorWeight</td></tr>
 		<tr><td>last seen:</td><td>$authorLastSeen</td></tr>
 		<tr class=advanced><td>registration:</td><td><b><tt>$publicKeyHash</tt></b></td></tr>
 		<tr><td>friends:</td><td>$authorFriends</td></tr>
