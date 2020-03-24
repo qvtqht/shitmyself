@@ -449,6 +449,8 @@ sub IndexTextFile { # indexes one text file into database
 			}
 		}
 
+		my @itemParents;
+
 		# look for quoted message ids
 		if (GetConfig('admin/token/reply') && $message) {
 			# >> token
@@ -459,6 +461,8 @@ sub IndexTextFile { # indexes one text file into database
 					my $parentHash = shift @replyLines;
 
 					if (IsSha1($parentHash)) {
+						push @itemParents, $parentHash;
+
 						DBAddItemParent($fileHash, $parentHash);
 						DBAddVoteRecord($fileHash, $addedTime, 'reply');
 					}
@@ -479,7 +483,7 @@ sub IndexTextFile { # indexes one text file into database
 			$hasParent = 1;
 		}
 
-		# look for hash tags aka hashtags
+		# look for hash tags aka hashtags hash tag hashtag
 		if (GetConfig('admin/token/hashtag') && $message) {
 			WriteLog("... check for hashtags");
 			my @hashTags = ($message =~ m/\#([a-zA-Z0-9]+)/mg);
@@ -491,14 +495,23 @@ sub IndexTextFile { # indexes one text file into database
 					my $hashTag = shift @hashTags;
 
 					if ($hashTag) {
-						#todo add sanity checks here
-						DBAddVoteRecord($fileHash, $addedTime, $hashTag);
-
-						DBAddPageTouch('tag', $hashTag);
-
 						#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
-
 						#todo
+
+						if ($hasParent) {
+							if (scalar(@itemParents)) {
+								foreach my $itemParentHash (@itemParents) {
+									DBAddVoteRecord($itemParentHash, $addedTime, $hashTag);
+
+									DBAddPageTouch('item', $itemParentHash);
+								}
+							}
+						} else { # no parent, !$hasParent
+							#todo add sanity checks here
+							DBAddVoteRecord($fileHash, $addedTime, $hashTag);
+
+							DBAddPageTouch('tag', $hashTag);
+						}
 					}
 				}
 			}
