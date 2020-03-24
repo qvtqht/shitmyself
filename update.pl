@@ -67,6 +67,8 @@ sub ProcessTextFile { #add new textfile to index
 		# organize files aka rename to hash-based path
 		my $fileHashPath = GetFileHashPath($file);
 
+		WriteLog('ProcessTextFile: organize: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
+
 		if ($fileHashPath) {
 			WriteLog('ProcessTextFile: $fileHashPath = ' . $fileHashPath);
 
@@ -77,6 +79,8 @@ sub ProcessTextFile { #add new textfile to index
 				if (-e $fileHashPath) {
 					$file = $fileHashPath;
 				}
+			} else {
+				WriteLog('ProcessTextFile: no need to rename ' . $file);
 			}
 		} else {
 			WriteLog('ProcessTextFile: $fileHashPath is missing');
@@ -84,18 +88,23 @@ sub ProcessTextFile { #add new textfile to index
 	}
 
 	if (!GetCache('indexed/' . $fileHash)) {
-		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ')');
+		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ') not in cache/indexed');
+
+		require './sqlite.pl';
+		require './index.pl';
+		require './access.pl';
+		require './pages.pl';
 
 		IndexTextFile($file);
 
 		PutCache('indexed/' . $fileHash, 1);
-
-		WriteLog('ProcessTextFile: return 1');
-		return 1;
+		#
+		# WriteLog('ProcessTextFile: return 1');
+		# return 1;
 	}
 
-	WriteLog('ProcessTextFile: return 0');
-	return 0;
+	WriteLog('ProcessTextFile: return 1');
+	return 1;
 
 	# run commands to
 	#	  add changed file to git repo
@@ -322,14 +331,17 @@ if (!$arg1) {
 	if (-e $arg1) {
 		WriteLog('File ' . $arg1 . ' exists, calling ProcessTextFile()');
 
-		ProcessTextFile($arg1);
+		my $filesProcessed = ProcessTextFile($arg1);
 
-		require './sqlite.pl';
-		require './index.pl';
-		require './access.pl';
-		require './pages.pl';
+		if ($filesProcessed > 0) {
+			IndexTextFile('flush');
 
-		my $pagesProcessed = BuildTouchedPages();
+			WriteIndexedConfig();
+
+			MakeSummaryPages();
+
+			my $pagesProcessed = BuildTouchedPages();
+		}
 
 		unlink('cron.lock');
 	} else {
