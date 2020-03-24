@@ -1307,7 +1307,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
 	WriteLog($styleSheet);
 
-	my $clock = '*';
+	my $clock = '';
 	if (GetConfig('html/clock')) {
 		$clock = GetTemplate('clock.template');
 
@@ -1582,7 +1582,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
 	if (GetConfig('html/clock')) {
-		# if clock is enabled, automatically add it
+		# if clock is enabled, automatically add its js
 		push @scriptNames, 'clock';
 	}
 
