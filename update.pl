@@ -14,9 +14,9 @@ use Cwd qw(cwd);
 
 my $arg1 = shift;
 if ($arg1) {
-	print($arg1);
+	print($arg1 . "\n");
 } else {
-	print ('arg1 missing');
+	print ("arg1 missing\n\nplease specify --all or name of file\n");
 }
 
 sub GetTime2() { # returns epoch time
@@ -115,7 +115,7 @@ sub ProcessTextFile { #add new textfile to index
 }
 
 if (!$arg1) {
-	print 'must supply filename or --all';
+	print 'must supply filename or --all\n';
 } elsif ($arg1 eq '--all') {
 	require './sqlite.pl';
 	require './index.pl';
@@ -333,7 +333,7 @@ if (!$arg1) {
 
 		unlink('cron.lock');
 	} else {
-		print('File ' . $arg1 . ' DOES NOT EXIST');
+		print('File ' . $arg1 . ' DOES NOT EXIST' . "\n");
 		WriteLog('File ' . $arg1 . ' DOES NOT EXIST');
 	}
 }
