@@ -1,96 +1,116 @@
 <?php
-	$cookie = 0;
 
-	include_once('utils.php');
+$cookie = 0;
 
-	$commandRegister = 'Register';
-	$commandRegister2 = 'Please wait...';
-	$commandRegister3 = 'Wait...';
-	$commandUnregister = 'Sign Out';
-	// #technically all the commands stuff should be in profile.php
+include_once('utils.php');
+
+$commandRegister = 'Register';
+$commandRegister2 = 'Please wait...';
+$commandRegister3 = 'Wait...';
+$commandUnregister = 'Sign Out';
+
+// #technically all the commands stuff should be in profile.php
 
 //	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
 
-	function setcookie2($key, $value) { //wrapper for setcookie() which sets cookie with parameters
-	    if (0) {
-		    WriteLog('setcookie2(' . $key . ',' . $value . ')');
-		    setcookie($key, $value);
-        } else {
+function setcookie2($key, $value) { //wrapper for setcookie() which sets cookie with parameters
+	if (0) {
+		WriteLog('setcookie2(' . $key . ',' . $value . ')');
+		setcookie($key, $value);
+	} else {
 //    		$date = new Datetime('+2 years');
 //    		$cookieDate = $date->format(DateTime::COOKIE);
 //    		Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/');
 
-            setcookie($key, $value, time()+86400, '/'); //#todo ie3 compat
-        }
+		setcookie($key, $value, time()+86400, '/'); //#todo ie3 compat
 	}
+}
 
-	function unsetcookie2($key) { // wrapper for setcookie() to remove a cookie
-	    if (0) {
-            WriteLog('unsetcookie2(' . $key . ')');
-            setcookie($key);
-        } else {
-            setcookie($key, '', time()-86400, '/');
-        }
-	}
-
-	if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
-		unsetcookie2('test');
-		unsetcookie2('cookie');
-		unsetcookie2('checksum');
-
-		WriteLog('all cookies unset');
+function unsetcookie2($key) { // wrapper for setcookie() to remove a cookie
+	if (0) {
+		WriteLog('unsetcookie2(' . $key . ')');
+		setcookie($key);
 	} else {
-		if (isset($_COOKIE['test']) && $_COOKIE['test']) {
-			WriteLog('test cookie found');
+		setcookie($key, '', time()-86400, '/');
+	}
+}
 
-			if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { # todo actual auth
-				WriteLog('test cookie override!');
+$messageSignedIn = 0;
 
-				$cookie = $_COOKIE['test'];
-				setcookie2('cookie', $cookie);
+if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
+	unsetcookie2('test');
+	unsetcookie2('cookie');
+	unsetcookie2('checksum');
 
-				$secret = GetConfig('admin/secret');
+	$serverMessageUnregistered = StoreServerMessage('You have been signed out.');
 
-				$checksum = md5($cookie . '/' . $secret);
-				setcookie2('checksum', $checksum);
+	header('Location: /profile.html?message=' . $serverMessageUnregistered);
 
-				setcookie2('test', 1);
-			} else {
-				if (isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
-					$cookie = $_COOKIE['cookie'];
-				}
+	WriteLog('all cookies unset');
+} else {
+	if (isset($_COOKIE['test']) && $_COOKIE['test']) {
+		WriteLog('test cookie found');
 
-				if (isset($_COOKIE['checksum']) && $_COOKIE['checksum']) {
-					$checksum = $_COOKIE['checksum'];
-				}
-			}
+		if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { # todo actual auth
+			WriteLog('test cookie override!');
 
-			WriteLog('$cookie = ' . (isset($cookie) ? $cookie : '(unset)') . '; $checksum= ' . (isset($checksum) ? $checksum : '(unset)'));
+			$cookie = $_COOKIE['test'];
+			setcookie2('cookie', $cookie);
 
 			$secret = GetConfig('admin/secret');
 
-			if (!$cookie) {
-				WriteLog('$cookie not found, creating new one...');
+			$checksum = md5($cookie . '/' . $secret);
+			setcookie2('checksum', $checksum);
 
-				$cookie = strtoupper(substr(md5(rand()), 16));
+			setcookie2('test', 1);
 
-				$checksum = md5($cookie . '/' . $secret);
-
-				setcookie2('cookie', $cookie);
-				setcookie2('checksum', $checksum);
-			}
-
-			if (md5($cookie . '/' . $secret) != $checksum) {
-				WriteLog('Checksum mis-match! Expected ' . md5($cookie . '/' . $secret) . ', found ' . $checksum);
-
-				unset($cookie);
-				unsetcookie2('cookie');
-				//header('Location: /profile.html?' . time());
-			}
+			$messageSignedIn = 1;
 		} else {
-			if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
-				setcookie2('test', '1');
-				header('Location: /profile.html?' . time());
+			if (isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
+				$cookie = $_COOKIE['cookie'];
+			}
+
+			if (isset($_COOKIE['checksum']) && $_COOKIE['checksum']) {
+				$checksum = $_COOKIE['checksum'];
 			}
 		}
+
+		WriteLog('$cookie = ' . (isset($cookie) ? $cookie : '(unset)') . '; $checksum= ' . (isset($checksum) ? $checksum : '(unset)'));
+
+		$secret = GetConfig('admin/secret');
+
+		if (!$cookie) {
+			WriteLog('$cookie not found, creating new one...');
+
+			$cookie = strtoupper(substr(md5(rand()), 16));
+
+			$checksum = md5($cookie . '/' . $secret);
+
+			setcookie2('cookie', $cookie);
+			setcookie2('checksum', $checksum);
+
+			$messageSignedIn = 1;
+		}
+
+		if (md5($cookie . '/' . $secret) != $checksum) {
+			WriteLog('Checksum mis-match! Expected ' . md5($cookie . '/' . $secret) . ', found ' . $checksum);
+
+			unset($cookie);
+			unsetcookie2('cookie');
+
+			$messageWrongChecksum = StoreServerMessage('Signed out due to checksum mismatch.');
+
+			header('Location: /profile.html?message=' . $messageWrongChecksum);
+		}
+
+		if ($messageSignedIn) {
+			$messageSignedIn = StoreServerMessage('Success! You have signed in.');
+			header('Location: /profile.html?message=' . $messageSignedIn);
+		}
+	} else {
+		if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
+			setcookie2('test', '1');
+			header('Location: /profile.html?' . time());
+		}
 	}
+}
