@@ -1,6 +1,11 @@
 Known Issues
 ============
 
+In Opera 12.x, registration fails
+	This is due to OpenPGP.js throwing an error
+		Fix 1: polyfill getRandomValues()
+		Fix 2: handle exeptions thrown by openpgp with fallback
+
 Browsers which do not support Unicode display gibberish when faced with non-Ascii characters
     This can be remediated in the future by down-converting to one particular encoding based on which non-ascii characters are used
         e.g. if there are Cyrillic Unicode characters present, down-convert into koi8-r or

@@ -1,3 +1,11 @@
+remove external js file dependencies from 404 page
+    404 page should only be 1 request
+
+Anytime using rewrite to add attributes to a tag
+    If tag has no attributes, have to replace <tag> instead of "<tag "
+
+without php, profile page contains several $ placeholders
+
 #todo make textareas nowrap in netscape 4, currently annoying
 
 #bug Currently update.pl is broken, only the first 100 files are imported
