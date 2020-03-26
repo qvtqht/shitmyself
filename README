@@ -82,6 +82,7 @@ requirements
 * HTML::Parser
 * Digest::MD5
 * Digest::SHA1
+* File::Spec
 * DBI
 * SQLite
 
