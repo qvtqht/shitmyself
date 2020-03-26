@@ -15,6 +15,43 @@ function WriteLog($text) { // writes to debug log if enabled
 	$logText .= '<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n";
 }
 
+//
+//function GetAdminKey() { // Returns admin's public key, 0 if there is none
+//	static $adminsKey = 0;
+//
+//	if ($adminsKey) {
+//		return $adminsKey;
+//	}
+//
+//	$pwd = getcwd();
+//
+//	WriteLog('$pwd = ' . $pwd);
+//
+//	$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
+//
+//	if (file_exists("$scriptDir/admin.key")) {
+//
+//		$adminsInfo = GpgParse("$scriptDir/admin.key");
+//
+//		if ($adminsInfo['isSigned']) {
+//			if ($adminsInfo['key']) {
+//				$adminsKey = $adminsInfo['key'];
+//
+//				return $adminsKey;
+//			} else {
+//				return 0;
+//			}
+//		} else {
+//			return 0;
+//		}
+//	} else {
+//		return 0;
+//	}
+//
+//	return 0;
+//}
+
+
 function GetMyVersion() { // returns current git commit id
 	static $myVersion;
 
@@ -46,16 +83,112 @@ function length($string) { // emulates perl's length()
 	return strlen($string);
 }
 
-function GpgParse($filePath) {
-	$gpgCommand = 'gpg2';
-	$gpgStderr = '';
+function GpgParsePubkey($filePath) {
+    return array();
+}
+
+function GpgParseSignedMessage($filePath) {
+	$gpgCommand = 'gpg2'; // todo add gpg1 support
+	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
 
 	if (GetConfig('admin/gpg/capture_stderr_output')) {
+	    // capture stderr output
     	$gpgStderr = '2>&1';
     } else {
-    	if (GetConfig('admin/debug')) {
+    	if (GetConfig('admin/debug_php')) {
+    	    // if debug is on, let it go to stderr
     		$gpgStderr = '';
     	} else {
+    	    // if not in debug mode, send it to /dev/null
+    		$gpgStderr = ' 2>/dev/null';
+    	}
+    }
+
+////////////////
+
+    WriteLog("GpgParseSignedMessage($filePath)");
+
+    $gpgResult = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
+    WriteLog('$gpgResult = ' . "$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
+    WriteLog('$gpgResult: ' . $gpgResult);
+
+    $key_id_prefix = '';
+    $key_id_suffix = '';
+
+    $verifyError = 0;
+
+    if (index($gpgResult, "[GNUPG:] GOODSIG ") >= 0) {
+        $key_id_prefix = "[GNUPG:] GOODSIG ";
+        $key_id_suffix = " ";
+    }
+
+    $keyExpired = 0;
+    if (index($gpgResult, "[GNUPG:] EXPKEYSIG ") >= 0) {
+        $key_id_prefix = "[GNUPG:] EXPKEYSIG ";
+        $key_id_suffix = " ";
+
+        $keyExpired = 1;
+    }
+
+    WriteLog('$key_id_prefix = ' . $key_id_prefix);
+    WriteLog('$key_id_suffix = ' . $key_id_suffix);
+
+    if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
+        // Extract the key fingerprint from GPG's output.
+        $gpg_key = substr($gpgResult, index($gpgResult, $key_id_prefix) + length($key_id_prefix));
+        $gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
+
+        WriteLog("$gpgCommand --decrypt \"$filePath\" $gpgStderr");
+
+        $message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
+
+        $isSigned = 1;
+    }
+
+    $txt = file_get_contents($filePath);
+    $fileHash = sha1_file($filePath);
+
+    $returnValues['isSigned'] = $isSigned;
+    $returnValues['text'] = $txt;
+    $returnValues['message'] = $message;
+    $returnValues['key'] = $gpg_key;
+    $returnValues['keyExpired'] = $keyExpired;
+    $returnValues['gitHash'] = $fileHash;
+    $returnValues['verifyError'] = $verifyError;
+
+    return $returnValues;
+}
+
+function file_force_contents($dir, $contents){
+    WriteLog("file_force_contents($dir, $contents)");
+
+    $parts = explode('/', $dir);
+    $file = array_pop($parts);
+    $dir = '';
+
+    foreach($parts as $part) {
+        if (!is_dir($dir .= "/$part")) {
+            mkdir($dir);
+        }
+    }
+
+    return file_put_contents("$dir/$file", $contents);
+}
+
+
+function GpgParse($filePath) {
+	$gpgCommand = 'gpg2'; // todo add gpg1 support
+	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
+
+	if (GetConfig('admin/gpg/capture_stderr_output')) {
+	    // capture stderr output
+    	$gpgStderr = '2>&1';
+    } else {
+    	if (GetConfig('admin/debug_php')) {
+    	    // if debug is on, let it go to stderr
+    		$gpgStderr = '';
+    	} else {
+    	    // if not in debug mode, send it to /dev/null
     		$gpgStderr = ' 2>/dev/null';
     	}
     }
@@ -63,89 +196,59 @@ function GpgParse($filePath) {
 	WriteLog('GpgParse(' . $filePath . ')');
 
 	if (file_exists($filePath)) {
+	// file should exist
 		WriteLog('GpgParse: File exists');
 
-		$txt = file_get_contents($filePath);
+		$txt = file_get_contents($filePath); // contains text file contents
 
 		$fileHash = sha1_file($filePath);
 
-		$message = $txt;
+        $cachePath = "./cache/" . GetMyVersion() . "/gpg/php/$fileHash.cache";
+        // this is where we will cache results for later use
+        // php's cache is separate from perl's because it's in a different format
 
-		if ($fileHash) {
-			WriteLog('GpgParse: $fileHash = ' . $fileHash);
+        if (file_exists($cachePath)) {
+            // if file at $cachePath exists, means we've already done this before, just return cached data
+            WriteLog('GpgParse: ' . $cachePath . ' exists');
+            $returnValues = unserialize(file_get_contents($cachePath));
+        } else {
+            // no cache, gotta do the dirty work...
 
-			$cachePath = "./cache/" . GetMyVersion() . "/gpg/$fileHash.php.cache";
+            $message = $txt; // will contain message output for user including results of parsing in place of tokens
 
-			$returnValues = array();
+            if ($fileHash) {
+            // sanity check, but if there is no $fileHash, something is wrong and we shouldn't keep going
+                WriteLog('GpgParse: $fileHash = ' . $fileHash);
 
-			if (file_exists($cachePath)) {
-				WriteLog('GpgParse: ' . $cachePath . ' exists');
-				$returnValues = unserialize(file_get_contents($cachePath));
-			} else {
-				WriteLog('GpgParse: beginning search...');
+                $returnValues = array(); // will store return values from function
 
-				$gpgMessageHeader = "-----BEGIN PGP SIGNED MESSAGE-----"; // Signed messages header
-				$gpgPubkeyHeader = "-----BEGIN PGP PUBLIC KEY BLOCK-----"; // Public key header
-				$gpgEncryptedHeader = "-----BEGIN PGP MESSAGE-----"; // Encrypted message header
+                // this is where it gets ugly...
 
-				$trimmedTxt = trim($txt);
+                WriteLog('GpgParse: beginning search...');
+
+                // what to look for to figure out message type
+                $gpgMessageHeader = "-----BEGIN PGP SIGNED MESSAGE-----"; // Signed messages header
+                $gpgPubkeyHeader = "-----BEGIN PGP PUBLIC KEY BLOCK-----"; // Public key header
+                $gpgEncryptedHeader = "-----BEGIN PGP MESSAGE-----"; // Encrypted message header
+
+                $trimmedTxt = trim($txt);
 
                 if (strpos($txt, $gpgMessageHeader) !== false) {
-                	WriteLog('GpgParse: $gpgMessageHeader found');
+                    $returnValues = GpgParseSignedMessage($filePath);
 
-					$gpgResult = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
-					WriteLog('$gpgResult = ' . "$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
-					WriteLog('$gpgResult: ' . $gpgResult);
+                    file_force_contents($cachePath, serialize($returnValues));
 
-					$key_id_prefix = '';
-					$key_id_suffix = '';
-
-					$verifyError = 0;
-
-					if (index($gpgResult, "[GNUPG:] GOODSIG ") >= 0) {
-						$key_id_prefix = "[GNUPG:] GOODSIG ";
-						$key_id_suffix = " ";
-					}
-
-					$keyExpired = 0;
-					if (index($gpgResult, "[GNUPG:] EXPKEYSIG ") >= 0) {
-						$key_id_prefix = "[GNUPG:] EXPKEYSIG ";
-						$key_id_suffix = " ";
-
-						$keyExpired = 1;
-					}
-
-					WriteLog('$key_id_prefix = ' . $key_id_prefix);
-					WriteLog('$key_id_suffix = ' . $key_id_suffix);
-
-					if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
-						// Extract the key fingerprint from GPG's output.
-						$gpg_key = substr($gpgResult, index($gpgResult, $key_id_prefix) + length($key_id_prefix));
-						$gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
-
-						WriteLog("$gpgCommand --decrypt \"$filePath\" $gpgStderr");
-
-						$message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
-
-						$isSigned = 1;
-					}
-
-					$returnValues['isSigned'] = $isSigned;
-					$returnValues['text'] = $txt;
-					$returnValues['message'] = $message;
-					$returnValues['key'] = $gpg_key;
-//					$returnValues['alias'] = $alias;
-					$returnValues['keyExpired'] = $keyExpired;
-					$returnValues['gitHash'] = $fileHash;
-					$returnValues['verifyError'] = $verifyError;
-
-					file_put_contents($cachePath, serialize($returnValues));
-
-					return $returnValues;
+                    return $returnValues;
                 }
-			}
-		} else {
-			WriteLog('GpgParse(' . $filePath . ') -- could not get file hash');
+
+                if (strpos($txt, $gpgPubkeyHeader) !== false) {
+                    $returnValues = GpgParsePubkey($filePath);
+
+                    file_put_contents($cachePath, serialize($returnValues));
+
+                    return $returnValues;
+                }
+            }
 		}
 	} else {
 		WriteLog('GpgParse(' . $filePath . ') -- file does not exist');
@@ -244,14 +347,101 @@ function GetTemplate($templateKey) { // get template from config tree
     }
 }
 
-function AddMessage($message) { //adds message to queue, which can be passed to next page load
+
+
+
+function GetFile($file) {
+	return file_get_contents($file);
+}
+
+function PutFile($file, $content) {
+	return file_put_contents($file, $content);
+}
+
+function GetCache($cacheName) { // get cache by cache key
+	// comes from cache/ directory, under current git commit
+	// this keeps cache version-specific
+
+	static $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
+
+	// cache name prefixed by current version
+	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
+
+	if (file_exists($cacheName)) {
+		// return contents of file at that path
+		return GetFile($cacheName);
+	} else {
+		return;
+	}
+}
+
+function PutCache($cacheName, $content) { // stores value in cache; $cacheName, $content
+//#todo sanity checks and error handling
+	static $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
+
+	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
+
+	return PutFile($cacheName, $content);
+}
+
+function UnlinkCache($cacheName) { // removes cache by unlinking file it's stored in
+	static $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
+
+	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
+
+	if (file_exists($cacheName)) {
+		unlink($cacheName);
+	}
+}
+
+function CacheExists($cacheName) { // Check whether specified cache entry exists, return 1 (exists) or 0 (not)
+	static $myVersion;
+	if (!$myVersion) {
+		$myVersion = GetMyVersion();
+	}
+
+	$cacheName = '..cache/' . $myVersion . '/' . $cacheName;
+
+	if (file_exists($cacheName)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+
+function StoreServerMessage($message) { //adds message to queue, which can be passed to next page load
+	$message = trim($message);
+
     if ($message == '') {
-        // generate message id
-        // write message to cache
-        // return cache id
+    	return;
     }
 
-    // static $messages array
+    $messageId = md5($message . time()); // #todo better?
 
+	PutCache('sm' . $messageId, $message);
+
+	return $messageId;
+
+    // static $messages array
     // push message to array
+}
+
+function RetrieveServerMessage($messageId) {
+	$message = GetCache('sm' . $messageId);
+
+	if ($message) {
+		UnlinkCache('sm' . $messageId);
+	}
+
+	return $message;
 }
