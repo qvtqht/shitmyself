@@ -2,6 +2,6 @@
 	<a
 		href="/post.html?comment=vote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum"
 		class="$class"
-		onclick="if (window.signVote) { return signVote(this, 'vote/$fileHash/$ballotTime/$voteValue/$checksum'); }"
+		onclick="if (window.signVote) { var gt = unescape('%3E'); return signVote(this, gt+gt+'$fileHash\n#$voteValue'); }"
 	>+$voteCaption</a>;
 	<!-- / vote2button.template -->
