@@ -1,0 +1,20 @@
+<!-- server_message.template -->
+<center id=serverMessage>
+    $serverMessage
+    <a href=# onclick="
+        if (this.parentElement && this.parentElement.style) {
+            this.parentElement.style.display = 'none';
+        }
+
+        if (window.history) {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.pathname);
+                return false;
+            }
+        } else {
+            return true;
+        }
+    ">
+        <b>OK</b></a>
+</center>
+<!-- / server_message.template -->
