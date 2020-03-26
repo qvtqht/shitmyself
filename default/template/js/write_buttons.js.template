@@ -4,17 +4,28 @@
 // this checks for a place to put a "post as" or "reply as" button
 // and if it exists, puts the button there
 if (window.getUserFp) {
-	if (document.getElementById && getUserFp()) {
+	if (document.getElementById && getUserFp() && document.createElement) {
 		var sp = document.getElementById('signAndPost');
 		var actName = 'Post as ';
-		var gt = unescape('%3E');
 
 		if (!sp) {
 			sp = document.getElementById('replySignedContainer');
 			actName = 'Reply as ';
 		}
+
+		actName = actName + getAvatar();
+
 		if (sp) {
-			sp.innerHTML = '<button onclick="if (window.signMessage) { this.value = \'Please wait... (click to try again)\'; signMessage(); }"' + gt + actName + getAvatar() + '</button' + gt;
+			var gt = unescape('%3E');
+
+			var btnSignReply = document.createElement('button');
+			btnSignReply.setAttribute('onclick', "if (window.signMessage) { this.value = 'Please wait... (click to try again)'; signMessage(); }");
+			//btnSignReply.setAttribute('value', actName);
+			btnSignReply.innerHTML = actName;
+
+			sp.appendChild(btnSignReply);
+
+			//sp.innerHTML = '<button onclick=""' + gt + actName + getAvatar() + '</button' + gt;
 		}
 	}
 }
