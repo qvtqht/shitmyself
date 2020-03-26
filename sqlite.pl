@@ -7,11 +7,11 @@ use DBI;
 use Data::Dumper;
 use 5.010;
 
+require './utils.pl';
+
 my $SqliteDbName = './cache/' . GetMyVersion() . '/index.sqlite3'; # path to sqlite db
 
 my $dbh; # handle for sqlite interface
-
-require './utils.pl';
 
 sub SqliteConnect { # Establishes connection to sqlite db
 	$dbh = DBI->connect(
@@ -2231,6 +2231,8 @@ sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now
 		WHERE 
 			(',' || tags_list || ',' LIKE '%,approve,%')
 			AND (',' || tags_list || ',' NOT LIKE '%,flag,%')
+			AND parent_count = 0
+
 	"; #todo remove hardcoding here
 
 	#
