@@ -1,0 +1,11 @@
+javascript debug output is in the following format.
+
+//alert('DEBUG: attempt setting foo to bar');
+
+this allows turning on/off output with config/admin/debug
+
+===
+
+javascript templates must not contain greater than (>) character.
+
+this is because mosaic interprets it as end of html comments 
