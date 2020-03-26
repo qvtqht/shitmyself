@@ -45,6 +45,18 @@ div.txt {
     border-color: gold;
 }
 
+#serverMessage {
+/* messages from server */
+    background-color: #ffc080;
+    color: black;
+    padding: 5pt;
+    spacing: 5pt;
+    position: fixed;
+    top: 2pt;
+    left: 25%;
+    width: 50%;
+}
+
 #eventLocation, #eventBrcLocation {
 /* event form */
 	background-color: $colorRow0Bg;
