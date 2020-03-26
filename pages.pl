@@ -1265,6 +1265,9 @@ sub FillThemeColors {
 	my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
 	$html =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
 
+	my $colorWindow = GetThemeColor('window');
+	$html =~ s/\$colorWindow/$colorWindow/g;
+
 	return $html;
 }
 
@@ -2384,6 +2387,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	if (GetConfig('admin/js/enable')) {
 		$postPage =~ s/<body /<body onload="makeRefLink();" /;
+		$postPage =~ s/<body>/<body onload="makeRefLink();">/;
 	}
 	
 	WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
@@ -2534,13 +2538,20 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	#PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
+	if (GetConfig('admin/debug_javascript')) {
+		$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+	}
 	PutHtmlFile("$HTMLDIR/crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
-	PutHtmlFile("$HTMLDIR/avatar.js", GetTemplate('js/avatar.js.template'));
+	my $avatarJsTemplate = GetTemplate('js/avatar.js.template');
+	if (GetConfig('admin/debug_javascript')) {
+		$avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+	}
+	PutHtmlFile("$HTMLDIR/avatar.js", $avatarJsTemplate);
 
 	# Write settings javascript
-	PutHtmlFile("$HTMLDIR/settings.js", GetTemplate('js/settings.js.template'));
+	#PutHtmlFile("$HTMLDIR/settings.js", GetTemplate('js/settings.js.template'));
 	PutHtmlFile("$HTMLDIR/prefstest.html", GetTemplate('js/prefstest.template'));
 
 
@@ -2560,9 +2571,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
 		PutFile('html/cookie.php', $cookiePhpTemplate);
-
-		my $profilePhpTemplate = GetTemplate('php/profile.php.template');
-		PutFile('html/profile.php', $profilePhpTemplate);
 
 		my $utilsPhpTemplate = GetTemplate('php/utils.php.template');
 		PutFile('html/utils.php', $utilsPhpTemplate);
@@ -2663,6 +2671,7 @@ sub GetWritePage { # returns html for write page
 	# add call to writeOnload to page
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
+		$txtIndex =~ s/<body>/<body onload="if (window.writeOnload) writeOnload();">/;
 	}
 
 	return $txtIndex;
@@ -2759,6 +2768,9 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
+		$txtIndex =~ s/<body>/<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }">/;
+	} else {
+
 	}
 
 	#
@@ -2786,6 +2798,7 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	$txtIndex = InjectJs($txtIndex, qw(avatar profile settings));
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
+		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/;
 	}
 
 	return $txtIndex;
