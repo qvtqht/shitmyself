@@ -54,6 +54,7 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 
 	if (window.localStorage) {
 		// minimum features check
+		// #todo resolve conflict with ie11 vs opera 12
 
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
 
@@ -66,7 +67,6 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 
 			return intKeyGenResult;
 		}
-
 	} else {
 		return true;
 	}
