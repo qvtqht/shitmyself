@@ -11059,6 +11059,7 @@ var onUnhandled = function (promise) {
           handler({ promise: promise, reason: value });
         } else if ((console = global.console) && console.error) {
           console.error('Unhandled promise rejection', value);
+          //value.message contains the useful info
         }
       });
       // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
@@ -36861,6 +36862,7 @@ exports.default = {
 
             case 19:
               throw new Error('No secure random number generator available.');
+				// #todo fix this to work with opera 12
 
             case 20:
               return _context.abrupt('return', buf);
