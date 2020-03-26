@@ -95,20 +95,20 @@ function sharePubKey() { // shares current user's public key via injected form a
 
 	if (pubKey) {
 		//alert('DEBUG: sharePubKey: creating iframe');
-
-		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
-		ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
-	//	ifrSharePubKey.setAttribute("height", "11");
-	//	ifrSharePubKey.setAttribute("width", "11");
-		// #todo pre-createElement browsers
-		document.body.appendChild(ifrSharePubKey);
+//
+//		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
+//		ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
+//	//	ifrSharePubKey.setAttribute("height", "11");
+//	//	ifrSharePubKey.setAttribute("width", "11");
+//		// #todo pre-createElement browsers
+//		document.body.appendChild(ifrSharePubKey);
 
 		//alert('DEBUG: sharePubKey: creating form');
 
 		var form = document.createElement('form');
 		form.setAttribute("action", "/post.html");
 		form.setAttribute("method", "get");
-		form.setAttribute("target", "ifrSharePubKey");
+		//form.setAttribute("target", "ifrSharePubKey");
 
 		//alert('DEBUG: sharePubKey: creating input');
 
@@ -458,6 +458,15 @@ function ProfileOnLoad() {
 						var strHandle = localStorage.getItem('avatar');
 						if (strHandle) {
 							lblHandle.innerHTML = strHandle;
+						}
+					}
+
+					lblFingerprint = document.getElementById('lblFingerprint');
+
+					if (lblFingerprint) {
+						var strFingerprint = localStorage.getItem('fingerprint');
+						if (strFingerprint) {
+							lblFingerprint.innerHTML = strFingerprint;
 						}
 					}
 
