@@ -12,7 +12,17 @@ include_once('utils.php');
 //    // disabled
 //}
 
-if (GetConfig('admin/php/route_enable')) { # route_enable is on
+function SetHtmlClock($html) {
+    $newHtml = $html;
+
+    return $html;
+}
+
+if (GetConfig('admin/php/route_enable')) {
+// admin/php/route_enable is true
+
+	$redirectUrl = '';
+
     if ($_GET) {
         // there is a get request
         WriteLog(print_r($_GET, 1));
@@ -193,9 +203,13 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
     }
 } else {
     WriteLog('config/admin/php/route_enable = false');
+
+    print "oh no! route_enable is false, but route.php was called!";
 }
 
-print '<br>' . WriteLog('');
+if (GetConfig('admin/debug_php')) {
+    print '<br>' . WriteLog('');
+}
 
 //
 //if (isset($_GET['path']) && $_GET['path']) {
