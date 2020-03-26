@@ -12,12 +12,10 @@
 			<tr class=menubar>
 				<td>
 					<span class=advanced>
-						<p>
 						<span class=beginner><br>Share information about your </span>
 						<a href="/write.html?report=client">Browser</a>;
 						<span class=beginner><br>Enable keyboard transliteration for </span>
 						<a href="/write.html?russian=1">Russian</a>;
-						<span id=spanInsPubKey></span>
 					</span>
 				</td>
 			</tr>
