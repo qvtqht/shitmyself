@@ -336,6 +336,6 @@ if (!$redirected && $fileUrlPath) {
 
 print($html);
 
-if (GetConfig('admin/debug')) {
+if (GetConfig('admin/debug_php')) {
     print(WriteLog(''));
 }

@@ -59,7 +59,7 @@ if (isset($_GET['russian']) && $_GET['russian']) {
     $html = str_replace('<textarea', '<textarea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $html);
 }
 
-if (GetConfig('admin/debug')) {
+if (GetConfig('admin/debug_php')) {
     $html = str_replace('</body>', WriteLog('') . '</body>', $html);
 }
 
