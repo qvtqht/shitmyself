@@ -8,7 +8,7 @@ use warnings;
 
 system('rm cron.lock');
 
-while (!system('perl ./update.pl --all')) { # if error in update, quit
+while (!system('./update.pl --all')) { # if error in update, quit
 # 	print '
 #   _                          _
 #  | | ___   ___  _ __   _ __ | |
