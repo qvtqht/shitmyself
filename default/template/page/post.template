@@ -10,6 +10,8 @@
         <tr class=body>
             <td class=content>
                 <p>Thank you!
+                <p>Your submission has been received.
+                <p>You may not see it appear on the site immediately.
 				<p><a href="/">You're welcome.</a>
 				<p><b><span id=retRef></span></b>
 				<p><span><!-- submitted_text --></span>
