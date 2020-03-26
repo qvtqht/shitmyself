@@ -43,6 +43,7 @@
 							cols=32
 							name=comment
 							autofocus
+							wrap=wrap
 							onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 							onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
 						>$initText</textarea><br>
