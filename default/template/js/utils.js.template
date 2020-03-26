@@ -37,6 +37,37 @@ function UrlExists(url) { // checks if url exists
 		return (httpStatusReturned == 200);
 	}
 }
+//
+//function UrlExists2(url, callback) { // checks if url exists
+//// todo use async and callback
+//// todo how to do pre-xhr browsers?
+//    //alert('DEBUG: UrlExists(' + url + ')');
+//
+//	if (window.XMLHttpRequest) {
+//	    //alert('DEBUG: UrlExists: window.XMLHttpRequest check passed');
+//
+//        var xhttp = new XMLHttpRequest();
+//        xhttp.onreadystatechange = function() {
+//    if (this.readyState == 4 && this.status == 200) {
+//       // Typical action to be performed when the document is ready:
+//       document.getElementById("demo").innerHTML = xhttp.responseText;
+//    }
+//};
+//xhttp.open("GET", "filename", true);
+//xhttp.send();
+//
+//
+//
+//		var http = new XMLHttpRequest();
+//		http.open('HEAD', url, false);
+//		http.send();
+//		var httpStatusReturned = http.status;
+//
+//		//alert('DEBUG: UrlExists: httpStatusReturned = ' + httpStatusReturned);
+//
+//		return (httpStatusReturned == 200);
+//	}
+//}
 
 function SetCookie(cname, cvalue, exdays) {
 	var d = new Date();
