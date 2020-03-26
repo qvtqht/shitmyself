@@ -204,6 +204,8 @@ function GetPrefs(prefKey) { // get prefs value from localstorage
 }
 
 function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefValue
+    //alert('DEBUG: SetPrefs(' + prefKey + ', ' + prefValue + ')');
+
 	if (window.localStorage) {
 		var currentPrefs = localStorage.getItem('prefs1');
 		var prefsObj;
