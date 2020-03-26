@@ -11,13 +11,20 @@ use warnings FATAL => 'all';
 use utf8;
 use 5.010;
 use Cwd qw(cwd);
+use File::Spec; #todo
 
 my $arg1 = shift;
+
 if ($arg1) {
 	print($arg1 . "\n");
 } else {
 	print ("arg1 missing\n\nplease specify --all or name of file\n");
 }
+
+require './sqlite.pl';
+require './index.pl';
+require './access.pl';
+require './pages.pl';
 
 sub GetTime2() { # returns epoch time
 # this is identical to GetTime() in utils.pl
@@ -44,9 +51,14 @@ my $locked = 0;
 sub ProcessTextFile { #add new textfile to index
 	my $file = shift;
 
+	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
+	if ($file ne $relativePath) {
+		$file = $relativePath;
+	}
+
 	my $addedTime = GetTime2();
 
-	WriteLog('ProcessTextFile: $addedTime = ' . $addedTime);
+	WriteLog('ProcessTextFile: $file = ' . $file . '; $addedTime = ' . $addedTime);
 
 	# get file's hash from git
 	my $fileHash = GetFileHash($file);
@@ -59,8 +71,9 @@ sub ProcessTextFile { #add new textfile to index
 		WriteLog("ProcessTextFile: $fileHash exists in deleted.log, file removed and skipped");
 
 		WriteLog('ProcessTextFile: return 0');
-
 		return 0;
+	} else {
+		WriteLog("ProcessTextFile: $fileHash was not in log/deleted.log, continuing");
 	}
 
 	if (GetConfig('admin/organize_files')) {
@@ -72,35 +85,41 @@ sub ProcessTextFile { #add new textfile to index
 		if ($fileHashPath) {
 			WriteLog('ProcessTextFile: $fileHashPath = ' . $fileHashPath);
 
+			if (-e $fileHashPath) {
+				WriteLog('ProcessTextFile: Warning: file already exists = ' . $fileHashPath);
+			}
+
 			if ($fileHashPath && $file ne $fileHashPath) {
 				WriteLog('ProcessTextFile: renaming ' . $file . ' to ' . $fileHashPath);
 				rename($file, $fileHashPath);
 
 				if (-e $fileHashPath) {
+					WriteLog('ProcessTextFile: rename succeeded, changing value of $file');
+
 					$file = $fileHashPath;
+
+					WriteLog('ProcessTextFile: $file is now ' . $file);
 				}
 			} else {
-				WriteLog('ProcessTextFile: no need to rename ' . $file);
+				WriteLog('ProcessTextFile: did not need to rename ' . $file);
 			}
 		} else {
 			WriteLog('ProcessTextFile: $fileHashPath is missing');
 		}
+	} else {
+		WriteLog("ProcessTextFile: organize_files is off, continuing");
 	}
 
 	if (!GetCache('indexed/' . $fileHash)) {
-		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ') not in cache/indexed');
-
-		require './sqlite.pl';
-		require './index.pl';
-		require './access.pl';
-		require './pages.pl';
+		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ') not in cache/indexed, calling IndexTextFile');
 
 		IndexTextFile($file);
 
-		PutCache('indexed/' . $fileHash, 1);
-		#
-		# WriteLog('ProcessTextFile: return 1');
-		# return 1;
+		PutCache('indexed/' . $fileHash, '1');
+	} else {
+		# return 0 so that this file is not counted
+		WriteLog('ProcessTextFile: return 0');
+		return 0;
 	}
 
 	WriteLog('ProcessTextFile: return 1');
@@ -124,7 +143,7 @@ sub ProcessTextFile { #add new textfile to index
 }
 
 if (!$arg1) {
-	print 'must supply filename or --all\n';
+	print "must supply filename or --all\n";
 } elsif ($arg1 eq '--all') {
 	require './sqlite.pl';
 	require './index.pl';
@@ -235,12 +254,18 @@ if (!$arg1) {
 
 		my $filesProcessed = 0;
 
+		if ($filesLimit > scalar(@files)) {
+			$filesLimit = scalar(@files);
+		}
+
 		# Go through all the changed files
 		foreach my $file (@files) {
 			if ($filesProcessed >= $filesLimit) {
 				WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
 				last;
 			}
+
+			WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 
 			if ((GetTime2() - $startTime) > $timeLimit) {
 				WriteLog("Time limit reached, exiting loop");
@@ -307,7 +332,11 @@ if (!$arg1) {
 		#	PutConfig('last_abyss', $curTime);
 		#}
 
+		WriteLog('update.pl: Building touched pages...');
+
 		$pagesProcessed = BuildTouchedPages();
+
+		WriteLog('Saving last update time...');
 
 		# save current time in config/admin/update/last
 		my $newLastFlow = GetTime2();
