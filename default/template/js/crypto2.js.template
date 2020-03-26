@@ -4,6 +4,8 @@
 var myFingerprint = '';
 var myUsername = '';
 
+//alert('DEBUG: crypto2.js begins');
+
 function time() { // returns epoch time
     var d = new Date();
     return Math.floor(d.getTime() / 1000);
@@ -338,6 +340,8 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 function cryptoJs() { // used for checking if crypto2.js has been loaded
 	return 1;
 }
+
+//alert('DEBUG: crypto2.js ends');
 
 
 // == end crypto2.js
