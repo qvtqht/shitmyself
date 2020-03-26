@@ -228,6 +228,8 @@ function identityOnload() { // onload function for identity page (aka profile pa
 }
 
 function sharePubKey() { // shares current user's public key via injected form and iframe
+    //alert('DEBUG: profile.js: sharePubKey() begins');
+
 	var pubKey = getPublicKey();
 
 	var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
