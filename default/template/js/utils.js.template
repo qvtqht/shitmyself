@@ -22,11 +22,19 @@ function unescapeHTML(html) {
 function UrlExists(url) { // checks if url exists
 // todo use async
 // todo how to do pre-xhr browsers?
+    //alert('DEBUG: UrlExists(' + url + ')');
+
 	if (window.XMLHttpRequest) {
+	    //alert('DEBUG: UrlExists: window.XMLHttpRequest check passed');
+
 		var http = new XMLHttpRequest();
 		http.open('HEAD', url, false);
 		http.send();
-		return (http.status == 200);
+		var httpStatusReturned = http.status;
+
+		//alert('DEBUG: UrlExists: httpStatusReturned = ' + httpStatusReturned);
+
+		return (httpStatusReturned == 200);
 	}
 }
 

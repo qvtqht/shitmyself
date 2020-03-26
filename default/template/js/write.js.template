@@ -6,7 +6,6 @@ function writeOnload() { // onload handler for write page
 	if (document.getElementById) {
 	    //alert('DEBUG: writeOnload: document.getElementById is true');
 
-
         var pubKey = '';
         if (window.getPublicKey) {
         	//alert('DEBUG: window.getPublicKey exists');
@@ -47,11 +46,15 @@ function writeOnload() { // onload handler for write page
         if (pubKey) {
             //alert('DEBUG: pubKey was true, adding options...');
 
-            var spanInsPubKey = document.getElementById('spanInsPubKey')
-			if (spanInsPubKey) {
-	            var gt = unescape('%3E');
-			    spanInsPubKey.innerHTML = '<span class=beginner' + gt + '<br' + gt + 'Re-upload your public </span' + gt + '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
-			}
+            if (window.PubkeyPing) {
+            	PubkeyPing();
+            }
+//
+//            var spanInsPubKey = document.getElementById('spanInsPubKey')
+//			if (spanInsPubKey) {
+//	            var gt = unescape('%3E');
+//			    spanInsPubKey.innerHTML = '<span class=beginner' + gt + '<br' + gt + 'Re-upload your public </span' + gt + '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
+//			}
         }
 
         if (window.location.hash) {

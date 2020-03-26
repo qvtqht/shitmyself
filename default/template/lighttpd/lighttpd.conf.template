@@ -57,7 +57,10 @@ accesslog.filename = "./log/access.log"
 server.dir-listing = "enable"
 dir-listing.activate = "enable"
 
-server.error-handler-404 = "/404.html"
+# enable 404 error handler
+# use server.error-handler instead of server.error-handler-404
+# because the latter returns http 200, which we don't want
+server.error-handler = "/404.html"
 
 server.http-parseopts = (
 	"url-ctrls-reject" => "disable"
