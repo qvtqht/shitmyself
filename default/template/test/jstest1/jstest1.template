@@ -98,6 +98,8 @@
                 window.setTimeout(...)
             </p>
 
+            <hr>
+
             <p>
                 <input type=text name=txtNavigatorJavaEnabled size=11>
                 navigator.javaEnabled
