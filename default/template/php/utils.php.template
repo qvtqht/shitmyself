@@ -163,10 +163,10 @@ function DoUpdate() {
 	WriteLog('$scriptDir = ' . $scriptDir);
 
 	if (file_exists($scriptDir . '/update.pl')) {
-		WriteLog('update.pl found, calling');
-		WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl');
+		WriteLog('update.pl found, calling update.pl --all');
+		WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl --all');
 
-		WriteLog(`cd "$scriptDir" ; perl ./update.pl`);
+		WriteLog(`cd "$scriptDir" ; perl ./update.pl --all`);
 
 		WriteLog('cd "' . $pwd . '"');
 
