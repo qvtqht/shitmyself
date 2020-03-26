@@ -1219,16 +1219,12 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		$content = ReplaceStrings($content);
 	}
 
+	# this allows adding extra attributes to the body tag
 	my $bodyAttr = GetThemeAttribute('tag/body');
 	if ($bodyAttr) {
-		# print $bodyAttr;
-		# print '@@@@@@';
-		# sleep 5;
-		# die;
-		#
-		# $content =~ s/\<body/<body $bodyAttr/ig;
+		$bodyAttr = FillThemeColors($bodyAttr);
 		$content =~ s/\<body/<body $bodyAttr/i;
-		#$content = str_replace($content, '<body ', '<body ' . $bodyAttr);
+		$content =~ s/\<body>/<body $bodyAttr>/i;
 	}
 
 	PutFile($file, $content);
@@ -2000,7 +1996,7 @@ sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based lay
 	# $text =~ s/\n/<br>\n/g;
 	# $text =~ s/<br>/'<br><input type=text size=80 name=txt'.$i++.'><br>'/ge;
 	# $text =~ s/<br>/<br><br>/g;
-	$text = '<textarea cols=80 rows=24>'.$text.'</textarea>';
+	$text = '<textarea wrap=wrap cols=80 rows=24>'.$text.'</textarea>';
 	$text = '<form action=/post.html>'.$text.'<br><input type=submit value=Send></form>';
 
 	#htmlspecialchars(
