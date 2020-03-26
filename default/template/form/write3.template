@@ -25,6 +25,7 @@
 							rows=9
 							cols=32
 							name=comment
+							wrap=wrap
 							autofocus
 							onchange="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"
 							onkeyup="if (window.commentOnChange) { commentOnChange(this, 'compose'); }"

@@ -7,7 +7,7 @@
 	</span>
 	<label for="comment">Write something here. Not too long. Press button to send. <a href="/manual.html">Have you seen
 		the manual? Clicking here will take you there</a></label><br>
-	<textarea id=comment title="Enter some text here, press button to send." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
+	<textarea wrap=wrap id=comment title="Enter some text here, press button to send." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
 	<span id=signAndPost></span>
 	<input type=submit value="Post Without Signing" id=addtext>
 	$extraFields
