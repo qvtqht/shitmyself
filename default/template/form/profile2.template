@@ -8,9 +8,9 @@
 
 	<span id=spanSignedInStatus></span>
 
-	<p>Handle: <span id=lblHandle>$handle</span>
+	<p>Handle: <b><span id=lblHandle></span></b>
 
-	<p>Fingerprint: <span id=lblFingerprint>$fingerprint</span>
+	<p>Fingerprint: <span id=lblFingerprint></span>
 
 	<p class=advanced>OpenPGP: <span id=lblSigningIndicator>No</span></p>
 
