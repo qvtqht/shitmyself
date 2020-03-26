@@ -43,8 +43,8 @@ fieldset {
 .titlebar, .titlebar td {
     border-radius: 3pt;
 }
-*:focus {
+*:focus, *:active {
 /* focused items are orange for visibility */
-    background-color: #201000;
+    background-color: #402010;
     color: orange;
 }
