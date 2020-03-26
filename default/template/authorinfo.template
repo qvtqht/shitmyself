@@ -15,8 +15,8 @@
 		</tr>
 
 		<tr><td>relation:</td><td><b><span id=itsyou>*</span></b></td></tr>
-		<tr class=advanced><td>avatar:</td><td>$avatar</td></tr>
-		<tr><td>fingerprint:</td><td>$fingerprint</td></tr>
+		<tr><td>avatar:</td><td>$avatar</td></tr>
+		<tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
 		<tr><td>score:</td><td>$authorScore</td></tr>
 		<tr><td>items:</td><td>$itemCount</td></tr>
 		<tr><td>description:</td><td>$authorDescription</td></tr>
