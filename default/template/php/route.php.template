@@ -14,9 +14,13 @@ include_once('utils.php');
 
 if (GetConfig('admin/php/route_enable')) { # route_enable is on
     if ($_GET) {
+        // there is a get request
         WriteLog(print_r($_GET, 1));
 
         if (isset($_GET['path'])) {
+        	$serverMessage = '';
+
+            // get request includes path argument
             $path = $_GET['path'];
             WriteLog('$path = ' . $path);
             $pathFull = realpath('.'.$path);
@@ -29,7 +33,8 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
             WriteLog ('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
 
             if (substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot) {
-            // mitigate directory traversal?
+                // mitigate directory traversal?
+
                 WriteLog('$path = "' . $path . '"');
                 if ($path) {
                     $pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
@@ -40,6 +45,46 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                                 WriteLog('$cookie = ' . $cookie);
                             }
                         }
+
+						if (
+							isset($_GET['message']) &&
+							isset($_GET['message'])
+						)
+						{
+							WriteLog('$_GET[message] exists');
+							$messageId = $_GET['message'];
+
+                            if ($messageId == 'test') {
+                            	$newMessageId = StoreServerMessage('
+                            		Over the firewall,
+                            		out the antenna,
+                            		into the router,
+                            		shot to the modem,
+                            		out the transponder,
+                            		bounce into space,
+                            		off the satellite,
+                            		over their firewall,
+                            		into the forums ....
+                            		nothing but NET
+								');
+                            	$newUrl = $path . '?message=' . $newMessageId;
+
+                            	if (!$redirectUrl) {
+									$redirectUrl = $newUrl;
+								}
+                            }
+
+							if (preg_match('/^[a-f0-9]{32}$/', $messageId)) {
+								$serverMessage = RetrieveServerMessage($messageId);
+								$serverMessage = trim($serverMessage);
+                            }
+
+                            if (!$serverMessage && !$redirectUrl) {
+                            	$redirectUrl = $path;
+							}
+						} else {
+							WriteLog('$_GET[message] NOT exists');
+						}
 
                         if (
                             isset($_GET['chkUpgrade']) &&
@@ -73,8 +118,14 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                                 if (file_exists('../admin.key')) {
                                     unlink('../admin.key');
                                     WriteLog('Overthrow successful');
+
+                                    $messageOverthrow = StoreServerMessage('Overthrow successful! Publish your public key to become operator.');
+                                    $redirectUrl = '/settings.html?message=' . $messageOverthrow;
                                 } else {
                                     WriteLog('Overthrow already in effect: admin.key missing');
+
+									$messageOverthrow = StoreServerMessage('Overthrow already in effect!');
+                                    $redirectUrl = '/settings.html?message=' . $messageOverthrow;
                                 }
                             } else {
                                 WriteLog('Overthrow conditions not met');
@@ -86,10 +137,57 @@ if (GetConfig('admin/php/route_enable')) { # route_enable is on
                 }
             } else {
                 //WriteLog ('not sure what to say to that...');
-                $html = '404'; //#todo template and header
+                $html = file_get_contents('404.html'); //#todo template and header
             }
 
         }
+
+        if (GetConfig('html/clock')) {
+            WriteLog('calling SetHtmlClock()');
+            $html = SetHtmlClock($html);
+        }
+
+		if ($serverMessage) {
+			$serverMessageTemplate = GetTemplate('server_message.template');
+			$serverMessageTemplate = str_replace('$serverMessage', $serverMessage, $serverMessageTemplate);
+			$serverMessageTemplate = str_replace('<a href=#', '<a href="' . $path . '"', $serverMessageTemplate);
+
+			$replaceWhat = '(<body[^>]+?>)';
+			$replaceWith = '$0' . $serverMessageTemplate;
+			$html = preg_replace($replaceWhat, $replaceWith, $html);
+		}
+
+		if ($redirectUrl) {
+			header('Location: ' . $redirectUrl);
+		}
+
+		if ($path == '/profile.html') {
+			WriteLog('route.php: /profile.html');
+
+			include_once('cookie.php');
+
+			$handle = '';
+			$fingerprint = '';
+
+			if (isset($cookie) && $cookie) {
+				$handle = 'Anonymous';
+				$fingerprint = $cookie;
+
+//				$html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
+				// #todo get this from template
+				// #todo add the same logic to javascript frontend
+			} else {
+				$fingerprint = '(not signed in)';
+				$handle = '(not signed in)';
+			}
+
+			if (0 && function_exists('WriteLog')) {
+				$html = str_replace('</body>', WriteLog(0) . '</body>', $html);
+			}
+
+			$html = str_replace('<span id=lblHandle></span>', "<span id=lblHandle>$handle</span>", $html);
+			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);
+		}
 
         print $html;
     }
