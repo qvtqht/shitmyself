@@ -1040,6 +1040,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $itemText = $message; # output for item's message (formatted text)
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
 		my $fileHashShort = substr($fileHash, 0, 8) . '..';
+		my $itemAnchor = substr($fileHash, 0, 8);
 		my $itemName; # item's 'name'
 
 		if ($file{'display_full_hash'} && $file{'display_full_hash'} != 0) {
@@ -1095,6 +1096,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 		$itemTemplate =~ s/\$addedTime/$addedTime/g;
 		$itemTemplate =~ s/\$replyLink/$replyLink/g;
+		$itemTemplate =~ s/\$itemAnchor/$itemAnchor/g;
 
 		if ($file{'show_easyfind'}) {
 			my $itemEasyFind = GetItemEasyFind($fileHash);
