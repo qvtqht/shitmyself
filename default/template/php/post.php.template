@@ -19,7 +19,7 @@ if ($stopTimeConfig) {
 	}
 }
 
-$redirected = 0; // tracks whether header('Location:...') has already been sent
+$redirectUrl = ''; // where we're going after this is all over
 
 function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
@@ -226,7 +226,8 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		WriteLog(`cd $pwd`);
 	}
 
-	return $fileUrlPath;
+	//return $fileUrlPath;
+	return $hash;
 }
 
 $fileUrlPath = '';
@@ -277,9 +278,18 @@ if ($_GET) {
 
 if ($comment) {
 	if ($comment == 'Update') {
+		$updateStartTime = time();
+
 		DoUpdate();
 		$fileUrlPath = '';
-	    Header('Location: /stats.html?' . time()); //#todo make work with relativize links
+
+		$updateFinishTime = time();
+
+		$updateDuration = $updateFinishTime - $updateStartTime;
+
+		$updateMessageId = StoreServerMessage("Update finished! <small>$updateDurations</small>");
+
+	    Header('Location: /stats.html?message=' . $updateMessageId); //#todo make work with relativize links
 	} elseif (strtolower($comment) == 'stop') {
 		$stopTime = time();
 		$stopTimeConfig = GetConfig('admin/stop');
@@ -296,17 +306,57 @@ if ($comment) {
 			$comment .= "\n\n" . $replyToToken;
 		}
 
-		$fileUrlPath = ProcessNewComment($comment);
-		if (!$redirected && strpos($comment, 'PUBLIC KEY BLOCK')) {
+		$newFileHash = ProcessNewComment($comment);
+		// path for client's (browser's) path to html file
+		$fileUrlPath =
+			'/' .
+			substr($newFileHash, 0, 2) .
+			'/' .
+			substr($newFileHash, 2, 2) .
+			'/' .
+			$newFileHash . '.html'
+		;
+
+		if (!$redirectUrl && strpos($comment, 'PUBLIC KEY BLOCK')) {
             // if user is submitting a public key, chances are
             // they just registered, so lazily redirect them
             // to the profile page instead.
             // #todo relative url support
             // #todo better flow for registration -> profile page
 
-		    Header('Location: /profile.html');
+            $messagePublicKeyPosted = StoreServerMessage("Profile created!");
 
-		    $redirected = 1;
+		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
+		}
+
+		if ($replyTo) {
+			// path for parent html file
+			$replyToHtmlPath =
+				'./' .
+				substr($replyTo, 0, 2) .
+				'/' .
+				substr($replyTo, 2, 2) .
+				'/' .
+				$replyTo . '.html'
+			;
+
+			if (file_exists($replyToHtmlPath)) {
+				// path for client's (browser's) path to html file
+				$replyToUrlPath =
+					'/' .
+					substr($replyTo, 0, 2) .
+					'/' .
+					substr($replyTo, 2, 2) .
+					'/' .
+					$replyTo . '.html'
+				;
+
+				$newItemAnchor = substr($newFileHash, 0, 8);
+
+				$messageReplyPosted = StoreServerMessage("Your reply has been posted.");
+
+				$redirectUrl = $replyToUrlPath . '?message=' . $messageReplyPosted . '#' . $newItemAnchor;
+			}
 		}
 	}
 }
@@ -328,10 +378,14 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 	$html = str_replace('<!-- submitted_text -->', $postedMessage, $html);
 }
 
-if (!$redirected && $fileUrlPath) {
-    Header('Location: ' . $fileUrlPath);
+if (!$redirectUrl && $fileUrlPath) {
+	$itemPostedServerMessageId = StoreServerMessage('Success! Your item has been posted!');
 
-    $redirected = 1;
+    $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
+}
+
+if ($redirectUrl) {
+	header('Location: ' . $redirectUrl);
 }
 
 print($html);
