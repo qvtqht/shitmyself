@@ -1,3 +1,4 @@
+<!-- event_add.template -->
 <form method="get" name=addevent action="/action/event.html">
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
@@ -204,3 +205,4 @@
 		</table>
 	</font>
 </form>
+<!-- / event_add.template -->
