@@ -94,7 +94,7 @@ function sharePubKey() { // shares current user's public key via injected form a
 	//alert('DEBUG: sharePubKey: pubKey = ' + (pubKey ? pubKey : '(false)'));
 
 	if (pubKey) {
-		//alert('DEBUG: sharePubKey: creating iframe');
+//		//alert('DEBUG: sharePubKey: creating iframe');
 //
 //		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
 //		ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
