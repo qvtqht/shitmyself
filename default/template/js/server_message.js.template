@@ -22,7 +22,7 @@ function serverMessageOk(t) { // function which hides server message
 				// if we just hid a table, we can call it a day
 				break;
 			}
-			t = t.parentElement;
+			t = t.parentElement; // go up the element tree until satisfied
 		}
 
 		// #todo remove element altogether
