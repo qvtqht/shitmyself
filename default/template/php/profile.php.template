@@ -1,5 +1,9 @@
 <?php
 
+// THIS TEMPLATE IS DEPRECATED
+// THIS TEMPLATE IS DEPRECATED
+// THIS TEMPLATE IS DEPRECATED
+
 $html = file_get_contents('profile.html');
 
 include_once('cookie.php');
