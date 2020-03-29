@@ -274,7 +274,7 @@ if ($comment) {
 
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
-		$updateMessageId = StoreServerMessage("Update finished! <small>$updateDurations</small>");
+		$updateMessageId = StoreServerMessage("Update finished! <small>{$updateDuration}s</small>");
 
 	    Header('Location: /stats.html?message=' . $updateMessageId); //#todo make work with relativize links
 	} elseif (strtolower($comment) == 'stop') {
@@ -295,14 +295,7 @@ if ($comment) {
 
 		$newFileHash = ProcessNewComment($comment);
 		// path for client's (browser's) path to html file
-		$fileUrlPath =
-			'/' .
-			substr($newFileHash, 0, 2) .
-			'/' .
-			substr($newFileHash, 2, 2) .
-			'/' .
-			$newFileHash . '.html'
-		;
+		$fileUrlPath = '/' . GetHtmlFilename($newFileHash);
 
 		if (!$redirectUrl && strpos($comment, 'PUBLIC KEY BLOCK')) {
             // if user is submitting a public key, chances are
@@ -318,31 +311,17 @@ if ($comment) {
 
 		if ($replyTo) {
 			// path for parent html file
-			$replyToHtmlPath =
-				'./' .
-				substr($replyTo, 0, 2) .
-				'/' .
-				substr($replyTo, 2, 2) .
-				'/' .
-				$replyTo . '.html'
-			;
+			$replyToHtmlPath = './' . GetHtmlFilename($replyTo);
 
 			if (file_exists($replyToHtmlPath)) {
 				// path for client's (browser's) path to html file
-				$replyToUrlPath =
-					'/' .
-					substr($replyTo, 0, 2) .
-					'/' .
-					substr($replyTo, 2, 2) .
-					'/' .
-					$replyTo . '.html'
-				;
+				$replyToUrlPath = '/' . GetHtmlFilename($replyTo);
 
 				$newItemAnchor = substr($newFileHash, 0, 8);
 
 				$messageReplyPosted = StoreServerMessage("Your reply has been posted.");
 
-				$redirectUrl = $replyToUrlPath . '?message=' . $messageReplyPosted . '#' . $newItemAnchor;
+				$redirectUrl = $replyToUrlPath . '?message=' . $messageReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
 		}
 	}
