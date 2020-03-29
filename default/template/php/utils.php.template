@@ -12,7 +12,7 @@ function WriteLog($text) { // writes to debug log if enabled
 	}
 
     //#todo sanity check for $text being a string
-	$logText .= '<span class=advanced>' . htmlspecialchars($text) . "<br></span>\n";
+	$logText .= '<tt class=advanced>' . time() . ':' . htmlspecialchars($text) . "<br></tt>\n";
 }
 
 //
@@ -436,10 +436,14 @@ function StoreServerMessage($message) { //adds message to queue, which can be pa
     // push message to array
 }
 
-function RetrieveServerMessage($messageId) {
+function RetrieveServerMessage($messageId) { // retrieves message for display by client and deletes it
+	WriteLog("RetrieveServerMessage($messageId)");
+
 	$message = GetCache('sm' . $messageId);
 
 	if ($message) {
+		WriteLog("RetrieveServerMessage: Message found, deleting");
+
 		UnlinkCache('sm' . $messageId);
 	}
 
