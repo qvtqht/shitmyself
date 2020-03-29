@@ -76,9 +76,18 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 
 function getUserFp() { // retrieve stored user fingerprint from localstorage
 	if (window.localStorage) {
+		// localstorage mode
 		var fingerprint = localStorage.getItem('fingerprint');
 		if (!fingerprint) {
-//		if (fingerprint === null || fingerprint.length === 0) {
+			return null;
+		} else {
+			return fingerprint;
+		}
+	} else {
+		// cookie mode
+		var fingerprint = GetCookie('cookie');
+
+		if (!fingerprint) {
 			return null;
 		} else {
 			return fingerprint;
