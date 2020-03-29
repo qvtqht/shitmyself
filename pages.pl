@@ -1259,6 +1259,9 @@ sub FillThemeColors {
 	my $colorTagPositive = GetThemeColor('tag_positive');
 	$html =~ s/\$colorTagPositive/$colorTagPositive/g;
 
+	my $colorHighlightAlert = GetThemeColor('highlight_alert');
+	$html =~ s/\$colorHighlightAlert/$colorHighlightAlert/g;
+
 	my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
 	$html =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
 
@@ -1669,7 +1672,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 	# get the wrapper, i.e. <script>$javascript</script>
 	my $scriptInject = GetTemplate('scriptinject.template');
 	# fill in the wrapper with our scripts from above
-	$scriptInject =~ s/\$javascript/$scriptsText/g;
+	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 
 	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
