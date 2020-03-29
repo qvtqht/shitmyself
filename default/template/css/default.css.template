@@ -48,14 +48,15 @@ div.txt {
 
 #serverMessage {
 /* messages from server */
-    background-color: $colorHighlightBeginner;
+    background-color: $colorHighlightAlert;
     color: $colorText;
     padding: 5pt;
     spacing: 5pt;
     position: fixed;
-    top: 12pt;
-    left: 12pt;
-    border: 2pt $colorWindow solid;
+    top: 10pt;
+    left: 20%;
+    width: 60%;
+    border: 3pt $colorWindow dotted;
     border-radius: 5pt;
 }
 
