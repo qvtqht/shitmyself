@@ -499,6 +499,68 @@ sub IndexTextFile { # indexes one text file into database
 						#todo
 
 						if ($hasParent) {
+							# if the vote value is 'remove', perform appropriate operations
+							if ($hashTag eq 'remove') {
+								WriteLog('Found request to remove file');
+
+								foreach my $itemParent (@itemParents) {
+									# find the author of the item in question.
+									# this will help us determine whether the request can be fulfilled
+									my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
+
+									WriteLog('hashtag: #remove, IsAdmin = ' . IsAdmin($gpgKey) . '; $gpgKey = ' . $gpgKey . '; $parentItemAuthor = ' . $parentItemAuthor);
+
+									# at this time only signed requests to remove are honored
+									if (
+										$gpgKey # is signed
+											&&
+											(
+												IsAdmin($gpgKey)                   # signed by admin
+													||                             # OR
+													($gpgKey eq $parentItemAuthor) # signed by same as author
+											)
+									) {
+										WriteLog('Found seemingly valid request to remove file (hashtag)');
+
+										AppendFile('log/deleted.log', $itemParent);
+
+										DBDeleteItemReferences($itemParent);
+
+										my $htmlFilename = 'html/' . GetHtmlFilename($itemParent);
+										if (-e $htmlFilename) {
+											WriteLog($htmlFilename . ' exists, calling unlink()');
+											unlink($htmlFilename);
+										}
+										else {
+											WriteLog($htmlFilename . ' does NOT exist, very strange');
+										}
+
+										if (-e $file) {
+											#todo unlink the file represented by $voteFileHash, not $file
+
+											if (!GetConfig('admin/logging/record_remove_action')) {
+												# this removes the remove call itself
+												WriteLog($file . ' exists, calling unlink()');
+												unlink($file);
+											}
+
+											my $itemParentPath = GetPathFromHash($itemParent);
+											if (-e $itemParentPath) {
+												WriteLog("removing $itemParentPath");
+												unlink($itemParentPath);
+											}
+										}
+										else {
+											WriteLog($file . ' does NOT exist, very strange');
+										}
+
+										#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
+									} else {
+										WriteLog('Request to remove file was not found to be valid');
+									}
+								}
+							}
+
 							if (scalar(@itemParents)) {
 								foreach my $itemParentHash (@itemParents) {
 									DBAddVoteRecord($itemParentHash, $addedTime, $hashTag);
