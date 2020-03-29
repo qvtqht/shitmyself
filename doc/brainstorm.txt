@@ -1,9 +1,30 @@
+The --\n signature system should probably be replaced
+	Idea: abcd.txt.footers file
+		Contains all the "footers" (as opposed to headers)
+			Host:
+			Cookie:
+			Fingerprint:
+			etc
+		Problem: Fragmentation of data
+		Advantage: Text file hashes remain the same regardless of footers
+	Alternative:
+		Calculate hashes without footer
+
+
+
 TESTS
 =====
 each template should contain certain $placeholders
     this can be trained from existing templates
     then theme's overriding templates can be tested for same placeholders
 html templates should not contain $ character
+-----
+
+foreach(git commits) {
+	build site
+	open home page in browser
+	screenshot
+}
 
 adopt/ABCDE
     creates entry in adopt table
