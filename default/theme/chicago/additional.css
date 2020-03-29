@@ -47,6 +47,7 @@ fieldset {
 
 a:focus, a:active {
     color: red;
+    background-color: orange;
 }
 input:focus, textarea:focus {
     background-color: orange;
