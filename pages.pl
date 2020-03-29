@@ -1653,7 +1653,7 @@ sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
 			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
 		}
 
-		if (GetConfig('admin/debug_javascript')) {
+		if (GetConfig('admin/js/debug')) {
 			#uncomment all javascript debug alert statements
 			#and replace them with confirm()'s which stop on no/cancel
 			#
@@ -2538,14 +2538,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	#PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
 
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
-	if (GetConfig('admin/debug_javascript')) {
+	if (GetConfig('admin/js/debug')) {
 		$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 	}
 	PutHtmlFile("$HTMLDIR/crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
 	my $avatarJsTemplate = GetTemplate('js/avatar.js.template');
-	if (GetConfig('admin/debug_javascript')) {
+	if (GetConfig('admin/js/debug')) {
 		$avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 	}
 	PutHtmlFile("$HTMLDIR/avatar.js", $avatarJsTemplate);
