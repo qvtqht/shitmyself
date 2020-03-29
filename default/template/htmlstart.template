@@ -11,7 +11,7 @@ $styleSheet
 -->
 </style>
 </head>
-<body link="$colorLink" vlink="$colorVlink" text="$colorText" bgcolor="$colorWindow">
+<body>
 $topMenu
 <p class=beginner>$introText</p>
 <p>
