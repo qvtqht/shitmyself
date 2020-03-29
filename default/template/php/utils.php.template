@@ -95,7 +95,7 @@ function GpgParseSignedMessage($filePath) {
 	    // capture stderr output
     	$gpgStderr = '2>&1';
     } else {
-    	if (GetConfig('admin/debug_php')) {
+    	if (GetConfig('admin/php/debug')) {
     	    // if debug is on, let it go to stderr
     		$gpgStderr = '';
     	} else {
@@ -184,7 +184,7 @@ function GpgParse($filePath) {
 	    // capture stderr output
     	$gpgStderr = '2>&1';
     } else {
-    	if (GetConfig('admin/debug_php')) {
+    	if (GetConfig('admin/php/debug')) {
     	    // if debug is on, let it go to stderr
     		$gpgStderr = '';
     	} else {

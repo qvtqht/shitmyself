@@ -207,7 +207,7 @@ if (GetConfig('admin/php/route_enable')) {
     print "oh no! route_enable is false, but route.php was called!";
 }
 
-if (GetConfig('admin/debug_php')) {
+if (GetConfig('admin/php/debug')) {
     print '<br>' . WriteLog('');
 }
 

@@ -390,6 +390,6 @@ if ($redirectUrl) {
 
 print($html);
 
-if (GetConfig('admin/debug_php')) {
+if (GetConfig('admin/php/debug')) {
     print(WriteLog(''));
 }
