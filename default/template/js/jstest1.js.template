@@ -78,6 +78,9 @@ function RunTest() {
 	//alert('DEBUG: Looking for document.all...');
 	document.frmTest.txtDocumentAll.value = !!document.all;
 
+	//alert('DEBUG: Looking for window.opener...');
+	document.frmTest.txtWindowOpener.value = window.opener;
+
 	//alert('DEBUG: Finished, returning.');
 	return false;
 }

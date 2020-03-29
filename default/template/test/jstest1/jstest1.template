@@ -20,7 +20,14 @@
         </style>
     </head>
     <body>
-    <noscript><p><font color=#ff8000>JavaScript appears to be disabled. These tests will not work without it.</font></p></noscript>
+        <noscript>
+            <p>
+                <font color=#ff8000>
+                    <b>JavaScript</b> appears to be turned off or unsupported.<br>
+                    These tests will not work without it.
+                </font>
+            </p>
+        </noscript>
 
         <form name=frmTest id=frmTest action="/post.html">
             <input
@@ -113,6 +120,11 @@
             <p>
                 <input type=text name=txtDocumentAll size=11>
                 document.all
+            </p>
+
+            <p>
+                <input type=text name=txtWindowOpener size=11>
+                window.opener
             </p>
         </form>
     </body>
