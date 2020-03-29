@@ -78,6 +78,6 @@ function serverMessageShrink() { // moves server message to the top of the page 
 }
 
 //serverMessageTimeout = setTimeout('serverMessageOk()', 5000);
-serverMessageTimeout = setTimeout('serverMessageShrink()', 2000);
+//serverMessageTimeout = setTimeout('serverMessageShrink()', 2000);
 
 // end server_message.js.template
