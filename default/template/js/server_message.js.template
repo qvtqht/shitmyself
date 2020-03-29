@@ -1,0 +1,83 @@
+// begin server_message.js.template
+
+function serverMessageOk(t) { // function which hides server message
+// can be called with t pointing to the OK button or false
+	//alert('DEBUG: serverMessageOk(t): t: ' + !!t);
+
+	if (window.serverMessageTimeout) {
+		clearTimeout(serverMessageTimeout);
+	}
+
+	if (!t && document.getElementById) {
+		t = document.getElementById('serverMessage');
+	}
+
+	if (t && t.parentElement && t.parentElement.style) {
+		// this will traverse and hide everything from the OK button up
+		// previously, this just said:  t.parentElement.style.display = 'none';
+		// but this was not good enough for tables
+		while (t.nodeName != 'BODY') {
+			t.style.display = 'none';
+			t = t.parentElement;
+		}
+
+		// #todo remove element altogether
+	}
+
+	if (document.body && document.body.onkeydown) {
+		//alert('DEBUG: serverMessageOk: setting body.onkeydown to return true;')
+
+		document.body.setAttribute('onkeydown', 'return true;');
+	}
+
+	if (window.history) {
+		//alert('DEBUG: serverMessageOk: window.history found');
+
+		if (window.history.replaceState) {
+			//alert('DEBUG: serverMessageOk: window.history.replaceState found');
+
+			window.history.replaceState(null, null, window.location.pathname);
+			return false;
+		} else {
+			//alert('DEBUG: serverMessageOk: window.history.replaceState NOT FOUND');
+			return true;
+		}
+	} else {
+		//alert('DEBUG: serverMessageOk: window.history NOT FOUND');
+		return true;
+	}
+}
+
+function bodyEscPress(keyCode) { // called when user presses esc (or spacebar) on a page with server message
+// results in server message being hidden
+
+	//alert('DEBUG: bodyEscPress(keyCode): keyCode = ' + keyCode);
+
+	if (document.getElementById) {
+		serverMessageOk(document.getElementById('smo'));
+	} else {
+		serverMessageOk();
+	}
+
+	return false;
+}
+
+function serverMessageShrink() { // moves server message to the top of the page instead of floating
+	if (document.getElementById) {
+		var serverMessage = document.getElementById('serverMessage');
+		if (serverMessage) {
+			serverMessage.style.display = 'block';
+			serverMessage.style.position = 'inherit';
+			serverMessage.style.margin = '0';
+			serverMessage.style.borderRadius = '0';
+			serverMessage.style.border = '0';
+			serverMessage.style.borderBottom = '5pt silver double';
+			serverMessage.style.boxShadow = '0 0 0 0';
+		}
+	}
+}
+
+//serverMessageTimeout = setTimeout('serverMessageOk()', 5000);
+serverMessageTimeout = setTimeout('serverMessageShrink()', 2000);
+
+// end server_message.js.template
