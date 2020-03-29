@@ -1246,9 +1246,11 @@ sub IndexTextFile { # indexes one text file into database
 			DBAddPageTouch('author', $gpgKey);
 			# add a touch to the author page
 
-			UnlinkCache('avatar/' . $gpgKey);
-			UnlinkCache('avatar.color/' . $gpgKey);
-			UnlinkCache('pavatar/' . $gpgKey);
+			my $themeName = GetConfig('html/theme');
+
+			UnlinkCache('avatar/' . $themeName . $gpgKey);
+			UnlinkCache('avatar.color/' . $themeName . $gpgKey);
+			UnlinkCache('pavatar/' . $themeName . $gpgKey);
 		} else {
 			$detokenedMessage = trim($detokenedMessage);
 
