@@ -18,6 +18,10 @@ function serverMessageOk(t) { // function which hides server message
 		// but this was not good enough for tables
 		while (t.nodeName != 'BODY') {
 			t.style.display = 'none';
+			if (t.nodeName == 'TABLE') {
+				// if we just hid a table, we can call it a day
+				break;
+			}
 			t = t.parentElement;
 		}
 
@@ -62,22 +66,22 @@ function bodyEscPress(keyCode) { // called when user presses esc (or spacebar) o
 	return false;
 }
 
-function serverMessageShrink() { // moves server message to the top of the page instead of floating
-	if (document.getElementById) {
-		var serverMessage = document.getElementById('serverMessage');
-		if (serverMessage) {
-			serverMessage.style.display = 'block';
-			serverMessage.style.position = 'inherit';
-			serverMessage.style.margin = '0';
-			serverMessage.style.borderRadius = '0';
-			serverMessage.style.border = '0';
-			serverMessage.style.borderBottom = '5pt silver double';
-			serverMessage.style.boxShadow = '0 0 0 0';
-		}
-	}
-}
-
-//serverMessageTimeout = setTimeout('serverMessageOk()', 5000);
-//serverMessageTimeout = setTimeout('serverMessageShrink()', 2000);
+////function serverMessageShrink() { // moves server message to the top of the page instead of floating
+////	if (document.getElementById) {
+////		var serverMessage = document.getElementById('serverMessage');
+////		if (serverMessage) {
+////			serverMessage.style.display = 'block';
+////			serverMessage.style.position = 'inherit';
+////			serverMessage.style.margin = '0';
+////			serverMessage.style.borderRadius = '0';
+////			serverMessage.style.border = '0';
+////			serverMessage.style.borderBottom = '5pt silver double';
+////			serverMessage.style.boxShadow = '0 0 0 0';
+////		}
+////	}
+////}
+////
+//serverMessageTimeout = setTimeout('serverMessageOk()', 15000);
+//serverMessageTimeout = setTimeout('serverMessageShrink()', 5000);
 
 // end server_message.js.template

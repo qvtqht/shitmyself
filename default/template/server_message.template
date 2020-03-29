@@ -1,20 +1,8 @@
 <!-- server_message.template -->
-<center id=serverMessage>
-    $serverMessage
-    <a href=# onclick="
-        if (this.parentElement && this.parentElement.style) {
-            this.parentElement.style.display = 'none';
-        }
 
-        if (window.history) {
-            if (window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.pathname);
-                return false;
-            }
-        } else {
-            return true;
-        }
-    ">
-        <b>OK</b></a>
-</center>
+<table id=serverMessage bgcolor=$colorHighlightAlert><tr><td align=center>
+    <b>$serverMessage</b>
+    <a href=#maincontent tabindex=0 href=$serverMessageReturnPath id=smo onclick="if (window.serverMessageOk) { return serverMessageOk(this); } else { return true; }" title="Hide Message"><b><i>OK</i></b></a>
+</td></tr></table>
+
 <!-- / server_message.template -->
