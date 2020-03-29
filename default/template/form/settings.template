@@ -37,6 +37,7 @@
 							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('beginner'); }">
 							<input type=submit name=ui value="Intermediate" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
 							<input type=submit name=ui class=advanced value="Advanced" onclick="if (window.modeChange) { return modeChange('advanced'); }">
+							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
 							<input type=submit name=ui class=advanced name=ui value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
 						</nobr></p>
 					</fieldset>

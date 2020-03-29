@@ -88,7 +88,11 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 // 1 = does not re-do setTimeout (called this way from checkboxes)
 // 0 = previous preference values are remembered, and are not re-done (called by timer)
 
+	//alert('DEBUG: ShowAdvanced(' + force + ')');
+
 	if (window.localStorage && document.getElementsByClassName) {
+		//alert('DEBUG: ShowAdvanced: feature check passed!');
+
 		var displayVoter = 'none'; // no voting controls by default
 		if (GetPrefs('want_to_vote') == 1) {
 		    // check value of want_to_vote preference
@@ -167,17 +171,19 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 				AmIFresh();
 			}
 		}
-	}
 
-	if (window.setAva) {
-		setAva(); // #todo caching similar to above
-	}
-
-	if (!force) {
-		if (timerShowAdvanced) {
-			clearTimeout(timerShowAdvanced);
+		if (window.setAva) {
+			setAva(); // #todo caching similar to above
 		}
-		timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
+
+		if (!force) {
+			if (timerShowAdvanced) {
+				clearTimeout(timerShowAdvanced);
+			}
+			timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
+		}
+	} else {
+		//alert('DEBUG: ShowAdvanced: feature check FAILED! window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
 	}
 }
 
@@ -288,6 +294,13 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
 			SetPrefs('notify_on_change', 1);
+            SetPrefs('show_admin', 0);
+		} else if (ab == 'minimal') {
+			SetPrefs('show_advanced', 0);
+			SetPrefs('advanced_highlight', 0);
+			SetPrefs('beginner', 0);
+			SetPrefs('beginner_highlight', 0);
+			SetPrefs('notify_on_change', 0);
             SetPrefs('show_admin', 0);
 		} else if (ab == 'admin') {
 			SetPrefs('show_advanced', 1);
