@@ -22,6 +22,120 @@ function SetHtmlClock($html) {
     return $html;
 }
 
+function InjectJs ($html, $scriptNames) { // inject js template(s) before </body> ; $html, @scriptNames
+	WriteLog('InjectJs() begin...');
+
+	if (!GetConfig('admin/js/enable')) {
+		return $html;
+	}
+
+	$scriptsText = '';  // will contain all the js we want to inject
+	$scriptsComma = ''; // separator between scripts, will be set to \n\n after first script
+
+	$scriptsDone = array();  // array to keep track of scripts we've already injected, to avoid duplicates
+
+//	if (GetConfig('html/clock')) {
+//		// if clock is enabled, automatically add its js
+//		$scriptNames[] = 'clock';
+//	}
+//
+//	if (GetConfig('html/fresh_js')) {
+//		// if clock is enabled, automatically add it
+//		$scriptNames[] = 'fresh';
+//	}
+//
+//	if (GetConfig('admin/force_profile')) {
+//		// if force_profile is enabled, automatically add it
+//		$scriptNames[] = 'force_profile';
+//	}
+//
+	//output list of all the scripts we're about to include
+	$scriptNamesList = implode(' ', $scriptNames);
+
+	// loop through all the scripts
+	foreach ($scriptNames as $script) {
+		// only inject each script once, otherwise move on
+		if (isset($scriptsDone[$script])) {
+			next;
+		} else {
+			$scriptsDone[$script] = 1;
+		}
+
+		// separate each script with \n\n
+		if (!$scriptsComma) {
+			$scriptsComma = "\n\n";
+		} else {
+			$scriptsText .= $scriptsComma;
+		}
+
+		$scriptTemplate = GetTemplate("js/$script.js.template");
+
+		if (!$scriptTemplate) {
+			WriteLog("InjectJs: WARNING: Missing script contents for $script");
+			if (GetConfig('admin/debug')) {
+				die('InjectJs: Missing script contents');
+			}
+		}
+
+// todo finish porting below
+//		if ($script eq 'voting') {
+//			# for voting.js we need to fill in some theme colors
+//			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
+//			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
+//
+//			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
+//			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+//		}
+//
+//		if ($script eq 'settings') {
+//			# for settings.js we also need to fill in some theme colors
+//			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+//			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+//
+//			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+//			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
+//		}
+//
+//		if (index($scriptTemplate, '>') > -1) {
+//			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
+//			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+//		}
+//
+//		if (GetConfig('admin/js/debug')) {
+//			#uncomment all javascript debug alert statements
+//			#and replace them with confirm()'s which stop on no/cancel
+//			#
+//			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
+//			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
+//			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+//		}
+//
+		// add to the snowball of javascript
+		$scriptsText .= $scriptTemplate;
+	}
+
+	// get the wrapper, i.e. <script>$javascript</script>
+	$scriptInject = GetTemplate('scriptinject.template');
+
+
+	// fill in the wrapper with our scripts from above
+	$scriptInject = str_replace('$javascript', $scriptsText, $scriptInject);
+
+	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
+
+	if (index($html, '</body>') > -1) {
+		// replace it into html, right before the closing </body> tag
+		$html = str_replace('</body>', $scriptInject . '</body>', $html);
+	} else {
+		print 2;
+		// if there was no </body> tag, just append at the end
+		$html .= "\n\n" . $scriptInject;
+		WriteLog('InjectJs(): WARNING! $html does not contain </body>');
+	}
+
+	return $html;
+}
+
 if (GetConfig('admin/php/route_enable')) {
 // admin/php/route_enable is true
 
@@ -38,6 +152,27 @@ if (GetConfig('admin/php/route_enable')) {
             $path = $_GET['path'];
             WriteLog('$path = ' . $path);
             $pathFull = realpath('.'.$path);
+
+
+
+			if ($path == '/profile.html') {
+			} else {
+				if (GetConfig('admin/force_profile')) {
+					$clientHasCookie = 0;
+					if (isset($_COOKIE)) {
+						if (isset($_COOKIE['cookie'])) {
+							$clientHasCookie = 1;
+						}
+					}
+
+					if (!$clientHasCookie) {
+						$registerMessage = StoreServerMessage('This community requires you to register.');
+
+						header('Location: /profile.html?message=' . $registerMessage);
+					}
+				}
+			}
+
 
             $pathSelf = $_SERVER['PHP_SELF'];
             $pathSelfReal = realpath('.'.$pathSelf);
@@ -162,26 +297,78 @@ if (GetConfig('admin/php/route_enable')) {
         }
 
 		if ($serverMessage) {
-			$serverMessageTemplate = GetTemplate('server_message.template');
-			$serverMessageTemplate = str_replace('$serverMessage', $serverMessage, $serverMessageTemplate);
-			$serverMessageTemplate = str_replace('<a href=#', '<a href="' . $path . '"', $serverMessageTemplate);
+			// inject server message into html
 
-			$replaceWhat = '(<body[^>]+?>)';
-			$replaceWith = '$0' . $serverMessageTemplate;
-			$html = preg_replace($replaceWhat, $replaceWith, $html);
+			// base template for server message, not including js
+			$serverMessageTemplate = GetTemplate('server_message.template');
+
+			// inject the message text itself.
+			// no escaping, because it can contain html formatting
+			$serverMessageTemplate = str_replace('$serverMessage', $serverMessage, $serverMessageTemplate);
+
+			$messageInjected = 0;
+			if (isset($_GET['anchorto']) && $_GET['anchorto']) {
+				$anchorTo = $_GET['anchorto'];
+
+			 	if (index($html, "<a name=$anchorTo>") > -1) {
+			 		// same as below, same message applies
+			 		$serverMessageTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverMessageTemplate);
+
+					$replaceWhat = "<a name=$anchorTo>";
+					$replaceWith = "<a name=$anchorTo>" . $serverMessageTemplate;
+					$html = str_replace($replaceWhat, $replaceWith, $html);
+
+					$messageInjected = 1;
+				}
+			}
+
+			if (!$messageInjected) {
+				// put the current file's path in the "OK" link for nojs browsers
+				// this is a compromise, because it causes a page reload, which may be slow
+				// the other option is to leave it as is, but the message will remain on
+				// the page instead of disappearing, which doesn't look nearly as cool
+				// perhaps to be conditional under html/cool_effects?
+				$serverMessageTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '"', $serverMessageTemplate);
+
+				// inject server message right after the body tag
+				$replaceWhat = '(<body\s[^>]*>|<body>)'; // both with attributes or without
+				$replaceWith = '$0' . $serverMessageTemplate; // the $0 is the original body tag, which we want to retain
+				$html = preg_replace($replaceWhat, $replaceWith, $html);
+
+				$messageInjected = 1;
+			}
+
+			if (GetConfig('admin/js/enable')) {
+				//javascript stuff, if javascript is enabled
+
+				// inject server_message.js for hiding the server message popup
+				$html = InjectJs($html, array('server_message'));
+
+				// add onkeydown event to body tag, which responds to escape and spacebar keys
+				// spacebar is added for qutebrowser's normal mode, which doesn't let esc through
+				// known issue: if there's non-32 whitespace, this may not work right
+				$replaceWhat = '<body ';
+				$replaceWith = '<body onkeydown="if (event.keyCode && event.keyCode == 27 || event.keyCode == 32) { if (window.bodyEscPress) { return bodyEscPress(); } }"';
+				$html = str_replace($replaceWhat, $replaceWith . ' ', $html);
+				$replaceWhat = '<body>';
+				$html = str_replace($replaceWhat, $replaceWith . '>', $html);
+			}
 		}
 
 		if ($redirectUrl) {
+			// if we've come up with a place to redirect to, do it now
 			header('Location: ' . $redirectUrl);
 		}
 
 		if ($path == '/profile.html') {
+			// special handling for /profile.html
 			WriteLog('route.php: /profile.html');
 
+			// we need cookies
 			include_once('cookie.php');
 
-			$handle = '';
-			$fingerprint = '';
+			$handle = ''; // will store our handle
+			$fingerprint = ''; // will store our fingerprint
 
 			if (isset($cookie) && $cookie) {
 				$handle = 'Anonymous';
@@ -195,12 +382,12 @@ if (GetConfig('admin/php/route_enable')) {
 				$handle = '(not signed in)';
 			}
 
-			if (0 && function_exists('WriteLog')) {
-				$html = str_replace('</body>', WriteLog(0) . '</body>', $html);
-			}
-
 			$html = str_replace('<span id=lblHandle></span>', "<span id=lblHandle>$handle</span>", $html);
 			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);
+		}
+
+		if (function_exists('WriteLog') && GetConfig('admin/php/debug')) {
+			$html = str_replace('</body>', WriteLog(0) . '</body>', $html);
 		}
 
         print $html;
@@ -209,10 +396,6 @@ if (GetConfig('admin/php/route_enable')) {
     WriteLog('config/admin/php/route_enable = false');
 
     print "oh no! route_enable is false, but route.php was called!";
-}
-
-if (GetConfig('admin/php/debug')) {
-    print '<br>' . WriteLog('');
 }
 
 //
