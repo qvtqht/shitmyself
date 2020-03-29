@@ -45,5 +45,5 @@ Some of the JS has statements beginning with "alert('DEBUG:"
 I have ensured that each statement only spans one line, so global search and replace can be used to enable/disable
 To disable, global search and replace "alert('DEBUG:" with "//alert('DEBUG:"
 To enable, do the opposite
-This can also be accomplished by setting admin/debug_javascript=1
+This can also be accomplished by setting admin/js/debug=1
 
