@@ -830,12 +830,23 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 	#		substr($hash, 2, 8) .
 	#		'.html';
 	#
+
+
+	# my $htmlFilename =
+	# 	substr($hash, 0, 2) .
+	# 	'/' .
+	# 	substr($hash, 2, 2) .
+	# 	'/' .
+	# 	$hash .
+	# 	'.html';
+	#
+	#
 	my $htmlFilename =
 		substr($hash, 0, 2) .
 		'/' .
 		substr($hash, 2, 2) .
 		'/' .
-		$hash .
+		substr($hash, 0, 8) .
 		'.html';
 
 	return $htmlFilename;

@@ -125,25 +125,12 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 			$hash . '.txt'
 		;
 
+
 		// path for new html file
-		$fileHtmlPath =
-			'./' .
-			substr($hash, 0, 2) .
-			'/' .
-			substr($hash, 2, 2) .
-			'/' .
-			$hash . '.html'
-		;
+		$fileHtmlPath = './' . GetHtmlFilename($hash);
 
 		// path for client's (browser's) path to html file
-		$fileUrlPath =
-			'/' .
-			substr($hash, 0, 2) .
-			'/' .
-			substr($hash, 2, 2) .
-			'/' .
-			$hash . '.html'
-		;
+		$fileUrlPath = '/' . GetHtmlFilename($hash);
 
 		// save new post to txt file
 		file_put_contents($filePath, $comment);

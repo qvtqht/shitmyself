@@ -445,3 +445,17 @@ function RetrieveServerMessage($messageId) {
 
 	return $message;
 }
+
+function GetHtmlFilename($hash) {
+	// path for new html file
+	$fileHtmlPath =
+		substr($hash, 0, 2) .
+		'/' .
+		substr($hash, 2, 2) .
+		'/' .
+		substr($hash, 0, 8) .
+		'.html'
+	;
+
+	return $fileHtmlPath;
+}
