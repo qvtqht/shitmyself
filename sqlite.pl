@@ -151,7 +151,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 	");
 
 	# page_touch
-	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER);");
+	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER, priority);");
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
 
 	# config
@@ -720,14 +720,24 @@ sub DBGetItemAuthor { # get author for item ($itemhash)
 		return;
 	}
 
+	chomp $itemHash;
+
+	WriteLog('DBGetItemAuthor(' . $itemHash . ')');
+
 	my $query = 'SELECT author_key FROM item WHERE file_hash = ?';
 	my @queryParams = ();
-
+	#
 	push @queryParams, $itemHash;
+
+	WriteLog('DBGetItemAuthor: $query = ' . $query);
 
 	my $authorKey = SqliteGetValue($query, @queryParams);
 
-	return $authorKey;
+	if ($authorKey) {
+		return $authorKey;
+	} else {
+		return;
+	}
 }
 
 
@@ -869,9 +879,10 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 			page_name, 
 			page_param, 
 			touch_time, 
-			(page_name IN ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) AS priority_page
+			priority
 		FROM page_touch
-		ORDER BY priority_page DESC, touch_time DESC
+		WHERE priority > 0
+		ORDER BY priority DESC, touch_time DESC
 		LIMIT ?;
 	";
 
@@ -957,14 +968,15 @@ sub DBResetPageTouch { # Clears the page_touch table
 
 sub DBDeletePageTouch { # deletes page_touch entry ;  $pageName, $pageParam
 #todo optimize
-	my $query = 'DELETE FROM page_touch WHERE page_name = ? AND page_param = ?';
+	#my $query = 'DELETE FROM page_touch WHERE page_name = ? AND page_param = ?';
+	my $query = 'UPDATE page_touch SET priority = 0 WHERE page_name = ? AND page_param = ?';
 	
 	my $pageName = shift;
 	my $pageParam = shift;
 	
-	 my @queryParams = ($pageName, $pageParam);
+	my @queryParams = ($pageName, $pageParam);
 	 
-	  SqliteQuery2($query, @queryParams); 
+	SqliteQuery2($query, @queryParams);
 }
 
 sub DBDeleteItemReferences { # delete all references to item from tables
@@ -998,22 +1010,25 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 
 sub DBAddPageTouch { # Adds an entry to page_touch table
 # page_touch table is used for determining which pages need to be refreshed
-# DBAddPageTouch is called from IndexTextFile to schedule updates for pages affected by a newly indexed item
+# is called from IndexTextFile to schedule updates for pages affected by a newly indexed item
 	state $query;
 	state @queryParams;
 
 	my $pageName = shift;
 
 	if ($pageName eq 'tag') {
+		# if a tag page is being updated,
+		# then the tags summary page must be updated also
 		DBAddPageTouch('tags', '0');
 	}
 
 	if ($pageName eq 'flush') {
+		# flush to database queue stored in $query and @queryParams
 		if ($query) {
 			WriteLog("DBAddPageTouch(flush)");
 
 			if (!$query) {
-				WriteLog('Aborting, no query');
+				WriteLog('Aborting DBAddPageTouch(flush), no query');
 				return;
 			}
 
@@ -1044,12 +1059,12 @@ sub DBAddPageTouch { # Adds an entry to page_touch table
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time) VALUES ";
+		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time, priority) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= '(?, ?, ?)';
+	$query .= '(?, ?, ?, 1)';
 	push @queryParams, $pageName, $pageParam, $touchTime;
 }
 
