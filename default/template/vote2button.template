@@ -1,7 +1,7 @@
 	<!-- vote2button.template -->
 	<a
-		href="/post.html?comment=vote%2F$fileHash%2F$ballotTime%2F$voteValue%2F$checksum"
+		href="/post.html?comment=%23$voteValue&replyto=$fileHash"
 		class="$class"
 		onclick="if (window.signVote) { var gt = unescape('%3E'); return signVote(this, gt+gt+'$fileHash\n#$voteValue'); }"
-	>+$voteCaption</a>;
+	>#$voteCaption</a>;
 	<!-- / vote2button.template -->
