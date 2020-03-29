@@ -9,17 +9,6 @@
 				</td>
 			</tr>
 
-			<tr class=menubar>
-				<td>
-					<span class=advanced>
-						<span class=beginner><br>Share information about your </span>
-						<a href="/write.html?report=client">Browser</a>;
-						<span class=beginner><br>Enable keyboard transliteration for </span>
-						<a href="/write.html?russian=1">Russian</a>;
-					</span>
-				</td>
-			</tr>
-
 			<tr class=body>
 				<td class=content>
 					<fieldset>
@@ -73,6 +62,16 @@
 					</fieldset>
 				</td>
 			</tr>
+
+			<tr class=menubar>
+				<td>
+					<span class=advanced>
+						<a href="/write.html?report=client">Browser Report</a> |
+						<a href="/write.html?russian=1">Russian Mode</a> |
+					</span>
+				</td>
+			</tr>
+
 		</table>
 	</font>
 </form>
