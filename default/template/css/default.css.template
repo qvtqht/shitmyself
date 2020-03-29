@@ -1,6 +1,7 @@
 .tag-flag,
 .tag-troll,
 .tag-spam,
+.tag-remove,
 .tag-abuse {
 /* negative (red) tags */
 	color: $colorTagNegative;
@@ -47,15 +48,15 @@ div.txt {
 
 #serverMessage {
 /* messages from server */
-    background-color: #ffc080;
-    color: black;
+    background-color: $colorHighlightBeginner;
+    color: $colorText;
     padding: 5pt;
     spacing: 5pt;
     position: fixed;
-    top: 15%;
-    width: 75%;
-    left: 13%;
-    border: 1pt #404040 solid;
+    top: 12pt;
+    left: 12pt;
+    border: 2pt $colorWindow solid;
+    border-radius: 5pt;
 }
 
 #eventLocation, #eventBrcLocation {
