@@ -1,12 +1,20 @@
 // == begin force_profile.js
+
+// when this file is included, it will force the user to the profile page
+// if they are not registered
+// #todo account for cookies?
+
 if (window.getUserFp) {
 	if (!getUserFp()) {
 		var url = window.location.toString();
 
-		var filename = url.split('/').pop();
+		// todo rewrite this to be more compatible
+		if (document.getElementById) { // not a good feature check here
+			var filename = url.split('/').pop().split('?').shift();
 
-		if (filename != 'profile.html') {
-			window.location = '/profile.html';
+			if (filename != 'profile.html') {
+				window.location = '/profile.html';
+			}
 		}
 	}
 }
