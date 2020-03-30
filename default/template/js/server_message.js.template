@@ -63,7 +63,7 @@ function bodyEscPress(keyCode) { // called when user presses esc (or spacebar) o
 		serverMessageOk();
 	}
 
-	return false;
+	return true;
 }
 
 ////function serverMessageShrink() { // moves server message to the top of the page instead of floating
