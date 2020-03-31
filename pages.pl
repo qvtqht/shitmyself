@@ -429,7 +429,7 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar settings timestamps voting profile));
+	$txtPage = InjectJs($txtPage, qw(avatar settings timestamp voting profile));
 
 	return $txtPage;
 
@@ -715,7 +715,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile write_buttons timestamps));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile write_buttons timestamp));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1499,7 +1499,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	$htmlOutput .= GetPageFooter(); # </body></html>
 
 	# add necessary js
-	$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamps profile avatar));
+	$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar));
 #	$htmlOutput = InjectJs($htmlOutput, qw(settings));
 
 	return $htmlOutput;
@@ -1571,7 +1571,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar settings timestamps pingback profile));
+	$statsPage = InjectJs($statsPage, qw(avatar settings timestamp pingback profile));
 
 	return $statsPage;
 }
@@ -1764,7 +1764,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings timestamps profile voting));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings timestamp profile voting));
 
 	return $txtIndex;
 }
@@ -2052,9 +2052,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
-		$txtIndex = InjectJs($txtIndex, qw(itsyou settings timestamps voting profile));
+		$txtIndex = InjectJs($txtIndex, qw(itsyou settings timestamp voting profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(settings voting timestamps profile));
+		$txtIndex = InjectJs($txtIndex, qw(settings voting timestamp profile));
 	}
 
 	return $txtIndex;
@@ -2199,7 +2199,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Close html
 	$html .= GetPageFooter();
 
-	$html = InjectJs($html, qw(avatar settings voting profile timestamps));
+	$html = InjectJs($html, qw(avatar settings voting profile timestamp));
 
 	return $html;
 }

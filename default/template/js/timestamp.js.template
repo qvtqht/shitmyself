@@ -1,4 +1,5 @@
-// == begin timestamps.js
+// == begin timestamp.js
+
 function ShowTimestamps() { // finds any class=timestamp, updates its displayed time as needed
 	if (document.getElementsByClassName) {
 		var d = new Date();
@@ -87,4 +88,4 @@ function LongAgo(seconds) { // returns string with time units
 
 ShowTimestamps();
 
-// == end timestamps.js
+// == end timestamp.js
