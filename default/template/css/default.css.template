@@ -46,19 +46,6 @@ div.txt {
     border-color: gold;
 }
 
-#serverMessage {
-/* messages from server */
-    background-color: $colorHighlightAlert;
-    color: $colorText;
-    padding: 5pt;
-    spacing: 5pt;
-    position: fixed;
-    top: 10pt;
-    left: 20%;
-    width: 60%;
-    border: 3pt $colorWindow dotted;
-    border-radius: 5pt;
-}
 
 #eventLocation, #eventBrcLocation {
 /* event form */

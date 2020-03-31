@@ -19,3 +19,20 @@ button, input[type=button], input[type=submit], input[type=checkbox] {
 #txtClock {
 	border: 1pt inset $colorWindow;
 }
+
+#serverMessage {
+/* messages from server */
+    background-color: $colorHighlightAlert;
+    color: $colorText;
+    padding: 5pt;
+    spacing: 5pt;
+    border: 10pt $colorWindow double;
+    display: block;
+}
+a:focus, a:active {
+    color: #40ff40;
+    background-color: green;
+}
+input:focus, textarea:focus {
+    background-color: green;
+}

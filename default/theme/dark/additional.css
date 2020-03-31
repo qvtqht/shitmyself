@@ -45,6 +45,15 @@ fieldset {
 }
 *:focus, *:active {
 /* focused items are orange for visibility */
-    background-color: #402010;
-    color: orange;
+    background-color: #402010 !important;
+    color: orange !important;
+}
+#serverMessage {
+/* messages from server */
+    background-color: $colorHighlightAlert;
+    color: $colorText;
+    padding: 5pt;
+    spacing: 5pt;
+    border: 2pt $colorPrimary double;
+    display: block
 }

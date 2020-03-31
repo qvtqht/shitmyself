@@ -23,3 +23,15 @@ a:focus, a:active {
 input:focus, textarea:focus {
     background-color: orange;
 }
+#serverMessage {
+/* messages from server */
+    background-color: $colorHighlightAlert;
+    color: $colorText;
+    padding: 5pt;
+    spacing: 5pt;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    border: $borderWindow;
+}
