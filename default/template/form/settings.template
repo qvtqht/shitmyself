@@ -31,10 +31,10 @@
 					<p>
 
 					<fieldset>
-						<legend>Interface<br></legend>
+						<legend>Interface Mode<br></legend>
 
 						<p><nobr>
-							<input type=submit name=ui value="Beginner" onclick="if (window.modeChange) { return modeChange('beginner'); }">
+							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }" style="font-size: large">
 							<input type=submit name=ui value="Intermediate" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
 							<input type=submit name=ui class=advanced value="Advanced" onclick="if (window.modeChange) { return modeChange('advanced'); }">
 							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
