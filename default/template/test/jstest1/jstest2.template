@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <title>jstest1</title>
+
+        <style type="text/css">
+            <!--
+                input {
+                    box-shadow: 3pt 3pt 5pt gray;
+                }
+                p {
+                    padding-left: 15pt;
+                    font-family: monospace;
+                    font-size: 8pt;
+                }
+            -->
+        </style>
+    </head>
+    <body>
+        <noscript>
+            <p>
+                <font color=#ff8000>
+                    <b>JavaScript</b> appears to be turned off or unsupported.<br>
+                    These tests will not work without it.
+                </font>
+            </p>
+        </noscript>
+
+        <form name=frmTest id=frmTest action="/post.html">
+            <input
+                type=button
+                onclick="if(window.RunTest || RunTest) { return RunTest() } else { alert('window.RunTest was false'); return false; }"
+                value="Run Tests"
+            >
+
+            <input type=submit value="Upload Results" onclick="this.value='Please wait...'; return true;">
+
+            <p>
+                navigator.userAgent:<br>
+                <input type=text name=txtNavigatorUserAgent size=80>
+            </p>
+
+            <p>
+                navigator.language:<br>
+                <input type=text name=txtNavigatorLanguage size=11>
+            </p>
+
+            <hr>
+
+            <p>
+                <input type=text name=txtDocumentGetElementById size=11>
+                document.getElementById
+            </p>
+
+            <p>
+                <input type=text name=txtDocumentGetElementsByClassName size=11>
+                document.getElementsByClassName
+            </p>
+
+            <p>
+                <input type=text name=txtWindowLocalStorage size=11>
+                window.localStorage
+            </p>
+
+            <p>
+                <input type=text name=txtWindowPromise size=11>
+                window.Promise
+            </p>
+
+            <p>
+                <input type=text name=txtWindowUnescape size=11>
+                window.unescape
+            </p>
+
+            <p>
+                <input type=text name=txtWindowXmlHttpRequest size=11>
+                window.XMLHttpRequest
+            </p>
+
+            <p>
+                <input type=text name=txtStringFromCharCode size=11>
+                String.fromCharCode
+            </p>
+
+            <p>
+                <input type=text name=txtDateGetMilliseconds size=11>
+                Date.getMilliseconds
+            </p>
+
+            <p>
+                <input type=text name=txtWindowHistory size=11>
+                window.history
+            </p>
+
+            <p>
+                <input type=text name=txtWindowSetTimeout size=11>
+                window.setTimeout
+            </p>
+
+            <p>
+                <input type=text name=txtWindowSetTimeoutReturn size=11>
+                window.setTimeout(...)
+            </p>
+
+            <hr>
+
+            <p>
+                <input type=text name=txtNavigatorJavaEnabled size=11>
+                navigator.javaEnabled
+            </p>
+
+            <p>
+                <input type=text name=txtDocumentLayers size=11>
+                document.layers
+            </p>
+
+            <p>
+                <input type=text name=txtDocumentAll size=11>
+                document.all
+            </p>
+
+            <p>
+                <input type=text name=txtWindowOpener size=11>
+                window.opener
+            </p>
+        </form>
+    </body>
+</html>
