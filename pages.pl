@@ -978,7 +978,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
 			# otherwise, determine template based on item length (config/item_long_threshold)
-			if (length($message) > GetConfig('item_long_threshold')) {
+			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
+			if (length($message) > $itemLongThreshold) {
 				# if item is long, use template/item/itemlong.template
 				$itemTemplate = GetTemplate("item/item2.template");
 			} else {
@@ -2641,7 +2642,7 @@ sub GetWritePage { # returns html for write page
 	my $titleHtml = "Write";
 
 	my $itemCount = DBGetItemCount();
-	my $itemLimit = GetConfig('item_limit');
+	my $itemLimit = GetConfig('number/item_limit');
 	if (!$itemLimit) {
 		$itemLimit = 9000;
 	}
@@ -2871,7 +2872,7 @@ sub GetRssFile { # returns rss feed for current site
 
 	my $feedTitle = GetConfig('home_title');
 	my $feedLink = GetConfig('admin/my_domain'); # default = http://localhost:2784/
-	my $feedDescription = 'site_description';
+	my $feedDescription = GetString('site_description');
 	my $aboutUrl = $baseUrl;
 	
 	my $feedPubDate = GetTime();
