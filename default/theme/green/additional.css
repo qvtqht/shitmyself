@@ -1,5 +1,5 @@
-body {
-	font-family: helvetica;
+body, table, .item, #txtClock, input {
+	font-family: courier;
 	font-size: 14pt;
 	background-color: $colorBackground;
 }
