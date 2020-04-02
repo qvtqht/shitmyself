@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use strict;
 use warnings;
 
@@ -163,7 +165,6 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	if ($windowTitle) {
 		my $windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
-		$windowTitlebar = $windowTitlebar;
 
 		$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
 	} else {
@@ -213,7 +214,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$windowTemplate =~ s/\$windowBody//g;
 	}
 
-	if ($windowBody) {
+	if ($windowStatus) {
 		$windowTemplate =~ s/\$windowStatus/$windowStatus/g;
 	} else {
 		$windowTemplate =~ s/\$windowStatus//g;
@@ -3072,6 +3073,8 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 
 	WriteLog('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
+	WriteMessage('MakePage(' . $pageType . ', ' . $pageParam . ')');
+
 	# tag page, get the tag name from $pageParam
 	if ($pageType eq 'tag') {
 		my $tagName = $pageParam;
@@ -3242,6 +3245,7 @@ if ($arg1) {
 		MakePage('item', $arg1);
 	}
 	if ($arg1 eq '--summary') {
+		print ("recognized --summary\n");
 		MakeSummaryPages();
 	}
 }
