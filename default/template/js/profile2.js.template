@@ -43,6 +43,7 @@ function btnSignout_Click(t) { // event for 'Sign Out' button's click
 		ls.removeItem('fingerprint');
 		ls.removeItem('avatar');
 
+		SetPrefs('last_pubkey_ping', 0);
 	}
 
 	return true;
@@ -65,6 +66,8 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 
 			//alert('DEBUG: btnRegister_Click: intKeyGenResult = ' + intKeyGenResult);
 
+			SetPrefs('last_pubkey_ping', 0);
+
 			return intKeyGenResult;
 		}
 	} else {
@@ -75,24 +78,25 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 }
 
 function getUserFp() { // retrieve stored user fingerprint from localstorage
+	//alert('DEBUG: getUserFp() begin');
+
 	if (window.localStorage) {
 		// localstorage mode
 		var fingerprint = localStorage.getItem('fingerprint');
-		if (!fingerprint) {
-			return null;
-		} else {
-			return fingerprint;
-		}
-	} else {
-		// cookie mode
-		var fingerprint = GetCookie('cookie');
-
-		if (!fingerprint) {
-			return null;
-		} else {
+		if (fingerprint) {
 			return fingerprint;
 		}
 	}
+
+	// fallback to cookie mode
+	var fingerprint = GetCookie('cookie');
+
+	if (fingerprint) {
+		return fingerprint;
+	}
+
+	// nothing found, we looked everywhere
+	return null;
 }
 
 function sharePubKey() { // shares current user's public key via injected form and iframe
@@ -207,7 +211,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aProfileShare.setAttribute('href', '/write.html#inspubkey');
 				aProfileShare.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(); }');
 				aProfileShare.setAttribute('id', 'linkProfileShare');
-				aProfileShare.innerHTML = 'upload profile';
+				aProfileShare.innerHTML = 'create profile';
 				pProfileShareLink.appendChild(aProfileShare);
 				fieldset.appendChild(pProfileShareLink);
 
@@ -395,46 +399,44 @@ function PubkeyPing() { // checks if user's public key is on server
 	var lastPubkeyPing = GetPrefs('last_pubkey_ping');
 
 	if (lastPubkeyPing && (time() < (lastPubkeyPing + 3600))) {
-		//alert('DEBUG: lastPubkeyPing+10 = ' + (lastPubkeyPing+10) + ' < time() = ' + time());
+		//alert('DEBUG: PubkeyPing: lastPubkeyPing+10 = ' + (lastPubkeyPing+10) + ' < time() = ' + time());
 	} else {
-		//alert('DEBUG: lastPubkeyPing was false or stale, doing a check at ' + time());
+		//alert('DEBUG: PubkeyPing: lastPubkeyPing was false or stale, doing a check at ' + time());
 
 		if (window.getUserFp) {
-			//alert('DEBUG; window.getUserFp check passed');
+			//alert('DEBUG; PubkeyPing: window.getUserFp check passed');
 
 			var myFingerprint = getUserFp();
 
-			//alert('DEBUG: myFingerprint = ' + myFingerprint);
+			//alert('DEBUG: PubkeyPing: myFingerprint = ' + myFingerprint);
 
 			if (myFingerprint) {
 				if (0 && PubkeyCheckProfileExists(myFingerprint)) {
-					//alert('DEBUG: profile already exists');
+					//alert('DEBUG: PubkeyPing: profile already exists');
 				} else {
 					if (window.sharePubKey) {
-						//alert('DEBUG: lastPubkeyPing: window.sharePubKey check passed, doing it...');
+						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check passed, doing it...');
 
 						sharePubKey();
 					} else {
-						//alert('DEBUG: lastPubkeyPing: window.sharePubKey check FAILED');
+						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check FAILED');
 					}
 				}
 			} else {
-				//alert('DEBUG: myFingerprint: false');
+				//alert('DEBUG: PubkeyPing: myFingerprint: false');
 			}
 
-			//alert('DEBUG: lastPubkeyPing check complete');
+			//alert('DEBUG: PubkeyPing: lastPubkeyPing check complete, saving time');
 
 			lastPubkeyPing = time();
 			SetPrefs('last_pubkey_ping', lastPubkeyPing);
 		} else {
-			//alert('DEBUG: window.getUserFp check FAILED');
+			//alert('DEBUG: PubkeyPing: window.getUserFp check FAILED');
 		}
 	}
 }
 
-
-
-function ProfileOnLoad() {
+function ProfileOnLoad() { // onload event for profile page
 	//alert('DEBUG: ProfileOnLoad() begin');
 
 	var lblSigningIndicator;
@@ -449,11 +451,11 @@ function ProfileOnLoad() {
 
 				var pk = getPrivateKey();
 
-				// indicates whether openpgp signing is available
+				// span used to indicate whether openpgp signing is available
 				lblSigningIndicator = document.getElementById('lblSigningIndicator');
 
 				if (pk) {
-					//alert('DEBUG: pk = GetPrivateKey() = ' + pk);
+					//alert('DEBUG: ProfileOnLoad: pk = GetPrivateKey() = ' + pk);
 
 					if (lblSigningIndicator) {
 						lblSigningIndicator.innerHTML = 'Yes';
@@ -479,6 +481,7 @@ function ProfileOnLoad() {
 						}
 					}
 
+					//alert('DEBUG: ProfileOnLoad: calling PubkeyPing()');
 					PubkeyPing();
 				} else {
 					//alert('DEBUG: pk = false')
