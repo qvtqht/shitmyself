@@ -1,3 +1,40 @@
+antispam
+========
+antispam table which contains fingerprints
+	associate fingerprint of each datapoint with item
+		usergaent_hash
+		ip_hash
+		js_hash
+		all into the same column to help prevent differentiation
+when item is tagged as #spam
+	perform search for all item's hashes against other items' hashes and tag them as spam as well
+
+
+<input hidden js=on>
+include js state in form submission
+
+
+#holytext mode
+	hash each line
+		allow replies to each line
+		may need refinemenet such as replying to a range of lines
+	how to handle line numeration:
+		either uatomatic or first thing in line
+			first thing in line can be assigned as repliable id?
+#yesno mode
+add #yes and #no tags
+
+
+environment
+===========
+cache_dir
+html_dir
+php_dir
+config_dir
+scripts_dir
+
+
+
 The --\n signature system should probably be replaced
 	Idea: abcd.txt.footers file
 		Contains all the "footers" (as opposed to headers)

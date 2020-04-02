@@ -405,7 +405,7 @@ default/template/js
 default/template/js/prefstest.template
 default/template/js/geo.js.template
 default/template/js/sha512.js
-default/template/js/timestamps.js.template
+default/template/js/timestamp.js.template
 default/template/js/pingback.js.template
 default/template/js/force_profile.js.template
 default/template/js/lib
