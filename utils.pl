@@ -882,11 +882,10 @@ sub GetTime() { # Returns time in epoch format.
 	return (time());
 }
 
+sub GetClockFormattedTime() { # returns current time in appropriate format from config
+#formats supported: union, epoch (default)
 
-sub GetClockFormattedTime() {
 	my $clockFormat = GetConfig('html/clock_format');
-
-	my $clockFormattedTime = GetTime();
 
 	if ($clockFormat eq 'union') {
 		my $time = GetTime();
@@ -898,9 +897,9 @@ sub GetClockFormattedTime() {
 		# var hours = now.getHours();
 		# var minutes = now.getMinutes();
 		# var seconds = now.getSeconds();
-		my $hours = strftime '%H', localtime $time;
-		my $minutes = strftime '%M', localtime $time;
-		my $seconds = strftime '%S', localtime $time;
+		my $hours = strftime('%H', localtime $time);
+		my $minutes = strftime('%M', localtime $time);
+		my $seconds = strftime('%S', localtime $time);
 		#
 
 		my $milliseconds = '000'; #todo
@@ -945,12 +944,12 @@ sub GetClockFormattedTime() {
 		# }
 		#
 
-		$clockFormattedTime = $hours . $minutes . $seconds . $milliseconds . $secondsR . $minutesR . $hoursR;
+		my $clockFormattedTime = $hours . $minutes . $seconds . $milliseconds . $secondsR . $minutesR . $hoursR;
 
-		# document.frmTopMenu.txtClock.value = timeValue;
+		return $clockFormattedTime;
 	}
 
-	return $clockFormattedTime;
+	return GetTime();
 }
 
 sub GetTitle { # Gets title for file (incomplete, currently does nothing)
