@@ -42,7 +42,7 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 	unsetcookie2('cookie');
 	unsetcookie2('checksum');
 
-	$serverMessageUnregistered = StoreServerMessage('You have been signed out.');
+	$serverMessageUnregistered = StoreServerMessage('You have signed out.');
 
 	header('Location: /profile.html?message=' . $serverMessageUnregistered);
 
@@ -98,7 +98,7 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 			unset($cookie);
 			unsetcookie2('cookie');
 
-			$messageWrongChecksum = StoreServerMessage('Signed out due to checksum mismatch.');
+			$messageWrongChecksum = StoreServerMessage('Signed out due to checksum mismatch. Please notify operator.');
 
 			header('Location: /profile.html?message=' . $messageWrongChecksum);
 		}
