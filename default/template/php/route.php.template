@@ -195,6 +195,13 @@ if (GetConfig('admin/php/route_enable')) {
                             }
                         }
 
+						if ($path == '/write.html') {
+							if (file_exists('write.php')) {
+								include('write.php');
+								exit;
+							}
+						}
+
 						if (
 							isset($_GET['message']) &&
 							isset($_GET['message'])
