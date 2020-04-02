@@ -42,7 +42,8 @@ function MakeKey() { //makes key using default settings
 
 		// defaults for testing #todo
 		var bits = 512;
-		var username = prompt('Choose your handle:', 'Anonymous') || 'Anonymous';
+		var username = 'Anonymous';
+//		var username = prompt('Choose your handle:', 'Anonymous') || 'Anonymous';
 
 		openpgp.initWorker({path:'openpgp.worker.js'});
 
@@ -134,7 +135,7 @@ function getPrivateKey() { // get private key from local storage
 		var privateKey = localStorage.getItem("privatekey");
 
 		if (privateKey) {
-		    //alert('DEBUG: getPrivateKey: found something in localStorage: ' . privateKey);
+		    //alert('DEBUG: getPrivateKey: found something in localStorage: ' + privateKey);
 
 			return privateKey;
 		} else {
