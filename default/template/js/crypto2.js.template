@@ -42,8 +42,8 @@ function MakeKey() { //makes key using default settings
 
 		// defaults for testing #todo
 		var bits = 512;
-		var username = 'Anonymous';
-//		var username = prompt('Choose your handle:', 'Anonymous') || 'Anonymous';
+//		var username = 'Anonymous';
+		var username = prompt('Choose your handle:', 'Anonymous') || 'Anonymous';
 
 		openpgp.initWorker({path:'openpgp.worker.js'});
 
