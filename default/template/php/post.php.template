@@ -274,7 +274,7 @@ if ($comment) {
 
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
-		$updateMessageId = StoreServerMessage("Update finished! <small>{$updateDuration}s</small>");
+		$updateMessageId = StoreServerMessage("Update finished! <small>in $updateDuration seconds</small>");
 
 	    Header('Location: /stats.html?message=' . $updateMessageId); //#todo make work with relativize links
 	} elseif (strtolower($comment) == 'stop') {
@@ -304,7 +304,7 @@ if ($comment) {
             // #todo relative url support
             // #todo better flow for registration -> profile page
 
-            $messagePublicKeyPosted = StoreServerMessage("Profile created!");
+            $messagePublicKeyPosted = StoreServerMessage("Success! Profile created!");
 
 		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
 		}
@@ -319,7 +319,7 @@ if ($comment) {
 
 				$newItemAnchor = substr($newFileHash, 0, 8);
 
-				$messageReplyPosted = StoreServerMessage("Your reply has been posted.");
+				$messageReplyPosted = StoreServerMessage("Success! Reply posted.");
 
 				$redirectUrl = $replyToUrlPath . '?message=' . $messageReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
@@ -345,7 +345,7 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 }
 
 if (!$redirectUrl && $fileUrlPath) {
-	$itemPostedServerMessageId = StoreServerMessage('Success! Your item has been posted!');
+	$itemPostedServerMessageId = StoreServerMessage('Success! New item posted!');
 
     $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
 }
