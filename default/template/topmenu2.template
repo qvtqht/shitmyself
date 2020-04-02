@@ -8,7 +8,7 @@
 		</tr>
 		<tr bgcolor=$colorWindow class=menubar>
 			<td>
-				<big style="padding:5pt">$menuItems</big>
+				<big style="padding:5pt"><big>$menuItems</big></big>
 				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>/
 				<a href="/help.html">Help</a>
 			</td>
