@@ -1056,6 +1056,30 @@ sub DBAddPageTouch { # Adds an entry to page_touch table
 		$pageParam = 0;
 	}
 
+
+	if ($pageName eq 'author') {
+		# cascade refresh items which are by this author
+		# todo probably put this in another function
+		# could also be done as
+		# foreach (author's items) { DBAddPageTouch('item', $item); }
+
+		# touch all of author's items too
+		my $queryAuthorItems = "
+			UPDATE page_touch
+			SET priority = (priority + 1)
+			WHERE
+				page_name = 'item' AND
+				page_param IN (
+					SELECT file_hash FROM item WHERE author_key = ?
+				)
+		";
+		my @queryParamsAuthorItems;
+		push @queryParamsAuthorItems, $pageParam;
+
+		SqliteQuery2($queryAuthorItems, @queryParamsAuthorItems);
+	}
+
+
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
 	if (!$query) {
