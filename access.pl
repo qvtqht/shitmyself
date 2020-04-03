@@ -426,8 +426,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							}
 						}
 
-						if ($paramName eq 'a') {
-							if ($paramValue eq 'anon') {
+						if ($paramName && $paramName eq 'a') {
+							if ($paramValue && $paramValue eq 'anon') {
 
 							}
 						}
