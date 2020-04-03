@@ -1,3 +1,9 @@
+#bug relative redirects don't work on some browsers
+
+Rewrite anything that adds a footer to do it into .txt.nfo file instead
+	also include added_* files
+
+
 research .user.ini (php settings for apache)
 
 remove external js file dependencies from 404 page
@@ -212,17 +218,11 @@ Content-Length can cause problem
 	Typically sent with static html files
 	How to disable it?
 
-There should be a setting to avoid setting colors for the user
-	Instead of theme colors
-
-Simplify vote/tag tokens
-	Human readable
-	Machine readable
-	only the hash and the tag text are really needed
-
 #bug with PHP enabled, replies create a dupe
 	Dupe contains >> token at the bottom (from access log)
 	Other copy does not (from PHP)
+		#cause is cookie: and host: footers
+		[in progress]
 
 Rename "beginner" to "hint" or something even better
 
@@ -237,9 +237,6 @@ Resolve issues with missing modules. Add everything to lib/ dir
 
 Create token which allows a new item to "overwrite" an item
 	Perhaps only admin or original author?
-
-Netscape 2.0 and 3.0 js errors
-Netscape 3.0 tries to download javascript files
 
 Warning when write content becomes close to too long for GET
 
