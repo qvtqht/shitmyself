@@ -6,6 +6,8 @@
 
 //error_reporting(E_ALL);
 
+$postPhpStartTime = time();
+
 include_once('utils.php');
 
 $stopTimeConfig = GetConfig('admin/stop');
@@ -304,7 +306,9 @@ if ($comment) {
             // #todo relative url support
             // #todo better flow for registration -> profile page
 
-            $messagePublicKeyPosted = StoreServerMessage("Success! Profile created!");
+            $finishTime = time() - $postPhpStartTime;
+
+            $messagePublicKeyPosted = StoreServerMessage("Success! Profile created! <small>in $finishTime seconds</small>");
 
 		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
 		}
@@ -319,7 +323,9 @@ if ($comment) {
 
 				$newItemAnchor = substr($newFileHash, 0, 8);
 
-				$messageReplyPosted = StoreServerMessage("Success! Reply posted.");
+	            $finishTime = time() - $postPhpStartTime;
+
+				$messageReplyPosted = StoreServerMessage("Success! Reply posted. <small>in $finishTime seconds</small>");
 
 				$redirectUrl = $replyToUrlPath . '?message=' . $messageReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
@@ -345,7 +351,9 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 }
 
 if (!$redirectUrl && $fileUrlPath) {
-	$itemPostedServerMessageId = StoreServerMessage('Success! New item posted!');
+	$finishTime = time() - $postPhpStartTime;
+
+	$itemPostedServerMessageId = StoreServerMessage("Success! New item posted! <small>in $finishTime seconds</small>");
 
     $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
 }
