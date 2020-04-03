@@ -265,6 +265,12 @@ sub IndexTextFile { # indexes one text file into database
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
 		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
 
+		if ($gpgKey) {
+			chomp $gpgKey;
+		} else {
+			$gpgKey = '';
+		}
+
 		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
 
 		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
@@ -398,6 +404,18 @@ sub IndexTextFile { # indexes one text file into database
 			DBAddAuthor($gpgKey);
 
 			DBAddPageTouch('author', $gpgKey);
+
+			if (! ($gpgKey =~ m/\s/)) {
+				#DBAddPageTouch may be a better place for this
+				# sanity check for gpgkey having any whitespace in it before using it in a glob for unlinking cache items
+				WriteLog('IndexTextFile: proceeding to unlink avatar caches for ' . $gpgKey);
+
+				#todo this is kind of dangerous
+				unlink(glob("cache/*/avatar/*/$gpgKey"));
+				unlink(glob("cache/*/avatar.plain/*/$gpgKey"));
+			} else {
+				WriteLog('IndexTextFile: NOT unlinking avatar caches for ' . $gpgKey);
+			}
 
 			DBAddPageTouch('scores', 0);
 
@@ -596,7 +614,25 @@ sub IndexTextFile { # indexes one text file into database
 
 		#look for setconfig and resetconfig
 		if (GetConfig('admin/token/setconfig') && $message) {
-			if (IsAdmin($gpgKey) || GetConfig('admin/anyone_can_config') || GetConfig('admin/signed_can_config')) {
+			if (
+					IsAdmin($gpgKey) #admin can always config
+				||
+					GetConfig('admin/anyone_can_config') # anyone can config
+				||
+					(
+						# signed can config
+						GetConfig('admin/signed_can_config')
+						&&
+						$isSigned
+					)
+				||
+					(
+						# cookied can config
+						GetConfig('admin/cookied_can_config')
+						&&
+						$hasCookie
+					)
+			) {
 				# preliminary conditions
 
 				my @setConfigLines = ($message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg);
@@ -614,91 +650,98 @@ sub IndexTextFile { # indexes one text file into database
 				if (@setConfigLines) {
 					#my $lineCount = @setConfigLines / 3;
 
-					if ($isSigned) { #todo this is a mistake, unsigned should be able to config if allowed above
-						while (@setConfigLines) {
-							my $configAction = shift @setConfigLines;
-							my $configKey = shift @setConfigLines;
-							my $configValue;
-							if ($configAction eq 'setconfig') {
-								$configValue = shift @setConfigLines;
-							}
-							else {
-								$configValue = 'reset';
-							}
+					while (@setConfigLines) {
+						my $configAction = shift @setConfigLines;
+						my $configKey = shift @setConfigLines;
+						my $configValue;
+						if ($configAction eq 'setconfig') {
+							$configValue = shift @setConfigLines;
+						}
+						else {
+							$configValue = 'reset';
+						}
 
-							my $reconLine;
-							if ($configAction eq 'setconfig') {
-								$reconLine = "setconfig/$configKey=$configValue";
-							}
-							else {
-								$reconLine = "resetconfig/$configKey";
-							}
+						my $reconLine;
+						if ($configAction eq 'setconfig') {
+							$reconLine = "setconfig/$configKey=$configValue";
+						}
+						else {
+							$reconLine = "resetconfig/$configKey";
+						}
 
-							if (ConfigKeyValid($configKey)) {
+						if (ConfigKeyValid($configKey)) {
 
-								WriteLog(
-									'ConfigKeyValid() passed! ' .
-										$reconLine .
-										'; IsAdmin() = ' . IsAdmin($gpgKey) .
-										'; isSigned = ' . $isSigned .
-										'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
-										'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
-										'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
-								);
+							WriteLog(
+								'ConfigKeyValid() passed! ' .
+									$reconLine .
+									'; IsAdmin() = ' . IsAdmin($gpgKey) .
+									'; isSigned = ' . $isSigned .
+									'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
+									'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
+									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
+							);
 
-								if
-								(
+							if
+							(
+								#
 									( # either user is admin ...
 										IsAdmin($gpgKey)
 									)
-										||
-										( # ... or it can't be under admin/
-											substr(lc($configKey), 0, 5) ne 'admin'
-										)
-											&&
-											(     # not admin, but may be allowed to edit key ...
-												( # if signed and signed editing allowed
-													$isSigned
-														&&
-														GetConfig('admin/signed_can_config')
-												)
-													||
-													( # ... or if anyone is allowed to edit
-														GetConfig('admin/anyone_can_config')
-													)
+								||
+									( # ... or it can't be under admin/
+										substr(lc($configKey), 0, 5) ne 'admin'
+									)
+								&&
+									( # not admin, but may be allowed to edit key ...
+										#
+											( # if signed and signed editing allowed
+												$isSigned
+													&&
+													GetConfig('admin/signed_can_config')
 											)
-								) # condition 1
-								{
-									DBAddVoteRecord($fileHash, $addedTime, 'config');
+										||
+											( # if cookied and cookied editing allowed
+												$hasCookie
+													&&
+												GetConfig('admin/cookied_can_config')
+											)
+										||
+											( # ... or if anyone is allowed to edit
+												GetConfig('admin/anyone_can_config')
+											)
+										#
+									)
+								#
+							)
+							{
+								# checks passed, we're going to update/reset a config entry
+								DBAddVoteRecord($fileHash, $addedTime, 'config');
 
-									if ($configAction eq 'resetconfig') {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
-									}
-									else {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
-									}
-
-									$detokenedMessage =~ s/$reconLine//g;
-
-									if ($configKey eq 'html/theme') {
-										# unlink cache/avatar.plain
-									}
+								if ($configAction eq 'resetconfig') {
+									DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
+									$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
 								}
 								else {
+									DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
+									$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
+								}
 
-									$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not allowed.]/g;
-									$detokenedMessage =~ s/$reconLine//g;
+								$detokenedMessage =~ s/$reconLine//g;
 
+								if ($configKey eq 'html/theme') {
+									# unlink cache/avatar.plain
 								}
 							}
 							else {
-								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
+								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not allowed.]/g;
 								$detokenedMessage =~ s/$reconLine//g;
 							}
 						}
-					}
+						else {
+							$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
+							$detokenedMessage =~ s/$reconLine//g;
+						}
+					} # while
 				}
 			}
 		}
@@ -1388,7 +1431,7 @@ sub WriteIndexedConfig { # writes config indexed in database into config/
 sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteLog( "MakeIndex()...\n");
 
-	my @filesToInclude = @{$_[0]}; # ?
+	my @filesToInclude = split("\n", `find html/txt | grep -i txt\$`);
 
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
@@ -1410,6 +1453,13 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 
 my $arg1 = shift;
 if ($arg1) {
+	if ($arg1 eq '--all') {
+		print "--all\n";
+
+		MakeIndex();
+
+	}
+
 	if (-e $arg1) {
 		IndexTextFile($arg1);
 	}
