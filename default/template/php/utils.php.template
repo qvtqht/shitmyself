@@ -305,6 +305,9 @@ function GetConfig($configKey) { // get value for config value $configKey
 // config is stored in config/
 // if not found in config/ it looks in default/
 // if it is in default/, it is copied to config/
+	//$configDir = '/home/ily/hike/config/'; // config is stored here
+	//$defaultDir = '/home/ily/hike/default/'; // defaults are stored here
+
 	$configDir = '../config/'; // config is stored here
 	$defaultDir = '../default/'; // defaults are stored here
 
@@ -356,6 +359,7 @@ function GetFile($file) {
 
 function PutFile($file, $content) {
 	return file_put_contents($file, $content);
+//	return file_force_contents($file, $content);
 }
 
 function GetCache($cacheName) { // get cache by cache key
@@ -462,4 +466,170 @@ function GetHtmlFilename($hash) {
 	;
 
 	return $fileHtmlPath;
+}
+
+function GetWindowTemplate($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) {
+// returns template for html-table-based-"window"
+	$contentColumnCount = 0;
+
+	$windowTemplate = GetTemplate('window/standard.template');
+
+	if ($windowTitle) {
+		$windowTitlebar = GetTemplate('window/titlebar.template');
+		$windowTitlebar = str_replace('$windowTitle', $windowTitle, $windowTitlebar);
+
+		$windowTemplate =~ str_replace('$windowTitlebar', $windowTitlebar, $windowTemplate);
+	} else {
+		$windowTemplate =~ str_replace('$windowTitlebar', '', $windowTemplate);
+	}
+
+	if ($windowMenubarContent) {
+		$windowMenubar = GetTemplate('window/menubar.template');
+		$windowMenubar = str_replace('$windowMenubarContent', $windowMenubarContent, $windowMenubar);
+
+		$windowTemplate = str_replace('$windowMenubar', $windowMenubar, $windowTemplate);
+	} else {
+		$windowTemplate = str_replace('$windowMenubar', '', $windowTemplate);
+		//#todo currently results in an empty menubar
+	}
+
+	if ($columnHeadings) {
+		$windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
+		$windowHeaderColumns = '';
+		$columnsArray = explode(',', $columnHeadings);
+
+		$printedColumnsCount = 0;
+		foreach ($columnsArray as $columnCaption) {
+			$printedColumnsCount++;
+
+			$columnHeaderTemplate = GetTemplate('window/header_column.template');
+			if ($printedColumnsCount >= count($columnsArray)) {
+				$columnCaption .= '<br>'; //# for no-table browsers
+			}
+
+			$columnHeaderTemplate = str_replace('$headerCaption', $columnCaption, $columnHeaderTemplate);
+			$windowHeaderColumns .= $columnHeaderTemplate;
+		}
+
+		$windowHeaderTemplate = str_replace('$windowHeadings', $windowHeaderColumns, $windowHeaderTemplate);
+		$windowTemplate = str_replace('$windowHeader', $windowHeaderTemplate, $windowTemplate);
+
+		$contentColumnCount = count($columnsArray);
+	} else {
+		$windowTemplate = str_replace('$windowHeader', '', $windowTemplate);
+		$contentColumnCount = 0;
+	}
+
+	if ($windowBody) {
+		if (index(strtolower($windowBody), '<tr') == -1) {
+			// put content into a table row and cell if missing
+			$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
+		}
+
+		$windowTemplate = str_replace('$windowBody', $windowBody, $windowTemplate);
+	} else {
+		$windowTemplate = str_replace('$windowBody', '', $windowTemplate);
+	}
+
+	if ($windowBody) {
+		$windowTemplate = str_replace('$windowStatus', $windowStatus, $windowTemplate);
+	} else {
+		$windowTemplate = str_replace('$windowStatus', '', $windowTemplate);
+	}
+
+	if ($contentColumnCount) {
+		$windowTemplate = str_replace('$contentColumnCount', $contentColumnCount, $windowTemplate);
+	} else {
+		$windowTemplate = str_replace('$contentColumnCount', '', $windowTemplate);
+	}
+
+	return $windowTemplate;
+}
+
+function GetThemeAttribute($attributeName) { // returns theme color from config/theme/
+	$themeName = GetConfig('html/theme');
+
+	$attributePath = 'theme/' . $themeName . '/' . $attributeName;
+	//#todo sanity checks
+
+	$attributeValue = GetConfig($attributePath);
+	$attributeValue = trim($attributeValue);
+
+	WriteLog('GetThemeAttribute: $attributeName: ' . $attributeName . '; $attributePath: ' . $attributePath . '; $attributeValue: ' . $attributeValue);
+
+	return $attributeValue;
+}
+
+function GetThemeColor($colorName) { // returns theme color based on html/theme
+	$colorName = 'color/' . $colorName;
+
+	$color = GetThemeAttribute($colorName);
+
+	if (!$color) {
+		$color = 'red';
+		WriteLog("GetThemeColor: WARNING: Value for $colorName not found");
+	}
+
+	if (preg_match('/^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/', $color)) {
+		WriteLog('GetThemeColor: Color found missing its # prefix: ' . $color);
+
+		$color = '#' . $color;
+
+		WriteLog('GetThemeColor: Prefix added: ' . $color);
+	} else {
+		WriteLog('GetThemeColor: Found nice color: ' . $color);
+	}
+
+	WriteLog('GetThemeColor: Returning for ' . $colorName . ': ' . $color);
+
+	return $color;
+}
+
+function GetTime() {
+	return time();
+}
+
+function GetClockFormattedTime() { // returns current time in appropriate format from config
+//formats supported: union, epoch (default)
+
+	$clockFormat = GetConfig('html/clock_format');
+
+	if ($clockFormat == 'union') {
+		$time = GetTime();
+
+		// #todo make it perl-equivalent with locatime($time)
+		$hours = strftime('%H', $time);
+		$minutes = strftime('%M', $time);
+		$seconds = strftime('%S', $time);
+
+		$milliseconds = '000';
+		$hoursR = 23 - $hours;
+		if ($hoursR < 10) {
+			$hoursR = '0' . $hoursR;
+		}
+
+		$minutesR = 59 - $minutes;
+		if ($minutesR < 10) {
+			$minutesR = '0' . $minutesR;
+		}
+
+		$secondsR = 59 - $seconds;
+		if ($secondsR < 10) {
+			$secondsR = '0' . $secondsR;
+		}
+
+		#
+		# if (milliseconds < 10) {
+		# 	milliseconds = '00' + '' + milliseconds;
+		# } else if (milliseconds < 100) {
+		# 	milliseconds = '0' + '' + milliseconds;
+		# }
+		#
+
+		$clockFormattedTime = $hours . $minutes . $seconds . $milliseconds . $secondsR . $minutesR . $hoursR;
+
+		return $clockFormattedTime;
+	}
+
+	return GetTime();
 }
