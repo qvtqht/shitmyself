@@ -15,7 +15,7 @@
 			<td>
 				<a href="$permalinkHtml">$addedTime</a>;
 				$authorLink
-				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt>;</a>
+				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort</tt>;</a>
 				<a href="$permalinkHtml#reply" class=beginner onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount);</a>
 				$itemFlagButton
 			</td>
