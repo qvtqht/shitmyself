@@ -1,0 +1,3 @@
+<!-- image.template -->
+<img src="$imageUrl" width="420" height="420">
+<!-- / image.template -->
