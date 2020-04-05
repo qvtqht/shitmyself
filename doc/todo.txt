@@ -1,3 +1,62 @@
+#wtf figure out where the <script> tags are going in the test avatar
+	1. create profile with the following username: <script>alert()</script>
+
+#bug status page has no #maincontent
+
+
+no-js php server-side profiles
+	add link to profile on profile.html page
+	add "this is you" message to author page
+user's own id should be identified anywhere it is displayed
+	in unique color and with "(this is you)
+
+Image Support MPV
+=================
+	indexing of files into database
+		generate standard size
+		generate thumbnail
+		generate alt tag
+		save original file name (as title?)
+		rename if organize_files
+	embed in html or <img> tag, etc.
+		size
+			height
+			width
+			css size
+		alt tag
+		link to original
+	standardization
+		size and quality
+		convert and store (imagemagick)
+		retain size information
+	tokens to add image title,
+		#token, perhaps
+			select best title based on #title post scores
+	finish support in
+		index.pl
+			generate standardized image
+			thumbnail
+			alt tag (top title?)
+		update.pl
+	upload capability
+		how to create image
+			link to existing url (site will download)
+			upload via upload form
+				for registered users, link is displayed?
+	x config/admin/image/enable
+	config/admin/image/upload/enable
+	how to insert picture into post?
+		>> perhaps?
+size stuff may not be as important if
+	on pages, display standardized image (standard dimensions)
+	link to original image (not necessary)
+
+
+build crashes if config has a file which is looked up as a directory
+
+
+
+
 #bug relative redirects don't work on some browsers
 
 Rewrite anything that adds a footer to do it into .txt.nfo file instead
@@ -789,9 +848,6 @@ FILE TYPE SUPPORT
 Files should be eventually uploadable...
 	Somehow
 		For trusted users
-
-Image support
-	embed in html or <img> tag, etc.
 
 Other filetypes that can be supported
 	latex

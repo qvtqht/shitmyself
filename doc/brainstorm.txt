@@ -1,3 +1,43 @@
+authors users has interacted with previously should be highlighted somehow
+	could also be a separate list for them
+
+client-side user notes
+
+http://sitename.com/0123abcd should be a working link
+	a) interpret "o" and "O" as zero
+	b) redirect to item page and/or rewrite url
+	c) make it prominent to encourage sharing
+
+
+"where to get a good browser" page
+	recommend browsers for each platform
+		for older platforms, there should be an archive of installers
+		for current platform, configuration info
+		commands to install: apt-get and/or rpm/yum, etc
+
+
+there needs to be server-side insecure (with a warning) key management
+	as an option for the no-js user
+	key is stored on server, and does all the pgp signing
+	can be downloaded if user still has the cookie
+	can be uploaded as proof and/or to create server-side entry
+	what else?
+
+
+is there a need for a "basic" and "full" mode?
+	does all the html need to be pre-generated?
+		perhaps only basic would be pre-generated if php is enabled?
+	basic mode
+		no js
+		no images
+		no css
+		no tables
+		no html comments
+		all the links
+		voting supported
+		no cookies
+	is basic mode a theme?
+
 file_id.diz
 .nfo files
 
