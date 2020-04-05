@@ -31,13 +31,14 @@ my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
 # make a list of some directories that need to exist
-my @dirsThatShouldExist = qw(log html html/txt cache html/author html/action html/top config);
+my @dirsThatShouldExist = qw(log html html/txt html/image cache html/author html/action html/top config);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
+
 
 # create directories that need to exist
 foreach(@dirsThatShouldExist) {
@@ -2336,13 +2337,13 @@ sub RemoveOldItems {
 		SELECT * FROM item_flat WHERE file_hash NOT IN (
 			SELECT file_hash FROM item_flat
 			WHERE
-				',' || tags_list || ',' like '%keep%'
+				',' || tags_list || ',' like '%approve%'
 					OR
 				file_hash IN (
 					SELECT item_hash
 					FROM item_parent
 					WHERE parent_hash IN (
-						SELECT file_hash FROM item_flat WHERE ',' || tags_list || ',' LIKE '%keep%'
+						SELECT file_hash FROM item_flat WHERE ',' || tags_list || ',' LIKE '%approve%'
 					)
 				)
 		)
