@@ -4,7 +4,7 @@ a prototype message board system
 
 Testing Locally
 ===============
-clean-build
+clean.sh
 	purges cache/
 	removes html/*.html
 	removes config/template/*
@@ -47,6 +47,7 @@ update.pl
 validate.pl
 	(in the future will) compare the results of index.pl+generate.pl vs update.pl
 
+
 installation on GNU platforms
 =============================
 
@@ -85,6 +86,7 @@ requirements
 * File::Spec
 * DBI
 * SQLite
+* ImageMagick
 
 optional
 ========
@@ -93,11 +95,11 @@ PHP
 
 Debian, Ubuntu, and other apt-based
 ===================================
-sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2
+sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 ImageMagick
 
 Redhat, Centos, Fedora, and other yum-based
 ===========================================
-sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
+sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick
 
 known issues
 ============
