@@ -31,7 +31,7 @@ my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
 # make a list of some directories that need to exist
-my @dirsThatShouldExist = qw(log html html/txt html/image cache html/author html/action html/top config);
+my @dirsThatShouldExist = qw(log html html/txt html/image html/thumb cache html/author html/action html/top config);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
