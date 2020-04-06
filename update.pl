@@ -114,6 +114,7 @@ sub ProcessTextFile { #add new textfile to index
 		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ') not in cache/indexed, calling IndexTextFile');
 
 		IndexTextFile($file);
+		IndexTextFile('flush');
 
 		PutCache('indexed/' . $fileHash, '1');
 	} else {
@@ -140,6 +141,85 @@ sub ProcessTextFile { #add new textfile to index
 	#
 	#		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
 
+} # ProcessTextFile
+
+sub ProcessImageFile { #add new image to index
+	my $file = shift;
+
+	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
+	if ($file ne $relativePath) {
+		$file = $relativePath;
+	}
+
+	my $addedTime = GetTime2();
+
+	WriteLog('ProcessImageFile: $file = ' . $file . '; $addedTime = ' . $addedTime);
+
+	# get file's hash from git
+	my $fileHash = GetFileHash($file);
+
+	WriteLog('ProcessTextFile: $fileHash = ' . $fileHash);
+
+	# if deletion of this file has been requested, skip
+	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+		unlink($file);
+		WriteLog("ProcessTextFile: $fileHash exists in deleted.log, file removed and skipped");
+
+		WriteLog('ProcessTextFile: return 0');
+		return 0;
+	} else {
+		WriteLog("ProcessTextFile: $fileHash was not in log/deleted.log, continuing");
+	}
+
+	# if (GetConfig('admin/organize_files')) {
+	# 	# organize files aka rename to hash-based path
+	# 	my $fileHashPath = GetFileHashPath($file);
+	#
+	# 	WriteLog('ProcessTextFile: organize: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
+	#
+	# 	if ($fileHashPath) {
+	# 		WriteLog('ProcessTextFile: $fileHashPath = ' . $fileHashPath);
+	#
+	# 		if (-e $fileHashPath) {
+	# 			WriteLog('ProcessTextFile: Warning: file already exists = ' . $fileHashPath);
+	# 		}
+	#
+	# 		if ($fileHashPath && $file ne $fileHashPath) {
+	# 			WriteLog('ProcessTextFile: renaming ' . $file . ' to ' . $fileHashPath);
+	# 			rename($file, $fileHashPath);
+	#
+	# 			if (-e $fileHashPath) {
+	# 				WriteLog('ProcessTextFile: rename succeeded, changing value of $file');
+	#
+	# 				$file = $fileHashPath;
+	#
+	# 				WriteLog('ProcessTextFile: $file is now ' . $file);
+	# 			}
+	# 		} else {
+	# 			WriteLog('ProcessTextFile: did not need to rename ' . $file);
+	# 		}
+	# 	} else {
+	# 		WriteLog('ProcessTextFile: $fileHashPath is missing');
+	# 	}
+	# } else {
+	# 	WriteLog("ProcessTextFile: organize_files is off, continuing");
+	# }
+
+	if (!GetCache('indexed/' . $fileHash)) {
+		WriteLog('ProcessImageFile: ProcessImageFile (' . $file . ') not in cache/indexed, calling IndexImageFile');
+
+		IndexImageFile($file);
+		IndexImageFile('flush');
+
+		PutCache('indexed/' . $fileHash, '1');
+	} else {
+		# return 0 so that this file is not counted
+		WriteLog('ProcessImageFile: return 0');
+		return 0;
+	}
+
+	WriteLog('ProcessImageFile: return 1');
+	return 1;
 }
 
 if (!$arg1) {
@@ -222,7 +302,7 @@ if (!$arg1) {
 		}
 
 		if (!-d 'html') {
-			WriteLog('Problem!!! html is not a directory!');
+			WriteLog('Problem? html is not a directory!');
 		}
 
 		if (!-e 'html/txt') {
@@ -230,7 +310,7 @@ if (!$arg1) {
 		}
 
 		if (!-d 'html/txt') {
-			WriteLog('Problem!!! html/txt is not a directory!');
+			WriteLog('Problem? html/txt is not a directory!');
 		}
 
 
@@ -294,6 +374,64 @@ if (!$arg1) {
 		IndexTextFile('flush');
 
 		WriteIndexedConfig();
+
+
+#####
+
+		{
+
+			$findCommand = 'find html/image';
+			push @files, split("\n", `$findCommand`);
+
+			my $filesProcessed = 0;
+
+			if ($filesLimit > scalar(@files)) {
+				$filesLimit = scalar(@files);
+			}
+
+			# Go through all the changed files
+			foreach my $file (@files) {
+				if ($filesProcessed >= $filesLimit) {
+					WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+					last;
+				}
+
+				WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+
+				if ((GetTime2() - $startTime) > $timeLimit) {
+					WriteLog("Time limit reached, exiting loop");
+					last;
+				}
+
+				# Trim the file path
+				chomp $file;
+				$file = trim($file);
+
+				# Log it
+				WriteLog('update.pl: image: $file = ' . $file);
+
+				#todo add rss.txt addition
+
+				# If the file exists, and is not a directory, process it
+				if (-e $file && !-d $file) {
+					$filesProcessed += ProcessImageFile($file);
+				}
+				else {
+					# this should not happen
+					WriteLog("Error! $file doesn't exist!");
+				}
+			}
+
+			IndexImageFile('flush');
+
+
+
+		}
+
+
+#####
+
+
 
 		RemoveEmptyDirectories('./html/'); #includes txt/
 		#RemoveEmptyDirectories('./txt/');
