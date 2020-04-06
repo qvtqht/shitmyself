@@ -1,5 +1,6 @@
-body {
-	font: family: Verdana, Geneva, sans-serif;
+body, .txt {
+	font: family: Tahoma, Verdana, Arial, sans-serif;
+	font-size: 10pt;
 }
 fieldset {
 	border-color: $colorSecondary;
@@ -12,7 +13,6 @@ textarea { font-family:monospace; font-size:10pt; }
 input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
 	color: $colorInputText;
-	font-family: Verdana, Geneva, sans-serif;
 }
 #txtClock {
 	border: 1pt inset $colorWindow;
@@ -33,9 +33,10 @@ input[type=text], input[type=password], select, option, textarea {
     border: 2pt $colorPrimary double;
 }
 a:focus, a:active {
-    color: red;
-    background-color: orange;
+    color: white !important;
+    background-color: teal !important;
 }
 input:focus, textarea:focus {
-    background-color: orange;
+	color: white !important;
+    background-color: teal !important;
 }
