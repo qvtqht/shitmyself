@@ -843,7 +843,7 @@ sub GetItemVotesSummary { # returns html with list of tags applied to item, and 
 }
 
 sub GetItemTemplate { # returns HTML for outputting one item
-	WriteLog("GetItemTemplate");
+	WriteLog("GetItemTemplate() begin");
 
 	# %file(hash for each file)
 	# file_path = file path including filename
@@ -860,6 +860,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# tags_list = comma-separated list of tags the item has
 	# is_textart = set <tt><code> tags for the message itself
 	# show_easyfind = show/hide easyfind words
+	# item_type = 'txt' or 'image'
 
 	# get %file hash from supplied parameters
 	my %file = %{shift @_};
@@ -875,6 +876,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $alias; # stores author's alias / name
 		my $isAdmin = 0; # author is admin? (needs extra styles)
 
+		my $itemType = '';
+
 		my $isSigned; # is signed by user (also if it's a pubkey)
 		if ($gpgKey) { # if there's a gpg key, it's signed
 			$isSigned = 1;
@@ -886,6 +889,12 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
 		WriteLog($message);
+
+		if ($file{'item_type'}) {
+			$itemType = $file{'item_type'};
+		} else {
+			$itemType = 'txt';
+		}
 
 		if (!$file{'item_title'}) {
 			#hack #todo
@@ -989,22 +998,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			}
 		}
 
-		# initialize item's css class to 'txt'
-		my $itemClass = "txt";
-		if ($isSigned) {
-			# if item is signed, add "signed" css class
-			$itemClass .= ' signed';
-		}
-		if ($isAdmin) {
-			# if item is signed by an admin, add "admin" css class
-			$itemClass .= ' byadmin';
-		}
-		if ($isTextart) {
-			# if item is textart, add "item-textart" css class
-			#todo this may not be necessary anymore
-			$itemClass .= ' item-textart';
-		}
-
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
 		my $authorLink; # author's link
@@ -1039,7 +1032,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
 		#		$permalinkTxt =~ s/^\.//;
 
-		my $itemText = $message; # output for item's message (formatted text)
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
 		my $fileHashShort = substr($fileHash, 0, 8) . '..';
 		my $itemAnchor = substr($fileHash, 0, 8);
@@ -1073,13 +1065,51 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$itemTitleTemplate//g;
 		}
 
-		if ($isTextart) {
-			$itemText = '<tt><code>' . $message . '</code></tt>';
-		}
+		my $itemText = '';
+		my $itemClass = '';
 
-		if ($isAdmin) {
-			$itemText = '<font color=red>' . $message . '</font>';
-		}
+		if ($itemType eq 'txt') {
+			$itemText = $message; # output for item's message (formatted text)
+
+			$itemClass = "txt";
+			if ($isSigned) {
+				# if item is signed, add "signed" css class
+				$itemClass .= ' signed';
+			}
+
+			if ($isTextart) {
+				# if item is textart, add "item-textart" css class
+				#todo this may not be necessary anymore
+				$itemClass .= ' item-textart';
+
+				my $textartContainer = GetTemplate('item/container/textart.template');
+				$textartContainer =~ s/\$message/$itemText/g;
+
+				$itemText = $textartContainer;
+			}
+
+			if ($isAdmin) {
+				# if item is signed by an admin, add "admin" css class
+				$itemClass .= ' byadmin';
+
+				my $adminContainer = GetTemplate('item/container/admin.template');
+				$adminContainer =~ s/\$message/$itemText/g;
+
+				$itemText = $adminContainer;
+			}
+		} # $itemType eq 'txt'
+
+		if (GetConfig('admin/image/enable') && $itemType eq 'image') {
+			my $imageContainer = GetTemplate('item/container/image.template');
+
+			my $imageUrl = "/thumb/$fileHash.gif";
+
+			$imageContainer =~ s/\$imageUrl/$imageUrl/g;
+
+			$itemText = $imageContainer;
+
+			$itemClass = "image";
+		} # $itemType eq 'image'
 
 		my $replyLink = $permalinkHtml . '#reply'; #todo this doesn't need the url before #reply if it is on the item's page
 
@@ -1163,7 +1193,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	} else {
 		return '';
 	}
-}
+} #GetItemTemplate
+
 
 sub GetPageFooter { # returns html for page footer
 	my $txtFooter = GetTemplate('htmlend.template');
@@ -1359,7 +1390,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
 	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
 	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
-	$menuItems .= GetMenuItem("/jstest1.html", 'Test', 'advanced');
+	# $menuItems .= GetMenuItem("/jstest1.html", 'Test', 'advanced');
 	$menuItems .= GetMenuItem("/profile.html", 'Profile');
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
@@ -1455,7 +1486,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			} else {
 				$authorAvatar = '';
 			}
-			
+
 			$itemLastTouch = GetTimestampElement($itemLastTouch);
 
 			# populate item template
@@ -1505,7 +1536,7 @@ sub GetTopItemsPage { # returns page with top items listing
 #	$htmlOutput = InjectJs($htmlOutput, qw(settings));
 
 	return $htmlOutput;
-}
+} #GetTopItemsPage
 
 sub GetStatsTable() {
 	my $itemCount = DBGetItemCount();
