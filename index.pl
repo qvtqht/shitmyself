@@ -183,14 +183,14 @@ sub IndexTextFile { # indexes one text file into database
 
 	# admin/organize_files
 	# renames files to their hashes
-	if (GetConfig('admin/organize_files')) {
+	if (GetConfig('admin/organize_files') && substr(lc($file), length($file) -4, 4) eq ".txt") {
 		# don't touch server.key.txt or html/txt directory or directories in general
 		if ($file ne 'html/txt/server.key.txt' && $file ne 'html/txt' && !-d $file) {
 			WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
 
 			# Figure out what the file's path should be
 			my $fileHashPath = GetFileHashPath($file);
-			
+
 			if ($fileHashPath) {
 				# Does it match?
 				if ($file eq $fileHashPath) {
@@ -202,13 +202,13 @@ sub IndexTextFile { # indexes one text file into database
 					WriteLog('IndexTextFile: hash path does not match, organize');
 					WriteLog('Before: ' . $file);
 					WriteLog('After: ' . $fileHashPath);
-	
+
 					if (-e $fileHashPath) {
 						WriteLog("Warning: $fileHashPath already exists!");
 					}
-	
+
 					rename ($file, $fileHashPath);
-	
+
 					# if new file exists
 					if (-e $fileHashPath) {
 						$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
@@ -382,7 +382,7 @@ sub IndexTextFile { # indexes one text file into database
 			PutFile('./admin.key', $txt);
 
 			my $newAdminMessage = 'html/txt/' . GetTime() . '_newadmin.txt';
-			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n" . GetTime());
+			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n" . GetTime());
 			ServerSign($newAdminMessage);
 		}
 
@@ -1351,6 +1351,7 @@ sub IndexTextFile { # indexes one text file into database
 			if ($hasCookie) {
 				# Otherwise, if there is a cookie, use the cookie
 				DBAddItem($file, $itemName, $hasCookie, $fileHash, 'txt', $verifyError);
+				#todo #bug here $hasCookie is the wrong variable here, i think. should be cookie value
 			} else {
 				# Otherwise add with an empty author key
 				DBAddItem($file, $itemName, '', $fileHash, 'txt', $verifyError);
@@ -1397,7 +1398,176 @@ sub IndexTextFile { # indexes one text file into database
 
 		DBAddPageTouch('flush');
 	}
-}
+} # IndexTextFile
+
+
+sub IndexImageFile { # indexes one image file into database, $file = path to file
+	# Reads a given $file, gets its attributes, puts it into the index database
+	# If ($file eq 'flush), flushes any queued queries
+	# Also sets appropriate page_touch entries
+
+	my $file = shift;
+	chomp($file);
+
+	WriteLog("IndexImageFile($file)");
+
+	if ($file eq 'flush') {
+		WriteLog("IndexTextFile(flush)");
+
+		DBAddAddedTimeRecord('flush');
+		DBAddItem('flush');
+		DBAddVoteRecord('flush');
+		DBAddPageTouch('flush');
+		DBAddTitle('flush');
+
+		return;
+	}
+
+	# # admin/organize_files
+	# # renames files to their hashes
+	# if (GetConfig('admin/organize_files')) {
+	# 	# don't touch server.key.txt or html/txt directory or directories in general
+	# 	if ($file ne 'html/txt/server.key.txt' && $file ne 'html/txt' && !-d $file) {
+	# 		WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
+	#
+	# 		# Figure out what the file's path should be
+	# 		my $fileHashPath = GetFileHashPath($file);
+	#
+	# 		if ($fileHashPath) {
+	# 			# Does it match?
+	# 			if ($file eq $fileHashPath) {
+	# 				# No action needed
+	# 				WriteLog('IndexTextFile: hash path matches, no action needed');
+	# 			}
+	# 			# It doesn't match, fix it
+	# 			elsif ($file ne $fileHashPath) {
+	# 				WriteLog('IndexTextFile: hash path does not match, organize');
+	# 				WriteLog('Before: ' . $file);
+	# 				WriteLog('After: ' . $fileHashPath);
+	#
+	# 				if (-e $fileHashPath) {
+	# 					WriteLog("Warning: $fileHashPath already exists!");
+	# 				}
+	#
+	# 				rename ($file, $fileHashPath);
+	#
+	# 				# if new file exists
+	# 				if (-e $fileHashPath) {
+	# 					$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+	# 				} else {
+	# 					WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# 	else {
+	# 		WriteLog('IndexTextFile: organizing not needed');
+	# 	}
+	# }
+
+	my $addedTime;          # time added, epoch format
+	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
+	my $fileHash;            # git's hash of file blob, used as identifier
+
+
+	if (-e $file && (substr(lc($file), length($file) -4, 4) eq ".jpg" || substr(lc($file), length($file) -4, 4) eq ".gif" || substr(lc($file), length($file) -4, 4) eq ".png")) {
+	#if (-e $file && (substr(lc($file), length($file) -4, 4) eq ".jpg" || substr(lc($file), length($file) -4, 4) eq ".gif")) {
+		my $fileHash = GetFileHash($file);
+
+		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
+
+		$addedTime = DBGetAddedTime($fileHash);
+		# get the file's added time.
+
+		# debug output
+		WriteLog('IndexImageFile: $file = ' . ($file?$file:'false') . '; $fileHash = ' . ($fileHash?$fileHash:'false') . '; $addedTime = ' . ($addedTime?$addedTime:'false'));
+
+		# if the file is present in deleted.log, get rid of it and its page, return
+		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+			# write to log
+			WriteLog("... $fileHash exists in deleted.log, removing $file");
+
+			# unlink the file itself
+			if (-e $file) {
+				unlink($file);
+			}
+
+			# find the html file and unlink it too
+			#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . ".html";
+
+			WriteLog('$fileHash = ' . $fileHash);
+
+			my $htmlFilename = GetHtmlFilename($fileHash);
+
+			if ($htmlFilename) {
+				$htmlFilename = 'html/' . $htmlFilename;
+
+				if (-e $htmlFilename) {
+					unlink($htmlFilename);
+				}
+			}
+
+			return;
+		}
+
+		if (!$addedTime) {
+			# This file was not added through access.pl, and has
+			# not been indexed before, so it should get an added_time
+			# record. This is what we'll do here. It will be picked
+			# up and put into the database on the next cycle
+			# unless we add provisions for that here #todo
+
+			WriteLog("... No added time found for " . $fileHash . " setting it to now.");
+
+			# current time
+			my $newAddedTime = GetTime();
+			$addedTime = $newAddedTime; #todo is this right? confirm
+
+			if (GetConfig('admin/logging/write_added_log')) {
+				# add new line to added.log
+				my $logLine = $fileHash . '|' . $newAddedTime;
+				AppendFile('./log/added.log', $logLine);
+			}
+
+			# store it in index, since that's what we're doing here
+			DBAddAddedTimeRecord($fileHash, $newAddedTime);
+
+			$addedTimeIsNew = 1;
+		}
+
+		DBAddPageTouch('rss', 0);
+
+		my $itemName = TrimPath($file);
+
+		my $convertCommand = "convert $file -thumbnail 420x420 html/thumb/$fileHash.gif";
+		WriteLog('IndexImageFile: ' . $convertCommand);
+
+		my $convertCommandResult = `$convertCommand`;
+		WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+
+		DBAddItem($file, $itemName, '', $fileHash, 'image', 0);
+
+		DBAddItem('flush');
+
+		#DBAddTitle($fileHash, 'TITLEE');
+		DBAddTitle($fileHash, $itemName);
+
+		DBAddVoteRecord($fileHash, $addedTime, 'image');
+		# add image tag
+
+		DBAddPageTouch('top', 1);
+
+		DBAddPageTouch('item', $fileHash);
+
+		DBAddPageTouch('stats', 1);
+
+		DBAddPageTouch('rss', 'foo');
+
+		DBAddPageTouch('index', 1); #todo verify this works
+
+		DBAddPageTouch('flush');
+	}
+} #IndexImageFile
 
 sub WriteIndexedConfig { # writes config indexed in database into config/
 	my @indexedConfig = DBGetLatestConfig();
@@ -1449,6 +1619,33 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	IndexTextFile('flush');
 
 	WriteIndexedConfig();
+
+    if (GetConfig('admin/image/enable')) {
+        my @imageFiles = split("\n", `find html/image`);
+
+        my $imageFilesCount = scalar(@imageFiles);
+        my $currentImageFile = 0;
+
+        WriteLog('MakeIndex: $imageFilesCount = ' . $imageFilesCount);
+
+        foreach my $imageFile (@imageFiles) {
+            $currentImageFile++;
+
+            my $percentImageFiles = $currentImageFile / $imageFilesCount * 100;
+
+            WriteMessage("*** MakeIndex: $currentImageFile/$imageFilesCount ($percentImageFiles %) $imageFile");
+
+            IndexImageFile($imageFile);
+        }
+
+        IndexImageFile('flush');
+    } # admin/image/enable
+}
+
+sub IndexFile {
+	# if textfile indextextfile
+	# if imagefile indeximagefile
+	# and so on
 }
 
 my $arg1 = shift;
@@ -1462,6 +1659,9 @@ if ($arg1) {
 
 	if (-e $arg1) {
 		IndexTextFile($arg1);
+		IndexTextFile('flush');
+
+		#todo IndexFile instead
 	}
 }
 
