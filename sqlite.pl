@@ -345,21 +345,31 @@ sub SqliteMakeTables() { # creates sqlite schema
 
 sub SqliteQuery2 { # calls sqlite with query, and returns result as array reference
 # #params: $query, @queryParams
+	WriteLog('SqliteQuery2() begin');
 
 	my $query = shift;
 	chomp $query;
 
+	WriteLog('SqliteQuery2: $query = ' . $query);
+
 	if ($query) {
 		WriteLog($query);
 
-		my $sth = $dbh->prepare($query);
-		$sth->execute(@_);
+		if ($dbh) {
+			my $sth = $dbh->prepare($query);
+			$sth->execute(@_);
 
-		my $aref = $sth->fetchall_arrayref();
+			my $aref = $sth->fetchall_arrayref();
 
-		$sth->finish();
+			$sth->finish();
 
-		return $aref;
+			return $aref;
+		} else {
+			WriteLog('SqliteQuery2: problem: no $dbh');
+		}
+	}
+	else {
+		WriteLog('SqliteQuery2: problem: no $query!');
 	}
 }
 
@@ -2202,7 +2212,8 @@ sub DBGetItemFields { # Returns fields we typically need to request from item_fl
 		item_flat.add_timestamp add_timestamp,
 		item_flat.item_title item_title,
 		item_flat.item_score item_score,
-		item_flat.tags_list tags_list";
+		item_flat.tags_list tags_list,
+		item_flat.item_type item_type";
 
 	return $itemFields;
 }
