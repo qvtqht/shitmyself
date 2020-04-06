@@ -417,6 +417,21 @@ function PubkeyPing() { // checks if user's public key is on server
 					if (window.sharePubKey) {
 						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check passed, doing it...');
 
+						if (document.getElementById) {
+							var serverMessage = document.getElementById('serverMessage');
+							if (serverMessage) {
+								var hr = document.createElement('hr');
+								serverMessage.appendChild(hr);
+
+								var center = document.createElement('p');
+								center.style.fontWeight = 'bold';
+								center.style.textAlign = 'center';
+
+								center.innerHTML = 'Please meditate while profile is created...';
+								serverMessage.appendChild(center);
+							}
+						}
+
 						sharePubKey();
 					} else {
 						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check FAILED');
