@@ -1557,6 +1557,8 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 		DBAddPageTouch('top', 1);
 
+		DBAddPageTouch('tag', 'image');
+
 		DBAddPageTouch('item', $fileHash);
 
 		DBAddPageTouch('stats', 1);
