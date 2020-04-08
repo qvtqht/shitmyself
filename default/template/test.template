@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width">
 
 <font face=arial>
-<table cellspacing=0 bgcolor="$colorWindow" cellpadding=3 border=3 style="border: $borderWindow;" class=dialog>
+<table cellspacing=0 bgcolor="$colorWindow" cellpadding=3 border=3 style="border: $borderDialog;" class=dialog>
 	<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 		<td colspan=2>
 			<font color=$colorTitlebarText><b>Untitled</b></font>
