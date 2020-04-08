@@ -206,7 +206,6 @@ if (GetConfig('admin/php/route_enable')) {
 						}
 
 						if (
-							isset($_GET['message']) &&
 							isset($_GET['message'])
 						)
 						{
@@ -233,7 +232,7 @@ if (GetConfig('admin/php/route_enable')) {
 								}
 							}
 
-							if (preg_match('/^[a-f0-9]{32}$/', $messageId)) {
+							if (preg_match('/^[a-f0-9]{8}$/', $messageId)) {
 								$serverMessage = RetrieveServerMessage($messageId);
 								$serverMessage = trim($serverMessage);
 							}

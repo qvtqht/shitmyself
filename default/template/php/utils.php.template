@@ -423,7 +423,13 @@ function CacheExists($cacheName) { // Check whether specified cache entry exists
 }
 
 
-function StoreServerMessage($message) { //adds message to queue, which can be passed to next page load
+function StoreServerMessage($message) { // adds server message and returns message id
+// stores server message in cache/sm[message_id]
+// returns message id which can be passed to next page load via ?message=
+
+    // #todo static $messages array
+    // #todo push message to array
+
 	$message = trim($message);
 
     if ($message == '') {
@@ -431,13 +437,11 @@ function StoreServerMessage($message) { //adds message to queue, which can be pa
     }
 
     $messageId = md5($message . time()); // #todo better?
+    $messageId = substr($messageId, 0, 8);
 
 	PutCache('sm' . $messageId, $message);
 
 	return $messageId;
-
-    // static $messages array
-    // push message to array
 }
 
 function RetrieveServerMessage($messageId) { // retrieves message for display by client and deletes it
