@@ -589,9 +589,13 @@ sub IndexTextFile { # indexes one text file into database
 						} else { # no parent, !$hasParent
 							#todo add sanity checks here
 							DBAddVoteRecord($fileHash, $addedTime, $hashTag);
+
+							DBAddVoteRecord('flush');
 						}
 
 						DBAddPageTouch('tag', $hashTag);
+
+						$detokenedMessage =~ s/#$hashTag//g;
 					}
 				}
 			}
