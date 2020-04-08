@@ -1,3 +1,13 @@
+onpageunload reset please wait button back to its previou caption so that if users presses back it's back to normal again
+	there can also be a special js to check for this as well
+		implementation details hazy
+
+if txtClock then
+	assume special accesibility mode for browsers which do not support tab-based navigation for links
+		safari (???)
+		opera 12 (only if links have tabindex= set)
+		netscape (turn important links into input type=submit buttons)
+
 authors users has interacted with previously should be highlighted somehow
 	could also be a separate list for them
 
