@@ -1,10 +1,13 @@
 #!/usr/bin/perl
+
 use strict;
-use warnings FATAL => 'all';
+#use warnings FATAL => 'all'; #only if debugging
 use threads;
 use utf8;
 
 sub BuildMessage {
+	print time();
+	print ' ';
 	print shift;
 	print "\n";
 }
@@ -22,6 +25,7 @@ BuildMessage "\$prevBuildStart = " . $prevBuildStart;
 BuildMessage "\$prevBuildFinish = " . $prevBuildFinish;
 
 my $prevBuildDuration;
+
 if ($prevBuildFinish && $prevBuildStart && $prevBuildFinish > $prevBuildStart) {
 	$prevBuildDuration = ($prevBuildFinish - $prevBuildStart);
 	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
@@ -46,17 +50,19 @@ require './index.pl';
 #}
 #
 
-BuildMessage "SqliteUnlinkDB()...";
+{ # clear and rebuild the sqlite db
+	BuildMessage "SqliteUnlinkDB()...";
 
-SqliteUnlinkDb();
+	SqliteUnlinkDb();
 
-BuildMessage "SqliteConnect()...";
+	BuildMessage "SqliteConnect()...";
 
-SqliteConnect();
+	SqliteConnect();
 
-BuildMessage "SqliteMakeTables()...";
+	BuildMessage "SqliteMakeTables()...";
 
-SqliteMakeTables();
+	SqliteMakeTables();
+}
 
 BuildMessage "Ensure there's html/txt and something inside...";
 
