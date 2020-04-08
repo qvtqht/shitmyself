@@ -318,7 +318,7 @@ if (!$arg1) {
 		# This limits the number of files to process per launch of update.pl
 		my $filesLimit = GetConfig('admin/update/limit_file');
 		if (!$filesLimit) {
-			WriteLog("WARNING: config/admin/update/limit_file missing!");
+			WriteLog('WARNING: admin/update/limit_file missing, using 100');
 			$filesLimit = 100;
 		}
 
