@@ -361,16 +361,17 @@ sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to
 }
 
 sub GetString { # Returns string from config/string/en/..., with special rules:
-# #todo look up locale, not hard-coded to en
 	my $stringKey = shift;
 	my $language = shift;
+
+	my $defaultLanguage = 'en';
 
 	if (!$language) {
 		$language = GetConfig('language');
 	}
 
 	if (!$language) {
-		$language = 'en';
+		$language = $defaultLanguage;
 	}
 
 	state %strings;
@@ -383,7 +384,17 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 
 	    	$strings{$stringKey} = $string;
 		} else {
-			return $stringKey;
+			if ($language ne $defaultLanguage) {
+				$string = GetString($stringKey, $defaultLanguage);
+			}
+
+			if (!$string) {
+				$string = $stringKey;
+			}
+
+			chomp ($string);
+
+			$strings{$stringKey} = $string;
 		}
 	}
 
@@ -1781,7 +1792,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 					$message =~ s/\$fingerprint/$gpg_key/g;
 
 				} else {
-					$message = "Problem! Public key item did not parse correctly. Try changing config/admin/gpg/gpg_command";
+					$message = "Problem! Public key item did not parse correctly. Try changing admin/gpg/gpg_command";
 				}
 
 				$isSigned = 1;
@@ -2305,6 +2316,37 @@ sub GetItemMessage { # retrieves item's message using cache or file path
 
 	return  $message;
 }
+
+sub GetItemMeta { # retrieves item's metadata
+# $itemHash, $filePath
+
+	WriteLog('GetItemMeta()');
+
+	my $itemHash = shift;
+	if (!$itemHash) {
+		return;
+	}
+
+	chomp $itemHash;
+
+	if (!IsItem($itemHash)) {
+		return;
+	}
+
+	WriteLog("GetItemMeta($itemHash)");
+
+	my $metaText;
+	my $metaCacheName = "./cache/" . GetMyVersion() . "/meta/$itemHash";
+
+	if (-e $metaCacheName) {
+		$metaText = GetFile($metaCacheName);
+	} else {
+		$metaText = '';
+	}
+
+	return $metaText;
+
+} # GetItemMeta
 
 sub GetPrefixedUrl { # returns url with relative prefix 
 	my $url = shift;
