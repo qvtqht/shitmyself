@@ -1609,6 +1609,7 @@ sub DBAddVoteRecord { # Adds a new vote (tag) record to an item based on vote/ t
 
 	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddVoteRecord('flush');
+		DBAddPageTouch('flush');
 		$query = '';
 	}
 
@@ -1642,6 +1643,8 @@ sub DBAddVoteRecord { # Adds a new vote (tag) record to an item based on vote/ t
 
 	$query .= '(?, ?, ?, ?)';
 	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy;
+
+	DBAddPageTouch('tag', $voteValue);
 }
 
 
