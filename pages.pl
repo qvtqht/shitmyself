@@ -51,6 +51,8 @@ sub GenerateDialogPage { # generates page with dialog
 
 			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('htmlstart.template');
 
+			$pageTemplate .= GetTemplate('maincontent.template');
+
 			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, 'Ready');
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 
@@ -705,10 +707,10 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		$replyForm =~ s/\$replyTo/$replyTo/g;
 		$replyForm =~ s/\$prefillText/$prefillText/g;
 
-		if (GetConfig('admin/php/enable')) {
+#		if (GetConfig('admin/php/enable')) {
 #			my $postHtml = 'post.html';
 #			$replyForm =~ s/$postHtml/post.php/;
-		}
+#		}
 
 		$txtIndex .= $replyForm;
 	}
@@ -1189,9 +1191,13 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all');
 		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
 
+        WriteLog('GetItemTemplate() return $itemTemplate');
+
 		return $itemTemplate;
 	} else {
-		return '';
+        WriteLog('GetItemTemplate() return empty string');
+
+        return '';
 	}
 } #GetItemTemplate
 
@@ -1379,19 +1385,38 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	
 	my $menuItems = '';
 
-	#todo replace with config/menu/*
-	$menuItems .= GetMenuItem("/", 'Read');
-	$menuItems .= GetMenuItem("/write.html", 'Write');
-	$menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
-	$menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+	my @menuList = split("\n", GetConfig('list/menu'));
 
-	$menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
-	# $menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
-	$menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
-	$menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
-	$menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
-	# $menuItems .= GetMenuItem("/jstest1.html", 'Test', 'advanced');
-	$menuItems .= GetMenuItem("/profile.html", 'Profile');
+	foreach my $menuItem (@menuList) {
+		my $menuItemName = $menuItem;
+		my $menuItemUrl	= '/' . $menuItemName . '.html';
+
+		if ($menuItemName eq 'index') {
+			$menuItemUrl = '/';
+		}
+
+		if ($menuItemName eq 'index0') {
+			$menuItemName = 'compost';
+		}
+
+		$menuItemName = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
+
+		$menuItems .= GetMenuItem($menuItemUrl, $menuItemName);
+	}
+
+	# #todo replace with config/menu/*
+	# $menuItems .= GetMenuItem("/", 'Read');
+	# $menuItems .= GetMenuItem("/write.html", 'Write');
+	# $menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
+	# $menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
+	#
+	# $menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
+	# # $menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
+	# $menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
+	# $menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
+	# $menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
+	# # $menuItems .= GetMenuItem("/jstest1.html", 'Test', 'advanced');
+	# $menuItems .= GetMenuItem("/profile.html", 'Profile');
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	
@@ -2453,8 +2478,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	$okPage = InjectJs($okPage, qw(settings));
 
 	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
-	PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
-	PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
+	#PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
+	#PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
 	PutHtmlFile("$HTMLDIR/action/event.html", $okPage);
 		
 	{
@@ -2602,6 +2627,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
+
+		my $test2PhpTemplate = GetTemplate('php/test2.php.template');
+		PutFile('html/test2.php', $test2PhpTemplate);
 
 		my $testPhpTemplate = GetTemplate('php/test.php.template');
 		PutFile('html/test.php', $testPhpTemplate);
