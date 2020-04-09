@@ -2,6 +2,8 @@
 
 function translitKey(e, t) { // replaces pressed key with russian letter
 // called via textarea or input's onkeydown event
+// e is event object passed by onkeydown event
+// t is the text field's "this"
 
     //alert('DEBUG: translitKey() begins');
 
