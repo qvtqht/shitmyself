@@ -4,3 +4,4 @@ cache/*
 log/*
 admin.key
 cron.lock
+server.key.secret
