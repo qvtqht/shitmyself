@@ -545,15 +545,15 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
                         # Begin logging section
 						if (
-							GetServerKey() # there should be a server key, otherwise do not log
-								&& 
-							(
+							# GetServerKey() # there should be a server key, otherwise do not log
+							# 	&&
+							# (
 								GetConfig('admin/logging/record_timestamps')
 									||
 								GetConfig('admin/logging/record_clients')
 									||
 								GetConfig('admin/logging/record_sha512')
-							)
+							# )
 						) { # if any of the logging options are turned on, proceed
 							# I guess we're saving this 
 							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
@@ -579,7 +579,9 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 								WriteLog('$addedMessage = ' . $addedMessage);
 
-								ServerSign($addedFilename);
+								if (GetServerKey()) {
+									ServerSign($addedFilename);
+								}
 							}
 
 							DBAddAddedTimeRecord($fileHash, $addedTime);
@@ -784,131 +786,131 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 #				}
 			}
 		}
-
-		my $voteAction = '/action/vote2.html?';
-        WriteLog('access.pl: $voteAction = ' . $voteAction);
-
-		WriteLog('access.pl: ' . substr($file, 0, length($voteAction)) . ' eq ' . $voteAction);
-
-		if (substr($file, 0, length($voteAction)) eq $voteAction) {
-			#				http://localhost:2784/action/vote2.html?
-			#					vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
-			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Finformative%2F435fcd62a628d7b918e243fe97912d7b=on
-			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ffriendly%2F435fcd62a628d7b918e243fe97912d7b=on
-			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fmeta%2F435fcd62a628d7b918e243fe97912d7b=on
-			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fremove%2F435fcd62a628d7b918e243fe97912d7b=on
-			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ftextart%2F435fcd62a628d7b918e243fe97912d7b=on
-			#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fabuse%2F435fcd62a628d7b918e243fe97912d7b=on
-			#
-			#					everything after ?
-			#						split by &
-			#						remove =on
-			#						urldecode
-			#						parse as a vote record
-			#
-			WriteLog("access.pl: /action/vote2.html");
-
-			# everything after ?
-			my $votesQuery = substr($file, index($file, '?') + 1);
-
-            WriteLog('$votesQuery = ' . $votesQuery);
-
-            # split by &
-			my @voteAtoms = split('&', $votesQuery);
-			my $newFile = '';
-
-			foreach my $voteAtom (@voteAtoms) {
-				WriteLog($voteAtom);
-
-				# remove =on
-				$voteAtom =~ s/=on$//;
-				# url decode
-				$voteAtom = uri_decode($voteAtom);
-
-				WriteLog($voteAtom);
-
-				my @voteLines = ( $voteAtom =~ m/^vote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
-				#                                 token   /item           /time     /tag      /csrf
-				if (@voteLines) {
-					my $fileHash   = shift @voteLines;
-					my $ballotTime = shift @voteLines;
-					my $voteValue  = shift @voteLines;
-					my $csrf = shift @voteLines;
-
-					#todo my $voteBallot .= "$fileHash/$ballotTime/$voteValue
-
-					my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
-
-					my $currentTime = GetTime();
-					if (
-							($csrf eq $checksumCorrect) #checksum needs to match
-								&&
-							(($currentTime - $ballotTime) < 7200) # vote should be recent #todo remove magic number
-						) {
-						#my $voteEntry = "$fileHash|$ballotTime|$voteValue";
-						#AppendFile("log/votes.log", $voteEntry);
-						#votes.log is deprecated in favor of adding stuff to the tree
-
-						my $newLine = "vote/$fileHash/$ballotTime/$voteValue/$csrf";
-						if ($newFile) {
-							$newFile .= "\n";
-						}
-						$newFile .= $newLine;
-
-						$newItemCount++;
-					}
-
-					if (GetConfig('admin/logging/record_voter_fingerprint')) {
-						$recordFingerprint = 1;
-					}
-					if (GetConfig('admin/logging/record_voter_timestamp')) {
-						$recordTimestamp = 1;
-					}
-				}
-			}
-
-			if ($newFile) {
-				#$newFile .= "\n\n(Anonymously submitted without a signature.)";
-
-				my $filename;
-				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
-
-				PutFile('html/txt/' . $filename, $newFile);
-
-				if (GetConfig('admin/server_key_id')) {
-					ServerSign('html/txt/' . $filename);
-				}
-			}
-		}
-
-		# If the URL begins with "/action/" run it through the processor
-		my $actionPrefix = "/action/";
-		if (0 && substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
-			# Put the arguments into an array
-			my @actionArgs = split("/", $file);
-
-
-			# If the action is "vote.html"
-			if ($actionArgs[2] eq 'vote.html?') {
-				# Get the arguments: file, time, value, checksum
-				my $voteFile = $actionArgs[3];
-				my $ballotTime = $actionArgs[4];
-				my $voteValue = $actionArgs[5];
-				my $checksum = $actionArgs[6];
-
-				# Verify the checksum
-				my $checksumCorrect = md5_hex($voteFile . $ballotTime . $mySecret);
-
-				my $currentTime = GetTime();
-				if ($checksum eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
-					my $voteEntry = "$voteFile|$ballotTime|$voteValue";
-
-					AppendFile("log/votes.log", $voteEntry);
-
-					$newItemCount++;
-				}
-			}
-		}
+		#
+		# my $voteAction = '/action/vote2.html?';
+        # WriteLog('access.pl: $voteAction = ' . $voteAction);
+		#
+		# WriteLog('access.pl: ' . substr($file, 0, length($voteAction)) . ' eq ' . $voteAction);
+		#
+		# if (substr($file, 0, length($voteAction)) eq $voteAction) {
+		# 	#				http://localhost:2784/action/vote2.html?
+		# 	#					vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Finformative%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ffriendly%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fmeta%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fremove%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ftextart%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fabuse%2F435fcd62a628d7b918e243fe97912d7b=on
+		# 	#
+		# 	#					everything after ?
+		# 	#						split by &
+		# 	#						remove =on
+		# 	#						urldecode
+		# 	#						parse as a vote record
+		# 	#
+		# 	WriteLog("access.pl: /action/vote2.html");
+		#
+		# 	# everything after ?
+		# 	my $votesQuery = substr($file, index($file, '?') + 1);
+		#
+        #     WriteLog('$votesQuery = ' . $votesQuery);
+		#
+        #     # split by &
+		# 	my @voteAtoms = split('&', $votesQuery);
+		# 	my $newFile = '';
+		#
+		# 	foreach my $voteAtom (@voteAtoms) {
+		# 		WriteLog($voteAtom);
+		#
+		# 		# remove =on
+		# 		$voteAtom =~ s/=on$//;
+		# 		# url decode
+		# 		$voteAtom = uri_decode($voteAtom);
+		#
+		# 		WriteLog($voteAtom);
+		#
+		# 		my @voteLines = ( $voteAtom =~ m/^vote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
+		# 		#                                 token   /item           /time     /tag      /csrf
+		# 		if (@voteLines) {
+		# 			my $fileHash   = shift @voteLines;
+		# 			my $ballotTime = shift @voteLines;
+		# 			my $voteValue  = shift @voteLines;
+		# 			my $csrf = shift @voteLines;
+		#
+		# 			#todo my $voteBallot .= "$fileHash/$ballotTime/$voteValue
+		#
+		# 			my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
+		#
+		# 			my $currentTime = GetTime();
+		# 			if (
+		# 					($csrf eq $checksumCorrect) #checksum needs to match
+		# 						&&
+		# 					(($currentTime - $ballotTime) < 7200) # vote should be recent #todo remove magic number
+		# 				) {
+		# 				#my $voteEntry = "$fileHash|$ballotTime|$voteValue";
+		# 				#AppendFile("log/votes.log", $voteEntry);
+		# 				#votes.log is deprecated in favor of adding stuff to the tree
+		#
+		# 				my $newLine = "vote/$fileHash/$ballotTime/$voteValue/$csrf";
+		# 				if ($newFile) {
+		# 					$newFile .= "\n";
+		# 				}
+		# 				$newFile .= $newLine;
+		#
+		# 				$newItemCount++;
+		# 			}
+		#
+		# 			if (GetConfig('admin/logging/record_voter_fingerprint')) {
+		# 				$recordFingerprint = 1;
+		# 			}
+		# 			if (GetConfig('admin/logging/record_voter_timestamp')) {
+		# 				$recordTimestamp = 1;
+		# 			}
+		# 		}
+		# 	}
+		#
+		# 	if ($newFile) {
+		# 		#$newFile .= "\n\n(Anonymously submitted without a signature.)";
+		#
+		# 		my $filename;
+		# 		$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
+		#
+		# 		PutFile('html/txt/' . $filename, $newFile);
+		#
+		# 		if (GetConfig('admin/server_key_id')) {
+		# 			ServerSign('html/txt/' . $filename);
+		# 		}
+		# 	}
+		# }
+		#
+		# # If the URL begins with "/action/" run it through the processor
+		# my $actionPrefix = "/action/";
+		# if (0 && substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
+		# 	# Put the arguments into an array
+		# 	my @actionArgs = split("/", $file);
+		#
+		#
+		# 	# If the action is "vote.html"
+		# 	if ($actionArgs[2] eq 'vote.html?') {
+		# 		# Get the arguments: file, time, value, checksum
+		# 		my $voteFile = $actionArgs[3];
+		# 		my $ballotTime = $actionArgs[4];
+		# 		my $voteValue = $actionArgs[5];
+		# 		my $checksum = $actionArgs[6];
+		#
+		# 		# Verify the checksum
+		# 		my $checksumCorrect = md5_hex($voteFile . $ballotTime . $mySecret);
+		#
+		# 		my $currentTime = GetTime();
+		# 		if ($checksum eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
+		# 			my $voteEntry = "$voteFile|$ballotTime|$voteValue";
+		#
+		# 			AppendFile("log/votes.log", $voteEntry);
+		#
+		# 			$newItemCount++;
+		# 		}
+		# 	}
+		# }
 	}
 
 	# Close the log file handle
