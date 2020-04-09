@@ -19,7 +19,7 @@ if (window.getUserFp) {
 			var gt = unescape('%3E');
 
 			var btnSignReply = document.createElement('button');
-			btnSignReply.setAttribute('onclick', "if (window.signMessage) { this.value = 'Please wait... (click to try again)'; signMessage(); }");
+			btnSignReply.setAttribute('onclick', "if (window.signMessage) { this.value = 'Meditate... (click to try again)'; signMessage(); }");
 			//btnSignReply.setAttribute('value', actName);
 			btnSignReply.innerHTML = actName;
 

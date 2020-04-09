@@ -5,6 +5,7 @@ $cookie = 0;
 include_once('utils.php');
 
 $commandRegister = 'Register';
+$commandRegister1 = 'Meditate...';
 $commandRegister2 = 'Please wait...';
 $commandRegister3 = 'Wait...';
 $commandUnregister = 'Sign Out';
@@ -108,7 +109,7 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 			header('Location: /profile.html?message=' . $messageSignedIn);
 		}
 	} else {
-		if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
+		if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister1 || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
 			setcookie2('test', '1');
 			header('Location: /profile.html?' . time());
 		}

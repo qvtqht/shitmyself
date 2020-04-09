@@ -32,7 +32,7 @@
 						>$initText</textarea><br>
 
 						<p>
-							<input type=submit onclick="this.value = 'Please wait...'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
+							<input type=submit onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(); }" value="Send Message" id=addtext>
 						</p>
 
 						<p id=lblWriteLengthWarning class=warning style="display: none">

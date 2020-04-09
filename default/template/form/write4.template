@@ -40,7 +40,7 @@
 						<p>
 							<input
 								type=submit
-								onclick="this.value = 'Please wait...'; if (window.writeSubmit) { return writeSubmit(this); }"
+								onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"
 								value="Send Message"
 								name=addtext
 								id=addtext

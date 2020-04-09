@@ -36,7 +36,7 @@
                 value="Run Tests"
             >
 
-            <input type=submit value="Upload Results" onclick="this.value='Please wait...'; return true;">
+            <input type=submit value="Upload Results" onclick="this.value='Meditate...'; return true;">
 
             <p>
                 navigator.userAgent:<br>
