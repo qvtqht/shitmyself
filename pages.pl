@@ -1108,9 +1108,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (GetConfig('admin/image/enable') && $itemType eq 'image') {
 			my $imageContainer = GetTemplate('item/container/image.template');
 
-			my $imageUrl = "/thumb/$fileHash.gif";
+			my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
+			my $imageAlt = $itemTitle;
 
 			$imageContainer =~ s/\$imageUrl/$imageUrl/g;
+			$imageContainer =~ s/\$imageAlt/$imageAlt/g;
 
 			$itemText = $imageContainer;
 
@@ -2116,7 +2118,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	}
 
 	return $txtIndex;
-} # /GetReadPage
+} # GetReadPage
 
 
 sub GetMenuItem { # returns html snippet for a menu item (used for both top and footer menus)
