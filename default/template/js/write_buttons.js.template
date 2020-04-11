@@ -17,11 +17,18 @@ if (window.getUserFp) {
 
 		if (sp) {
 			var gt = unescape('%3E');
+//
+//			// the <button> way, allowing formatting inside button
+//			// if using color avatars, requiring button element instead of submit, would look like this:
+//			var btnSignReply = document.createElement('button');
+//			btnSignReply.setAttribute('onclick', "this.innerHTML = 'Meditate...'; if (window.signMessage) { signMessage(); }");
+//			btnSignReply.innerHTML = actName;
 
-			var btnSignReply = document.createElement('button');
-			btnSignReply.setAttribute('onclick', "if (window.signMessage) { this.value = 'Meditate... (click to try again)'; signMessage(); }");
-			//btnSignReply.setAttribute('value', actName);
-			btnSignReply.innerHTML = actName;
+			// the <input type=submit way, more compatible
+			var btnSignReply = document.createElement('input');
+			btnSignReply.setAttribute('onclick', "this.value = 'Meditate...'; if (window.signMessage) { signMessage(); }");
+			btnSignReply.setAttribute('value', actName);
+			btnSignReply.setAttribute('type', 'submit');
 
 			sp.appendChild(btnSignReply);
 
