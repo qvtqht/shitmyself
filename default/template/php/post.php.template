@@ -265,7 +265,7 @@ if ($_GET) {
 	}
 }
 
-if ($comment) {
+if (isset($comment) && $comment) {
 	if ($comment == 'Update') {
 		$updateStartTime = time();
 
@@ -353,7 +353,10 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 if (!$redirectUrl && $fileUrlPath) {
 	$finishTime = time() - $postPhpStartTime;
 
-	$itemPostedServerMessageId = StoreServerMessage("Success! New item posted! <small>in $finishTime seconds</small>");
+	$itemPostedServerMessage = "Success! New item posted!<small class=advanced> in $finishTime seconds</small>";
+	//$itemPostedServerMessage .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
+
+	$itemPostedServerMessageId = StoreServerMessage($itemPostedServerMessage);
 
     $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
 }
