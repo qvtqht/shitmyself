@@ -5,94 +5,129 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 // e is event object passed by onkeydown event
 // t is the text field's "this"
 
-    //alert('DEBUG: translitKey() begins');
+	//alert('DEBUG: translitKey() begins');
 
-    if (e.ctrlKey || e.metaKey) {
-    // do nothing if ctrl or meta key is pressed down
-    // alt is not here because there are several alt combinations
-        return;
-    }
+	if (e.ctrlKey || e.metaKey) {
+	// do nothing if ctrl or meta key is pressed down
+	// alt is not here because there are several alt combinations
+		return true;
+	}
 
-    var nl = '$'; // new letter
+	var nl = '$'; // new letter
 
-    var key = '$'; // pressed key
+	var key = '$'; // pressed key
 
-    if (e.key) {
-    // for browsers which return event.key
-        //alert('DEBUG: translitKey: e.key is TRUE');
-        key = e.key;
-    } else if (e.keyCode) {
-    // older browsers only return event.keyCode
-        //alert('DEBUG: translitKey: e.key is FALSE');
-        key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
-    }
-    //alert('DEBUG: key: ' + key);
+	if (e.key) {
+	// for browsers which return event.key
+		//alert('DEBUG: translitKey: e.key is TRUE, and equal to ' + e.key);
+		key = e.key;
+	} else if (e.keyCode) {
+	// older browsers only return event.keyCode
+		//alert('DEBUG: translitKey: e.key is FALSE');
 
-    if (e.altKey) {
-    // alt key combinations are few
-        if (e.key == 'e') {
-            nl = "ё";
-        } else if (e.key == 'E') {
-            nl = 'Ё';
-        } else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
-            nl = e.key;
-        } else {
-            return;
-        }
-    } else {
-        var keysEn =
-            "`-=" +
-            "~_+" +
-            "qwertyuiop[]\\" +
-            "QWERTYUIOP{}|" +
-            "asdfghjkl" +
-            "ASDFGHJKL" +
-            "zxcvbnm" +
-            "ZXCVBNM"
-        ;
+		// magic, not sure if this actually works
+		// what browsers is this for?
+		key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
+	}
+	//alert('DEBUG: key: ' + key);
 
-        var keysRu =
-            "щьъ" +
-            "Щ-=" +
-            "яшертыуиопюжэ" +
-            "ЯШЕРТЫУИОПЮЖЭ" +
-            "асдфгчйкл" +
-            "АСДФГЧЙКЛ" +
-            "зхцвбнм" +
-            "ЗХЦВБНМ"
-        ;
 
-        if (keysEn.length != keysRu.length) {
-            //alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
-        }
+	// alt+` will toggle translit mode
+	if (e.altKey) {
+		if (e.key == '`' || e.key == 'r' || e.key == 'R') {
+			if (window.translitKeyState == 1) {
+				// 2 is off
+				window.translitKeyState = 2;
+				t.style.borderTop = '3pt solid blue';
+			} else {
+				window.translitKeyState = 1;
+				t.style.borderTop = '3pt solid red';
+			}
 
-        if (e.key) {
-            for (var i = 0; i < keysEn.length; i++) {
-                if (e.key == keysEn.substr(i, 1)) {
-                    //alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
-                    nl = keysRu.substr(i, 1);
+			// we're doing it, we're overriding the user's keypress
+			if (e.preventDefault) {
+				e.preventDefault();
+			}
 
-                    break;
-                }
-            }
-        }
-    }
+			return false;
+		}
+	}
+	// end toggle handler
 
-    if (nl == '$') {
-    // new letter was never changed from $ character,
-    // which is not part of the possible outputs,
-    // so we do not need to replace the input.
-        return;
-    }
+	// check for toggle status.
+	// 2 is off
+	if (!window.translitKeyState) {
+		window.translitKeyState = 2;
+	}
+	if (window.translitKeyState == 2) {
+		return true;
+	}
 
-    // we're doing it, we're overriding the user's keypress
-    if (e.preventDefault) {
-        e.preventDefault();
-    }
+	if (e.altKey) {
+	// alt key combinations are few
+		if (e.key == 'e') {
+			nl = "ё";
+		} else if (e.key == 'E') {
+			nl = 'Ё';
+		} else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
+			nl = e.key;
+		} else {
+			return true;
+		}
+	} else {
+		var keysEn =
+			"`-=" +
+			"~_+" +
+			"qwertyuiop[]\\" +
+			"QWERTYUIOP{}|" +
+			"asdfghjkl" +
+			"ASDFGHJKL" +
+			"zxcvbnm" +
+			"ZXCVBNM"
+		;
 
-    //alert('DEBUG: e.preventDefault() was called');
+		var keysRu =
+			"щьъ" +
+			"Щ-=" +
+			"яшертыуиопюжэ" +
+			"ЯШЕРТЫУИОПЮЖЭ" +
+			"асдфгчйкл" +
+			"АСДФГЧЙКЛ" +
+			"зхцвбнм" +
+			"ЗХЦВБНМ"
+		;
 
-    var txt = t;
+		if (keysEn.length != keysRu.length) {
+			//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
+		}
+
+		if (e.key) {
+			for (var i = 0; i < keysEn.length; i++) {
+				if (e.key == keysEn.substr(i, 1)) {
+					//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
+					nl = keysRu.substr(i, 1);
+
+					break;
+				}
+			}
+		}
+	}
+
+	if (nl == '$') {
+	// new letter was never changed from $ character,
+	// which is not part of the possible outputs,
+	// so we do not need to replace the input.
+		return true;
+	}
+
+	// we're doing it, we're overriding the user's keypress
+	if (e.preventDefault) {
+		e.preventDefault();
+	}
+
+	//alert('DEBUG: e.preventDefault() was called');
+
+	var txt = t;
 
 // this block of code may still come in handy.
 // it finds the textbox by element id instead of using the one passed into the function
@@ -109,14 +144,16 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 //        }
 //    }
 
-    if (txt) {
-    // append the text to the textbox
-    // dont bother with looking for pointer location or selection
-        txt.value = txt.value + nl;
-        //replaceSelectedText(txt, nl);
-    } else {
-        //alert('DEBUG: no text field');
-    }
+	if (txt) {
+	// append the text to the textbox
+	// dont bother with looking for pointer location or selection
+		txt.value = txt.value + nl;
+		//replaceSelectedText(txt, nl);
+	} else {
+		//alert('DEBUG: no text field');
+	}
+
+	return false;
 }
 
 /////////////////////////////
