@@ -390,6 +390,10 @@ sub IndexTextFile { # indexes one text file into database
 			# it was posted by admin
 			$isAdmin = 1;
 
+			if (GetConfig('admin/admin_last_action') < $addedTime) {
+				PutConfig('admin/admin_last_action', $addedTime);
+			}
+
 			DBAddVoteRecord($fileHash, $addedTime, 'admin');
 
 			DBAddPageTouch('tag', 'admin');
@@ -1543,11 +1547,34 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 		my $itemName = TrimPath($file);
 
-		my $convertCommand = "convert $file -thumbnail 420x420 html/thumb/$fileHash.gif";
-		WriteLog('IndexImageFile: ' . $convertCommand);
+		{
+			# make 1024x1024 thumbnail
+			if (!-e "html/thumb/thumb_1024_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 1024x1024 -strip html/thumb/thumb_1024_$fileHash.gif";
+				WriteLog('IndexImageFile: ' . $convertCommand);
 
-		my $convertCommandResult = `$convertCommand`;
-		WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+				my $convertCommandResult = `$convertCommand`;
+				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			}
+
+			# make 420x420 thumbnail
+			if (!-e "html/thumb/thumb_420_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip html/thumb/thumb_420_$fileHash.gif";
+				WriteLog('IndexImageFile: ' . $convertCommand);
+
+				my $convertCommandResult = `$convertCommand`;
+				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			}
+
+			# make 48x48 thumbnail
+			if (!-e "html/thumb/thumb_48_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 48x48 -strip html/thumb/thumb_48_$fileHash.gif";
+				WriteLog('IndexImageFile: ' . $convertCommand);
+
+				my $convertCommandResult = `$convertCommand`;
+				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			}
+		}
 
 		DBAddItem($file, $itemName, '', $fileHash, 'image', 0);
 
