@@ -3,7 +3,7 @@
 	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td><small>
-				<a href="#maincontent"><font color=$colorTitlebarText><b><small>Skip to main content</small></b></font></a>
+				<b><small><a href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a></small></b>
 			</small></td>
 		</tr>
 		<tr class=clock>
