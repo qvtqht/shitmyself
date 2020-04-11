@@ -1,3 +1,43 @@
+Added Support for phonetic Russian typing in text fields.
+
+This is definitely a "scratching my own itch" feature, primarily intended for desktop.
+
+To ENABLE: Press Alt+` or Alt+R in text field.
+
+To SWITCH BACK TO ENGLISH: same thing, press Alt+` or Alt+R.
+
+If successful, the text box will get a red border at the top when Russian, blue when back to English.
+
+Here is a the layout on a U.S. keyboard:
+
+ Щ 1 2 3 4 5 6 7 8 9 0 ь ъ [Backspc]
+[Tab] Я Ш Е Р Т Ы У И О П Ю Ж   Э
+[Caps] А С Д Ф Г Ч Й К Л ; ' [Enter]
+[Shift] З Х Ц В Б Н М , . /  [Shift]
+[Ctr][M][Alt][______][Al][M][m][Ctr]
+
+To type ё, press Alt+E.
+To type -/_ and =/+, also use the Alt key.
+
+I copied Apple's Russian Phonetic layout, because I'm most used to it, and it makes the most sense to me.
+* I think it is easy to remember that ь and ъ are on the - and + keys.
+* Less frequently used letters are placed at the edges.
+* Most of the letters are phonetically aligned.
+* I also like that most of the punctuation remains unchanged.
+* I don't care about traditional Russian punctuation, such as No, <<, >>, etc.
+
+There are a couple of known issues, which I intend to fix in the future:
+
+* The typed letters are always added to the end of the text field, ignoring selection and cursor.
+* The letters щ, ь, ъ, ю, ж, э do not obey Caps Lock.
+* There is no global setting, it must be turned on each time.
+* The feature is available only on Write and Reply fields.
+* Only newer browsers, about 2010+, support this feature.
+
+
+
+
+
 
 <!-- >
 <b>Attention Mosaic Users!</b><br>
@@ -50,7 +90,7 @@ http://localhost:3000/post.html
 http://localhost:3000/action/event.html?event_name=eventnaeme&brc_ave=2%3A00&brc_street=C&event_location=llcoation&month=8&day=24&year=2019&hour=2&minute=0&am_pm=1&date_yyyy=2019-08-24+14%3A00&event_details=wordfdfad%0D%0Aafdfad
 
 
-127.0.0.1 localhost:3000 - [27/Aug/2019:23:08:17 -0400] "GET 
+127.0.0.1 localhost:3000 - [27/Aug/2019:23:08:17 -0400] "GET
 
 /action/event.html
 ?event_name=eventnaeme

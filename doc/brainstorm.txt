@@ -1,3 +1,15 @@
+collapse/expand images
+
+views with/without images and content
+
+proof of work to improve author weight
+	hash own fingerprint + number =~ m/b00b135/
+
+improve handling of list/* as lists (arrays?)
+
+an entire thread from facebook, reddit, or twitter, can be imported
+	substitute anonymous for all the usernames
+
 onpageunload reset please wait button back to its previou caption so that if users presses back it's back to normal again
 	there can also be a special js to check for this as well
 		implementation details hazy
@@ -468,6 +480,8 @@ posts voted on = vouch
 
 private key save methods
 	image with qr code
+		could be qr code, could be stegano, could be text in exif
+			or all of the above
 		great for iphone and android
 		re-login procedure
 			select image from photos

@@ -1,3 +1,28 @@
+#bug reply counts are not reported when comments are listed as replies
+
+deleted items page
+	X items are deleted. Here are their IDs and comments on them
+
+#known some html templates include onclick, onchange, etc. events, which still there when config/admin/js/enable is 0
+
+#bug in translit: letters on -=[]\ keys don't listen to caps lock
+
+assigning someone a tagset allows them to assign all the tags in the tagset
+
+local save
+	autosave to localstorage
+	autosave to cookie
+	save draft button
+
+
+mosaic doesn't understand relative redirects
+	location: header must include full url
+		protocol
+		://
+		self-host
+		:port if not default
+		/rest of the url
+
 rate limiting
 	by ip
 	by action type
@@ -24,36 +49,37 @@ user's own id should be identified anywhere it is displayed
 Image Support MPV
 =================
 	indexing of files into database
-		generate standard size
-		generate thumbnail
-		generate alt tag
-		save original file name (as title?)
-		rename if organize_files
-		index dimensions?
+		xgenerate standard size
+		xgenerate thumbnail
+		xgenerate alt tag
+		xsave original file name (as title?)
+		o rename if organize_files
+		o index dimensions?
 	embed in html or <img> tag, etc.
-		size
-			height
-			width
-			css size
-		alt tag
-		link to original
+		xsize
+			xheight
+			xwidth
+			o css size
+		xalt tag
+		xlink to original
 	standardization
-		size and quality
-		convert and store (imagemagick)
-		retain size information
+		xsize and quality
+		xconvert and store (imagemagick)
+		xretain size information
+			(original is retained and linked)
 	tokens to add image title,
-		#token, perhaps
+		#title, perhaps
 			select best title based on #title post scores
 	finish support in
-		index.pl
-			generate standardized image
-			thumbnail
-			alt tag (top title?)
-		update.pl
+		xindex.pl
+			xgenerate standardized image
+			xthumbnail
+			xalt tag (top title?)
+		xupdate.pl
 	upload capability
 		how to create image
-			link to existing url (site will download)
-			upload via upload form
+			o link to existing url (site will download)
+			xupload via upload form
 				for registered users, link is displayed?
 	x config/admin/image/enable
 	config/admin/image/upload/enable
