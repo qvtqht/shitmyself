@@ -304,6 +304,7 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 //            SetPrefs('show_admin', 0);
 		} else if (ab == 'admin') {
             SetPrefs('show_admin', 1);
+            SetPrefs('want_to_vote', 1);
 		}
 
 		ShowAdvanced(1);
