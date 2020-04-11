@@ -1,28 +1,69 @@
+<?php
+		// remember current working directory, we'll need it later
+
+		
+		$pwd = getcwd();
+		WriteLog('$pwd = ' . $pwd);
+
+		if (GetConfig('admin/php/update_on_post')) {
+			WriteLog("cd .. ; ./update.pl \"html/$path\"");
+			WriteLog(`cd .. ; ./update.pl "html/$path"`);
+		}
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+
+		// path for new html file
+		$fileHtmlPath = './' . GetHtmlFilename($hash);
+
+		// path for client's (browser's) path to html file
+		$fileUrlPath = '/' . GetHtmlFilename($hash);
+
+		$redirectUrl = '';
+
+		if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
+			$itemPostedServerMessage = "Success! New image posted!";
+			//$itemPostedServerMessage .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
+
+			$itemPostedServerMessageId = StoreServerMessage($itemPostedServerMessage);
+
+			$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
+		}
+		
+		if ($redirectUrl) {
+			WriteLog('Location: ' . $redirectUrl);
+			header('Location: ' . $redirectUrl);
+		}
+	} else {
+		WriteLog("There was an error uploading the file, please try again!");
+		echo "There was an error uploading the file, please try again!";
+	}
+
+	print WriteLog('');
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Upload your files</title>
+	<title>Upload your files</title>
+	<style type="text/css">
+	<!--
+		* {
+			font-size: x-large;
+		}
+	-->
+	</style>
 </head>
 <body>
   <form enctype="multipart/form-data" action="upload.php" method="POST">
-    <p>Upload your file</p>
-    <input type="file" name="uploaded_file"></input><br />
-    <input type="submit" value="Upload"></input>
+	<p>Upload your file</p>
+	<input type="file" name="uploaded_file"></input>
+	<br><br>
+	<input type="submit" value="Upload"></input>
   </form>
 </body>
 </html>
-<?PHP
-  if(!empty($_FILES['uploaded_file']))
-  {
-    $path = "uploads/";
-    $path = $path . basename( $_FILES['uploaded_file']['name']);
-
-    if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path)) {
-      echo "The file ".  basename( $_FILES['uploaded_file']['name']). 
-      " has been uploaded";
-    } else{
-        echo "There was an error uploading the file, please try again!";
-    }
-  }
-?>
-
