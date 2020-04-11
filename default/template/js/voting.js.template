@@ -13,10 +13,19 @@
 function PingUrl(url) { // loads arbitrary url via image
 // compatible with most js
 	if (document.images) {
-		var img = document.images[0];
+		if (document.images.length) {
+			// use last image on page, if possible. this should be the special pixel image.
+			var img = document.images[document.images.length - 1];
 
-		if (img) {
-			img.setAttribute("src", url);
+			if (img) {
+				img.setAttribute("src", url);
+			}
+		} else {
+			var img = document.images[0];
+
+			if (img) {
+				img.setAttribute("src", url);
+			}
 		}
 	}
 }
@@ -64,8 +73,6 @@ function signVote(t, token) { // signs a vote from referenced vote button
 					AmIFresh();
 				}
 			}
-
-			return false;
 		} else {
 		// there is a private key
 
@@ -90,9 +97,9 @@ function signVote(t, token) { // signs a vote from referenced vote button
 
 			// sign the voting token and send to post.html when finished
 			openpgp.sign(options).then(signCallback);
-
-			return false;
 		}
+
+		return false;
 	} else {
 //	    if (document.images) {
 //	        var myUrl = window.location;
