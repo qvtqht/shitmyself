@@ -349,12 +349,16 @@ function SavePrivateKeyAsTxt() {
 }
 
 function CallLoadPrivateKey() {
-	var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
+	alert('DEBUG: CallLoadPrivateKey() begins');
 
-	//alert('DEBUG: CallLoadPrivateKey: fileLoadKeyFromText: ' + !!fileLoadKeyFromText);
+	if (document.getElementById) {
+		var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
 
-	if (fileLoadKeyFromText) {
-		fileLoadKeyFromText.click();
+		//alert('DEBUG: CallLoadPrivateKey: fileLoadKeyFromText: ' + !!fileLoadKeyFromText);
+
+		if (fileLoadKeyFromText) {
+			fileLoadKeyFromText.click();
+		}
 	}
 }
 
