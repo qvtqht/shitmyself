@@ -301,18 +301,29 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('Overthrow requested');
 
 							if (GetConfig('admin/allow_deop')) {
-								WriteLog('Overthrow conditions met');
+								if (time() - GetConfig('admin/admin_last_action') > 60) {
+									WriteLog('Overthrow conditions met');
 
-								if (file_exists('../admin.key')) {
-									unlink('../admin.key');
-									WriteLog('Overthrow successful');
+									//PutConfig('admin/admin_last_action', 0);
+									file_put_contents('../config/admin/admin_last_action', 0); //#todo PutConfig()
 
-									$messageOverthrow = StoreServerMessage('Overthrow successful! Publish your profile to become operator.');
-									$redirectUrl = '/settings.html?message=' . $messageOverthrow;
+									if (file_exists('../admin.key')) {
+										unlink('../admin.key');
+										WriteLog('Overthrow successful');
+
+										$messageOverthrow = StoreServerMessage('Overthrow successful! Publish your profile to become operator.');
+
+										$redirectUrl = '/settings.html?message=' . $messageOverthrow;
+									} else {
+										WriteLog('Overthrow already in effect: admin.key missing');
+
+										$messageOverthrow = StoreServerMessage('Overthrow already happened! Publish your profile.');
+										$redirectUrl = '/settings.html?message=' . $messageOverthrow;
+									}
 								} else {
-									WriteLog('Overthrow already in effect: admin.key missing');
+									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
 
-									$messageOverthrow = StoreServerMessage('Overthrow already happened!');
+									$messageOverthrow = StoreServerMessage('Overthrow conditions not met, overthrow unsuccessful');
 									$redirectUrl = '/settings.html?message=' . $messageOverthrow;
 								}
 							} else {
