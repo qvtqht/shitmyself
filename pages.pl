@@ -1313,6 +1313,34 @@ sub FillThemeColors {
 	return $html;
 }
 
+sub GetMenuFromList {
+	my $listName = shift;
+	chomp $listName;
+	if (!$listName) {
+		return;
+	}
+
+	my $listText = GetConfig('list/' . $listName);
+
+	my $menuItems = '';
+	my @menuList = split("\n", $listText);
+
+	foreach my $menuItem (@menuList) {
+		my $menuItemName = $menuItem;
+		my $menuItemUrl	= '/' . $menuItemName . '.html';
+
+		if ($menuItemName eq 'index') {
+			$menuItemUrl = '/';
+		}
+
+		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
+
+		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption);
+	}
+
+	return $menuItems;
+}
+
 sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
 	my $title = shift; # page title
 	my $titleHtml = shift; # formatted page title
@@ -1382,41 +1410,9 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $adminKey = GetAdminKey();
 
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
-	
-	my $menuItems = '';
 
-	my @menuList = split("\n", GetConfig('list/menu'));
-
-	foreach my $menuItem (@menuList) {
-		my $menuItemName = $menuItem;
-		my $menuItemUrl	= '/' . $menuItemName . '.html';
-
-		if ($menuItemName eq 'index') {
-			$menuItemUrl = '/';
-		}
-
-		if ($menuItemName eq 'index0') {
-			$menuItemName = 'compost';
-		}
-
-		$menuItemName = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
-
-		$menuItems .= GetMenuItem($menuItemUrl, $menuItemName);
-	}
-
-	# #todo replace with config/menu/*
-	# $menuItems .= GetMenuItem("/", 'Read');
-	# $menuItems .= GetMenuItem("/write.html", 'Write');
-	# $menuItems .= GetMenuItem("/settings.html", 'Settings', 'advanced');
-	# $menuItems .= GetMenuItem("/stats.html", 'Status', 'advanced');
-	#
-	# $menuItems .= GetMenuItem("/authors.html", 'Authors', 'advanced');
-	# # $menuItems .= GetMenuItem("/events.html", 'Events', 'advanced');
-	# $menuItems .= GetMenuItem("/tags.html", 'Tags', 'advanced');
-	# $menuItems .= GetMenuItem("/index0.html", 'Compost', 'voter');
-	# $menuItems .= GetMenuItem("/data.html", 'Data', 'advanced');
-	# # $menuItems .= GetMenuItem("/jstest1.html", 'Test', 'advanced');
-	# $menuItems .= GetMenuItem("/profile.html", 'Profile');
+	my $menuItems = GetMenuFromList('menu');
+	$menuItems .= '<span class=advanced>' . GetMenuFromList('menu_advanced') . '</span>';
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	
@@ -2133,24 +2129,38 @@ sub GetMenuItem { # returns html snippet for a menu item (used for both top and 
 #	}
 
 	my $menuItem = '';
-	if ($className eq 'advanced') {
-		$menuItem = GetTemplate('menuitem-advanced.template');
-	} elsif ($className eq 'voter') {
-		$menuItem = GetTemplate('menuitem-voter.template');
-	} elsif ($className eq 'beginner') {
-		$menuItem = GetTemplate('menuitem-beginner.template');
-	} else {
-		$menuItem = GetTemplate('menuitem.template');
-	}
+	$menuItem = GetTemplate('menuitem.template');
 
-	my $color = '#' . substr(md5_hex($caption), 0, 6);
+	#my $color = GetThemeColor('link');
+	# my $colorSourceHash = md5_hex($caption);
+	# my $menuColorMode = GetThemeAttribute('menu_color_mode') ? 1 : 0;
+	# for (my $colorSelectorI = 0; $colorSelectorI < 6; $colorSelectorI++) {
+	# 	my $char = substr($colorSourceHash, $colorSelectorI, 1);
+	# 	if (!$menuColorMode) {
+	# 		if ($char eq 'd' || $char eq 'e' || $char eq 'f') {
+	# 			$char = 'c';
+	# 		}
+	# 	}
+	# 	if ($menuColorMode) {
+	# 		if ($char eq '0' || $char eq '1' || $char eq '2') {
+	# 			$char = '3';
+	# 		}
+	# 	}
+	# 	$color .= $char;
+	# }
+
+	# my $firstLetter = substr($caption, 0, 1);
+	# $caption = substr($caption, 1);
+
+	my $color = substr(md5_hex($caption), 0, 6);
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
 	$menuItem =~ s/\$color/$color/g;
+	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
 
 	return $menuItem;
-}
+} # GetMenuItem
 
 sub GetMenuItemByKey {
 	my $key = shift;
