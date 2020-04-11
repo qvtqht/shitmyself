@@ -1095,6 +1095,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$itemClass .= ' byadmin';
 
 				my $adminContainer = GetTemplate('item/container/admin.template');
+
+				my $colorAdmin = GetThemeColor('admin') || 'red';
+				$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
+
 				$adminContainer =~ s/\$message/$itemText/g;
 
 				$itemText = $adminContainer;
