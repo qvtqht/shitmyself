@@ -5,7 +5,7 @@ use strict;
 use threads;
 use utf8;
 
-sub BuildMessage {
+sub BuildMessage { # prints timestamped message to output
 	print time();
 	print ' ';
 	print shift;
@@ -13,33 +13,30 @@ sub BuildMessage {
 }
 
 BuildMessage "Require ./utils.pl...";
-
 require './utils.pl';
 
 BuildMessage "Calculating build times...";
-
-my $prevBuildStart = trim(GetFile('config/admin/build_begin'));
-my $prevBuildFinish = trim(GetFile('config/admin/build_end'));
-
-BuildMessage "\$prevBuildStart = " . $prevBuildStart;
-BuildMessage "\$prevBuildFinish = " . $prevBuildFinish;
-
-my $prevBuildDuration;
-
-if ($prevBuildFinish && $prevBuildStart && $prevBuildFinish > $prevBuildStart) {
-	$prevBuildDuration = ($prevBuildFinish - $prevBuildStart);
-	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
-}
-
-PutFile('config/admin/build_begin', GetTime());
-PutFile('config/admin/build_end', '');
+#
+# my $prevBuildStart = trim(GetFile('config/admin/build_begin'));
+# my $prevBuildFinish = trim(GetFile('config/admin/build_end'));
+#
+# BuildMessage "\$prevBuildStart = " . $prevBuildStart;
+# BuildMessage "\$prevBuildFinish = " . $prevBuildFinish;
+#
+# my $prevBuildDuration;
+#
+# if ($prevBuildFinish && $prevBuildStart && $prevBuildFinish > $prevBuildStart) {
+# 	$prevBuildDuration = ($prevBuildFinish - $prevBuildStart);
+# 	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
+# }
+#
+# PutFile('config/admin/build_begin', GetTime());
+# PutFile('config/admin/build_end', '');
 
 BuildMessage "Require ./access.pl...";
-
 require './access.pl';
 
 BuildMessage "Require ./index.pl...";
-
 require './index.pl';
 
 # BuildMessage "Upgrade stuff...";
@@ -65,12 +62,15 @@ require './index.pl';
 }
 
 BuildMessage "Ensure there's html/txt and something inside...";
-
 if (!-e 'html/txt') {
+	# create html/txt directory if it doesn't exist
 	mkdir('html/txt');
+	PutFile('html/txt/hello.txt', 'Hello, World!');
 }
 
 if (!glob('html/txt')) {
+	# create first text file if there are none.
+	#
 	PutFile('html/txt/hello.txt', 'Hello, World!');
 }
 
