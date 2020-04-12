@@ -712,13 +712,15 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 #			$replyForm =~ s/$postHtml/post.php/;
 #		}
 
+		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
+
 		$txtIndex .= $replyForm;
 	}
 
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile write_buttons timestamp));
+	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile translit write_buttons timestamp));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -1053,6 +1055,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		my $addedTime = DBGetAddedTime($fileHash); #todo optimize
 		$addedTime = GetTimestampElement($addedTime);
+
+		my $itemTitle = $file{'item_title'};
 
 		if ($file{'item_title'}) {
 			my $itemTitleTemplate = GetTemplate('item_title_link2.template');
@@ -2124,11 +2128,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 sub GetMenuItem { # returns html snippet for a menu item (used for both top and footer menus)
 	my $address = shift;
 	my $caption = shift;
-	my $className = shift;
 
-	if (!$className) {
-		$className = '';
-	}
 #
 #	if (!-e "html/$address") { #don't make a menu item if file doesn't exist
 #		return '';
@@ -2328,6 +2328,9 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 			}
 
 			PutHtmlFile("html/index$i.html", $indexPage);
+			if ($i == 0) {
+				PutHtmlFile("html/compost.html", $indexPage);
+			}
 		}
 	} else {
 		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'), 'home_empty');
@@ -2343,6 +2346,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar));
 
 		PutHtmlFile('html/index0.html', $indexPage);
+		PutHtmlFile('html/compost.html', $indexPage);
 	}
 }
 
@@ -2418,6 +2422,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Submit page
 	my $submitPage = GetWritePage();
 	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
+	PutHtmlFile("$HTMLDIR/create.html", $submitPage);
 
 	# Add Event page
 	my $eventAddPage = GetEventAddPage();
@@ -2653,6 +2658,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		my $writePhpTemplate = GetTemplate('php/write.php.template');
 		PutFile('html/write.php', $writePhpTemplate);
 
+		#my $uploadPhpTemplate = GetTemplate('php/upload.php.template');
+		#PutFile('html/upload.php', $uploadPhpTemplate);
+
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
 		PutFile('html/cookie.php', $cookiePhpTemplate);
 
@@ -2745,9 +2753,9 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetPageFooter();
 
 	if (GetConfig('php/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write translit settings profile));
-	} else {
 		$txtIndex = InjectJs($txtIndex, qw(avatar write translit write_php settings profile));
+	} else {
+		$txtIndex = InjectJs($txtIndex, qw(avatar write translit settings profile));
 	}
 	#$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
 	#$txtIndex = InjectJs($txtIndex, qw(clock));
