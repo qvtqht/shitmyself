@@ -144,6 +144,8 @@ sub ProcessTextFile { #add new textfile to index
 } # ProcessTextFile
 
 sub ProcessImageFile { #add new image to index
+	WriteLog('ProcessImageFile() begins');
+
 	my $file = shift;
 
 	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
@@ -158,17 +160,17 @@ sub ProcessImageFile { #add new image to index
 	# get file's hash from git
 	my $fileHash = GetFileHash($file);
 
-	WriteLog('ProcessTextFile: $fileHash = ' . $fileHash);
+	WriteLog('ProcessImageFile: $fileHash = ' . $fileHash);
 
 	# if deletion of this file has been requested, skip
 	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
 		unlink($file);
-		WriteLog("ProcessTextFile: $fileHash exists in deleted.log, file removed and skipped");
+		WriteLog("ProcessImageFile: $fileHash exists in deleted.log, file removed and skipped");
 
-		WriteLog('ProcessTextFile: return 0');
+		WriteLog('ProcessImageFile: return 0');
 		return 0;
 	} else {
-		WriteLog("ProcessTextFile: $fileHash was not in log/deleted.log, continuing");
+		WriteLog("ProcessImageFile: $fileHash was not in log/deleted.log, continuing");
 	}
 
 	# if (GetConfig('admin/organize_files')) {
@@ -322,68 +324,76 @@ if (!$arg1) {
 			$filesLimit = 100;
 		}
 
-		my $findCommand;
-		my @files;
-
-		#prioritize files with a public key in them
-		$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
-		push @files, split("\n", `$findCommand`);
-
-		$findCommand = 'find html/txt | grep -i txt$';
-		push @files, split("\n", `$findCommand`);
-
 		my $filesProcessed = 0;
 
-		if ($filesLimit > scalar(@files)) {
-			$filesLimit = scalar(@files);
+		{
+			############
+			# TEXT FILE PROCESSING PART BEGINS HERE
+
+			my $findCommand;
+			my @files;
+
+			#prioritize files with a public key in them
+			$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
+			push @files, split("\n", `$findCommand`);
+
+			$findCommand = 'find html/txt | grep -i txt$';
+			push @files, split("\n", `$findCommand`);
+
+			if ($filesLimit > scalar(@files)) {
+				$filesLimit = scalar(@files);
+			}
+
+			# Go through all the changed files
+			foreach my $file (@files) {
+				if ($filesProcessed >= $filesLimit) {
+					WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+					last;
+				}
+
+				WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+
+				if ((GetTime2() - $startTime) > $timeLimit) {
+					WriteLog("Time limit reached, exiting loop");
+					last;
+				}
+
+				# Trim the file path
+				chomp $file;
+				$file = trim($file);
+
+				# Log it
+				WriteLog('update.pl: $file = ' . $file);
+
+				#todo add rss.txt addition
+
+				# If the file exists, and is not a directory, process it
+				if (-e $file && !-d $file) {
+					$filesProcessed += ProcessTextFile($file);
+				}
+				else {
+					# this should not happen
+					WriteLog("Error! $file doesn't exist!");
+				}
+			}
+
+			IndexTextFile('flush');
+
+			WriteIndexedConfig();
+
+
+			# TEXT FILE PROCESSING PART ENDS HERE
+			############
 		}
-
-		# Go through all the changed files
-		foreach my $file (@files) {
-			if ($filesProcessed >= $filesLimit) {
-				WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
-				last;
-			}
-
-			WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
-
-			if ((GetTime2() - $startTime) > $timeLimit) {
-				WriteLog("Time limit reached, exiting loop");
-				last;
-			}
-
-			# Trim the file path
-			chomp $file;
-			$file = trim($file);
-
-			# Log it
-			WriteLog('update.pl: $file = ' . $file);
-
-			#todo add rss.txt addition
-
-			# If the file exists, and is not a directory, process it
-			if (-e $file && !-d $file) {
-				$filesProcessed += ProcessTextFile($file);
-			}
-			else {
-				# this should not happen
-				WriteLog("Error! $file doesn't exist!");
-			}
-		}
-
-		IndexTextFile('flush');
-
-		WriteIndexedConfig();
-
-
 #####
 
 		{
+			# IMAGE PROCESSING PART BEGINS HERE
+			my $findCommand;
+			my @files;
 
 			$findCommand = 'find html/image';
 			push @files, split("\n", `$findCommand`);
-
-			my $filesProcessed = 0;
 
 			if ($filesLimit > scalar(@files)) {
 				$filesLimit = scalar(@files);
@@ -423,9 +433,6 @@ if (!$arg1) {
 			}
 
 			IndexImageFile('flush');
-
-
-
 		}
 
 
@@ -439,12 +446,17 @@ if (!$arg1) {
 		my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
 		my $filesLeft = `$filesLeftCommand`; #todo
 
+		my $imageFilesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+		$filesLeft += `$imageFilesLeftCommand`; #todo
+
 		WriteLog('update.pl: $filesLeft = ' . $filesLeft);
 
 		PutConfig('admin/update/files_left', $filesLeft);
 
 		# if new items were added, re-make all the summary pages (top authors, new threads, etc)
 		if ($filesProcessed > 0) {
+			WriteLog('update.pl: $filesProcessed > 0, calling UpdateUpdateTime() and MakeSummaryPages()...');
+
 			UpdateUpdateTime();
 			MakeSummaryPages();
 			#	WriteIndexPages();
@@ -474,6 +486,8 @@ if (!$arg1) {
 
 		$pagesProcessed = BuildTouchedPages();
 
+		WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
+
 		WriteLog('Saving last update time...');
 
 		# save current time in config/admin/update/last
@@ -495,19 +509,35 @@ if (!$arg1) {
 } elsif ($arg1) {
 	WriteLog('Found argument ' . $arg1);
 
-	if (-e $arg1) {
-		WriteLog('File ' . $arg1 . ' exists, calling ProcessTextFile()');
+	if (-e $arg1 && length($arg1) > 5) {
+		WriteLog('File ' . $arg1 . ' exists');
 
-		my $filesProcessed = ProcessTextFile($arg1);
+		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.txt') { #$arg1 =~ m/\.txt$/
 
-		if ($filesProcessed > 0) {
-			IndexTextFile('flush');
+			my $filesProcessed = ProcessTextFile($arg1);
 
-			WriteIndexedConfig();
+			if ($filesProcessed > 0) {
+				IndexTextFile('flush');
 
-			MakeSummaryPages();
+				WriteIndexedConfig();
 
-			my $pagesProcessed = BuildTouchedPages();
+				MakeSummaryPages();
+
+				my $pagesProcessed = BuildTouchedPages();
+			}
+		}
+
+		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.png' || lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' || lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg') { #$arg1 =~ m/\.txt$/
+
+			my $filesProcessed = ProcessImageFile($arg1);
+
+			if ($filesProcessed > 0) {
+				IndexImageFile('flush');
+
+				MakeSummaryPages();
+
+				my $pagesProcessed = BuildTouchedPages();
+			}
 		}
 
 		unlink('cron.lock');
