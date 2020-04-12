@@ -31,7 +31,7 @@ my $SCRIPTDIR = `pwd`; #hardcode #todo
 chomp $SCRIPTDIR;
 
 # make a list of some directories that need to exist
-my @dirsThatShouldExist = qw(log html html/txt html/image html/thumb cache html/author html/action html/top config);
+my @dirsThatShouldExist = qw(log html html/txt html/image html/thumb cache html/author html/action html/top config html/upload);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
@@ -431,7 +431,7 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 #}
 
 
-sub GetFileHash { # $fileName ; returns git's hash of file contents
+sub GetFileHash { # $fileName ; returns hash of file contents
 	WriteLog("GetFileHash()");
 
 	my $fileName = shift;
@@ -1059,13 +1059,13 @@ sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused
 
 }
 
-sub str_replace { # $string, $old, $new  (copies php's str_replace)
-	my $string = shift;
+sub str_replace { # $old, $new, $string  (copies php's str_replace)
 #	return $string;
 	my $old = shift;
 	my $new = shift;
+	my $string = shift;
 
-	if (!$old || !$new || !$string) {
+	if (!$old || !$string) {
 		return 'str_replace failed due to one of the parameters missing!'; #todo make some kind of gesture
 	}
 
@@ -1119,7 +1119,7 @@ sub ReplaceStrings {
 			my $newString = GetConfig('string/' . $newLanguage . '/' . $stringHash);
 
 			if ($newString) {
-				$content = str_replace($content, $string, $newString);
+				$content = str_replace($string, $newString, $content);
 			} else {
 				PutConfig('string/' . $newLanguage . '/' . $stringHash, $string);
 			}
@@ -2328,25 +2328,40 @@ sub GetItemMeta { # retrieves item's metadata
 	}
 
 	chomp $itemHash;
-
 	if (!IsItem($itemHash)) {
 		return;
 	}
 
 	WriteLog("GetItemMeta($itemHash)");
 
-	my $metaText;
-	my $metaCacheName = "./cache/" . GetMyVersion() . "/meta/$itemHash";
-
-	if (-e $metaCacheName) {
-		$metaText = GetFile($metaCacheName);
-	} else {
-		$metaText = '';
+	my $filePath = shift;
+	if (!$filePath) {
+		return;
 	}
 
-	return $metaText;
+	chomp $filePath;
 
+	if (-e $filePath) {
+		# if (GetFileHash)
+		my $metaFileName = $filePath . '.nfo';
+
+		if (-e $metaFileName) {
+			my $metaText;
+
+			$metaText = GetFile($metaFileName);
+
+			return $metaText;
+		} else {
+			return; # no meta file
+		}
+	} else {
+		return; # file doesn't exist
+	}
 } # GetItemMeta
+
+sub AppendItemMeta { # appends to item's metadata
+# $
+}
 
 sub GetPrefixedUrl { # returns url with relative prefix 
 	my $url = shift;
@@ -2445,5 +2460,20 @@ sub GetPathFromHash { # gets path of text file based on hash
 	}
 }
 
+sub Sha1Test {
+	print "\n";
+
+	print GetFileHash('utils.pl');
+
+	print "\n";
+
+	print(`sha1sum utils.pl | cut -f 1 -d ' '`);
+
+	# print "\n";
+
+	print(`php -r "print(sha1_file('utils.pl'));"`);
+
+	print "\n";
+}
 
 1;
