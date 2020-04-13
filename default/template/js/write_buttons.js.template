@@ -18,7 +18,7 @@ if (window.getUserFp) {
 		if (sp) {
 			var gt = unescape('%3E');
 //
-//			// the <button> way, allowing formatting inside button
+//			// the [button] way, allowing formatting inside button
 //			// if using color avatars, requiring button element instead of submit, would look like this:
 //			var btnSignReply = document.createElement('button');
 //			btnSignReply.setAttribute('onclick', "this.innerHTML = 'Meditate...'; if (window.signMessage) { signMessage(); }");
