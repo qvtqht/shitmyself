@@ -58,3 +58,21 @@ div.txt {
 	background-color: $colorRow1Bg;
 	padding: 5pt;
 }
+
+#addtext {
+	width: 100%
+}
+#a383 {
+	color: black;
+	background-color: yellow;
+	padding: 8pt;
+	position: fixed;
+	top: 10%;
+	left: 30%;
+	width: 40%;
+	margin: 0;
+	border-radius: 3pt;
+}
+#a383 a {
+
+}
