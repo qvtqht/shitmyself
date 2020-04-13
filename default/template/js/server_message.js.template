@@ -52,7 +52,7 @@ function serverMessageOk(t) { // function which hides server message
 	}
 }
 
-function bodyEscPress(keyCode) { // called when user presses esc (or spacebar) on a page with server message
+function bodyEscPress(keyCode) { // called when user presses esc on a page with server message
 // results in server message being hidden
 
 	//alert('DEBUG: bodyEscPress(keyCode): keyCode = ' + keyCode);

@@ -2,7 +2,7 @@
 
 <table id=serverMessage bgcolor=$colorHighlightAlert onclick="if (window.serverMessageOk) { return serverMessageOk(this); } else { return true; }"><tr><td align=center>
     <b>$serverMessage</b>
-    <a href=#maincontent tabindex=0 id=smo onclick="if (window.serverMessageOk) { return serverMessageOk(this); } else { return true; }" title="Hide Message"><b><i>OK</i></b></a>
+    <a href=#maincontent tabindex=0 id=smo onclick="if (window.serverMessageOk) { return serverMessageOk(this); } else {  return true; }" title="Hide Message"><b><i>OK</i></b></a>
     <!-- must begin with <a href=#maincontent for templating reasons -->
 </td></tr></table>
 
