@@ -1,4 +1,4 @@
 <script><!--
-document.write('<p>Informational: JavaScript is enabled in your browser.</p>');
+document.write('<p>JavaScript is enabled in your browser.</p>');
 // #todo replace with element-adding
 // --></script>
