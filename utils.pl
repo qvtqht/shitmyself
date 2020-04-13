@@ -485,6 +485,8 @@ sub GetTemplate { # returns specified template from HTML directory
 		# and we are in debug mode
 		# report the issue
 		WriteLog("GetTemplate: WARNING! template/$filename does not exist, exiting");
+
+		die("GetTemplate: WARNING! template/$filename does not exist, exiting");
 	}
 
 	#information about theme
@@ -1127,6 +1129,33 @@ sub ReplaceStrings {
 	}
 
 	return $content;
+}
+
+sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to html tag;
+	WriteLog('AddAttributeToTag() begin');
+
+	my $html = shift; # chunk of html to work with
+	my $tag = shift; # tag we'll be modifying
+	my $attributeName = shift; # name of attribute
+	my $attributeValue = shift; # value of attribute
+
+	#WriteLog('AddAttributeToTag: $html before: '.$html);
+
+	my $tagAttribute = '';
+	if ($attributeValue =~ m/\w/) {
+		$tagAttribute = $attributeName . '="' . $attributeValue . '"';
+	} else {
+		$tagAttribute = $attributeName . '=' . $attributeValue . '';
+	}
+
+    #todo this is sub-optimal
+	$html =~ s/\<$tag\w/<$tag $tagAttribute /i;
+	$html =~ s/\<$tag/<$tag $tagAttribute /i;
+	$html =~ s/\<$tag>/<$tag $tagAttribute>/i;
+
+	#WriteLog('AddAttributeToTag: $html after: '.$html);
+
+	return $html;
 }
 
 sub PutHtmlFile { # writes content to html file, with special rules; parameters: $file, $content
@@ -2063,9 +2092,13 @@ if ($lastVersion ne $currVersion) {
 		'Software Updated to Version ' . substr($currVersion, 0, 8) . '..' . "\n\n" .
 		'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
 
-	my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
-	$changeLogList = trim($changeLogList);
-	$changeLogMessage .= "$changeLogList";
+	if ($lastVersion) {
+		my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
+		$changeLogList = trim($changeLogList);
+		$changeLogMessage .= "$changeLogList";
+	} else {
+		$changeLogMessage .= 'No changelog will be generated because $lastVersion is false';
+	}
 
 	$changeLogMessage .= "\n\n#changelog";
 
@@ -2342,17 +2375,25 @@ sub GetItemMeta { # retrieves item's metadata
 	chomp $filePath;
 
 	if (-e $filePath) {
-		# if (GetFileHash)
-		my $metaFileName = $filePath . '.nfo';
+		my $fileHash = GetFileHash($filePath);
 
-		if (-e $metaFileName) {
-			my $metaText;
+		if ($fileHash eq $filePath) {
+			my $metaFileName = $filePath . '.nfo';
 
-			$metaText = GetFile($metaFileName);
+			if (-e $metaFileName) {
+				my $metaText;
 
-			return $metaText;
+				$metaText = GetFile($metaFileName);
+
+				return $metaText;
+			}
+			else {
+				return; # no meta file
+			}
 		} else {
-			return; # no meta file
+			WriteLog('GetItemMeta: WARNING: called with hash which did not match file hash');
+
+			return;
 		}
 	} else {
 		return; # file doesn't exist
