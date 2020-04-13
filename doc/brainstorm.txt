@@ -1,3 +1,5 @@
+retroactive registration
+
 collapse/expand images
 
 views with/without images and content
@@ -852,3 +854,53 @@ Can some JS be included as base64 and decoded after loading?
 For pre-form browsers, can registration be accomplished with
 	Links
 	Link re-writing (like WebSphere)
+
+
+name: libreforum LibreForum
+
+continue segregating languages
+	move addtagattribute js snippets to templates
+	move template under admin/
+		is that ok?
+
+logged in indicator
+	set by js
+	set by php
+	in template as span with id
+	just like on profile page
+	needs coiokie php
+
+overthrow_password
+	the password is a hash of a known-to-admin string
+	for x days, the entire password must be matched
+	but as time goes by, only the first 39, then the first 38 etc chars must be matched
+		maybe build a ui for non-technical users to take advantage of bruteforcing too?
+	then eventually no password is needed
+		some kind of basic intent-verification process would be nice
+			that way a random crawl bot doesn't end up being admin
+			bots should still be able to admin a board
+			that's why it says intent-verification, not human-verification
+
+users can gain weight by calculating hashes
+	proof of work
+	against their own fingerprint
+	plus a number
+	must generate a hash which includes '8008135'
+
+
+
+
+overthrow_continue
+	admin the previous top admin for continuation of vouchness
+
+
+page definitions
+	template
+	positons
+	variables
+	queries
+	etc
+
+
+Remember if we popped up loading progress before
+	If we did, we can make it appear right away instead of with a delay

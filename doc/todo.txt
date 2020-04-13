@@ -1,3 +1,18 @@
+admin/organize_files should not be in IndexTextFile... somewhere else, not there
+
+separate out rewrite stuff
+	move rewrite config to separate webserver config file elements
+	rewrite .html links to .php if rewrite is off
+
+#bug links in server messages don't go to their link but just close the server message
+
+
+place to enter private key into textbox
+	just like show private key link
+	but also with a button
+	it used to be that way, so id_create or id_current may have the code
+
+
 #bug reply counts are not reported when comments are listed as replies
 
 deleted items page
