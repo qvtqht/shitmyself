@@ -58,7 +58,7 @@ sub GenerateDialogPage { # generates page with dialog
 
 			$pageTemplate .= GetPageFooter();
 
-			$pageTemplate = InjectJs($pageTemplate, qw(profile settings));
+			$pageTemplate = InjectJs($pageTemplate, qw(settings profile));
 
 			return $pageTemplate;
 		}
@@ -432,7 +432,7 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage .= GetPageFooter();
 
-	$txtPage = InjectJs($txtPage, qw(avatar settings timestamp voting profile));
+	$txtPage = InjectJs($txtPage, qw(settings avatar timestamp voting profile));
 
 	return $txtPage;
 
@@ -503,7 +503,7 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings profile));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
 
 	return $txtIndex;
 }
