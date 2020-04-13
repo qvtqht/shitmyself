@@ -29,9 +29,12 @@ function StripHeavyTags($html) {
 	);
 
 	{
-		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
-		$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
-		$html = preg_replace('/\<\/legend\>/', '<br>', $html);
+	// this would be necessary if the br tags were not already there
+	// may be useful in the future to do automated fixing-up of existing templates
+	// then we can remove all those <br> tags from the templates and make them look neater
+			$html = preg_replace('/\<\/tr\>/', '<br>', $html);
+			$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
+			$html = preg_replace('/\<\/legend\>/', '<br>', $html);
 	}
 
 	foreach ($tags as $tag) {
@@ -52,10 +55,42 @@ function StripComments($html) {
 
 function StripWhitespace($html) {
 //	while (preg_match('/[\t\n ]{2}'
-	$html = preg_replace('/[\t\n ]+/', ' ', $html);
-	while (strpos($html, '  ') !== false) {
-		$html = str_replace('  ', ' ', $html);
-	}
+	$html = str_replace("\t", ' ', $html);
+
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+	$html = str_replace("\n ", "\n", $html);
+
+//
+	$html = str_replace("\n", ' ', $html);
+
+	$html = str_replace('  ', ' ', $html);
+	$html = str_replace('  ', ' ', $html);
+	$html = str_replace('  ', ' ', $html);
+	$html = str_replace('  ', ' ', $html);
+	$html = str_replace('  ', ' ', $html);
+//
+//	while (! (strpos($html, '  ') === false)) {
+//		$html = str_replace('  ', ' ', $html);
+//	}
+//
+	$html = str_replace('> <', '> <', $html);
+	$html = str_replace('> <', '> <', $html);
+	$html = str_replace('> <', '> <', $html);
+	$html = str_replace('> <', '> <', $html);
+	$html = str_replace('> <', '> <', $html);
+	$html = str_replace('> <', '> <', $html);
+////	$html = str_replace('> ', '>', $html);
+////	$html = str_replace(' <', '<', $html);
+//	$html = str_replace('<br><br>', '<br>', $html);
+//	$html = str_replace('<br> <br>', '<br>', $html);
 
 	return $html;
 }
@@ -314,11 +349,13 @@ if (GetConfig('admin/php/route_enable')) {
 							// server sign
 							// call processor
 
-//
-// this quick hack doesn't work yet for lack of SetConfig() in php code
-//
-//                            SetConfig('html/theme', $newTheme);
-//
+							//
+							// this quick hack doesn't work yet for lack of SetConfig() in php code
+							//
+							//SetConfig('html/theme', $newTheme);
+							file_put_contents('../config/html/theme', $newTheme);
+							//
+
 							if (GetConfig('theme/' . $newTheme . '/additional.css')) {
 								file_put_contents('../config/html/theme', $newTheme);
 							}
@@ -542,9 +579,9 @@ if (GetConfig('admin/php/route_enable')) {
 				if ($_COOKIE['light'] != $lightMode) {
 					setcookie2('light', $lightMode);
 
-//					$lightModeSetMessage = StoreServerMessage('Light mode has been set to ' . $lightMode);
+					//$lightModeSetMessage = StoreServerMessage('Light mode has been set to ' . $lightMode);
 
-//					$redirectUrl = '';
+					//$redirectUrl = '';
 				}
 			}
 		} else {
@@ -554,9 +591,16 @@ if (GetConfig('admin/php/route_enable')) {
 		}
 
 		if ($lightMode) {
-			$html = StripWhitespace($html);
 			$html = StripComments($html);
 			$html = StripHeavyTags($html);
+			$html = StripWhitespace($html);
+
+			$html = str_replace(
+				'</body>',
+				'<h3><a href="/settings.html?light=0">Click here to return to fully featured mode.</a></h3></body>',
+				$html
+			);
+
 			//#todo perhaps strip onclick, onkeypress, etc., and style
 		}
 
