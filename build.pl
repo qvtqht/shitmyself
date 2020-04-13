@@ -49,16 +49,16 @@ require './index.pl';
 
 { # clear and rebuild the sqlite db
 	BuildMessage "SqliteUnlinkDB()...";
-
 	SqliteUnlinkDb();
 
 	BuildMessage "SqliteConnect()...";
-
 	SqliteConnect();
 
 	BuildMessage "SqliteMakeTables()...";
-
 	SqliteMakeTables();
+
+	BuildMessage "Remove cache/indexed/*";
+	system('rm -v cache/*/indexed/*');
 }
 
 BuildMessage "Ensure there's html/txt and something inside...";

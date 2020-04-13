@@ -2,4 +2,15 @@ RewriteEngine On
 RewriteRule ^post\.html??(.+)? /post.php [QSA]
 #RewriteRule ^write\.html??(.+)? /write.php [QSA]
 RewriteRule ^profile.html$ /route.php?path=/profile.html [QSA]
+
+# config/php/rewrite=all
+########################
+# php supported on all urls
+# BUT less accessible static failover
+# includes urls without query in route.php requests
+# this mode is useful if you require registration
+
 RewriteRule ^(.+\.html)$ /route.php?path=/$1 [QSA]
+
+
+
