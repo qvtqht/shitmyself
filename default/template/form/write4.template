@@ -31,9 +31,6 @@
 							name=comment
 							autofocus
 							wrap=wrap
-							onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
-							onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
-							onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"
 						>$initText</textarea><br>
 
 						<span class=advanced id=spanSignAs></span>
@@ -45,7 +42,6 @@
 								value="Send Message"
 								name=addtext
 								id=addtext
-								style="width: 100%"
 							>
 						</p>
 

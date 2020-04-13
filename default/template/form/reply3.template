@@ -14,7 +14,6 @@
 					<p>
 					<textarea
 						wrap=wrap rows=4 cols=40 style="width: 100%;" id=comment name=comment
-						onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"
 					>$replyFooter</textarea><br>
 					<span id=replySignedContainer></span>
 					<input type=submit value="Reply Anonymously" onclick="this.value='Meditate...'; return true;">

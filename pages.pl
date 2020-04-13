@@ -796,6 +796,10 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 
 			my $tagButton = GetTemplate('vote2button.template');
 
+			if ($jsEnabled) {
+				$tagButton = AddAttributeToTag($tagButton, 'a', 'onclick', "if (window.signVote) { var gt = unescape('%3E'); return signVote(this, gt+gt+'\$fileHash\\n#\$voteValue'); }")
+			}
+
 			my $quickTagCaption = GetString($quickTagValue);
 
 			if ($doVoteButtonStyles) {
@@ -812,6 +816,13 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 #				$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
 			}
 
+			if ($returnTo) {
+				# set value for $returnTo placeholder
+				$tagButton =~ s/\$returnTo/$returnTo/g;
+			} else {
+				# remove entire returnto= parameter
+				$tagButton =~ s/&returnto=\$returnTo//g;
+			}
 			$tagButton =~ s/\$fileHash/$fileHash/g;
 			$tagButton =~ s/\$ballotTime/$ballotTime/g;
 			$tagButton =~ s/\$voteValue/$quickTagValue/g;
@@ -865,6 +876,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# is_textart = set <tt><code> tags for the message itself
 	# show_easyfind = show/hide easyfind words
 	# item_type = 'txt' or 'image'
+	# vote_return_to = page to redirect user to after voting, either item hash or url
 
 	# get %file hash from supplied parameters
 	my %file = %{shift @_};
@@ -1021,7 +1033,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 		} else {
 			# if no author, no $authorLink
-			$authorLink = ''; #todo put it into getitemtemplate logic instead
+			$authorLink = ''; #todo put it into GetItemTemplate() logic instead
 		}
 		$authorLink = trim($authorLink);
 
@@ -1184,7 +1196,16 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			WriteLog('GetItemTemplate: $file{\'show_quick_vote\'} = ' . $file{'show_quick_vote'});
 	
 			if ($file{'show_quick_vote'}) {
-				my $quickVotesButtons = GetItemVoteButtons($file{'file_hash'}); #todo refactor to take vote totals directly
+				my $quickVotesButtons = '';
+				if (defined($file{'vote_return_to'}) && $file{'vote_return_to'}) {
+					WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
+
+					$quickVotesButtons = GetItemVoteButtons($file{'file_hash'}, 0, $file{'vote_return_to'}); #todo refactor to take vote totals directly
+				} else {
+					# WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
+
+					$quickVotesButtons = GetItemVoteButtons($file{'file_hash'}); #todo refactor to take vote totals directly
+				}
 
 				my $quickVoteButtonGroup = GetTemplate('votequick2.template');
 				$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
@@ -1198,7 +1219,17 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
 
-		my $itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all');
+		my $itemFlagButton = '';
+		if (defined($file{'vote_return_to'}) && $file{'vote_return_to'}) {
+			WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
+
+			$itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all', $file{'vote_return_to'}); #todo refactor to take vote totals directly
+		} else {
+			# WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
+
+			$itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all'); #todo refactor to take vote totals directly
+		}
+
 		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
 
         WriteLog('GetItemTemplate() return $itemTemplate');
@@ -1476,7 +1507,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 		while (@topItems) {
 			my $itemTemplate = GetTemplate('item_listing.template');
-			# it's ok to do this every time because GetTemplate already stores it in a static
+			# it's ok to do this every time because GetTemplate() already stores it in a static
 			# alternative is to store it in another variable above
 
 			#alternate row color
@@ -1640,7 +1671,7 @@ sub GetStatsPage { # returns html for stats page
 	return $statsPage;
 }
 
-sub InjectJs { # inject js template(s) before </body> ; $html, @scriptNames
+sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my $html = shift;     # html we're going to inject into
 
 	if (!GetConfig('admin/js/enable')) {
@@ -2719,6 +2750,23 @@ sub GetWriteForm {
 	$writeForm =~ s/\$extraFields/poop/g;
 	$writeForm =~ s/\$initText/$initText/g;
 
+
+	if (GetConfig('admin/js/enable')) {
+		# $replyForm = AddAttributeToTag($replyForm, 'textarea', 'style', 'background-color: red important!; border: 10pt solid red; width: 1000px;');
+		# $replyForm = AddAttributeToTag($replyForm, 'textarea', 'badse', 'ternefojf adfa');
+
+		# onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
+		# onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
+		# onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"
+		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onchange', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
+		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeyup', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
+
+		if (GetConfig('admin/js/translit')) {
+			$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
+		}
+	}
+
+
 	return $writeForm;
 }
 
@@ -2762,8 +2810,15 @@ sub GetWritePage { # returns html for write page
 
 	# add call to writeOnload to page
 	if (GetConfig('admin/js/enable')) {
-		$txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
-		$txtIndex =~ s/<body>/<body onload="if (window.writeOnload) writeOnload();">/;
+		# this is not an accidental duplicate, there's a difference at the end of the line
+		# $txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }" /;
+		# $txtIndex =~ s/<body>/<body onload="if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }">/;
+
+		$txtIndex = AddAttributeToTag($txtIndex, 'body', 'onload', 'if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }');
+
+		# this is not an accidental duplicate, there's a difference at the end of the line
+		# $txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
+		# $txtIndex =~ s/<body>/<body onload="if (window.writeOnload) writeOnload();">/;
 	}
 
 	return $txtIndex;
