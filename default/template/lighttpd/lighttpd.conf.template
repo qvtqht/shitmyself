@@ -39,6 +39,7 @@ mimetype.assign = (
 
 # which file types to compress
 compress.filetype = (
+	"text/javascript",
 	"application/javascript",
 	"text/css",
 	"text/html",
