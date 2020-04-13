@@ -226,6 +226,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	# file's attributes
 	my $txt = "";           # original text inside file
 	my $message = "";       # outputted text after parsing
+	#my $fileMeta = "";
 	my $isSigned = 0;       # was this item signed?
 	my $hasCookie = 0;
 
@@ -275,6 +276,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
 		$fileHash = $gpgResults{'gitHash'};                # hash provided by git for the file
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; #
+
+		# $fileMeta = GetItemMeta($fileHash, $file);
+
+		# $message .= "\n-- \n" . $fileMeta;
 
 		if (GetConfig('admin/gpg/capture_stderr_output')) {
 			if (index($message, 'gpg: Signature made ')) {
