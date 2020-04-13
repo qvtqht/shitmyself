@@ -27,7 +27,7 @@ $quickVoteButtonGroup
 				<a href="$permalinkHtml">$addedTime</a>
 				$authorLink
 				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort.txt</tt></a>
-				<a href="#reply" class=beginner>reply($replyCount)</a>
+				<a href="$permalinkHtml#reply" onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount);</a>
 			</td>
 		</tr>
 	</table>
