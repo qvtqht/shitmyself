@@ -1,0 +1,26 @@
+
+# php rewrites
+url.rewrite = (
+	"^/post.html\??(.+)?" => "/post.php?$1",
+	#"^write.html\??(.+)?" => "/write.php?$1",
+
+	# OPTION 0:
+	# more accessible static failover
+	# BUT php not supported on all urls
+	# uncomment next line
+	#"^(.+\.html)\?(.+)?" => "/route.php?path=$1&$2",
+	# purposely exclude urls without query
+	# this improves accessibility when php has an issue
+	# giving users direct access to static html files
+
+	# OPTION 1:
+	# php supported on all urls
+	# BUT less accessible static failover
+	# uncomment next line
+	"^(.+\.html)\??(.+)?" => "/route.php?path=$1&$2",
+	# includes urls without query in route.php requests
+	# this mode is useful if you require registration
+
+	"^profile\.html" => "/route.php?path=/profile.html"
+)
+

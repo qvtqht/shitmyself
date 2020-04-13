@@ -612,14 +612,18 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 				WriteLog($replyVar);
 			}
 
+			DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
+
 			# use item-small template to display the reply items
 			$$replyItem{'template_name'} = 'item/item-small.template';
 			
 			# if the child item contains a reply token for our parent item
 			# we want to remove it, to reduce redundant information on the page
-			# to do this, we pass the remove_token parameter to GetItemTemplate below
+			# to do this, we pass the remove_token parameter to GetItemTemplate() below
 			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
-			
+
+			$$replyItem{'vote_return_to'} = $file{'file_hash'};
+
 			# Get the reply template			
 			my $replyTemplate = GetItemTemplate($replyItem);
 			
@@ -637,11 +641,15 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
 				foreach my $subReplyItem (@subReplies) {
+					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
+
 					$$subReplyItem{'template_name'} = 'item/item-small.template';
 					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
+					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
 
-					WriteLog('$$subReplyItem{\'remove_token\'} = \'>>\' . $$subReplyItem{\'file_hash\'}');
-					WriteLog($$subReplyItem{'remove_token'} . ',' . $$subReplyItem{'file_hash'});
+					WriteLog('$$subReplyItem{\'remove_token\'} = ' . $$subReplyItem{'remove_token'});
+					WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
+					WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
 
 					my $subReplyTemplate = GetItemTemplate($subReplyItem);
 
@@ -702,15 +710,19 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		}
 
 		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
-		$replyForm =~ s/\$extraFields/$replyTag/g;
+		# $replyForm =~ s/\$extraFields/$replyTag/g;
 		$replyForm =~ s/\$replyFooter/$replyFooter/g;
 		$replyForm =~ s/\$replyTo/$replyTo/g;
-		$replyForm =~ s/\$prefillText/$prefillText/g;
+		# $replyForm =~ s/\$prefillText/$prefillText/g;
 
-#		if (GetConfig('admin/php/enable')) {
-#			my $postHtml = 'post.html';
-#			$replyForm =~ s/$postHtml/post.php/;
-#		}
+		if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
+			# my $postHtml = '\/post\.html';
+			$replyForm =~ s/\/post\.html/\/post.php/g;
+		}
+
+		if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
+			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
+		}
 
 		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
 
@@ -720,7 +732,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings voting profile translit write_buttons timestamp));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write_buttons timestamp));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -742,6 +754,7 @@ sub GetHtmlLink {
 sub GetItemVoteButtons { # get vote buttons for item in html form
 	my $fileHash = shift; # item's file hash
 	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
+	my $returnTo = shift; # (optional) what page to return to instead of current (for use by post.php)
 
 	WriteLog('GetItemVoteButtons(' . ($fileHash?$fileHash:'-') . ', ' . ($tagSet?$tagSet:'-') . ')');
 
@@ -763,8 +776,6 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 		# otherwise it must be calculated
 		my $quickVotesForTags;
 
-
-
 		foreach my $voteTag (keys %voteTotals) {
 			$quickVotesForTags = GetConfig('tagset/' . $voteTag);
 			if ($quickVotesForTags) {
@@ -785,11 +796,13 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 
 	my $tagButtons = '';
 	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
+	my $jsEnabled = GetConfig('admin/js/enable');
 	
 	WriteLog('GetItemVoteButtons: @quickVotesList = ' . scalar(@quickVotesList));
 
 	foreach my $quickTagValue (@quickVotesList) {
 		my $ballotTime = GetTime();
+
 		if ($fileHash && $ballotTime) {
 			my $mySecret = GetConfig('admin/secret');
 			my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
@@ -1250,6 +1263,10 @@ sub GetPageFooter { # returns html for page footer
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
 
+	if (GetConfig('admin/js/enable') && GetConfig('admin/js/loading')) {
+		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(loading_end));
+	}
+
 	return $txtFooter;
 }
 
@@ -1472,6 +1489,10 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 		$htmlStart =~ s/\$logoText/$logoText/g;
 	}
 
+	if (GetConfig('admin/js/enable') && GetConfig('admin/js/loading')) {
+		$htmlStart = InjectJs2($htmlStart, 'after', '<body>', qw(loading_begin));
+	}
+
 	$htmlStart = FillThemeColors($htmlStart);
 
 	$txtIndex .= $htmlStart;
@@ -1666,7 +1687,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(avatar settings timestamp pingback profile));
+	$statsPage = InjectJs($statsPage, qw(settings avatar timestamp pingback profile));
 
 	return $statsPage;
 }
@@ -1783,6 +1804,134 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	return $html;
 }
 
+sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js template(s) before </body> ;
+# todo, once i figure out how to pass an array and/or need this in perl:
+# to copy php version
+# $injectMode: before, after, append
+# $htmlTag: e.g. </body>, only used with before/after
+# if $htmlTag is not found, does fall back to append
+	my $html = shift;     # html we're going to inject into
+
+	if (!GetConfig('admin/js/enable')) {
+		return $html;
+	}
+
+	my $injectMode = shift;
+	my $htmlTag = shift;
+
+	my @scriptNames = @_; # array of names of script templates (minus the .js.template suffix)
+
+	my $scriptsText = '';  # will contain all the js we want to inject
+	my $scriptsComma = ''; # separator between scripts, will be set to \n\n after first script
+
+	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
+
+	if (GetConfig('html/clock')) {
+		# if clock is enabled, automatically add its js
+		push @scriptNames, 'clock';
+	}
+
+	if (GetConfig('html/fresh_js')) {
+		# if clock is enabled, automatically add it
+		push @scriptNames, 'fresh';
+	}
+
+	if (GetConfig('admin/force_profile')) {
+		# if force_profile is enabled, automatically add it
+		push @scriptNames, 'force_profile';
+	}
+
+	#output list of all the scripts we're about to include
+	my $scriptNamesList = join(' ', @scriptNames);
+
+	# loop through all the scripts
+	foreach my $script (@scriptNames) {
+		# only inject each script once, otherwise move on
+		if (defined($scriptsDone{$script})) {
+			next;
+		} else {
+			$scriptsDone{$script} = 1;
+		}
+
+		# separate each script with \n\n
+		if (!$scriptsComma) {
+			$scriptsComma = "\n\n";
+		} else {
+			$scriptsText .= $scriptsComma;
+		}
+
+		my $scriptTemplate = GetTemplate("js/$script.js.template");
+
+		if (!$scriptTemplate) {
+			WriteLog("InjectJs: WARNING: Missing script contents for $script");
+			if (GetConfig('admin/debug')) {
+				die('InjectJs: Missing script contents');
+			}
+		}
+
+		if ($script eq 'voting') {
+			# for voting.js we need to fill in some theme colors
+			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
+			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
+
+			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
+			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+		}
+
+		if ($script eq 'settings') {
+			# for settings.js we also need to fill in some theme colors
+			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+
+			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
+		}
+
+		if (index($scriptTemplate, '>') > -1) {
+			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
+			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+		}
+
+		if (GetConfig('admin/js/debug')) {
+			#uncomment all javascript debug alert statements
+			#and replace them with confirm()'s which stop on no/cancel
+			#
+			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
+			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
+			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		}
+
+		# add to the snowball of javascript
+		$scriptsText .= $scriptTemplate;
+	}
+
+	# get the wrapper, i.e. <script>$javascript</script>
+	my $scriptInject = GetTemplate('scriptinject.template');
+	# fill in the wrapper with our scripts from above
+	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
+
+	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
+
+	if ($injectMode ne 'append' && index($html, $htmlTag) > -1) {
+		# replace it into html, right before the closing </body> tag
+		if ($injectMode eq 'before') {
+			#$html = str_replace($htmlTag, $scriptInject . $htmlTag, $html);
+			$html =~ s/$htmlTag/$scriptInject$htmlTag/;
+		} else {
+			#$html = str_replace($htmlTag, $htmlTag . $scriptInject, $html);
+			$html =~ s/$htmlTag/$htmlTag$scriptInject/;
+		}
+	} else {
+		# if there was no </body> tag, just append at the end
+		if ($injectMode ne 'append') {
+			WriteLog('InjectJs: WARNING! $html does not contain $htmlTag, falling back to append mode');
+		}
+		$html .= "\n" . $scriptInject;
+	}
+
+	return $html;
+}
+
 sub GetScoreboardPage { #returns html for /authors.html
 	#todo rewrite this more pretty
 	my $txtIndex = "";
@@ -1859,7 +2008,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings timestamp profile voting));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar timestamp profile voting));
 
 	return $txtIndex;
 }
@@ -2304,7 +2453,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	# Close html
 	$html .= GetPageFooter();
 
-	$html = InjectJs($html, qw(avatar settings voting profile timestamp));
+	$html = InjectJs($html, qw(settings avatar voting profile timestamp));
 
 	return $html;
 }
@@ -2403,6 +2552,18 @@ sub GetLighttpdConfig {
 		WriteLog('$phpConf end =====');
 		
 		$conf .= "\n" . $phpConf;
+
+		my $rewriteSetting = GetConfig('admin/php/rewrite');
+		if ($rewriteSetting) {
+			if ($rewriteSetting eq 'all') {
+				my $phpRewriteAllConf = GetTemplate('lighttpd/lighttpd_php_rewrite_all.conf.template');
+				$conf .= "\n" . $phpRewriteAllConf;
+			}
+			if ($rewriteSetting eq 'query') {
+				my $phpRewriteQueryConf = GetTemplate('lighttpd/lighttpd_php_rewrite_query.conf.template');
+				$conf .= "\n" . $phpRewriteQueryConf;
+			}
+		}
 	}
 	
 	if (GetConfig('admin/ssi/enable')) {
@@ -2500,7 +2661,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$postPage .= GetPageFooter();
 
-	$postPage = InjectJs($postPage, qw(avatar post settings));
+	$postPage = InjectJs($postPage, qw(settings avatar post));
 
 	if (GetConfig('admin/js/enable')) {
 		$postPage =~ s/<body /<body onload="makeRefLink();" /;
@@ -2555,7 +2716,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetPageFooter();
 
-		$tfmPage = InjectJs($tfmPage, qw(avatar settings profile));
+		$tfmPage = InjectJs($tfmPage, qw(settings avatar profile));
 
 		PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
 
@@ -2607,7 +2768,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage .= GetPageFooter();
 
-		$tfmPage = InjectJs($tfmPage, qw(avatar settings));
+		$tfmPage = InjectJs($tfmPage, qw(settings avatar));
 
 		PutHtmlFile("$HTMLDIR/manual_advanced.html", $tfmPage);
 	}
@@ -2624,7 +2785,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$tokensPage .= GetPageFooter();
 
-	$tokensPage = InjectJs($tokensPage, qw(avatar settings));
+	$tokensPage = InjectJs($tokensPage, qw(settings avatar));
 
 	PutHtmlFile("$HTMLDIR/manual_tokens.html", $tokensPage);
 
@@ -2634,12 +2795,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 
 	# Zalgo javascript
-	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('js/zalgo.js.template'));
+	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('js/lib/zalgo.js.template'));
 
 
-	# OpenPGP javascript
-	PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
-	PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
+	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
+		# OpenPGP javascript
+		PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
+		PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
+	}
 
 	# Write form javascript
 #	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
@@ -2675,7 +2838,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess.template');
 	if (GetConfig('admin/php/enable')) {
-		$HtaccessTemplate .= "\n".GetTemplate('php/htaccess_php.template')."\n";
+		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php.template');
+
+		my $rewriteSetting = GetConfig('admin/php/rewrite');
+		if ($rewriteSetting) {
+			if ($rewriteSetting eq 'all') {
+				$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php_rewrite_all.template');
+			}
+			if ($rewriteSetting eq 'query') {
+				$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php_rewrite_query.template');
+			}
+		}
 
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile('html/post.php', $postPhpTemplate);
@@ -2683,14 +2856,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		my $test2PhpTemplate = GetTemplate('php/test2.php.template');
 		PutFile('html/test2.php', $test2PhpTemplate);
 
+		my $adminPhpTemplate = GetTemplate('php/admin.php.template');
+		PutFile('html/admin.php', $adminPhpTemplate);
+
 		my $testPhpTemplate = GetTemplate('php/test.php.template');
 		PutFile('html/test.php', $testPhpTemplate);
 
 		my $writePhpTemplate = GetTemplate('php/write.php.template');
 		PutFile('html/write.php', $writePhpTemplate);
 
-		#my $uploadPhpTemplate = GetTemplate('php/upload.php.template');
-		#PutFile('html/upload.php', $uploadPhpTemplate);
+		my $uploadPhpTemplate = GetTemplate('php/upload.php.template');
+		PutFile('html/upload.php', $uploadPhpTemplate);
 
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
 		PutFile('html/cookie.php', $cookiePhpTemplate);
@@ -2745,9 +2921,9 @@ sub GetWriteForm {
 	}
 
 	my $initText = '';
-
-	# these are not present in the template
-	$writeForm =~ s/\$extraFields/poop/g;
+	#
+	# # these are not present in the template
+	# $writeForm =~ s/\$extraFields/poop/g;
 	$writeForm =~ s/\$initText/$initText/g;
 
 
@@ -2801,9 +2977,9 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetPageFooter();
 
 	if (GetConfig('php/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write translit write_php settings profile));
+		$txtIndex = InjectJs($txtIndex, qw(settings avatar write translit write_php profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(avatar write translit settings profile));
+		$txtIndex = InjectJs($txtIndex, qw(settings avatar write translit profile));
 	}
 	#$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
 	#$txtIndex = InjectJs($txtIndex, qw(clock));
@@ -2868,7 +3044,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar settings event_add profile));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar event_add profile));
 
 	my $colorRow0Bg = GetThemeColor('row_0');
 	my $colorRow1Bg = GetThemeColor('row_1');
@@ -2911,7 +3087,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(utils settings profile2));
+	$txtIndex = InjectJs($txtIndex, qw(settings utils profile2));
 
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
@@ -2942,7 +3118,7 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar profile settings));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
 		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/;
@@ -2983,7 +3159,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(avatar profile settings));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -3134,7 +3310,7 @@ sub GetVersionPage { # returns html with version information for $version (git c
 
 	$txtPageHtml .= GetPageFooter();
 
-	$txtPageHtml = InjectJs($txtPageHtml, qw(avatar settings));
+	$txtPageHtml = InjectJs($txtPageHtml, qw(settings avatar));
 
 	return $txtPageHtml;
 }
@@ -3196,7 +3372,7 @@ sub MakeDataPage { # returns html for /data.html
 
 	$dataPage .= GetPageFooter();
 
-	$dataPage = InjectJs($dataPage, qw(avatar settings profile));
+	$dataPage = InjectJs($dataPage, qw(settings avatar profile));
 
 	PutHtmlFile("$HTMLDIR/data.html", $dataPage);
 }

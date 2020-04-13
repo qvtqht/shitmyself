@@ -22,7 +22,49 @@ function SetHtmlClock($html) {
 	return $html;
 }
 
-function InjectJs ($html, $scriptNames) { // inject js template(s) before </body> ; $html, @scriptNames
+function StripHeavyTags($html) {
+	$tags = array(
+		'table', 'tr', 'td', 'span', 'fieldset', 'legend', 'font',
+		'script', 'style', 'big'
+	);
+
+	{
+		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
+		$html = preg_replace('/\<\/legend\>/', '<br>', $html);
+	}
+
+	foreach ($tags as $tag) {
+		$html = preg_replace('/\<'.$tag.'[^>]+\>/', '', $html);
+		//$html = preg_replace('/\<\/'.$tag.'\>/', '', $html);
+		$html = str_replace('<'.$tag.'>', '', $html);
+		$html = str_replace('</'.$tag.'>', '', $html);
+	}
+
+	return $html;
+}
+
+function StripComments($html) {
+	$html = preg_replace('/\<\!--[^>]+\>/', '', $html);
+
+	return $html;
+}
+
+function StripWhitespace($html) {
+//	while (preg_match('/[\t\n ]{2}'
+	$html = preg_replace('/[\t\n ]+/', ' ', $html);
+	while (strpos($html, '  ') !== false) {
+		$html = str_replace('  ', ' ', $html);
+	}
+
+	return $html;
+}
+
+function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</body>') { // inject js template(s) before </body> ; $html, @scriptNames
+// $injectMode: before, after, append
+// $htmlTag: e.g. </body>, only used with before/after
+// if $htmlTag is not found, does fall back to append
+
 	WriteLog('InjectJs() begin...');
 
 	if (!GetConfig('admin/js/enable')) {
@@ -123,14 +165,18 @@ function InjectJs ($html, $scriptNames) { // inject js template(s) before </body
 
 	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
-	if (index($html, '</body>') > -1) {
+	if ($injectMode != 'append' && index($html, $htmlTag) > -1) {
 		// replace it into html, right before the closing </body> tag
-		$html = str_replace('</body>', $scriptInject . '</body>', $html);
+		if ($injectMode == 'before') {
+			$html = str_replace($htmlTag, $scriptInject . $htmlTag, $html);
+		} else {
+			$html = str_replace($htmlTag, $htmlTag . $scriptInject, $html);
+		}
 	} else {
-		print 2;
-		// if there was no </body> tag, just append at the end
-		$html .= "\n\n" . $scriptInject;
-		WriteLog('InjectJs(): WARNING! $html does not contain </body>');
+		if ($injectMode != 'append') {
+			WriteLog('InjectJs: WARNING! $html does not contain $htmlTag, falling back to append mode');
+		}
+		$html .= "\n" . $scriptInject;
 	}
 
 	return $html;
@@ -201,7 +247,6 @@ if (GetConfig('admin/php/route_enable')) {
 						if ($path == '/write.html') {
 							if (file_exists('write.php')) {
 								include('write.php');
-								exit;
 							}
 						}
 
@@ -311,13 +356,13 @@ if (GetConfig('admin/php/route_enable')) {
 										unlink('../admin.key');
 										WriteLog('Overthrow successful');
 
-										$messageOverthrow = StoreServerMessage('Overthrow successful! Publish your profile to become operator.');
+										$messageOverthrow = StoreServerMessage('Overthrow successful! Register to become operator.');
 
 										$redirectUrl = '/settings.html?message=' . $messageOverthrow;
 									} else {
 										WriteLog('Overthrow already in effect: admin.key missing');
 
-										$messageOverthrow = StoreServerMessage('Overthrow already happened! Publish your profile.');
+										$messageOverthrow = StoreServerMessage('Overthrow already happened! Register to become operator.</a>');
 										$redirectUrl = '/settings.html?message=' . $messageOverthrow;
 									}
 								} else {
@@ -437,13 +482,13 @@ if (GetConfig('admin/php/route_enable')) {
 				//javascript stuff, if javascript is enabled
 
 				// inject server_message.js for hiding the server message popup
-				$html = InjectJs($html, array('server_message'));
+				$html = InjectJs($html, array('server_message'), 'before', '</head>');
 
 				// add onkeydown event to body tag, which responds to escape and spacebar keys
 				// spacebar is added for qutebrowser's normal mode, which doesn't let esc through
 				// known issue: if there's non-32 whitespace, this may not work right
 				$replaceWhat = '<body ';
-				$replaceWith = '<body onkeydown="if (event.keyCode && event.keyCode == 27 || event.keyCode == 32) { if (window.bodyEscPress) { return bodyEscPress(); } }"';
+				$replaceWith = '<body onkeydown="if (event.keyCode && event.keyCode == 27) { if (window.bodyEscPress) { return bodyEscPress(); } }"';
 				$html = str_replace($replaceWhat, $replaceWith . ' ', $html);
 				$replaceWhat = '<body>';
 				$html = str_replace($replaceWhat, $replaceWith . '>', $html);
@@ -489,7 +534,35 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
 		}
 
-		print $html;
+//		$lightMode = GetConfig('admin/php/light_mode');
+		$lightMode = 0;
+		if (isset($_GET['light'])) {
+			$lightMode = $_GET['light'] ? 1 : 0;
+			if (isset($_COOKIE['light'])) {
+				if ($_COOKIE['light'] != $lightMode) {
+					setcookie2('light', $lightMode);
+
+//					$lightModeSetMessage = StoreServerMessage('Light mode has been set to ' . $lightMode);
+
+//					$redirectUrl = '';
+				}
+			}
+		} else {
+			if (isset($_COOKIE['light'])) {
+				$lightMode = $_COOKIE['light'] ? 1 : 0;
+			}
+		}
+
+		if ($lightMode) {
+			$html = StripWhitespace($html);
+			$html = StripComments($html);
+			$html = StripHeavyTags($html);
+			//#todo perhaps strip onclick, onkeypress, etc., and style
+		}
+
+		////////////////////////////
+		print $html; // final output
+		////////////////////////////
 	}
 } else {
 	WriteLog('config/admin/php/route_enable = false');

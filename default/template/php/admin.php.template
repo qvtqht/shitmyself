@@ -1,0 +1,29 @@
+<pre>
+
+<?php
+
+echo(time());
+
+$default = explode("\n", `find ../default`);
+$config = explode("\n", `find ../config`);
+
+$configLookup = array();
+
+foreach ($config as $c) {
+	$c = str_replace('../config/', '', $c);
+	$configLookup[$c] = 1;
+	//$configLookup[$c] = trim(file_get_contents('../config/' . $c));
+}
+
+foreach ($default as $d) {
+	if (strpos($d, 'template') === false) {
+
+		$d = str_replace('../default/', '', $d);
+
+		print $d;
+		print ' ';
+//		print (isset($configLookup[$d]) ? $configLookup[$d] : '');
+		print (isset($configLookup[$d]) ? '<b>yes</b>' : '');
+		print "<br>";
+	}
+}

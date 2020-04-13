@@ -138,6 +138,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 		file_put_contents($filePath, $comment);
 		// this could probably just be a rename() #todo
 
+
 		// escape comment for output as html
 		$commentHtml =
 			nl2br(
@@ -222,6 +223,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 $fileUrlPath = '';
 $replyTo = '';
 $replyToToken = '';
+$returnTo = '';
 
 if ($_POST) {
 	WriteLog('$_POST');
@@ -233,6 +235,10 @@ if ($_POST) {
 	if (isset($_POST['replyto']) && $_POST['replyto']) {
 		$replyTo = $_POST['replyto']; 
 		$replyToToken = '>>' . $replyTo;
+	}
+
+	if (isset($_POST['returnto']) && $_POST['returnto']) {
+		$returnTo = $_POST['returnto'];
 	}
 }
 
@@ -263,6 +269,10 @@ if ($_GET) {
 		$replyTo = $_GET['replyto']; 
 		$replyToToken = '>>' . $replyTo;
 	}
+
+	if (isset($_GET['returnto']) && $_GET['returnto']) {
+		$returnTo = $_GET['returnto'];
+	}
 }
 
 if (isset($comment) && $comment) {
@@ -276,7 +286,7 @@ if (isset($comment) && $comment) {
 
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
-		$updateMessageId = StoreServerMessage("Update finished! <small>in $updateDuration seconds</small>");
+		$updateMessageId = StoreServerMessage("Update finished! <small>in $updateDuration"."s</small>");
 
 	    Header('Location: /stats.html?message=' . $updateMessageId); //#todo make work with relativize links
 	} elseif (strtolower($comment) == 'stop') {
@@ -308,26 +318,55 @@ if (isset($comment) && $comment) {
 
             $finishTime = time() - $postPhpStartTime;
 
-            $messagePublicKeyPosted = StoreServerMessage("Success! Profile created! <small>in $finishTime seconds</small>");
 
-		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
+			$profileId = preg_match(
+				'/[0-9A-F]{16}/',
+				file_get_contents(
+					GetHtmlFilename($newFileHash)
+				),
+				$matches
+			);
+			if ($profileId) {
+				$profileId = $matches[0];
+			} else {
+				$profileId = 0;
+			}
+			if ($profileId) {
+				//#todo add file exists check
+				$redirectUrl = '/author/' . $profileId . '/';
+			} else {
+				//#todo add file exists check
+				$redirectUrl = $fileUrlPath;
+//			} else {
+				// profile.html
+			}
+
+            $messagePublicKeyPosted = StoreServerMessage("Success! Profile created! <small>in $finishTime"."s</small>");
+            $redirectUrl .= '?message=' . $messagePublicKeyPosted;
+
+
+//		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
+//		    $redirectUrl = $fileUrlPath . '?message=' . $messagePublicKeyPosted;
 		}
 
-		if ($replyTo) {
-			// path for parent html file
-			$replyToHtmlPath = './' . GetHtmlFilename($replyTo);
+		if ($replyTo && !$returnTo) {
+			$returnTo = $replyTo;
+		}
 
-			if (file_exists($replyToHtmlPath)) {
+		if ($returnTo) {
+			$returnToHtmlPath = './' . GetHtmlFilename($returnTo); // path for parent html file
+
+			if (file_exists($returnToHtmlPath)) {
 				// path for client's (browser's) path to html file
-				$replyToUrlPath = '/' . GetHtmlFilename($replyTo);
+				$returnToUrlPath = '/' . GetHtmlFilename($returnTo);
 
 				$newItemAnchor = substr($newFileHash, 0, 8);
 
 	            $finishTime = time() - $postPhpStartTime;
 
-				$messageReplyPosted = StoreServerMessage("Success! Reply posted. <small>in $finishTime seconds</small>");
+				$messageReplyPosted = StoreServerMessage("Success! Reply posted. <small>in $finishTime"."s</small>");
 
-				$redirectUrl = $replyToUrlPath . '?message=' . $messageReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
+				$redirectUrl = $returnToUrlPath . '?message=' . $messageReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
 		}
 	}
@@ -353,7 +392,7 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 if (!$redirectUrl && $fileUrlPath) {
 	$finishTime = time() - $postPhpStartTime;
 
-	$itemPostedServerMessage = "Success! New item posted!<small class=advanced> in $finishTime seconds</small>";
+	$itemPostedServerMessage = "Success! New item posted!<small class=advanced> in $finishTime"."s</small>";
 	//$itemPostedServerMessage .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
 	$itemPostedServerMessageId = StoreServerMessage($itemPostedServerMessage);
