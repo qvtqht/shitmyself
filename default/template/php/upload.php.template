@@ -1,7 +1,12 @@
 <?php
-		// remember current working directory, we'll need it later
+include_once('utils.php');
+	
+if (!empty($_FILES['uploaded_file'])) {
+	$path = "image/";
+	$path = $path . basename( $_FILES['uploaded_file']['name']);
 
-		
+	if (move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path)) {
+		// remember current working directory, we'll need it later
 		$pwd = getcwd();
 		WriteLog('$pwd = ' . $pwd);
 
@@ -14,6 +19,8 @@
 			WriteLog("cd $pwd");
 			WriteLog(`cd $pwd`);
 		}
+
+		$hash = sha1_file($path);
 
 		// path for new html file
 		$fileHtmlPath = './' . GetHtmlFilename($hash);
@@ -31,7 +38,7 @@
 
 			$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
 		}
-		
+
 		if ($redirectUrl) {
 			WriteLog('Location: ' . $redirectUrl);
 			header('Location: ' . $redirectUrl);
