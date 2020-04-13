@@ -1,4 +1,5 @@
 <script><!--
-document.write('<p>JavaScript is enabled in your browser.</p>');
+var gt = unescape('%3e');
+document.write('<p'+gt+'JavaScript is enabled in your browser.</p'+gt);
 // #todo replace with element-adding
 // --></script>
