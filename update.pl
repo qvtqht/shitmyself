@@ -337,7 +337,11 @@ if (!$arg1) {
 			$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
 			push @files, split("\n", `$findCommand`);
 
-			$findCommand = 'find html/txt | grep -i txt$';
+			#prioritize files with a public key in them
+			$findCommand = 'grep -rl "setconfig" html/txt';
+			push @files, split("\n", `$findCommand`);
+
+			$findCommand = 'find html/txt | grep -i \.txt$';
 			push @files, split("\n", `$findCommand`);
 
 			if ($filesLimit > scalar(@files)) {
