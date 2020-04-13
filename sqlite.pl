@@ -112,8 +112,8 @@ sub SqliteMakeTables() { # creates sqlite schema
 	SqliteQuery2("CREATE UNIQUE INDEX item_attribute_unique ON item_attribute (file_hash, attribute);");
 
 	# item_page
-	SqliteQuery2("CREATE TABLE item_page(item_hash, page_type, page_param);");
-	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_type, page_param);");
+	SqliteQuery2("CREATE TABLE item_page(item_hash, page_name, page_param);");
+	SqliteQuery2("CREATE UNIQUE INDEX item_page_unique ON item_page(item_hash, page_name, page_param);");
 
 	#SqliteQuery2("CREATE TABLE item_type(item_hash, type_mask)");
 
@@ -151,7 +151,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 	");
 
 	# page_touch
-	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER, priority);");
+	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER, priority DEFAULT 1);");
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
 
 	# config
@@ -886,7 +886,7 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 	#todo remove hardcoding
 	my $query = "
 		SELECT 
-			page_name, 
+			page_name,
 			page_param, 
 			touch_time, 
 			priority
@@ -912,6 +912,7 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 }
 
 sub DBAddItemPage { # adds an entry to item_page table
+# should perhaps be called DBAddItemPageReference
 # purpose of table is to track which items are on which pages
 
 	state $query;
@@ -955,7 +956,7 @@ sub DBAddItemPage { # adds an entry to item_page table
 	WriteLog("DBAddItemPage($itemHash, $pageType, $pageParam)");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item_page(item_hash, page_type, page_param) VALUES ";
+		$query = "INSERT OR REPLACE INTO item_page(item_hash, page_name, page_param) VALUES ";
 	} else {
 		$query .= ',';
 	}
@@ -1020,7 +1021,7 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 
 sub DBAddPageTouch { # Adds an entry to page_touch table
 # page_touch table is used for determining which pages need to be refreshed
-# is called from IndexTextFile to schedule updates for pages affected by a newly indexed item
+# is called from IndexTextFile() to schedule updates for pages affected by a newly indexed item
 	state $query;
 	state @queryParams;
 
@@ -1093,12 +1094,12 @@ sub DBAddPageTouch { # Adds an entry to page_touch table
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time, priority) VALUES ";
+		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= '(?, ?, ?, 1)';
+	$query .= '(?, ?, ?)';
 	push @queryParams, $pageName, $pageParam, $touchTime;
 }
 
