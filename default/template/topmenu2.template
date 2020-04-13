@@ -4,7 +4,7 @@
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2><small>
 				<b><small><a href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a></small></b>
-			</small></td>
+			</small><br></td>
 		</tr>
 		<tr bgcolor=$colorWindow class=menubar>
 			<td>
