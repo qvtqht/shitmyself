@@ -1,6 +1,8 @@
 // == begin avatar.js
 
 function setAva() { // sets avatar widgets (and italicizes Profile link)
+	//alert('DEBUG: setAva() begins');
+	
 	if (document.getElementById && String.fromCharCode) {
 		var myidBox = document.getElementById('myid'); // displays username (if preference is set)
 		var signinBox = document.getElementById('signin'); // Profile link
@@ -35,6 +37,9 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 				}
 
 				if (!window.openpgp && document.head && document.getElementById && window.localStorage) {
+					//alert('DEBUG: setAva: loading openpgp.js');
+					window.openPgpJsLoadBegin = 1;
+
 					var script = document.createElement('script');
 					script.src = '/openpgp.js';
 					script.async = false; // This is required for synchronous execution
@@ -42,6 +47,8 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 				}
 
 				if (!window.setAvatar && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
+					//alert('DEBUG: setAva: loading crypto2.js');
+
 					var script2 = document.createElement('script');
 					script2.src = '/crypto2.js';
 					script2.async = false; // This is required for synchronous execution

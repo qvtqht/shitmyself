@@ -190,6 +190,8 @@ function setPrivateKeyFromTxt(newKey) { // set the current private key and refre
 
             //alert('DEBUG: setPrivateKeyFromTxt: checks passed, loading openpgp.js');
 
+			window.openPgpJsLoadBegin = 1;
+
             var script = document.createElement('script');
             script.src = '/openpgp.js';
             script.async = false; // This is required for synchronous execution
@@ -260,7 +262,7 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 		var textbox = document.getElementById('comment');
 		var composeForm = document.getElementById('compose');
 
-		if (textbox && composeForm) {
+		if (textbox && composeForm && window.openpgp) {
 			//alert('DEBUG: signMessage: textbox && composeForm is true');
 
 //			textbox.style.color = '#00ff00';
