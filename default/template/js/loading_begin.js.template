@@ -9,23 +9,19 @@ var a383loadCounter = 0;
 
 var a383 = document.createElement('span');
 a383.setAttribute('id', 'a383');
-a383.innerHTML = 'Page is loading... ';
+a383.innerHTML = 'Please meditate while page loads... ';
 a383.style.display = 'none';
 
 var a383lightLink = document.createElement('a');
 a383lightLink.setAttribute('href', window.location.href + '?light=1');
-a383lightLink.innerHTML = 'Click to try fast and light mode.';
-//a383lightLink.style.backgroundColor = '#c0c0c0';
-//a383lightLink.style.color = '#0000ff';
+a383lightLink.innerHTML = 'or try basic mode';
 a383lightLink.style.display = 'none';
-////a383lightLink.style.borderRadius = '3pt';
-////a383lightLink.style.padding = '3pt';
 
 a383.appendChild(a383lightLink);
 
 document.body.appendChild(a383);
 
-var a383showTimeout = setTimeout('a383.style.display = "block";', 1000);
-var a383showLightLinkTimeout = setTimeout('a383lightLink.style.display = "inline";', 7500);
+var a383showTimeout = setTimeout('a383.style.display = "block";', 500);
+var a383showLightLinkTimeout = setTimeout('a383lightLink.style.display = "inline"; a383.innerHTML = a383.innerHTML + "."', 3000);
 
 // end loading_begin.js

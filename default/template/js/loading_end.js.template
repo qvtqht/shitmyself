@@ -18,8 +18,8 @@ function WaitForOpenPgp() {
 		var a383end = a383dd.getTime() * 1;
 		var a383duration = a383end - a383start;
 
-		a383.style.backgroundColor = '#00ff00';
 		a383.innerHTML = 'Finished! You meditated for ' + (Math.floor(a383duration / 1000)) + 's.';
+		a383.style.backgroundColor = '#00ff00';
 
 		var a383hideTimeout = a383duration / 5;
 		if (5000 < a383hideTimeout) {
