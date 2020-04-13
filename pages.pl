@@ -2517,7 +2517,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 #		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
 
-		my $infoMessage = '<p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p><br>';
+		#todo this should be in template
+		my $infoMessage = '<p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p>';
 
 		$indexPage .= GetWindowTemplate('No Items', '', '', $infoMessage, 'Ready');
 
