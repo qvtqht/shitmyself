@@ -1,1 +1,1 @@
-<tr class=body><td><a href="$link">$tagName</td><td>$tagCount</td><td class=beginner>$tagInfo</td></tr>
+<tr class=body><td><a href="$link">$tagName</a></td><td>$tagCount</td><td class=beginner>$tagInfo</td></tr>
