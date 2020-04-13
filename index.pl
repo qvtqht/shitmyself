@@ -149,15 +149,13 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 #	}
 #}
 
-sub IndexTextFile { # indexes one text file into database
+sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
-# If ($file eq 'flush), flushes any queued queries
+# If ($file eq 'flush'), flushes any queued queries
 # Also sets appropriate page_touch entries
 
 	my $file = shift;
 	chomp($file);
-
-	WriteLog("IndexTextFile($file)");
 
 	if ($file eq 'flush') {
 		WriteLog("IndexTextFile(flush)");
@@ -180,6 +178,8 @@ sub IndexTextFile { # indexes one text file into database
 
 		return;
 	}
+
+	WriteLog("IndexTextFile($file)");
 
 	# admin/organize_files
 	# renames files to their hashes
@@ -222,7 +222,6 @@ sub IndexTextFile { # indexes one text file into database
 			WriteLog('IndexTextFile: organizing not needed');
 		}
 	}
-
 
 	# file's attributes
 	my $txt = "";           # original text inside file
@@ -275,7 +274,7 @@ sub IndexTextFile { # indexes one text file into database
 
 		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
 		$fileHash = $gpgResults{'gitHash'};                # hash provided by git for the file
-		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; # 
+		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; #
 
 		if (GetConfig('admin/gpg/capture_stderr_output')) {
 			if (index($message, 'gpg: Signature made ')) {
@@ -741,7 +740,7 @@ sub IndexTextFile { # indexes one text file into database
 								}
 							}
 							else {
-								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not allowed.]/g;
+								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not operator.]/g;
 								$detokenedMessage =~ s/$reconLine//g;
 							}
 						}
@@ -1407,7 +1406,6 @@ sub IndexTextFile { # indexes one text file into database
 		DBAddPageTouch('flush');
 	}
 } # IndexTextFile
-
 
 sub IndexImageFile { # indexes one image file into database, $file = path to file
 	# Reads a given $file, gets its attributes, puts it into the index database
