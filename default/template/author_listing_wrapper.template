@@ -9,7 +9,7 @@
 
 		<tr class=menubar>
 			<td colspan=6>
-				<p><a href="/profile.html">Profile</a>
+				<p><a href="/profile.html">Profile</a><br>
 			</td>
 		</tr>
 
@@ -19,7 +19,7 @@
 			<th class=advanced align=left>Items</th>
 			<th class=advanced align=left>Gravity</th>
 			<th align=left>Seen</th>
-			<th align=left>Actions</th>
+			<th align=left>Actions<br></th>
 		</tr>
 
 		$authorListings
