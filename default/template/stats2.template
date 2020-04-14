@@ -21,7 +21,6 @@
 					<p>Operator: $admin
 					<p class=advanced>Server: $server
 					<p>Version: $versionShort
-					 <!--<span class=advanced>($versionFull)</span>-->
 				</fieldset>
 			</td>
 		</tr>
