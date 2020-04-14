@@ -639,7 +639,7 @@ function GetClockFormattedTime() { // returns current time in appropriate format
 }
 
 
-function setcookie2($key, $value) { //wrapper for setcookie() which sets cookie with parameters
+function setcookie2 ($key, $value) { //wrapper for setcookie() which sets cookie with parameters
 	if (0) {
 		WriteLog('setcookie2(' . $key . ',' . $value . ')');
 		setcookie($key, $value);
