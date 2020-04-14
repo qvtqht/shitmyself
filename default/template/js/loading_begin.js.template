@@ -1,5 +1,8 @@
 // begin loading_begin.js
 
+function addLoadingIndicator() {
+}
+
 var a383d = new Date();
 var a383start = a383d.getTime() * 1;
 
@@ -10,10 +13,19 @@ var a383loadCounter = 0;
 var a383 = document.createElement('span');
 a383.setAttribute('id', 'a383');
 a383.innerHTML = 'Loading...';
-a383.style.display = 'none';
 document.body.appendChild(a383);
 
-var a383showTimeout = setTimeout('a383.style.display = "block";', 1500);
+if (window.localStorage) {
+	var a383lastLoadTime = localStorage.getItem('last_load_time');
+	
+	if (a383lastLoadTime && 3000 < a383lastLoadTime) {
+		a383.style.display = 'block';
+	} else {
+		a383.style.display = 'none';
+		var a383showTimeout = setTimeout('a383.style.display = "block";', 1500);
+	}
+}
+
 var a383LightModeLink = window.location.pathname;
 if (a383LightModeLink == '/') {
 	a383LightModeLink = '/index.html';

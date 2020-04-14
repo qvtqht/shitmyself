@@ -16,7 +16,13 @@ function WaitForOpenPgp() {
 		}
 
 		var a383end = a383dd.getTime() * 1;
-		var a383duration = a383end - a383start;
+		var a383duration = a383end*1 - a383start*1;
+		var a383durationAvg = ((a383duration * 1) + (a383lastLoadTime * 1)) / 2;
+
+		if (window.localStorage) {
+			localStorage.setItem('last_load_time', a383durationAvg );
+
+		}
 
 		a383.innerHTML = 'Finished! You meditated for ' + (Math.floor(a383duration / 1000)) + 's.';
 		a383.style.backgroundColor = '#00ff00';
