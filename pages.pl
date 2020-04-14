@@ -1245,13 +1245,13 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
 
-        WriteLog('GetItemTemplate() return $itemTemplate');
+		WriteLog('GetItemTemplate() return $itemTemplate');
 
 		return $itemTemplate;
 	} else {
-        WriteLog('GetItemTemplate() return empty string');
+		WriteLog('GetItemTemplate() return empty string');
 
-        return '';
+		return '';
 	}
 } #GetItemTemplate
 
@@ -1317,7 +1317,7 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 }
 
 sub FillThemeColors {
-    my $html = shift;
+	my $html = shift;
 	chomp($html);
 
 	my $colorPrimary = GetThemeColor('primary');
@@ -1387,9 +1387,10 @@ sub GetMenuFromList {
 		my $menuItemName = $menuItem;
 		my $menuItemUrl	= '/' . $menuItemName . '.html';
 
-		if ($menuItemName eq 'index') {
-			$menuItemUrl = '/';
-		}
+		# this avoids creating duplicate urls but currently breaks light mode
+		# if ($menuItemName eq 'index') {
+		# 	$menuItemUrl = '/';
+		# }
 
 		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
@@ -2139,7 +2140,14 @@ sub GetReadPage { # generates page with item listing based on parameters
 			if ($authorDescription) {
 				$authorDescription .= '<br>';
 			}
-			$authorDescription .= '<b>Admin.</b>';
+
+			my $descText = '<b>Admin.</b>';
+			my $adminContainer = GetTemplate('item/container/admin.template');
+			my $colorAdmin = GetThemeColor('admin') || 'red';
+			$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
+			$adminContainer =~ s/\$message/$descText/g;
+
+			$authorDescription = $adminContainer;
 		}
 
 		if ($authorDescription) {
@@ -2151,13 +2159,13 @@ sub GetReadPage { # generates page with item listing based on parameters
 		
 		$authorLastSeen = GetTimestampElement($authorLastSeen);
 
-        if (!$authorDescription) {
-            $authorDescription = '*';
-        }
+		if (!$authorDescription) {
+			$authorDescription = '*';
+		}
 
-        if (!$publicKeyHash) {
-            $publicKeyHash = '*';
-        }
+		if (!$publicKeyHash) {
+			$publicKeyHash = '*';
+		}
 
 		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
@@ -2905,9 +2913,9 @@ sub GetWriteForm {
 
 	if (GetConfig('admin/php/enable')) {
 
-        ## changing the form target is no longer necessary thanks to mod_rewrite
-        ## this code may have to be reused later when we want to adapt to an environment
-        ## without mod_rewrite
+		## changing the form target is no longer necessary thanks to mod_rewrite
+		## this code may have to be reused later when we want to adapt to an environment
+		## without mod_rewrite
 
 		#if php module is enabled, change the form target to post.php
 		#		my $postHtml = 'post.html';
@@ -3068,14 +3076,14 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	my $profileWindowContents = GetTemplate('form/profile2.template');
 
-    if (GetConfig('admin/gpg/use_gpg2')) {
-        my $gpg2Choices = GetTemplate('gpg2.choices.template');
-        $profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
-    } else {
-        $profileWindowContents =~ s/\$gpg2Algochoices//;
-    }
+	if (GetConfig('admin/gpg/use_gpg2')) {
+		my $gpg2Choices = GetTemplate('gpg2.choices.template');
+		$profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
+	} else {
+		$profileWindowContents =~ s/\$gpg2Algochoices//;
+	}
 
-    my $profileWindow = GetWindowTemplate(
+	my $profileWindow = GetWindowTemplate(
 		'Profile',
 		'',
 #		'<a class=advanced href="/gpg.html">Signatures</a>',
