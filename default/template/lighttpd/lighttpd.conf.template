@@ -4,7 +4,8 @@ server.modules += (
 	"mod_access",    # not sure what this does? #todo
 	"mod_rewrite",   # for rewrites (related to php)
 	"mod_compress",  # for faster transfers, not sure how much it helps
-	"mod_fastcgi"    # for php 
+	"mod_fastcgi",   # for php
+	"mod_expire"     # helps browsers know it's ok to cache things
 )
 
 server.document-root = "$serverDocumentRoot" 
@@ -66,4 +67,8 @@ server.error-handler = "/404.html"
 
 server.http-parseopts = (
 	"url-ctrls-reject" => "disable"
+)
+
+expire.url = (
+	"/" => "access plus 2 hours"
 )
