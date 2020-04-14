@@ -111,7 +111,7 @@ sub ProcessTextFile { #add new textfile to index
 	}
 
 	if (!GetCache('indexed/' . $fileHash)) {
-		WriteLog('ProcessTextFile: ProcessTextFile (' . $file . ') not in cache/indexed, calling IndexTextFile');
+		WriteLog('ProcessTextFile: ProcessTextFile(' . $file . ') not in cache/indexed, calling IndexTextFile');
 
 		IndexTextFile($file);
 		IndexTextFile('flush');
@@ -315,137 +315,197 @@ if (!$arg1) {
 			WriteLog('Problem? html/txt is not a directory!');
 		}
 
+		my $filesProcessedTotal = 0;
+		my $filesProcessed = 1;
 
-		# See if update/file_limit setting exists
-		# This limits the number of files to process per launch of update.pl
-		my $filesLimit = GetConfig('admin/update/limit_file');
-		if (!$filesLimit) {
-			WriteLog('WARNING: admin/update/limit_file missing, using 100');
-			$filesLimit = 100;
+		while ($filesProcessed > 0) {
+			# See if update/file_limit setting exists
+			# This limits the number of files to process per launch of update.pl
+			my $filesLimit = GetConfig('admin/update/limit_file');
+			if (!$filesLimit) {
+				WriteLog('WARNING: admin/update/limit_file missing, using 100');
+				$filesLimit = 100;
+			}
+
+			WriteLog('while loop: $filesProcessed = ' . $filesProcessed);
+
+			$filesProcessed = 0;
+			
+			{
+				############
+				# TEXT FILE PROCESSING PART BEGINS HERE
+
+				my $findCommand;
+				my @files;
+
+				#prioritize files with a public key in them
+				$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
+				push @files, split("\n", `$findCommand`);
+
+				#prioritize files with a public key in them
+				$findCommand = 'grep -rl "setconfig" html/txt';
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = 'find html/txt | grep -i \.txt$';
+				push @files, split("\n", `$findCommand`);
+				#
+				# if ($filesLimit > scalar(@files)) {
+				# 	$filesLimit = scalar(@files);
+				# }
+
+				# Go through all the changed files
+				foreach my $file (@files) {
+					if ($filesProcessed >= $filesLimit) {
+						WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+						last;
+					}
+
+					WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+					#
+					# if ((GetTime2() - $startTime) > $timeLimit) {
+					# 	WriteLog("Time limit reached, exiting loop");
+					# 	last;
+					# }
+
+					# Trim the file path
+					chomp $file;
+					$file = trim($file);
+
+					# Log it
+					WriteLog('update.pl: $file = ' . $file);
+
+					#todo add rss.txt addition
+
+					# If the file exists, and is not a directory, process it
+					if (-e $file && !-d $file) {
+						$filesProcessed += ProcessTextFile($file);
+					}
+					else {
+						# this should not happen
+						WriteLog("Error! $file doesn't exist!");
+					}
+				}
+
+				IndexTextFile('flush');
+
+				WriteIndexedConfig();
+
+
+				# TEXT FILE PROCESSING PART ENDS HERE
+				############
+			}
+			#####
+
+			{
+				# IMAGE PROCESSING PART BEGINS HERE
+				my $findCommand;
+				my @files;
+
+				# todo figure out why we're not here already #bug
+				WriteLog("cd $SCRIPTDIR");
+				WriteLog(`cd "$SCRIPTDIR"`);
+
+				$findCommand = 'find html/image | grep -i \.png$';
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = 'find html/image | grep -i \.gif$';
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = 'find html/image | grep -i \.jpg$';
+				push @files, split("\n", `$findCommand`);
+
+				# if ($filesLimit > scalar(@files)) {
+				# 	$filesLimit = scalar(@files);
+				# }
+
+				# Go through all the changed files
+				foreach my $file (@files) {
+					if ($filesProcessed >= $filesLimit) {
+						WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+						last;
+					}
+
+					WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+					#
+					# if ((GetTime2() - $startTime) > $timeLimit) {
+					# 	WriteLog("Time limit reached, exiting loop");
+					# 	last;
+					# }
+
+					# Trim the file path
+					chomp $file;
+					$file = trim($file);
+
+					# Log it
+					WriteLog('update.pl: image: $file = ' . $file);
+
+					#todo add rss.txt addition
+
+					# If the file exists, and is not a directory, process it
+					if (-e $file && !-d $file) {
+						$filesProcessed += ProcessImageFile($file);
+					}
+					else {
+						# this should not happen
+						WriteLog("Error! $file doesn't exist!");
+					}
+				}
+
+				IndexImageFile('flush');
+			}
+
+
+			#####
+
+
+			RemoveEmptyDirectories('./html/txt/');
+			RemoveEmptyDirectories('./html/image/');
+			#RemoveEmptyDirectories('./txt/');
+
+			# if new items were added, re-make all the summary pages (top authors, new threads, etc)
+			if ($filesProcessed > 0) {
+				WriteLog('update.pl: $filesProcessed > 0, calling UpdateUpdateTime() and MakeSummaryPages()...');
+
+				UpdateUpdateTime();
+				MakeSummaryPages();
+				#	WriteIndexPages();
+			}
+
+			# if anything has changed, redo the abyss index pages
+			#if ($newItemCount) {
+			#WriteIndexPages();
+			#}
+
+			## rebuild abyss pages no more than once an hour (default/admin/abyss_rebuild_interval)
+			#my $lastAbyssRebuild = GetConfig('last_abyss');
+			#my $abyssRebuildInterval = GetConfig('admin/abyss_rebuild_interval');
+			#my $curTime = GetTime2();
+			#
+			#WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
+			#if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
+			#	$lastAbyssRebuild = 0;
+			#}
+			#if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
+			#	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
+			#	WriteIndexPages();
+			#	PutConfig('last_abyss', $curTime);
+			#}
+
+			WriteLog('update.pl: Building touched pages...');
+
+			$pagesProcessed += BuildTouchedPages();
+
+			$filesProcessedTotal += $filesProcessed;
 		}
 
-		my $filesProcessed = 0;
+		WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
 
-		{
-			############
-			# TEXT FILE PROCESSING PART BEGINS HERE
+		WriteLog('Saving last update time...');
 
-			my $findCommand;
-			my @files;
-
-			#prioritize files with a public key in them
-			$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
-			push @files, split("\n", `$findCommand`);
-
-			#prioritize files with a public key in them
-			$findCommand = 'grep -rl "setconfig" html/txt';
-			push @files, split("\n", `$findCommand`);
-
-			$findCommand = 'find html/txt | grep -i \.txt$';
-			push @files, split("\n", `$findCommand`);
-
-			if ($filesLimit > scalar(@files)) {
-				$filesLimit = scalar(@files);
-			}
-
-			# Go through all the changed files
-			foreach my $file (@files) {
-				if ($filesProcessed >= $filesLimit) {
-					WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
-					last;
-				}
-
-				WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
-
-				if ((GetTime2() - $startTime) > $timeLimit) {
-					WriteLog("Time limit reached, exiting loop");
-					last;
-				}
-
-				# Trim the file path
-				chomp $file;
-				$file = trim($file);
-
-				# Log it
-				WriteLog('update.pl: $file = ' . $file);
-
-				#todo add rss.txt addition
-
-				# If the file exists, and is not a directory, process it
-				if (-e $file && !-d $file) {
-					$filesProcessed += ProcessTextFile($file);
-				}
-				else {
-					# this should not happen
-					WriteLog("Error! $file doesn't exist!");
-				}
-			}
-
-			IndexTextFile('flush');
-
-			WriteIndexedConfig();
-
-
-			# TEXT FILE PROCESSING PART ENDS HERE
-			############
-		}
-#####
-
-		{
-			# IMAGE PROCESSING PART BEGINS HERE
-			my $findCommand;
-			my @files;
-
-			$findCommand = 'find html/image';
-			push @files, split("\n", `$findCommand`);
-
-			if ($filesLimit > scalar(@files)) {
-				$filesLimit = scalar(@files);
-			}
-
-			# Go through all the changed files
-			foreach my $file (@files) {
-				if ($filesProcessed >= $filesLimit) {
-					WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
-					last;
-				}
-
-				WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
-
-				if ((GetTime2() - $startTime) > $timeLimit) {
-					WriteLog("Time limit reached, exiting loop");
-					last;
-				}
-
-				# Trim the file path
-				chomp $file;
-				$file = trim($file);
-
-				# Log it
-				WriteLog('update.pl: image: $file = ' . $file);
-
-				#todo add rss.txt addition
-
-				# If the file exists, and is not a directory, process it
-				if (-e $file && !-d $file) {
-					$filesProcessed += ProcessImageFile($file);
-				}
-				else {
-					# this should not happen
-					WriteLog("Error! $file doesn't exist!");
-				}
-			}
-
-			IndexImageFile('flush');
-		}
-
-
-#####
-
-
-
-		RemoveEmptyDirectories('./html/'); #includes txt/
-		#RemoveEmptyDirectories('./txt/');
+		# save current time in config/admin/update/last
+		my $newLastFlow = GetTime2();
+		WriteLog($newLastFlow);
+		PutConfig('admin/update/last', $newLastFlow);
 
 		my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
 		my $filesLeft = `$filesLeftCommand`; #todo
@@ -457,49 +517,8 @@ if (!$arg1) {
 
 		PutConfig('admin/update/files_left', $filesLeft);
 
-		# if new items were added, re-make all the summary pages (top authors, new threads, etc)
-		if ($filesProcessed > 0) {
-			WriteLog('update.pl: $filesProcessed > 0, calling UpdateUpdateTime() and MakeSummaryPages()...');
-
-			UpdateUpdateTime();
-			MakeSummaryPages();
-			#	WriteIndexPages();
-		}
-
-		# if anything has changed, redo the abyss index pages
-		#if ($newItemCount) {
-		#WriteIndexPages();
-		#}
-
-		## rebuild abyss pages no more than once an hour (default/admin/abyss_rebuild_interval)
-		#my $lastAbyssRebuild = GetConfig('last_abyss');
-		#my $abyssRebuildInterval = GetConfig('admin/abyss_rebuild_interval');
-		#my $curTime = GetTime2();
-		#
-		#WriteLog("Abyss was last rebuilt at $lastAbyssRebuild, and now it is $curTime");
-		#if (!($lastAbyssRebuild =~ /^[0-9]+/)) {
-		#	$lastAbyssRebuild = 0;
-		#}
-		#if ((!$lastAbyssRebuild) || (($lastAbyssRebuild + $abyssRebuildInterval) < $curTime)) {
-		#	WriteLog("Rebuilding Abyss, because " . ($lastAbyssRebuild + 86400) . " < " . $curTime);
-		#	WriteIndexPages();
-		#	PutConfig('last_abyss', $curTime);
-		#}
-
-		WriteLog('update.pl: Building touched pages...');
-
-		$pagesProcessed = BuildTouchedPages();
-
-		WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
-
-		WriteLog('Saving last update time...');
-
-		# save current time in config/admin/update/last
-		my $newLastFlow = GetTime2();
-		WriteLog($newLastFlow);
-		PutConfig('admin/update/last', $newLastFlow);
-
 		unlink('cron.lock');
+
 
 		WriteLog("======update.pl DONE! ======");
 		WriteLog("Items/files processed: $filesProcessed");
