@@ -464,6 +464,37 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = SetHtmlClock($html);
 		}
 
+		if (isset($_GET['light'])) {
+			// user is requesting to change light mode state
+
+			$lightMode = $_GET['light'] ? 1 : 0; // normalize the request
+
+			if (isset($_COOKIE['light'])) {
+				// if there is a cookie, change its value if it's necessary
+
+				if ($_COOKIE['light'] != $lightMode) {
+					setcookie2('light', $lightMode);
+
+					//$lightModeSetMessage = StoreServerMessage('Light mode has been set to ' . $lightMode);
+					//$redirectUrl = '';
+				}
+			} else {
+				// if there is no cookie set, set it
+				
+				setcookie2('light', $lightMode);
+			}
+		} else {
+			// no requests for light mode change, check if there is a cookie
+			
+			if (isset($_COOKIE['light'])) {
+				// cookie is set
+				$lightMode = $_COOKIE['light'] ? 1 : 0;
+			} else {
+				// use light mode default from config
+				$lightMode = GetConfig('admin/php/light_mode_default');
+			}
+		}
+
 		if ($serverMessage) {
 			// inject server message into html
 
@@ -480,14 +511,16 @@ if (GetConfig('admin/php/route_enable')) {
 			//$serverMessageTemplate = GetWindowTemplate('title', '', '', 'hi', 'ready');
 
 			$messageInjected = 0;
-			if (isset($_GET['anchorto']) && $_GET['anchorto']) {
+			
+			if (!$lightMode && isset($_GET['anchorto']) && $_GET['anchorto']) {
+				// if there is an anchorto parameter, we will put the server message next to the anchor
+				// unless we are in light mode, because then we want the message at the top of the page
+
 				$anchorTo = $_GET['anchorto'];
 
 				if (index($html, "<a name=$anchorTo>") > -1) {
 					// same as below, same message applies
 					$serverMessageTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverMessageTemplate);
-
-
 
 					$replaceWhat = "<a name=$anchorTo>";
 					$replaceWith = "<a name=$anchorTo>" . $serverMessageTemplate;
@@ -504,8 +537,6 @@ if (GetConfig('admin/php/route_enable')) {
 				// the page instead of disappearing, which doesn't look nearly as cool
 				// perhaps to be conditional under html/cool_effects?
 				$serverMessageTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '"', $serverMessageTemplate);
-
-
 
 				// inject server message right after the body tag
 				$replaceWhat = '(<body\s[^>]*>|<body>)'; // both with attributes or without
@@ -571,35 +602,27 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
 		}
 
-//		$lightMode = GetConfig('admin/php/light_mode');
-		$lightMode = 0;
-		if (isset($_GET['light'])) {
-			$lightMode = $_GET['light'] ? 1 : 0;
-			if (isset($_COOKIE['light'])) {
-				if ($_COOKIE['light'] != $lightMode) {
-					setcookie2('light', $lightMode);
-
-					//$lightModeSetMessage = StoreServerMessage('Light mode has been set to ' . $lightMode);
-
-					//$redirectUrl = '';
-				}
-			}
-		} else {
-			if (isset($_COOKIE['light'])) {
-				$lightMode = $_COOKIE['light'] ? 1 : 0;
-			}
-		}
-
 		if ($lightMode) {
 			$html = StripComments($html);
 			$html = StripHeavyTags($html);
 			$html = StripWhitespace($html);
 
+			$pathSelf = $_SERVER['REQUEST_URI'];
+			if (! (strpos($pathSelf, '?') === false)) {
+				$pathSelf = substr($pathSelf, 0, strpos($pathSelf, '?'));
+			}
+
 			$html = str_replace(
 				'</body>',
-				'<h3><a href="/settings.html?light=0">Click here to return to fully featured mode.</a></h3></body>',
+				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
 				$html
 			);
+//
+//			$html = str_replace(
+//				'<main id=maincontent>',
+//				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p><main id=maincontent>',
+//				$html
+//			);
 
 			//#todo perhaps strip onclick, onkeypress, etc., and style
 		}
