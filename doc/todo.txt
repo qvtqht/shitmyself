@@ -1,3 +1,23 @@
+in php, if debug is enabled, save WRitelo() when passig server messagewriteindexpage
+
+Give update.pl a parameter which looks up in page_item and only does those
+
+Automatic filtering of problematic items
+	.txt with binary in it ;
+	very large files
+	many hashtags
+		perhaps use `file`
+
+
+Replace #pubkey items with author page
+	No need to have 2 pages for each pubkey
+
+
+#bug title mismatch between untitled item ('untitled') and page title (hash)
+
+If user signs in without OpenPGP, is signed in via cookies only
+	There is a problem with the Profile page not displaying correctly
+
 admin/organize_files should not be in IndexTextFile... somewhere else, not there
 
 separate out rewrite stuff

@@ -1,3 +1,4 @@
+
 retroactive registration
 
 collapse/expand images
@@ -904,3 +905,10 @@ page definitions
 
 Remember if we popped up loading progress before
 	If we did, we can make it appear right away instead of with a delay
+
+duration between page and next page load can be tracked
+	set click id using message id or something like that
+	grab it on the beginning of next pageload
+
+Maintain a constant ~80% approval rate, with bottom 20% of items automatically flushed
+
