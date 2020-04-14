@@ -15,8 +15,8 @@
 				<fieldset>
 					<p>Built: $lastBuildTime
 					<p>Updated: $lastUpdateTime <input type=submit name=comment value="Update">
-					<p><a href="/index0.html">Indexed</a>: $itemCount
-					<p class=advanced><a href="/data.html">Total</a>: $filesLeft
+					<p><a href="/index0.html">Indexed</a>: $itemsIndexed
+					<p class=advanced><a href="/data.html">Total</a>: $filesTotal
 					<p><a href="/authors.html">Authors</a>: $authorCount
 					<p>Operator: $admin
 					<p class=advanced>Server: $server

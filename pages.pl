@@ -1471,7 +1471,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
 
 	my $menuItems = GetMenuFromList('menu');
-	$menuItems .= '<span class=advanced>' . GetMenuFromList('menu_advanced') . '</span>';
+	$menuItems .= '<span class=advanced><br><small>' . GetMenuFromList('menu_advanced') . '</small></span>';
+	#todo move html to template
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	
@@ -1623,7 +1624,7 @@ sub GetTopItemsPage { # returns page with top items listing
 } #GetTopItemsPage
 
 sub GetStatsTable() {
-	my $itemCount = DBGetItemCount();
+	my $itemsIndexed = DBGetItemCount();
 	my $authorCount = DBGetAuthorCount();
 
 	my $adminId = GetAdminKey();
@@ -1664,16 +1665,21 @@ sub GetStatsTable() {
 		$lastBuildTime = 0;
 	}
 
-	my $filesLeft = GetConfig('admin/update/files_left') || 0;
+
+	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
+	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
+	my $filesTotal = trim(`find html/txt | grep \.txt\$ | wc -l`);
+	$filesTotal += trim(`find html/image | grep \.png\$ | wc -l`);
+
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
 
 	$statsTable =~ s/\$versionFull/$versionFull/;
 	$statsTable =~ s/\$versionShort/$versionShort/;
-	$statsTable =~ s/\$itemCount/$itemCount/;
+	$statsTable =~ s/\$itemsIndexed/$itemsIndexed/;
 	$statsTable =~ s/\$authorCount/$authorCount/;
-	$statsTable =~ s/\$filesLeft/$filesLeft/;
+	$statsTable =~ s/\$filesTotal/$filesTotal/;
 
 	return $statsTable;
 }
@@ -2845,7 +2851,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 
 	# .htaccess file for Apache
-	my $HtaccessTemplate = GetTemplate('htaccess.template');
+	my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
 	if (GetConfig('admin/php/enable')) {
 		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php.template');
 
