@@ -58,7 +58,7 @@ require './index.pl';
 	SqliteMakeTables();
 
 	BuildMessage "Remove cache/indexed/*";
-	system('rm -v cache/*/indexed/*');
+	system('rm cache/*/indexed/*');
 }
 
 BuildMessage "Ensure there's html/txt and something inside...";
@@ -72,6 +72,18 @@ if (!glob('html/txt')) {
 	# create first text file if there are none.
 	#
 	PutFile('html/txt/hello.txt', 'Hello, World!');
+}
+
+if (!-e 'html/image') {
+	# create html/txt directory if it doesn't exist
+	mkdir('html/image');
+	PutFile('html/image/hello.gif', GetTemplate('p.gif.template'));
+}
+
+if (!glob('html/image')) {
+	# create first text file if there are none.
+	#
+	PutFile('html/image/hello.gif', GetTemplate('p.gif.template'));
 }
 
 #my $accessLogPath = GetConfig('admin/access_log_path');
