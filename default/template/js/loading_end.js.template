@@ -25,7 +25,7 @@ function WaitForOpenPgp() {
 		if (5000 < a383hideTimeout) {
 			a383hideTimeout = 5000;
 		}
-		if (a383hideTimeout < 100) {
+		if (a383hideTimeout < 500) {
 			a383hideTimeout = 0;
 		}
 

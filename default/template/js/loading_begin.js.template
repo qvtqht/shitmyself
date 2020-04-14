@@ -9,19 +9,16 @@ var a383loadCounter = 0;
 
 var a383 = document.createElement('span');
 a383.setAttribute('id', 'a383');
-a383.innerHTML = 'Please meditate while page loads... ';
+a383.innerHTML = 'Loading...';
 a383.style.display = 'none';
-
-var a383lightLink = document.createElement('a');
-a383lightLink.setAttribute('href', window.location.href + '?light=1');
-a383lightLink.innerHTML = 'or try basic mode';
-a383lightLink.style.display = 'none';
-
-a383.appendChild(a383lightLink);
-
 document.body.appendChild(a383);
 
-var a383showTimeout = setTimeout('a383.style.display = "block";', 500);
-var a383showLightLinkTimeout = setTimeout('a383lightLink.style.display = "inline"; a383.innerHTML = a383.innerHTML + "."', 3000);
+var a383showTimeout = setTimeout('a383.style.display = "block";', 1500);
+var a383LightModeLink = window.location.pathname;
+if (a383LightModeLink == '/') {
+	a383LightModeLink = '/index.html';
+}
+a383LightModeLink = a383LightModeLink + '?light=1';
+var a383expandTimeout = setTimeout('a383.innerHTML = a383.innerHTML + \' For faster service, you can try <a href="' + a383LightModeLink + '"' + a383gt + 'light mode</a' + a383gt + '.\';', 3000);
 
 // end loading_begin.js
