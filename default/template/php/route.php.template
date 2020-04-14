@@ -217,7 +217,61 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 	return $html;
 }
 
-function Handle404($path, $pathValid) {
+function HandleNotFound($path, $pathRel) { // handles 404 errors
+	if (
+		$path == '/stats.html' ||
+		$path == '/write.html'
+	) {
+		// currently able to handle these pages
+
+		// remember current working directory, we'll need it later
+		$pwd = getcwd();
+		WriteLog('$pwd = ' . $pwd);
+
+		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
+
+		if (GetConfig('admin/php/regrow_404_pages')) {
+			// attempt to make page on the fly
+			
+			WriteLog("cd .. ; ./pages.pl --summary");
+			WriteLog(`cd .. ; ./pages.pl --summary`);
+		}
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+
+		if ($pathRel && file_exists($pathRel)) {
+			WriteLog('$pathRel exist: ' . $pathRel);
+			$html = file_get_contents($pathRel);
+		} else {
+			WriteLog('$pathRel NO exist: ' . $pathRel);
+			if (file_exists('404.html')) {
+				$html = file_get_contents('404.html');
+			}
+		}
+	} else {
+		// don't know how to handle this request, default to 404
+		if (file_exists('404.html')) {
+			$html = file_get_contents('404.html');
+		}
+	}
+
+	if (!$html && file_exists('404.html')) {
+		// something strange happened, and $html is still blank
+		// try to get 404.html into it
+		WriteLog('HandleNotFound: Fallback which should not happen');
+		$html = file_get_contents('404.html');
+	}
+
+	if (!$html) {
+		// evidently, 404.html didn't work, just use some hard-coded html
+		WriteLog('HandleNotFound: Fallback which should not happen');
+		$html = '<html><body>404</body></html>';
+	}
+
+	return $html;
 }
 
 if (GetConfig('admin/php/route_enable')) {
@@ -240,6 +294,7 @@ if (GetConfig('admin/php/route_enable')) {
 
 			if ($path == '/profile.html') {
 			} else {
+				// if registration is required, redirect user to profile.html
 				if (GetConfig('admin/force_profile')) {
 					$clientHasCookie = 0;
 					if (isset($_COOKIE)) {
@@ -272,6 +327,8 @@ if (GetConfig('admin/php/route_enable')) {
 				if ($path) {
 					$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
 					if ($path != '/404.html' && file_exists($pathRel)) {
+						WriteLog("file_exists($pathRel) was true");
+						
 						if ($path == '/settings.html') {
 							if (isset($_GET['chkWantToVote']) && isset($_GET['query']) && $_GET['query'] == 'ui=Admin') {
 								include_once('cookie.php');
@@ -416,47 +473,24 @@ if (GetConfig('admin/php/route_enable')) {
 						WriteLog('$html = file_get_contents($pathRel);');
 						$html = file_get_contents($pathRel);
 					} else {
-						$html = file_get_contents('404.html');
-						WriteLog('buh: ' . $path);
+						WriteLog('$path not found, using HandleNotFound(' . $path . ',' . $pathRel . ')');
+						$html = HandleNotFound($path, $pathRel);
 					}
 				} else {
 					// no $path
-					$html = file_get_contents('404.html');
-					WriteLog('no $path specified');
-					WriteLog('boff');
+					WriteLog('$path not specified, using HandleNotFound()');
+					$html = HandleNotFound($path, '');
 				}
 			} else {
+				// #todo when does this actually happen?
 				// smarter 404 handler
 				WriteLog('smarter 404 handler... activate!');
-
-				if (
-					$path == '/stats.html' ||
-					$path == '/write.html'
-				) {
-					// remember current working directory, we'll need it later
-					$pwd = getcwd();
-					WriteLog('$pwd = ' . $pwd);
-
-					if (GetConfig('admin/php/regrow_404_pages')) {
-						WriteLog("cd .. ; ./pages.pl --summary");
-						WriteLog(`cd .. ; ./pages.pl --summary`);
-					}
-
-					if ($pwd) {
-						WriteLog("cd $pwd");
-						WriteLog(`cd $pwd`);
-					}
-
-					$html = file_get_contents('404.html');
-				} else {
-					$html = file_get_contents('404.html');
-				}
-				WriteLog('bruh');
+				WriteLog('$path not found, using HandleNotFound()');
+				$html = HandleNotFound($path, '');
 			}
 		} else {
-			WriteLog('broff');
-			$html = file_get_contents('404.html');
-			// no $_GET['path']
+			WriteLog('no $path specified in GET');
+			$html = HandleNotFound($path, $pathRel);
 		}
 
 		if (GetConfig('html/clock')) {
