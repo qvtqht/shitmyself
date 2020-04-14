@@ -16,5 +16,7 @@ if (-d 'archive') {
 
 	system("mkdir html");
 	system("mkdir html/txt");
+	system("mkdir html/image");
+	system("mkdir html/thumb");
 	system("echo \"archived at $date\" > html/txt/archived_$date\.txt");
 }
