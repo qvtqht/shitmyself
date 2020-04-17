@@ -12,7 +12,16 @@ use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use Data::Dumper;
 use File::Copy;
+# use File::Copy qw(copy);
 use Cwd qw(cwd);
+
+
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $PHPDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
+my $IMAGEDIR = $HTMLDIR . '/txt';
+
 
 #use List::Uniq ':all';
 
@@ -21,7 +30,6 @@ use Cwd qw(cwd);
 require './utils.pl';
 require './sqlite.pl';
 
-my $HTMLDIR = "html";
 
 sub GenerateDialogPage { # generates page with dialog
 	# #todo:
@@ -1054,7 +1062,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $permalinkTxt = $file{'file_path'};
 		# strip the 'html/' prefix on the file's path, replace with /
 		# todo relative links
-		$permalinkTxt =~ s/html\//\//;
+		$permalinkTxt =~ s/$HTMLDIR\//\//;
 
 		# set up $permalinkHtml, which links to the html page for the item
 		my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
@@ -1668,8 +1676,10 @@ sub GetStatsTable() {
 
 	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
 	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
-	my $filesTotal = trim(`find html/txt | grep \.txt\$ | wc -l`);
-	$filesTotal += trim(`find html/image | grep \.png\$ | wc -l`);
+	my $filesTotal = trim(`find $TXTDIR | grep \.txt\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.png\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.jpg\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.gif\$ | wc -l`);
 
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
@@ -2319,14 +2329,14 @@ sub GetReadPage { # generates page with item listing based on parameters
 } # GetReadPage
 
 
-sub GetMenuItem { # returns html snippet for a menu item (used for both top and footer menus)
+sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (used for both top and footer menus)
 	my $address = shift;
 	my $caption = shift;
 
-#
-#	if (!-e "html/$address") { #don't make a menu item if file doesn't exist
-#		return '';
-#	}
+	# if (!-e "$HTMLDIR/$address") {
+	#	#don't make a menu item if file doesn't exist
+	# 	return '';
+	# }
 
 	my $menuItem = '';
 	$menuItem = GetTemplate('menuitem.template');
@@ -2521,9 +2531,9 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 				$indexPage = GetIndexPage(\@ft);
 			}
 
-			PutHtmlFile("html/index$i.html", $indexPage);
+			PutHtmlFile("index$i.html", $indexPage);
 			if ($i == 0) {
-				PutHtmlFile("html/compost.html", $indexPage);
+				PutHtmlFile("compost.html", $indexPage);
 			}
 		}
 	} else {
@@ -2540,8 +2550,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar));
 
-		PutHtmlFile('html/index0.html', $indexPage);
-		PutHtmlFile('html/compost.html', $indexPage);
+		PutHtmlFile("index0.html", $indexPage);
+		PutHtmlFile("compost.html", $indexPage);
 	}
 }
 
@@ -2596,73 +2606,73 @@ sub GetLighttpdConfig {
 
 sub MakeJsTestPages {
 	my $jsTestPage = GetTemplate('js/test.js.template');
-	PutHtmlFile("$HTMLDIR/jstest.html", $jsTestPage);
+	PutHtmlFile("jstest.html", $jsTestPage);
 
 	my $jsTest2Page = GetTemplate('js/test2.js.template');
 	#	$jsTest2Page = InjectJs($jsTest2Page, qw(sha512.js));
-	PutHtmlFile("$HTMLDIR/jstest2.html", $jsTest2Page);
+	PutHtmlFile("jstest2.html", $jsTest2Page);
 
 	my $jsTest3Page = GetTemplate('js/test3.js.template');
-	PutHtmlFile("$HTMLDIR/jstest3.html", $jsTest3Page);
+	PutHtmlFile("jstest3.html", $jsTest3Page);
 
 	my $jsTest4Page = GetTemplate('js/test4.js.template');
-	PutHtmlFile("$HTMLDIR/jstest4.html", $jsTest4Page);
+	PutHtmlFile("jstest4.html", $jsTest4Page);
 
 
 	my $jsTest1 = GetTemplate('test/jstest1/jstest1.template');
 	$jsTest1 = InjectJs($jsTest1, qw(jstest1));
-	PutHtmlFile("$HTMLDIR/jstest1.html", $jsTest1);
+	PutHtmlFile("jstest1.html", $jsTest1);
 
 	my $jsTest2 = GetTemplate('test/jstest1/jstest2.template');
 	$jsTest2 = InjectJs($jsTest2, qw(jstest2));
-	PutHtmlFile("$HTMLDIR/jstest2.html", $jsTest2);
+	PutHtmlFile("jstest2.html", $jsTest2);
 }
 
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 	WriteLog('MakeSummaryPages() BEGIN');
-	
-	PutHtmlFile("$HTMLDIR/test.html", GetTemplate('test.template'));
+
+	PutHtmlFile("test.html", GetTemplate('test.template'));
 
 	MakeJsTestPages();
 
 	# Submit page
 	my $submitPage = GetWritePage();
-	PutHtmlFile("$HTMLDIR/write.html", $submitPage);
-	PutHtmlFile("$HTMLDIR/create.html", $submitPage);
+	PutHtmlFile("write.html", $submitPage);
+	PutHtmlFile("create.html", $submitPage);
 
 	# Add Event page
 	my $eventAddPage = GetEventAddPage();
-	PutHtmlFile("$HTMLDIR/event.html", $eventAddPage);
+	PutHtmlFile("event.html", $eventAddPage);
 
 	# Stats page
 	my $statsPage = GetStatsPage();
-	PutHtmlFile("$HTMLDIR/stats.html", $statsPage);
+	PutHtmlFile("stats.html", $statsPage);
 
 	my $clockTest = '<form>'.GetTemplate('clock.template').'</form>';
 	my $clockTestPage = '<html><body>';
 	$clockTestPage .= $clockTest;
 	$clockTestPage .= '</body></html>';
 	$clockTestPage = InjectJs($clockTestPage, qw(clock));
-	PutHtmlFile("$HTMLDIR/clock.html", $clockTestPage);
+	PutHtmlFile("clock.html", $clockTestPage);
 
 	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
 	if (GetConfig('html/clock')) {
 		$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
 	}
-	PutHtmlFile("$HTMLDIR/404.html", $fourOhFourPage);
+	PutHtmlFile("404.html", $fourOhFourPage);
 
 	# Profile page
 	my $identityPage2 = GetIdentityPage2();
-	PutHtmlFile("$HTMLDIR/profile.html", $identityPage2);
+	PutHtmlFile("profile.html", $identityPage2);
 
 	# Settings page
 	my $settingsPage = GetSettingsPage();
-	PutHtmlFile("$HTMLDIR/settings.html", $settingsPage);
+	PutHtmlFile("settings.html", $settingsPage);
 
 	# More page
 	my $etcPage = GetEtcPage();
-	PutHtmlFile("$HTMLDIR/etc.html", $etcPage);
+	PutHtmlFile("etc.html", $etcPage);
 
 	# Target page for the submit page
 	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
@@ -2685,7 +2695,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	
 	WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
 
-	PutHtmlFile("$HTMLDIR/post.html", $postPage);
+	PutHtmlFile("post.html", $postPage);
 	
 	
 	# Ok page
@@ -2705,10 +2715,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$okPage = InjectJs($okPage, qw(settings));
 
-	#PutHtmlFile("$HTMLDIR/ok.html", $okPage);
-	#PutHtmlFile("$HTMLDIR/action/vote.html", $okPage);
-	#PutHtmlFile("$HTMLDIR/action/vote2.html", $okPage);
-	PutHtmlFile("$HTMLDIR/action/event.html", $okPage);
+	#PutHtmlFile("ok.html", $okPage);
+	#PutHtmlFile("action/vote.html", $okPage);
+	#PutHtmlFile("action/vote2.html", $okPage);
+	PutHtmlFile("action/event.html", $okPage);
 		
 	{
 		# Manual page
@@ -2733,7 +2743,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage = InjectJs($tfmPage, qw(settings avatar profile));
 
-		PutHtmlFile("$HTMLDIR/manual.html", $tfmPage);
+		PutHtmlFile("manual.html", $tfmPage);
 
 	}
 
@@ -2759,7 +2769,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage = InjectJs($tfmPage, qw(avatar settings profile));
 
-		PutHtmlFile("$HTMLDIR/help.html", $tfmPage);
+		PutHtmlFile("help.html", $tfmPage);
 
 	}
 
@@ -2785,7 +2795,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		$tfmPage = InjectJs($tfmPage, qw(settings avatar));
 
-		PutHtmlFile("$HTMLDIR/manual_advanced.html", $tfmPage);
+		PutHtmlFile("manual_advanced.html", $tfmPage);
 	}
 
 
@@ -2802,21 +2812,21 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	$tokensPage = InjectJs($tokensPage, qw(settings avatar));
 
-	PutHtmlFile("$HTMLDIR/manual_tokens.html", $tokensPage);
+	PutHtmlFile("manual_tokens.html", $tokensPage);
 
 
 	# Blank page
-	PutHtmlFile("$HTMLDIR/blank.html", "");
+	PutHtmlFile("blank.html", "");
 
 
 	# Zalgo javascript
-	PutHtmlFile("$HTMLDIR/zalgo.js", GetTemplate('js/lib/zalgo.js.template'));
+	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js.template'));
 
 
 	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
 		# OpenPGP javascript
-		PutHtmlFile("$HTMLDIR/openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
-		PutHtmlFile("$HTMLDIR/openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
+		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
+		PutHtmlFile("openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
 	}
 
 	# Write form javascript
@@ -2830,24 +2840,24 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	#rewrites have been added for this, so it's commented out for now, but could still be an option in the future
 #		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
 	}
-	#PutHtmlFile("$HTMLDIR/crypto.js", $cryptoJsTemplate);
+	#PutHtmlFile("crypto.js", $cryptoJsTemplate);
 
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
 	if (GetConfig('admin/js/debug')) {
 		$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 	}
-	PutHtmlFile("$HTMLDIR/crypto2.js", $crypto2JsTemplate);
+	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
 	my $avatarJsTemplate = GetTemplate('js/avatar.js.template');
 	if (GetConfig('admin/js/debug')) {
 		$avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 	}
-	PutHtmlFile("$HTMLDIR/avatar.js", $avatarJsTemplate);
+	PutHtmlFile("avatar.js", $avatarJsTemplate);
 
 	# Write settings javascript
-	#PutHtmlFile("$HTMLDIR/settings.js", GetTemplate('js/settings.js.template'));
-	PutHtmlFile("$HTMLDIR/prefstest.html", GetTemplate('js/prefstest.template'));
+	#PutHtmlFile("settings.js", GetTemplate('js/settings.js.template'));
+	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
 
 	# .htaccess file for Apache
@@ -2866,35 +2876,35 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		}
 
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
-		PutFile('html/post.php', $postPhpTemplate);
+		PutFile($PHPDIR . '/post.php', $postPhpTemplate);
 
 		my $test2PhpTemplate = GetTemplate('php/test2.php.template');
-		PutFile('html/test2.php', $test2PhpTemplate);
+		PutFile($PHPDIR . '/test2.php', $test2PhpTemplate);
 
 		my $adminPhpTemplate = GetTemplate('php/admin.php.template');
-		PutFile('html/admin.php', $adminPhpTemplate);
+		PutFile($PHPDIR . '/admin.php', $adminPhpTemplate);
 
 		my $testPhpTemplate = GetTemplate('php/test.php.template');
-		PutFile('html/test.php', $testPhpTemplate);
+		PutFile($PHPDIR . '/test.php', $testPhpTemplate);
 
 		my $writePhpTemplate = GetTemplate('php/write.php.template');
-		PutFile('html/write.php', $writePhpTemplate);
+		PutFile($PHPDIR . '/write.php', $writePhpTemplate);
 
 		my $uploadPhpTemplate = GetTemplate('php/upload.php.template');
-		PutFile('html/upload.php', $uploadPhpTemplate);
+		PutFile($PHPDIR . '/upload.php', $uploadPhpTemplate);
 
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
-		PutFile('html/cookie.php', $cookiePhpTemplate);
+		PutFile($PHPDIR . '/cookie.php', $cookiePhpTemplate);
 
 		my $utilsPhpTemplate = GetTemplate('php/utils.php.template');
-		PutFile('html/utils.php', $utilsPhpTemplate);
+		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
 
 		my $routePhpTemplate = GetTemplate('php/route.php.template');
-		PutFile('html/route.php', $routePhpTemplate);
+		PutFile($PHPDIR . '/route.php', $routePhpTemplate);
 	}
-	PutHtmlFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
+	PutHtmlFile(".htaccess", $HtaccessTemplate);
 
-	PutHtmlFile("$HTMLDIR/favicon.ico", '');
+	PutHtmlFile("favicon.ico", '');
 
 	{
 		# p.gif
@@ -2907,7 +2917,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		}
 
 		if (-e 'config/template/p.gif.template') {
-			copy('config/template/p.gif.template', 'html/p.gif');
+			copy('config/template/p.gif.template', $HTMLDIR . '/p.gif');
 		}
 	}
 
@@ -3153,7 +3163,6 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	my $menuItems = '';
-
 	#todo move html to template
 	$menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
@@ -3163,6 +3172,11 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 	$menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
 	$menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
+
+	# my $menuItems;
+	# $menuItems .= GetMenuFromList('menu', '<br>');
+	# $menuItems .= '<br>';
+	# $menuItems .= GetMenuFromList('menu_advanced', '<br>');
 
 	my $etcPageContent = GetTemplate('etc.template');
 
@@ -3345,7 +3359,7 @@ sub MakeDataPage { # returns html for /data.html
 		# -q for quiet
 		# -r for recursive
 
-		system("zip -qr $HTMLDIR/hike.tmp.zip html/txt/ log/votes.log");
+		system("zip -qr $HTMLDIR/hike.tmp.zip $TXTDIR log/votes.log");
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 		
 		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyVersion() . "/index.sqlite3");
@@ -3389,10 +3403,10 @@ sub MakeDataPage { # returns html for /data.html
 
 	$dataPage = InjectJs($dataPage, qw(settings avatar profile));
 
-	PutHtmlFile("$HTMLDIR/data.html", $dataPage);
+	PutHtmlFile("data.html", $dataPage);
 }
 
-sub MakePage { # make a page and write it into html/ directory; $pageType, $pageParam
+sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $pageParam
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
 	my $pageType = shift;
@@ -3412,7 +3426,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 
 		my $tagPage = GetReadPage('tag', $tagName);
 
-		PutHtmlFile('html/top/' . $tagName . '.html', $tagPage);
+		PutHtmlFile("top/$tagName.html", $tagPage);
 	}
 	#
 	# author page, get author's id from $pageParam
@@ -3421,11 +3435,11 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 
 		my $authorPage = GetReadPage('author', $authorKey);
 
-		if (!-e 'html/author/' . $authorKey) {
-			mkdir ('html/author/' . $authorKey);
+		if (!-e "$HTMLDIR/author/$authorKey") {
+			mkdir ("$HTMLDIR/author/$authorKey");
 		}
 
-		PutHtmlFile('html/author/' . $authorKey . '/index.html', $authorPage);
+		PutHtmlFile("author/$authorKey/index.html", $authorPage);
 	}
 	#
 	# if $pageType eq item, generate that item's page
@@ -3441,12 +3455,12 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 			my $file = $files[0];
 
 			# get item page's path #todo refactor this into a function
-			#my $targetPath = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
-			my $targetPath = 'html/' .GetHtmlFilename($fileHash);
+			#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+			my $targetPath = GetHtmlFilename($fileHash);
 
 			# create a subdir for the first 2 characters of its hash if it doesn't exist already
-			if (!-e 'html/' . substr($fileHash, 0, 2)) {
-				mkdir('html/' . substr($fileHash, 0, 2));
+			if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
+				mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2)));
 			}
 
 			# get the page for this item and write it
@@ -3462,34 +3476,34 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 	# tags page
 	elsif ($pageType eq 'tags') {
 		my $tagsPage = GetTagsPage('Tags', 'Tags', '');
-		PutHtmlFile("html/tags.html", $tagsPage);
+		PutHtmlFile("tags.html", $tagsPage);
 
 		my $votesPage = GetTagsPage('Votes', 'Votes', 'ORDER BY vote_value');
-		PutHtmlFile("html/votes.html", $votesPage);
+		PutHtmlFile("votes.html", $votesPage);
 	}
 	#
 	# events page
 	elsif ($pageType eq 'events') {
 		my $eventsPage = GetEventsPage();
-		PutHtmlFile("html/events.html", $eventsPage);
+		PutHtmlFile("events.html", $eventsPage);
 	}
 	#
 	# scores page
 	elsif ($pageType eq 'scores') {
 		my $scoresPage = GetScoreboardPage();
-		PutHtmlFile('html/authors.html', $scoresPage);
+		PutHtmlFile("authors.html", $scoresPage);
 	}
 	#
 	# topitems page
 	elsif ($pageType eq 'top') {
 		my $topItemsPage = GetTopItemsPage();
-		PutHtmlFile('html/top.html', $topItemsPage);
+		PutHtmlFile("top.html", $topItemsPage);
 	}
 	#
 	# stats page
 	elsif ($pageType eq 'stats') {
 		my $statsPage = GetStatsPage();
-		PutHtmlFile('html/stats.html', $statsPage);
+		PutHtmlFile("stats.html", $statsPage);
 	}
 	#
 	# index pages (queue)
@@ -3504,7 +3518,7 @@ sub MakePage { # make a page and write it into html/ directory; $pageType, $page
 		$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 		my @rssFiles = DBGetItemList(\%queryParams);
 
-		PutFile('html/rss.xml', GetRssFile(@rssFiles));
+		PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
 	}
 	#
 	# summary pages

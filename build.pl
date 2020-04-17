@@ -12,6 +12,12 @@ sub BuildMessage { # prints timestamped message to output
 	print "\n";
 }
 
+#my $SCRIPTDIR = `pwd`; chomp $SCRIPTDIR;
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
+my $IMAGEDIR = $HTMLDIR . '/txt';
+
 BuildMessage "Require ./utils.pl...";
 require './utils.pl';
 
@@ -61,29 +67,15 @@ require './index.pl';
 	system('rm cache/*/indexed/*');
 }
 
-BuildMessage "Ensure there's html/txt and something inside...";
-if (!-e 'html/txt') {
-	# create html/txt directory if it doesn't exist
-	mkdir('html/txt');
-	PutFile('html/txt/hello.txt', 'Hello, World!');
+BuildMessage "Ensure there's $HTMLDIR and something inside...";
+if (!-e $TXTDIR) {
+	# create $TXTDIR directory if it doesn't exist
+	mkdir($TXTDIR);
 }
 
-if (!glob('html/txt')) {
-	# create first text file if there are none.
-	#
-	PutFile('html/txt/hello.txt', 'Hello, World!');
-}
-
-if (!-e 'html/image') {
-	# create html/txt directory if it doesn't exist
-	mkdir('html/image');
-	PutFile('html/image/hello.gif', GetTemplate('p.gif.template'));
-}
-
-if (!glob('html/image')) {
-	# create first text file if there are none.
-	#
-	PutFile('html/image/hello.gif', GetTemplate('p.gif.template'));
+if (!-e $IMAGEDIR) {
+	# create $IMAGEDIR directory if it doesn't exist
+	mkdir($IMAGEDIR);
 }
 
 #my $accessLogPath = GetConfig('admin/access_log_path');
@@ -91,21 +83,9 @@ if (!glob('html/image')) {
 
 BuildMessage "Looking for files...";
 
-# This holds all the files we will list in the primary index
-my @filesToInclude;
-push (@filesToInclude, `find html/txt | grep \.txt\$ | sort -r`);
-
-#push (@filesToInclude, `find html/image | grep \.jpg\$ | sort -r`); #aug29
-
-#push (@filesToInclude, `find html/txt/ | grep \.md\$ | sort -r`); #todo add support for .md (markdown) files
-
 BuildMessage "MakeAddedIndex()...";
 
 MakeAddedIndex();
-
-#BuildMessage "MakeIndex(\@filesToInclude)";
-
-#MakeIndex(\@filesToInclude);
 
 BuildMessage "MakeVoteIndex()...";
 
@@ -153,7 +133,7 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
 
-my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+my $filesLeftCommand = 'find $TXTDIR | grep "\.txt$" | wc -l';
 my $filesLeft = `$filesLeftCommand`; #todo
 
 WriteLog('build.pl: $filesLeft = ' . $filesLeft);
@@ -165,7 +145,7 @@ PutFile('config/admin/build_end', GetTime());
 UpdateUpdateTime();
 # Stats page
 my $statsPage = GetStatsPage();
-PutHtmlFile("html/stats.html", $statsPage);
+PutHtmlFile("stats.html", $statsPage);
 
 if (GetConfig('admin/build/update_after')) {
 	BuildMessage("system('perl update.pl --all')...");

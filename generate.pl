@@ -21,13 +21,13 @@ my $HTMLDIR = "html";
 
 MakeSummaryPages();
 
-WriteLog ("GetReadPage()...");
+WriteLog("GetReadPage()...");
 
 #my $indexText = GetReadPage();
 
-#PutHtmlFile("$HTMLDIR/index.html", $indexText);
+#PutHtmlFile("index.html", $indexText);
 {
-	WriteLog ("Author pages...");
+	WriteLog("Author pages...");
 
 	my @authors = DBGetAuthorList();
 	#my @authors = ();
@@ -71,7 +71,7 @@ WriteLog ("GetReadPage()...");
 
 		WriteLog("$HTMLDIR/author/$key/index.html");
 
-		PutHtmlFile("$HTMLDIR/author/$key/index.html", $authorIndex);
+		PutHtmlFile("author/$key/index.html", $authorIndex);
 
 		PutCache("key/$key", GetTime());
 	}
@@ -121,14 +121,14 @@ PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
 
 		my $fileIndex = GetItemPage($file);
 
-		#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
-		my $targetPath = 'html/' . GetHtmlFilename($fileHash);
+		#my $targetPath = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+		my $targetPath = GetHtmlFilename($fileHash);
 
 		WriteLog("Writing HTML file for item");
 		WriteLog("\$targetPath = $targetPath");
 
-		if (!-e 'html/' . substr($fileHash, 0, 2)) {
-			mkdir('html/' . substr($fileHash, 0, 2));
+		if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
+			mkdir($HTMLDIR . '/' . substr($fileHash, 0, 2));
 		}
 
 		PutHtmlFile($targetPath, $fileIndex);
@@ -180,16 +180,16 @@ WriteIndexPages();
 
 WriteMessage("GetTagsPage()...");
 my $tagsPage = GetTagsPage();
-PutHtmlFile("html/tags.html", $tagsPage);
+PutHtmlFile("tags.html", $tagsPage);
 
 WriteMessage("GetEventsPage()...");
 my $eventsPage = GetEventsPage();
-PutHtmlFile("html/events.html", $eventsPage);
+PutHtmlFile("events.html", $eventsPage);
 
 WriteMessage("GetScoreboardPage()...");
 my $scoreboardPage = GetScoreboardPage();
-PutHtmlFile('html/authors.html', $scoreboardPage);
-PutHtmlFile('html/author/index.html', $scoreboardPage);
+PutHtmlFile('authors.html', $scoreboardPage);
+PutHtmlFile('author/index.html', $scoreboardPage);
 
 WriteMessage("DBGetVoteCounts()...");
 
@@ -210,7 +210,7 @@ while (@voteCountsArray) {
 
 	unshift @allTagsList, $tagName;
 
-	PutHtmlFile('html/top/' . $tagName . '.html', $indexPage);
+	PutHtmlFile('top/' . $tagName . '.html', $indexPage);
 }
 
 WriteMessage("DBGetAllAppliedTags()...");
@@ -234,9 +234,9 @@ if (GetConfig('tag_cloud_page')) {
 				my $testPage;
 				$testPage = GetIndexPage(\@items);
 	
-				WriteLog("html/top/$tag1\_$tag2.html");
+				WriteLog("top/$tag1\_$tag2.html");
 	
-				PutHtmlFile("html/top/$tag1\_$tag2.html", $testPage);
+				PutHtmlFile("top/$tag1\_$tag2.html", $testPage);
 	
 				unshift @allTagsList, "$tag1\_$tag2";
 			} else {
@@ -250,7 +250,7 @@ WriteMessage("GetTopItemsPage()");
 
 #my $topItemsPage = GetTopItemsPage();
 my $topItemsPage = GetTopItemsPage();
-PutHtmlFile('html/top.html', $topItemsPage);
+PutHtmlFile('top.html', $topItemsPage);
 
 @allTagsList = sort @allTagsList;
 
@@ -262,47 +262,8 @@ if (GetConfig('tag_cloud_page')) {
 	#	$linkTitle =~ s/\_/+/;
 		$tagCloudPage .= '<a href="top/' . $tag . '.html">' . $linkTitle . '</a><br>';
 	}
-	PutHtmlFile('html/tagcloud.html', $tagCloudPage);
+	PutHtmlFile('tagcloud.html', $tagCloudPage);
 }
-#
-#sub MakePage {
-#	if (!$force) {
-#		if ($myCounter < $myCounterMax) {
-#			return;
-#		}
-#	}
-#
-#	my $page = shift;
-#
-#
-#
-#	my $currentPageContent = GetCache("page/$page");
-#
-#	if ($newPageContent == $currentPageContent) {
-#		#PutHtmlFile('html/' . $page, $pageContent);
-#
-#}
-#
-
-# This is a special call which gathers up last run's written html files
-# that were not updated on this run and removes them
-#PutHtmlFile("removePreviousFiles", "1");
-
-#my $votesInDatabase = DBGetVotesTable();
-#if ($votesInDatabase) {
-#	PutFile('html/votes.txt', DBGetVotesTable());
-#}
-#
-#my $arg1 = shift;
-#if ($arg1) {
-#	if (-e $arg1) {
-#		if ($arg1 == 'summary') {
-#			WriteMessage('MakeSummaryPages');
-#			
-#			MakeSummaryPages();
-#		}
-#	}
-#} else {
 
 MakeDataPage();
 
@@ -314,14 +275,12 @@ if ($homePageHasBeenWritten) {
 } else {
 	WriteLog("Warning! Home Page has not been written! Fixing that");
 	
-	if (-e 'html/write.html') {
-		WriteLog('-e html/write.html');
-		PutHtmlFile('html/index.html', GetFile('html/write.html'));
-	} elsif (-e 'html/top.html') {
-		WriteLog('-e html/top.html');
-		PutHtmlFile('html/index.html', GetFile('html/top.html'));
+	if (-e $HTMLDIR.'/write.html') {
+		PutHtmlFile('index.html', GetFile($HTMLDIR.'/write.html'));
+	} elsif (-e $HTMLDIR.'/top.html') {
+		PutHtmlFile('index.html', GetFile($HTMLDIR.'/top.html'));
 	} else {
-		WriteLog('fallback for html/index.html');
+		WriteLog('fallback for index.html');
 		my $fallbackHomepage =
 '<html><body><h1>Placeholder</h1>
 <p>There was a problem writing homepage. Please contact your administrator for resolution.</p>
@@ -330,7 +289,7 @@ if ($homePageHasBeenWritten) {
 <p><a href="/write.html">Writing Something</a></p>
 <p><a href="/stats.html">Check the Server Status</a></p>';
 
-		PutHtmlFile('html/index.html', $fallbackHomepage);
+		PutHtmlFile('index.html', $fallbackHomepage);
 	} 	
 	
 	$homePageHasBeenWritten = PutHtmlFile('check_homepage');
@@ -338,7 +297,5 @@ if ($homePageHasBeenWritten) {
 		
 	}
 }
-
-#}
 
 1;

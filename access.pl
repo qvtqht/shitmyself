@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # This file parses the access logs
-# It posts messages to html/txt/
+# It posts messages to $TXTDIR
 
 use strict;
 use warnings FATAL => 'all';
@@ -18,23 +18,22 @@ use POSIX qw( mktime );
 use Cwd qw(cwd);
 use Date::Parse;
 
+
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
+my $IMAGEDIR = $HTMLDIR . '/txt';
+
+
 #use POSIX::strptime qw( strptime );
 
 ## CONFIG AND SANITY CHECKS ##
-
-# We'll use pwd for for the install root dir
-#my $SCRIPTDIR = `pwd`;
-my $SCRIPTDIR = cwd();
-chomp $SCRIPTDIR;
 
 if (!-e './utils.pl') {
 	die ("Sanity check failed, can't find ./utils.pl in $SCRIPTDIR");
 }
 require './utils.pl';
 require './index.pl';
-
-# We'll use ./txt as the text repo
-my $TXTDIR = "$SCRIPTDIR/html/txt/";
 
 # Logfile for default site domain
 # In Apache, use CustomLog, e.g.:
@@ -48,16 +47,14 @@ my $TXTDIR = "$SCRIPTDIR/html/txt/";
 # Wherever there is a post.html and board.nfo exists
 
 
-#my @submitReceivers = `find html/ | grep post.html`; #todo this is a hack
+#my @submitReceivers = `find $HTMLDIR | grep post.html`; #todo this is a hack
 my @submitReceivers;
 
-#push @submitReceivers, 'html/write.html';
-push @submitReceivers, 'html/post.php';
-push @submitReceivers, 'html/post.html';
-push @submitReceivers, 'html/stats.html';
+push @submitReceivers, '/post.php';
+push @submitReceivers, '/post.html';
+push @submitReceivers, '/stats.html';
 
 foreach (@submitReceivers) {
-	s/^html\//\//;
 	s/$/\?comment=/;
 	chomp;
 }
@@ -138,7 +135,7 @@ sub LogError {
 
 	my $debugFilename = 'error_' . $time . '.txt';
 	
-	$debugFilename = 'html/txt/' . $debugFilename;
+	$debugFilename = $TXTDIR . $debugFilename;
 
 	WriteLog('PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
 
@@ -182,7 +179,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		close (LOGFILELOG);
 	}
 
-	WriteLog ("Processing $logfile...\n");
+	WriteLog("Processing $logfile...\n");
 
 	# The log file should always be there
 	if (!open(LOGFILE, $logfile)) {
@@ -372,7 +369,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		if ($submitPrefix) {
 			# Look for it in the beginning of the requested URL
 			if (substr($file, 0, length($submitPrefix)) eq $submitPrefix) {
-				WriteLog ("Found a message...\n");
+				WriteLog("Found a message...\n");
 
 				# Found a new item, increase the counter
 				$newItemCount++;
@@ -478,10 +475,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
 					# Write to log file/debug console
-					WriteLog ("I'm going to put $filename\n");
+					WriteLog("I'm going to put $filename\n");
 
 					# hardcoded path
-					my $pathedFilename = './html/txt/' . $filename;
+					my $pathedFilename = $TXTDIR . '/' . $filename;
 
 					if (GetConfig('admin/logging/record_http_host')) {
 						# append "signature" to file if record_http_host is enabled
@@ -536,7 +533,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							$debugInfo .= $userAgent;
 							
 							my $debugFilename = 'debug_' . $fileHash . '.txt';
-							$debugFilename = 'html/txt/' . $debugFilename;
+							$debugFilename = $TXTDIR . '/' . $debugFilename;
 							
 							WriteLog('PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
 							
@@ -556,7 +553,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							# )
 						) { # if any of the logging options are turned on, proceed
 							# I guess we're saving this 
-							my $addedFilename = 'html/txt/log/added_' . $fileHash . '.log.txt';
+							my $addedFilename = $TXTDIR . '/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = '';
 
 							if (GetConfig('admin/logging/record_timestamps') && $recordTimestamp) {
@@ -779,10 +776,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 				my $filename;
 				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
-				PutFile('html/txt/' . $filename, $newFile);
+				PutFile($TXTDIR . '/' . $filename, $newFile);
 #
 #				if (GetConfig('admin/server_key_id')) {
-#					ServerSign('html/txt/' . $filename);
+#					ServerSign($TXTDIR . '/' . $filename);
 #				}
 			}
 		}
@@ -875,10 +872,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		# 		my $filename;
 		# 		$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 		#
-		# 		PutFile('html/txt/' . $filename, $newFile);
+		# 		PutFile($TXTDIR . '/' . $filename, $newFile);
 		#
 		# 		if (GetConfig('admin/server_key_id')) {
-		# 			ServerSign('html/txt/' . $filename);
+		# 			ServerSign($TXTDIR . '/' . $filename);
 		# 		}
 		# 	}
 		# }

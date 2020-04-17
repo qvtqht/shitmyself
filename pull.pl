@@ -69,8 +69,8 @@ sub PullFeedFromHost { # connects to $host with http and downloads any new items
 
 				my $fileLocalHash = GetFileHash('.' . $fileName);
 
-				WriteLog ('Remote: ' . $fileHash);
-				WriteLog (' Local: ' . $fileLocalHash);
+				WriteLog('Remote: ' . $fileHash);
+				WriteLog(' Local: ' . $fileLocalHash);
 			} else {
 				my $fileUrl = $hostBase . $fileName;
 
@@ -171,7 +171,7 @@ sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 
 	my $curlCommand = $curlPrefix . 'curl';
 
-	WriteLog ("$curlCommand -s $url");
+	WriteLog("$curlCommand -s $url");
 
 	#my $remoteFileContents = '';#####`curl -A useragent -s $url`;
 	my $remoteFileContents = `$curlCommand -s $url`;

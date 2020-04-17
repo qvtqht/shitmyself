@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # the purpose of this script is to
-#   find new items in html/txt
+#   find new items
 #   run IndexTextFile() on them
 #   re-generate affected pages
 #		via the page_touch table
@@ -12,6 +12,11 @@ use utf8;
 use 5.010;
 use Cwd qw(cwd);
 use File::Spec; #todo
+
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
+my $IMAGEDIR = $HTMLDIR . '/image';
 
 my $arg1 = shift;
 
@@ -33,12 +38,7 @@ sub GetTime2() { # returns epoch time
 	return (time());
 }
 
-# We'll use pwd for for the install root dir
-#my $SCRIPTDIR = `pwd`;
-my $SCRIPTDIR = cwd();
-chomp $SCRIPTDIR;
-
-# WriteLog ('Begin requires');
+# WriteLog('Begin requires');
 
 require './utils.pl';
 require './index.pl';
@@ -139,7 +139,7 @@ sub ProcessTextFile { #add new textfile to index
 	#
 	#		my @files = DBGetItemList(\%queryParams);
 	#
-	#		WriteLog ("Count of new items for $fileHash : " . scalar(@files));
+	#		WriteLog("Count of new items for $fileHash : " . scalar(@files));
 
 } # ProcessTextFile
 
@@ -307,12 +307,12 @@ if (!$arg1) {
 			WriteLog('Problem? html is not a directory!');
 		}
 
-		if (!-e 'html/txt') {
-			system('mkdir html/txt');
+		if (!-e $TXTDIR) {
+			system("mkdir $TXTDIR");
 		}
 
-		if (!-d 'html/txt') {
-			WriteLog('Problem? html/txt is not a directory!');
+		if (!-d $TXTDIR) {
+			WriteLog("Problem? $TXTDIR is not a directory!");
 		}
 
 		my $filesProcessedTotal = 0;
@@ -339,14 +339,14 @@ if (!$arg1) {
 				my @files;
 
 				#prioritize files with a public key in them
-				$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" html/txt';
+				$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" ' . $TXTDIR;
 				push @files, split("\n", `$findCommand`);
 
 				#prioritize files with a public key in them
-				$findCommand = 'grep -rl "setconfig" html/txt';
+				$findCommand = 'grep -rl "setconfig" ' . $TXTDIR;
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = 'find html/txt | grep -i \.txt$';
+				$findCommand = "find $TXTDIR | grep -i \.txt\$";
 				push @files, split("\n", `$findCommand`);
 				#
 				# if ($filesLimit > scalar(@files)) {
@@ -405,13 +405,13 @@ if (!$arg1) {
 				WriteLog("cd $SCRIPTDIR");
 				WriteLog(`cd "$SCRIPTDIR"`);
 
-				$findCommand = 'find html/image | grep -i \.png$';
+				$findCommand = 'find $IMAGEDIR | grep -i \.png$';
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = 'find html/image | grep -i \.gif$';
+				$findCommand = 'find $IMAGEDIR | grep -i \.gif$';
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = 'find html/image | grep -i \.jpg$';
+				$findCommand = 'find $IMAGEDIR | grep -i \.jpg$';
 				push @files, split("\n", `$findCommand`);
 
 				# if ($filesLimit > scalar(@files)) {
@@ -458,8 +458,8 @@ if (!$arg1) {
 			#####
 
 
-			RemoveEmptyDirectories('./html/txt/');
-			RemoveEmptyDirectories('./html/image/');
+			RemoveEmptyDirectories($TXTDIR);
+			RemoveEmptyDirectories($IMAGEDIR);
 			#RemoveEmptyDirectories('./txt/');
 
 			# if new items were added, re-make all the summary pages (top authors, new threads, etc)
@@ -496,7 +496,7 @@ if (!$arg1) {
 			$pagesProcessed += BuildTouchedPages();
 
 			$filesProcessedTotal += $filesProcessed;
-		}
+		} # while ($filesProcessed > 0)
 
 		WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
 
@@ -507,10 +507,14 @@ if (!$arg1) {
 		WriteLog($newLastFlow);
 		PutConfig('admin/update/last', $newLastFlow);
 
-		my $filesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+		my $filesLeftCommand = 'find ' . $TXTDIR . ' | grep "\.txt$" | wc -l';
 		my $filesLeft = `$filesLeftCommand`; #todo
 
-		my $imageFilesLeftCommand = 'find html/txt | grep "\.txt$" | wc -l';
+		my $imageFilesLeftCommand = 'find ' . $IMAGEDIR . ' | grep "\.png" | wc -l';
+		$filesLeft += `$imageFilesLeftCommand`; #todo
+        $imageFilesLeftCommand = 'find ' . $IMAGEDIR . ' | grep "\.gif" | wc -l';
+		$filesLeft += `$imageFilesLeftCommand`; #todo
+        $imageFilesLeftCommand = 'find ' . $IMAGEDIR . ' | grep "\.jpg" | wc -l';
 		$filesLeft += `$imageFilesLeftCommand`; #todo
 
 		WriteLog('update.pl: $filesLeft = ' . $filesLeft);

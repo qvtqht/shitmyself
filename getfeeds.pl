@@ -17,12 +17,12 @@ if (scalar(@feeds)) {
 
 		my $localName = $sha1->hexdigest;
 
-		if (!-e "html/txt/$localName") {
-			system("git clone $_ html/txt/$localName");
+		if (!-e "$TXTDIR/$localName") {
+			system("git clone $_ \"$HTMLDIR/$localName\"");
 		}
 
-		if (-e "html/txt/$localName" && -d "html/txt/$localName") {
-			system("cd html/txt/$localName ; git fetch ; git merge ; cd -");
+		if (-e "$TXTDIR/$localName" && -d "$TXTDIR/$localName") {
+			system("cd $TXTDIR/$localName ; git fetch ; git merge ; cd -");
 		}
 	}
 }

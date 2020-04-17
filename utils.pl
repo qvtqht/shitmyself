@@ -7,6 +7,7 @@ use 5.010;
 use POSIX;
 use POSIX 'strftime';
 use Data::Dumper;
+use Cwd qw(cwd);
 
 #use Devel::StackTrace;
 
@@ -26,12 +27,14 @@ use Storable;
 use Digest::SHA qw(sha1_hex);
 
 
-# We'll use pwd for for the install root dir
-my $SCRIPTDIR = `pwd`; #hardcode #todo
-chomp $SCRIPTDIR;
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
+my $IMAGEDIR = $HTMLDIR . '/txt';
+
 
 # make a list of some directories that need to exist
-my @dirsThatShouldExist = qw(log html html/txt html/image html/thumb cache html/author html/action html/top config html/upload);
+my @dirsThatShouldExist = qw(log $HTMLDIR $HTMLDIR/txt $HTMLDIR/image $HTMLDIR/thumb cache $HTMLDIR/author $HTMLDIR/action $HTMLDIR/top config $HTMLDIR/upload);
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
@@ -50,16 +53,12 @@ foreach(@dirsThatShouldExist) {
 	}
 }
 
-sub WriteLog {  # Writes timestamped message to console (stdout) AND log/log.log
-	# Only if debug mode is enabled
-	if (-e 'config/admin/debug') {
-		my $text = shift;
-
-		if (!$text) {
-			$text = '(empty string)';
-		}
-
-		chomp $text;
+sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/log.log
+	my $text = shift;
+	if (!$text) {
+		$text = '(empty string)';
+	}
+	chomp $text;
 
 		my $timestamp = GetTime();
 
@@ -123,7 +122,7 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 #		$commandsFollowing = ' ' . $commandsFollowing;
 #	}
 #
-#	my $gitCommandPrefix = 'git --git-dir=html/txt/.git --work-tree=html/txt ';
+#	my $gitCommandPrefix = 'git --git-dir=' . $TXTDIR . '/.git --work-tree=' . $TXTDIR . ' ';
 #	my $gitCommandSuffix = ' 2>&1';
 #
 #	my $gitCommandFull = $gitCommandPrefix . $gitCommand . $gitCommandSuffix . $commandsFollowing;
@@ -699,7 +698,7 @@ sub GetFile { # Gets the contents of file $fileName
 	my $fileName = shift;
 
 	if (!$fileName) {
-#		WriteLog('attempting GetFile() without $fileName'); #todo writelog is too much dependencies for here
+#		WriteLog('attempting GetFile() without $fileName'); #todo WriteLog() is too much dependencies for here
 		if (-e 'config/admin/debug') {
 			die('attempting GetFile() without $fileName');
 		}
@@ -1161,7 +1160,7 @@ sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to
 sub PutHtmlFile { # writes content to html file, with special rules; parameters: $file, $content
 # the special rules are:
 # * if config/admin/html/ascii_only is set, all non-ascii characters are stripped from output to file
-# * if $file matches config/home_page, the output is also written to html/index.html
+# * if $file matches config/home_page, the output is also written to index.html
 #   also keeps track of whether home page has been written, and returns the status of it
 #   if $file is 'check_homepage'
 
@@ -1173,9 +1172,29 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		return;
 	}
 
+	WriteLog("PutHtmlFile($file)");
+
+	if ($HTMLDIR && !-e $HTMLDIR) {
+		mkdir($HTMLDIR);
+	}
+
+	if (!$HTMLDIR || !-e $HTMLDIR) {
+		WriteLog('PutHtmlFile: $HTMLDIR is missing: ' . $HTMLDIR);
+		return;
+	}
+
 	if (!$content) {
 		$content = '';
 	}
+
+	if (index($file, 'html/') > -1) {
+		WriteLog('old-style call to PutHtmlFile, please fix');
+		if (GetConfig('admin/debug')) {
+			die('old-style call to PutHtmlFile, please fix');
+		}
+	}
+
+	$file = "$HTMLDIR/$file";
 
 	# controls whether linked urls are converted to relative format
 	# meaning they go from e.g. /write.html to ./write.html
@@ -1286,7 +1305,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	if ($file eq GetConfig('home_page')) {
 		my $homePageTitle = GetConfig('home_title');
 		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle<\/title>/;
-		PutFile ('html/index.html', $content);
+		PutFile ($HTMLDIR . '/index.html', $content);
 		$homePageWritten = 1;
 	}
 
@@ -1307,8 +1326,8 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 			my $aliasUrl = GetItemMessage($itemHash); # url is stored inside message
 
 			if ($aliasUrl =~ m/\.html$/) {
-				if (!-e 'html/' . $aliasUrl) { # don't clobber existing files
-					PutHtmlFile('html/' . $aliasUrl, $content); # put html file in place (#todo replace with ln -s)
+				if (!-e "$HTMLDIR/$aliasUrl") { # don't clobber existing files
+					PutHtmlFile($aliasUrl, $content); # put html file in place (#todo replace with ln -s)
 				}
 			}
 		}
@@ -1504,8 +1523,8 @@ sub GetServerKey { # Returns server's public key, 0 if there is none
 		return $serversKey;
 	}
 
-	if (-e "html/txt/server.key.txt") { #server's pub key should reside here
-		my %adminsInfo = GpgParse("html/txt/server.key.txt");
+	if (-e "$TXTDIR/server.key.txt") { #server's pub key should reside here
+		my %adminsInfo = GpgParse("$TXTDIR/server.key.txt");
 
 		if ($adminsInfo{'isSigned'}) {
 			if ($adminsInfo{'key'}) {
@@ -2069,6 +2088,9 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	my $timestamp = GetTime();
 
 	print $timestamp . ' ' . $text . "\n";
+	#print ".";
+
+	WriteLog($text);
 }
 
 my $lastVersion = GetConfig('current_version');
@@ -2102,9 +2124,9 @@ if ($lastVersion ne $currVersion) {
 
 	$changeLogMessage .= "\n\n#changelog";
 
-	PutFile("html/txt/$changeLogFilename", $changeLogMessage);
+	PutFile("$TXTDIR/$changeLogFilename", $changeLogMessage);
 
-	ServerSign("html/txt/$changeLogFilename");
+	ServerSign("$TXTDIR/$changeLogFilename");
 
 	PutConfig('current_version', $currVersion);
 }
@@ -2123,9 +2145,9 @@ if ($currAdmin) {
 		my $changeAdminFilename = 'changeadmin_' . GetTime() . '.txt';
 		my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
 
-		PutFile("html/txt/$changeAdminFilename", $changeAdminMessage);
+		PutFile("$TXTDIR/$changeAdminFilename", $changeAdminMessage);
 
-		ServerSign("html/txt/$changeAdminFilename");
+		ServerSign("$TXTDIR/$changeAdminFilename");
 
 		PutConfig("current_admin", $currAdmin);
 
@@ -2177,11 +2199,11 @@ sub ServerSign { # Signs a given file with the server's key
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
-	if (!-e "html/txt/server.key.txt") {
+	if (!-e "$TXTDIR/server.key.txt") {
 		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId $gpgStderr");
 		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId $gpgStderr`;
 
-		PutFile('html/txt/server.key.txt', $gpgOutput);
+		PutFile($TXTDIR . '/server.key.txt', $gpgOutput);
 
 		WriteLog($gpgOutput);
 	} #todo here we should also verify that server.key.txt matches server_key_id
@@ -2482,18 +2504,18 @@ sub GetPathFromHash { # gets path of text file based on hash
 		return;
 	}
 
-	if (!-e 'html/txt/' . substr($fileHash, 0, 2)) {
-		system('mkdir html/txt/' . substr($fileHash, 0, 2));
+	if (!-e $TXTDIR . '/' . substr($fileHash, 0, 2)) {
+		system('mkdir ' . $TXTDIR . '/' . substr($fileHash, 0, 2));
 	}
 
-	if (!-e 'html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
-		system('mkdir html/txt/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
+	if (!-e $TXTDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)) {
+		system('mkdir ' . $TXTDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2));
 	}
 
 	my $fileHashSubDir = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2);
 
 	if ($fileHash) {
-		my $fileHashPath = 'html/txt/' . $fileHashSubDir . '/' . $fileHash . '.txt';
+		my $fileHashPath = $TXTDIR . '/' . $fileHashSubDir . '/' . $fileHash . '.txt';
 
 		WriteLog("\$fileHashPath = $fileHashPath");
 

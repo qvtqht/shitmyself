@@ -9,9 +9,10 @@ use Cwd qw(cwd);
 
 # We'll use pwd for for the install root dir
 #my $SCRIPTDIR = `pwd`;
-my $SCRIPTDIR = cwd();
-chomp $SCRIPTDIR;
 
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
 
 require './utils.pl';
 require './sqlite.pl';
@@ -102,7 +103,7 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 #		my @addedLines = ( $message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg );
 #
 #		if (@addedLines) {
-#			WriteLog (". addedtime token found!");
+#			WriteLog(". addedtime token found!");
 #			my $lineCount = @addedLines / 2;
 #
 #			while(@addedLines) {
@@ -184,8 +185,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	# admin/organize_files
 	# renames files to their hashes
 	if (GetConfig('admin/organize_files') && substr(lc($file), length($file) -4, 4) eq ".txt") {
-		# don't touch server.key.txt or html/txt directory or directories in general
-		if ($file ne 'html/txt/server.key.txt' && $file ne 'html/txt' && !-d $file) {
+		# don't touch server.key.txt or $TXTDIR directory or directories in general
+		if ($file ne "$TXTDIR/server.key.txt" && $file ne $TXTDIR && !-d $file) {
 			WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
 
 			# Figure out what the file's path should be
@@ -326,15 +327,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				unlink($file);
 			}
 
-			# find the html file and unlink it too
-			#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . ".html";
-
 			WriteLog('$fileHash = ' . $fileHash);
 
 			my $htmlFilename = GetHtmlFilename($fileHash);
 
 			if ($htmlFilename) {
-				$htmlFilename = 'html/' . $htmlFilename;
+				$htmlFilename = $HTMLDIR . '/' . $htmlFilename;
 
 				if (-e $htmlFilename) {
 					unlink($htmlFilename);
@@ -385,7 +383,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (!GetAdminKey() && GetConfig('admin/admin_imprint') && $gpgKey && $alias) {
 			PutFile('./admin.key', $txt);
 
-			my $newAdminMessage = 'html/txt/' . GetTime() . '_newadmin.txt';
+			my $newAdminMessage = '/txt/' . GetTime() . '_newadmin.txt';
 			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n" . GetTime());
 			ServerSign($newAdminMessage);
 		}
@@ -441,12 +439,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('author', $gpgKey);
 
-			DBAddPageTouch('scores', 'foo');
+			DBAddPageTouch('scores', 1);
 
-			DBAddPageTouch('stats', 'foo');
+			DBAddPageTouch('stats', 1);
 		}
 
-		DBAddPageTouch('rss', 'foo');
+		DBAddPageTouch('rss', 1);
 
 		my $itemName = TrimPath($file);
 
@@ -552,7 +550,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 										DBDeleteItemReferences($itemParent);
 
-										my $htmlFilename = 'html/' . GetHtmlFilename($itemParent);
+										my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
 										if (-e $htmlFilename) {
 											WriteLog($htmlFilename . ' exists, calling unlink()');
 											unlink($htmlFilename);
@@ -617,7 +615,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $upgradeNow = system('perl ./upgrade.pl');
 
-					PutFile('html/txt/upgrade_' . $time . '.txt', $upgradeNow);
+					PutFile($TXTDIR . '/upgrade_' . $time . '.txt', $upgradeNow);
 
 					AppendFile('log/deleted.log', $fileHash);
 				}
@@ -1248,8 +1246,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							DBDeleteItemReferences($voteFileHash);
 
-							#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
-							my $htmlFilename = 'html/' . GetHtmlFilename($voteFileHash);
+							my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($voteFileHash);
 							if (-e $htmlFilename) {
 								WriteLog($htmlFilename . ' exists, calling unlink()');
 								unlink($htmlFilename);
@@ -1404,7 +1401,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		
 		DBAddPageTouch('events', 1);
 											 
-		DBAddPageTouch('rss', 'foo');
+		DBAddPageTouch('rss', 1);
 
 		DBAddPageTouch('index', 1); #todo verify this works
 
@@ -1437,8 +1434,9 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 	# # admin/organize_files
 	# # renames files to their hashes
 	# if (GetConfig('admin/organize_files')) {
-	# 	# don't touch server.key.txt or html/txt directory or directories in general
-	# 	if ($file ne 'html/txt/server.key.txt' && $file ne 'html/txt' && !-d $file) {
+	# 	# don't touch server.key.txt or $TXTDIR directory or directories in general
+	# 	if ($file ne $TXTDIR.'/server.key.txt' && $file ne $TXTDIR && !-d $file) {
+	# #todo there's a bug here because of relative vs absolute paths, i think
 	# 		WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
 	#
 	# 		# Figure out what the file's path should be
@@ -1503,15 +1501,13 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 				unlink($file);
 			}
 
-			# find the html file and unlink it too
-			#my $htmlFilename = 'html/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . ".html";
-
 			WriteLog('$fileHash = ' . $fileHash);
 
 			my $htmlFilename = GetHtmlFilename($fileHash);
 
 			if ($htmlFilename) {
-				$htmlFilename = 'html/' . $htmlFilename;
+				#unlink html filename
+				$htmlFilename = "$HTMLDIR/$htmlFilename";
 
 				if (-e $htmlFilename) {
 					unlink($htmlFilename);
@@ -1551,32 +1547,32 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		my $itemName = TrimPath($file);
 
 		{
-			# make 1024x1024 thumbnail
-			if (!-e "html/thumb/thumb_1024_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 1024x1024 -strip html/thumb/thumb_1024_$fileHash.gif";
-				WriteLog('IndexImageFile: ' . $convertCommand);
-
-				my $convertCommandResult = `$convertCommand`;
-				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
-			}
+			# # make 1024x1024 thumbnail
+			# if (!-e "$HTMLDIR/thumb/thumb_1024_$fileHash.gif") {
+			# 	my $convertCommand = "convert \"$file\" -thumbnail 1024x1024 -strip $HTMLDIR/thumb/thumb_1024_$fileHash.gif";
+			# 	WriteLog('IndexImageFile: ' . $convertCommand);
+			#
+			# 	my $convertCommandResult = `$convertCommand`;
+			# 	WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			# }
 
 			# make 420x420 thumbnail
-			if (!-e "html/thumb/thumb_420_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip html/thumb/thumb_420_$fileHash.gif";
+			if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
 				my $convertCommandResult = `$convertCommand`;
 				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
 			}
 
-			# make 48x48 thumbnail
-			if (!-e "html/thumb/thumb_48_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 48x48 -strip html/thumb/thumb_48_$fileHash.gif";
-				WriteLog('IndexImageFile: ' . $convertCommand);
-
-				my $convertCommandResult = `$convertCommand`;
-				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
-			}
+			# # make 48x48 thumbnail
+			# if (!-e "$HTMLDIR/thumb/thumb_48_$fileHash.gif") {
+			# 	my $convertCommand = "convert \"$file\" -thumbnail 48x48 -strip $HTMLDIR/thumb/thumb_48_$fileHash.gif";
+			# 	WriteLog('IndexImageFile: ' . $convertCommand);
+			#
+			# 	my $convertCommandResult = `$convertCommand`;
+			# 	WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			# }
 		}
 
 		DBAddItem($file, $itemName, '', $fileHash, 'image', 0);
@@ -1597,7 +1593,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 		DBAddPageTouch('stats', 1);
 
-		DBAddPageTouch('rss', 'foo');
+		DBAddPageTouch('rss', 1);
 
 		DBAddPageTouch('index', 1); #todo verify this works
 
@@ -1637,7 +1633,7 @@ sub WriteIndexedConfig { # writes config indexed in database into config/
 sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteLog( "MakeIndex()...\n");
 
-	my @filesToInclude = split("\n", `find html/txt | grep -i txt\$`);
+	my @filesToInclude = split("\n", `find $TXTDIR | grep -i \.txt\$`);
 
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
@@ -1657,7 +1653,7 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteIndexedConfig();
 
     if (GetConfig('admin/image/enable')) {
-        my @imageFiles = split("\n", `find html/image`);
+        my @imageFiles = split("\n", `find $HTMLDIR/image`);
 
         my $imageFilesCount = scalar(@imageFiles);
         my $currentImageFile = 0;
