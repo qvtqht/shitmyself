@@ -140,10 +140,10 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 
 	my $pageLimit = GetConfig('page_limit');
 
-	my $pageStart = $pageNumber * $pageLimit + 1;
+	my $pageStart = $pageNumber * $pageLimit;
 	my $pageEnd = $pageNumber * $pageLimit + $pageLimit;
 	if ($pageEnd > $itemCount) {
-		$pageEnd = $itemCount;
+		$pageEnd = $itemCount - 1;
 	}
 	my $pageCaption = $pageStart . '-' . $pageEnd;
 
@@ -251,8 +251,7 @@ sub InjectBodyOnload { #injects <body onload event into supplied html
 	return $html;
 }
 
-sub GetPageLinks { # returns html for pagination links
-# $currentPageNumber = current page
+sub GetPageLinks { # $currentPageNumber ; returns html for pagination links
 
 	my $currentPageNumber = shift; #
 
@@ -273,8 +272,9 @@ sub GetPageLinks { # returns html for pagination links
 		my $currentPageStart = $currentPageNumber * $pageLimit;
 		my $currentPageEnd = $currentPageNumber * $pageLimit + $pageLimit;
 		if ($currentPageEnd > $itemCount) {
-			$currentPageEnd = $itemCount;
+			$currentPageEnd = $itemCount - 1;
 		}
+
 		my $currentPageCaption = $currentPageStart . '-' . $currentPageEnd;
 
 		my $pageLinksReturn = $pageLinks; # make a copy of $pageLinks which we'll modify
@@ -1379,17 +1379,31 @@ sub FillThemeColors {
 	return $html;
 }
 
-sub GetMenuFromList {
+sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on referenced list
+# $listName is reference to a list in config/list, e.g. config/list/menu
+# $separator is what is inserted between menu items
+
+	WriteLog('GetMenuFromList: begin');
+
 	my $listName = shift;
 	chomp $listName;
 	if (!$listName) {
+		WriteLog('GetMenuFromList: no $listName, returning');
 		return;
 	}
 
 	my $listText = GetConfig('list/' . $listName);
-
-	my $menuItems = '';
 	my @menuList = split("\n", $listText);
+
+	my $separator = shift;
+	if (!$separator) {
+		$separator = '';
+	} else {
+		chomp $separator;
+	}
+
+	my $menuItems = ''; # output html which will be returned
+	my $comma = ''; # separator (filled after first item)
 
 	foreach my $menuItem (@menuList) {
 		my $menuItemName = $menuItem;
@@ -1400,11 +1414,22 @@ sub GetMenuFromList {
 		# 	$menuItemUrl = '/';
 		# }
 
+		# capitalize caption
 		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
+		# add separator
+		$menuItems .= $comma;
+
+		# add menu item to output
 		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption);
+
+		if (!$comma) {
+			# set separator after first item
+			$comma = $separator;
+		}
 	}
 
+	# return template we've built
 	return $menuItems;
 }
 
@@ -2516,9 +2541,16 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 
-			if ($overlapPage && $lastPage > $overlapPage && $i > $overlapPage) {
-				$offset = $offset - ($itemCount % $pageLimit);
-			}
+			# this code prevents the last page from being largely empty
+			# it moves the offset back so that the last page is the same
+			# number of items as the others.
+			# the downside is that when the page links are item numbers
+			# the link for last page may not match the items on the page
+			#
+			# if ($overlapPage && $lastPage > $overlapPage && $i > $overlapPage) {
+			# 	$offset = $offset - ($itemCount % $pageLimit);
+			# }
+
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 
@@ -3585,12 +3617,21 @@ sub BuildTouchedPages {
 my $arg1 = shift;
 if ($arg1) {
 	if (IsItem($arg1)) {
+		print ("recognized item identifier\n");
 		MakePage('item', $arg1);
 	}
-	if ($arg1 eq '--summary') {
+	elsif ($arg1 eq '--summary') {
 		print ("recognized --summary\n");
 		MakeSummaryPages();
 	}
+	else {
+		print ("--summary\n");
+		print ("item_id\n");
+	}
+}
+else {
+	print ("--summary\n");
+	print ("item_id\n");
 }
 
 1;
