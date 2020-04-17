@@ -10,6 +10,6 @@ url.rewrite = (
 	# includes urls without query in route.php requests
 	# this mode is useful if you require registration
 	"^(.+\.html)\??(.+)?" => "/route.php?path=$1&$2",
-	"^(.+\/)\??(.+)?" => "/route.php?path=$1/index.html&$2",
+	"^(.+)\/$" => "/route.php?path=$1/index.html"
 )
 
