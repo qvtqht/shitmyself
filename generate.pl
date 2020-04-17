@@ -139,8 +139,8 @@ PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
 	PutFile("$HTMLDIR/rss.txt", $fileList);
 }
 
-# generate commits page
-{
+if (0) {
+	# generate commits pages
 	my $versionPageCount = 5;
 
 	#todo only do this for versions mentioned in changelogs
