@@ -1,11 +1,5 @@
 <?php
 
-//if (1/0) {
-//	// exit
-//}
-
-//print_r($_GET);
-
 // this fixes a crash bug in mosaic. it should not cause a problem anywhere else
 // <_<     >_>      o_O      -_-     ^_^
 header('Content-Type: text/html');
