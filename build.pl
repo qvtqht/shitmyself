@@ -4,6 +4,7 @@ use strict;
 #use warnings FATAL => 'all'; #only if debugging
 use threads;
 use utf8;
+use Cwd qw(cwd);
 
 sub BuildMessage { # prints timestamped message to output
 	print time();
