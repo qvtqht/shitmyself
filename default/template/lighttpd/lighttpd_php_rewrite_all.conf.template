@@ -1,16 +1,15 @@
-
 # php rewrites
 url.rewrite = (
+	# always for post.html
 	"^/post.html\??(.+)?" => "/post.php?$1",
-	#"^write.html\??(.+)?" => "/write.php?$1",
 
-	# php supported on all urls
+	# config/php/rewrite=all
+	########################
+	# php supported on all html urls
 	# BUT less accessible static failover
 	# includes urls without query in route.php requests
 	# this mode is useful if you require registration
-
 	"^(.+\.html)\??(.+)?" => "/route.php?path=$1&$2",
-	#"^\/$" => "/route.php?path=/index.html",
-	#"^\/\??(.+)?$" => "/route.php?path=/index.html&$1"
+	"^(.+\/)\??(.+)?" => "/route.php?path=$1/index.html&$2",
 )
 
