@@ -15,9 +15,6 @@
 
 		<tr>
 			<th align=left>Name</th>
-			<th align=left>Score</th>
-			<th class=advanced align=left>Items</th>
-			<th class=advanced align=left>Gravity</th>
 			<th align=left>Seen</th>
 			<th align=left>Actions<br></th>
 		</tr>
