@@ -32,9 +32,12 @@ function StripHeavyTags($html) {
 	// this would be necessary if the br tags were not already there
 	// may be useful in the future to do automated fixing-up of existing templates
 	// then we can remove all those <br> tags from the templates and make them look neater
-			$html = preg_replace('/\<\/tr\>/', '<br>', $html);
-			$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
-			$html = preg_replace('/\<\/legend\>/', '<br>', $html);
+		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
+		$html = preg_replace('/\<\/td\>/', '; ', $html);
+		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
+		$html = preg_replace('/\<\/legend\>/', '<br>', $html);
+		$html = preg_replace('/\<\/table\>/', '<br><hr>', $html);
 	}
 
 	foreach ($tags as $tag) {
@@ -47,13 +50,19 @@ function StripHeavyTags($html) {
 	return $html;
 }
 
-function StripComments($html) {
+function StripComments ($html) { //strips comments from html
 	$html = preg_replace('/\<\!--[^>]+\>/', '', $html);
 
 	return $html;
 }
 
-function StripWhitespace($html) {
+function CleanBodyTag ($html) {
+	$html = preg_replace('/\<body[^>]+\>/', '<body>', $html);
+
+	return $html;
+}
+
+function StripWhitespace ($html) { //strips extra whitespace from html
 //	while (preg_match('/[\t\n ]{2}'
 	$html = str_replace("\t", ' ', $html);
 
@@ -81,12 +90,7 @@ function StripWhitespace($html) {
 //		$html = str_replace('  ', ' ', $html);
 //	}
 //
-	$html = str_replace('> <', '> <', $html);
-	$html = str_replace('> <', '> <', $html);
-	$html = str_replace('> <', '> <', $html);
-	$html = str_replace('> <', '> <', $html);
-	$html = str_replace('> <', '> <', $html);
-	$html = str_replace('> <', '> <', $html);
+	$html = str_replace('> <', '><', $html);
 ////	$html = str_replace('> ', '>', $html);
 ////	$html = str_replace(' <', '<', $html);
 //	$html = str_replace('<br><br>', '<br>', $html);
@@ -316,9 +320,9 @@ if (GetConfig('admin/php/route_enable')) {
 			$pathSelfReal = realpath('.'.$pathSelf);
 			$pathValidRoot = substr($pathSelfReal, 0, strlen($pathSelfReal) - strlen($pathSelf));
 
-			WriteLog ('$pathValidRoot = ' . $pathValidRoot . ';');
-			WriteLog ('$pathFull = ' . $pathFull . ';');
-			WriteLog ('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
+			WriteLog('$pathValidRoot = ' . $pathValidRoot . ';');
+			WriteLog('$pathFull = ' . $pathFull . ';');
+			WriteLog('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
 
 			if ($path == '/404.html' || $pathFull && substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot) {
 				// mitigate directory traversal?
@@ -498,6 +502,12 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = SetHtmlClock($html);
 		}
 
+		if (isset($_GET['mode'])) {
+			if ($_GET['mode'] == 'light') {
+				$_GET['light'] = 1;
+			}
+		}
+
 		if (isset($_GET['light'])) {
 			// user is requesting to change light mode state
 
@@ -638,8 +648,9 @@ if (GetConfig('admin/php/route_enable')) {
 
 		if ($lightMode) {
 			$html = StripComments($html);
-			$html = StripHeavyTags($html);
 			$html = StripWhitespace($html);
+			$html = CleanBodyTag($html);
+			$html = StripHeavyTags($html);
 
 			$pathSelf = $_SERVER['REQUEST_URI'];
 			if (! (strpos($pathSelf, '?') === false)) {
