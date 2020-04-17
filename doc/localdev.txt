@@ -32,7 +32,7 @@ Otherwise I accidentally change a cached file which gets overwritten later.
 Perl
 There is a config file in config/admin/default.
 Unlike other settings, the value of the file is not checked, and its presence enables debug mode.
-In debug mode any calls to WriteLog are output to both stdout and log/log.log
+In debug mode any calls to WriteLog() are output to log/log.log
 
 PHP
 In utils.php, there is a function called WriteLog()
