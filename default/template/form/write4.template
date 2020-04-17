@@ -59,15 +59,6 @@
 					</fieldset>
 				</td>
 			</tr>
-
-			<tr class=menubar>
-				<td>
-					<span>
-						<a href="/write.html?report=client">Submit Browser Report</a>
-					</span>
-				</td>
-			</tr>
-
 		</table>
 	</font>
 </form>
