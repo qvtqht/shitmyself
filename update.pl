@@ -99,6 +99,8 @@ sub ProcessTextFile { #add new textfile to index
 					$file = $fileHashPath;
 
 					WriteLog('ProcessTextFile: $file is now ' . $file);
+				} else {
+					WriteLog("ProcessTextFile: WARNING: rename failed, from $file to $fileHashPath");
 				}
 			} else {
 				WriteLog('ProcessTextFile: did not need to rename ' . $file);
@@ -177,34 +179,36 @@ sub ProcessImageFile { #add new image to index
 	# 	# organize files aka rename to hash-based path
 	# 	my $fileHashPath = GetFileHashPath($file);
 	#
-	# 	WriteLog('ProcessTextFile: organize: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
+	# 	WriteLog('ProcessImageFile: organize: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
 	#
 	# 	if ($fileHashPath) {
-	# 		WriteLog('ProcessTextFile: $fileHashPath = ' . $fileHashPath);
+	# 		WriteLog('ProcessImageFile: $fileHashPath = ' . $fileHashPath);
 	#
 	# 		if (-e $fileHashPath) {
-	# 			WriteLog('ProcessTextFile: Warning: file already exists = ' . $fileHashPath);
+	# 			WriteLog('ProcessImageFile: Warning: file already exists = ' . $fileHashPath);
 	# 		}
 	#
 	# 		if ($fileHashPath && $file ne $fileHashPath) {
-	# 			WriteLog('ProcessTextFile: renaming ' . $file . ' to ' . $fileHashPath);
+	# 			WriteLog('ProcessImageFile: renaming ' . $file . ' to ' . $fileHashPath);
 	# 			rename($file, $fileHashPath);
 	#
 	# 			if (-e $fileHashPath) {
-	# 				WriteLog('ProcessTextFile: rename succeeded, changing value of $file');
+	# 				WriteLog('ProcessImageFile: rename succeeded, changing value of $file');
 	#
 	# 				$file = $fileHashPath;
 	#
-	# 				WriteLog('ProcessTextFile: $file is now ' . $file);
+	# 				WriteLog('ProcessImageFile: $file is now ' . $file);
+	# 			} else {
+	# 				WriteLog("ProcessImageFile: WARNING: rename failed, from $file to $fileHashPath");
 	# 			}
 	# 		} else {
-	# 			WriteLog('ProcessTextFile: did not need to rename ' . $file);
+	# 			WriteLog('ProcessImageFile: did not need to rename ' . $file);
 	# 		}
 	# 	} else {
-	# 		WriteLog('ProcessTextFile: $fileHashPath is missing');
+	# 		WriteLog('ProcessImageFile: $fileHashPath is missing');
 	# 	}
 	# } else {
-	# 	WriteLog("ProcessTextFile: organize_files is off, continuing");
+	# 	WriteLog("ProcessImageFile: organize_files is off, continuing");
 	# }
 
 	if (!GetCache('indexed/' . $fileHash)) {
@@ -396,22 +400,36 @@ if (!$arg1) {
 			}
 			#####
 
-			{
+			if (-e $IMAGEDIR) {
 				# IMAGE PROCESSING PART BEGINS HERE
 				my $findCommand;
 				my @files;
 
 				# todo figure out why we're not here already #bug
-				WriteLog("cd $SCRIPTDIR");
+				WriteLog('update.pl: ImageProcessing: pwd = ' . `pwd`);
+
+				WriteLog("update.pl: ImageProcessing: cd $SCRIPTDIR");
 				WriteLog(`cd "$SCRIPTDIR"`);
 
-				$findCommand = 'find $IMAGEDIR | grep -i \.png$';
+				#
+				# print('update.pl: $SCRIPTDIR = ' . $SCRIPTDIR);
+				# print "\n";
+				# print('update.pl: $HTMLDIR = ' . $HTMLDIR);
+				# print "\n";
+				# print('update.pl: $TXTDIR = ' . $TXTDIR);
+				# print "\n";
+				# print('update.pl: $IMAGEDIR = ' . $IMAGEDIR);
+				# print "\n";
+				# die;
+
+
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.png\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = 'find $IMAGEDIR | grep -i \.gif$';
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.gif\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = 'find $IMAGEDIR | grep -i \.jpg$';
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jpg\$";
 				push @files, split("\n", `$findCommand`);
 
 				# if ($filesLimit > scalar(@files)) {
@@ -510,12 +528,14 @@ if (!$arg1) {
 		my $filesLeftCommand = 'find ' . $TXTDIR . ' | grep "\.txt$" | wc -l';
 		my $filesLeft = `$filesLeftCommand`; #todo
 
-		my $imageFilesLeftCommand = 'find ' . $IMAGEDIR . ' | grep "\.png" | wc -l';
-		$filesLeft += `$imageFilesLeftCommand`; #todo
-        $imageFilesLeftCommand = 'find ' . $IMAGEDIR . ' | grep "\.gif" | wc -l';
-		$filesLeft += `$imageFilesLeftCommand`; #todo
-        $imageFilesLeftCommand = 'find ' . $IMAGEDIR . ' | grep "\.jpg" | wc -l';
-		$filesLeft += `$imageFilesLeftCommand`; #todo
+		if (-e $IMAGEDIR) {
+			my $imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.png" | wc -l';
+			$filesLeft += `$imageFilesLeftCommand`; #todo
+			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.gif" | wc -l';
+			$filesLeft += `$imageFilesLeftCommand`; #todo
+			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.jpg" | wc -l';
+			$filesLeft += `$imageFilesLeftCommand`; #todo
+		}
 
 		WriteLog('update.pl: $filesLeft = ' . $filesLeft);
 
