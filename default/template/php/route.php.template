@@ -32,6 +32,7 @@ function StripHeavyTags($html) {
 	// this would be necessary if the br tags were not already there
 	// may be useful in the future to do automated fixing-up of existing templates
 	// then we can remove all those <br> tags from the templates and make them look neater
+		$html = preg_replace('/\<\/th\>/', '; ', $html);
 		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
 		$html = preg_replace('/\<\/td\>/', '; ', $html);
 		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
