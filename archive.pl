@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use strict;
 use Cwd qw(cwd);
 use File::Copy qw(copy);
 
@@ -17,11 +18,12 @@ if (!-e $ARCHIVEDIR) {
 	mkdir($ARCHIVEDIR);
 }
 
+my $ARCHIVE_DATE_DIR = '';
 if (-d $ARCHIVEDIR) {
 	while (-e "$ARCHIVEDIR/$date") {
 		$date++;
 	}
-	my $ARCHIVE_DATE_DIR = "$ARCHIVEDIR/$date";
+	$ARCHIVE_DATE_DIR = "$ARCHIVEDIR/$date";
 	mkdir("$ARCHIVE_DATE_DIR");
 }
 
@@ -34,18 +36,29 @@ my $TXTDIR = $HTMLDIR . '/txt';
 my $IMAGEDIR = $HTMLDIR . '/image';
 
 {
+	print("rename($TXTDIR, $ARCHIVE_DATE_DIR/txt\n");
 	rename("$TXTDIR", "$ARCHIVE_DATE_DIR/txt");
+
+	print("rename($IMAGEDIR, $ARCHIVE_DATE_DIR/image\n");
 	rename("$IMAGEDIR", "$ARCHIVE_DATE_DIR/image");
 
-	# this needs to happen before txt and image above
+	# this needs to happen after txt and image above
+	print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html\n");
 	rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
 
+	print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log\n");
 	rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
 
-	copy("$CONFIGDIR", "$ARCHIVE_DATE_DIR/config");  #todo make faster
+	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
+	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"");  #todo make faster
 
-	system("mkdir $HTMLDIR");
-	system("mkdir $TXTDIR");
+	print("mkdir($HTMLDIR)");
+	mkdir("$HTMLDIR");
+
+	print("mkdir($TXTDIR)");
+	mkdir("$TXTDIR");
 
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
 }
+
+1;
