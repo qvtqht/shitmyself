@@ -82,6 +82,24 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 #			print $timestamp . " " . $text . "\n";
 		}
 
+# 		if (-e 'config/admin/prev_build_duration') {
+# 			state $prevBuildDuration;
+# 			$prevBuildDuration = $prevBuildDuration || trim(GetFile('config/admin/prev_build_duration'));
+# 			#bug here
+#
+# 			if ($prevBuildDuration) {
+# 				state $buildBegin;
+# 				$buildBegin = $buildBegin || trim(GetFile('config/admin/build_begin'));
+#
+# 				my $approximateProgress = (GetTime() - $buildBegin) / $prevBuildDuration * 100;
+# #				print '(~' . $approximateProgress . '%) ' . $timestamp . " " . $text . "\n";
+# 			} else {
+# #				print $timestamp . " " . $text . "\n";
+# 			}
+# 		} else {
+# #			print $timestamp . " " . $text . "\n";
+# 		}
+
 		return 1;
 	}
 
