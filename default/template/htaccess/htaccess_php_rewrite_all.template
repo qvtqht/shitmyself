@@ -1,7 +1,5 @@
 RewriteEngine On
 RewriteRule ^post\.html??(.+)? /post.php [QSA]
-#RewriteRule ^write\.html??(.+)? /write.php [QSA]
-RewriteRule ^profile.html$ /route.php?path=/profile.html [QSA]
 
 # config/php/rewrite=all
 ########################
@@ -11,6 +9,3 @@ RewriteRule ^profile.html$ /route.php?path=/profile.html [QSA]
 # this mode is useful if you require registration
 
 RewriteRule ^(.+\.html)$ /route.php?path=/$1 [QSA]
-
-
-

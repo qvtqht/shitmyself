@@ -1,15 +1,14 @@
 RewriteEngine On
 RewriteRule ^post\.html??(.+)? /post.php [QSA]
-#RewriteRule ^write\.html??(.+)? /write.php [QSA]
-RewriteRule ^profile.html$ /route.php?path=/profile.html [QSA]
 
 # config/php/rewrite=query
+# ========================
 # more accessible static failover
 # BUT php not supported on all urls
-# uncomment next line
+
 # purposely exclude urls without query
 # this improves accessibility when php has an issue
 # giving users direct access to static html files
 
-#RewriteRule ^(.+\.html)\?$ /route.php?path=/$1 [QSA]
-"^(.+\.html)\?(.+)?" => "/route.php?path=$1&$2",
+RewriteRule ^(.+\.html)\?(.+)$ /route.php?path=/$1&$2 [QSA]
+
