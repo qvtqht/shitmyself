@@ -1,4 +1,4 @@
-Name: $name
-ID: $fingerprint
+$name has joined.
 
-Leave a message by replying to this post.
+--
+Fingerprint: $fingerprint
