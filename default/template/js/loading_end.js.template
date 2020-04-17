@@ -51,7 +51,7 @@ function WaitForOpenPgp() {
 	}
 }
 
-if (a383) {
+if (window.a383) {
 
 	a383.style.backgroundColor = '#c0ff00';
 
