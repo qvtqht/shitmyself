@@ -78,15 +78,23 @@ function CheckIfFresh() {
 var intFreshTimeout = 0;
 
 function AmIFresh() {
+	//alert('DEBUG: AmIFresh: begin');
+
 	if (intFreshTimeout < 0) {
+		//alert('DEBUG: AmIFresh: intFreshTimeout < 0; return');
+
 		return;
 	}
 
 	if (timeoutFresh) {
+		//alert('DEBUG: AmIFresh: clearTimeout(timeoutFresh)');
+
 		clearTimeout(timeoutFresh);
 	}
 
 	if (window.XMLHttpRequest) {
+		//alert('DEBUG: AmIFresh: window.XMLHttpRequest feature check passed');
+
 		if (!intFreshTimeout) {
 			intFreshTimeout = 1000;
 		} else {
@@ -98,7 +106,9 @@ function AmIFresh() {
 		if (5000 < intFreshTimeout) {
 			intFreshTimeout = 5000;
 		} 
-		
+
+		//alert('DEBUG: AmIFresh: setting timeout to ' + intFreshTimeout);
+
 		timeoutFresh = setTimeout('AmIFresh()', intFreshTimeout);
 	}
 }
