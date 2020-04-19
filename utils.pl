@@ -83,24 +83,10 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 		my $timestamp = GetTime();
 
 		AppendFile("log/log.log", $timestamp . " " . $text);
-
-		if (-e 'config/admin/prev_build_duration') {
-			state $prevBuildDuration;
-			$prevBuildDuration = $prevBuildDuration || trim(GetFile('config/admin/prev_build_duration'));
-			#bug here
-
-			if ($prevBuildDuration) {
-				state $buildBegin;
-				$buildBegin = $buildBegin || trim(GetFile('config/admin/build_begin'));
-
-				my $approximateProgress = (GetTime() - $buildBegin) / $prevBuildDuration * 100;
-#				print '(~' . $approximateProgress . '%) ' . $timestamp . " " . $text . "\n";
-			} else {
-#				print $timestamp . " " . $text . "\n";
-			}
-		} else {
-#			print $timestamp . " " . $text . "\n";
-		}
+		#todo
+		# if (index(lc($text), 'warning') > -1) {
+		# 	#die($text);
+		# }
 
 # 		if (-e 'config/admin/prev_build_duration') {
 # 			state $prevBuildDuration;
@@ -832,7 +818,8 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 
 			return $configValue;
 		} else {
-			WriteLog("WARNING! Tried to get value of config with no default value!");
+			#WriteLog("WARNING! Tried to get value of config with no default value: $configName");
+
 			#WriteLog("-e default/$configName returned false");
 			#die();
 		}
@@ -2511,7 +2498,7 @@ sub RemoveEmptyDirectories { #looks for empty directories under $path and remove
 		return;
 	}
 	
-	system('find $path -type d -empty -delete');
+	#system('find $path -type d -empty -delete'); #todo uncomment when bugs fixed
 }
 
 sub RemoveOldItems {
