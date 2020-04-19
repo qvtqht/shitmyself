@@ -60,6 +60,26 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 	}
 	chomp $text;
 
+	# if (-e 'config/admin/benchmark') {
+	# 	state $lastText;
+	# 	state $lastTextBegin;
+	#
+	# 	if ($lastText && $lastTextBegin && (time() - $lastTextBegin) > 0) {
+	# 		my $query = "INSERT INTO debug_benchmark(text, time_begin, time_end) VALUES(?, ?, ?);";
+	# 		my @params;
+	# 		push @params, $text;
+	# 		push @params, $lastTextBegin;
+	# 		push @params, time();
+	#
+	# 		SqliteQuery2($query, @params);
+	# 	}
+	#
+	# 	$lastText = $text;
+	# 	$lastTextBegin = time();
+	# }
+
+	# Only if debug mode is enabled
+	if (-e 'config/admin/debug') {
 		my $timestamp = GetTime();
 
 		AppendFile("log/log.log", $timestamp . " " . $text);
@@ -242,6 +262,13 @@ sub EnsureSubdirs { # ensures that subdirectories for a file exist
 
 # todo remove requirement of external module
 	my $fullPath = shift;
+	chomp $fullPath;
+
+	if (substr($fullPath, 0, 1) eq '/') {
+		#WriteLog('EnsureSubdirs: WARNING! $fullPath should not begin with a /;' . $fullPath);
+	}
+
+	WriteLog("EnsureSubdirs($fullPath)");
 
 	my ( $file, $dirs ) = fileparse $fullPath;
 	if ( !$file ) {
@@ -738,7 +765,9 @@ sub GetFile { # Gets the contents of file $fileName
 	#todo do something for a file which is missing
 }
 
-sub GetConfig { # gets configuration value based for $key
+sub GetConfig { # $configName, $token ;  gets configuration value based for $key
+# $token can be 'uncache', which removes it from %configLookup
+
 	my $configName = shift;
 	chomp $configName;
 
@@ -752,6 +781,17 @@ sub GetConfig { # gets configuration value based for $key
 #	}
 #
 	state %configLookup;
+
+	my $token = shift;
+	if ($token) {
+		chomp $token;
+	}
+
+	if ($token && $token eq 'uncache') {
+		if (exists($configLookup{$configName})) {
+			delete($configLookup{$configName});
+		}
+	}
 
 	if (exists($configLookup{$configName})) {
 		WriteLog('$configLookup already contains value, returning that...');
@@ -786,9 +826,9 @@ sub GetConfig { # gets configuration value based for $key
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 
-			WriteLog('PutConfig (' . $configName . ', ' . $configValue .');');
+			WriteLog('PutConfig(' . $configName . ', ' . $configValue .');');
 
-			PutConfig ($configName, $configValue);
+			PutConfig($configName, $configValue);
 
 			return $configValue;
 		} else {
@@ -1011,7 +1051,11 @@ sub PutConfig { # writes config value to config storage
 
 	chomp $configValue;
 
-	return PutFile("config/$configName", $configValue);
+	my $putFileResult = PutFile("config/$configName", $configValue);
+
+	GetConfig($configName, 'uncache');
+
+	return $putFileResult;
 }
 							  
 sub PutFile { # Writes content to a file; $file, $content, $binMode
