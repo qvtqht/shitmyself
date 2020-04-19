@@ -69,6 +69,6 @@ server.http-parseopts = (
 	"url-ctrls-reject" => "disable"
 )
 
-expire.url = (
-	"/" => "access plus 2 hours"
-)
+#expire.url = (
+#	"/" => "access plus 2 hours"
+#)
