@@ -275,7 +275,9 @@ if ($homePageHasBeenWritten) {
 } else {
 	WriteLog("Warning! Home Page has not been written! Fixing that");
 	
-	if (-e $HTMLDIR.'/write.html') {
+	if (-e $HTMLDIR.'/'.GetConfig('home_page')) {
+		PutHtmlFile('index.html', GetFile($HTMLDIR . '/' . GetConfig('home_page')));
+	} elsif (-e $HTMLDIR.'/write.html') {
 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/write.html'));
 	} elsif (-e $HTMLDIR.'/top.html') {
 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/top.html'));
