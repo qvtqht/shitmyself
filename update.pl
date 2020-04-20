@@ -322,7 +322,7 @@ if (!$arg1) {
 		my $filesProcessedTotal = 0;
 		my $filesProcessed = 1;
 
-		while ($filesProcessed > 0) {
+		while ($filesProcessed > 0 || $pagesProcessed > 1) {
 			# See if update/file_limit setting exists
 			# This limits the number of files to process per launch of update.pl
 			my $filesLimit = GetConfig('admin/update/limit_file');
@@ -331,10 +331,11 @@ if (!$arg1) {
 				$filesLimit = 100;
 			}
 
-			WriteLog('while loop: $filesProcessed = ' . $filesProcessed);
+			WriteLog('while loop: $filesProcessed: ' . $filesProcessed . '; $pagesProcessed: ' . $pagesProcessed);
 
 			$filesProcessed = 0;
-			
+			$pagesProcessed = 0;
+
 			{
 				############
 				# TEXT FILE PROCESSING PART BEGINS HERE
@@ -357,6 +358,8 @@ if (!$arg1) {
 				# 	$filesLimit = scalar(@files);
 				# }
 
+				my $serverMessageSet = 0;
+
 				# Go through all the changed files
 				foreach my $file (@files) {
 					if ($filesProcessed >= $filesLimit) {
@@ -364,7 +367,7 @@ if (!$arg1) {
 						last;
 					}
 
-					WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+					# WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 					#
 					# if ((GetTime2() - $startTime) > $timeLimit) {
 					# 	WriteLog("Time limit reached, exiting loop");
@@ -383,6 +386,13 @@ if (!$arg1) {
 					# If the file exists, and is not a directory, process it
 					if (-e $file && !-d $file) {
 						$filesProcessed += ProcessTextFile($file);
+
+						if (0 && $filesProcessed > 0 && !$serverMessageSet) {#todo
+							if (!GetConfig('admin/global_server_message') || GetConfig('admin/global_server_message') eq 'This forum was just built, and may appear empty until the index is updated.') {
+								PutConfig('admin/global_server_message', 'Notice: Indexing in progress, not all content may be visible.');
+							}
+						}
+
 					}
 					else {
 						# this should not happen
@@ -443,7 +453,7 @@ if (!$arg1) {
 						last;
 					}
 
-					WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+					# WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 					#
 					# if ((GetTime2() - $startTime) > $timeLimit) {
 					# 	WriteLog("Time limit reached, exiting loop");
@@ -514,7 +524,7 @@ if (!$arg1) {
 			$pagesProcessed += BuildTouchedPages();
 
 			$filesProcessedTotal += $filesProcessed;
-		} # while ($filesProcessed > 0)
+		} # while ($filesProcessed > 0 || $pagesProcessed > 1)
 
 		WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
 
@@ -548,9 +558,10 @@ if (!$arg1) {
 		WriteLog("Items/files processed: $filesProcessed");
 		WriteLog("Pages processed: $pagesProcessed");
 
-		if ($filesProcessed > 0) {
-			print("Items/files processed: $filesProcessed\n");
-			print("Pages processed: $pagesProcessed\n");
+		if (0 && $filesProcessed == 0) { #todo
+			if (GetConfig('admin/global_server_message') eq 'Notice: Indexing in progress, not all content may be visible.') {
+				PutConfig('admin/global_server_message', '');
+			}
 		}
 	}
 } elsif ($arg1) {
