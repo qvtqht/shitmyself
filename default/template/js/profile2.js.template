@@ -33,8 +33,8 @@ if (!window.MakeKey && document.head && document.head.appendChild && document.ge
 	//alert('DEBUG: not loading crypto2.js; ' + ' window.MakeKey = ' + window.MakeKey + '; document.getElementById = ' + document.getElementById + ' window.localStorage = ' + window.localStorage );
 }
 
-function btnSignout_Click(t) { // event for 'Sign Out' button's click
-	//alert('DEBUG: btnSignout_Click begin');
+function btnSignOut_Click(t) { // event for 'Sign Out' button's click
+	//alert('DEBUG: btnSignOut_Click begin');
 
 	if (window.localStorage) {
 		//alert('DEBUG: localStorage is true');

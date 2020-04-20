@@ -16,6 +16,14 @@ $commandUnregister = 'Sign Out';
 
 $messageSignedIn = 0;
 
+if (isset($_GET['btnSignOut'])) {
+	$_GET['request'] = 'Sign Out';
+}
+
+if (isset($_GET['btnRegister'])) {
+	$_GET['request'] = 'Register';
+}
+
 if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 	unsetcookie2('test');
 	unsetcookie2('cookie');

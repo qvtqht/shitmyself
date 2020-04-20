@@ -15,8 +15,9 @@
 	<p class=advanced>OpenPGP: <span id=lblSigningIndicator>No</span></p>
 
 	<p>
-		<input type=submit name=request onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id="btnRegister" value="Register">
-		<input type=submit name=request onclick="if (window.btnSignout_Click) { return btnSignout_Click(this); }" id="btnSignout" value="Sign Out">
+		<input type=submit name=btnRegister onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id=btnRegister value="Register">
+		<input type=submit name=btnSignOut onclick="if (window.btnSignOut_Click) { return btnSignOut_Click(this); }" id=btnSignOut value="Sign Out">
+	</p>
 </fieldset>
 
 </form>
