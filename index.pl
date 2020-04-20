@@ -412,7 +412,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			DBAddPageTouch('author', $gpgKey);
 
 			if (! ($gpgKey =~ m/\s/)) {
-				#DBAddPageTouch may be a better place for this
+				#DBAddPageTouch() may be a better place for this
 				# sanity check for gpgkey having any whitespace in it before using it in a glob for unlinking cache items
 				WriteLog('IndexTextFile: proceeding to unlink avatar caches for ' . $gpgKey);
 
@@ -1403,7 +1403,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 											 
 		DBAddPageTouch('rss', 1);
 
-		DBAddPageTouch('index', 1); #todo verify this works
+		DBAddPageTouch('index', 1);
 
 		DBAddPageTouch('flush');
 	}
@@ -1595,7 +1595,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 		DBAddPageTouch('rss', 1);
 
-		DBAddPageTouch('index', 1); #todo verify this works
+		DBAddPageTouch('index', 1);
 
 		DBAddPageTouch('flush');
 	}
