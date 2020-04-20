@@ -1,3 +1,9 @@
+Make it so that all 500 bajillion index pages aren't rewritten at once
+	especially every time there's an update
+		when 'index' goes through, increase priority of each page by 1*(page_no/total_pages)
+
+move all html templates under template/html
+
 in php, if debug is enabled, save WRitelo() when passig server messagewriteindexpage
 
 Give update.pl a parameter which looks up in page_item and only does those
