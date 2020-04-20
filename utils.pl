@@ -1059,14 +1059,18 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 		return;
 	}
 
+	WriteLog("PutFile($file)");
+
+	WriteLog("PutFile: EnsureSubdirs($file)");
 	EnsureSubdirs($file);
 
-	WriteLog("PutFile($file, ...");
+	WriteLog("PutFile: $file, ...");
 
 	my $content = shift;
 	my $binMode = shift;
 
 	if (!defined($content)) {
+		WriteLog('PutFile: $content not defined, returning');
 		return;
 	}
 
@@ -1074,23 +1078,31 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 #		return;
 #	}
 	if (!$binMode) {
+		WriteLog('PutFile: $binMode: 0');
 		$binMode = 0;
 	} else {
 		$binMode = 1;
+		WriteLog('PutFile: $binMode: 1');
 	}
 
-	WriteLog("PutFile($file, (\$content), $binMode)");
+	WriteLog("PutFile: $file, (\$content), $binMode");
 	WriteLog("==== \$content ====");
 	WriteLog($content);
 	WriteLog("====");
 
 	if (open (my $fileHandle, ">", $file)) {
-		WriteLog("file handle opened.");
+		WriteLog("PutFile: file handle opened for $file");
 		if ($binMode) {
+			WriteLog("PutFile: binmode $fileHandle, ':utf8';");
 			binmode $fileHandle, ':utf8';
 		}
+		WriteLog("PutFile: print $fileHandle $content;");
 		print $fileHandle $content; #todo wide character error here
+
+		WriteLog("PutFile: close $fileHandle;");
 		close $fileHandle;
+
+		return 1;
 	}
 }
 
@@ -2388,9 +2400,7 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	return $easyFindString;
 }
 
-sub GetItemMessage { # retrieves item's message using cache or file path
-# $itemHash, $filePath
-
+sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cache or file path
 	WriteLog('GetItemMessage()');
 
 	my $itemHash = shift;
