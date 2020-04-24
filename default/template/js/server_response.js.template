@@ -45,9 +45,14 @@ function serverMessageOk(t) { // function which hides server response message
 			//alert('DEBUG: serverMessageOk: window.history.replaceState found');
 
 			window.history.replaceState(null, null, window.location.pathname);
+
+			// don't follow the link, we already changed the location
 			return false;
 		} else {
 			//alert('DEBUG: serverMessageOk: window.history.replaceState NOT FOUND');
+
+			// this means we'll let the browser follow the link to the page
+			// which doesn't have response message on it
 			return true;
 		}
 	} else {
