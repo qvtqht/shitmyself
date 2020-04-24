@@ -23,7 +23,7 @@ if ($stopTimeConfig) {
 
 $redirectUrl = ''; // where we're going after this is all over
 
-function ProcessNewComment($comment) { // saves new comment to .txt file and calls indexer
+function ProcessNewComment ($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
 
@@ -218,7 +218,7 @@ function ProcessNewComment($comment) { // saves new comment to .txt file and cal
 
 	//return $fileUrlPath;
 	return $hash;
-}
+} // ProcessNewComment
 
 $fileUrlPath = '';
 $replyTo = '';

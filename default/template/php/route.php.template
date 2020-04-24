@@ -10,13 +10,15 @@ include_once('utils.php');
 //    // disabled
 //}
 
-function SetHtmlClock($html) {
-	$newHtml = $html;
+function SetHtmlClock ($html) { // #todo sets html clock on page if present
+	WriteLog('SetHtmlClock()');
 
-	return $html;
+	$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
+
+    return $html;
 }
 
-function StripHeavyTags($html) {
+function StripHeavyTags ($html) { // strips heavy tags from page replaces with basic ones
 	$tags = array(
 		'table', 'tr', 'td', 'span', 'fieldset', 'legend', 'font',
 		'script', 'style', 'big'
@@ -45,19 +47,19 @@ function StripHeavyTags($html) {
 	return $html;
 }
 
-function StripComments ($html) { //strips comments from html
+function StripComments ($html) { // strips html comments from html
 	$html = preg_replace('/\<\!--[^>]+\>/', '', $html);
 
 	return $html;
 }
 
-function CleanBodyTag ($html) {
+function CleanBodyTag ($html) { // removes all attributes from body tag in given html
 	$html = preg_replace('/\<body[^>]+\>/', '<body>', $html);
 
 	return $html;
 }
 
-function StripWhitespace ($html) { //strips extra whitespace from html
+function StripWhitespace ($html) { // strips extra whitespace from given html
 //	while (preg_match('/[\t\n ]{2}'
 	$html = str_replace("\t", ' ', $html);
 
@@ -94,8 +96,8 @@ function StripWhitespace ($html) { //strips extra whitespace from html
 	return $html;
 }
 
-function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</body>') { // inject js template(s) before </body> ; $html, @scriptNames
-// $injectMode: before, after, append
+function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</body>') { // inject js template(s) into html
+// $injectMode: before, after, append (to end of html)
 // $htmlTag: e.g. </body>, only used with before/after
 // if $htmlTag is not found, does fall back to append
 
@@ -216,7 +218,11 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 	return $html;
 }
 
-function HandleNotFound($path, $pathRel) { // handles 404 errors
+function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing the missing page
+	// if (preg_match(aa/bb/aabb..html) {
+	// generate item page
+	// } #todo
+
 	if (
 		$path == '/stats.html' ||
 		$path == '/write.html'
@@ -290,8 +296,8 @@ if (GetConfig('admin/php/route_enable')) {
 			WriteLog('$path = ' . $path);
 			$pathFull = realpath('.'.$path);
 
-
 			if ($path == '/profile.html') {
+				
 			} else {
 				// if registration is required, redirect user to profile.html
 				if (GetConfig('admin/force_profile')) {

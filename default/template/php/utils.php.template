@@ -1,6 +1,9 @@
 <?php
 
-function WriteLog($text) { // writes to debug log if enabled
+function WriteLog ($text) { // writes to debug log if enabled
+// the debug log is stored as a static variable in this function
+// when a blank (false) argument is passed, returns entire log as html
+
 	static $logText;
 
 	if (!$logText) {
@@ -16,7 +19,7 @@ function WriteLog($text) { // writes to debug log if enabled
 }
 
 //
-//function GetAdminKey() { // Returns admin's public key, 0 if there is none
+//function GetAdminKey () { // Returns admin's public key, 0 if there is none
 //	static $adminsKey = 0;
 //
 //	if ($adminsKey) {
@@ -52,7 +55,7 @@ function WriteLog($text) { // writes to debug log if enabled
 //}
 
 
-function GetMyVersion() { // returns current git commit id
+function GetMyVersion () { // returns current git commit id
 	static $myVersion;
 
 	if ($myVersion) {
@@ -70,7 +73,7 @@ function GetMyVersion() { // returns current git commit id
 	return $myVersion;
 }
 
-function index($string, $needle) { // emulates perl's index(), returning -1 instead of false
+function index ($string, $needle) { // emulates perl's index(), returning -1 instead of false
 	$strpos = strpos($string, $needle);
 	if ($strpos === false) {
 		return -1;
@@ -79,15 +82,15 @@ function index($string, $needle) { // emulates perl's index(), returning -1 inst
 	}
 }
 
-function length($string) { // emulates perl's length()
+function length ($string) { // emulates perl's length()
 	return strlen($string);
 }
 
-function GpgParsePubkey($filePath) {
+function GpgParsePubkey ($filePath) { // #todo parse file with gpg public key
     return array();
 }
 
-function GpgParseSignedMessage($filePath) {
+function GpgParseSignedMessage ($filePath) { // #todo #untested parses gpg signed message
 	$gpgCommand = 'gpg2'; // todo add gpg1 support
 	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
 
@@ -159,7 +162,9 @@ function GpgParseSignedMessage($filePath) {
     return $returnValues;
 }
 
-function file_force_contents($dir, $contents){
+function file_force_contents ($dir, $contents) { // ensures parent directories exist before writing file
+// #todo clean this function up
+
     WriteLog("file_force_contents($dir, $contents)");
 
     $parts = explode('/', $dir);
@@ -176,7 +181,7 @@ function file_force_contents($dir, $contents){
 }
 
 
-function GpgParse($filePath) {
+function GpgParse ($filePath) { // #todo #untested
 	$gpgCommand = 'gpg2'; // todo add gpg1 support
 	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
 
@@ -256,7 +261,7 @@ function GpgParse($filePath) {
 	}
 }
 
-function DoUpdate() {
+function DoUpdate () { // #todo #untested
 	$pwd = getcwd();
 
 	WriteLog('$pwd = ' . $pwd);
@@ -301,7 +306,7 @@ function DoUpdate() {
 
 }
 
-function GetConfig($configKey) { // get value for config value $configKey
+function GetConfig ($configKey) { // get value for config value $configKey
 // config is stored in config/
 // if not found in config/ it looks in default/
 // if it is in default/, it is copied to config/
@@ -338,31 +343,36 @@ function GetConfig($configKey) { // get value for config value $configKey
 	return $configValue;
 }
 
-function GetTemplate($templateKey) { // get template from config tree
+function GetTemplate ($templateKey) { // get template from config tree
 // looks in theme directory first, so config/theme/ > default/theme/ > config/ > default/
     $themeName = GetConfig('html/theme');
     $themePath = 'theme/' . $themeName . '/template/' . $templateKey;
 
+	WriteLog("GetTemplate($templateKey)");
+
     if (GetConfig($themePath)) {
+    	WriteLog("GetTemplate: GetConfig($themePath) was true, returning GetConfig($themePath)");
         return GetConfig($themePath);
     } else {
-	    return GetConfig('template/' . $templateKey);
+		WriteLog("GetTemplate: GetConfig($themePath) was FALSE, returning GetConfig(template/$templateKey)");
+
+	    return GetConfig("template/$templateKey");
     }
 }
 
 
 
 
-function GetFile($file) {
+function GetFile ($file) { // gets file contents
 	return file_get_contents($file);
 }
 
-function PutFile($file, $content) {
+function PutFile ($file, $content) { // puts file contents
 	return file_put_contents($file, $content);
 //	return file_force_contents($file, $content);
 }
 
-function GetCache($cacheName) { // get cache by cache key
+function GetCache ($cacheName) { // get cache contents by key/name
 	// comes from cache/ directory, under current git commit
 	// this keeps cache version-specific
 
@@ -382,7 +392,7 @@ function GetCache($cacheName) { // get cache by cache key
 	}
 }
 
-function PutCache($cacheName, $content) { // stores value in cache; $cacheName, $content
+function PutCache ($cacheName, $content) { // stores value in cache
 //#todo sanity checks and error handling
 	static $myVersion;
 	if (!$myVersion) {
@@ -394,7 +404,7 @@ function PutCache($cacheName, $content) { // stores value in cache; $cacheName, 
 	return PutFile($cacheName, $content);
 }
 
-function UnlinkCache($cacheName) { // removes cache by unlinking file it's stored in
+function UnlinkCache ($cacheName) { // removes cache by unlinking file it's stored in
 	static $myVersion;
 	if (!$myVersion) {
 		$myVersion = GetMyVersion();
@@ -407,7 +417,7 @@ function UnlinkCache($cacheName) { // removes cache by unlinking file it's store
 	}
 }
 
-function CacheExists($cacheName) { // Check whether specified cache entry exists, return 1 (exists) or 0 (not)
+function CacheExists ($cacheName) { // Check whether specified cache entry exists, return 1 (exists) or 0 (not)
 	static $myVersion;
 	if (!$myVersion) {
 		$myVersion = GetMyVersion();
@@ -458,7 +468,7 @@ function RetrieveServerResponse ($messageId) { // retrieves response message for
 	return $message;
 }
 
-function GetHtmlFilename($hash) {
+function GetHtmlFilename ($hash) { // gets html filename based on hash
 	// path for new html file
 	$fileHtmlPath =
 		substr($hash, 0, 2) .
@@ -472,8 +482,8 @@ function GetHtmlFilename($hash) {
 	return $fileHtmlPath;
 }
 
-function GetWindowTemplate($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) {
-// returns template for html-table-based-"window"
+function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) { // returns html for window template
+// uses template/window/standard.template by default
 	$contentColumnCount = 0;
 
 	$windowTemplate = GetTemplate('window/standard.template');
@@ -550,7 +560,7 @@ function GetWindowTemplate($windowTitle, $windowMenubarContent, $columnHeadings,
 	return $windowTemplate;
 }
 
-function GetThemeAttribute($attributeName) { // returns theme color from config/theme/
+function GetThemeAttribute ($attributeName) { // returns theme color from config/theme/
 	$themeName = GetConfig('html/theme');
 
 	$attributePath = 'theme/' . $themeName . '/' . $attributeName;
@@ -564,7 +574,7 @@ function GetThemeAttribute($attributeName) { // returns theme color from config/
 	return $attributeValue;
 }
 
-function GetThemeColor($colorName) { // returns theme color based on html/theme
+function GetThemeColor ($colorName) { // returns theme color based on html/theme
 	$colorName = 'color/' . $colorName;
 
 	$color = GetThemeAttribute($colorName);
@@ -589,19 +599,22 @@ function GetThemeColor($colorName) { // returns theme color based on html/theme
 	return $color;
 }
 
-function GetTime() {
+function GetTime () { // returns time()
 	return time();
 }
 
-function GetClockFormattedTime() { // returns current time in appropriate format from config
+function GetClockFormattedTime () { // returns current time in appropriate format from config
 //formats supported: union, epoch (default)
+
+	WriteLog("GetClockFormattedTime()");
 
 	$clockFormat = GetConfig('html/clock_format');
 
 	if ($clockFormat == 'union') {
-		$time = GetTime();
+		// union square clock format
+		$time = GetTime() - 3600*4; // hard-coded correction, should be timezone convert
 
-		// #todo make it perl-equivalent with locatime($time)
+		// #todo make it perl-equivalent with localtime($time)
 		$hours = strftime('%H', $time);
 		$minutes = strftime('%M', $time);
 		$seconds = strftime('%S', $time);
@@ -632,8 +645,13 @@ function GetClockFormattedTime() { // returns current time in appropriate format
 
 		$clockFormattedTime = $hours . $minutes . $seconds . $milliseconds . $secondsR . $minutesR . $hoursR;
 
+		WriteLog("GetClockFormattedTime: return $clockFormattedTime");
+
+
 		return $clockFormattedTime;
 	}
+
+	WriteLog("GetClockFormattedTime: return GetTime()");
 
 	return GetTime();
 }
@@ -652,7 +670,7 @@ function setcookie2 ($key, $value) { //wrapper for setcookie() which sets cookie
 	}
 }
 
-function unsetcookie2($key) { // wrapper for setcookie() to remove a cookie
+function unsetcookie2 ($key) { // wrapper for setcookie() to remove a cookie
 	if (0) {
 		WriteLog('unsetcookie2(' . $key . ')');
 		setcookie($key);

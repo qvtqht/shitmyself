@@ -1,6 +1,6 @@
 <?php
 //
-//function StripAdvanced($html) {
+//function StripAdvanced ($html) {
 ////	$html = preg_replace('/\<input [^>]+class=advanced[^>]*\>/', '', $html);
 ////	$html = preg_replace('/\<a [^>]+class=advanced[^>]+\>[^\<]+\<\/a\>/', '', $html);
 ////	$html = preg_replace('/\<span[^>]+class=advanced[^>]*\>.+<\/span\>/', '', $html);
@@ -13,7 +13,7 @@
 //	return $html;
 //}
 //
-//function StripHeavyTags($html) {
+//function StripHeavyTags ($html) {
 //	$tags = array('table', 'td', 'span', 'fieldset', 'legend');
 //
 //	foreach ($tags as $tag) {
@@ -29,13 +29,13 @@
 //	return $html;
 //}
 //
-//function StripComments($html) {
+//function StripComments ($html) {
 //	$html = preg_replace('/\<\!--[^>]+\>/', '', $html);
 //
 //	return $html;
 //}
 //
-//function StripWhitespace($html) {
+//function StripWhitespace ($html) {
 //	$html = preg_replace('/[\t\n ]+/', ' ', $html);
 //
 //	return $html;
