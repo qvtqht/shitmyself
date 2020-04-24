@@ -143,6 +143,10 @@ PutConfig('admin/update/files_left', $filesLeft);
 
 PutFile('config/admin/build_end', GetTime());
 
+if (!GetConfig('admin/secret')) {
+	PutConfig('admin/secret', md5_hex(time()));
+}
+
 UpdateUpdateTime();
 # Stats page
 my $statsPage = GetStatsPage();
