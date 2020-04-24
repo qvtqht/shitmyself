@@ -20,7 +20,7 @@ button, input[type=button], input[type=submit], input[type=checkbox] {
 	border: 1pt inset $colorWindow;
 }
 
-#serverMessage {
+#serverResponse {
 /* messages from server */
     background-color: $colorHighlightAlert;
     color: $colorText;

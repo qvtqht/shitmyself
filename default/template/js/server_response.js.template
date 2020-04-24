@@ -1,7 +1,9 @@
-// begin server_message.js.template
+// begin server_response.js.template
 
-function serverMessageOk(t) { // function which hides server message
-// can be called with t pointing to the OK button or false
+function serverMessageOk(t) { // function which hides server response message
+// can be called with t pointing to OK button -or- 0
+// when t==0, function will look for it on the page
+
 	//alert('DEBUG: serverMessageOk(t): t: ' + !!t);
 
 	if (window.serverMessageTimeout) {
@@ -13,10 +15,12 @@ function serverMessageOk(t) { // function which hides server message
 	}
 
 	if (t && t.parentElement && t.parentElement.style) {
-		// this will traverse and hide everything from the OK button up
+		// this will traverse and hide everything from the OK button up to
+		// but not including <body
 		// previously, this just said:  t.parentElement.style.display = 'none';
 		// but this was not good enough for tables
 		while (t.nodeName != 'BODY') {
+			// stop before hiding body
 			t.style.display = 'none';
 			if (t.nodeName == 'TABLE') {
 				// if we just hid a table, we can call it a day
@@ -25,7 +29,7 @@ function serverMessageOk(t) { // function which hides server message
 			t = t.parentElement; // go up the element tree until satisfied
 		}
 
-		// #todo remove element altogether
+		// #todo remove elements from tree altogether
 	}
 
 	if (document.body && document.body.onkeydown) {
@@ -84,4 +88,4 @@ function bodyEscPress(keyCode) { // called when user presses esc on a page with 
 //serverMessageTimeout = setTimeout('serverMessageOk()', 15000);
 //serverMessageTimeout = setTimeout('serverMessageShrink()', 5000);
 
-// end server_message.js.template
+// end server_response.js.template

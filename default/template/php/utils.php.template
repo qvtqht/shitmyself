@@ -423,7 +423,7 @@ function CacheExists($cacheName) { // Check whether specified cache entry exists
 }
 
 
-function StoreServerMessage($message) { // adds server message and returns message id
+function StoreServerResponse ($message) { // adds server message and returns message id
 // stores server message in cache/sm[message_id]
 // returns message id which can be passed to next page load via ?message=
 
@@ -444,13 +444,13 @@ function StoreServerMessage($message) { // adds server message and returns messa
 	return $messageId;
 }
 
-function RetrieveServerMessage($messageId) { // retrieves message for display by client and deletes it
-	WriteLog("RetrieveServerMessage($messageId)");
+function RetrieveServerResponse ($messageId) { // retrieves response message for display by client and deletes it
+	WriteLog("RetrieveServerResponse($messageId)");
 
 	$message = GetCache('sm' . $messageId);
 
 	if ($message) {
-		WriteLog("RetrieveServerMessage: Message found, deleting");
+		WriteLog("RetrieveServerResponse: Message found, deleting");
 
 		UnlinkCache('sm' . $messageId);
 	}

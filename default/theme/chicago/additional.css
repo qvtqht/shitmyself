@@ -29,7 +29,7 @@ input[type=text], input[type=password], select, option, textarea {
 	font-size: 10pt;
 	margin: 10pt;
 }
-#serverMessage {
+#serverResponse {
 	box-shadow: 5pt 5pt 5pt #405050;
 }
 .statusbar td {
@@ -56,7 +56,7 @@ a:focus, a:active {
 input:focus, textarea:focus {
     background-color: orange;
 }
-#serverMessage {
+#serverResponse {
 /* messages from server */
     background-color: $colorHighlightAlert;
     color: $colorText;

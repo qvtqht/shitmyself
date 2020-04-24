@@ -23,7 +23,7 @@ a:focus, a:active {
 input:focus, textarea:focus {
     background-color: orange;
 }
-#serverMessage {
+#serverResponse {
 /* messages from server */
     background-color: $colorHighlightAlert;
     color: $colorText;

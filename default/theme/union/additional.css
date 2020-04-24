@@ -28,8 +28,8 @@ button, input {
 	border: 0;
     padding: 2pt;
 }
-#serverMessage {
-/* messages from server */
+#serverResponse {
+/* responses from server */
     background-color: $colorWindow;
     color: $colorText;
     padding: 5pt;

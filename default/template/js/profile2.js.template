@@ -416,17 +416,17 @@ function PubkeyPing() { // checks if user's public key is on server
 						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check passed, doing it...');
 
 						if (document.getElementById) {
-							var serverMessage = document.getElementById('serverMessage');
-							if (serverMessage) {
+							var serverResponse = document.getElementById('serverResponse');
+							if (serverResponse) {
 								var hr = document.createElement('hr');
-								serverMessage.appendChild(hr);
+								serverResponse.appendChild(hr);
 
 								var center = document.createElement('p');
 								center.style.fontWeight = 'bold';
 								center.style.textAlign = 'center';
 
 								center.innerHTML = 'Please meditate while profile is created...';
-								serverMessage.appendChild(center);
+								serverResponse.appendChild(center);
 							}
 						}
 

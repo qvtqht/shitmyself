@@ -286,7 +286,7 @@ if (isset($comment) && $comment) {
 
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
-		$updateMessageId = StoreServerMessage("Update finished! <small>in $updateDuration"."s</small>");
+		$updateMessageId = StoreServerResponse("Update finished! <small>in $updateDuration"."s</small>");
 
 	    Header('Location: /stats.html?message=' . $updateMessageId); //#todo make work with relativize links
 	} elseif (strtolower($comment) == 'stop') {
@@ -341,8 +341,8 @@ if (isset($comment) && $comment) {
 				// profile.html
 			}
 
-            $messagePublicKeyPosted = StoreServerMessage("Success! Profile created! <small>in $finishTime"."s</small>");
-            $redirectUrl .= '?message=' . $messagePublicKeyPosted;
+            $responsePublicKeyPosted = StoreServerResponse("Success! Profile created! <small>in $finishTime"."s</small>");
+            $redirectUrl .= '?message=' . $responsePublicKeyPosted;
 
 
 //		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
@@ -364,9 +364,9 @@ if (isset($comment) && $comment) {
 
 	            $finishTime = time() - $postPhpStartTime;
 
-				$messageReplyPosted = StoreServerMessage("Success! Reply posted. <small>in $finishTime"."s</small>");
+				$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
 
-				$redirectUrl = $returnToUrlPath . '?message=' . $messageReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
+				$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
 		}
 	}
@@ -392,12 +392,12 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 if (!$redirectUrl && $fileUrlPath) {
 	$finishTime = time() - $postPhpStartTime;
 
-	$itemPostedServerMessage = "Success! New item posted!<small class=advanced> in $finishTime"."s</small>";
-	//$itemPostedServerMessage .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
+	$itemPostedServerResponse = "Success! New item posted! <small class=advanced> in $finishTime"."s</small>";
+	//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
-	$itemPostedServerMessageId = StoreServerMessage($itemPostedServerMessage);
+	$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
 
-    $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
+    $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
 }
 
 if ($redirectUrl) {

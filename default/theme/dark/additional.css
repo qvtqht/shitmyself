@@ -48,8 +48,8 @@ fieldset {
     background-color: #402010 !important;
     color: orange !important;
 }
-#serverMessage {
-/* messages from server */
+#serverResponse {
+/* response from server */
     background-color: $colorHighlightAlert;
     color: $colorText;
     padding: 5pt;

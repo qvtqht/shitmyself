@@ -20,8 +20,8 @@ input[type=text], input[type=password], select, option, textarea {
 .statusbar td {
     padding: 2pt;
 }
-#serverMessage {
-/* messages from server */
+#serverResponse {
+/* responses from server */
     background-color: $colorWindow;
     color: $colorText;
     padding: 5pt;

@@ -33,7 +33,7 @@ a:focus, a:active, input:focus, input:active {
     color: magenta;
     background-color: #c0a0ff;
 }
-#serverMessage {
+#serverResponse {
 /* messages from server */
     background-color: $colorHighlightAlert;
     color: cyan;

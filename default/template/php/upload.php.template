@@ -31,12 +31,12 @@ if (!empty($_FILES['uploaded_file'])) {
 		$redirectUrl = '';
 
 		if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
-			$itemPostedServerMessage = "Success! New image posted!";
-			//$itemPostedServerMessage .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
+			$itemPostedServerResponse = "Success! New image posted!";
+			//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
-			$itemPostedServerMessageId = StoreServerMessage($itemPostedServerMessage);
+			$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
 
-			$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerMessageId;
+			$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
 		}
 
 		if ($redirectUrl) {

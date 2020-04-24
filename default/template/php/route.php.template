@@ -283,7 +283,7 @@ if (GetConfig('admin/php/route_enable')) {
 		WriteLog(print_r($_GET, 1));
 
 		if (isset($_GET['path'])) {
-			$serverMessage = '';
+			$serverResponse = '';
 
 			// get request includes path argument
 			$path = $_GET['path'];
@@ -303,9 +303,9 @@ if (GetConfig('admin/php/route_enable')) {
 					}
 
 					if (!$clientHasCookie) {
-						$registerMessage = StoreServerMessage('This community requires you to register.');
+						$registerResponse = StoreServerResponse('This community requires a registration cookie.');
 
-						header('Location: /profile.html?message=' . $registerMessage);
+						header('Location: /profile.html?message=' . $registerResponse);
 					}
 				}
 			}
@@ -349,7 +349,7 @@ if (GetConfig('admin/php/route_enable')) {
 							$messageId = $_GET['message'];
 
 							if ($messageId == 'test') {
-								$newMessageId = StoreServerMessage('
+								$newMessageId = StoreServerResponse('
 									Over the firewall,
 									out the antenna,
 									into the router,
@@ -369,11 +369,11 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 
 							if (preg_match('/^[a-f0-9]{8}$/', $messageId)) {
-								$serverMessage = RetrieveServerMessage($messageId);
-								$serverMessage = trim($serverMessage);
+								$serverResponse = RetrieveServerResponse($messageId);
+								$serverResponse = trim($serverResponse);
 							}
 
-							if (!$serverMessage && !$redirectUrl) {
+							if (!$serverResponse && !$redirectUrl) {
 								$redirectUrl = $path;
 							}
 						} else {
@@ -416,9 +416,9 @@ if (GetConfig('admin/php/route_enable')) {
 								file_put_contents('../config/html/theme', $newTheme);
 							}
 
-							$messageThemeChanged = StoreServerMessage('Theme update: ' . $newTheme);
+							$responseThemeChanged = StoreServerResponse('Theme update: ' . $newTheme);
 							if (!$redirectUrl) {
-								$redirectUrl = '/settings.html?message=' . $messageThemeChanged;
+								$redirectUrl = '/settings.html?message=' . $responseThemeChanged;
 							}
 						}
 
@@ -449,20 +449,19 @@ if (GetConfig('admin/php/route_enable')) {
 										unlink('../admin.key');
 										WriteLog('Overthrow successful');
 
-										$messageOverthrow = StoreServerMessage('Overthrow successful! Register to become operator.');
-
-										$redirectUrl = '/settings.html?message=' . $messageOverthrow;
+										$responseOverthrow = StoreServerResponse('Overthrow successful! Register to become operator.');
+										$redirectUrl = '/settings.html?message=' . $responseOverthrow;
 									} else {
 										WriteLog('Overthrow already in effect: admin.key missing');
 
-										$messageOverthrow = StoreServerMessage('Overthrow already happened! Register to become operator.</a>');
-										$redirectUrl = '/settings.html?message=' . $messageOverthrow;
+										$responseOverthrow = StoreServerResponse('Overthrow already happened! Register to become operator.</a>');
+										$redirectUrl = '/settings.html?message=' . $responseOverthrow;
 									}
 								} else {
 									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
 
-									$messageOverthrow = StoreServerMessage('Overthrow conditions not met, overthrow unsuccessful');
-									$redirectUrl = '/settings.html?message=' . $messageOverthrow;
+									$responseOverthrow = StoreServerResponse('Overthrow conditions not met, overthrow unsuccessful');
+									$redirectUrl = '/settings.html?message=' . $responseOverthrow;
 								}
 							} else {
 								WriteLog('Overthrow conditions not met');
@@ -514,7 +513,7 @@ if (GetConfig('admin/php/route_enable')) {
 				if ($_COOKIE['light'] != $lightMode) {
 					setcookie2('light', $lightMode);
 
-					//$lightModeSetMessage = StoreServerMessage('Light mode has been set to ' . $lightMode);
+					//$lightModeSetMessage = StoreServerResponse('Light mode has been set to ' . $lightMode);
 					//$redirectUrl = '';
 				}
 			} else {
@@ -534,20 +533,25 @@ if (GetConfig('admin/php/route_enable')) {
 			}
 		}
 
-		if ($serverMessage) {
+		if ($serverResponse) {
+			WriteLog('$serverResponse set');
+		}
+
+		if ($serverResponse) {
 			// inject server message into html
 
 			// base template for server message, not including js
-			$serverMessageTemplate = GetTemplate('server_message.template');
+			$serverResponseTemplate = GetTemplate('server_response.template');
+
 
 			$colorHighlightAlert = GetThemeColor('highlight_alert');
-			$serverMessageTemplate = str_replace('$colorHighlightAlert', $colorHighlightAlert, $serverMessageTemplate);
+			$serverResponseTemplate = str_replace('$colorHighlightAlert', $colorHighlightAlert, $serverResponseTemplate);
 
 			// inject the message text itself.
 			// no escaping, because it can contain html formatting
-			$serverMessageTemplate = str_replace('$serverMessage', $serverMessage, $serverMessageTemplate);
+			$serverResponseTemplate = str_replace('$serverResponse', $serverResponse, $serverResponseTemplate);
 
-			//$serverMessageTemplate = GetWindowTemplate('title', '', '', 'hi', 'ready');
+			//$serverResponseTemplate = GetWindowTemplate('title', '', '', 'hi', 'ready');
 
 			$messageInjected = 0;
 			
@@ -559,10 +563,10 @@ if (GetConfig('admin/php/route_enable')) {
 
 				if (index($html, "<a name=$anchorTo>") > -1) {
 					// same as below, same message applies
-					$serverMessageTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverMessageTemplate);
+					$serverResponseTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverResponseTemplate);
 
 					$replaceWhat = "<a name=$anchorTo>";
-					$replaceWith = "<a name=$anchorTo>" . $serverMessageTemplate;
+					$replaceWith = "<a name=$anchorTo>" . $serverResponseTemplate;
 					$html = str_replace($replaceWhat, $replaceWith, $html);
 
 					$messageInjected = 1;
@@ -575,11 +579,11 @@ if (GetConfig('admin/php/route_enable')) {
 				// the other option is to leave it as is, but the message will remain on
 				// the page instead of disappearing, which doesn't look nearly as cool
 				// perhaps to be conditional under html/cool_effects?
-				$serverMessageTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '"', $serverMessageTemplate);
+				$serverResponseTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '"', $serverResponseTemplate);
 
 				// inject server message right after the body tag
 				$replaceWhat = '(<body\s[^>]*>|<body>)'; // both with attributes or without
-				$replaceWith = '$0' . $serverMessageTemplate; // the $0 is the original body tag, which we want to retain
+				$replaceWith = '$0' . $serverResponseTemplate; // the $0 is the original body tag, which we want to retain
 				$html = preg_replace($replaceWhat, $replaceWith, $html);
 
 				$messageInjected = 1;
@@ -588,8 +592,8 @@ if (GetConfig('admin/php/route_enable')) {
 			if (GetConfig('admin/js/enable')) {
 				//javascript stuff, if javascript is enabled
 
-				// inject server_message.js for hiding the server message popup
-				$html = InjectJs($html, array('server_message'), 'before', '</head>');
+				// inject server_response.js for hiding the server message popup
+				$html = InjectJs($html, array('server_response'), 'before', '</head>');
 
 				// add onkeydown event to body tag, which responds to escape and spacebar keys
 				// spacebar is added for qutebrowser's normal mode, which doesn't let esc through

@@ -1,0 +1,10 @@
+<!-- server_response.template -->
+
+<table id=serverResponse bgcolor=$colorHighlightAlert onclick="if (window.serverResponseOk) { return serverResponseOk(this); } else { return true; }"><tr><td align=center>
+    <b>$serverResponse</b>
+    <a href=#maincontent tabindex=3 id=sro onclick="if (window.serverResponseOk) { return serverResponseOk(this); } else {  return true; }" title="Hide Message"><b><i>Thanks</i></b></a>
+    <!-- must begin with <a href=#maincontent for templating reasons -->
+    <br>
+</td></tr></table>
+
+<!-- / server_response.template -->
