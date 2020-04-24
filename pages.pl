@@ -1828,7 +1828,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	}
 
 	# get the wrapper, i.e. <script>$javascript</script>
-	my $scriptInject = GetTemplate('scriptinject.template');
+	my $scriptInject = GetTemplate('html/utils/scriptinject.template');
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 
@@ -1948,7 +1948,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	}
 
 	# get the wrapper, i.e. <script>$javascript</script>
-	my $scriptInject = GetTemplate('scriptinject.template');
+	my $scriptInject = GetTemplate('html/utils/scriptinject.template');
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 

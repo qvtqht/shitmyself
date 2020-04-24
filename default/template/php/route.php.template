@@ -193,7 +193,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 	}
 
 	// get the wrapper, i.e. <script>$javascript</script>
-	$scriptInject = GetTemplate('scriptinject.template');
+	$scriptInject = GetTemplate('html/utils/scriptinject.template');
 
 
 	// fill in the wrapper with our scripts from above
