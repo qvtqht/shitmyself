@@ -180,15 +180,6 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 
 			//alert('DEBUG: AddPrivateKeyLinks: checks pass');
 
-			//alert('DEBUG: AddPrivateKeyLinks: creating file input...');
-
-			var fileLoadKeyFromText = document.createElement('input');
-			fileLoadKeyFromText.setAttribute('type', 'file');
-			fileLoadKeyFromText.setAttribute('accept', 'text/plain');
-			fileLoadKeyFromText.setAttribute('onchange', 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }');
-			fileLoadKeyFromText.setAttribute('style', 'display: none');
-			fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
-
 			//alert('DEBUG: AddPrivateKeyLinks: check for privateKey');
 
 			if (privateKey) {
@@ -246,15 +237,16 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 
 				var pLoadKeyFromTxt = document.createElement('p');
 
-				// add [load from file] link
-				var aLoadKeyFromText = document.createElement('a');
-				aLoadKeyFromText.setAttribute('class', 'advanced');
-				aLoadKeyFromText.setAttribute('href', '#');
-				aLoadKeyFromText.setAttribute('id', 'linkLoadPrivateKey');
-				aLoadKeyFromText.setAttribute('onclick', 'if (window.CallLoadPrivateKey) { return CallLoadPrivateKey(); }');
-				aLoadKeyFromText.innerHTML = 'load from file';
+				//alert('DEBUG: AddPrivateKeyLinks: creating file input...');
 
-				pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
+				var fileLoadKeyFromText = document.createElement('input');
+				fileLoadKeyFromText.setAttribute('type', 'file');
+				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
+				fileLoadKeyFromText.setAttribute('onchange', 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }');
+				//fileLoadKeyFromText.setAttribute('style', 'display: none');
+				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
+
+				// pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
 				pLoadKeyFromTxt.appendChild(fileLoadKeyFromText);
 
 				fieldset.appendChild(pLoadKeyFromTxt);
