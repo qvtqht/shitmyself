@@ -277,10 +277,10 @@ if ($homePageHasBeenWritten) {
 	
 	if (-e $HTMLDIR.'/'.GetConfig('home_page')) {
 		PutHtmlFile('index.html', GetFile($HTMLDIR . '/' . GetConfig('home_page')));
-	} elsif (-e $HTMLDIR.'/write.html') {
-		PutHtmlFile('index.html', GetFile($HTMLDIR.'/write.html'));
 	} elsif (-e $HTMLDIR.'/top.html') {
 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/top.html'));
+	} elsif (-e $HTMLDIR.'/write.html') {
+		PutHtmlFile('index.html', GetFile($HTMLDIR.'/write.html'));
 	} else {
 		WriteLog('fallback for index.html');
 		my $fallbackHomepage =
