@@ -2,4 +2,4 @@
 
 # opens index database from cache in sqlitebrowser
 
-sqlitebrowser ./cache/*/index.sqlite3
+sqlite3 -echo -cmd ".headers on" -cmd ".timeout 500" -cmd ".mode column" -cmd ".tables" ./cache/*/index.sqlite3
