@@ -343,17 +343,17 @@ sub SqliteMakeTables() { # creates sqlite schema
 	");
 }
 
-sub SqliteQuery2 { # calls sqlite with query, and returns result as array reference
-# #params: $query, @queryParams
-	WriteLog('SqliteQuery2() begin');
+sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns result as array reference
+
+	# WriteLog('SqliteQuery2() begin');
 
 	my $query = shift;
 	chomp $query;
 
-	WriteLog('SqliteQuery2: $query = ' . $query);
+	# WriteLog('SqliteQuery2: $query = ' . $query);
 
 	if ($query) {
-		WriteLog($query);
+		# WriteLog($query);
 
 		if ($dbh) {
 			my $sth = $dbh->prepare($query);
@@ -365,11 +365,11 @@ sub SqliteQuery2 { # calls sqlite with query, and returns result as array refere
 
 			return $aref;
 		} else {
-			WriteLog('SqliteQuery2: problem: no $dbh');
+			# WriteLog('SqliteQuery2: problem: no $dbh');
 		}
 	}
 	else {
-		WriteLog('SqliteQuery2: problem: no $query!');
+		# WriteLog('SqliteQuery2: problem: no $query!');
 	}
 }
 
@@ -666,7 +666,7 @@ sub DBGetItemReplies { # Returns replies for item (actually returns all child it
 	$itemHash = SqliteEscape($itemHash);
 
 	my %queryParams;
-	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash')";
+	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash') AND ','||tags_list||',' NOT LIKE '%,meta,%'";
 	$queryParams{'order_clause'} = "ORDER BY add_timestamp";
 
 	return DBGetItemList(\%queryParams);
@@ -1019,13 +1019,21 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo any successes deleting stuff should result in a refresh for the affected page
 }
 
-sub DBAddPageTouch { # Adds an entry to page_touch table
+sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an entry to page_touch table
 # page_touch table is used for determining which pages need to be refreshed
 # is called from IndexTextFile() to schedule updates for pages affected by a newly indexed item
+# if $pageName eq 'flush' then all the in-function stored queries are flushed to database.
+
 	state $query;
 	state @queryParams;
 
 	my $pageName = shift;
+
+	if ($pageName eq 'index') {
+		#return;
+		# this can be uncommented during testing to save time
+		#todo optimize this so that all pages aren't rewritten at once
+	}
 
 	if ($pageName eq 'tag') {
 		# if a tag page is being updated,
@@ -1598,12 +1606,7 @@ sub DBAddBrcRecord { #adds record to brc table
 
 ###
 
-sub DBAddVoteRecord { # Adds a new vote (tag) record to an item based on vote/ token
-# DBAddVoteRecord
-# $fileHash
-# $ballotTime
-# $voteValue
-# $signedBy
+sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a new vote (tag) record to an item based on vote/ token
 	state $query;
 	state @queryParams;
 
