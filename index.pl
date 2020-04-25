@@ -497,6 +497,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					#$message =~ s/$reconLine/[In response to message $parentHash]/;
 					# replace with itself, no change needed
+					#todo eventually we will want some kind of more friendly display of replied-to content
 
 					$detokenedMessage =~ s/$reconLine//;
 
@@ -587,10 +588,24 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							if (scalar(@itemParents)) {
 								foreach my $itemParentHash (@itemParents) {
-									DBAddVoteRecord($itemParentHash, $addedTime, $hashTag);
+
+									# add a record to the vote table
+									if ($isSigned) {
+										# include author's key if message is signed
+										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey);
+									}
+									else {
+										if ($hasCookie) {
+											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie);
+										} else {
+											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag);
+										}
+									}
 
 									DBAddPageTouch('item', $itemParentHash);
 								}
+
+								DBAddVoteRecord('flush');
 							}
 						} else { # no parent, !$hasParent
 							#todo add sanity checks here
