@@ -14,7 +14,7 @@ Here is a the layout on a U.S. keyboard:
 [Tab] Я Ш Е Р Т Ы У И О П Ю Ж   Э
 [Caps] А С Д Ф Г Ч Й К Л ; ' [Enter]
 [Shift] З Х Ц В Б Н М , . /  [Shift]
-[Ctr][M][Alt][______][Al][M][m][Ctr]
+[Ctl][M][Alt][______][Al][M][m][Ctl]
 
 To type ё, press Alt+E.
 To type -/_ and =/+, also use the Alt key.
