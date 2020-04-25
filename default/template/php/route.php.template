@@ -25,16 +25,29 @@ function StripHeavyTags ($html) { // strips heavy tags from page replaces with b
 	);
 
 	{
-	// this would be necessary if the br tags were not already there
-	// may be useful in the future to do automated fixing-up of existing templates
-	// then we can remove all those <br> tags from the templates and make them look neater
+		// this would be necessary if the br tags were not already there
+		// may be useful in the future to do automated fixing-up of existing templates
+		// then we can remove all those <br> tags from the templates and make them look neater
+
+		// the substitutions below provide some reasonable replacements for the tags
+		// each replacement, for debugging purposes, has an extra attribute like id1 or id5
+		// these can be removed later once debugging is mostly finished
+
+		$html = preg_replace('/\<\/a\>\<b\>/', '</a>; <b id1>', $html);
+		$html = preg_replace('/\<\/b\>\<a\ /', '</b>; <a id2 ', $html);
+
 		$html = preg_replace('/\<\/th\>/', '; ', $html);
 		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
+		$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br id3>', $html);
 		$html = preg_replace('/\<\/td\>/', '; ', $html);
-		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
-		$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
-		$html = preg_replace('/\<\/legend\>/', '<br>', $html);
-		$html = preg_replace('/\<\/table\>/', '<br><hr>', $html);
+		$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br id4><hr>', $html);
+		$html = preg_replace('/\<\/table\>/', '<br id5><hr>', $html);
+		$html = preg_replace('/\<\/tr\>/', '<br id6>', $html);
+		$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br id7>', $html);
+		$html = preg_replace('/\<\/fieldset\>/', '<br id8>', $html);
+		$html = preg_replace('/\<\/legend\>/', '<br id9>', $html);
+		$html = preg_replace('/\<\/a\>\<a/', '</a>; <a id10', $html);
+		$html = preg_replace('/; ;/', '; ', $html);
 	}
 
 	foreach ($tags as $tag) {
@@ -631,7 +644,7 @@ if (GetConfig('admin/php/route_enable')) {
 				$handle = 'Anonymous';
 				$fingerprint = $cookie;
 
-//				$html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
+				// $html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
 				// #todo get this from template
 				// #todo add the same logic to javascript frontend
 			} else {
@@ -648,7 +661,8 @@ if (GetConfig('admin/php/route_enable')) {
 		}
 
 		if (GetConfig('html/clock')) {
-			$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
+			//$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
+			$html = SetHtmlClock($html);
 		}
 
 		if ($lightMode) {
@@ -667,12 +681,12 @@ if (GetConfig('admin/php/route_enable')) {
 				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
 				$html
 			);
-//
-//			$html = str_replace(
-//				'<main id=maincontent>',
-//				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p><main id=maincontent>',
-//				$html
-//			);
+			//
+			//	$html = str_replace(
+			//		'<main id=maincontent>',
+			//		'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p><main id=maincontent>',
+			//		$html
+			//	);
 
 			//#todo perhaps strip onclick, onkeypress, etc., and style
 		}
