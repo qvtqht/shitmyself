@@ -549,12 +549,6 @@ if (!$arg1) {
 		WriteLog("======update.pl DONE! ======");
 		WriteLog("Items/files processed: $filesProcessed");
 		WriteLog("Pages processed: $pagesProcessed");
-
-		if (0 && $filesProcessed == 0) { #todo
-			if (GetConfig('admin/global_server_message') eq 'Notice: Indexing in progress, not all content may be visible.') {
-				PutConfig('admin/global_server_message', '');
-			}
-		}
 	}
 } elsif ($arg1) {
 	WriteLog('Found argument ' . $arg1);
