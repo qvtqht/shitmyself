@@ -8,6 +8,9 @@
 <p>
     Message received, and scheduled to be posted.
 </p>
+<p>
+    This plain-looking page because page formatter is catching up.
+</p>
 <hr>
 $commentHtml
 </body>
