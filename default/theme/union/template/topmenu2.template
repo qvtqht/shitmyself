@@ -3,7 +3,12 @@
 	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td><small>
-				<b><small><a href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a></small></b>
+				<b>
+					<small>
+					<a tabindex=1 href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a>;
+					<a href="$selfLink?light=1" tabindex=2><font color=$colorTitlebarText>Accessibility mode</font></a>
+					</small>
+				</b>
 			</small><br></td>
 		</tr>
 		<tr class=clock>
