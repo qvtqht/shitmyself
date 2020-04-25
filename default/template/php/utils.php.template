@@ -313,31 +313,37 @@ function GetConfig ($configKey) { // get value for config value $configKey
 	//$configDir = '/home/ily/hike/config/'; // config is stored here
 	//$defaultDir = '/home/ily/hike/default/'; // defaults are stored here
 
-	$configDir = '../config/'; // config is stored here
-	$defaultDir = '../default/'; // defaults are stored here
+	$configDir = '../config'; // config is stored here
+	$defaultDir = '../default'; // defaults are stored here
 
 	WriteLog('GetConfig('.$configKey.'); $configDir = "' . $configDir . '", $defaultDir = "' . $defaultDir . '", pwd = "' . getcwd() . '"');
 
-	WriteLog('Checking in ' . $configDir . $configKey );
+	WriteLog('GetConfig: Checking in ' . $configDir . '/' . $configKey );
 
-	if (file_exists($configDir . $configKey)) {
-		WriteLog('found in config/');
+	if (file_exists($configDir . '/' . $configKey)) {
+		WriteLog('GetConfig: found in config/');
 
-		$configValue = file_get_contents($configDir . $configKey);
-	} elseif (file_exists($defaultDir . $configKey)) {
-		WriteLog('found in default/');
+		$configValue = file_get_contents($configDir . '/' . $configKey);
+	} elseif (file_exists($defaultDir . '/' . $configKey)) {
+		WriteLog('GetConfig: found in default/');
 
-		copy ($defaultDir . $configKey, $configDir . $configKey); // copy to config/
-		$configValue = file_get_contents($configDir . $configKey);
+		WriteLog("GetConfig: copy ($defaultDir/$configKey, $configDir/$configKey);"); // copy to config/
+		copy ($defaultDir . '/' . $configKey, $configDir . '/' . $configKey); // copy to config/
+
+		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} else {
 		// otherwise return empty string
-		WriteLog('returning empty string');
+		WriteLog('GetConfig: WARNING: else, fallthrough, for ' . $configKey);
 		$configValue = '';
 	}
 
+	WriteLog('GetConfig: $configValue: ' . $configValue);
+
 	$configValue = trim($configValue); // remove trailing \n and any other whitespace
 
-	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '")');
+	WriteLog('GetConfig: $configValue after trim: ' . $configValue);
+
+	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '") final answer');
 	// notify log of what we found
 
 	return $configValue;
@@ -359,9 +365,6 @@ function GetTemplate ($templateKey) { // get template from config tree
 	    return GetConfig("template/$templateKey");
     }
 }
-
-
-
 
 function GetFile ($file) { // gets file contents
 	return file_get_contents($file);
