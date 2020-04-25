@@ -32,8 +32,8 @@ require './access.pl';
 require './pages.pl';
 
 sub GetTime2() { # returns epoch time
-# this is identical to GetTime() in utils.pl
-# #todo replace at some point
+	# this is identical to GetTime() in utils.pl
+	# #todo replace at some point
 	#	return (time() + 2207520000);
 	return (time());
 }
@@ -259,9 +259,6 @@ if (!$arg1) {
 			$lastFlow = 0;
 		}
 
-		my $pagesProcessed;
-		$pagesProcessed = BuildTouchedPages();
-
 		#	# get the path of access log, usually log/access.log
 		#	my $accessLogPath = GetConfig('admin/access_log_path');
 		#	WriteLog("\$accessLogPath = $accessLogPath");
@@ -322,15 +319,19 @@ if (!$arg1) {
 		my $filesProcessedTotal = 0;
 		my $filesProcessed = 1;
 
-		while ($filesProcessed > 0 || $pagesProcessed > 1) {
-			# See if update/file_limit setting exists
-			# This limits the number of files to process per launch of update.pl
-			my $filesLimit = GetConfig('admin/update/limit_file');
-			if (!$filesLimit) {
-				WriteLog('WARNING: admin/update/limit_file missing, using 100');
-				$filesLimit = 100;
-			}
+		my $pagesProcessed;
+		$pagesProcessed = BuildTouchedPages();
 
+
+		# See if update/file_limit setting exists
+		# This limits the number of files to process per launch of update.pl
+		my $filesLimit = GetConfig('admin/update/limit_file');
+		if (!$filesLimit) {
+			WriteLog('WARNING: admin/update/limit_file missing, using 100');
+			$filesLimit = 100;
+		}
+
+		while ($filesProcessed > 0 || $pagesProcessed > 1) {
 			WriteLog('while loop: $filesProcessed: ' . $filesProcessed . '; $pagesProcessed: ' . $pagesProcessed);
 
 			$filesProcessed = 0;
@@ -358,8 +359,6 @@ if (!$arg1) {
 				# 	$filesLimit = scalar(@files);
 				# }
 
-				my $serverMessageSet = 0;
-
 				# Go through all the changed files
 				foreach my $file (@files) {
 					if ($filesProcessed >= $filesLimit) {
@@ -367,7 +366,7 @@ if (!$arg1) {
 						last;
 					}
 
-					# WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+					WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 					#
 					# if ((GetTime2() - $startTime) > $timeLimit) {
 					# 	WriteLog("Time limit reached, exiting loop");
@@ -386,13 +385,6 @@ if (!$arg1) {
 					# If the file exists, and is not a directory, process it
 					if (-e $file && !-d $file) {
 						$filesProcessed += ProcessTextFile($file);
-
-						if (0 && $filesProcessed > 0 && !$serverMessageSet) {#todo
-							if (!GetConfig('admin/global_server_message') || GetConfig('admin/global_server_message') eq 'This forum was just built, and may appear empty until the index is updated.') {
-								PutConfig('admin/global_server_message', 'Notice: Indexing in progress, not all content may be visible.');
-							}
-						}
-
 					}
 					else {
 						# this should not happen
@@ -453,7 +445,7 @@ if (!$arg1) {
 						last;
 					}
 
-					# WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
+					WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 					#
 					# if ((GetTime2() - $startTime) > $timeLimit) {
 					# 	WriteLog("Time limit reached, exiting loop");
@@ -519,9 +511,9 @@ if (!$arg1) {
 			#	PutConfig('last_abyss', $curTime);
 			#}
 
-			WriteLog('update.pl: Building touched pages...');
-
+			WriteLog('update.pl: Building touched pages... $pagesProcessed = ' . $pagesProcessed);
 			$pagesProcessed += BuildTouchedPages();
+			WriteLog('update.pl: Finished building touched pages... $pagesProcessed = ' . $pagesProcessed);
 
 			$filesProcessedTotal += $filesProcessed;
 		} # while ($filesProcessed > 0 || $pagesProcessed > 1)
