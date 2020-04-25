@@ -833,24 +833,30 @@ sub GetItemVoteButtons { # get vote buttons for item in html form
 			}
 
 			if ($voteTotals{$quickTagCaption}) {
+				# $voteTotals{$quickTagCaption} is the number of tags of this type item has
+
 				$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
-#				$quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
+				# $quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
 			}
 
-			if ($returnTo) {
-				# set value for $returnTo placeholder
-				$tagButton =~ s/\$returnTo/$returnTo/g;
-			} else {
-				# remove entire returnto= parameter
-				$tagButton =~ s/&returnto=\$returnTo//g;
-			}
-			$tagButton =~ s/\$fileHash/$fileHash/g;
-			$tagButton =~ s/\$ballotTime/$ballotTime/g;
-			$tagButton =~ s/\$voteValue/$quickTagValue/g;
-			$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
-			$tagButton =~ s/\$checksum/$checksum/g;
+			# html/vote_buttons_only_assigned causes only assigned hashtags to display vote buttons
+			if (!GetConfig('html/vote_buttons_only_assigned') || $voteTotals{$quickTagCaption}) {
+				if ($returnTo) {
+					# set value for $returnTo placeholder
+					$tagButton =~ s/\$returnTo/$returnTo/g;
+				}
+				else {
+					# remove entire returnto= parameter
+					$tagButton =~ s/&returnto=\$returnTo//g;
+				}
+				$tagButton =~ s/\$fileHash/$fileHash/g;
+				$tagButton =~ s/\$ballotTime/$ballotTime/g;
+				$tagButton =~ s/\$voteValue/$quickTagValue/g;
+				$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
+				$tagButton =~ s/\$checksum/$checksum/g;
 
-			$tagButtons .= $tagButton;
+				$tagButtons .= $tagButton;
+			}
 		}
 	}
 
@@ -983,7 +989,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		} else {
 			# if not textart, just escape html characters
 			WriteLog('GetItemTemplate: calling FormatForWeb');
-			$message = FormatForWeb($message);
+			$message = FormatForWeb($message, $file{'file_hash'});
 		}
 
 		WriteLog('GetItemTemplate: $message is: ' . $message);
@@ -1507,8 +1513,11 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= '<span class=advanced><br><small>' . GetMenuFromList('menu_advanced') . '</small></span>';
 	#todo move html to template
 
+	my $selfLink = '/index.html';
+
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
-	
+	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
+
 	$htmlStart =~ s/\$topMenu/$topMenuTemplate/g;
 
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
@@ -3559,16 +3568,16 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	}
 }
 
-sub BuildTouchedPages {
+sub BuildTouchedPages { # builds pages returned by DBGetTouchedPages();
+# DBGetTouchedPages() means select * from page_touch where priority > 0
+
 	my $pagesLimit = GetConfig('admin/update/limit_page');
 	if (!$pagesLimit) {
 		WriteLog("WARNING: config/admin/update/limit_page missing!");
 		$pagesLimit = 1000;
 	}
-	state $pagesProcessed;
-	if (!$pagesProcessed) {
-		$pagesProcessed = 1;
-	}
+
+	my $pagesProcessed = 0;
 
 	# get a list of pages that have been touched since the last git_flow
 	# this is from the page_touch table
@@ -3611,7 +3620,7 @@ sub BuildTouchedPages {
 	}
 
 	return $pagesProcessed;
-}
+} # BuildTouchedPages
 
 
 my $arg1 = shift;
