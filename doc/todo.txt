@@ -1,3 +1,9 @@
+For an item page with a reply box
+	Move the voting/response hash tag buttons to the reply form
+
+During overthrow, automatically re-vouch previous admin
+	I think continuity is expected by most
+
 Make it so that all 500 bajillion index pages aren't rewritten at once
 	especially every time there's an update
 		when 'index' goes through, increase priority of each page by 1*(page_no/total_pages)
