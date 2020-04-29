@@ -545,7 +545,6 @@ if (!$arg1) {
 
 		unlink('cron.lock');
 
-
 		WriteLog("======update.pl DONE! ======");
 		WriteLog("Items/files processed: $filesProcessed");
 		WriteLog("Pages processed: $pagesProcessed");

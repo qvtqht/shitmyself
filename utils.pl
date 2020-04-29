@@ -34,7 +34,7 @@ my $IMAGEDIR = $HTMLDIR . '/txt';
 
 
 # make a list of some directories that need to exist
-my @dirsThatShouldExist = qw(log $HTMLDIR $HTMLDIR/txt $HTMLDIR/image $HTMLDIR/thumb cache $HTMLDIR/author $HTMLDIR/action $HTMLDIR/top config $HTMLDIR/upload);
+my @dirsThatShouldExist = ("log", "$HTMLDIR", "$HTMLDIR/txt", "$HTMLDIR/image", "$HTMLDIR/thumb", "cache", "$HTMLDIR/author", "$HTMLDIR/action", "$HTMLDIR/top", "config", "$HTMLDIR/upload");
 push @dirsThatShouldExist, 'cache/' . GetMyVersion();
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
 push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
@@ -127,7 +127,7 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 	}
 }
 
-#sub GitPipe { # runs git with proper prefix, sufix, and post-command pipe
+#sub GitPipe { # runs git with proper prefix, suffix, and post-command pipe
 ## $gitCommand = git command (excluding the 'git' part)
 ## $commandsFollowing = what follows after the git command (and after the command suffix)
 #
@@ -245,6 +245,8 @@ sub ParseDate { # takes $stringDate, returns epoch time
 
 sub EnsureSubdirs { # ensures that subdirectories for a file exist
 	# takes file's path as argument
+
+	# todo more validation
 
 	# todo remove requirement of external module
 	my $fullPath = shift;
@@ -495,8 +497,14 @@ sub GetRandomHash { # returns a random sha1-looking hash, lowercase
 	return $randomString;
 }
 
-sub GetTemplate { # returns specified template from HTML directory
-	# returns empty string if template not found
+sub GetTemplate { # returns specified template from template directory
+# returns empty string if template not found
+# here is how the template file is chosen:
+# 1. template's existence is checked in config/template/ or default/template/
+#    a. if it is found, it is THEN looked up in the config/theme/template/ and default/theme/template/
+#    b. if it is not found in the theme directory, then it is looked up in config/template/, and then default/template/
+# this allows themes to override existing templates, but not create new ones
+#
 	my $filename = shift;
 	chomp $filename;
 	#	$filename = "$SCRIPTDIR/template/$filename";
@@ -1062,6 +1070,7 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 	WriteLog("PutFile($file)");
 
 	WriteLog("PutFile: EnsureSubdirs($file)");
+
 	EnsureSubdirs($file);
 
 	WriteLog("PutFile: $file, ...");
@@ -2059,14 +2068,12 @@ sub AddItemToConfigList { # Adds a line to a list stored in config
 	PutConfig($configPath, $configList);
 }
 
-sub FormatForWeb { # $text, $itemHash ; replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
 	my $text = shift;
 
 	if (!$text) {
 		return '';
 	}
-
-	my $itemHash = shift;
 
 	$text = HtmlEscape($text);
 	#	$text =~ s/\n /<br>&nbsp;/g;
@@ -2075,20 +2082,11 @@ sub FormatForWeb { # $text, $itemHash ; replaces some spaces with &nbsp; to pres
 	$text =~ s/\n/<br>\n/g;
 
 	if (GetConfig('admin/html/allow_tag/code')) {
-		#todo this incorrectly replaces all <code></code> blocks at once, leaving the tags inside untouched
-		# $text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>&lt;code&gt;$1&lt;\/code&gt;<\/code>/msgi;
 		$text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>$1<\/code>/msgi;
 		# m = multi-line
 		# s = multi-line
 		# g = all instances
 		# i = case-insensitive
-	}
-
-	if ($itemHash) {
-		#### $text =~ s/\[([a-z])\]/GetItemVoteButtons($itemHash, $1)/ge;
-		#$text =~ s/\[([a-z]+)\]/GetItemVoteButtons($itemHash, 'yesno')/ge;
-		#todo make this work with tagset
-		#todo make this not conflict with the item hash linker
 	}
 
 	return $text;
