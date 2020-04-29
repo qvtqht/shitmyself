@@ -579,7 +579,7 @@ sub SqliteGetValue { # Returns the first column from the first row returned by s
 	WriteLog('SqliteGetValue: ' . $query);
 
 	my $sth = $dbh->prepare($query);
-	$sth->execute();
+	$sth->execute(@_);
 
 	my @aref = $sth->fetchrow_array();
 
@@ -1023,7 +1023,6 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 # page_touch table is used for determining which pages need to be refreshed
 # is called from IndexTextFile() to schedule updates for pages affected by a newly indexed item
 # if $pageName eq 'flush' then all the in-function stored queries are flushed to database.
-
 	state $query;
 	state @queryParams;
 
@@ -1412,7 +1411,7 @@ sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ to
 	push @queryParams, $key, $weight, $fileHash;
 }
 
-sub DBAddEventRecord { # add event record to database; $gitHash, $eventTime, $eventDuration, $signedBy
+sub DBAddEventRecord { # add event record to database; $itemHash, $eventTime, $eventDuration, $signedBy
 	state $query;
 	state @queryParams;
 
@@ -1470,10 +1469,7 @@ sub DBAddEventRecord { # add event record to database; $gitHash, $eventTime, $ev
 }
 
 
-sub DBAddLocationRecord { # Adds new location record from latlong token
-	# DBAddLocationRecord
-	# $gitHash, $latitude, $longitude, $signedBy
-
+sub DBAddLocationRecord { # $itemHash, $latitude, $longitude, $signedBy ; Adds new location record from latlong token
 	state $query;
 	state @queryParams;
 
@@ -1538,9 +1534,7 @@ sub DBAddLocationRecord { # Adds new location record from latlong token
 	push @queryParams, $fileHash, $latitude, $longitude, $signedBy;
 }
 
-sub DBAddBrcRecord { #adds record to brc table
-# $gitHash, $hours, $minutes, $street, $signedBy
-
+sub DBAddBrcRecord { # $fileHash, $hours, $minutes, $street, $signedBy ; adds record to brc table
 	state $query;
 	state @queryParams;
 
