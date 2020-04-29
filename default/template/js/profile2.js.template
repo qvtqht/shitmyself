@@ -176,11 +176,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 		var fieldset = document.getElementById('fldRegistration');
 
 		if (fieldset && document.createElement) {
-			// file selector (hidden, activated by [load from file] link
-
 			//alert('DEBUG: AddPrivateKeyLinks: checks pass');
-
-			//alert('DEBUG: AddPrivateKeyLinks: check for privateKey');
 
 			if (privateKey) {
 				//alert('DEBUG: AddPrivateKeyLinks: privateKey: true');
@@ -251,6 +247,8 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 
 				fieldset.appendChild(pLoadKeyFromTxt);
 			}
+		} else {
+			//alert('DEBUG: AddPrivateKeyLinks: checks FAILED');
 		}
 	}
 }
