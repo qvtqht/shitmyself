@@ -1,9 +1,16 @@
-<!-- authorinfo.template -->
+<!-- author_info.template -->
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2>
 				<font color=$colorTitlebarText><b>$authorName</b></font>
+			</td>
+		</tr>
+
+		<tr class=beginner>
+			<td colspan=2>
+				<p>This page belongs to the author listed below.</p>
+				<p>If you know them, use the Vouch button.</p>
 			</td>
 		</tr>
 
@@ -27,4 +34,4 @@
 	</table>
 </font>
 <p>
-<!-- / authorinfo.template -->
+<!-- / author_info.template -->

@@ -2160,7 +2160,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	if ($pageType eq 'author') {
-		my $authorInfoTemplate = GetTemplate('authorinfo.template');
+		my $authorInfoTemplate = GetTemplate('author_info.template');
 
 		my $authorAliasHtml = GetAlias($authorKey);
 		my $authorAvatarHtml = GetAvatar($authorKey);
