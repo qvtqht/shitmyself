@@ -354,12 +354,6 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 						}
 
-						if ($path == '/write.html') {
-							if (file_exists('write.php')) {
-								include('write.php');
-							}
-						}
-
 						if (
 							isset($_GET['message'])
 						)
@@ -489,6 +483,34 @@ if (GetConfig('admin/php/route_enable')) {
 
 						WriteLog('$html = file_get_contents($pathRel);');
 						$html = file_get_contents($pathRel);
+
+						if ($path == '/write.html') {
+							if (file_exists('write.php')) {
+								include('write.php');
+
+								if (isset($_GET['vouch']) && $_GET['vouch']) {
+									WriteLog('vouch request found');
+
+									$vouchValue = $_GET['vouch'];
+
+									WriteLog('$vouchValue = ' . $vouchValue);
+
+									// #todo validate $vouchValue
+									$vouchToken =
+										'vouch/' . $vouchValue . '/31337' .
+										"\n" .
+										"\n" .
+										"I vouch for this author because ...\n\n"
+									;
+
+									WriteLog('$vouchToken = ' . $vouchToken);
+
+									$html = str_ireplace('</textarea>', $vouchToken . '</textarea>' , $html);
+								} else {
+									WriteLog('vouch request not found');
+								}
+							}
+						}
 					} else {
 						WriteLog('$path not found, using HandleNotFound(' . $path . ',' . $pathRel . ')');
 						$html = HandleNotFound($path, $pathRel);
