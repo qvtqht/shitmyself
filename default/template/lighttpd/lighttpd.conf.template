@@ -35,7 +35,9 @@ mimetype.assign = (
 	".rdf"           =>  "application/xml",
 	".rss"           =>  "application/rss+xml",
 	".topojson"      =>  "application/json",
-	".xml"           =>  "application/xml"
+	".xml"           =>  "application/xml",
+
+	".manifest"      =>  "text/cache-manifest"
 )
 
 # which file types to compress
