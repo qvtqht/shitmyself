@@ -54,6 +54,10 @@ sub GenerateDialogPage { # generates page with dialog
 
 			$windowContents = GetTemplate('404.template');
 
+			# todo look up in list/looking_for
+			my $lookingFor = 'kittens';
+			$windowContents =~ s/looking for kittens/looking for $lookingFor/;
+
 			my $pageTemplate;
 			$pageTemplate = '';
 
@@ -589,7 +593,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		$file{'item_title'} = 'Untitled';
 	}
 
-	my $itemTemplate = GetItemTemplate(\%file);
+	my $itemTemplate = GetItemTemplate(\%file); # GetItemPage()
 
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
@@ -633,7 +637,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 			$$replyItem{'vote_return_to'} = $file{'file_hash'};
 
 			# Get the reply template			
-			my $replyTemplate = GetItemTemplate($replyItem);
+			my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
 			
 			# output it to debug
 			WriteLog('$replyTemplate');
@@ -659,7 +663,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 					WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
 					WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
 
-					my $subReplyTemplate = GetItemTemplate($subReplyItem);
+					my $subReplyTemplate = GetItemTemplate($subReplyItem); # GetItemPage()
 
 					if ($subReplyComma eq '') {
 						$subReplyComma = '<hr size=4>';
@@ -910,7 +914,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 	# verify that referenced file path exists
 	if (-e $file{'file_path'}) {
-		my $gitHash = $file{'file_hash'}; # file hash/item identifier
+		my $itemHash = $file{'file_hash'}; # file hash/item identifier
 		my $gpgKey = $file{'author_key'}; # author's fingerprint
 
 		my $isTextart = 0; # if textart, need extra formatting
@@ -989,17 +993,18 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		} else {
 			# if not textart, just escape html characters
 			WriteLog('GetItemTemplate: calling FormatForWeb');
-			$message = FormatForWeb($message, $file{'file_hash'});
+			$message = FormatForWeb($message);
 		}
-
-		WriteLog('GetItemTemplate: $message is: ' . $message);
-
-		# $message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1, '>>')/eg;
 
 		# if any references to other items, replace with link to item
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+		#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
 
-#		$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
+		if ($itemHash) {
+			$message =~ s/\[([a-z]+)\]/GetItemVoteButtons($itemHash, $1)/ge;
+		}
+
+		WriteLog('GetItemTemplate: $message is: ' . $message);
 
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
@@ -1071,8 +1076,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		$permalinkTxt =~ s/$HTMLDIR\//\//;
 
 		# set up $permalinkHtml, which links to the html page for the item
-		my $permalinkHtml = '/' . GetHtmlFilename($gitHash);
-		#		my $permalinkHtml = '/' . substr($gitHash, 0, 2) . '/' . substr($gitHash, 2) . ".html";
+		my $permalinkHtml = '/' . GetHtmlFilename($itemHash);
+		#		my $permalinkHtml = '/' . substr($itemHash, 0, 2) . '/' . substr($itemHash, 2) . ".html";
 		#		$permalinkTxt =~ s/^\.//;
 
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
@@ -1161,6 +1166,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 			$itemClass = "image";
 		} # $itemType eq 'image'
+		elsif ($itemType eq 'image') {
+			WriteLog('$itemType eq image, but images disabled');
+		}
 
 		my $replyLink = $permalinkHtml . '#reply'; #todo this doesn't need the url before #reply if it is on the item's page
 
@@ -2282,7 +2290,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		DBAddItemPage($row->{'file_hash'}, $pageType, $pageParam);
 
 		if ($file && -e $file) {
-			my $gitHash = $row->{'file_hash'};
+			my $itemHash = $row->{'file_hash'};
 
 			my $gpgKey = $row->{'author_key'};
 
@@ -2298,7 +2306,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			my $isAdmin = 0;
 
 			my $message;
-			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
 			WriteLog('$messageCacheName (1) = ' . $messageCacheName);
 			if ($gpgKey) {
 				$message = GetFile($messageCacheName);
@@ -2329,7 +2337,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			my $itemTemplate = '';
 			if ($message) {
 #				$row->{'show_quick_vote'} = 1;
-				$itemTemplate = GetItemTemplate($row);
+				$itemTemplate = GetItemTemplate($row); # GetReadPage()
 			} else {
 				$itemTemplate = '<p>Problem decoding message</p>';
 				WriteLog('Something happened and there is no $message where I expected it... Oh well, moving on.');
@@ -2451,10 +2459,10 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		my $file = $row->{'file_path'};
 
 		if ($file && -e $file) {
-			my $gitHash = $row->{'file_hash'};
+			my $itemHash = $row->{'file_hash'};
 
 			WriteLog('DBAddItemPage (2)');
-			#DBAddItemPage('index', $currentPageNumber, $gitHash);
+			#DBAddItemPage('index', $currentPageNumber, $itemHash);
 
 			my $gpgKey = $row->{'author_key'};
 
@@ -2470,7 +2478,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			my $isAdmin = 0;
 
 			my $message;
-			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$gitHash";
+			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
 			WriteLog('$messageCacheName (3) = ' . $messageCacheName);
 			if (-e $messageCacheName) {
 				$message = GetFile($messageCacheName);
@@ -2484,7 +2492,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$row->{'display_full_hash'} = 0;
 
 			my $itemTemplate;
-			$itemTemplate = GetItemTemplate($row);
+			$itemTemplate = GetItemTemplate($row); # GetIndexPage()
 
 			$itemList = $itemList . $itemComma . $itemTemplate;
 
@@ -2671,9 +2679,12 @@ sub MakeJsTestPages {
 
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
+# js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
 
 	PutHtmlFile("test.html", GetTemplate('test.template'));
+
+	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
 
 	MakeJsTestPages();
 
@@ -2690,18 +2701,24 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("stats.html", $statsPage);
 
-	my $clockTest = '<form>'.GetTemplate('clock.template').'</form>';
-	my $clockTestPage = '<html><body>';
-	$clockTestPage .= $clockTest;
-	$clockTestPage .= '</body></html>';
-	$clockTestPage = InjectJs($clockTestPage, qw(clock));
-	PutHtmlFile("clock.html", $clockTestPage);
-
-	my $fourOhFourPage = GenerateDialogPage('404');#GetTemplate('404.template');
-	if (GetConfig('html/clock')) {
-		$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
+	{ # clock test page
+		my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
+		my $clockTestPage = '<html><body>';
+		$clockTestPage .= $clockTest;
+		$clockTestPage .= '</body></html>';
+		$clockTestPage = InjectJs($clockTestPage, qw(clock));
+		PutHtmlFile("clock.html", $clockTestPage);
 	}
-	PutHtmlFile("404.html", $fourOhFourPage);
+
+	{
+		my $fourOhFourPage = GenerateDialogPage('404'); #GetTemplate('404.template');
+		if (GetConfig('html/clock')) {
+			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
+		}
+		PutHtmlFile("404.html", $fourOhFourPage);
+	}
+
+
 
 	# Profile page
 	my $identityPage2 = GetIdentityPage2();
@@ -2718,47 +2735,27 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Target page for the submit page
 	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
 #	$postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
-
 	$postPage .= GetTemplate('maincontent.template');
-
 	my $postTemplate = GetTemplate('page/post.template');
-
 	$postPage .= $postTemplate;
-
 	$postPage .= GetPageFooter();
-
 	$postPage = InjectJs($postPage, qw(settings avatar post));
-
 	if (GetConfig('admin/js/enable')) {
 		$postPage =~ s/<body /<body onload="makeRefLink();" /;
 		$postPage =~ s/<body>/<body onload="makeRefLink();">/;
 	}
-	
 	WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
-
 	PutHtmlFile("post.html", $postPage);
 	
 	
 	# Ok page
 	my $okPage;
-
 	$okPage .= GetPageHeader('OK', 'OK', 'default');
-
 	my $windowContents = GetTemplate('action_ok.template');
-
 	$okPage .= GetWindowTemplate('Data Received', '', '', $windowContents, 'Ready');
-
 	$okPage .= GetPageFooter();
-
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
-
-	#$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="5; url=\/blank.html"><\/head>/;
-
 	$okPage = InjectJs($okPage, qw(settings));
-
-	#PutHtmlFile("ok.html", $okPage);
-	#PutHtmlFile("action/vote.html", $okPage);
-	#PutHtmlFile("action/vote2.html", $okPage);
 	PutHtmlFile("action/event.html", $okPage);
 		
 	{
@@ -2965,6 +2962,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	WriteLog('MakeSummaryPages() END');
 }
 
+sub GetUploadWindow {
+	my $uploadForm = GetTemplate('form/upload.template');
+
+	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, 'Ready');
+
+	return $uploadWindow;
+}
+
 sub GetWriteForm {
 	my $writeForm = GetTemplate('form/write4.template');
 
@@ -3030,8 +3035,10 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	my $writeForm = GetWriteForm();
-
 	$txtIndex .= $writeForm;
+
+	my $uploadForm = GetUploadWindow();
+	$txtIndex .= $uploadForm;
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		my $itemCounts = GetTemplate('form/itemcount.template');
@@ -3549,11 +3556,13 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	#
 	# index pages (queue)
 	elsif ($pageType eq 'index') {
-		WriteIndexPages();
+		#WriteIndexPages();
 	}
 	#
 	# rss feed
 	elsif ($pageType eq 'rss') {
+		#todo break out into own module and/or auto-generate rss for all relevant pages
+
 		my %queryParams;
 
 		$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';

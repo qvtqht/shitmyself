@@ -3,7 +3,14 @@ include_once('utils.php');
 	
 if (!empty($_FILES['uploaded_file'])) {
 	$path = "image/";
+
+	WriteLog('$path = ' . $path);
+
 	$path = $path . basename( $_FILES['uploaded_file']['name']);
+
+	WriteLog('$path = ' . $path);
+
+	WriteLog('trying to move_uploaded_file(' . $_FILES['uploaded_file']['tmp_name'] . ',' . $path . ')');
 
 	if (move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path)) {
 		// remember current working directory, we'll need it later
@@ -50,27 +57,3 @@ if (!empty($_FILES['uploaded_file'])) {
 
 	print WriteLog('');
 }
-
-?>
-
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Upload your files</title>
-	<style type="text/css">
-	<!--
-		* {
-			font-size: x-large;
-		}
-	-->
-	</style>
-</head>
-<body>
-  <form enctype="multipart/form-data" action="upload.php" method="POST">
-	<p>Upload your file</p>
-	<input type="file" name="uploaded_file"></input>
-	<br><br>
-	<input type="submit" value="Upload"></input>
-  </form>
-</body>
-</html>
