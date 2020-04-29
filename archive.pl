@@ -36,26 +36,26 @@ my $TXTDIR = $HTMLDIR . '/txt';
 my $IMAGEDIR = $HTMLDIR . '/image';
 
 {
-	print("rename($TXTDIR, $ARCHIVE_DATE_DIR/txt\n");
+	print("rename($TXTDIR, $ARCHIVE_DATE_DIR/txt)\n");
 	rename("$TXTDIR", "$ARCHIVE_DATE_DIR/txt");
 
-	print("rename($IMAGEDIR, $ARCHIVE_DATE_DIR/image\n");
+	print("rename($IMAGEDIR, $ARCHIVE_DATE_DIR/image)\n");
 	rename("$IMAGEDIR", "$ARCHIVE_DATE_DIR/image");
 
 	# this needs to happen after txt and image above
-	print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html\n");
+	print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html)\n");
 	rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
 
-	print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log\n");
+	print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
 	rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
 
 	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
 	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"");  #todo make faster
 
-	print("mkdir($HTMLDIR)");
+	print("mkdir($HTMLDIR)\n");
 	mkdir("$HTMLDIR");
 
-	print("mkdir($TXTDIR)");
+	print("mkdir($TXTDIR)\n");
 	mkdir("$TXTDIR");
 
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
