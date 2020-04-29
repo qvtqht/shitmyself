@@ -1,3 +1,13 @@
+What year was browser released quiz
+	Can be multiple choice
+		Voting takes you to the item, which tells you if correct?
+			
+
+Extend request times for new submissions
+	How to do it without keeping connection open?
+		Redirector page which says "Click this button in 15 seconds"
+			If clicked before 15 seconds, says 25 seconds, then 45, etc.
+			Client-side, it can count down if JS available
 
 retroactive registration
 

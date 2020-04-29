@@ -442,7 +442,7 @@ default/template/about.template
 default/template/htaccess.template
 default/template/clock_ssi.template
 default/template/votebutton.template
-default/template/authorinfo.template
+default/template/author_info.template
 default/template/topmenu.template
 default/template/authorlink.template
 default/template/menuitem.template
