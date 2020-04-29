@@ -383,7 +383,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (!GetAdminKey() && GetConfig('admin/admin_imprint') && $gpgKey && $alias) {
 			PutFile('./admin.key', $txt);
 
-			my $newAdminMessage = '/txt/' . GetTime() . '_newadmin.txt';
+			my $newAdminMessage = $TXTDIR . '/' . GetTime() . '_newadmin.txt';
 			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n" . GetTime());
 			ServerSign($newAdminMessage);
 		}
@@ -1557,7 +1557,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			$addedTimeIsNew = 1;
 		}
 
-		DBAddPageTouch('rss', 0);
+		DBAddPageTouch('rss', 1);
 
 		my $itemName = TrimPath($file);
 
