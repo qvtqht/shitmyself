@@ -10,3 +10,5 @@ ErrorDocument 404 /404.html
 
 #RewriteEngine On
 #RewriteRule ^action/.+ /ok.html
+
+AddType text/cache-manifest .manifest

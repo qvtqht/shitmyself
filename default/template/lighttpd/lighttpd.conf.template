@@ -17,6 +17,7 @@ server.port = $serverPort
 server.max-request-field-size = 16384 
 
 # mime types
+
 mimetype.assign = (
 	".html" => "text/html",
 	".htm" => "text/html",
