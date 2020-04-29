@@ -93,7 +93,7 @@ function writeOnload() { // onload handler for write page
 	}
 }
 
-function writeSubmit(t) { // called when user submits write form
+function writeSubmit (t) { // called when user submits write form
 	//alert('DEBUG: writeSubmit() begin');
 
 	if (window.getPrivateKey && window.signMessage) {
