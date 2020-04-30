@@ -1,0 +1,5 @@
+<!-- header_wrapper.template -->
+<tr class=heading>
+	$windowHeadings
+</tr>
+<!-- / header_wrapper.template -->
