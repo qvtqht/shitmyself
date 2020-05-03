@@ -1,5 +1,5 @@
 <!-- form/upload.template -->
-<form enctype="multipart/form-data" action="upload.php" method="POST">
+<form enctype="multipart/form-data" action="/upload.php" method="POST">
 	<p>Upload your file</p>
 	<p><input type="file" name="uploaded_file"></p>
 	<p><input type="submit" value="Upload"></p>
