@@ -22,11 +22,14 @@ mimetype.assign = (
 	".html" => "text/html",
 	".htm" => "text/html",
 	".txt" => "text/plain",
+	".css" => "text/css",
+	".js" => "text/javascript",
+
 	".jpg" => "image/jpeg",
 	".png" => "image/png",
 	".gif" => "image/gif",
-	".css" => "text/css",
-	".js" => "text/javascript",
+	".bmp" => "image/bmp",
+	".svg" => "image/svg+xml",
 
 	".atom"          =>  "application/atom+xml",
 	".geojson"       =>  "application/vnd.geo+json",
