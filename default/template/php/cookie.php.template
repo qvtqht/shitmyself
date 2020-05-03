@@ -29,7 +29,7 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 	unsetcookie2('cookie');
 	unsetcookie2('checksum');
 
-	$serverResponseUnregistered = StoreServerResponse('You have signed out.');
+	$serverResponseUnregistered = StoreServerResponse('Signed out. Thank you for visiting.');
 
 	header('Location: /profile.html?message=' . $serverResponseUnregistered);
 
