@@ -31,8 +31,9 @@ button, input[type=button], input[type=submit], input[type=checkbox] {
 }
 a:focus, a:active {
     color: #40ff40;
-    background-color: green;
+    background-color: #004000;
 }
 input:focus, textarea:focus {
-    background-color: green;
+    background-color: #004000;
+    color: #40ff40;
 }
