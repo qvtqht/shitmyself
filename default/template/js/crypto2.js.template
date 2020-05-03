@@ -251,8 +251,8 @@ function setPrivateKeyFromTxt (newKey) { // set the current private key and refr
     window.location = '/profile.html?' + myFingerprint;
 
     // this will submit public key as an item to the board
-    if (window.PubkeyPing) {
-    	PubkeyPing();
+    if (window.PubKeyPing) {
+    	PubKeyPing();
     } else {
     	window.location = '/write.html#inspubkey';
 	}
