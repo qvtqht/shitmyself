@@ -4,7 +4,7 @@
 
 <p>If you want to register or sign in, go to <a href="./profile.html" style="text-decoration-color: #cce99c; border-bottom: 3pt solid #cce99c">Profile</a>.</p>
 
-<p>If you want to use the clunky moderation interface, go to <a href="./settings.html" style="text-decoration-color: #f4f707; border-bottom: 3pt solid #f4f707">Settings</a>.</p>
+<p>If you want to use the moderation interface, go to <a href="./settings.html" style="text-decoration-color: #f4f707; border-bottom: 3pt solid #f4f707">Settings</a>.</p>
 
 <p>Posts and comments may not appear on the site immediately, for technical reasons.</p>
 
@@ -12,6 +12,7 @@
 
 <p><a href="/manual.html">Manual</a></p>
 <p><a href="/manual_advanced.html">Advanced Manual</a></p>
+<p><a href="/manual_tokens.html">Tokens Reference</a></p>
 <p><a href="/data.html">Data</a></p>
 <p><a href="/jstest1.html">Browser JavaScript Diagnostics</a></p>
 
