@@ -10,7 +10,7 @@ if (window.getUserFp) {
 
 		if (!sp) {
 			sp = document.getElementById('replySignedContainer');
-			actName = 'Reply as ';
+			actName = 'Sign as ';
 		}
 
 		actName = actName + getAvatar();
