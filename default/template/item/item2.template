@@ -14,8 +14,8 @@
 		<tr class=statusbar>
 			<td>
 				<a href="$permalinkHtml">$addedTime</a>;
-				$authorLink
-				<a class=advanced href="$permalinkTxt"><tt>$fileHashShort</tt></a>;
+				$authorLink;
+				<span class=advanced><a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;</span>
 				<a href="$permalinkHtml#reply" onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount)</a>;
 				$itemFlagButton
 			</td>
