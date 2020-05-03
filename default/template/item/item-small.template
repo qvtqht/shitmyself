@@ -6,9 +6,9 @@
 		<td>
 			<p>$itemText</p>
 			<p>
-				<a href="$permalinkHtml">$addedTime</a>
-				$authorLink
-				<a href="$permalinkHtml#reply" class=beginner><b>reply</b></a>
+				<a href="$permalinkHtml">$addedTime</a>;
+				$authorLink;
+				<span class=beginner><a href="$permalinkHtml#reply"><b>reply</b></a></span>;
 				$itemFlagButton
 			</p>
 
