@@ -20,8 +20,8 @@ function writeOnload() { // onload handler for write page
             privKey = getPrivateKey();
         }
 
-        //alert('DEBUG: privKey = ' + privKey);
-        //alert('DEBUG: pubKey = ' + pubKey);
+        //alert('DEBUG: privKey = ' + !!privKey);
+        //alert('DEBUG: pubKey = ' + !!pubKey);
 
         if (privKey) {
             //alert('DEBUG: privKey was true, adding options...');
@@ -29,25 +29,36 @@ function writeOnload() { // onload handler for write page
 			if (document.getElementById('spanSignAs')) {
 				var gt = unescape('%3E');
 				if (window.getAvatar) {
-					document.getElementById('spanSignAs').innerHTML =
-					    '<p' + gt + '[x] Sign message as ' + getAvatar() + '</p' + gt;
-				} else {
-					document.getElementById('spanSignAs').innerHTML =
-					    '<p' + gt + '[x] Sign message as logged in user</p' + gt;
+					var spanSignAs = document.getElementById('spanSignAs');
+
+					var lblSignAs = document.createElement('label');
+					lblSignAs.setAttribute('for', 'chkSignAs');
+
+					var chkSignAs = document.createElement('input');
+					//chkSignAs.setAttribute('name', 'signAs');
+					chkSignAs.setAttribute('id', 'chkSignAs');
+					chkSignAs.setAttribute('type', 'checkbox');
+					chkSignAs.setAttribute('checked', 1);
+
+					lblSignAs.innerHTML = 'Sign message as ' + getAvatar();
+
+					lblSignAs.appendChild(chkSignAs);
+
+					spanSignAs.appendChild(lblSignAs);
 				}
 			}
-
-			if (document.getElementById('addtext')) {
-				document.getElementById('addtext').value = 'Sign Message and Send';
-			}
+//
+//			if (document.getElementById('addtext')) {
+//				document.getElementById('addtext').value = 'Sign Message and Send';
+//			}
 
         }
 
         if (pubKey) {
             //alert('DEBUG: pubKey was true, adding options...');
 
-            if (window.PubkeyPing) {
-            	PubkeyPing();
+            if (window.PubKeyPing) {
+            	PubKeyPing();
             }
 //
 //            var spanInsPubKey = document.getElementById('spanInsPubKey')
@@ -101,8 +112,15 @@ function writeSubmit (t) { // called when user submits write form
 		if (getPrivateKey()) {
 			//alert('DEBUG: getPrivateKey() is true, writeSubmit() Calling signMessage()');
 
-			return signMessage();
-			// once the message is signed, callback will submit the form
+			if (document.getElementById) {
+				if (document.getElementById('chkSignAs').checked) {
+					return signMessage();
+					// once the message is signed, callback will submit the form
+				} else {
+					return true;
+				}
+			}
+
 		} else {
 			//alert('DEBUG: no private key, basic submit');
 		}
