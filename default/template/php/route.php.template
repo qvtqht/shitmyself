@@ -452,7 +452,7 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('Overthrow requested');
 
 							if (GetConfig('admin/allow_deop')) {
-								if (time() - GetConfig('admin/admin_last_action') > 60) {
+								if (time() - GetConfig('admin/admin_last_action') > 7200) {
 									WriteLog('Overthrow conditions met');
 
 									//PutConfig('admin/admin_last_action', 0);
@@ -639,8 +639,9 @@ if (GetConfig('admin/php/route_enable')) {
 				// add onkeydown event to body tag, which responds to escape and spacebar keys
 				// spacebar is added for qutebrowser's normal mode, which doesn't let esc through
 				// known issue: if there's non-32 whitespace, this may not work right
-				$replaceWhat = '<body ';
 				$replaceWith = '<body onkeydown="if (event.keyCode && event.keyCode == 27) { if (window.bodyEscPress) { return bodyEscPress(); } }"';
+
+				$replaceWhat = '<body ';
 				$html = str_replace($replaceWhat, $replaceWith . ' ', $html);
 				$replaceWhat = '<body>';
 				$html = str_replace($replaceWhat, $replaceWith . '>', $html);
