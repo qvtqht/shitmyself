@@ -17,46 +17,59 @@ if (!empty($_FILES['uploaded_file'])) {
 		echo "File with that name already exists!";
 		//#todo handle
 	} else {
-		if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path)) {
-			WriteLog("There was an error uploading the file, please try again!");
-			echo "There was an error uploading the file, please try again!";
+		WriteLog('$_FILES: ' . print_r($_FILES, 1));
+
+		if ($_FILES['uploaded_file']['error']) {
+			echo "There was an error uploading the file.";
+
+			if ($_FILES['uploaded_file']['error'] == 1) {
+				echo "The problem may be related to the file's size";
+			}
 		} else {
-			// remember current working directory, we'll need it later
-			$pwd = getcwd();
-			WriteLog('$pwd = ' . $pwd);
 
-			if (GetConfig('admin/php/update_on_post')) {
-				WriteLog("cd .. ; ./update.pl \"html/$path\"");
-				WriteLog(`cd .. ; ./update.pl "html/$path"`);
-			}
+			$moveFileResult = move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path);
 
-			if ($pwd) {
-				WriteLog("cd $pwd");
-				WriteLog(`cd $pwd`);
-			}
+			if (!$moveFileResult) {
+				WriteLog("There was an error uploading the file, please try again! move_uploaded_file() returned: [$moveFileResult]");
+				echo "There was a problem uploading the file, please try again!";
+			} else {
+				// remember current working directory, we'll need it later
+				$pwd = getcwd();
+				WriteLog('$pwd = ' . $pwd);
 
-			$hash = sha1_file($path);
+				if (GetConfig('admin/php/update_on_post')) {
+					WriteLog("cd .. ; ./update.pl \"html/$path\"");
+					WriteLog(`cd .. ; ./update.pl "html/$path"`);
+				}
 
-			// path for new html file
-			$fileHtmlPath = './' . GetHtmlFilename($hash);
+				if ($pwd) {
+					WriteLog("cd $pwd");
+					WriteLog(`cd $pwd`);
+				}
 
-			// path for client's (browser's) path to html file
-			$fileUrlPath = '/' . GetHtmlFilename($hash);
+				$hash = sha1_file($path);
 
-			$redirectUrl = '';
+				// path for new html file
+				$fileHtmlPath = './' . GetHtmlFilename($hash);
 
-			if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
-				$itemPostedServerResponse = "Success! New image posted!";
-				//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
+				// path for client's (browser's) path to html file
+				$fileUrlPath = '/' . GetHtmlFilename($hash);
 
-				$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
+				$redirectUrl = '';
 
-				$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
-			}
+				if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
+					$itemPostedServerResponse = "Success! New image posted!";
+					//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
-			if ($redirectUrl) {
-				WriteLog('Location: ' . $redirectUrl);
-				header('Location: ' . $redirectUrl);
+					$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
+
+					$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
+				}
+
+				if ($redirectUrl) {
+					WriteLog('Location: ' . $redirectUrl);
+					header('Location: ' . $redirectUrl);
+				}
 			}
 		}
 	}
