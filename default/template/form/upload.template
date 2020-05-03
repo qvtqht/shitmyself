@@ -3,7 +3,7 @@
 	<p>Upload your file</p>
 	<p><input type="file" name="uploaded_file"></p>
 	<p><input type="submit" value="Upload"></p>
-	<p>Allowed files: jpg, gif, png</p>
+	<p>Allowed files: jpg, gif, png, bmp, svg</p>
 	<p>Only images supported, video support later</p>
 </form>
 <!-- / form/upload.template -->
