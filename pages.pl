@@ -710,7 +710,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 
 		$fileContents = GetFile($file{'file_path'});
 
-		$replyForm = GetTemplate('form/reply3.template');
+		$replyForm = GetTemplate('form/reply.template');
 #		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
 		$replyFooter = '';
 		$replyTo = $file{'file_hash'};
