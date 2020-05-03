@@ -1001,7 +1001,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
 
 		if ($itemHash) {
-			$message =~ s/\[([a-z]+)\]/GetItemVoteButtons($itemHash, $1)/ge;
+			$message =~ s/\[\[([a-z]+)\]\]/GetItemVoteButtons($itemHash, $1)/ge;
 		}
 
 		WriteLog('GetItemTemplate: $message is: ' . $message);
@@ -1038,12 +1038,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# otherwise, determine template based on item length (config/item_long_threshold)
 			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
 			if (length($message) > $itemLongThreshold) {
-				# if item is long, use template/item/itemlong.template
-				$itemTemplate = GetTemplate("item/item2.template");
-			} else {
-				# otherwise use template/item/item.template
-				$itemTemplate = GetTemplate("item/item2.template");
+				$message = substr($message, 0, $itemLongThreshold) . '[...]';
+				# if item is long, trim it
 			}
+			$itemTemplate = GetTemplate("item/item2.template");
 		}
 
 		my $authorUrl; # author's profile url
@@ -1157,9 +1155,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			my $imageContainer = GetTemplate('item/container/image.template');
 
 			my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
+			my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
 			my $imageAlt = $itemTitle;
 
 			$imageContainer =~ s/\$imageUrl/$imageUrl/g;
+			$imageContainer =~ s/\$imageSmallUrl/$imageSmallUrl/g;
 			$imageContainer =~ s/\$imageAlt/$imageAlt/g;
 
 			$itemText = $imageContainer;
@@ -1521,7 +1521,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= '<span class=advanced><br><small>' . GetMenuFromList('menu_advanced') . '</small></span>';
 	#todo move html to template
 
-	my $selfLink = '/index.html';
+	my $selfLink = '/settings.html';
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
@@ -1722,6 +1722,8 @@ sub GetStatsTable() {
 	$filesTotal += trim(`find $IMAGEDIR | grep \.png\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.jpg\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.gif\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.bmp\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.svg\$ | wc -l`);
 
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
@@ -1749,6 +1751,16 @@ sub GetStatsPage { # returns html for stats page
 	$statsPage = InjectJs($statsPage, qw(settings avatar timestamp pingback profile));
 
 	return $statsPage;
+}
+
+sub EnableJsDebug { # $scriptTemplate ; enables javascript debug output by uncommenting any lines which begin with //alert('DEBUG:
+	my $scriptTemplate = shift;
+
+	# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+	# $scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/g;
+
+
+	return $scriptTemplate;
 }
 
 sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
@@ -1837,7 +1849,9 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			#
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+
+			#$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+			$scriptTemplate = EnableJsDebug($scriptTemplate);
 		}
 
 		# add to the snowball of javascript
@@ -1957,7 +1971,10 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 			#
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+
+			#$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+			$scriptTemplate = EnableJsDebug($scriptTemplate);
+
 		}
 
 		# add to the snowball of javascript
@@ -2836,22 +2853,30 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		PutHtmlFile("manual_advanced.html", $tfmPage);
 	}
 
+    {
+        # Tokens Reference page
+        my $tokensPage = GetPageHeader("Tokens Reference", "Tokens Reference", 'manual_tokens');
 
-	# Tokens Reference page
-	my $tokensPage = GetPageHeader("Tokens Reference", "Tokens Reference", 'manual_tokens');
+        $tokensPage .= GetTemplate('maincontent.template');
 
-	$tokensPage .= GetTemplate('maincontent.template');
+        my $tokensPageContent = GetTemplate('page/manual_tokens.template');
 
-	my $tokensPageTemplate = GetTemplate('page/manual_tokens.template');
+        my $tokensPageWindow = GetWindowTemplate(
+            'Tokens Reference',
+            '', #menubar
+            '', #columns
+			$tokensPageContent,
+            'Ready'
+        );
 
-	$tokensPage .= $tokensPageTemplate;
+        $tokensPage .= $tokensPageWindow;
 
-	$tokensPage .= GetPageFooter();
+        $tokensPage .= GetPageFooter();
 
-	$tokensPage = InjectJs($tokensPage, qw(settings avatar));
+        $tokensPage = InjectJs($tokensPage, qw(settings avatar));
 
-	PutHtmlFile("manual_tokens.html", $tokensPage);
-
+        PutHtmlFile("manual_tokens.html", $tokensPage);
+    }
 
 	# Blank page
 	PutHtmlFile("blank.html", "");
@@ -2882,14 +2907,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
 	if (GetConfig('admin/js/debug')) {
-		$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		#$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		$crypto2JsTemplate = EnableJsDebug($crypto2JsTemplate);
 	}
 	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
 	my $avatarJsTemplate = GetTemplate('js/avatar.js.template');
 	if (GetConfig('admin/js/debug')) {
-		$avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		# $avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		$avatarJsTemplate = EnableJsDebug($avatarJsTemplate);
+
 	}
 	PutHtmlFile("avatar.js", $avatarJsTemplate);
 
@@ -2920,7 +2948,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		PutFile($PHPDIR . '/test2.php', $test2PhpTemplate);
 
 		my $adminPhpTemplate = GetTemplate('php/admin.php.template');
-		PutFile($PHPDIR . '/admin.php', $adminPhpTemplate);
+		PutFile($PHPDIR . '/config.php', $adminPhpTemplate);
 
 		my $testPhpTemplate = GetTemplate('php/test.php.template');
 		PutFile($PHPDIR . '/test.php', $testPhpTemplate);
@@ -3037,8 +3065,11 @@ sub GetWritePage { # returns html for write page
 	my $writeForm = GetWriteForm();
 	$txtIndex .= $writeForm;
 
-	my $uploadForm = GetUploadWindow();
-	$txtIndex .= $uploadForm;
+	if (GetConfig('admin/image/enable')) {
+		# add upload form if images module is enabled
+		my $uploadForm = GetUploadWindow();
+		$txtIndex .= $uploadForm;
+	}
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		my $itemCounts = GetTemplate('form/itemcount.template');
@@ -3556,7 +3587,7 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	#
 	# index pages (queue)
 	elsif ($pageType eq 'index') {
-		#WriteIndexPages();
+		WriteIndexPages();
 	}
 	#
 	# rss feed
