@@ -1,6 +1,6 @@
 // begin server_response.js.template
 
-function serverMessageOk(t) { // function which hides server response message
+function serverMessageOk (t) { // function which hides server response message
 // can be called with t pointing to OK button -or- 0
 // when t==0, function will look for it on the page
 
@@ -67,7 +67,7 @@ function bodyEscPress(keyCode) { // called when user presses esc on a page with 
 	//alert('DEBUG: bodyEscPress(keyCode): keyCode = ' + keyCode);
 
 	if (document.getElementById) {
-		serverMessageOk(document.getElementById('smo'));
+		serverMessageOk(document.getElementById('sro'));
 	} else {
 		serverMessageOk();
 	}
