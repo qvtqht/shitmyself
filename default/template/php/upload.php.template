@@ -6,9 +6,11 @@ if (!empty($_FILES['uploaded_file'])) {
 
 	WriteLog('$path = ' . $path);
 
-	$path = $path . basename( $_FILES['uploaded_file']['name']);
+	$path = $path . basename($_FILES['uploaded_file']['name']);
 
 	WriteLog('$path = ' . $path);
+
+	WriteLog(print_r($_FILES, 1));
 
 	WriteLog('trying to move_uploaded_file(' . $_FILES['uploaded_file']['tmp_name'] . ',' . $path . ')');
 
@@ -26,7 +28,6 @@ if (!empty($_FILES['uploaded_file'])) {
 				echo "The problem may be related to the file's size";
 			}
 		} else {
-
 			$moveFileResult = move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path);
 
 			if (!$moveFileResult) {
