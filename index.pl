@@ -637,6 +637,105 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
+		if (GetConfig('admin/token/my_name_is')) {
+		# "my name is" token
+			if ($hasCookie) {
+			   #my @myNameIsLines = ($message =~ m/^(my name is )/([A-Za-z0-9 _]+))$/mg);
+				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_ ]+)\r?$/mg);
+				# my @setConfigLines = ($message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg);
+
+
+				WriteLog('@myNameIsLines = ' . scalar(@myNameIsLines));
+
+				if (@myNameIsLines) {
+					#my $lineCount = @myNameIsLines / 2;
+
+					while (@myNameIsLines) {
+						my $myNameIsToken = shift @myNameIsLines;
+						my $nameGiven = shift @myNameIsLines;
+
+						chomp $nameGiven;
+
+						my $reconLine;
+						$reconLine = $myNameIsToken . $nameGiven;
+
+						if ($nameGiven && $hasCookie) {
+							DBAddKeyAlias($hasCookie, $nameGiven, $fileHash);
+
+							UnlinkCache('avatar/' . $hasCookie);
+							UnlinkCache('avatar.color/' . $hasCookie);
+							UnlinkCache('pavatar/' . $hasCookie);
+
+							DBAddKeyAlias('flush');
+
+							DBAddPageTouch('author', $hasCookie);
+
+							DBAddPageTouch('scores', 1);
+
+							DBAddPageTouch('stats', 1);
+						}
+
+
+						$message =~ s/$reconLine/[My name is: $nameGiven for $hasCookie.]/g;
+					}
+				}
+			}
+		}
+
+		if (GetConfig('admin/token/title')) {
+		# look for "title: ..." token
+			if ($hasParent) {
+				WriteLog('$hasParent was true for ' . $fileHash);
+
+				WriteLog('$message = ' . $message);
+
+                my @setTitleToLines = ($message =~ m/^(title: )([a-zA-Z0-9_ ]+)\r?$/msig);
+
+				WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
+
+				if (@setTitleToLines) {
+					#my $lineCount = @setTitleToLines / 2;
+
+					while (@setTitleToLines) {
+						my $setTitleToToken = shift @setTitleToLines;
+						my $titleGiven = shift @setTitleToLines;
+
+						chomp $setTitleToToken;
+						chomp $titleGiven;
+
+						my $reconLine;
+						$reconLine = $setTitleToToken . $titleGiven;
+
+						if ($titleGiven && $hasParent) {
+						    chomp $titleGiven;
+
+							foreach my $itemParent (@itemParents) {
+								DBAddTitle($itemParent, $titleGiven);
+
+								DBAddTitle('flush'); #todo refactor this out
+							}
+
+							if ($hasCookie) {
+								DBAddPageTouch('author', $hasCookie);
+							}
+
+							if ($isSigned) {
+								DBAddPageTouch('author', $gpgKey);
+							}
+
+							DBAddPageTouch('scores', 1);
+
+							DBAddPageTouch('stats', 1);
+						}
+
+						$message =~ s/$reconLine/[Title: $titleGiven]/g;
+					}
+				}
+			} else {
+				WriteLog('$hasParent was false for ' . $fileHash);
+			}
+		}
+
 		#look for setconfig and resetconfig
 		if (GetConfig('admin/token/setconfig') && $message) {
 			if (
