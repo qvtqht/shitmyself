@@ -1312,7 +1312,7 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 	push @queryParams, $itemHash, $parentHash;
 }
 
-sub DBAddItem { # Adds a new item to database
+sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError ; Adds a new item to database
 # $filePath = path to text file
 # $itemName = item's 'name' (currently hash)
 # $authorKey = author's gpg fingerprint
