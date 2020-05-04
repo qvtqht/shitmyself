@@ -434,6 +434,12 @@ if (!$arg1) {
 				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jpg\$";
 				push @files, split("\n", `$findCommand`);
 
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.bmp\$";
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.svg\$";
+				push @files, split("\n", `$findCommand`);
+
 				# if ($filesLimit > scalar(@files)) {
 				# 	$filesLimit = scalar(@files);
 				# }
@@ -537,6 +543,10 @@ if (!$arg1) {
 			$filesLeft += `$imageFilesLeftCommand`; #todo
 			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.jpg" | wc -l';
 			$filesLeft += `$imageFilesLeftCommand`; #todo
+			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.bmp" | wc -l';
+			$filesLeft += `$imageFilesLeftCommand`; #todo
+			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.svg" | wc -l';
+			$filesLeft += `$imageFilesLeftCommand`; #todo
 		}
 
 		WriteLog('update.pl: $filesLeft = ' . $filesLeft);
@@ -570,7 +580,13 @@ if (!$arg1) {
 			}
 		}
 
-		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.png' || lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' || lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg') { #$arg1 =~ m/\.txt$/
+		if (
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.png' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.bmp' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.svg'
+		) { #$arg1 =~ m/\.txt$/
 
 			my $filesProcessed = ProcessImageFile($arg1);
 
