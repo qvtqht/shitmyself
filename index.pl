@@ -1674,6 +1674,14 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 				my $convertCommandResult = `$convertCommand`;
 				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
 			}
+			# make 42x42 thumbnail
+			if (!-e "$HTMLDIR/thumb/thumb_42_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 42x42 -strip $HTMLDIR/thumb/thumb_42_$fileHash.gif";
+				WriteLog('IndexImageFile: ' . $convertCommand);
+
+				my $convertCommandResult = `$convertCommand`;
+				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			}
 
 			# # make 48x48 thumbnail
 			# if (!-e "$HTMLDIR/thumb/thumb_48_$fileHash.gif") {
