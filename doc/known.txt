@@ -1,5 +1,11 @@
 Known Issues
 ============
+For titles and self-assigned names, they take precedence unpredictably, but usually in order of posting.
+	Your best bet is to flag and remove the old value
+	This affects the following tokens:
+		title:
+		my name is
+		
 
 In Opera 12.x, registration fails
 	This is due to OpenPGP.js throwing an error
