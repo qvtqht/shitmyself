@@ -1581,8 +1581,16 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 	my $fileHash;            # git's hash of file blob, used as identifier
 
 
-	if (-e $file && (substr(lc($file), length($file) -4, 4) eq ".jpg" || substr(lc($file), length($file) -4, 4) eq ".gif" || substr(lc($file), length($file) -4, 4) eq ".png")) {
-	#if (-e $file && (substr(lc($file), length($file) -4, 4) eq ".jpg" || substr(lc($file), length($file) -4, 4) eq ".gif")) {
+	if (
+		-e $file &&
+		(
+			substr(lc($file), length($file) -4, 4) eq ".jpg" ||
+			substr(lc($file), length($file) -4, 4) eq ".gif" ||
+			substr(lc($file), length($file) -4, 4) eq ".png" ||
+			substr(lc($file), length($file) -4, 4) eq ".bmp" ||
+			substr(lc($file), length($file) -4, 4) eq ".svg"
+		)
+	) {
 		my $fileHash = GetFileHash($file);
 
 		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
