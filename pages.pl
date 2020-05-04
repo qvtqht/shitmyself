@@ -3191,13 +3191,14 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings utils profile2));
-
 	if (GetConfig('admin/js/enable')) {
+		$txtIndex = InjectJs($txtIndex, qw(settings utils profile2));
+
+		# these two lines are different, regex is hard sometimes
 		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
 		$txtIndex =~ s/<body>/<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }">/;
 	} else {
-
+		# js is disabled
 	}
 
 	#
