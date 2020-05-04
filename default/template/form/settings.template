@@ -20,13 +20,13 @@
 					<fieldset>
 						<legend>Accessibility Mode</legend>
 						<h3><a href="/settings.html?light=1">Light Mode</a></h3>
-						<p>
+						<p class=beginner>
 							Light mode is designed for accessibility <br>
 							by any user, device, connection, client, or service.
 						</p>
 
 						<h3><a href="/settings.html?light=0">Pretty Mode</a></h3>
-						<p>
+						<p class=beginner>
 							Pretty mode has more ding-dongs, <br>
 							and takes more resources.
 						</p>
@@ -40,7 +40,7 @@
 							<input type=submit name=ui value="Intermediate" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
 							<input type=submit name=ui class=advanced value="Advanced" onclick="if (window.modeChange) { return modeChange('advanced'); }">
 							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
-							<input type=submit name=ui class=advanced name=ui value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
+							<input type=submit name=ui class=advanced value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
 						</nobr></p>
 					</fieldset>
 
