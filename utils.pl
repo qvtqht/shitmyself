@@ -472,7 +472,13 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 
 	WriteLog("GetFileHash($fileName)");
 
-	return sha1_hex(GetFile($fileName));
+	my $fileContent = GetFile($fileName);
+	#
+	# if (index($fileContent, "\n-- \n") > -1) {
+	# 	$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
+	# }
+
+	return sha1_hex($fileContent);
 	#
 	#	my $gitOutput = GitPipe('hash-object -w "' . $fileName. '"');
 	#
@@ -497,7 +503,7 @@ sub GetRandomHash { # returns a random sha1-looking hash, lowercase
 	return $randomString;
 }
 
-sub GetTemplate { # returns specified template from template directory
+sub GetTemplate { # $templateName ; returns specified template from template directory
 # returns empty string if template not found
 # here is how the template file is chosen:
 # 1. template's existence is checked in config/template/ or default/template/
@@ -1336,6 +1342,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		# it may be wiser to use str_replace here
 		$content =~ s/src="\//src="$subDir/ig;
 		$content =~ s/href="\//href="$subDir/ig;
+		$content =~ s/action="\//action="$subDir/ig;
 		$content =~ s/\.src = '\//.src = '$subDir/ig;
 		$content =~ s/\.location = '\//.location = '$subDir/ig;
 	}
