@@ -805,49 +805,37 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
 							);
 
-							if
-							(
-								#
-									( # either user is admin ...
-										IsAdmin($gpgKey)
-									)
-								||
-									( # ... or it can't be under admin/
-										substr(lc($configKey), 0, 5) ne 'admin'
-									)
-								&&
-									( # not admin, but may be allowed to edit key ...
-										#
-											( # if signed and signed editing allowed
-												$isSigned
-													&&
-													GetConfig('admin/signed_can_config')
-											)
-										||
-											( # if cookied and cookied editing allowed
-												$hasCookie
-													&&
-												GetConfig('admin/cookied_can_config')
-											)
-										||
-											( # ... or if anyone is allowed to edit
-												GetConfig('admin/anyone_can_config')
-											)
-										#
-									)
-								#
-							)
-							{
+							my $canConfig = 0;
+							if (IsAdmin($gpgKey)) {
+								$canConfig = 1;
+							}
+							if (substr(lc($configKey), 0, 5) ne 'admin') {
+								if (GetConfig('admin/signed_can_config')) {
+									if ($isSigned) {
+										$canConfig = 1;
+									}
+								}
+								if (GetConfig('admin/cookied_can_config')) {
+									if ($hasCookie) {
+										$canConfig = 1;
+									}
+								}
+								if (GetConfig('admin/anyone_can_config')) {
+									$canConfig = 1;
+								}
+							}
+
+							if ($canConfig)	{
 								# checks passed, we're going to update/reset a config entry
 								DBAddVoteRecord($fileHash, $addedTime, 'config');
 
 								if ($configAction eq 'resetconfig') {
 									DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-									$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
+									$message =~ s/$reconLine/Successful config reset: $configKey will be reset to default./g;
 								}
 								else {
 									DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-									$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
+									$message =~ s/$reconLine/Successful config change: $configKey = $configValue/g;
 								}
 
 								$detokenedMessage =~ s/$reconLine//g;
