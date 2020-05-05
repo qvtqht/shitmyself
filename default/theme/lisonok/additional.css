@@ -45,12 +45,6 @@ a:focus, a:active, input:focus, input:active {
     width: 50%;
     border: $borderDialog;
 }
-.titlebar, body {
-}
-.dialog {
-	border: 8pt $colorWindow solid;
-	border-radius: 8pt;
-}
 #txtClock {
 	background-color: #404040;
 	color: #40ff00;
