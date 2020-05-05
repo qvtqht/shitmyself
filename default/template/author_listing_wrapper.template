@@ -2,14 +2,8 @@
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor=$colorWindow class=dialog>
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
-			<td colspan=6>
+			<td colspan=3>
 				<font color=$colorTitlebarText><b>Top Scores</b></font>
-			</td>
-		</tr>
-
-		<tr class=menubar>
-			<td colspan=6>
-				<p><a href="/profile.html">Profile</a><br>
 			</td>
 		</tr>
 
@@ -22,7 +16,7 @@
 		$authorListings
 
 		<tr class="statusbar">
-			<td colspan="6">
+			<td colspan=3>
 				<p>$authorCountMessage</p>
 			</td>
 		</tr>
