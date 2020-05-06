@@ -341,11 +341,35 @@ function LoadPrivateKeyFromTxt (text) {
 	}
 }
 
-function SavePrivateKeyAsTxt() {
+function StripToFilename (text) { // strips provided text to only filename-valid characters
+	if (!text) return '';
+
+	text = text.trim();
+
+	if (!text) return '';
+
+	var charsAllowed = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_';
+
+	for (var i = 0; i < text.length - 1; i++) {
+		if (charsAllowed.indexOf(text.substr(i, 1)) > -1) {
+			// ok
+		} else {
+			text = text.substr(0, i) + '' + text.substr(i + 1);
+			i = i - 1;
+		}
+	}
+
+	return text;
+}
+
+function SavePrivateKeyAsTxt() { // initiates "download" of private key as text file
 	var myFp = getUserFp();
+	var myUsername = getUsername();
 	var text = getPrivateKey();
 
-	DownloadAsTxt(myFp + '.txt', text);
+	myUsername = StripToFilename(myUsername);
+
+	return DownloadAsTxt(myUsername + '_' + myFp + '.txt', text);
 }
 
 function CallLoadPrivateKey() {
