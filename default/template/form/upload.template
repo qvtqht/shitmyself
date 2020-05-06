@@ -1,4 +1,4 @@
-<!-- form/upload.template -->
+<!-- form/upload.template ; file upload form -->
 <form enctype="multipart/form-data" action="/upload.php" method="POST">
 	<p>Upload your file</p>
 	<p><input type="file" name="uploaded_file"></p>
