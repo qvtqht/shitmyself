@@ -258,6 +258,24 @@ function setPrivateKeyFromTxt (newKey) { // set the current private key and refr
 	}
 }
 
+function getUsername () { // returns pgp username
+// #todo cache it
+    var openpgp = window.openpgp;
+
+    if (openpgp) {
+		// read it into pgp object
+		var privKeyObj = openpgp.key.readArmored(getPrivateKey());
+
+		// get the public key out of it
+		var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+		var myUsername = pubKeyObj.users[0].userId.userid;
+
+		return myUsername;
+	}
+
+	return '';
+}
 
 function signMessage() { // find the compose textbox and sign whatever is in it
 // if message is already signed or is a public key, exit
