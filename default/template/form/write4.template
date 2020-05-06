@@ -43,7 +43,7 @@
 							>
 						</p>
 
-						<span class=advanced id=spanSignAs></span>
+						<span id=spanSignAs></span>
 
 						<p class=advanced>
 							<label for=chkRepublish>
