@@ -62,7 +62,7 @@ if (window.localStorage && document.getElementById) {
 	setAva();
 }
 
-function getAvatar() { // retrieve previously built avatar from localstorage (already in html form)
+function getAvatar () { // retrieve previously built avatar from localStorage (already in html form)
 	var myAvatar = localStorage.getItem("avatar");
 	if (!myAvatar || myAvatar.length == 0) {
 		return '';
