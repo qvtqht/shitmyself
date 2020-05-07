@@ -13,9 +13,9 @@
 				<td class=content>
 					<p>
 					<textarea
-						wrap=hard rows=4 cols=40 style="width: 100%;" id=comment name=comment
+						wrap=soft rows=4 cols=40 style="width: 100%;" id=comment name=comment
 					>$replyFooter</textarea><br>
-					<input type=submit value="Send Reply" onclick="this.value='Meditate...'; return true;">
+					<input type=submit value="Send Reply" onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }">
 					<span id=replySignedContainer></span>
 					<input type=hidden name=replyto id=replyto value="$replyTo">
 				</td>
