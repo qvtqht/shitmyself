@@ -700,7 +700,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 		$txtIndex .= $itemTemplate;
 	}
 
-	if (GetConfig('replies') == 1) {
+	if (GetConfig('replies')) {
 		my $replyForm;
 		my $replyTag = GetTemplate('replytag.template');
 		my $replyFooter;
@@ -744,7 +744,7 @@ sub GetItemPage {	# returns html for individual item page. %file as parameter
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write_buttons timestamp));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write write_buttons timestamp));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -2744,6 +2744,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Settings page
 	my $settingsPage = GetSettingsPage();
 	PutHtmlFile("settings.html", $settingsPage);
+
+	# Access page
+	my $accessPage = GetAccessPage();
+	PutHtmlFile("access.html", $accessPage);
 
 	# More page
 	my $etcPage = GetEtcPage();

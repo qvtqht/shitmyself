@@ -1,15 +1,66 @@
-<!--# write.template #-->
+<!-- write.template -->
 
-<form action="/post.html" id=compose class=submit name=submit>
-	<span id=writeintro class=beginner><!--
-	<p>What you write below is public... You <i>could</i> say the whole world is watching. Be nice, please.</p>
-	<p>You can also submit commands, signed messages, public keys, and more! See manual and source code for details.</p>-->
-	</span>
-	<label for="comment">Write something here. Not too long. Press button to send. <a href="/manual.html">Have you seen
-		the manual? Clicking here will take you there</a></label><br>
-	<textarea wrap=wrap id=comment title="Enter some text here, press button to send." rows=9 cols=60 name=comment autofocus>$prefillText</textarea><br>
-	<span id=signAndPost></span>
-	<input type=submit value="Post Without Signing" id=addtext>
-	$extraFields
+<form action="/post.html" id=compose class=submit name=compose>
+	<font face=arial>
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+				<td>
+					<font color=$colorTitlebarText><b>New Message</b></font><br>
+				</td>
+			</tr>
+
+			<tr class=body>
+				<td class=content>
+					<fieldset>
+						<span id=writeintro></span>
+
+						<noscript>
+							<p>
+								If you are submitting a long text, please click here.
+							</p>
+						</noscript>
+
+						<label for="comment" class=beginner>Enter some text to share.<br></label>
+
+						<textarea
+							class=txtarea
+							id=comment
+							title="Enter some text to share here."
+							rows=9
+							cols=32
+							name=comment
+							autofocus
+							wrap=soft
+						>$initText</textarea><br>
+
+						<p>
+							<input
+								type=submit
+								onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"
+								value="Send Message"
+								name=addtext
+								id=addtext
+							>
+						</p>
+
+						<span id=spanSignAs></span>
+
+						<p class=advanced>
+							<label for=chkRepublish>
+								<input type=checkbox name=republish id=chkRepublish>
+								Republish to other known sites
+							</label>
+						</p>
+
+						<span>
+							<p id=lblWriteLengthWarning class=warning style="display: none">
+							</p>
+						</span>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+	</font>
 </form>
-<!--# / write.template #-->
+
+<!--/ write4.template -->
