@@ -13,7 +13,7 @@
 				<td class=content>
 					<p>
 					<textarea
-						wrap=wrap rows=4 cols=40 style="width: 100%;" id=comment name=comment
+						wrap=hard rows=4 cols=40 style="width: 100%;" id=comment name=comment
 					>$replyFooter</textarea><br>
 					<input type=submit value="Send Reply" onclick="this.value='Meditate...'; return true;">
 					<span id=replySignedContainer></span>
