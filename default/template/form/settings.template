@@ -18,21 +18,6 @@
 			<tr class=body>
 				<td class=content>
 					<fieldset>
-						<legend>Accessibility Mode</legend>
-						<h3><a href="/settings.html?light=1">Light Mode</a></h3>
-						<p class=beginner>
-							Light mode is designed for accessibility <br>
-							by any user, device, connection, client, or service.
-						</p>
-
-						<h3><a href="/settings.html?light=0">Pretty Mode</a></h3>
-						<p class=beginner>
-							Pretty mode has more ding-dongs, <br>
-							and takes more resources.
-						</p>
-					</fieldset>
-
-					<fieldset>
 						<legend>Interface Mode<br></legend>
 
 						<p><nobr>
