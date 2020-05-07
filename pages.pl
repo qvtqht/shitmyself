@@ -3169,7 +3169,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $profileWindowContents = GetTemplate('form/profile2.template');
+	my $profileWindowContents = GetTemplate('form/profile.template');
 
 	if (GetConfig('admin/gpg/use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
