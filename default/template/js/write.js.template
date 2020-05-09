@@ -41,7 +41,7 @@ function writeOnload() { // onload handler for write page
 					chkSignAs.setAttribute('checked', 1);
 					// this checkbox being checked means signMessage() is called in writeSubmit()
 
-					lblSignAs.innerHTML = 'Sign message as ' + getAvatar();
+					lblSignAs.innerHTML = 'Sign as ' + getAvatar();
 
 					lblSignAs.appendChild(chkSignAs);
 
