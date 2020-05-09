@@ -1,0 +1,45 @@
+document.createElement('hr');
+
+
+<hr size=3><!-- item-small.template -->
+<a name=cfb894d9>
+<table cellspacing=0 cellpadding=6 border=0 bgcolor="#c0c0c0" class=dialog>
+	<!-- item_title_link2.template -->
+<tr bgcolor=#000066 class=titlebar style="border:0;">
+	<td>
+		<b>
+			<font color=#ffffff>Untitled</font>
+		</b>
+	</td>
+</tr>
+<!-- / item_title_link2.template -->
+
+	<tr>
+		<td>
+			<p><!-- admin.template -->
+<font color=red>#approve</font>
+<!-- / admin.template -->
+</p>
+			<p>
+				<a href="/cf/b8/cfb894d9.html"><span title=1587987183 class=timestamp>07:33</span></a>
+				[<a class=avatar href="/author/DC1CB998E637C0B9/"><span class=avatar><span class=username><font color=#cc3300>Anonymous</font></span></span></a>]
+				<a href="/cf/b8/cfb894d9.html#reply" class=beginner><b>reply</b></a>
+				<!-- vote2button.template -->
+<a onclick="if (window.signVote) { var gt = unescape('%3E'); return signVote(this, gt+gt+'cfb894d9470da2445ef8c7a69dfd777b4c9b6381\n#flag'); }"
+	href="/post.html?comment=%23flag&replyto=cfb894d9470da2445ef8c7a69dfd777b4c9b6381&returnto=5ce26a172be30c9db396194741cf3cb97242423d"
+	class="tag-flag">#flag</a>;
+<!-- / vote2button.template -->
+<!-- vote2button.template -->
+<a onclick="if (window.signVote) { var gt = unescape('%3E'); return signVote(this, gt+gt+'cfb894d9470da2445ef8c7a69dfd777b4c9b6381\n#approve'); }"
+	href="/post.html?comment=%23approve&replyto=cfb894d9470da2445ef8c7a69dfd777b4c9b6381&returnto=5ce26a172be30c9db396194741cf3cb97242423d"
+	>#approve</a>;
+<!-- / vote2button.template -->
+
+			</p>
+
+
+		</td>
+	</tr>
+</table>
+</a>
+<!-- / item-small.template -->
