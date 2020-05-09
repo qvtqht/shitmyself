@@ -4,7 +4,7 @@
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 			<td colspan=2><small>
 			<b>
-				<a tabindex=2 href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a>;
+				<a tabindex=2 href="#maincontent" name=top><font color=$colorTitlebarText>Skip to main content</font></a>;
 				<a href="$selfLink?light=1" tabindex=3><font color=$colorTitlebarText>Accessibility mode</font></a>
 			</b>
 			</small><br></td>

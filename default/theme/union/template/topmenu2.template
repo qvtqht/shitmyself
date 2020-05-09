@@ -5,7 +5,7 @@
 			<td><small>
 				<b>
 					<small>
-					<a tabindex=2 href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a>;
+					<a tabindex=2 name=top href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a>;
 					<a href="$selfLink?light=1" tabindex=3><font color=$colorTitlebarText>Accessibility mode</font></a>
 					</small>
 				</b>

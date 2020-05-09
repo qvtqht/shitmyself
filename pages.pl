@@ -102,7 +102,7 @@ sub GetStylesheet { # returns style template based on config
 	return $styleSheet;
 }
 
-sub GetAuthorLink { # returns avatar'ed link for an author id
+sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author id
 	my $gpgKey = shift; # author's fingerprint
 	my $showPlain = shift; # 1 to display avatar without colors
 
@@ -520,231 +520,249 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 	return $txtIndex;
 }
 
-sub GetItemPage {	# returns html for individual item page. %file as parameter
-	# %file {
-	#		file_hash = git's file hash
-	#		file_path = path where text file is stored
-	#		item_title = title, if any
-	#		author_key = author's fingerprint
-	#		vote_buttons = 1 to display vote buttons
-	#		display_full_hash = 1 to display full hash for permalink (otherwise shortened)
-	#		show_vote_summary = 1 to display all votes recieved separately from vote buttons
-	#		show_quick_vote = 1 to display quick vote buttons
-	#		vote_buttons = 1 to display vote buttons (checkboxes)
-	#		format_avatars = 1 to format fingerprint-looking strings into avatars
-	#		child_count = number of child items for this item
-	#		template_name = name of template to use (item.template is default)
-	#		remove_token = reply token to remove from message (used for displaying replies)
-	#	}
+sub GetItemPage {
+    # returns html for individual item page. %file as parameter
+    # %file {
+    #		file_hash = git's file hash
+    #		file_path = path where text file is stored
+    #		item_title = title, if any
+    #		author_key = author's fingerprint
+    #		vote_buttons = 1 to display vote buttons
+    #		display_full_hash = 1 to display full hash for permalink (otherwise shortened)
+    #		show_vote_summary = 1 to display all votes recieved separately from vote buttons
+    #		show_quick_vote = 1 to display quick vote buttons
+    #		vote_buttons = 1 to display vote buttons (checkboxes)
+    #		format_avatars = 1 to format fingerprint-looking strings into avatars
+    #		child_count = number of child items for this item
+    #		template_name = name of template to use (item.template is default)
+    #		remove_token = reply token to remove from message (used for displaying replies)
+    #	}
 
-	# we're expecting a reference to a hash as the first parameter
-	# todo sanity checks here, it will probably break if anything else is supplied
-	my %file = %{shift @_};
-	
-	# create $fileHash and $filePath variables, since we'll be using them a lot
-	my $fileHash = $file{'file_hash'};
-	my $filePath = $file{'file_path'};
+    # we're expecting a reference to a hash as the first parameter
+    # todo sanity checks here, it will probably break if anything else is supplied
+    my %file = %{shift @_};
 
-	WriteLog("GetItemPage(" . $file{'file_path'} . ")");
+    # create $fileHash and $filePath variables, since we'll be using them a lot
+    my $fileHash = $file{'file_hash'};
+    my $filePath = $file{'file_path'};
 
-	# initialize variable which will contain page html
-	my $txtIndex = "";
+    WriteLog("GetItemPage(" . $file{'file_path'} . ")");
 
-	my $title = ''; # title for <title>
-	my $titleHtml = ''; # title for <h1>
+    # initialize variable which will contain page html
+    my $txtIndex = "";
 
-	if (defined($file{'item_title'}) && $file{'item_title'}) {
-		WriteLog("GetItemPage: defined(item_title) = true!");
+    my $title = '';     # title for <title>
+    my $titleHtml = ''; # title for <h1>
 
-		$title = HtmlEscape($file{'item_title'});
-		$titleHtml = HtmlEscape($file{'item_title'});
+    if (defined($file{'item_title'}) && $file{'item_title'}) {
+        WriteLog("GetItemPage: defined(item_title) = true!");
 
-		$title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
-	} else {
-		WriteLog("GetItemPage: defined(item_title) = false!");
+        $title = HtmlEscape($file{'item_title'});
+        $titleHtml = HtmlEscape($file{'item_title'});
 
-		$title = $file{'file_hash'};
-		$titleHtml = $file{'file_hash'};
-	}
+        $title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
+    }
+    else {
+        WriteLog("GetItemPage: defined(item_title) = false!");
 
-	if (defined($file{'author_key'}) && $file{'author_key'}) {
-		# todo the .txt extension should not be hard-coded
-		my $alias = GetAlias($file{'author_key'});
-		$alias = HtmlEscape($alias);
+        $title = $file{'file_hash'};
+        $titleHtml = $file{'file_hash'};
+    }
 
-		$title .= " by $alias";
-	}
+    if (defined($file{'author_key'}) && $file{'author_key'}) {
+        # todo the .txt extension should not be hard-coded
+        my $alias = GetAlias($file{'author_key'});
+        $alias = HtmlEscape($alias);
 
-	# Get the HTML page template
-	my $htmlStart = GetPageHeader($title, $titleHtml, 'item');
+        $title .= " by $alias";
+    }
 
-	$txtIndex .= $htmlStart;
+    # Get the HTML page template
+    my $htmlStart = GetPageHeader($title, $titleHtml, 'item');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+    $txtIndex .= $htmlStart;
 
-	#$file{'vote_buttons'} = 1;
-	$file{'display_full_hash'} = 1;
-	$file{'show_vote_summary'} = 1;
-	$file{'show_quick_vote'} = 1;
-	$file{'vote_buttons'} = 1;
-	$file{'format_avatars'} = 1;
+    $txtIndex .= GetTemplate('maincontent.template');
 
-	if (!$file{'item_title'}) {
-		$file{'item_title'} = 'Untitled';
-	}
+    #$file{'vote_buttons'} = 1;
+    $file{'display_full_hash'} = 1;
+    $file{'show_vote_summary'} = 1;
+    $file{'show_quick_vote'} = 1;
+    $file{'vote_buttons'} = 1;
+    $file{'format_avatars'} = 1;
 
-	my $itemTemplate = GetItemTemplate(\%file); # GetItemPage()
+    if (!$file{'item_title'}) {
+        $file{'item_title'} = 'Untitled';
+    }
 
-	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
+    my $itemTemplate = GetItemTemplate(\%file); # GetItemPage()
 
-	$file{'show_easyfind'} = 1;
+    WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
-	# if this item has a child_count, we want to print all the child items below
-	if ($file{'child_count'}) {
-		# get item's children (replies) and store in @itemReplies
-		my @itemReplies = DBGetItemReplies($file{'file_hash'});
+    $file{'show_easyfind'} = 1;
 
-		#debug message
-		WriteLog('@itemReplies = ' . @itemReplies);
+    # if this item has a child_count, we want to print all the child items below
+    if ($file{'child_count'}) {
+        # get item's children (replies) and store in @itemReplies
+        my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
-		# this will contain the replies as html output
-		my $allReplies = '';
+        #debug message
+        WriteLog('@itemReplies = ' . @itemReplies);
 
-		# start with a horizontal rule to separate from above content
-		$allReplies = '<hr size=3>' . $allReplies;
+        # this will contain the replies as html output
+        my $allReplies = '';
 
-		# this will store separator between items.
-		# first item doesn't need separator above it
-		my $replyComma = '';
+        # start with a horizontal rule to separate from above content
+        $allReplies = '<hr size=3>' . $allReplies;
 
-		foreach my $replyItem (@itemReplies) {
-			# output info about item to debug
-			WriteLog('$replyItem: ' . $replyItem);
-			foreach my $replyVar ($replyItem) {
-				WriteLog($replyVar);
-			}
+        # this will store separator between items.
+        # first item doesn't need separator above it
+        my $replyComma = '';
 
-			DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
+        foreach my $replyItem (@itemReplies) {
+            # output info about item to debug
+            WriteLog('$replyItem: ' . $replyItem);
+            foreach my $replyVar ($replyItem) {
+                WriteLog($replyVar);
+            }
 
-			# use item-small template to display the reply items
-			$$replyItem{'template_name'} = 'item/item-small.template';
-			
-			# if the child item contains a reply token for our parent item
-			# we want to remove it, to reduce redundant information on the page
-			# to do this, we pass the remove_token parameter to GetItemTemplate() below
-			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
+            DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
 
-			$$replyItem{'vote_return_to'} = $file{'file_hash'};
+            # use item-small template to display the reply items
+            $$replyItem{'template_name'} = 'item/item-small.template';
 
-			# Get the reply template			
-			my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
-			
-			# output it to debug
-			WriteLog('$replyTemplate');
-			WriteLog($replyTemplate);
+            # if the child item contains a reply token for our parent item
+            # we want to remove it, to reduce redundant information on the page
+            # to do this, we pass the remove_token parameter to GetItemTemplate() below
+            $$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
 
-			# if the reply item has children also, output the children
-			# threads are currently limited to 2 steps
-			# eventually, recurdsion can be used to output more levels
-			if ($$replyItem{'child_count'}) {
-				my $subRepliesTemplate = ''; # will store the sub-replies html output
-													  
-				my $subReplyComma = ''; # separator for sub-replies
+            $$replyItem{'vote_return_to'} = $file{'file_hash'};
 
-				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
-				foreach my $subReplyItem (@subReplies) {
-					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
+            $$replyItem{'trim_long_text'} = 1;
 
-					$$subReplyItem{'template_name'} = 'item/item-small.template';
-					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
-					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
+            # Get the reply template
+            my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
 
-					WriteLog('$$subReplyItem{\'remove_token\'} = ' . $$subReplyItem{'remove_token'});
-					WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
-					WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
+            # output it to debug
+            WriteLog('$replyTemplate');
+            WriteLog($replyTemplate);
 
-					my $subReplyTemplate = GetItemTemplate($subReplyItem); # GetItemPage()
+            # if the reply item has children also, output the children
+            # threads are currently limited to 2 steps
+            # eventually, recurdsion can be used to output more levels
+            if ($$replyItem{'child_count'}) {
+                my $subRepliesTemplate = ''; # will store the sub-replies html output
 
-					if ($subReplyComma eq '') {
-						$subReplyComma = '<hr size=4>';
-					} else {
-						$subReplyTemplate = $subReplyComma . $replyTemplate;
-					}
+                my $subReplyComma = ''; # separator for sub-replies
 
-					$subRepliesTemplate .= $subReplyTemplate;
-				}
-				$replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
-			} else {
-				$replyTemplate =~ s/<replies><\/replies>//;
-			}
+                my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
+                foreach my $subReplyItem (@subReplies) {
+                    DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
 
-			if ($replyTemplate) {
-				if ($replyComma eq '') {
-					$replyComma = '<hr size=5>';
-#					$replyComma = '<p>';
-				} else {
-					$replyTemplate = $replyComma . $replyTemplate;
-				}
+                    $$subReplyItem{'template_name'} = 'item/item-small.template';
+                    $$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
+                    $$subReplyItem{'vote_return_to'} = $file{'file_hash'};
 
-				$allReplies .= $replyTemplate;
-			} else {
-				WriteLog('Warning: replyTemplate is missing for some reason!');
-			}
+                    WriteLog('$$subReplyItem{\'remove_token\'} = ' . $$subReplyItem{'remove_token'});
+                    WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
+                    WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
+
+                    $$subReplyItem{'trim_long_text'} = 1;
+
+                    my $subReplyTemplate = GetItemTemplate($subReplyItem); # GetItemPage()
+
+                    if ($subReplyComma eq '') {
+                        $subReplyComma = '<hr size=4>';
+                    }
+                    else {
+                        $subReplyTemplate = $subReplyComma . $replyTemplate;
+                    }
+
+                    $subRepliesTemplate .= $subReplyTemplate;
+                }
+                $replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
+            }
+            else {
+                $replyTemplate =~ s/<replies><\/replies>//;
+            }
+
+            if ($replyTemplate) {
+                if ($replyComma eq '') {
+                    $replyComma = '<hr size=5>';
+                    #					$replyComma = '<p>';
+                }
+                else {
+                    $replyTemplate = $replyComma . $replyTemplate;
+                }
+
+                $allReplies .= $replyTemplate;
+            }
+            else {
+                WriteLog('Warning: replyTemplate is missing for some reason!');
+            }
+        }
+
+        $itemTemplate =~ s/<replies><\/replies>/$allReplies/;
+    }
+
+    if ($itemTemplate) {
+        $txtIndex .= $itemTemplate;
+    }
+
+    if (GetConfig('replies')) {
+        my $replyForm;
+        my $replyTag = GetTemplate('replytag.template');
+        my $replyFooter;
+        my $replyTo;
+        my $prefillText;
+        my $fileContents;
+
+        $fileContents = GetFile($file{'file_path'});
+
+        $replyForm = GetTemplate('form/reply.template');
+        #		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
+        $replyFooter = '';
+        $replyTo = $file{'file_hash'};
+
+        if (GetConfig('admin/js/enable')) {
+			$replyForm =~ s/(\<input type=submit )/$1 onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"/i;
 		}
 
-		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
-	}
+        $prefillText = "";
 
-	
-	if ($itemTemplate) {
-		$txtIndex .= $itemTemplate;
-	}
+        if (!$prefillText) {
+            $prefillText = "";
+        }
 
-	if (GetConfig('replies')) {
-		my $replyForm;
-		my $replyTag = GetTemplate('replytag.template');
-		my $replyFooter;
-		my $replyTo;
-		my $prefillText;
-		my $fileContents;
+        $replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
+        # $replyForm =~ s/\$extraFields/$replyTag/g;
+        $replyForm =~ s/\$replyFooter/$replyFooter/g;
+        $replyForm =~ s/\$replyTo/$replyTo/g;
+        # $replyForm =~ s/\$prefillText/$prefillText/g;
 
-		$fileContents = GetFile($file{'file_path'});
+        if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
+            # my $postHtml = '\/post\.html';
+            $replyForm =~ s/\/post\.html/\/post.php/g;
+        }
 
-		$replyForm = GetTemplate('form/reply.template');
-#		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
-		$replyFooter = '';
-		$replyTo = $file{'file_hash'};
+        if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
+            $replyForm = AddAttributeToTag($replyForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
+        }
 
-		$prefillText = "";
+        #$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
 
-		if (!$prefillText) {
-			$prefillText = "";
-		}
+        $txtIndex .= $replyForm;
+    }
 
-		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
-		# $replyForm =~ s/\$extraFields/$replyTag/g;
-		$replyForm =~ s/\$replyFooter/$replyFooter/g;
-		$replyForm =~ s/\$replyTo/$replyTo/g;
-		# $replyForm =~ s/\$prefillText/$prefillText/g;
+    # end page with footer
+    $txtIndex .= GetPageFooter();
 
-		if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
-			# my $postHtml = '\/post\.html';
-			$replyForm =~ s/\/post\.html/\/post.php/g;
-		}
-
-		if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
-			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
-		}
-
-		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
-
-		$txtIndex .= $replyForm;
-	}
-
-	# end page with footer
-	$txtIndex .= GetPageFooter();
-
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write write_buttons timestamp));
+    if (GetConfig('replies')) {
+    	# if replies is on, include write.js and write_buttons.js
+        $txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write write_buttons timestamp));
+    } else {
+        $txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit timestamp));
+    }
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -908,6 +926,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# show_easyfind = show/hide easyfind words
 	# item_type = 'txt' or 'image'
 	# vote_return_to = page to redirect user to after voting, either item hash or url
+	# trim_long_text = trim text if it is longer than config/number/item_long_threshold
 
 	# get %file hash from supplied parameters
 	my %file = %{shift @_};
@@ -935,7 +954,16 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		# get formatted/post-processed message for this item
 		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
-		WriteLog($message);
+		# WriteLog($message);
+
+		if (exists($file{'trim_long_text'}) && $file{'trim_long_text'}) {
+			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
+
+			if (length($message) > $itemLongThreshold) {
+				$message = substr($message, 0, $itemLongThreshold) . "\n" . '[ Long message has been trimmed ]';
+				# if item is long, trim it
+			}
+		}
 
 		if ($file{'item_type'}) {
 			$itemType = $file{'item_type'};
@@ -1035,12 +1063,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# if template_name is specified, use that as the template
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
-			# otherwise, determine template based on item length (config/item_long_threshold)
-			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
-			if (length($message) > $itemLongThreshold) {
-				$message = substr($message, 0, $itemLongThreshold) . '[...]';
-				# if item is long, trim it
-			}
+			# default template
 			$itemTemplate = GetTemplate("item/item2.template");
 		}
 
@@ -1157,6 +1180,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
 			my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
 			my $imageAlt = $itemTitle;
+
+			# $imageSmallUrl is a smaller image, used in the "lowsrc" attribute for img tag
 
 			$imageContainer =~ s/\$imageUrl/$imageUrl/g;
 			$imageContainer =~ s/\$imageSmallUrl/$imageSmallUrl/g;
@@ -1285,8 +1310,17 @@ sub GetPageFooter { # returns html for page footer
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
 
+	$txtFooter = FillThemeColors($txtFooter);
+
 	if (GetConfig('admin/js/enable') && GetConfig('admin/js/loading')) {
 		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(loading_end));
+	}
+
+	if (GetConfig('html/back_to_top_button')) {
+		my $backToTopTemplate = GetTemplate('html/back_to_top_button.template');
+		$txtFooter =~ s/\<\/body>/$backToTopTemplate<\/body>/i;
+
+		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(back_to_top_button));
 	}
 
 	return $txtFooter;
@@ -1521,7 +1555,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$menuItems .= '<span class=advanced><br><small>' . GetMenuFromList('menu_advanced') . '</small></span>';
 	#todo move html to template
 
-	my $selfLink = '/settings.html';
+	my $selfLink = '/access.html';
 
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
@@ -2354,6 +2388,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 			my $itemTemplate = '';
 			if ($message) {
 #				$row->{'show_quick_vote'} = 1;
+				$row->{'trim_long_text'} = 1;
+
 				$itemTemplate = GetItemTemplate($row); # GetReadPage()
 			} else {
 				$itemTemplate = '<p>Problem decoding message</p>';
@@ -2507,6 +2543,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$row->{'vote_buttons'} = 1;
 			$row->{'show_vote_summary'} = 1;
 			$row->{'display_full_hash'} = 0;
+			$row->{'trim_long_text'} = 0;
 
 			my $itemTemplate;
 			$itemTemplate = GetItemTemplate($row); # GetIndexPage()
@@ -2665,6 +2702,15 @@ sub GetLighttpdConfig {
 		WriteLog('$ssiConf end =====');
 
 		$conf .= "\n" . $ssiConf;
+	}
+	if (GetConfig('admin/lighttpd/basic_auth')) {
+		my $basicAuthConf = GetTemplate('lighttpd/lighttpd_basic_auth.conf.template');
+
+		WriteLog('$basicAuthConf beg =====');
+		WriteLog($basicAuthConf);
+		WriteLog('$basicAuthConf end =====');
+
+		$conf .= "\n" . $basicAuthConf;
 	}
 	
 	return $conf;
@@ -3003,7 +3049,7 @@ sub GetUploadWindow {
 }
 
 sub GetWriteForm {
-	my $writeForm = GetTemplate('form/write4.template');
+	my $writeForm = GetTemplate('form/write.template');
 
 	if (GetConfig('admin/php/enable')) {
 
@@ -3210,6 +3256,26 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
+}
+
+sub GetAccessPage { # returns html for access page /access.html
+	my $html = '';
+
+	my $title = 'Access';
+
+	$html = GetPageHeader($title, $title, 'access');
+
+	$html .= GetTemplate('maincontent.template');
+
+	my $accessTemplate = GetTemplate('access.template');
+
+	$accessTemplate = GetWindowTemplate('Accessibility Mode', '', '', $accessTemplate, 'Ready');
+
+	$html .= $accessTemplate;
+
+	$html .= GetPageFooter();
+
+	return $html;
 }
 
 sub GetSettingsPage { # returns html for settings page (/settings.html)
@@ -3443,7 +3509,6 @@ sub MakeDataPage { # returns html for /data.html
 		# -q for quiet
 		# -r for recursive
 
-		system("zip -qr $HTMLDIR/hike.tmp.zip $TXTDIR log/votes.log");
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 		
 		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyVersion() . "/index.sqlite3");
@@ -3581,6 +3646,11 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	# topitems page
 	elsif ($pageType eq 'top') {
 		my $topItemsPage = GetTopItemsPage();
+
+		if (GetConfig('home_page') eq 'top') {
+			PutHtmlFile("index.html", $topItemsPage);
+		}
+
 		PutHtmlFile("top.html", $topItemsPage);
 	}
 	#

@@ -1,7 +1,6 @@
 </main>
 <hr>
 <p class=beginner>
-    <img src="/p.gif" alt="." height=1 width=1>
-    <small>If you see this message, the page has finished loading.</small>
+    <img src="/p.gif" alt="" height=1 width=1>
 </p>
 </body></html>

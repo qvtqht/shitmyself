@@ -1,0 +1,16 @@
+// begin back_to_top_button.js
+function showBackToTop () { // show or hide "back to top" button depending on vertical scroll state
+    var pageOffset = document.body.scrollTop;
+
+    if (100 < pageOffset) {
+        document.getElementById('aBackToTop').style.visibility = 'visible';
+    } else {
+        document.getElementById('aBackToTop').style.visibility = 'hidden';
+    }
+}
+
+if (document.getElementById) { // enable window.onscroll if getElementById exists
+    window.onscroll = window.showBackToTop;
+    showBackToTop();
+}
+// end back_to_top_button.js

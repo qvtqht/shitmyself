@@ -1,12 +1,12 @@
 server.modules += (
 	"mod_ssi",       # for ssi 
 	"mod_accesslog", # for access log writing
-	"mod_access",    # not sure what this does? #todo
 	"mod_rewrite",   # for rewrites (related to php)
 	"mod_compress",  # for faster transfers, not sure how much it helps
 	"mod_fastcgi",   # for php
-	"mod_expire"     # helps browsers know it's ok to cache things
+	"mod_expire"    # helps browsers know it's ok to cache things
 )
+#todo split this up into different features?
 
 server.document-root = "$serverDocumentRoot" 
 
@@ -75,6 +75,6 @@ server.http-parseopts = (
 	"url-ctrls-reject" => "disable"
 )
 
-#expire.url = (
-#	"/" => "access plus 2 hours"
-#)
+expire.url = (
+	"/" => "access plus 1 minutes"
+)

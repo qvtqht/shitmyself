@@ -1,0 +1,16 @@
+server.modules += (
+	"mod_auth",      # basic auth
+	"mod_access"     # not sure what this does? #todo
+)
+
+auth.backend = "plain"
+auth.backend.plain.userfile = "config/lighttpd_password.conf"
+auth.require = (
+	"/" => (
+		"method"  => "basic",
+		"realm" => "<Cthon98> hey, if you type in your pw, it will show as stars",
+		#"require" => "user=AzureDiamond"
+		"require" => "valid-user"
+	)
+)
+
