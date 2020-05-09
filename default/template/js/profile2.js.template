@@ -231,6 +231,10 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 			} else {
 				//alert('DEBUG: AddPrivateKeyLinks: privateKey: false');
 
+				// add horizontal rule
+				var hrDivider = document.createElement('hr');
+				fieldset.appendChild(hrDivider);
+
 				var pLoadKeyFromTxt = document.createElement('p');
 
 				//alert('DEBUG: AddPrivateKeyLinks: creating file input...');
