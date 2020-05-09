@@ -15,7 +15,7 @@
 					<textarea
 						wrap=soft rows=4 cols=40 style="width: 100%;" id=comment name=comment
 					>$replyFooter</textarea><br>
-					<input type=submit value="Send Reply" onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }">
+					<input type=submit value="Send Reply">
 					<span id=replySignedContainer></span>
 					<input type=hidden name=replyto id=replyto value="$replyTo">
 				</td>
