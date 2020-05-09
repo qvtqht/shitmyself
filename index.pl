@@ -35,30 +35,6 @@ WriteLog( "Using $SCRIPTDIR as install root...\n");
 #	}
 #}
 
-sub MakeVoteIndex { # Indexes any votes recorded in log/votes.log into database
-	WriteLog( "MakeVoteIndex()\n");
-
-	my $voteLog = GetFile("log/votes.log");
-
-	#This is how long anonymous votes are counted for;
-	my $voteLimit = GetConfig('admin/vote_limit');
-
-	my $currentTime = GetTime();
-
-	if (defined($voteLog) && $voteLog) {
-		my @voteRecord = split("\n", GetFile("log/votes.log"));
-
-		foreach (@voteRecord) {
-			my ($fileHash, $ballotTime, $voteValue) = split('\|', $_);
-
-			if ($currentTime - $ballotTime <= $voteLimit) {
-				DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
-			}
-		}
-		DBAddVoteRecord("flush");
-	}
-}
-
 sub MakeAddedIndex { # reads from log/added.log and puts it into added_time table
 	WriteLog( "MakeAddedIndex()\n");
 
@@ -592,13 +568,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									# add a record to the vote table
 									if ($isSigned) {
 										# include author's key if message is signed
-										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey);
+										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
 									}
 									else {
 										if ($hasCookie) {
-											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie);
+											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
 										} else {
-											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag);
+											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
 										}
 									}
 
@@ -683,17 +659,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		if (GetConfig('admin/token/title')) {
-		# look for "title: ..." token
+		# title token is enabled
 			if ($hasParent) {
 				WriteLog('$hasParent was true for ' . $fileHash);
 
 				WriteLog('$message = ' . $message);
 
+				# looks for lines beginning with title: and text after
+				# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
                 my @setTitleToLines = ($message =~ m/^(title: )([a-zA-Z0-9_ ]+)\r?$/msig);
+
+                # todo improve regex to include punctuation
+                # todo allow non-latin characters
 
 				WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
-				if (@setTitleToLines) {
+				if (@setTitleToLines) { # means we found at least one title: token;
+
 					#my $lineCount = @setTitleToLines / 2;
 
 					while (@setTitleToLines) {
