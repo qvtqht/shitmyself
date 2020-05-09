@@ -50,7 +50,7 @@
 							<span class=beginner>Set site-wide appearance and colors:<br></span>
 
 							<label for=optTheme>theme:
-								<select name=setconfig/html/theme id=optTheme>
+								<select name=optTheme id=optTheme>
 									<option value=friday29>friday29</option>
 									<option value=chicago>chicago</option>
 									<option value=dark>dark</option>
