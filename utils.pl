@@ -392,9 +392,17 @@ sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to
 	#	#write to config/
 }
 
-sub GetString { # Returns string from config/string/en/..., with special rules:
+sub GetString { # $stringKey, $language ; Returns string from config/string/en/
+# language defaults to 'en'
+
 	my $stringKey = shift;
 	my $language = shift;
+    state %strings;
+
+    if (defined($strings{$stringKey})) {
+    # assumes $language is always the same, may need refactor later
+        return $strings{$stringKey};
+    }
 
 	my $defaultLanguage = 'en';
 
@@ -405,8 +413,6 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 	if (!$language) {
 		$language = $defaultLanguage;
 	}
-
-	state %strings;
 
 	if (!defined($strings{$stringKey})) {
 		my $string = GetConfig('string/' . $language . '/'.$stringKey);
@@ -427,11 +433,9 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 			chomp ($string);
 
 			$strings{$stringKey} = $string;
-		}
-	}
 
-	if (defined($strings{$stringKey})) {
-		return $strings{$stringKey};
+			return $string;
+		}
 	}
 }
 
