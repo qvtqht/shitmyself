@@ -63,6 +63,16 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
         // standard signature separator
 		$signatureSeparator = "\n-- \n";
 
+		if (GetConfig('admin/lighttpd/basic_auth') && isset($_SERVER['PHP_AUTH_USER']) && GetConfig('admin/logging/record_http_auth_username')) {
+			// record user's http-auth username if we're doing that and it exists
+			if ($_SERVER['PHP_AUTH_USER']) {
+                $comment .= $signatureSeparator;
+                $signatureSeparator = "\n";
+
+                $comment .= 'Authorization: ' . $_SERVER['PHP_AUTH_USER'];
+			}
+		}
+
 		if (GetConfig('admin/logging/record_cookie') && isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
 		    // if there's a cookie variable and cookie logging is enabled
 		    if (index($comment, 'PGP SIGNED MESSAGE') == -1 || GetConfig('admin/logging/record_cookie_when_signed')) {
