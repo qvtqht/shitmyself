@@ -104,7 +104,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 #	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 
 	# vote
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by);");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, ballot_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 
 	# item_attribute
@@ -1600,7 +1600,7 @@ sub DBAddBrcRecord { # $fileHash, $hours, $minutes, $street, $signedBy ; adds re
 
 ###
 
-sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a new vote (tag) record to an item based on vote/ token
+sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash ; Adds a new vote (tag) record to an item based on vote/ token
 	state $query;
 	state @queryParams;
 
@@ -1636,6 +1636,7 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a n
 	my $ballotTime = shift;
 	my $voteValue = shift;
 	my $signedBy = shift;
+	my $ballotHash = shift;
 
 	if (!$ballotTime) {
 		WriteLog("DBAddVoteRecord() called without \$ballotTime! Returning.");
@@ -1655,14 +1656,20 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a n
 		$signedBy = '';
 	}
 
+	if ($ballotHash) {
+		chomp $ballotHash;
+	} else {
+		$ballotHash = '';
+	}
+
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by) VALUES ";
+		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by, ballot_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= '(?, ?, ?, ?)';
-	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy;
+	$query .= '(?, ?, ?, ?, ?)';
+	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash;
 
 	DBAddPageTouch('tag', $voteValue);
 }
