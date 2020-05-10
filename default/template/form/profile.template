@@ -3,7 +3,7 @@
 <form action="/profile.html" name=frmProfile>
 
 <fieldset id=fldRegistration>
-	<legend>Registration uses cookies.</legend>
+	<p>Registration uses cookies.</p>
 
 	<span id=spanSignedInStatus></span>
 
