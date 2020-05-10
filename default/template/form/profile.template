@@ -3,8 +3,7 @@
 <form action="/profile.html" name=frmProfile>
 
 <fieldset id=fldRegistration>
-
-	<legend>Registration</legend>
+	<legend>Registration uses cookies.</legend>
 
 	<span id=spanSignedInStatus></span>
 
@@ -18,8 +17,6 @@
 		<input type=submit name=btnRegister onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id=btnRegister value="Register">
 		<input type=submit name=btnSignOut onclick="if (window.btnSignOut_Click) { return btnSignOut_Click(this); }" id=btnSignOut value="Sign Out">
 	</p>
-
-	<p>Registration uses cookies.</p>
 </fieldset>
 
 </form>
