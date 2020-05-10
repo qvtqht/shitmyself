@@ -1,3 +1,24 @@
+Provide cookieless sessions via url prefix
+	example.com/abcdefghi/top/agree.html
+
+.nfo support for non-txt files, which cannot have ""\n-- \n" footer-signature
+
+Include relevant library repos in lib/
+	Include only necessary files
+	But also the .git/config file
+	And also import script from lib/ to template/
+
+Stream of vouched items
+
+Parametrized item output
+	Sorting / Filtering
+	RSS
+
+SQL Query Log
+
+GetButtonTemplate?
+
+
 Allow tags:
 <i></i>
 <b></b>
