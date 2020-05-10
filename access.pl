@@ -194,13 +194,13 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	# Thank you, StackOverflow
 	foreach my $line (<LOGFILE>) {
 		WriteLog($line);
-	
+
 		#Check to see if we've already processed this line
 		# by hashing it and looking for its hash in %prevLines
 		my $lineHash = md5_hex($line);
 		if (defined($prevLines{$lineHash})) {
 			# If it exists, return to the beginning of the loop
-			$prevLines{$lineHash} ++;
+			$prevLines{$lineHash}++;
 			next;
 		} else {
 			# Otherwise add the hash to processed.log
@@ -227,25 +227,25 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		if ($vhostParse) {
 			# Split the log line
 			($site, $hostname, $logName, $fullName, $date, $gmt,
-				 $req, $file, $proto, $status, $length, $ref) = split(' ',$line);
+				$req, $file, $proto, $status, $length, $ref) = split(' ', $line);
 		} else {
 			# Split the log line
 			($hostname, $logName, $fullName, $date, $gmt,
-				 $req, $file, $proto, $status, $length, $ref) = split(' ',$line);
+				$req, $file, $proto, $status, $length, $ref) = split(' ', $line);
 		}
 
-		my $recordTimestamp = 0; # do we need to record timestamp?
-		my $recordFingerprint = 0;  # do we need to record timestamp?
-		my $recordDebugInfo = 0;  # do we need to record debug info?
+		my $recordTimestamp = 0;   # do we need to record timestamp?
+		my $recordFingerprint = 0; # do we need to record timestamp?
+		my $recordDebugInfo = 0;   # do we need to record debug info?
 
-		if (!defined($hostname)||!defined($logName)||!defined($fullName)||!defined($date)||!defined($gmt)||!defined($req)||!defined($file)||!defined($proto)||!defined($status)||!defined($length)||!defined($ref)) {
+		if (!defined($hostname) || !defined($logName) || !defined($fullName) || !defined($date) || !defined($gmt) || !defined($req) || !defined($file) || !defined($proto) || !defined($status) || !defined($length) || !defined($ref)) {
 			LogError('Broken line in access.log: ' . $line);
 			next;
 		}
 
 		# useragent is last. everything that is not the values we have pulled out so far
 		# is the useragent.
-		my $notUseragentLength = length($hostname.$logName.$fullName.$date.$gmt.$req.$file.$proto.$status.$length.$ref) + 11;
+		my $notUseragentLength = length($hostname . $logName . $fullName . $date . $gmt . $req . $file . $proto . $status . $length . $ref) + 11;
 		$userAgent = substr($line, $notUseragentLength);
 		chomp($userAgent);
 		$userAgent = trim($userAgent);
@@ -271,12 +271,12 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		# convert date to yyyy-mm-dd format
 		my ($dateDay, $dateMonth, $dateYear) = split('/', $date);
 		my %mon2num = qw(jan 01 feb 02 mar 03 apr 04 may 05 jun 06 jul 07 aug 08 sep 09 oct 10 nov 11 dec 12);
-		
+
 		if (!$dateDay || !$dateMonth || !$dateYear) {
 			LogError('Missing Date: ' . $line);
 			next;
 		}
-		
+
 		$dateMonth = lc($dateMonth);
 		$dateMonth = $mon2num{$dateMonth};
 
@@ -289,7 +289,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		my ($timeHour, $timeMinute, $timeSecond) = split(':', $time);
 
 		# remove the quotes around the request field
-		$req  = substr($req, 1);
+		$req = substr($req, 1);
 		chop($gmt);
 		chop($proto);
 
@@ -312,7 +312,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 				if ($filteredFile eq $deopString) {
 					WriteLog("Deop request found, removing admin.key");
-					unlink ('admin.key');
+					unlink('admin.key');
 					next;
 				}
 			}
@@ -392,24 +392,24 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					$message = decode_entities($message);
 					#$message = trim($message);
 
-##
-#					my $replyUrlToken = ( $message=~ m/replyto=(0-9a-f){40}/ );
-#					my $newReplyToken = '';
-##
-#					if ($replyUrlToken) {
-#						my $newReplyToken = $replyUrlToken; 
-#						$newReplyToken =~ s/replyto=/>>/;
-#						$message =~ s/$replyUrlToken/$newReplyToken/g;
-#					}
+					##
+					#					my $replyUrlToken = ( $message=~ m/replyto=(0-9a-f){40}/ );
+					#					my $newReplyToken = '';
+					##
+					#					if ($replyUrlToken) {
+					#						my $newReplyToken = $replyUrlToken;
+					#						$newReplyToken =~ s/replyto=/>>/;
+					#						$message =~ s/$replyUrlToken/$newReplyToken/g;
+					#					}
 
 
 					#todo bugs below, since only stuff below -- should be reformatted
 
-#					$message =~ s/\&(.+)=on/\n-- \n$1/g;
-#					$message =~ s/=on\&/\n&/g;
-#					$message =~ s/\&/\n&/g;
+					#					$message =~ s/\&(.+)=on/\n-- \n$1/g;
+					#					$message =~ s/=on\&/\n&/g;
+					#					$message =~ s/\&/\n&/g;
 					#is this dangerous?
-					
+
 					foreach my $urlParam (@messageItems) {
 						my ($paramName, $paramValue) = split('=', $urlParam);
 
@@ -440,7 +440,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								$recordFingerprint = 1;
 							}
 						}
-						
+
 						if ($paramName eq 'debug') {
 							if ($paramValue eq 'on') {
 								$recordDebugInfo = 1;
@@ -450,12 +450,12 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					}
 
 
-#					if ($replyUrlToken) {
-#						$message = s/$replyUrlToken//;
-##						if (index($message, $newReplyToken) >= 0) {
-#							$message = $newReplyToken . "\n\n" . $message;
-##						}
-#					}
+					#					if ($replyUrlToken) {
+					#						$message = s/$replyUrlToken//;
+					##						if (index($message, $newReplyToken) >= 0) {
+					#							$message = $newReplyToken . "\n\n" . $message;
+					##						}
+					#					}
 
 					# Look for a reference to a parent message in the footer
 					# This would come from the hidden variable on the reply form
@@ -463,15 +463,15 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					# the >> line
 
 
-#					# If we're parsing a vhost log, add the site name to the message
-#					if ($vhostParse && $site) {
-#						$message .= "\n" . $site;
-#					}
-#					#todo remove this unnecessary part
+					#					# If we're parsing a vhost log, add the site name to the message
+					#					if ($vhostParse && $site) {
+					#						$message .= "\n" . $site;
+					#					}
+					#					#todo remove this unnecessary part
 
 					# Generate filename from date and time
 					my $filename;
-#					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
+					#					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
 					# Write to log file/debug console
@@ -516,14 +516,14 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							AppendFile('./log/added.log', $addedLog);
 
 							if (GetConfig('admin/access_log_call_index')) {
-								WriteLog('access.pl: access_log_call_index is true, therefore DBAddAddedTimeRecord('.$fileHash.','.$addedTime.')');
+								WriteLog('access.pl: access_log_call_index is true, therefore DBAddAddedTimeRecord(' . $fileHash . ',' . $addedTime . ')');
 								DBAddAddedTimeRecord($fileHash, $addedTime);
 							}
 						}
 
 						# Tell debug console about file save completion
 						WriteLog("Seems like PutFile() worked! $addedTime");
-						
+
 						# record debug info
 						if ($recordDebugInfo) {
 							my $debugInfo = '>>' . $fileHash;
@@ -531,27 +531,28 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							$debugInfo .= "#meta #debug";
 							$debugInfo .= "\n";
 							$debugInfo .= $userAgent;
-							
+
 							my $debugFilename = 'debug_' . $fileHash . '.txt';
 							$debugFilename = $TXTDIR . '/' . $debugFilename;
-							
+
 							WriteLog('PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
-							
+
 							PutFile($debugFilename, $debugInfo);
 						}
 
-                        # Begin logging section
+						# Begin logging section
 						if (
 							# GetServerKey() # there should be a server key, otherwise do not log
 							# 	&&
 							# (
-								GetConfig('admin/logging/record_timestamps')
-									||
+							GetConfig('admin/logging/record_timestamps')
+								||
 								GetConfig('admin/logging/record_clients')
-									||
+								||
 								GetConfig('admin/logging/record_sha512')
 							# )
-						) { # if any of the logging options are turned on, proceed
+						) {
+							# if any of the logging options are turned on, proceed
 							# I guess we're saving this 
 							my $addedFilename = $TXTDIR . '/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = '';
@@ -561,7 +562,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							}
 
 							if (GetConfig('admin/logging/record_clients') && $recordFingerprint) {
-								my $clientFingerprint = md5_hex($hostname.$userAgent);
+								my $clientFingerprint = md5_hex($hostname . $userAgent);
 								$addedMessage .= "addedby/$fileHash/$clientFingerprint\n";
 							}
 
@@ -585,10 +586,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						}
 
 						if (GetConfig('admin/access_log_call_index')) {
-							WriteLog('access.pl: access_log_call_index is true, therefore IndexTextFile('.$pathedFilename.')');
+							WriteLog('access.pl: access_log_call_index is true, therefore IndexTextFile(' . $pathedFilename . ')');
 							IndexTextFile($pathedFilename);
 						}
-					} else {
+					}
+					else {
 						WriteLog("WARNING: Could not open text file to write to: ' . $filename");
 					}
 				}
@@ -672,7 +674,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					$newFile .= "\n\n";
 				}
 			}
-			
+
 			my %addedDates = (); # used to keep track of timestamps added to prevent duplicates
 
 			if (exists($ep{'month'}) && exists($ep{'day'}) && exists($ep{'year'})) {
@@ -700,20 +702,21 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					}
 
 					$eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'} . ' ' . $ep{'hour'} . ':' . $ep{'minute'};
-				} else {
+				}
+				else {
 					$eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'};
 				}
 
 				my $eventDate = ParseDate($eventDateString);
-#				my $eventDate = $eventDateString;
+				#				my $eventDate = $eventDateString;
 
 				if (!$addedDates{$eventDate}) {
 					if ($eventDate ne 'NaN') {
 						$addedDates{$eventDate} = 1;
-		
+
 						$newFile .= 'event/' . $eventDate . '/1';
 						$newFile .= "\n\n";
-		
+
 						#todo actually calculate the date and duration
 					}
 				}
@@ -721,7 +724,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 			if (exists($ep{'date_epoch'})) {
 				my $eventDateEpoch = $ep{'date_epoch'};
-				
+
 				if ($eventDateEpoch) {
 
 					if (!$addedDates{$eventDateEpoch}) {
@@ -741,16 +744,17 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					my $eventDateStringEpoch = ParseDate($eventDateStringFromYyyy);
 					if ($eventDateStringEpoch) {
 						WriteLog('$eventDateStringEpoch = ' . $eventDateStringEpoch);
-	
+
 						if ($eventDateStringEpoch) {
 							if (!$addedDates{$eventDateStringEpoch}) {
 								$addedDates{$eventDateStringEpoch} = 1;
-								
+
 								$newFile .= 'event/' . $eventDateStringEpoch . '/3';
 								$newFile .= "\n\n";
 							}
 						}
-					} else {
+					}
+					else {
 						$newFile .= "Date: $eventDateStringFromYyyy";
 						$newFile .= "\n\n";
 					}
@@ -768,7 +772,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 			if ($newFile) {
 				#$newFile .= "\n\n(Anonymously submitted without a signature.)";
-				
+
 				$newFile = trim($newFile);
 				$newFile =~ s/\n\n\n/\n\n/g;
 				#todo this shouldn't be necessary, clean up the \n\n above
@@ -777,137 +781,12 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
 				PutFile($TXTDIR . '/' . $filename, $newFile);
-#
-#				if (GetConfig('admin/server_key_id')) {
-#					ServerSign($TXTDIR . '/' . $filename);
-#				}
+				#
+				#				if (GetConfig('admin/server_key_id')) {
+				#					ServerSign($TXTDIR . '/' . $filename);
+				#				}
 			}
 		}
-		#
-		# my $voteAction = '/action/vote2.html?';
-        # WriteLog('access.pl: $voteAction = ' . $voteAction);
-		#
-		# WriteLog('access.pl: ' . substr($file, 0, length($voteAction)) . ' eq ' . $voteAction);
-		#
-		# if (substr($file, 0, length($voteAction)) eq $voteAction) {
-		# 	#				http://localhost:2784/action/vote2.html?
-		# 	#					vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fagree%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Finformative%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ffriendly%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fmeta%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fremove%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Ftextart%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#					&vote%2Feade7e3a1e7d009ee3f190d8bc8c9f2f269fcec3%2F1542345146%2Fabuse%2F435fcd62a628d7b918e243fe97912d7b=on
-		# 	#
-		# 	#					everything after ?
-		# 	#						split by &
-		# 	#						remove =on
-		# 	#						urldecode
-		# 	#						parse as a vote record
-		# 	#
-		# 	WriteLog("access.pl: /action/vote2.html");
-		#
-		# 	# everything after ?
-		# 	my $votesQuery = substr($file, index($file, '?') + 1);
-		#
-        #     WriteLog('$votesQuery = ' . $votesQuery);
-		#
-        #     # split by &
-		# 	my @voteAtoms = split('&', $votesQuery);
-		# 	my $newFile = '';
-		#
-		# 	foreach my $voteAtom (@voteAtoms) {
-		# 		WriteLog($voteAtom);
-		#
-		# 		# remove =on
-		# 		$voteAtom =~ s/=on$//;
-		# 		# url decode
-		# 		$voteAtom = uri_decode($voteAtom);
-		#
-		# 		WriteLog($voteAtom);
-		#
-		# 		my @voteLines = ( $voteAtom =~ m/^vote\/([0-9a-f]{40})\/([0-9]+)\/([a-z]+)\/([0-9a-f]{32})/mg );
-		# 		#                                 token   /item           /time     /tag      /csrf
-		# 		if (@voteLines) {
-		# 			my $fileHash   = shift @voteLines;
-		# 			my $ballotTime = shift @voteLines;
-		# 			my $voteValue  = shift @voteLines;
-		# 			my $csrf = shift @voteLines;
-		#
-		# 			#todo my $voteBallot .= "$fileHash/$ballotTime/$voteValue
-		#
-		# 			my $checksumCorrect = md5_hex($fileHash . $ballotTime . $mySecret);
-		#
-		# 			my $currentTime = GetTime();
-		# 			if (
-		# 					($csrf eq $checksumCorrect) #checksum needs to match
-		# 						&&
-		# 					(($currentTime - $ballotTime) < 7200) # vote should be recent #todo remove magic number
-		# 				) {
-		# 				#my $voteEntry = "$fileHash|$ballotTime|$voteValue";
-		# 				#AppendFile("log/votes.log", $voteEntry);
-		# 				#votes.log is deprecated in favor of adding stuff to the tree
-		#
-		# 				my $newLine = "vote/$fileHash/$ballotTime/$voteValue/$csrf";
-		# 				if ($newFile) {
-		# 					$newFile .= "\n";
-		# 				}
-		# 				$newFile .= $newLine;
-		#
-		# 				$newItemCount++;
-		# 			}
-		#
-		# 			if (GetConfig('admin/logging/record_voter_fingerprint')) {
-		# 				$recordFingerprint = 1;
-		# 			}
-		# 			if (GetConfig('admin/logging/record_voter_timestamp')) {
-		# 				$recordTimestamp = 1;
-		# 			}
-		# 		}
-		# 	}
-		#
-		# 	if ($newFile) {
-		# 		#$newFile .= "\n\n(Anonymously submitted without a signature.)";
-		#
-		# 		my $filename;
-		# 		$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
-		#
-		# 		PutFile($TXTDIR . '/' . $filename, $newFile);
-		#
-		# 		if (GetConfig('admin/server_key_id')) {
-		# 			ServerSign($TXTDIR . '/' . $filename);
-		# 		}
-		# 	}
-		# }
-		#
-		# # If the URL begins with "/action/" run it through the processor
-		# my $actionPrefix = "/action/";
-		# if (0 && substr($file, 0, length($actionPrefix)) eq $actionPrefix) {
-		# 	# Put the arguments into an array
-		# 	my @actionArgs = split("/", $file);
-		#
-		#
-		# 	# If the action is "vote.html"
-		# 	if ($actionArgs[2] eq 'vote.html?') {
-		# 		# Get the arguments: file, time, value, checksum
-		# 		my $voteFile = $actionArgs[3];
-		# 		my $ballotTime = $actionArgs[4];
-		# 		my $voteValue = $actionArgs[5];
-		# 		my $checksum = $actionArgs[6];
-		#
-		# 		# Verify the checksum
-		# 		my $checksumCorrect = md5_hex($voteFile . $ballotTime . $mySecret);
-		#
-		# 		my $currentTime = GetTime();
-		# 		if ($checksum eq $checksumCorrect && $currentTime - $ballotTime < 7200) {
-		# 			my $voteEntry = "$voteFile|$ballotTime|$voteValue";
-		#
-		# 			AppendFile("log/votes.log", $voteEntry);
-		#
-		# 			$newItemCount++;
-		# 		}
-		# 	}
-		# }
 	}
 
 	# Close the log file handle
