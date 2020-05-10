@@ -7,12 +7,6 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 
 	//alert('DEBUG: translitKey() begins');
 
-	if (e.ctrlKey || e.metaKey) {
-	// do nothing if ctrl or meta key is pressed down
-	// alt is not here because there are several alt combinations
-		return true;
-	}
-
 	var nl = '$'; // new letter
 
 	var key = '$'; // pressed key
@@ -33,7 +27,7 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 
 
 	// alt+` will toggle translit mode
-	if (e.altKey) {
+	if (e.altKey || e.ctrlKey || e.metaKey) {
 		if (e.key == '`' || e.key == 'r' || e.key == 'R') {
 			if (window.translitKeyState == 1) {
 				// 2 is off
@@ -50,6 +44,10 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 			}
 
 			return false;
+		} else {
+			if (e.ctrlKey || e.metaKey) {
+				return true;
+			}
 		}
 	}
 	// end toggle handler
@@ -64,7 +62,8 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 	}
 
 	if (e.altKey) {
-	// alt key combinations are few
+		// alt key combinations
+
 		if (e.key == 'e') {
 			nl = "ё";
 		} else if (e.key == 'E') {
@@ -75,6 +74,9 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 			return true;
 		}
 	} else {
+		// lookup lists, each char in keysEn
+		// corresponds to the same position in keysRu
+
 		var keysEn =
 			"`-=" +
 			"~_+" +
@@ -102,6 +104,7 @@ function translitKey(e, t) { // replaces pressed key with russian letter
 		}
 
 		if (e.key) {
+			// if e.key, then try to find it in the lookup list
 			for (var i = 0; i < keysEn.length; i++) {
 				if (e.key == keysEn.substr(i, 1)) {
 					//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
