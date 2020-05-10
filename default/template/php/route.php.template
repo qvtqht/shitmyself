@@ -394,24 +394,14 @@ if (GetConfig('admin/php/route_enable')) {
 						}
 
 						if (
-							isset($_GET['chkUpgrade']) &&
-							isset($_GET['btnUpgrade'])
-						)
-						{
-							WriteLog('Upgrade requested');
-
-							//WriteLog(`/home/ily/hike/upgrade.pl`);
-						}
-
-						if (
-							isset($_GET['setconfig/html/theme']) &&
-							isset($_GET['setconfig/html/theme']) &&
+							isset($_GET['optTheme']) &&
+							isset($_GET['optTheme']) &&
 							isset($_GET['btnSetTheme'])
 						)
 						{
 							WriteLog('Theme change requested');
 
-							$newTheme = $_GET['setconfig/html/theme'];
+							$newTheme = $_GET['optTheme'];
 							$themeUpdateFile = 'setconfig/html/theme=' . $newTheme;
 
 							// write file
@@ -435,6 +425,26 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 						}
 
+						//						if (!isset($_SERVER['PHP_AUTH_USER'])) {
+						////							header('WWW-Authenticate: Basic realm="My Realm"');
+						////							header('HTTP/1.0 401 Unauthorized');
+						//							echo 'Text to send if user hits Cancel button';
+						//							exit;
+						//						} else {
+						//							echo "<p>Hello {$_SERVER['PHP_AUTH_USER']}.</p>";
+						//							echo "<p>You entered {$_SERVER['PHP_AUTH_PW']} as your password.</p>";
+						//						}
+
+						if (
+							isset($_GET['chkUpgrade']) &&
+							isset($_GET['btnUpgrade'])
+						)
+						{
+							WriteLog('Upgrade requested');
+
+							$responseOverthrow = StoreServerResponse('Upgrade requested, but not yet implemented.');
+							$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+						}
 
 						if (
 							isset($_GET['chkFlush']) &&
@@ -442,6 +452,9 @@ if (GetConfig('admin/php/route_enable')) {
 						)
 						{
 							WriteLog('Flush requested');
+
+							$responseOverthrow = StoreServerResponse('Flush requested, but not yet implemented.');
+							$redirectUrl = '/settings.html?message=' . $responseOverthrow;
 						}
 
 						if (
@@ -702,6 +715,16 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = str_replace(
 				'</body>',
 				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
+				$html
+			);
+			$html = str_replace(
+				'>Accessibility mode<',
+				'><font color=orange>Accessibility mode</font><',
+				$html
+			);
+			$html = str_replace(
+				'>Light Mode<',
+				'><font color=orange>Light Mode</font><',
 				$html
 			);
 			//
