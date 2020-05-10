@@ -1,26 +1,29 @@
->
->
-> TESTS
-> =====
-> each template should contain certain $placeholders
-889,905d895
-< name: libreforum LibreForum
-<
-< continue segregating languages
-< 	move addtagattribute js snippets to templates
-< 	move template under admin/
-< 		is that ok?
-<
-< logged in indicator
-< 	set by js
-< 	set by php
-< 	in template as span with id
-< 	just like on profile page
-< 	needs coiokie php
-<
-< overthrow_password
-< 	the password is a hash of a known-to-admin string
-< 	for x days, the entire password must be matched
+Windows and Mac installers
+==========================
+
+toys: geek code generator
+
+TESTS
+=====
+each template should contain certain $placeholders
+
+name: libreforum LibreForum
+
+continue segregating languages
+ 	move addtagattribute js snippets to templates
+ 	move template under admin/
+ 		is that ok?
+
+ logged in indicator
+ 	set by js
+ 	set by php
+ 	in template as span with id
+ 	just like on profile page
+ 	needs coiokie php
+
+ overthrow_password
+ 	the password is a hash of a known-to-admin string
+ 	for x days, the entire password must be matched
 
 Ideas from nullprogram
 	Tags page has good layout.
