@@ -88,10 +88,6 @@ BuildMessage "MakeAddedIndex()...";
 
 MakeAddedIndex();
 
-BuildMessage "MakeVoteIndex()...";
-
-MakeVoteIndex();
-
 BuildMessage "MakeAddedIndex()...";
 
 MakeAddedIndex();
@@ -126,6 +122,11 @@ if (GetConfig('admin/lighttpd/enable')) {
 	
 	BuildMessage('PutFile(\'config/lighttpd.conf\', $lighttpdConf);');
 	PutFile('config/lighttpd.conf', $lighttpdConf);
+
+	if (GetConfig('admin/lighttpd/basic_auth')) {
+		my $basicAuthUserFile = GetTemplate('lighttpd/lighttpd_password.template');
+		PutFile('config/lighttpd_password.conf', $basicAuthUserFile);
+	}
 } else {
 	BuildMessage("admin/lighttpd/enable was false");
 }
