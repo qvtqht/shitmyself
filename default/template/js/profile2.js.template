@@ -197,7 +197,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				// add [go to profile] link
 				var pProfileLink = document.createElement('p');
 				var aProfile = document.createElement('a');
-				aProfile.setAttribute('href', '/author/' + getUserFp());
+				aProfile.setAttribute('href', '/author/' + getUserFp() + '/index.html');
 				aProfile.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(); }');
 				aProfile.setAttribute('id', 'linkGoToProfile');
 				aProfile.innerHTML = 'Go to profile';
