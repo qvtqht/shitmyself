@@ -1202,7 +1202,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if ($authorLink) {
 			$itemTemplate =~ s/\$authorLink/[$authorLink]/g;
 		} else {
-			$itemTemplate =~ s/\$authorLink//g;
+			$itemTemplate =~ s/\$authorLink;//g;
 		}
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
@@ -2457,11 +2457,11 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	# my $firstLetter = substr($caption, 0, 1);
 	# $caption = substr($caption, 1);
 
-	my $color = substr(md5_hex($caption), 0, 6);
+	#my $color = substr(md5_hex($caption), 0, 6);
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
-	$menuItem =~ s/\$color/$color/g;
+	#$menuItem =~ s/\$color/$color/g;
 	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
 
 	return $menuItem;
