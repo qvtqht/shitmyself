@@ -533,26 +533,6 @@ if (!$arg1) {
 		WriteLog($newLastFlow);
 		PutConfig('admin/update/last', $newLastFlow);
 
-		my $filesLeftCommand = 'find ' . $TXTDIR . ' | grep "\.txt$" | wc -l';
-		my $filesLeft = `$filesLeftCommand`; #todo
-
-		if (-e $IMAGEDIR) {
-			my $imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.png" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.gif" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.jpg" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.bmp" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.svg" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-		}
-
-		WriteLog('update.pl: $filesLeft = ' . $filesLeft);
-
-		PutConfig('admin/update/files_left', $filesLeft);
-
 		unlink('cron.lock');
 
 		WriteLog("======update.pl DONE! ======");
