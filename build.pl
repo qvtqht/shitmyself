@@ -85,29 +85,22 @@ if (!-e $IMAGEDIR) {
 BuildMessage "Looking for files...";
 
 BuildMessage "MakeAddedIndex()...";
-
 MakeAddedIndex();
-
-BuildMessage "MakeAddedIndex()...";
-
 MakeAddedIndex();
 
 BuildMessage "WriteConfigFromDatabase()...";
-
 WriteConfigFromDatabase();
 
 BuildMessage "DBAddPageTouch('summary', 0)...";
-
 DBAddPageTouch('summary', 0);
 
 BuildMessage("UpdateUpdateTime()...");
-
 UpdateUpdateTime();
 
+BuildMessage "require('./pages.pl')...";
 require './pages.pl';
 
 BuildMessage "require('./generate.pl')...";
-
 require('./generate.pl');
 
 if (GetConfig('admin/lighttpd/enable')) {
@@ -134,13 +127,6 @@ if (GetConfig('admin/lighttpd/enable')) {
 if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
-
-my $filesLeftCommand = 'find $TXTDIR | grep "\.txt$" | wc -l';
-my $filesLeft = `$filesLeftCommand`; #todo
-
-WriteLog('build.pl: $filesLeft = ' . $filesLeft);
-
-PutConfig('admin/update/files_left', $filesLeft);
 
 PutFile('config/admin/build_end', GetTime());
 
