@@ -296,9 +296,7 @@ if (isset($comment) && $comment) {
 
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
-		$updateMessageId = StoreServerResponse("Update finished! <small>in $updateDuration"."s</small>");
-
-	    Header('Location: /stats.html?message=' . $updateMessageId); //#todo make work with relativize links
+	    RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
 	} elseif (strtolower($comment) == 'stop') {
 		$stopTime = time();
 		$stopTimeConfig = GetConfig('admin/stop');
@@ -343,7 +341,7 @@ if (isset($comment) && $comment) {
 			}
 			if ($profileId) {
 				//#todo add file exists check
-				$redirectUrl = '/author/' . $profileId . '/';
+				$redirectUrl = '/author/' . $profileId . '/index.html';
 			} else {
 				//#todo add file exists check
 				$redirectUrl = $fileUrlPath;
@@ -351,8 +349,7 @@ if (isset($comment) && $comment) {
 				// profile.html
 			}
 
-            $responsePublicKeyPosted = StoreServerResponse("Success! Profile created! <small>in $finishTime"."s</small>");
-            $redirectUrl .= '?message=' . $responsePublicKeyPosted;
+            RedirectWithResponse($redirectUrl, "Success! Profile created! <small>in $finishTime"."s</small>");
 
 
 //		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
