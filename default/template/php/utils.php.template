@@ -485,6 +485,27 @@ function GetHtmlFilename ($hash) { // gets html filename based on hash
 	return $fileHtmlPath;
 }
 
+function RedirectWithResponse ($url, $message) { // redirects to page with server message
+// calls StoreServerResponse($message)
+// then creates url with message= attribute
+// sends header to go to that url
+	if (headers_sent()) {
+		// problem
+	} else {
+		$responseId = StoreServerResponse($message);
+
+		if (index($url, '?') < 0) {
+			header('Location: ' . $url . '?message=' . $responseId);
+		} else {
+			if (substr($url, strlen($url) - 1, 1) == '&') {
+				header('Location: ' . $url . 'message=' . $responseId);
+			} else {
+				header('Location: ' . $url . '&message=' . $responseId);
+			}
+		}
+	}
+}
+
 function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) { // returns html for window template
 // uses template/window/standard.template by default
 	$contentColumnCount = 0;
