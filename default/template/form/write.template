@@ -45,13 +45,6 @@
 
 						<span id=spanSignAs></span>
 
-						<p class=advanced>
-							<label for=chkRepublish>
-								<input type=checkbox name=republish id=chkRepublish>
-								Republish to other known sites
-							</label>
-						</p>
-
 						<span>
 							<p id=lblWriteLengthWarning class=warning style="display: none">
 							</p>
