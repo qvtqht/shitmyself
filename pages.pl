@@ -584,7 +584,6 @@ sub GetItemPage {
 
     $txtIndex .= GetTemplate('maincontent.template');
 
-    #$file{'vote_buttons'} = 1;
     $file{'display_full_hash'} = 1;
     $file{'show_vote_summary'} = 1;
     $file{'show_quick_vote'} = 1;
@@ -722,9 +721,16 @@ sub GetItemPage {
         $replyForm = GetTemplate('form/reply.template');
         #		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
         $replyFooter = '';
-        $replyTo = $file{'file_hash'};
+		#
+		# if ($file{'author_key'}) {
+		# 	$replyTo = $file{'author_key'};
+		# } else {
+		# 	$replyTo = $file{'file_hash'};
+		# }
+		$replyTo = $file{'file_hash'};
 
-        if (GetConfig('admin/js/enable')) {
+
+		if (GetConfig('admin/js/enable')) {
 			$replyForm =~ s/(\<input type=submit )/$1 onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"/i;
 		}
 
@@ -1750,15 +1756,12 @@ sub GetStatsTable() {
 	}
 
 
-	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
-	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
 	my $filesTotal = trim(`find $TXTDIR | grep \.txt\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.png\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.jpg\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.gif\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.bmp\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.svg\$ | wc -l`);
-
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
