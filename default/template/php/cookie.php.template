@@ -29,9 +29,7 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 	unsetcookie2('cookie');
 	unsetcookie2('checksum');
 
-	$serverResponseUnregistered = StoreServerResponse('Signed out. Thank you for visiting.');
-
-	header('Location: /profile.html?message=' . $serverResponseUnregistered);
+	RedirectWithResponse('/profile.html', 'Signed out. Thank you for visiting.');
 
 	WriteLog('all cookies unset');
 } else {
@@ -86,13 +84,11 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 			unsetcookie2('cookie');
 
 			$responseWrongChecksum = StoreServerResponse('Signed out due to checksum mismatch. Please notify operator.');
-
 			header('Location: /profile.html?message=' . $responseWrongChecksum);
 		}
 
 		if ($responseSignedIn) {
-			$responseSignedIn = StoreServerResponse('Success! You have signed in.');
-			header('Location: /profile.html?message=' . $responseSignedIn);
+			RedirectWithResponse('/profile.html', 'Success! You have signed in.');
 		}
 	} else {
 		if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister1 || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
