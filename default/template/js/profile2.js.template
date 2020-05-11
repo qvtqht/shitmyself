@@ -354,8 +354,8 @@ function StripToFilename (text) { // strips provided text to only filename-valid
 
 	var charsAllowed = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_';
 
-	for (var i = 0; i < text.length - 1; i++) {
-		if (charsAllowed.indexOf(text.substr(i, 1)) > -1) {
+	for (var i = 0; i < text.length; i++) {
+		if (-1 < charsAllowed.indexOf(text.substr(i, 1))) {
 			// ok
 		} else {
 			text = text.substr(0, i) + '' + text.substr(i + 1);
@@ -366,9 +366,28 @@ function StripToFilename (text) { // strips provided text to only filename-valid
 	return text;
 }
 
+function getUsername2 () { // returns pgp username
+// #todo cache it
+    var openpgp = window.openpgp;
+
+    if (openpgp) {
+		// read it into pgp object
+		var privKeyObj = openpgp.key.readArmored(getPrivateKey());
+
+		// get the public key out of it
+		var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+		var myUsername = pubKeyObj.users[0].userId.userid;
+
+		return myUsername;
+	}
+
+	return '';
+}
+
 function SavePrivateKeyAsTxt() { // initiates "download" of private key as text file
 	var myFp = getUserFp();
-	var myUsername = getUsername();
+	var myUsername = getUsername2();
 	var text = getPrivateKey();
 
 	myUsername = StripToFilename(myUsername);
