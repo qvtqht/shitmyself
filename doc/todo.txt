@@ -1,3 +1,14 @@
+custom 401 page
+
+when replying to public key, replyto should be author's fingerprint, not item's hash
+
+
+Profile page
+	if js
+		somehow check if logged-in state has changed
+			because when returning to cached page, old values preserved
+	
+
 Provide cookieless sessions via url prefix
 	example.com/abcdefghi/top/agree.html
 
