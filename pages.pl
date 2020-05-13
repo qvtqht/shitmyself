@@ -2706,7 +2706,7 @@ sub GetLighttpdConfig {
 
 		$conf .= "\n" . $ssiConf;
 	}
-	if (GetConfig('admin/lighttpd/basic_auth')) {
+	if (GetConfig('admin/http_auth/enable')) {
 		my $basicAuthConf = GetTemplate('lighttpd/lighttpd_basic_auth.conf.template');
 
 		WriteLog('$basicAuthConf beg =====');
