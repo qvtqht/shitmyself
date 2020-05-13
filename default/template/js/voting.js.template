@@ -55,16 +55,33 @@ function signVote(t, token) { // signs a vote from referenced vote button
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
-		var privkey = getPrivateKey();
 		// get private key
-	
+
+		if (t.innerHTML) {
+			// update count in vote link
+			//alert('DEBUG: signVote: t.innerHTML');
+			var ih = t.innerHTML;
+			if (ih.indexOf('(') == -1) {
+				//alert('DEBUG: signVote: ( not found');
+				t.innerHTML = ih + '(1)';
+			} else {
+				//alert('DEBUG: signVote: ( found');
+
+				var numVal = ih.substring(ih.indexOf('(') + 1, ih.indexOf(')'));
+				var newVal = parseInt(numVal) + 1;
+				var hashTag = ih.substring(0, ih.indexOf('('));
+				t.innerHTML = hashTag + '(' + newVal + ')';
+			}
+			//alert('DEBUG: signVote: finished with t.innerHTML');
+		}
+
+		var privkey = getPrivateKey();
+		//alert('DEBUG: signVote: privkey: ' + !!privkey);
+
 		if (!privkey) {
-		// if there is no private key, just do a basic unsigned vote;
-			t.enabled = false;
-			t.style.backgroundColor = '$colorSuccessVoteUnsigned'; //#todo
-			t.style.color = '$colorSuccessVoteUnsigned'; //#todo
-			t.style.borderRadius = '5pt'; //#todo
-	
+			//alert('DEBUG: !privkey');
+			// if there is no private key, just do a basic unsigned vote;
+
 			if (PingUrl(t.href)) {
 				// todo increment counter
 				if (window.AmIFresh) {
@@ -74,24 +91,15 @@ function signVote(t, token) { // signs a vote from referenced vote button
 				}
 			}
 		} else {
-		// there is a private key
-
-			// change the button's appearance, for appearance of responsiveness
-			t.enabled = false;
-			t.style.backgroundColor = '$colorSuccessVoteSigned'; //#todo
-			t.style.color = '$colorSuccessVoteSigned';
-			t.style.borderRadius = '5pt'; //#todo
+			// there is a private key
+			//alert('DEBUG: privkey is true');
 
 			// load the private key into openpgp
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-
 			var options;
-
 			options = new Object();
-
 			options.data = token;
 			options.privateKeys = privKeyObj;
-
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
 
