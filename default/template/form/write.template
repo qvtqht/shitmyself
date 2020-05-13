@@ -20,12 +20,12 @@
 							</p>
 						</noscript>
 
-						<label for="comment" class=beginner>Enter some text to share.<br></label>
+						<label for="comment" class=beginner>Enter some text to share:<br></label>
 
 						<textarea
 							class=txtarea
 							id=comment
-							title="Enter some text to share here."
+							title="Enter some text to share."
 							rows=9
 							cols=32
 							name=comment
@@ -56,4 +56,4 @@
 	</font>
 </form>
 
-<!--/ write4.template -->
+<!--/ write.template -->
