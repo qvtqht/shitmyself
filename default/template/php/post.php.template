@@ -63,7 +63,7 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
         // standard signature separator
 		$signatureSeparator = "\n-- \n";
 
-		if (GetConfig('admin/lighttpd/basic_auth') && isset($_SERVER['PHP_AUTH_USER']) && GetConfig('admin/logging/record_http_auth_username')) {
+		if (GetConfig('admin/http_auth/enable') && isset($_SERVER['PHP_AUTH_USER']) && GetConfig('admin/logging/record_http_auth_username')) {
 			// record user's http-auth username if we're doing that and it exists
 			if ($_SERVER['PHP_AUTH_USER']) {
                 $comment .= $signatureSeparator;
@@ -399,7 +399,7 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 if (!$redirectUrl && $fileUrlPath) {
 	$finishTime = time() - $postPhpStartTime;
 
-	$itemPostedServerResponse = "Success! New item posted! <small class=advanced> in $finishTime"."s</small>";
+	$itemPostedServerResponse = "Success! Item posted. <small class=advanced> in $finishTime"."s</small>";
 	//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
 	$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
