@@ -72,6 +72,9 @@ function btnRegister_Click (t) { // event for 'Register' button's click
 
 			if (intKeyGenResult) {
 				//alert('DEBUG: calling PubKeyPing()');
+				if (window.addLoadingIndicator) {
+					addLoadingIndicator();
+				}
 				PubKeyPing();
 			} else {
 				//alert('DEBUG: NOT calling PubKeyPing(), because intKeyGenResult was false');
@@ -110,7 +113,7 @@ function getUserFp() { // retrieve stored user fingerprint from localstorage
 	return null;
 }
 
-function sharePubKey() { // shares current user's public key via injected form and iframe
+function sharePubKey () { // shares current user's public key via injected form and iframe
 	//alert('DEBUG: profile2.js: sharePubKey() begins');
 
 	var pubKey = getPublicKey();
@@ -118,6 +121,10 @@ function sharePubKey() { // shares current user's public key via injected form a
 	//alert('DEBUG: sharePubKey: pubKey = ' + (pubKey ? pubKey : '(false)'));
 
 	if (pubKey) {
+		if (window.addLoadingIndicator) {
+			addLoadingIndicator();
+		}
+
 //		//alert('DEBUG: sharePubKey: creating iframe');
 //
 //		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
@@ -467,22 +474,6 @@ function PubKeyPing() { // checks if user's public key is on server
 				} else {
 					if (window.sharePubKey) {
 						//alert('DEBUG: PubKeyPing: lastPubKeyPing: window.sharePubKey check passed, doing it...');
-
-						if (document.getElementById) {
-							var serverResponse = document.getElementById('serverResponse');
-							if (serverResponse) {
-								var hr = document.createElement('hr');
-								serverResponse.appendChild(hr);
-
-								var center = document.createElement('p');
-								center.style.fontWeight = 'bold';
-								center.style.textAlign = 'center';
-
-								center.innerHTML = 'Please meditate while profile is created...';
-								serverResponse.appendChild(center);
-							}
-						}
-
 						sharePubKey();
 					} else {
 						//alert('DEBUG: PubKeyPing: lastPubKeyPing: window.sharePubKey check FAILED');
