@@ -1,0 +1,50 @@
+<div class="video-player-container player-container controls-visible paused" tabindex="-1">
+<div class="video-container media-container noselect" style="background-color:transparent">
+<video
+	class="video media"
+	id="video-frenchheartyassassinbug"
+	alt="RKBRQ1hp6HopCoTg GIF"
+	height="1024"
+	width="576"
+	muted=""
+	playsinline=""
+	preload="auto"
+	poster="https://thumbs.gfycat.com/FrenchHeartyAssassinbug-mobile.jpg"
+	style="max-width:576px;margin:0
+	auto;display:block"
+	tabindex="-1"
+>
+<source src="https://thumbs.gfycat.com/FrenchHeartyAssassinbug-mobile.mp4" type="video/mp4"/>
+<source src="https://giant.gfycat.com/FrenchHeartyAssassinbug.webm" type="video/webm"/>
+<source src="https://giant.gfycat.com/FrenchHeartyAssassinbug.mp4" type="video/mp4"/>
+<source src="https://thumbs.gfycat.com/FrenchHeartyAssassinbug-mobile.mp4" type="video/mp4"/>
+</video>
+</div>
+
+
+==========
+
+
+
+
+
+
+
+
+#Protect single file
+<Files admin.php>
+    AuthName "Dialog prompt"
+    AuthType Basic
+    AuthUserFile /home/username/example.com/.htpasswd
+    Require valid-user
+</Files>
+Protect multiple files
+This example protects multiple files:
+
+#Protect multiple files
+<FilesMatch "^(admin|staff).php$">
+AuthName "Dialog prompt"
+AuthType Basic
+AuthUserFile /home/username/example.com/.htpasswd
+Require valid-user
+</FilesMatch>
