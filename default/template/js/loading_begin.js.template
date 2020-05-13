@@ -1,6 +1,9 @@
 // begin loading_begin.js
-
 function addLoadingIndicator() {
+	var spanLoadingIndicator = document.createElement('span');
+	spanLoadingIndicator.setAttribute('id', 'spanLoadingIndicator');
+	spanLoadingIndicator.innerHTML = 'Loading...';
+	document.body.appendChild(spanLoadingIndicator);
 }
 
 if (document.createElement) {
