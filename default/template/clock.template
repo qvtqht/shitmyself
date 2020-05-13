@@ -1,7 +1,7 @@
 <!-- clock.template -->
 <span>
 	<input
-		style="text-align: center;"
+		style="text-align: center; float: right;"
 		type=text
 		size=11
 		name=txtClock
