@@ -20,7 +20,7 @@ function SetHtmlClock ($html) { // #todo sets html clock on page if present
 
 function StripHeavyTags ($html) { // strips heavy tags from page replaces with basic ones
 	$tags = array(
-		'table', 'tr', 'td', 'span', 'fieldset', 'legend', 'font',
+		'table', 'tr', 'td', 'th', 'span', 'fieldset', 'legend', 'font',
 		'script', 'style', 'big'
 	);
 
@@ -36,18 +36,18 @@ function StripHeavyTags ($html) { // strips heavy tags from page replaces with b
 		$html = preg_replace('/\<\/a\>\<b\>/', '</a>; <b id1>', $html);
 		$html = preg_replace('/\<\/b\>\<a\ /', '</b>; <a id2 ', $html);
 
-		$html = preg_replace('/\<\/th\>/', '; ', $html);
-		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
-		$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br id3>', $html);
-		$html = preg_replace('/\<\/td\>/', '; ', $html);
-		$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br id4><hr>', $html);
-		$html = preg_replace('/\<\/table\>/', '<br id5><hr>', $html);
-		$html = preg_replace('/\<\/tr\>/', '<br id6>', $html);
-		$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br id7>', $html);
-		$html = preg_replace('/\<\/fieldset\>/', '<br id8>', $html);
-		$html = preg_replace('/\<\/legend\>/', '<br id9>', $html);
-		$html = preg_replace('/\<\/a\>\<a/', '</a>; <a id10', $html);
-		$html = preg_replace('/; ;/', '; ', $html);
+		//$html = preg_replace('/\<\/th\>/', '; ', $html);
+		//$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
+		//$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br id3>', $html);
+		//$html = preg_replace('/\<\/td\>/', '; ', $html);
+		//$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br id4><hr>', $html);
+		//$html = preg_replace('/\<\/table\>/', '<br id5><hr>', $html);
+		//$html = preg_replace('/\<\/tr\>/', '<br id6>', $html);
+		//$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br id7>', $html);
+		//$html = preg_replace('/\<\/fieldset\>/', '<br id8>', $html);
+		//$html = preg_replace('/\<\/legend\>/', '<br id9>', $html);
+		//$html = preg_replace('/\<\/a\>\<a/', '</a>; <a id10', $html);
+		//$html = preg_replace('/; ;/', '; ', $html);
 	}
 
 	foreach ($tags as $tag) {
@@ -712,11 +712,11 @@ if (GetConfig('admin/php/route_enable')) {
 				$pathSelf = substr($pathSelf, 0, strpos($pathSelf, '?'));
 			}
 
-			$html = str_replace(
-				'</body>',
-				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
-				$html
-			);
+			//			$html = str_replace(
+			//				'</body>',
+			//				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
+			//				$html
+			//			);
 			$html = str_replace(
 				'>Accessibility mode<',
 				'><font color=orange>Accessibility mode</font><',
