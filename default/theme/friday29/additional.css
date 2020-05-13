@@ -6,10 +6,6 @@ body {
 .dialog {
 	box-shadow: 5pt 5pt 5pt #aabbcc;
 }
-input[type=text], input[type=password], select, option, textarea {
-	background-color: $colorInputBackground;
-	color: $colorInputText;
-}
 #txtClock {
 	border: 1pt inset $colorWindow;
 }
@@ -20,8 +16,12 @@ input[type=text], input[type=password], select, option, textarea {
 a:focus, a:active {
     background-color: orange;
 }
-input:focus, textarea:focus {
-    background-color: orange;
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+textarea:focus {
+	background-color: $colorInputBackground;
 }
 #serverResponse {
 /* messages from server */
