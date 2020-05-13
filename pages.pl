@@ -1070,7 +1070,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
 			# default template
-			$itemTemplate = GetTemplate("item/item2.template");
+			if (length($message) < 140) {
+				$itemTemplate = GetTemplate("item/item-short.template");
+			} else {
+				$itemTemplate = GetTemplate("item/item2.template");
+			}
 		}
 
 		my $authorUrl; # author's profile url
@@ -1866,6 +1870,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
 		}
 
+		#if ($script eq 'settings' || $script eq 'loading_begin') {
 		if ($script eq 'settings') {
 			# for settings.js we also need to fill in some theme colors
 			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
@@ -2981,6 +2986,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
+
 	if (GetConfig('admin/php/enable')) {
 		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php.template');
 
@@ -3021,7 +3027,15 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		my $routePhpTemplate = GetTemplate('php/route.php.template');
 		PutFile($PHPDIR . '/route.php', $routePhpTemplate);
 	}
-	PutHtmlFile(".htaccess", $HtaccessTemplate);
+
+	if (GetConfig('admin/http_auth/enable')) {
+		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_htpasswd.template');
+
+		my $HtpasswdTemplate .= GetTemplate('htaccess/htpasswd.template');
+		PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
+	}
+
+	PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 	PutHtmlFile("favicon.ico", '');
 
@@ -3046,7 +3060,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 sub GetUploadWindow {
 	my $uploadForm = GetTemplate('form/upload.template');
 
-	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, 'Ready');
+	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, '');
 
 	return $uploadWindow;
 }
@@ -3237,7 +3251,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 #		'<a class=advanced href="/gpg.html">Signatures</a>',
 		'',
 		$profileWindowContents,
-		'Ready'
+		''
 	);
 
 	$txtIndex .= $profileWindow;
@@ -3272,7 +3286,7 @@ sub GetAccessPage { # returns html for access page /access.html
 
 	my $accessTemplate = GetTemplate('access.template');
 
-	$accessTemplate = GetWindowTemplate('Accessibility Mode', '', '', $accessTemplate, 'Ready');
+	$accessTemplate = GetWindowTemplate('Accessibility Mode', '', '', $accessTemplate, '');
 
 	$html .= $accessTemplate;
 
