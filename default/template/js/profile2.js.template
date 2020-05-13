@@ -204,19 +204,19 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				pProfileLink.appendChild(aProfile);
 				fieldset.appendChild(pProfileLink);
 
+				// add horizontal rule
+				var hrDivider = document.createElement('hr');
+				fieldset.appendChild(hrDivider);
+
 				// add [save as file] link
 				var pSaveKeyAsTxt = document.createElement('p');
 				var aSaveKeyAsTxt = document.createElement('a');
 				aSaveKeyAsTxt.setAttribute('href', '#');
 				aSaveKeyAsTxt.setAttribute('id', 'linkSavePrivateKey');
 				aSaveKeyAsTxt.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { return SavePrivateKeyAsTxt(); }');
-				aSaveKeyAsTxt.innerHTML = 'Save profile as file';
+				aSaveKeyAsTxt.innerHTML = 'Save as file';
 				pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
 				fieldset.appendChild(pSaveKeyAsTxt);
-
-				// add horizontal rule
-				var hrDivider = document.createElement('hr');
-				fieldset.appendChild(hrDivider);
 
 				// add [show private key] link
 				var pShowPrivateKey = document.createElement('p');
@@ -285,9 +285,9 @@ function ShowPrivateKey() { // displays private key in textarea
 			var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
 			if (linkShowPrivateKey) {
 				if (txtPrivateKey.style.display == 'none') {
-					linkShowPrivateKey.innerHTML = 'show private key';
+					linkShowPrivateKey.innerHTML = 'Show private key';
 				} else {
-					linkShowPrivateKey.innerHTML = 'hide private key';
+					linkShowPrivateKey.innerHTML = 'Hide private key';
 				}
 			}
 
@@ -313,7 +313,7 @@ function ShowPrivateKey() { // displays private key in textarea
 
 			var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
 			if (linkShowPrivateKey) {
-				linkShowPrivateKey.innerHTML = 'hide private key';
+				linkShowPrivateKey.innerHTML = 'Hide private key';
 			}
 
 			txtPrivKey.focus();
