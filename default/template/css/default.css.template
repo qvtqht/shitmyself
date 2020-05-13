@@ -62,9 +62,9 @@ div.txt {
 #addtext {
 	width: 100%
 }
-#a383 {
-	color: black;
-	background-color: yellow;
+#a383, #spanLoadingIndicator {
+	color: $colorText;
+	background-color: $colorHighlightBeginner;
 	padding: 1pt;
 	position: fixed;
 	top: 0;
