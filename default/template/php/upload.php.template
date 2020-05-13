@@ -11,32 +11,35 @@ if (!empty($_FILES['uploaded_file'])) {
 	WriteLog(print_r($_FILES, 1));
 
 	WriteLog('trying to move_uploaded_file(' . $_FILES['uploaded_file']['tmp_name'] . ',' . $path . ')');
-
-	if (file_exists($path)) {
-		//		$hash = sha1_file($path);
-		//
-		//		// path for new html file
-		//		$fileHtmlPath = './' . GetHtmlFilename($hash);
-		//
-		//		// path for client's (browser's) path to html file
-		//		$fileUrlPath = '/' . GetHtmlFilename($hash);
-		//
-		//		$redirectUrl = '';
-		//
-		//		if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
-		//			$itemPostedServerResponse = "Success! Item already posted!";
-		//			$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
-		//			$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
-		//		}
-		//
-		//		if ($redirectUrl) {
-		//			WriteLog('Location: ' . $redirectUrl);
-		//			header('Location: ' . $redirectUrl);
-		//		}
-
-		WriteLog("Warning: File with that name already exists on upload.php");
-		echo "File with that name already exists!";
-	} else {
+//
+//	if (file_exists($path)) {
+//		//		$hash = sha1_file($path);
+//		//
+//		//		// path for new html file
+//		//		$fileHtmlPath = './' . GetHtmlFilename($hash);
+//		//
+//		//		// path for client's (browser's) path to html file
+//		//		$fileUrlPath = '/' . GetHtmlFilename($hash);
+//		//
+//		//		$redirectUrl = '';
+//		//
+//		//		if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
+//		//			$itemPostedServerResponse = "Success! Item already posted!";
+//		//			$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
+//		//			$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
+//		//		}
+//		//
+//		//		if ($redirectUrl) {
+//		//			WriteLog('Location: ' . $redirectUrl);
+//		//			header('Location: ' . $redirectUrl);
+//		//		}
+//
+//		WriteLog("File with that name already exists on upload.php");
+//		//echo "File with that name already exists!";
+//	}
+//
+//
+	{
 		WriteLog('$_FILES: ' . print_r($_FILES, 1));
 
 		if ($_FILES['uploaded_file']['error']) {
@@ -78,7 +81,7 @@ if (!empty($_FILES['uploaded_file'])) {
 				$redirectUrl = '';
 
 				if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
-					$itemPostedServerResponse = "Success! New image posted!";
+					$itemPostedServerResponse = "Success! Image posted!";
 					//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
 					$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
