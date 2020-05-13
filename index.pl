@@ -667,7 +667,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				# looks for lines beginning with title: and text after
 				# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-                my @setTitleToLines = ($message =~ m/^(title: )([a-zA-Z0-9_ ]+)\r?$/msig);
+                my @setTitleToLines = ($message =~ m/^(title: )([a-zA-Z0-9_.;:\(\) ]+)\r?$/msig);
 
                 # todo improve regex to include punctuation
                 # todo allow non-latin characters
