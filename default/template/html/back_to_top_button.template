@@ -16,5 +16,5 @@
         border-radius: 5pt;
         text-decoration: none;
     "
-><big>Back to top</big></a>
+><big><span class=advanced>[^]</span> <span class=beginner>Back to top</span></big></a>
 <!-- / back_to_top_button.template -->
