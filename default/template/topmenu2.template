@@ -5,7 +5,8 @@
 			<td colspan=2><small>
 			<b>
 				<a tabindex=2 href="#maincontent" name=top><font color=$colorTitlebarText>Skip to main content</font></a>;
-				<a href="$selfLink?light=1" tabindex=3><font color=$colorTitlebarText>Accessibility mode</font></a>
+				<a href="$selfLink?light=1" tabindex=3><font color=$colorTitlebarText>Accessibility mode</font></a>;
+				$clock
 			</b>
 			</small><br></td>
 		</tr>
@@ -13,7 +14,6 @@
 			<td>
 				<big style="padding:5pt"><big>$menuItems</big></big>
 				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>
-				$clock
 			</td>
 		</tr>
 	</table>
