@@ -3029,7 +3029,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	}
 
 	if (GetConfig('admin/http_auth/enable')) {
-		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_htpasswd.template');
+		my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
+		$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+
+		$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
 
 		my $HtpasswdTemplate .= GetTemplate('htaccess/htpasswd.template');
 		PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
