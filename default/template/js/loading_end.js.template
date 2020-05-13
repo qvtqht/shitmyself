@@ -52,8 +52,7 @@ function WaitForOpenPgp() {
 }
 
 if (window.a383) {
-
-	a383.style.backgroundColor = '#c0ff00';
+	a383.innerHTML = 'Finished loading page. Loading library...';
 
 	setTimeout('WaitForOpenPgp()', 500);
 }
