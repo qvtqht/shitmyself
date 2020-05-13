@@ -17,6 +17,8 @@
 		<input type=submit name=btnRegister onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }" id=btnRegister value="Register">
 		<input type=submit name=btnSignOut onclick="if (window.btnSignOut_Click) { return btnSignOut_Click(this); }" id=btnSignOut value="Sign Out">
 	</p>
+
+	<span id=spanProfileLink></span>
 </fieldset>
 
 </form>
