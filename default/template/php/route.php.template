@@ -689,7 +689,8 @@ if (GetConfig('admin/php/route_enable')) {
 			}
 
 			$html = str_replace('<span id=lblHandle></span>', "<span id=lblHandle>$handle</span>", $html);
-			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);
+			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);			
+			$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
 		}
 
 		if (function_exists('WriteLog') && GetConfig('admin/php/debug')) {
