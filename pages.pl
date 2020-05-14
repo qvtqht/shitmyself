@@ -119,7 +119,7 @@ sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author
 		return;
 	}
 
-	my $authorUrl = "/author/$gpgKey/";
+	my $authorUrl = "/author/$gpgKey/index.html";
 
 	my $authorAvatar = '';
 	if ($showPlain) {
