@@ -202,18 +202,29 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				fieldset.appendChild(hrDivider);
 
 				// add [go to profile] link
-				var pProfileLink = document.createElement('p');
-				var aProfile = document.createElement('a');
-				aProfile.setAttribute('href', '/author/' + getUserFp() + '/index.html');
-				aProfile.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(); }');
-				aProfile.setAttribute('id', 'linkGoToProfile');
-				aProfile.innerHTML = 'Go to profile';
-				pProfileLink.appendChild(aProfile);
-				fieldset.appendChild(pProfileLink);
+				var pProfileLink = document.getElementById('spanProfileLink');
+				if (pProfileLink && pProfileLink.innerHTML) {
+					// profile link already there, and contains profile link
+				} else {
+					// profile link not there or the p is empty
+					if (!pProfileLink) {
+						pProfileLink = document.createElement('p');
+					}
 
-				// add horizontal rule
-				var hrDivider = document.createElement('hr');
-				fieldset.appendChild(hrDivider);
+					aProfile = document.createElement('a');
+
+					aProfile.setAttribute('href', '/author/' + getUserFp() + '/index.html');
+					aProfile.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(); }');
+					aProfile.setAttribute('id', 'linkGoToProfile');
+					aProfile.innerHTML = 'Go to profile';
+
+					pProfileLink.appendChild(aProfile);
+					fieldset.appendChild(pProfileLink);
+
+					// add horizontal rule
+					var hrDivider = document.createElement('hr');
+					fieldset.appendChild(hrDivider);
+				}
 
 				// add [save as file] link
 				var pSaveKeyAsTxt = document.createElement('p');
