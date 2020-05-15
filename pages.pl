@@ -1082,18 +1082,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $authorLink; # author's link
 
 		if ($gpgKey) {
-			# if theres a $gpgKey, set up related variables
-
-			$authorUrl = "/author/$gpgKey/";
-			$authorAvatar = GetAvatar($gpgKey);
-
-			$authorAvatar = trim($authorAvatar);
-
-			# generate $authorLink from template
-			$authorLink = GetTemplate('authorlink.template');
-
-			$authorLink =~ s/\$authorUrl/$authorUrl/g;
-			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+			# get author link for this gpg key
+			$authorLink = GetAuthorLink($gpgKey);
 		} else {
 			# if no author, no $authorLink
 			$authorLink = ''; #todo put it into GetItemTemplate() logic instead
@@ -1822,11 +1812,6 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
-	if (GetConfig('html/clock')) {
-		# if clock is enabled, automatically add its js
-		push @scriptNames, 'clock';
-	}
-
 	if (GetConfig('html/fresh_js')) {
 		# if clock is enabled, automatically add it
 		push @scriptNames, 'fresh';
@@ -1842,6 +1827,13 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 	# loop through all the scripts
 	foreach my $script (@scriptNames) {
+		if ($script eq 'clock') {
+			my $clockFormat = GetConfig('html/clock_format');
+			if ($clockFormat eq 'epoch' || $clockFormat eq 'union' || $clockFormat eq '24hour') {
+				$script = 'clock/' . $clockFormat;
+			}
+		}
+
 		# only inject each script once, otherwise move on
 		if (defined($scriptsDone{$script})) {
 			next;
@@ -1965,6 +1957,13 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 
 	# loop through all the scripts
 	foreach my $script (@scriptNames) {
+		if ($script eq 'clock') {
+			my $clockFormat = GetConfig('html/clock_format');
+			if ($clockFormat eq 'epoch' || $clockFormat eq 'union' || $clockFormat eq '24hour') {
+				$script = 'clock/' . $clockFormat;
+			}
+		}
+
 		# only inject each script once, otherwise move on
 		if (defined($scriptsDone{$script})) {
 			next;
@@ -2032,7 +2031,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 
-	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
+	$scriptInject = '<!-- InjectJs2: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
 	if ($injectMode ne 'append' && index($html, $htmlTag) > -1) {
 		# replace it into html, right before the closing </body> tag
@@ -2094,7 +2093,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 			$authorVoteButtons = '-';
 		}
 
-		my $authorLink = "/author/" . $authorKey . "/";
+		my $authorLink = GetAuthorLink($authorKey);
 
 #		my $authorFriendKey = $authorFriend->{'author_key'};
 
@@ -2104,7 +2103,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorLastSeen = GetTimestampElement($authorLastSeen);
 #		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 #
-		$authorItemTemplate =~ s/\$link/$authorLink/g;
+		$authorItemTemplate =~ s/\$authorLink/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
@@ -2778,20 +2777,20 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Stats page
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("stats.html", $statsPage);
-
-	{ # clock test page
-		my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
-		my $clockTestPage = '<html><body>';
-		$clockTestPage .= $clockTest;
-		$clockTestPage .= '</body></html>';
-		$clockTestPage = InjectJs($clockTestPage, qw(clock));
-		PutHtmlFile("clock.html", $clockTestPage);
-	}
+	#
+	# { # clock test page
+	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
+	# 	my $clockTestPage = '<html><body>';
+	# 	$clockTestPage .= $clockTest;
+	# 	$clockTestPage .= '</body></html>';
+	# 	$clockTestPage = InjectJs($clockTestPage, qw(clock));
+	# 	PutHtmlFile("clock.html", $clockTestPage);
+	# }
 
 	{
 		my $fourOhFourPage = GenerateDialogPage('404'); #GetTemplate('404.template');
 		if (GetConfig('html/clock')) {
-			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
+			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock)); #todo
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
 	}
@@ -3167,12 +3166,6 @@ sub GetWritePage { # returns html for write page
 
 	my $writeForm = GetWriteForm();
 	$txtIndex .= $writeForm;
-
-	if (GetConfig('admin/image/enable')) {
-		# add upload form if images module is enabled
-		my $uploadForm = GetUploadWindow();
-		$txtIndex .= $uploadForm;
-	}
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		my $itemCounts = GetTemplate('form/itemcount.template');
