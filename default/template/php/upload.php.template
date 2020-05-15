@@ -91,7 +91,12 @@ if (!empty($_FILES['uploaded_file'])) {
 
 				if ($redirectUrl) {
 					WriteLog('Location: ' . $redirectUrl);
-					header('Location: ' . $redirectUrl);
+
+					if (GetConfig('admin/php/debug')) {
+                    	// don't redirect
+					} else {
+						header('Location: ' . $redirectUrl);
+					}
 				}
 			}
 		}
