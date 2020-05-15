@@ -419,7 +419,8 @@ if (GetConfig('admin/php/route_enable')) {
 								file_put_contents('../config/html/theme', $newTheme);
 							}
 
-							$responseThemeChanged = StoreServerResponse('Theme update: ' . $newTheme);
+							$responseThemeChanged = StoreServerResponse('Requested theme change: ' . $newTheme);
+							
 							if (!$redirectUrl) {
 								$redirectUrl = '/settings.html?message=' . $responseThemeChanged;
 							}
@@ -707,7 +708,7 @@ if (GetConfig('admin/php/route_enable')) {
 
 		if ($lightMode) {
 			$html = StripComments($html);
-			$html = StripWhitespace($html);
+			$html = StripWhitespace($html);                          
 			$html = CleanBodyTag($html);
 			$html = StripHeavyTags($html);
 
