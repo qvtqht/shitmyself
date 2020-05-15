@@ -1570,7 +1570,10 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			substr(lc($file), length($file) -4, 4) eq ".gif" ||
 			substr(lc($file), length($file) -4, 4) eq ".png" ||
 			substr(lc($file), length($file) -4, 4) eq ".bmp" ||
-			substr(lc($file), length($file) -4, 4) eq ".svg"
+			substr(lc($file), length($file) -4, 4) eq ".svg" ||
+			substr(lc($file), length($file) -5, 5) eq ".jfif" ||
+			substr(lc($file), length($file) -5, 5) eq ".webp"
+			#todo config/admin/upload/allow_files
 		)
 	) {
 		my $fileHash = GetFileHash($file);
