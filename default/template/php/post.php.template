@@ -408,7 +408,12 @@ if (!$redirectUrl && $fileUrlPath) {
 }
 
 if ($redirectUrl) {
-	header('Location: ' . $redirectUrl);
+	WriteLog('Location: ' . $redirectUrl);
+	if (GetConfig('admin/php/debug')) {
+		$html = '<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> (debug message)<hr>' . $html;
+	} else {
+		header('Location: ' . $redirectUrl);
+	}
 }
 
 print($html);
