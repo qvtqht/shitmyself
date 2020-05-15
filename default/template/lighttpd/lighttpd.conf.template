@@ -25,11 +25,13 @@ mimetype.assign = (
 	".css" => "text/css",
 	".js" => "text/javascript",
 
-	".jpg" => "image/jpeg",
-	".png" => "image/png",
-	".gif" => "image/gif",
-	".bmp" => "image/bmp",
-	".svg" => "image/svg+xml",
+	".jpg"  => "image/jpeg",
+	".png"  => "image/png",
+	".gif"  => "image/gif",
+	".bmp"  => "image/bmp",
+	".svg"  => "image/svg+xml",
+	".jfif"  => "image/jpeg",
+	".webp"  => "image/webp",
 
 	".atom"          =>  "application/atom+xml",
 	".geojson"       =>  "application/vnd.geo+json",
