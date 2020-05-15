@@ -962,6 +962,19 @@ sub GetClockFormattedTime() { # returns current time in appropriate format from 
 	#formats supported: union, epoch (default)
 
 	my $clockFormat = GetConfig('html/clock_format');
+	chomp $clockFormat;
+
+	if ($clockFormat eq '24hour') {
+	    my $time = GetTime();
+
+        my $hours = strftime('%H', localtime $time);
+        my $minutes = strftime('%M', localtime $time);
+        my $seconds = strftime('%S', localtime $time);
+
+        my $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+
+        return $clockFormattedTime;
+    }
 
 	if ($clockFormat eq 'union') {
 		my $time = GetTime();
