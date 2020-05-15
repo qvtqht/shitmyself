@@ -1,4 +1,4 @@
-// == begin clock.js
+// == begin clock/epoch.js
 
 var timeoutClock;
 
@@ -20,4 +20,4 @@ function setClock() {
 
 timeoutClock = window.setTimeout('setClock()', 500);
 
-// == end clock.js
+// == end clock/epoch.js

@@ -1,4 +1,4 @@
-// == begin clock.js
+// == begin clock/24hour.js
 
 var timeoutClock;
 
@@ -33,4 +33,4 @@ function setClock() {
 
 timeoutClock = window.setTimeout('setClock()', 50);
 
-// == end clock.js
+// == end clock/24hour.js

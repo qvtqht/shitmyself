@@ -1,4 +1,4 @@
-// == begin clock.js
+// == begin clock/union.js
 
 var timeoutClock;
 
@@ -59,4 +59,4 @@ function setClock() {
 
 timeoutClock = window.setTimeout('setClock()', 50);
 
-// == end clock.js
+// == end clock/union.js
