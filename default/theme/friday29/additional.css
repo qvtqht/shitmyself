@@ -8,6 +8,7 @@ body {
 }
 #txtClock {
 	border: 1pt inset $colorWindow;
+	background-color: $colorWindow;
 }
 .statusbar td {
 	border: 0;
