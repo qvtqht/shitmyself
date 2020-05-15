@@ -1,3 +1,5 @@
+address possibility of mismatch between cookie and localstorage
+
 custom 401 page
 
 when replying to public key, replyto should be author's fingerprint, not item's hash
