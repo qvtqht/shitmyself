@@ -634,6 +634,21 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 
 	$clockFormat = GetConfig('html/clock_format');
 
+	if ($clockFormat == '24hour') {
+	    $time = GetTime();
+
+		// #todo make it perl-equivalent with localtime($time)
+        $hours = strftime('%H', $time);
+        $minutes = strftime('%M', $time);
+        $seconds = strftime('%S', $time);
+
+        $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+
+		WriteLog("GetClockFormattedTime: return $clockFormattedTime");
+
+		return $clockFormattedTime;
+    }
+
 	if ($clockFormat == 'union') {
 		// union square clock format
 		$time = GetTime() - 3600*4; // hard-coded correction, should be timezone convert
@@ -670,7 +685,6 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 		$clockFormattedTime = $hours . $minutes . $seconds . $milliseconds . $secondsR . $minutesR . $hoursR;
 
 		WriteLog("GetClockFormattedTime: return $clockFormattedTime");
-
 
 		return $clockFormattedTime;
 	}
