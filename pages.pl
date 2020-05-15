@@ -1765,7 +1765,11 @@ sub GetStatsTable() {
 	$filesTotal += trim(`find $IMAGEDIR | grep \.jpg\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.gif\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.bmp\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.jfif\$ | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR | grep \.webp\$ | wc -l`);
 	$filesTotal += trim(`find $IMAGEDIR | grep \.svg\$ | wc -l`);
+	#todo config/admin/upload/allow_files
+	
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
@@ -2762,7 +2766,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Submit page
 	my $submitPage = GetWritePage();
 	PutHtmlFile("write.html", $submitPage);
-	PutHtmlFile("create.html", $submitPage);
+
+	# Upload page
+	my $uploadPage = GetUploadPage();
+	PutHtmlFile("upload.html", $uploadPage);
 
 	# Add Event page
 	my $eventAddPage = GetEventAddPage();
@@ -3036,6 +3043,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 		my $HtpasswdTemplate .= GetTemplate('htaccess/htpasswd.template');
 		PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
+		chmod 0644, "$HTMLDIR/.htpasswd";
 	}
 
 	PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
@@ -3062,6 +3070,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 sub GetUploadWindow {
 	my $uploadForm = GetTemplate('form/upload.template');
+
+	my $allowFiles = GetConfig('admin/image/allow_files');
+
+	$uploadForm =~ s/\$allowFiles/$allowFiles/gms;
 
 	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, '');
 
@@ -3113,6 +3125,27 @@ sub GetWriteForm {
 
 
 	return $writeForm;
+}
+
+sub GetUploadPage { # returns html for upload page
+	my $html = '';
+	my $title = 'Upload';
+
+	$html .= GetPageHeader($title, $title, 'upload');
+
+	$html .= GetTemplate('maincontent.template');
+
+	$html .= GetUploadWindow();
+
+	$html .= GetPageFooter();
+
+	if (GetConfig('php/enable')) {
+		$html = InjectJs($html, qw(settings avatar write translit write_php profile));
+	} else {
+		$html = InjectJs($html, qw(settings avatar write translit profile));
+	}
+
+	return $html;
 }
 
 sub GetWritePage { # returns html for write page
