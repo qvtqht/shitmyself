@@ -27,12 +27,6 @@
 				<p class=advanced>No matches.</p>
 			</td>
 		</tr>
-
-		<tr class=statusbar>
-			<td>
-				Ready
-			</td>
-		</tr>
 	</table>
 </font>
 <!-- / no_items.template -->
