@@ -440,6 +440,14 @@ if (!$arg1) {
 				$findCommand = "find \"$IMAGEDIR\" | grep -i \.svg\$";
 				push @files, split("\n", `$findCommand`);
 
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jfif\$";
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.webp\$";
+				push @files, split("\n", `$findCommand`);
+				#todo config/admin/upload/allow_files
+
+
 				# if ($filesLimit > scalar(@files)) {
 				# 	$filesLimit = scalar(@files);
 				# }
@@ -565,7 +573,10 @@ if (!$arg1) {
 			lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' ||
 			lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg' ||
 			lc(substr($arg1, length($arg1) - 4, 4)) eq '.bmp' ||
-			lc(substr($arg1, length($arg1) - 4, 4)) eq '.svg'
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.svg' ||
+			lc(substr($arg1, length($arg1) - 5, 5)) eq '.webp' ||
+			lc(substr($arg1, length($arg1) - 5, 5)) eq '.jfif'
+			#todo config/admin/upload/allow_files
 		) { #$arg1 =~ m/\.txt$/
 
 			my $filesProcessed = ProcessImageFile($arg1);
