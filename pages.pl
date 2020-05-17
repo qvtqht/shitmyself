@@ -1427,7 +1427,7 @@ sub FillThemeColors {
 	return $html;
 }
 
-sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on referenced list
+sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns html menu based on referenced list
 # $listName is reference to a list in config/list, e.g. config/list/menu
 # $separator is what is inserted between menu items
 
@@ -1440,18 +1440,16 @@ sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on r
 		return;
 	}
 
-	my $listText = GetConfig('list/' . $listName);
+	my $templateName = shift;
+	if (!$templateName) {
+		$templateName = 'menuitem.template';
+	}
+	chomp $templateName;
+
+	my $listText = GetConfig('list/' . $listName); #list/menu
 	my @menuList = split("\n", $listText);
 
-	my $separator = shift;
-	if (!$separator) {
-		$separator = '';
-	} else {
-		chomp $separator;
-	}
-
 	my $menuItems = ''; # output html which will be returned
-	my $comma = ''; # separator (filled after first item)
 
 	foreach my $menuItem (@menuList) {
 		my $menuItemName = $menuItem;
@@ -1465,16 +1463,8 @@ sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on r
 		# capitalize caption
 		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
-		# add separator
-		$menuItems .= $comma;
-
 		# add menu item to output
-		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption);
-
-		if (!$comma) {
-			# set separator after first item
-			$comma = $separator;
-		}
+		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
 	}
 
 	# return template we've built
@@ -2444,8 +2434,14 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	# 	return '';
 	# }
 
+	my $templateName = shift;
+	if (!$templateName) {
+		$templateName = 'menuitem.template';
+	}
+	chomp $templateName;
+
 	my $menuItem = '';
-	$menuItem = GetTemplate('menuitem.template');
+	$menuItem = GetTemplate($templateName);
 
 	#my $color = GetThemeColor('link');
 	# my $colorSourceHash = md5_hex($caption);
@@ -3358,27 +3354,28 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $menuItems = '';
-	#todo move html to template
-	$menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
 
-	# my $menuItems;
-	# $menuItems .= GetMenuFromList('menu', '<br>');
-	# $menuItems .= '<br>';
-	# $menuItems .= GetMenuFromList('menu_advanced', '<br>');
+	my $menuItems = GetMenuFromList('menu', 'menuitem-p.template');
+	$menuItems .= GetMenuFromList('menu_advanced', 'menuitem-p.template');
+	#todo move html to template
+	#
+	#
+	# my $menuItems = '';
+	# #todo move html to template
+	# $menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
+	# # $menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
+	# $menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
 
 	my $etcPageContent = GetTemplate('etc.template');
 
 	$etcPageContent =~ s/\$etcMenuItems/$menuItems/;
 
-	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, 'Ready');
+	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, '');
 
 	$txtIndex .= $etcPageWindow;
 
