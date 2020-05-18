@@ -373,7 +373,12 @@ if (isset($comment) && $comment) {
 
 				$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
 
-				$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
+				$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor;
+				// issue #1: not using RedirectWithResponse()
+				// issue #2: ie does not like redirecting to a url with an anchor tag, because it tries to include that in the request
+				// issue #3: mosaic doesn't like relative redirects, need to include own domain in return url
+
+				//$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
 		}
 	}
@@ -412,7 +417,9 @@ if ($redirectUrl) {
 	if (GetConfig('admin/php/debug')) {
 		$html = '<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> (debug message)<hr>' . $html;
 	} else {
-		header('Location: ' . $redirectUrl);
+		//header('Location: ' . $redirectUrl);
+
+	    RedirectWithResponse($redirectUrl, "Success! Profile created! <small>in $finishTime"."s</small>");
 	}
 }
 
