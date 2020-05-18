@@ -10,8 +10,20 @@
 //	// server-side shove an image into it as needed
 //}
 
+
 function PingUrl(url) { // loads arbitrary url via image
 // compatible with most js
+
+	// #todo
+	//	if (window.XMLHttpRequest) {
+	//		pingUrlClient = new XMLHttpRequest();
+	//		pingUrlClient.open("GET", url, true);
+	//
+	//		pingUrlClient.onreadystatechange = signVoteCallback;
+	//
+	//		freshClient.send();
+	//	}
+
 	if (document.images) {
 		if (document.images.length) {
 			// use last image on page, if possible. this should be the special pixel image.
@@ -107,20 +119,19 @@ function signVote(t, token) { // signs a vote from referenced vote button
 			openpgp.sign(options).then(signCallback);
 		}
 
-		return false;
+		return false; // cancel link click-through
 	} else {
-//	    if (document.images) {
-//	        var myUrl = window.location;
-//	    	document.images[0].src = '/post.html?mydomain=' + myUrl;
-//
-//	    	//alert('DEBUG: t = ' + t);
-//
-//	    	return false;
-//	    }
+		//	    if (document.images) {
+		//	        var myUrl = window.location;
+		//	    	document.images[0].src = '/post.html?mydomain=' + myUrl;
+		//
+		//	    	//alert('DEBUG: t = ' + t);
+		//
+		//	    	return false;
+		//	    }
 	}
 
-	// return true so that calling link goes to its target
-	return true;
+	return true; // allow link click to happen
 }
 
 // == end voting.js
