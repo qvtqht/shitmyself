@@ -1,3 +1,19 @@
+When displaying thread, OP's top-replies should be sorted first
+
+make setconfig token not sensitive to whitespace differences
+
+detect client-side advanced mode
+	flip class=beginner nodes to hidden by default during page pre-process
+		eliminate page jump
+
+import rss
+
+#bug
+list of tags has issues in light mode
+
+make setting to prefer post over get when possible
+	this will help avoid tripping up dreamhost's mod_security when sharing pubkey
+
 address possibility of mismatch between cookie and localstorage
 
 custom 401 page
