@@ -487,7 +487,7 @@ if (GetConfig('admin/php/route_enable')) {
 								} else {
 									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
 
-									$responseOverthrow = StoreServerResponse('Overthrow conditions not met, overthrow unsuccessful');
+									$responseOverthrow = StoreServerResponse('Overthrow unsuccessful, conditions not met.');
 									$redirectUrl = '/settings.html?message=' . $responseOverthrow;
 								}
 							} else {
