@@ -68,4 +68,7 @@ input:focus, textarea:focus {
     width: 50%;
     border: $borderDialog;
 }
-
+#txtClock {
+	border: 1pt inset $colorWindow;
+	background-color: $colorWindow;
+}
