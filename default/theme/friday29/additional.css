@@ -7,7 +7,7 @@ body {
 	box-shadow: 5pt 5pt 5pt #aabbcc;
 }
 #txtClock {
-	border: 1pt inset $colorWindow;
+	border: 0;
 	background-color: $colorWindow;
 }
 .statusbar td {
@@ -35,4 +35,7 @@ textarea:focus {
     left: 25%;
     width: 50%;
     border: $borderDialog;
+}
+#aBackToTop {
+	background-color: $colorHighlightBeginner;
 }
