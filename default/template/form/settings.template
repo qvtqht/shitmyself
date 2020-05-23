@@ -1,9 +1,9 @@
 <!-- settings.template -->
 <noscript>
-	<p>
-		Client-side settings require JavaScript...<br>
-		Aside from this page, the site should work for you.
-	</p>
+	<table class=dialog bgcolor="$colorWindow"><tr><td>
+		<b>JavaScript</b> is optional on this site.<br>
+		However, settings marked * won't work without it.<br>
+	</td></tr></table>
 </noscript>
 
 <form id=frmSettings name=frmSettings>
@@ -18,7 +18,7 @@
 			<tr class=body>
 				<td class=content>
 					<fieldset>
-						<legend>Interface Mode<br></legend>
+						<legend>Interface Mode<noscript>*</noscript><br></legend>
 
 						<p><nobr>
 							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }">
@@ -32,7 +32,7 @@
 					<p></p>
 
 					<fieldset>
-						<legend>Voting<br></legend>
+						<legend>Voting<noscript>*</noscript><br></legend>
 
 						<p>
 							<label for=chkWantToVote>
