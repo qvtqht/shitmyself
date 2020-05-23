@@ -18,7 +18,7 @@
 			name=btnRegister
 			onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }"
 			id=btnRegister
-			value="Register"
+			value="Join"
 		>
 		<input
 			type=submit
