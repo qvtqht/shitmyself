@@ -11,9 +11,14 @@
 
 			<tr class=body>
 				<td class=content>
-					<p>
+					<p><span class=advanced>$votesSummary<br></span>
 					<textarea
-						wrap=soft rows=4 cols=40 style="width: 100%;" id=comment name=comment
+						wrap=soft
+						rows=4
+						cols=60
+						style="min-width: 360px; height: 80px;"
+						id=comment
+						name=comment
 					>$replyFooter</textarea><br>
 					<input type=submit value="Send Reply">
 					<span id=replySignedContainer></span>
