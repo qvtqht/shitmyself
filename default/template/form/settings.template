@@ -1,11 +1,4 @@
 <!-- settings.template -->
-<noscript>
-	<table class=dialog bgcolor="$colorWindow"><tr><td>
-		<b>JavaScript</b> is optional on this site.<br>
-		However, settings marked * won't work without it.<br>
-	</td></tr></table>
-</noscript>
-
 <form id=frmSettings name=frmSettings>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
@@ -17,6 +10,15 @@
 
 			<tr class=body>
 				<td class=content>
+					<noscript><fieldset>
+						<legend>Notice About JavaScript<br></legend>
+
+						<b>JavaScript</b> is optional on this site.<br>
+						However, settings marked * won't work without it.<br>
+					</fieldset></noscript>
+
+					<p></p>
+
 					<fieldset>
 						<legend>Interface Mode<noscript>*</noscript><br></legend>
 
