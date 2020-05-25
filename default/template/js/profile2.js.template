@@ -257,13 +257,16 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 
 				//alert('DEBUG: AddPrivateKeyLinks: creating file input...');
 
+				// label for "load from file" button
 				var labelLoadFromFile = document.createElement('label');
 				labelLoadFromFile.setAttribute('for', 'fileLoadKeyFromText');
 				labelLoadFromFile.innerHTML = 'Load from file:';
 
+				// line break after label
 				var brLoadFromFile = document.createElement('br');
 				labelLoadFromFile.appendChild(brLoadFromFile);
 
+				// "load from file" button itself
 				var fileLoadKeyFromText = document.createElement('input');
 				fileLoadKeyFromText.setAttribute('type', 'file');
 				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
