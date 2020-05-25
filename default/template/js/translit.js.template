@@ -1,4 +1,4 @@
-// begin translit.js.template
+// begin translit.js.template -- substitutes typed characters with different character set
 
 function translitKey(e, t) { // replaces pressed key with russian letter
 // called via textarea or input's onkeydown event
