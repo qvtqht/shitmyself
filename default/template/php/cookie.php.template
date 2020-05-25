@@ -4,12 +4,6 @@ $cookie = 0;
 
 include_once('utils.php');
 
-$commandRegister = 'Register';
-$commandRegister1 = 'Meditate...';
-$commandRegister2 = 'Please wait...';
-$commandRegister3 = 'Wait...';
-$commandUnregister = 'Sign Out';
-
 // #technically all the commands stuff should be in profile.php
 
 //	WriteLog(htmlspecialchars(nl2br(print_r($_GET))));
@@ -24,7 +18,7 @@ if (isset($_GET['btnRegister'])) {
 	$_GET['request'] = 'Register';
 }
 
-if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
+if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 	unsetcookie2('test');
 	unsetcookie2('cookie');
 	unsetcookie2('checksum');
@@ -91,7 +85,7 @@ if (isset($_GET['request']) && $_GET['request'] == $commandUnregister) {
 			RedirectWithResponse('/profile.html', 'Success! You have signed in.');
 		}
 	} else {
-		if (isset($_GET['request']) && ($_GET['request'] == $commandRegister || $_GET['request'] == $commandRegister1 || $_GET['request'] == $commandRegister2 || $_GET['request'] == $commandRegister3)) {
+		if (isset($_GET['request']) && ($_GET['request'] == 'Register')) { // WARNING! $_GET['request'] may be set by code above
 			setcookie2('test', '1');
 			header('Location: /profile.html?' . time());
 		}
