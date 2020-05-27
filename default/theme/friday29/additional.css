@@ -25,7 +25,7 @@ textarea:focus {
 	background-color: $colorInputBackground;
 }
 #serverResponse {
-/* messages from server */
+/* responses from server */
     background-color: $colorHighlightAlert;
     color: $colorText;
     padding: 5pt;
