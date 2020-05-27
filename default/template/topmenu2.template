@@ -1,21 +1,20 @@
 <!-- topmenu2.template -->
 <form action="" name="frmTopMenu">
-	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
+	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog width="95%">
 		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
-			<td><small>
+			<td colspan=2><small>
 			<b>
 				<a tabindex=2 href="#maincontent" name=top><font color=$colorTitlebarText>Skip to main content</font></a>;
 				<a href="$selfLink?light=1" tabindex=3><font color=$colorTitlebarText>Accessibility mode</font></a>;
-
-			</b>
-			</small><br></td>
-			<td align=right>$clock</td>
+			</b><br>
+			</small></td>
 		</tr>
 		<tr bgcolor=$colorWindow class=menubar>
-			<td colspan=2>
-				<big style="padding:5pt"><big>$menuItems</big></big>
-				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>
+			<td>
+				<big style="padding:5pt"><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big></big>
+				<a href="/etc.html">More</a>
 			</td>
+			<td align=right>$clock</td>
 		</tr>
 	</table>
 </form>
