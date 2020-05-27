@@ -2,7 +2,7 @@
 
 <h1>Welcome to Area 404</h1>
 
-<p>Explanation: This page does not exist... yet. It may exist in the future, its existence set in motion by your request. Try again later!</p>
+<p>This page does not exist. It may still be in preparation.</p>
 
 <form action=/post.html>
 	<label for=comment>
