@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/perl
 
 use strict;
 use warnings;
@@ -477,7 +477,7 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 	WriteLog("GetFileHash($fileName)");
 
 	my $fileContent = GetFile($fileName);
-	#
+    #
 	# if (index($fileContent, "\n-- \n") > -1) {
 	# 	$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
 	# }
@@ -1604,9 +1604,9 @@ sub IsAdmin { # returns 1 if parameter equals GetAdminKey() or GetServerKey(), o
 	#
 	#	if ($adminKey eq $key) {
 	if ($key eq GetAdminKey() || $key eq GetServerKey()) {
-		return 1;
+		return 1; # is admin, return true;
 	} else {
-		return 0;
+		return 0; # not admin, return false;
 	}
 }
 
