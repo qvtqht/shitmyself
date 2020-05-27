@@ -414,13 +414,7 @@ if (!$redirectUrl && $fileUrlPath) {
 
 if ($redirectUrl) {
 	WriteLog('Location: ' . $redirectUrl);
-	if (GetConfig('admin/php/debug')) {
-		$html = '<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> (debug message)<hr>' . $html;
-	} else {
-		//header('Location: ' . $redirectUrl);
-
-	    RedirectWithResponse($redirectUrl, "Success! Profile created! <small>in $finishTime"."s</small>");
-	}
+	RedirectWithResponse($redirectUrl, "Success! <small>in $finishTime"."s</small>");
 }
 
 print($html);
