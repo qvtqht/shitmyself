@@ -3,7 +3,7 @@
 	<input
 		style="text-align: center; float: right;"
 		type=text
-		size=11
+		size=15
 		name=txtClock
 		id=txtClock value="$currentTime"
 		title=clock
