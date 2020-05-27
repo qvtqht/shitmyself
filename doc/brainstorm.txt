@@ -1,3 +1,23 @@
+shim/polyfill idea
+	createElement, addChild --> request for server to build form
+	
+
+
+
+Automatically underline-colorize links using hash of url
+
+server response could stick around at the ?message= url until user clicks thanks
+	would require cleaning up the cache every x hours
+
+setting for manual seen/unseen marking?
+
+[back to top] button
+	when clicked, change to "back to ..." button
+		which returns to where user was scrolled down
+			credit: pikabu
+
+cornerstone
+
 Windows and Mac installers
 ==========================
 

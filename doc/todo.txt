@@ -1,3 +1,29 @@
+"paste a lot of text" form
+	method=post
+	"warning: this method is less reliable, but allows more text"
+
+route.php
+	if (page has a priority in page_touch) {
+		remake page before serving
+	}
+
+timestamp title/tooltip/alt should be a human-readable timestamp
+	perhaps same as clock_format??
+
+profile page
+	without js
+		should not say anything about pgp
+	without php
+		shouldn't say cookies
+	without js or php
+		should show message that profiles are only available using pgp
+
+new comments since last visit
+	store in localstorage: page key, last visit
+	highlight new comments
+
+
+
 When displaying thread, OP's top-replies should be sorted first
 
 make setconfig token not sensitive to whitespace differences
