@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/perl
 
 use strict;
 use warnings;
@@ -54,7 +54,7 @@ sub GenerateDialogPage { # generates page with dialog
 
 			$windowContents = GetTemplate('404.template');
 
-			# todo look up in list/looking_for
+			# todo choose random item from list/looking_for
 			my $lookingFor = 'kittens';
 			$windowContents =~ s/looking for kittens/looking for $lookingFor/;
 
@@ -62,12 +62,9 @@ sub GenerateDialogPage { # generates page with dialog
 			$pageTemplate = '';
 
 			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('htmlstart.template');
-
 			$pageTemplate .= GetTemplate('maincontent.template');
-
-			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, 'Ready');
+			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, '');
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
-
 			$pageTemplate .= GetPageFooter();
 
 			$pageTemplate = InjectJs($pageTemplate, qw(settings profile));
@@ -709,6 +706,8 @@ sub GetItemPage {
     }
 
     if (GetConfig('replies')) {
+    	# add reply form bottom of page
+
         my $replyForm;
         my $replyTag = GetTemplate('replytag.template');
         my $replyFooter;
@@ -719,16 +718,18 @@ sub GetItemPage {
         $fileContents = GetFile($file{'file_path'});
 
         $replyForm = GetTemplate('form/reply.template');
+		$replyFooter = '';
+
         #		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
-        $replyFooter = '';
 		#
 		# if ($file{'author_key'}) {
 		# 	$replyTo = $file{'author_key'};
 		# } else {
 		# 	$replyTo = $file{'file_hash'};
 		# }
-		$replyTo = $file{'file_hash'};
+		#todo $replyTo should be $file{'author_key'} only if item is pubkey
 
+		$replyTo = $file{'file_hash'};
 
 		if (GetConfig('admin/js/enable')) {
 			$replyForm =~ s/(\<input type=submit )/$1 onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"/i;
@@ -746,13 +747,26 @@ sub GetItemPage {
         $replyForm =~ s/\$replyTo/$replyTo/g;
         # $replyForm =~ s/\$prefillText/$prefillText/g;
 
+
+		# at the top of reply.template, there is a placeholder for the voting buttons
+		# this will put them there
+		my $votesSummary = GetItemVoteButtons($file{'file_hash'});
+		$replyForm =~ s/\$votesSummary/$votesSummary/g;
+
         if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
             # my $postHtml = '\/post\.html';
             $replyForm =~ s/\/post\.html/\/post.php/g;
         }
 
         if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
-            $replyForm = AddAttributeToTag($replyForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
+        	# add onkeydown event which calls translitKey if feature is enabled
+        	# translit substitutes typed characters with a different character set
+            $replyForm = AddAttributeToTag(
+            	$replyForm,
+            	'textarea',
+            	'onkeydown',
+            	'if (window.translitKey) { translitKey(event, this); } else { return true; }'
+			);
         }
 
         #$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
@@ -787,7 +801,7 @@ sub GetHtmlLink {
 	}
 }
 
-sub GetItemVoteButtons { # get vote buttons for item in html form
+sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
 	my $fileHash = shift; # item's file hash
 	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
 	my $returnTo = shift; # (optional) what page to return to instead of current (for use by post.php)
@@ -1030,6 +1044,20 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$message = FormatForWeb($message);
 		}
 
+		#if (index($message, "<br>\n--\n<br>\n") > -1) {
+		if (
+		    GetConfig('html/hide_dashdash_signatures') && index($message, "<br>\n-- <br>\n") > -1
+        ) {
+			$message =~ s/(.+)<br>\n-- <br>\n(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/sm;
+			#$message = 'hi';
+			
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+		}
+
+
 		# if any references to other items, replace with link to item
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 		#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
@@ -1090,11 +1118,17 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 		$authorLink = trim($authorLink);
 
-		# set up $permalinkTxt, which links to the .txt version of the file
 		my $permalinkTxt = $file{'file_path'};
-		# strip the 'html/' prefix on the file's path, replace with /
-		# todo relative links
-		$permalinkTxt =~ s/$HTMLDIR\//\//;
+
+		{
+		    #todo still does not work perfectly, this
+			# set up $permalinkTxt, which links to the .txt version of the file
+
+			# strip the 'html/' prefix on the file's path, replace with /
+			# todo relative links
+			$permalinkTxt =~ s/$HTMLDIR\//\//;
+			$permalinkTxt =~ s/^html\//\//;
+		}
 
 		# set up $permalinkHtml, which links to the html page for the item
 		my $permalinkHtml = '/' . GetHtmlFilename($itemHash);
@@ -1203,6 +1237,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$authorLink/[$authorLink]/g;
 		} else {
 			$itemTemplate =~ s/\$authorLink;//g;
+			# if there is no authorlink needed,
+			# get rid of the semicolon after the placeholder as well
 		}
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
@@ -1226,7 +1262,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		} else {
 			$itemTemplate =~ s/\$replyCount/0/g;
 		}
-
 
 		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 		#todo this call is only needed if show_vote_summary or show_qiuck_vote
@@ -1317,6 +1352,7 @@ sub GetPageFooter { # returns html for page footer
 	}
 
 	if (GetConfig('html/back_to_top_button')) {
+		# add back to top button to the bottom of the page, right before </body>
 		my $backToTopTemplate = GetTemplate('html/back_to_top_button.template');
 		$txtFooter =~ s/\<\/body>/$backToTopTemplate<\/body>/i;
 
@@ -1525,6 +1561,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #		$currentTime = trim($currentTime);
 
 		$clock =~ s/\$currentTime/$currentTime/;
+	} else {
+		$clock = '+';
 	}
 
 	# Get the HTML page template
@@ -1540,13 +1578,17 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $adminKey = GetAdminKey();
 
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
+	if (GetConfig('admin/js/enable')) {
+		$topMenuTemplate = AddAttributeToTag ($topMenuTemplate, 'a href="/etc.html"', 'onclick', "if (window.ShowAll) { this.onclick = 'alert();'; return ShowAll(this); } else { return true; }");
+	}
 
 	my $menuItems = GetMenuFromList('menu');
-	$menuItems .= '<span class=advanced><br><small>' . GetMenuFromList('menu_advanced') . '</small></span>';
+	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
 	#todo move html to template
 
 	my $selfLink = '/access.html';
 
+	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
 
@@ -2747,7 +2789,7 @@ sub MakeJsTestPages {
 	PutHtmlFile("jstest2.html", $jsTest2);
 }
 
-sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
+sub MakeSummaryPages { # generates and writes all "summary" and "static" pages StaticPages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 # js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
@@ -2786,7 +2828,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	{
 		my $fourOhFourPage = GenerateDialogPage('404'); #GetTemplate('404.template');
 		if (GetConfig('html/clock')) {
-			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock)); #todo
+			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock)); #todo this causes duplicate clock script
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
 	}
@@ -2863,6 +2905,24 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	}
 
 	{
+		# Welcome page
+
+		my $title = 'Welcome';
+
+		my $welcomePage = GetPageHeader($title, $title, 'welcome');
+
+		$welcomePage .= GetTemplate('maincontent.template');
+
+		my $welcomePageContent = GetTemplate('page/welcome.template');
+
+		$welcomePage .= GetWindowTemplate('Welcome', '', '', $welcomePageContent, '');
+
+		$welcomePage = InjectJs($welcomePage, qw(avatar settings profile));
+
+		PutHtmlFile('welcome.html', $welcomePage);
+	}
+
+	{
 		# Help page
 		my $tfmPage = GetPageHeader("Help", "Help", 'help');
 
@@ -2875,7 +2935,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'', #menubar
 			'', #columns
 			$tfmPageContent,
-			'Ready'
+			''
 		);
 
 		$tfmPage .= $tfmPageWindow;
@@ -3033,6 +3093,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	if (GetConfig('admin/http_auth/enable')) {
 		my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
 		$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+		#todo this currently has a one-account template
+		#todo add generating of template for both lighttpd and htaccess
 
 		$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
 
@@ -3075,7 +3137,7 @@ sub GetUploadWindow {
 	return $uploadWindow;
 }
 
-sub GetWriteForm {
+sub GetWriteForm { # returns write form (for composing text message)
 	my $writeForm = GetTemplate('form/write.template');
 
 	if (GetConfig('admin/php/enable')) {
@@ -3300,21 +3362,16 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 	return $txtIndex;
 }
 
-sub GetAccessPage { # returns html for access page /access.html
+sub GetAccessPage { # returns html for accessibility mode page, /access.html
 	my $html = '';
 
 	my $title = 'Access';
 
 	$html = GetPageHeader($title, $title, 'access');
-
 	$html .= GetTemplate('maincontent.template');
-
 	my $accessTemplate = GetTemplate('access.template');
-
 	$accessTemplate = GetWindowTemplate('Accessibility Mode', '', '', $accessTemplate, '');
-
 	$html .= $accessTemplate;
-
 	$html .= GetPageFooter();
 
 	return $html;
@@ -3354,22 +3411,8 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-
 	my $menuItems = GetMenuFromList('menu', 'menuitem-p.template');
 	$menuItems .= GetMenuFromList('menu_advanced', 'menuitem-p.template');
-	#todo move html to template
-	#
-	#
-	# my $menuItems = '';
-	# #todo move html to template
-	# $menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
-	# # $menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
 
 	my $etcPageContent = GetTemplate('etc.template');
 
@@ -3689,12 +3732,11 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	# topitems page
 	elsif ($pageType eq 'top') {
 		my $topItemsPage = GetTopItemsPage();
+		PutHtmlFile("top.html", $topItemsPage);
 
 		if (GetConfig('home_page') eq 'top') {
 			PutHtmlFile("index.html", $topItemsPage);
 		}
-
-		PutHtmlFile("top.html", $topItemsPage);
 	}
 	#
 	# stats page
