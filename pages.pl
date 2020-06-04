@@ -2795,6 +2795,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	WriteLog('MakeSummaryPages() BEGIN');
 
 	PutHtmlFile("test.html", GetTemplate('test.template'));
+	PutHtmlFile("kbd.html", GetTemplate('keyboard.template'));
+	PutHtmlFile("frame.html", GetTemplate('keyboard_frame.template'));
 
 	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
 
@@ -3370,7 +3372,7 @@ sub GetAccessPage { # returns html for accessibility mode page, /access.html
 	$html = GetPageHeader($title, $title, 'access');
 	$html .= GetTemplate('maincontent.template');
 	my $accessTemplate = GetTemplate('access.template');
-	$accessTemplate = GetWindowTemplate('Accessibility Mode', '', '', $accessTemplate, '');
+	$accessTemplate = GetWindowTemplate('Select Accessibility Mode', '', '', $accessTemplate, '');
 	$html .= $accessTemplate;
 	$html .= GetPageFooter();
 
