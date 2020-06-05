@@ -62,11 +62,8 @@ input:focus, textarea:focus {
     color: $colorText;
     padding: 5pt;
     spacing: 5pt;
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    width: 50%;
     border: $borderDialog;
+	box-shadow: 5pt 5pt 5pt #405050;
 }
 #txtClock {
 	border: 1pt inset $colorWindow;
