@@ -1,6 +1,7 @@
 // begin translit.js.template -- substitutes typed characters with different character set
 
 function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
+	var gt = unescape('%3E');
 
 // called via textarea or input's onkeydown event
 // e is event object passed by onkeydown event
@@ -69,8 +70,8 @@ function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 		// lookup lists, each char in keysEn
 		// corresponds to the same position in keysRu
 
-		var keysEn = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<>?:[]{}-_=+";
-		var keysRu = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE>UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
+		var keysEn = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
+		var keysRu = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
 
 		if (keysEn.length != keysRu.length) {
 			//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
