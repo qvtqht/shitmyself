@@ -36,18 +36,18 @@ function StripHeavyTags ($html) { // strips heavy tags from page replaces with b
 		$html = preg_replace('/\<\/a\>\<b\>/', '</a>; <b id1>', $html);
 		$html = preg_replace('/\<\/b\>\<a\ /', '</b>; <a id2 ', $html);
 
-		//$html = preg_replace('/\<\/th\>/', '; ', $html);
-		//$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
-		//$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br id3>', $html);
-		//$html = preg_replace('/\<\/td\>/', '; ', $html);
-		//$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br id4><hr>', $html);
-		//$html = preg_replace('/\<\/table\>/', '<br id5><hr>', $html);
-		//$html = preg_replace('/\<\/tr\>/', '<br id6>', $html);
-		//$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br id7>', $html);
-		//$html = preg_replace('/\<\/fieldset\>/', '<br id8>', $html);
-		//$html = preg_replace('/\<\/legend\>/', '<br id9>', $html);
-		//$html = preg_replace('/\<\/a\>\<a/', '</a>; <a id10', $html);
-		//$html = preg_replace('/; ;/', '; ', $html);
+		$html = preg_replace('/\<\/th\>/', '; ', $html);
+		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
+		$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/\<\/td\>/', '; ', $html);
+		$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br><hr>', $html);
+		$html = preg_replace('/\<\/table\>/', '<br><hr>', $html);
+		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br>', $html);
+		$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
+		$html = preg_replace('/\<\/legend\>/', '<br>', $html);
+		$html = preg_replace('/\<\/a\>\<a/', '</a>; <a', $html);
+		$html = preg_replace('/; ;/', '; ', $html);
 	}
 
 	foreach ($tags as $tag) {
@@ -276,14 +276,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 	}
 
-	if (!$html && file_exists('404.html')) {
+	if ((!isset($html) || !$html) && file_exists('404.html')) {
 		// something strange happened, and $html is still blank
 		// try to get 404.html into it
 		WriteLog('HandleNotFound: Fallback which should not happen');
 		$html = file_get_contents('404.html');
 	}
 
-	if (!$html) {
+	if (!isset($html) || !$html) {
 		// evidently, 404.html didn't work, just use some hard-coded html
 		WriteLog('HandleNotFound: Fallback which should not happen');
 		$html = '<html><body>404</body></html>';
@@ -354,6 +354,11 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 						}
 
+						if (isset($_GET['txtClock'])) {
+							$_GET['message'] = 'test';
+							WriteLog('setting message = test');
+						}
+
 						if (
 							isset($_GET['message'])
 						)
@@ -374,7 +379,7 @@ if (GetConfig('admin/php/route_enable')) {
 									into the forums ....
 									nothing but NET
 								');
-								$newUrl = $path . '?message=' . $newMessageId;
+								$newUrl = GetConfig('admin/my_host') . $path . '?message=' . $newMessageId;
 
 								if (!$redirectUrl) {
 									$redirectUrl = $newUrl;
@@ -394,7 +399,6 @@ if (GetConfig('admin/php/route_enable')) {
 						}
 
 						if (
-							isset($_GET['optTheme']) &&
 							isset($_GET['optTheme']) &&
 							isset($_GET['btnSetTheme'])
 						)
@@ -419,11 +423,7 @@ if (GetConfig('admin/php/route_enable')) {
 								file_put_contents('../config/html/theme', $newTheme);
 							}
 
-							$responseThemeChanged = StoreServerResponse('Requested theme change: ' . $newTheme);
-							
-							if (!$redirectUrl) {
-								$redirectUrl = '/settings.html?message=' . $responseThemeChanged;
-							}
+							$responseThemeChanged = RedirectWithResponse('/settings.html', 'Requested theme change: ' . $newTheme);
 						}
 
 						//						if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -443,8 +443,7 @@ if (GetConfig('admin/php/route_enable')) {
 						{
 							WriteLog('Upgrade requested');
 
-							$responseOverthrow = StoreServerResponse('Upgrade requested, but not yet implemented.');
-							$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+							$responseOverthrow = RedirectWithResponse('/settings.html', 'Upgrade requested, but not yet implemented.');
 						}
 
 						if (
@@ -454,8 +453,7 @@ if (GetConfig('admin/php/route_enable')) {
 						{
 							WriteLog('Flush requested');
 
-							$responseOverthrow = StoreServerResponse('Flush requested, but not yet implemented.');
-							$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+							RedirectWithResponse('/settings.html', 'Flush requested, but not yet implemented.');
 						}
 
 						if (
@@ -476,19 +474,16 @@ if (GetConfig('admin/php/route_enable')) {
 										unlink('../admin.key');
 										WriteLog('Overthrow successful');
 
-										$responseOverthrow = StoreServerResponse('Overthrow successful! Register to become operator.');
-										$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+										RedirectWithResponse('/settings.html', 'Overthrow successful! Register to become operator.');
 									} else {
 										WriteLog('Overthrow already in effect: admin.key missing');
 
-										$responseOverthrow = StoreServerResponse('Overthrow already happened! Register to become operator.</a>');
-										$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+										RedirectWithResponse('/settings.html', 'Overthrow already happened! Register to become operator.</a>');
 									}
 								} else {
 									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
 
-									$responseOverthrow = StoreServerResponse('Overthrow unsuccessful, conditions not met.');
-									$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+									RedirectWithResponse('/settings.html', 'Overthrow unsuccessful, conditions not met. This incident will be reported.');
 								}
 							} else {
 								WriteLog('Overthrow conditions not met');
@@ -598,6 +593,14 @@ if (GetConfig('admin/php/route_enable')) {
 			// base template for server message, not including js
 			$serverResponseTemplate = GetTemplate('server_response.template');
 
+			if (GetConfig('admin/js/enable')) {
+				$serverResponseTemplate = AddAttributeToTag(
+					$serverResponseTemplate,
+					'table',
+					'onclick',
+					"if (window.serverResponseOk) { return serverResponseOk(this); }"
+				);
+			}
 
 			$colorHighlightAlert = GetThemeColor('highlight_alert');
 			$serverResponseTemplate = str_replace('$colorHighlightAlert', $colorHighlightAlert, $serverResponseTemplate);
@@ -618,6 +621,11 @@ if (GetConfig('admin/php/route_enable')) {
 
 				if (index($html, "<a name=$anchorTo>") > -1) {
 					// same as below, same message applies
+
+					if (GetConfig('admin/js/enable')) {
+						$serverResponseTemplate = AddAttributeToTag($serverResponseTemplate, 'a href=#maincontent', 'onclick', "if (window.serverResponseOk) { return serverResponseOk(this); } else { return true; }");
+					}
+
 					$serverResponseTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverResponseTemplate);
 
 					$replaceWhat = "<a name=$anchorTo>";
@@ -664,7 +672,8 @@ if (GetConfig('admin/php/route_enable')) {
 
 		if ($redirectUrl) {
 			// if we've come up with a place to redirect to, do it now
-			header('Location: ' . $redirectUrl);
+
+			//header('Location: ' . $redirectUrl);
 		}
 
 		if ($path == '/profile.html') {
@@ -692,7 +701,7 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = str_replace('<span id=lblHandle></span>', "<span id=lblHandle>$handle</span>", $html);
 			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);
 
-			if ($cookie) {
+			if (isset($cookie) && $cookie) {
 				$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
 			}
 		}
@@ -724,12 +733,12 @@ if (GetConfig('admin/php/route_enable')) {
 			//			);
 			$html = str_replace(
 				'>Accessibility mode<',
-				'><font color=orange>Accessibility mode</font><',
+				'><font color=orange>Accessibility mode is ON</font><',
 				$html
 			);
 			$html = str_replace(
 				'>Light Mode<',
-				'><font color=orange>Light Mode</font><',
+				'><font color=#008000>* Light Mode (selected)</font><',
 				$html
 			);
 			//
@@ -740,6 +749,12 @@ if (GetConfig('admin/php/route_enable')) {
 			//	);
 
 			//#todo perhaps strip onclick, onkeypress, etc., and style
+		} else {
+			$html = str_replace(
+				'>Pretty Mode<',
+				'><font color=#008000>* Pretty Mode (selected)</font><',
+				$html
+			);
 		}
 
 		////////////////////////////
