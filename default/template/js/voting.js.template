@@ -10,36 +10,68 @@
 //	// server-side shove an image into it as needed
 //}
 
+function PingUrlCallback () {
+	var xmlhttp = window.xmlhttp;
 
-function PingUrl(url) { // loads arbitrary url via image
+	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		//alert('DEBUG: PingUrlCallback() found status 200');
+
+//		window.location.replace(xmlhttp.responseURL);
+//		document.open();
+//		document.write(xmlhttp.responseText);
+//		document.close();
+	}
+}
+
+function PingUrl (url) { // loads arbitrary url via image or xhr
 // compatible with most js
+	//alert('DEBUG: PingUrl() begins');
 
-	// #todo
-	//	if (window.XMLHttpRequest) {
-	//		pingUrlClient = new XMLHttpRequest();
-	//		pingUrlClient.open("GET", url, true);
-	//
-	//		pingUrlClient.onreadystatechange = signVoteCallback;
-	//
-	//		freshClient.send();
-	//	}
+	if (window.XMLHttpRequest) {
+		//alert('DEBUG: PingUrl: window.XMLHttpRequest was true');
 
-	if (document.images) {
-		if (document.images.length) {
-			// use last image on page, if possible. this should be the special pixel image.
-			var img = document.images[document.images.length - 1];
-
-			if (img) {
-				img.setAttribute("src", url);
-			}
+		var xmlhttp;
+		if (window.xmlhttp) {
+			xmlhttp = window.xmlhttp;
 		} else {
-			var img = document.images[0];
+			window.xmlhttp = new XMLHttpRequest();
+			xmlhttp = window.xmlhttp;
+		}
 
-			if (img) {
-				img.setAttribute("src", url);
+        xmlhttp.onreadystatechange = window.PingUrlCallback;
+
+        xmlhttp.open("HEAD", url, true);
+        xmlhttp.send();
+
+        return false;
+	} else {
+		//alert('DEBUG: PingUrl: using image method, no xhr here');
+
+		if (document.images) {
+			//alert('DEBUG: PingUrl: document.images was true');
+
+			if (document.images.length) {
+				// use last image on page, if possible. this should be the special pixel image.
+				var img = document.images[document.images.length - 1];
+
+				if (img) {
+					img.setAttribute("src", url);
+
+					return false;
+				}
+			} else {
+				var img = document.images[0];
+
+				if (img) {
+					img.setAttribute("src", url);
+
+					return false;
+				}
 			}
 		}
 	}
+
+	return true;
 }
 
 
@@ -61,6 +93,29 @@ function signCallback (signed) {
 	}
 }
 
+function IncrementTagLink (t) { // increments number of votes in tag button
+// adds a number if there isn't one already
+// #todo adapt to accommodate buttons as well
+
+	if (t.innerHTML) {
+		// update count in vote link
+		//alert('DEBUG: signVote: t.innerHTML');
+		var ih = t.innerHTML;
+		if (ih.indexOf('(') == -1) {
+			//alert('DEBUG: signVote: ( not found');
+			t.innerHTML = ih + '(1)';
+		} else {
+			//alert('DEBUG: signVote: ( found');
+
+			var numVal = ih.substring(ih.indexOf('(') + 1, ih.indexOf(')'));
+			var newVal = parseInt(numVal) + 1;
+			var hashTag = ih.substring(0, ih.indexOf('('));
+			t.innerHTML = hashTag + '(' + newVal + ')';
+		}
+		//alert('DEBUG: signVote: finished with t.innerHTML');
+	}
+}
+
 function signVote(t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
 // token = full voting token, in the format vote/fileHash/ballotTime/voteValue/checksum
@@ -69,23 +124,7 @@ function signVote(t, token) { // signs a vote from referenced vote button
 	// needs better compatibility for older browsers
 		// get private key
 
-		if (t.innerHTML) {
-			// update count in vote link
-			//alert('DEBUG: signVote: t.innerHTML');
-			var ih = t.innerHTML;
-			if (ih.indexOf('(') == -1) {
-				//alert('DEBUG: signVote: ( not found');
-				t.innerHTML = ih + '(1)';
-			} else {
-				//alert('DEBUG: signVote: ( found');
-
-				var numVal = ih.substring(ih.indexOf('(') + 1, ih.indexOf(')'));
-				var newVal = parseInt(numVal) + 1;
-				var hashTag = ih.substring(0, ih.indexOf('('));
-				t.innerHTML = hashTag + '(' + newVal + ')';
-			}
-			//alert('DEBUG: signVote: finished with t.innerHTML');
-		}
+		IncrementTagLink(t);
 
 		var privkey = getPrivateKey();
 		//alert('DEBUG: signVote: privkey: ' + !!privkey);
