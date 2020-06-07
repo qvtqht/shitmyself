@@ -692,6 +692,29 @@ function GetTime () { // returns time()
 	return time();
 }
 
+function AddAttributeToTag ($html, $tag, $attributeName, $attributeValue) { // adds attr=value to html tag;
+	WriteLog('AddAttributeToTag() begin');
+
+	$tagAttribute = '';
+	if (preg_match('/\w/', $attributeValue)) {
+		WriteLog('AddAttributeToTag: whitespace match true');
+		// attribute value contains whitespace, must be enclosed in double quotes
+		$tagAttribute = $attributeName . '="' . $attributeValue . '"';
+	} else {
+		WriteLog('AddAttributeToTag: whitespace match false');
+		$tagAttribute = $attributeName . '=' . $attributeValue . '';
+	}
+
+	WriteLog('AddAttributeToTag: $tagAttribute is ' . $tagAttribute);
+
+	// todo this is sub-optimal
+	$html = preg_replace("/\<$tag\w/i", "<$tag $tagAttribute ", $html);
+	$html = preg_replace("/\<$tag/i", "<$tag $tagAttribute ", $html); // is this right/necessary? #todo
+	$html = preg_replace("/\<$tag\>/i", "<$tag $tagAttribute>", $html);
+
+	return $html;
+}
+
 function GetClockFormattedTime () { // returns current time in appropriate format from config
 //formats supported: union, epoch (default)
 
