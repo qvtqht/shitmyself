@@ -310,6 +310,7 @@ if (isset($comment) && $comment) {
 		}
 	} else {
 		if ($replyTo && !preg_match('/\>\>' . $replyTo . '/', $comment)) {
+			// note that the regex does have a / at the end, it's after $replyTo
 			$comment .= "\n\n" . $replyToToken;
 		}
 
