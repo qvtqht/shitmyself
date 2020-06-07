@@ -91,8 +91,8 @@ MakeAddedIndex();
 BuildMessage "WriteConfigFromDatabase()...";
 WriteConfigFromDatabase();
 
-BuildMessage "DBAddPageTouch('summary', 0)...";
-DBAddPageTouch('summary', 0);
+BuildMessage "DBAddPageTouch('summary')...";
+DBAddPageTouch('summary');
 
 BuildMessage("UpdateUpdateTime()...");
 UpdateUpdateTime();
