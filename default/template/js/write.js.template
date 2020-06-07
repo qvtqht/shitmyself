@@ -108,6 +108,12 @@ function writeOnload() { // onload handler for write page
 function writeSubmit (t) { // called when user submits write form
 	//alert('DEBUG: writeSubmit() begin');
 
+	if (window.localStorage) {
+		//alert('DEBUG: window.localStorage');
+	} else {
+		//alert('DEBUG: no window.localStorage');
+	}
+
 	if (window.getPrivateKey && window.signMessage) {
 		//alert('DEBUG: window.getPrivateKey && window.signMessage test passed');
 		if (getPrivateKey()) {
