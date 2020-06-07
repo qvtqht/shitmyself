@@ -1223,7 +1223,7 @@ sub ReplaceStrings {
 	return $content;
 }
 
-sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to html tag;
+sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds attr=value to html tag;
 	WriteLog('AddAttributeToTag() begin');
 
 	my $html = shift; # chunk of html to work with
@@ -1235,6 +1235,7 @@ sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to
 
 	my $tagAttribute = '';
 	if ($attributeValue =~ m/\w/) {
+		# attribute value contains whitespace, must be enclosed in double quotes
 		$tagAttribute = $attributeName . '="' . $attributeValue . '"';
 	} else {
 		$tagAttribute = $attributeName . '=' . $attributeValue . '';
@@ -1242,7 +1243,7 @@ sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to
 
 	#todo this is sub-optimal
 	$html =~ s/\<$tag\w/<$tag $tagAttribute /i;
-	$html =~ s/\<$tag/<$tag $tagAttribute /i;
+	$html =~ s/\<$tag/<$tag $tagAttribute /i; #  is this right/necessary? #todo
 	$html =~ s/\<$tag>/<$tag $tagAttribute>/i;
 
 	#WriteLog('AddAttributeToTag: $html after: '.$html);
