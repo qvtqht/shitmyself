@@ -1,3 +1,11 @@
+make clean.sh safer
+	maybe change to clean.pl for easier writing
+	first, use find to select all the files which need to be deleted
+	then, double-check that they're in proper directory
+	then, delete each one
+
+#moderator
+
 "paste a lot of text" form
 	method=post
 	"warning: this method is less reliable, but allows more text"
