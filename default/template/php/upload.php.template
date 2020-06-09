@@ -13,7 +13,7 @@ if (!empty($_FILES['uploaded_file'])) {
 	WriteLog('trying to move_uploaded_file(' . $_FILES['uploaded_file']['tmp_name'] . ',' . $path . ')');
 //
 //	if (file_exists($path)) {
-//		//		$hash = sha1_file($path);
+//		//		$hash = GetFileHash($path);
 //		//
 //		//		// path for new html file
 //		//		$fileHtmlPath = './' . GetHtmlFilename($hash);
@@ -70,7 +70,7 @@ if (!empty($_FILES['uploaded_file'])) {
 					WriteLog(`cd $pwd`);
 				}
 
-				$hash = sha1_file($path);
+				$hash = GetFileHash($path);
 
 				// path for new html file
 				$fileHtmlPath = './' . GetHtmlFilename($hash);

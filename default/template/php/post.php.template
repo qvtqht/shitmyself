@@ -104,7 +104,7 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
 
 		// now we can get the "proper" hash,
 		// which is for some reason different from sha1($comment), as noted above
-		$hash = sha1_file($fileName);
+		$hash = GetFileHash($fileName);
 		WriteLog('ProcessNewComment: $hash = ' . $hash);
 
 		// hash-named files are stored under /ab/cd/ two-level directory prefix

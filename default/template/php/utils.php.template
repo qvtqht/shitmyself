@@ -110,6 +110,23 @@ function GpgParsePubkey ($filePath) { // #todo parse file with gpg public key
     return array();
 }
 
+function GetFileHash ($fileName) { // returns hash of file contents
+	WriteLog("GetFileHash($fileName)");
+
+	if ((strtolower(substr($fileName, length($fileName) - 4, 4)) == '.txt')) {
+		$fileContent = GetFile($fileName);
+
+		if (index($fileContent, "\n-- \n") > -1) {
+			// exclude signature from hash content
+			$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
+		}
+
+		return sha1($fileContent);
+	} else {
+		return sha1_file($fileName);
+	}
+}
+
 function GpgParseSignedMessage ($filePath) { // #todo #untested parses gpg signed message
 	$gpgCommand = 'gpg2'; // todo add gpg1 support
 	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
@@ -169,7 +186,7 @@ function GpgParseSignedMessage ($filePath) { // #todo #untested parses gpg signe
     }
 
     $txt = file_get_contents($filePath);
-    $fileHash = sha1_file($filePath);
+    $fileHash = GetFileHash($filePath);
 
     $returnValues['isSigned'] = $isSigned;
     $returnValues['text'] = $txt;
@@ -226,7 +243,7 @@ function GpgParse ($filePath) { // #todo #untested
 
 		$txt = file_get_contents($filePath); // contains text file contents
 
-		$fileHash = sha1_file($filePath);
+		$fileHash = GetFileHash($filePath);
 
         $cachePath = "./cache/" . GetMyVersion() . "/gpg/php/$fileHash.cache";
         // this is where we will cache results for later use
