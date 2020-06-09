@@ -5,7 +5,10 @@ For titles and self-assigned names, they take precedence unpredictably, but usua
 	This affects the following tokens:
 		title:
 		my name is
-		
+
+For the "my name is" token
+	Must be the first item published by cookied author in order for the avatar to appear
+		Workaround: rm cache/avatar*
 
 In Opera 12.x, registration fails
 	This is due to OpenPGP.js throwing an error
