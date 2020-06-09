@@ -39,7 +39,8 @@ button, input {
     left: 15%;
     width: 70%;
     border: 2pt $colorPrimary double;
-    font-size: x-large;
+    font-size: xx-large;
+	border-radius: 5pt;
 }
 a:focus, a:active {
     color: red;
