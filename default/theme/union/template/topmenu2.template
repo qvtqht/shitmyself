@@ -17,10 +17,19 @@
 			</td>
 		</tr>
 		<tr bgcolor=$colorWindow class=menubar>
-			<td><big>
-				<big style="padding:5pt">$menuItems</big>
-				<a href="/etc.html" onclick="if (window.ShowAll) { return ShowAll(this); } else { return true; }">More</a>
-			</big></td>
+			<td>
+				<big>
+					<big style="padding:5pt">
+						<big>
+							$menuItems
+							<span class=advanced>
+								$menuItemsAdvanced
+							</span>
+						</big>
+					</big>
+					<a href="/etc.html">More</a>
+				</big>
+			</td>
 		</tr>
 	</table>
 </form>
