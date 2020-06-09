@@ -1,4 +1,7 @@
+<html>
 <frameset rows="*,190">
-<frame src="top.html">
+<frame src="write.html">
 <frame src="kbd.html">
 </frameset>
+<noframes><a href="/write.html">write.html</a></noframes>
+</html>
