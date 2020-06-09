@@ -1354,6 +1354,7 @@ sub GetPageFooter { # returns html for page footer
 	if (GetConfig('html/back_to_top_button')) {
 		# add back to top button to the bottom of the page, right before </body>
 		my $backToTopTemplate = GetTemplate('html/back_to_top_button.template');
+		$backToTopTemplate = FillThemeColors($backToTopTemplate);
 		$txtFooter =~ s/\<\/body>/$backToTopTemplate<\/body>/i;
 
 		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(back_to_top_button));
@@ -1408,7 +1409,7 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	return trim($attributeValue);
 }
 
-sub FillThemeColors {
+sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	my $html = shift;
 	chomp($html);
 
@@ -1579,7 +1580,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
 	if (GetConfig('admin/js/enable')) {
-		$topMenuTemplate = AddAttributeToTag ($topMenuTemplate, 'a href="/etc.html"', 'onclick', "if (window.ShowAll) { this.onclick = 'alert();'; return ShowAll(this); } else { return true; }");
+		$topMenuTemplate = AddAttributeToTag($topMenuTemplate, 'a href="/etc.html"', 'onclick', "if (window.ShowAll) { this.onclick = 'alert();'; return ShowAll(this); } else { return true; }");
 	}
 
 	my $menuItems = GetMenuFromList('menu');

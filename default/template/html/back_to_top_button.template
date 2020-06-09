@@ -3,18 +3,16 @@
     href="#top"
     onclick="if (window.scrollTo) { window.scrollTo(0, 0); return false; }"
     title="Back to top"
-    class=beginner
     id=aBackToTop
     style="
         position: fixed;
         right: 5pt;
         bottom: 5pt;
         background-color: $colorHighlightBeginner;
-        font-size: large;
         border: 5pt;
         padding: 5pt;
         border-radius: 5pt;
         text-decoration: none;
     "
-><span class=beginner><big>Back to top</big></span></a>
+>Back to top</a>
 <!-- / back_to_top_button.template -->
