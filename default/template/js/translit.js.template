@@ -7,7 +7,7 @@ function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 // e is event object passed by onkeydown event
 // t is the text field's "this"
 
-	//alert('DEBUG: translitKey() begins');
+	//alert('DEBUG: dvorakKey() begins');
 
 	var nl = '$'; // new letter
 
@@ -28,7 +28,7 @@ function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 	//alert('DEBUG: key: ' + key);
 
 
-	// alt+` will toggle translit mode
+	// alt+d will toggle dvorak mode
 	if (e.altKey || e.ctrlKey || e.metaKey) {
 		if (e.key == 'd' || e.key == 'D') {
 			if (window.translitKeyState == 1) {
@@ -74,7 +74,7 @@ function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 		var keysRu = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
 
 		if (keysEn.length != keysRu.length) {
-			//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
+			//alert('DEBUG: dvorakKey: Warning: length mismatch keysEn and keysRu');
 		}
 
 		if (e.key) {
