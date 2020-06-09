@@ -22,15 +22,12 @@ input[type=text], input[type=password], select, option, textarea {
     background-color: #f0f0d0;
 }
 .dialog {
-	box-shadow: 5pt 5pt 5pt #405050;
+	box-shadow: 5pt 5pt 0 #405050;
 	border: $borderDialog;
 	background-color: $colorWindow;
 	font-family: tahoma, helvetica, arial, sans-serif;
 	font-size: 10pt;
 	margin: 10pt;
-}
-#serverResponse {
-	box-shadow: 5pt 5pt 5pt #405050;
 }
 .statusbar td {
 	border: 1pt inset $colorWindow;
@@ -57,13 +54,13 @@ input:focus, textarea:focus {
     background-color: orange;
 }
 #serverResponse {
-/* messages from server */
+/* response messages from the server */
     background-color: $colorHighlightAlert;
     color: $colorText;
     padding: 5pt;
     spacing: 5pt;
-    border: $borderDialog;
-	box-shadow: 5pt 5pt 5pt #405050;
+    border: 0;
+	box-shadow: 5pt 5pt 0 #405050;
 }
 #txtClock {
 	border: 1pt inset $colorWindow;
