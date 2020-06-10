@@ -590,10 +590,18 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 
 function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) { // returns html for window template
 // uses template/window/standard.template by default
+
+	// stores number of columns if they exist
+	// if no columns, remains at 0
+	// whether there are columns or not determines:
+	// * column headers
+	// * colspan= in non-column cells
 	$contentColumnCount = 0;
 
+	// base template
 	$windowTemplate = GetTemplate('window/standard.template');
 
+	// titlebar, if there's a title
 	if ($windowTitle) {
 		$windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar = str_replace('$windowTitle', $windowTitle, $windowTitlebar);
@@ -603,6 +611,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$windowTemplate =~ str_replace('$windowTitlebar', '', $windowTemplate);
 	}
 
+	// menubar, if there is menubar content
 	if ($windowMenubarContent) {
 		$windowMenubar = GetTemplate('window/menubar.template');
 		$windowMenubar = str_replace('$windowMenubarContent', $windowMenubarContent, $windowMenubar);
@@ -613,6 +622,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		//#todo currently results in an empty menubar
 	}
 
+	// column headings from the $columnHeadings variable
 	if ($columnHeadings) {
 		$windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
 		$windowHeaderColumns = '';
@@ -640,6 +650,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$contentColumnCount = 0;
 	}
 
+	// main window content, aka body
 	if ($windowBody) {
 		if (index(strtolower($windowBody), '<tr') == -1) {
 			// put content into a table row and cell if missing
@@ -651,12 +662,18 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$windowTemplate = str_replace('$windowBody', '', $windowTemplate);
 	}
 
-	if ($windowBody) {
-		$windowTemplate = str_replace('$windowStatus', $windowStatus, $windowTemplate);
+	// statusbar
+	if ($windowStatus) {
+		$windowStatusTemplate = GetTemplate('window/status.template');
+
+		$windowStatusTemplate = str_replace('$windowStatus', $windowStatus, $windowStatusTemplate);
+
+		$windowTemplate = str_replace('$windowStatus', $windowStatusTemplate, $windowTemplate);
 	} else {
 		$windowTemplate = str_replace('$windowStatus', '', $windowTemplate);
 	}
 
+	// fill in the column count if necessary
 	if ($contentColumnCount) {
 		$windowTemplate = str_replace('$contentColumnCount', $contentColumnCount, $windowTemplate);
 	} else {
