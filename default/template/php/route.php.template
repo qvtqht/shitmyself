@@ -506,7 +506,7 @@ if (GetConfig('admin/php/route_enable')) {
 
 									// #todo validate $vouchValue
 									$vouchToken =
-										'vouch/' . $vouchValue . '/31337' .
+										'vouch/' . htmlspecialchars($vouchValue) . '/31337' .
 										"\n" .
 										"\n" .
 										"I vouch for this author because ...\n\n"
@@ -517,6 +517,28 @@ if (GetConfig('admin/php/route_enable')) {
 									$html = str_ireplace('</textarea>', $vouchToken . '</textarea>' , $html);
 								} else {
 									WriteLog('vouch request not found');
+								}
+
+								if (isset($_GET['name']) && $_GET['name']) {
+									WriteLog('name request found');
+
+									$nameValue = $_GET['name'];
+
+									WriteLog('$nameValue = ' . $nameValue);
+
+									// #todo validate $vouchValue
+									$nameToken =
+										'my name is ' . htmlspecialchars($nameValue) .
+										"\n" .
+										"\n" .
+										"I like to ...\n\n"
+									;
+
+									WriteLog('$nameToken = ' . $nameToken);
+
+									$html = str_ireplace('</textarea>', $nameToken . '</textarea>' , $html);
+								} else {
+									WriteLog('my name is request not found');
 								}
 							}
 						}
