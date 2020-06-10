@@ -8,7 +8,7 @@ auth.backend.plain.userfile = "config/lighttpd_password.conf"
 auth.require = (
 	"/" => (
 		"method"  => "basic",
-		"realm" => "it will show as stars",
+		"realm" => "stars",
 		#"require" => "user=AzureDiamond"
 		"require" => "valid-user"
 	)
