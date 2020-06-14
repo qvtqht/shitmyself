@@ -1,0 +1,7 @@
+<!-- window/status.template -->
+<tr class=statusbar>
+	<td colspan=$contentColumnCount>
+		$windowStatus
+	</td>
+</tr>
+<!-- / window/status.template -->

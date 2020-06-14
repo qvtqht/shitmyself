@@ -10,11 +10,7 @@
 
 		$windowBody
 
-		<tr class=statusbar>
-			<td colspan=$contentColumnCount>
-				$windowStatus
-			</td>
-		</tr>
+		$windowStatus
 	</table>
 </font>
 

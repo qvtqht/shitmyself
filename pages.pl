@@ -169,10 +169,18 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	my $windowBody = shift;
 	my $windowStatus = shift;
 
+
+	# stores number of columns if they exist
+	# if no columns, remains at 0
+	# whether there are columns or not determines:
+	# * column headers
+	# * colspan= in non-column cells
 	my $contentColumnCount = 0;
 
+	# base template
 	my $windowTemplate = GetTemplate('window/standard.template');
 
+	# titlebar, if there is a title
 	if ($windowTitle) {
 		my $windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
@@ -182,6 +190,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$windowTemplate =~ s/\$windowTitlebar//g;
 	}
 
+	# menubar, if there is menubar content
 	if ($windowMenubarContent) {
 		my $windowMenubar = GetTemplate('window/menubar.template');
 		$windowMenubar =~ s/\$windowMenubarContent/$windowMenubarContent/;
@@ -192,6 +201,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		#todo currently results in an empty menubar
 	}
 
+	# column headings
 	if ($columnHeadings) {
 		my $windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
 		my $windowHeaderColumns = '';
@@ -215,6 +225,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$contentColumnCount = 0;
 	}
 
+	# main window content, aka body
 	if ($windowBody) {
 		if (index(lc($windowBody), '<tr') == -1) {
 			$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
@@ -225,12 +236,18 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$windowTemplate =~ s/\$windowBody//g;
 	}
 
+	# statusbar
 	if ($windowStatus) {
-		$windowTemplate =~ s/\$windowStatus/$windowStatus/g;
+        my $windowStatusTemplate = GetTemplate('window/status.template');
+
+        $windowStatusTemplate =~ s/\$windowStatus/$windowStatus/g;
+
+        $windowTemplate =~ s/\$windowStatus/$windowStatusTemplate/g;
 	} else {
 		$windowTemplate =~ s/\$windowStatus//g;
 	}
 
+	# fill in column counts if necessary
 	if ($contentColumnCount) {
 		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
 	} else {
@@ -1226,6 +1243,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemClass = "image";
 		} # $itemType eq 'image'
 		elsif ($itemType eq 'image') {
+		    $itemText = 'itemType eq image, but images disabled';
 			WriteLog('$itemType eq image, but images disabled');
 		}
 
