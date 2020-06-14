@@ -1,3 +1,10 @@
+hide/disable with note unavailable features
+	e.g. gui registration with js=0 and php=0
+	light mode without php
+
+
+gpg feature checks
+
 make clean.sh safer
 	maybe change to clean.pl for easier writing
 	first, use find to select all the files which need to be deleted

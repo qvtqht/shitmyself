@@ -71,3 +71,15 @@ Crashes experienced
 	Mosaic
 	IE4
 	Opera 3
+
+
+just a basic prototype, not optimized to scale, and still a work in progress
+
+all 40-character-long hex-looking strings are assumed to be existing items
+	linked in the html-ized posts, even if they do not exist
+
+voter id should (debatable) be generated once per page, but is currently generated once per item.
+
+when an encrypted message has multiple recipients, only the first is used.
+
+server_key_id is tricky, must be 16 chars all caps
