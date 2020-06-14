@@ -48,6 +48,55 @@ my $currentTime = GetTime2();
 
 my $locked = 0;
 
+sub OrganizeFile { # $file ; renames file based on hash of its contents
+	my $file = shift;
+	chomp $file;
+
+	if (!-e $file) {
+		return $file; #todo is this right?
+	}
+
+	if (!GetConfig('admin/organize_files')) {
+		WriteLog('WARNING! OrganizeFile() was called when admin/organize_files was false.');
+	}
+
+	# organize files aka rename to hash-based path
+	my $fileHashPath = GetFileHashPath($file);
+
+	WriteLog('OrganizeFile: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
+
+	if ($fileHashPath) {
+		WriteLog('OrganizeFile: $fileHashPath = ' . $fileHashPath);
+
+		if (-e $fileHashPath) {
+			WriteLog('OrganizeFile: Warning: file already exists = ' . $fileHashPath);
+		}
+
+		if ($fileHashPath && $file ne $fileHashPath) {
+			WriteLog('OrganizeFile: renaming ' . $file . ' to ' . $fileHashPath);
+			rename($file, $fileHashPath);
+
+			if (-e $fileHashPath) {
+				WriteLog('OrganizeFile: rename succeeded, changing value of $file');
+
+				$file = $fileHashPath;
+
+				WriteLog('OrganizeFile: $file is now ' . $file);
+			} else {
+				WriteLog("OrganizeFile: WARNING: rename failed, from $file to $fileHashPath");
+			}
+		} else {
+			WriteLog('OrganizeFile: did not need to rename ' . $file);
+		}
+	} else {
+		WriteLog('OrganizeFile: $fileHashPath is missing');
+	}
+
+	WriteLog("OrganizeFile: returning $file");
+
+	return $file;
+}
+
 sub ProcessTextFile { #add new textfile to index
 	my $file = shift;
 
