@@ -6,7 +6,7 @@
     bgcolor="$colorHighlightAlert"
     cellpadding=5
     cellspacing=0
-><tr><td align=center>
+><tr><td align=center><font size=5>
     <b>$serverResponse</b>
     <a href=#maincontent
         tabindex=1
@@ -15,6 +15,6 @@
     ><b><i>Thanks</i></b></a>
     <!-- must begin with <a href=#maincontent for templating reasons -->
     <br>
-</td></tr></table>
+</font></td></tr></table>
 
 <!-- / server_response.template -->
