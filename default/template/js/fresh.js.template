@@ -20,22 +20,23 @@ function freshCallback() { // callback for requesting HEAD for current page
 
 	//alert('DEBUG: freshCallback() this.readyState = ' + this.readyState);
 
-	if (1 || this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
+//	if (1 || this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
+	if (this.readyState == this.HEADERS_RECEIVED || this.status == 200) { // headers received -- what we've been waiting for
+		// document.title = 'DEBUG: callback received 200';
+
 	    //alert('DEBUG: freshCallback() this.readyState == this.HEADERS_RECEIVED');
 
 		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
 
 		//alert('DEBUG: eTag = ' + eTag);
 
-		if (eTag) { // if etag header has a value
+		if (eTag) { // if eTag header has a value
 			if (window.lastEtag) { // if we already saved one
 				if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
 					// still fresh, no change
-				} else { // etag was different from last one we saw
-					// below is changing clock's appearance
-					if (clock) {
-						clock.style.color = '#808080'; //#todo templatize this color
-					}
+				} else {
+					// etag was different from last one we saw
+					document.title = 'DEBUG: perhaps something changed?';
 				}
 
 				window.lastEtag = eTag;
