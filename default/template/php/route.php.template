@@ -464,7 +464,12 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('Overthrow requested');
 
 							if (GetConfig('admin/allow_deop')) {
-								if (time() - GetConfig('admin/admin_last_action') > 7200) {
+								$overthrowInterval = GetConfig('admin/overthrow_interval');
+								if (!$overthrowInterval) {
+									$overthrowInterval = 34387200;
+								}
+
+								if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
 
 									//PutConfig('admin/admin_last_action', 0);
