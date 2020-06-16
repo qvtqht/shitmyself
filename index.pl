@@ -376,9 +376,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('tag', 'admin');
 
-			DBAddPageTouch('scores', 0);
+			DBAddPageTouch('scores');
 
-			DBAddPageTouch('stats', 0);
+			DBAddPageTouch('stats');
 		}
 
 		if ($isSigned && $gpgKey) {
@@ -399,9 +399,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				WriteLog('IndexTextFile: NOT unlinking avatar caches for ' . $gpgKey);
 			}
 
-			DBAddPageTouch('scores', 0);
+			DBAddPageTouch('scores');
 
-			DBAddPageTouch('stats', 0);
+			DBAddPageTouch('stats');
 		}
 
 		if ($alias) {
@@ -417,10 +417,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('scores', 1);
 
-			DBAddPageTouch('stats', 1);
+			DBAddPageTouch('scores');
+
+			DBAddPageTouch('stats');
 		}
 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
 		my $itemName = TrimPath($file);
 
@@ -442,9 +444,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					DBAddPageTouch('author', $cookieValue);
 
-					DBAddPageTouch('scores', 0);
+					DBAddPageTouch('scores');
 
-					DBAddPageTouch('stats', 0);
+					DBAddPageTouch('stats');
 				}
 			}
 		}
@@ -648,7 +650,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							DBAddPageTouch('scores', 1);
 
-							DBAddPageTouch('stats', 1);
+							DBAddPageTouch('scores');
+
+							DBAddPageTouch('stats');
 						}
 
 
@@ -705,9 +709,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								DBAddPageTouch('author', $gpgKey);
 							}
 
-							DBAddPageTouch('scores', 1);
+							DBAddPageTouch('scores');
 
-							DBAddPageTouch('stats', 1);
+							DBAddPageTouch('stats');
 						}
 
 						$message =~ s/$reconLine/[Title: $titleGiven]/g;
@@ -867,7 +871,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
                             # add record to vote weight table
 							DBAddVoteWeight($voterId, $voterWt, $fileHash);
 							DBAddPageTouch('author', $voterId);
-							DBAddPageTouch('scores', 0);
+							DBAddPageTouch('scores');
 						}
 
                         # tag item as having a vouch action
@@ -1229,7 +1233,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					DBAddPageTouch('tag', 'event');
 
-					DBAddPageTouch('events', 1);
+					DBAddPageTouch('events');
 				}
 			}
 		}
@@ -1451,7 +1455,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
-		DBAddPageTouch('top', 1);
+		DBAddPageTouch('top');
 
 		if ($hasParent == 0) {
 #			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
@@ -1474,20 +1478,20 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('author', $gpgKey);
 
-			DBAddPageTouch('scores', 1);
+			DBAddPageTouch('scores');
 		} elsif ($hasCookie) {
 			DBAddPageTouch('author', $hasCookie);
 
-			DBAddPageTouch('scores', 1);
+			DBAddPageTouch('scores');
 		}
 
-		DBAddPageTouch('stats', 1);
+		DBAddPageTouch('stats');
 		
-		DBAddPageTouch('events', 1);
+		DBAddPageTouch('events');
 											 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
-		DBAddPageTouch('index', 1);
+		DBAddPageTouch('index');
 
 		DBAddPageTouch('flush');
 	}
@@ -1637,7 +1641,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			$addedTimeIsNew = 1;
 		}
 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
 		my $itemName = TrimPath($file);
 
@@ -1688,17 +1692,17 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		DBAddVoteRecord($fileHash, $addedTime, 'image');
 		# add image tag
 
-		DBAddPageTouch('top', 1);
+		DBAddPageTouch('top');
 
 		DBAddPageTouch('tag', 'image');
 
 		DBAddPageTouch('item', $fileHash);
 
-		DBAddPageTouch('stats', 1);
+		DBAddPageTouch('stats');
 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
-		DBAddPageTouch('index', 1);
+		DBAddPageTouch('index');
 
 		DBAddPageTouch('flush');
 	}
