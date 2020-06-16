@@ -621,6 +621,8 @@ if (GetConfig('admin/php/route_enable')) {
 			$serverResponseTemplate = GetTemplate('server_response.template');
 
 			if (GetConfig('admin/js/enable')) {
+				// add javascript call to close server response message
+				// for the entire server response message table
 				$serverResponseTemplate = AddAttributeToTag(
 					$serverResponseTemplate,
 					'table',
@@ -629,6 +631,7 @@ if (GetConfig('admin/php/route_enable')) {
 				);
 			}
 
+			// fill in the theme color for $colorHighlightAlert
 			$colorHighlightAlert = GetThemeColor('highlight_alert');
 			$serverResponseTemplate = str_replace('$colorHighlightAlert', $colorHighlightAlert, $serverResponseTemplate);
 
@@ -636,13 +639,10 @@ if (GetConfig('admin/php/route_enable')) {
 			// no escaping, because it can contain html formatting
 			$serverResponseTemplate = str_replace('$serverResponse', $serverResponse, $serverResponseTemplate);
 
-			//$serverResponseTemplate = GetWindowTemplate('title', '', '', 'hi', 'ready');
-
 			$messageInjected = 0;
 			
-			if (!$lightMode && isset($_GET['anchorto']) && $_GET['anchorto']) {
-				// if there is an anchorto parameter, we will put the server message next to the anchor
-				// unless we are in light mode, because then we want the message at the top of the page
+			if (isset($_GET['anchorto']) && $_GET['anchorto']) {
+				// anchorto means we can add a # to the "Thanks" link which goes straight to the relevant item
 
 				$anchorTo = $_GET['anchorto'];
 
@@ -650,16 +650,31 @@ if (GetConfig('admin/php/route_enable')) {
 					// same as below, same message applies
 
 					if (GetConfig('admin/js/enable')) {
-						$serverResponseTemplate = AddAttributeToTag($serverResponseTemplate, 'a href=#maincontent', 'onclick', "if (window.serverResponseOk) { return serverResponseOk(this); } else { return true; }");
+						// add javascript call to close server response message for the 'thanks' link
+						$serverResponseTemplate = AddAttributeToTag(
+							$serverResponseTemplate,
+							'a href=#maincontent',
+							'onclick',
+							"if (window.serverResponseOk) { return serverResponseOk(this); } else { return true; }"
+						);
 					}
 
-					$serverResponseTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverResponseTemplate);
+					$serverResponseTemplate = str_replace(
+						'<a href=#maincontent',
+						'<a href="' . $path . '#' . $anchorTo . '"',
+						$serverResponseTemplate
+					);
 
-					$replaceWhat = "<a name=$anchorTo>";
-					$replaceWith = "<a name=$anchorTo>" . $serverResponseTemplate;
-					$html = str_replace($replaceWhat, $replaceWith, $html);
+					if (!$lightMode == GetConfig('admin/php/server_response_attach_to_anchor')) {
+						// if server_response_attach_to_anchor, we will put the server message next to the anchor
+						// unless we are in light mode, because then we want the message at the top of the page
 
-					$messageInjected = 1;
+						$replaceWhat = "<a name=$anchorTo>";
+						$replaceWith = "<a name=$anchorTo>" . $serverResponseTemplate;
+						$html = str_replace($replaceWhat, $replaceWith, $html);
+
+						$messageInjected = 1;
+					}
 				}
 			}
 
@@ -685,8 +700,7 @@ if (GetConfig('admin/php/route_enable')) {
 				// inject server_response.js for hiding the server message popup
 				$html = InjectJs($html, array('server_response'), 'before', '</head>');
 
-				// add onkeydown event to body tag, which responds to escape and spacebar keys
-				// spacebar is added for qutebrowser's normal mode, which doesn't let esc through
+				// add onkeydown event to body tag, which responds to escape key
 				// known issue: if there's non-32 whitespace, this may not work right
 				$replaceWith = '<body onkeydown="if (event.keyCode && event.keyCode == 27) { if (window.bodyEscPress) { return bodyEscPress(); } }"';
 
