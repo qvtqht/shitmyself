@@ -10,6 +10,10 @@
             border: 2pt outset #808080;
             border-radius: 5pt;
             background-color: #c0c0c0;
+            cursor: pointer;
+        }
+        #tblKeyboard td:active:hover {
+            border: 2pt inset #808080;
         }
         #tblKeyboard {
             border-radius: 5pt;
@@ -17,7 +21,30 @@
         }
     -->
 </style>
-<table border=2 cellspacing=3 cellpadding=5 align=center style="font-family: sans-serif" id=tblKeyboard>
+<script>
+    <!--
+        function tbl1(e) {
+            if (e.target.nodeName == 'TD') {
+                //alert(GetInputTargetForKeyboard());
+                //alert(e.target.innerHTML);
+                //var txtComment = GetInputTargetForKeyboard();
+                //alert(txtComment);
+                //if (txtComment) {
+                //    txtComment.style.display = 'none';
+                //}
+                //parent.frames['main'].document.compose.comment.value = e.target.innerHTML;
+                if (parent.frames['main'].document.compose.comment) {
+                    var newLetter = e.target.innerHTML;
+                    if (newLetter == '&nbsp;') {
+                        newLetter = ' ';
+                    }
+                    parent.frames['main'].document.compose.comment.value = parent.frames['main'].document.compose.comment.value + '' + newLetter;
+                }
+            }
+        }
+    // -->
+</script>
+<table border=2 cellspacing=3 cellpadding=5 align=center style="font-family: sans-serif" id=tblKeyboard onclick="tbl1(event);">
 <!-- colspans for each row should add up to 30 -->
     <tr>
         <td colspan=2>`</td>
