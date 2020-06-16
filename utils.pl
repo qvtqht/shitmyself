@@ -471,31 +471,25 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 	WriteLog("GetFileHash()");
 
 	my $fileName = shift;
-
 	chomp $fileName;
-
 	WriteLog("GetFileHash($fileName)");
 
-	my $fileContent = GetFile($fileName);
-    #
-	# if (index($fileContent, "\n-- \n") > -1) {
-	# 	$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
-	# }
+	if (-e $fileName) {
+		if ((lc(substr($fileName, length($fileName) - 4, 4)) eq '.txt')) {
+			my $fileContent = GetFile($fileName);
 
-	return sha1_hex($fileContent);
-	#
-	#	my $gitOutput = GitPipe('hash-object -w "' . $fileName. '"');
-	#
-	#	if ($gitOutput) {
-	#		WriteLog($gitOutput);
-	#		chomp($gitOutput);
-	#
-	#		WriteLog("GetFileHash($fileName) = $gitOutput");
-	#
-	#		return $gitOutput;
-	#	} else {
-	#		return;
-	#	}
+			if (index($fileContent, "\n-- \n") > -1) {
+				# exclude footer content from hashing
+				$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
+			}
+
+			return sha1_hex($fileContent);
+		} else {
+			return sha1_hex(GetFile($fileName));
+		}
+	} else {
+		return;
+	}
 }
 
 sub GetRandomHash { # returns a random sha1-looking hash, lowercase
