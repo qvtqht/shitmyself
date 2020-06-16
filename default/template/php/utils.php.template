@@ -409,7 +409,8 @@ function GetFile ($file) { // gets file contents
 
 function PutFile ($file, $content) { // puts file contents
 	return file_put_contents($file, $content);
-//	return file_force_contents($file, $content);
+	// #todo account for non-existing sub-dirs
+	// return file_force_contents($file, $content);
 }
 
 function GetCache ($cacheName) { // get cache contents by key/name
