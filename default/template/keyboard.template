@@ -30,20 +30,20 @@
     <!--
         function tbl1(e) {
             if (e.target.nodeName == 'TD') {
-                //alert(GetInputTargetForKeyboard());
-                //alert(e.target.innerHTML);
-                //var txtComment = GetInputTargetForKeyboard();
-                //alert(txtComment);
-                //if (txtComment) {
-                //    txtComment.style.display = 'none';
-                //}
-                //parent.frames['main'].document.compose.comment.value = e.target.innerHTML;
-                if (parent.frames['main'].document.compose.comment) {
+                var txtComment = parent.frames['main'].document.compose.comment;
+                if (txtComment) {
                     var newLetter = e.target.innerHTML;
                     if (newLetter == '&nbsp;') {
                         newLetter = ' ';
                     }
-                    parent.frames['main'].document.compose.comment.value = parent.frames['main'].document.compose.comment.value + '' + newLetter;
+                    if (newLetter == 'Enter') {
+                        newLetter = "\n";
+                    }
+                    if (newLetter == 'Back') {
+                        txtComment.value = txtComment.value.substring(0, txtComment.value.length - 1);
+                    } else {
+                        txtComment.value = txtComment.value + '' + newLetter;
+                    }
                 }
             }
         }
@@ -68,7 +68,7 @@
         <td colspan=4>Back</td>
     </tr>
     <tr>
-        <td colspan=3><small>Tab</small></td>
+        <td colspan=3>Tab</td>
         <td colspan=2>Q</td>
         <td colspan=2>W</td>
         <td colspan=2>E</td>
@@ -84,7 +84,7 @@
         <td colspan=3>\</td>
     </tr>
     <tr>
-        <td colspan=4><small>Caps</small></td>
+        <td colspan=4>Caps</td>
         <td colspan=2>A</td>
         <td colspan=2>S</td>
         <td colspan=2>D</td>
@@ -96,10 +96,10 @@
         <td colspan=2>L</td>
         <td colspan=2>;</td>
         <td colspan=2>'</td>
-        <td colspan=4><small><b>Enter</b></small></td>
+        <td colspan=4>Enter</td>
     </tr>
     <tr>
-        <td colspan=5><small>Shift</small></td>
+        <td colspan=5>Shift</td>
         <td colspan=2>Z</td>
         <td colspan=2>X</td>
         <td colspan=2>C</td>
@@ -110,17 +110,17 @@
         <td colspan=2>,</td>
         <td colspan=2>.</td>
         <td colspan=2>/</td>
-        <td colspan=5><small>Shift</small></td>
+        <td colspan=5>Shift</td>
     </tr>
     <tr>
-        <td colspan=3><small>Ctrl</small></td>
-        <td colspan=3><small>Meta</small></td>
-        <td colspan=3><small>Alt</small></td>
+        <td colspan=3>?</td>
+        <td colspan=3>#</td>
+        <td colspan=3>@</td>
         <td colspan=9>&nbsp;</td>
-        <td colspan=3><small>Alt</small></td>
-        <td colspan=3><small>Meta</small></td>
-        <td colspan=3><small>Menu</small></td>
-        <td colspan=3><small>Ctrl</small></td>
+        <td colspan=3>@</td>
+        <td colspan=3>#</td>
+        <td colspan=3>*</td>
+        <td colspan=3>!</td>
     </tr>
 </table>
 </form>
