@@ -14,9 +14,9 @@ for deployment using apache or lighttpd
 =======================================
 1. symlink log/access.log to wherever your access log lives, (e.g. ln -s log/access.log ~/logs/http/access.log)
 2. symlink html root to html/ (e.g. rmdir /var/www/html ; ln -s html /var/www/html)
-3. add ./cron.sh to your crontab, set to run as often as you like to update the site (or run it manually)
+3. add ./update.pl to your crontab, set to run as often as you like to update the site (or run it manually)
 4. if you want faster updates (at the expense of attack surface), use the php module, which will trigger updates too
-5. when upgrading (e.g. git pull) you must re-run build.pl (or clean-build)
+5. when upgrading (e.g. git pull) you must re-run build.pl
 
 requirements
 ============
