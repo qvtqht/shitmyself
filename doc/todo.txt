@@ -1,3 +1,7 @@
+move some config/default settings to system/ tree
+
+/admin ==> /top/admin.html (if exists)
+
 hide/disable with note unavailable features
 	e.g. gui registration with js=0 and php=0
 	light mode without php
