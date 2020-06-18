@@ -118,11 +118,16 @@ function IncrementTagLink (t) { // increments number of votes in tag button
 
 function signVote(t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
-// token = full voting token, in the format vote/fileHash/ballotTime/voteValue/checksum
+// token = full voting token, in the format >>fileHash\n#tag
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
 		// get private key
+
+		if (GetPrefs(token)) {
+			// don't let user vote twice basic
+			return 0;
+		}
 
 		IncrementTagLink(t);
 
@@ -157,6 +162,9 @@ function signVote(t, token) { // signs a vote from referenced vote button
 			// sign the voting token and send to post.html when finished
 			openpgp.sign(options).then(signCallback);
 		}
+
+		// remember that we voted for this already
+		SetPrefs(token, 1);
 
 		return false; // cancel link click-through
 	} else {
