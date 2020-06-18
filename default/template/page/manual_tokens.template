@@ -44,7 +44,7 @@
 
 <p>Example: <code>resetconfig/string/en/page_intro/post</code></p>
 
-<p>Settings under the admin/ tree are always restricted to admin.</p>
+<p>Settings under the <code>admin/</code> tree are always restricted to admin.</p>
 
 <p>
 	Notes:
@@ -60,13 +60,15 @@
 	config/cookied_can_config=1
 </p>
 
+<!-- -->
 
 <h4>Hashtags</h4>
 
 <p>Example: <code>#meta</code></p>
 
-<p>Translates to vote being added.</p>
+<p>Translates to vote being added to parent.</p>
 
+<!-- -->
 
 <h4>Vouch</h4>
 
@@ -98,6 +100,7 @@
 
 <p>Params: start time (epoch), duration (seconds)</p>
 
+<!-- -->
 
 <h4>Latitude-Logitude Location</h4>
 
@@ -107,12 +110,12 @@
 
 <p>Two negative or positive decimal values, with up to 9 digits after the decimal point.</p>
 
+<!-- -->
 
 <h4>Black Rock City (Burning Man) Location</h4>
 
 <p>Specifies an address in Black Rock City, in the form of avenue (between 2:00 - 10:00) and street (one letter A-ZZ)</p>
 
 <p>Example: <code>brc/4:20/A</code></p>
-
 
 <!-- / manual_tokens.template -->
