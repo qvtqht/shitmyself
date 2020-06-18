@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 use strict;
 use warnings;
 use utf8;
@@ -573,6 +574,7 @@ sub DBGetLatestConfig { # Returns everything from config_latest view
 #}
 
 sub SqliteGetValue { # Returns the first column from the first row returned by sqlite $query
+#todo perhaps use SqliteQuery2() ?
 	my $query = shift;
 	chomp $query;
 
@@ -817,13 +819,13 @@ sub DBAddTitle { # Add entry to item_title table
 		return;
 	}
 
-	my $title = shift;
-
 	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddTitle('flush');
 		$query = '';
 		@queryParams = ();
 	}
+
+	my $title = shift;
 
 	#todo sanity checks
 
@@ -835,6 +837,8 @@ sub DBAddTitle { # Add entry to item_title table
 
 	$query .= '(?, ?)';
 	push @queryParams, $hash, $title;
+
+	#todo add hastitle tag
 }
 
 sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
@@ -1068,12 +1072,12 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	}
 
 	my $pageParam = shift;
-	my $touchTime = GetTime();
 
 	if (!$pageParam) {
 		$pageParam = 0;
 	}
 
+	my $touchTime = GetTime();
 
 	if ($pageName eq 'author') {
 		# cascade refresh items which are by this author
