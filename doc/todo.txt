@@ -1,3 +1,5 @@
+#bug two message= after submitting post
+
 move some config/default settings to system/ tree
 
 /admin ==> /top/admin.html (if exists)
