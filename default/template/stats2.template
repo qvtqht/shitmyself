@@ -13,21 +13,17 @@
 		<tr class=body>
 			<td class=content>
 				<fieldset>
-					<p>Built: $lastBuildTime
 					<p>Updated: $lastUpdateTime <input type=submit name=comment value="Update">
-					<p><a href="/index0.html">Indexed</a>: $itemsIndexed
-					<p class=advanced><a href="/data.html">Total</a>: $filesTotal
-					<p><a href="/authors.html">Authors</a>: $authorCount
 					<p>Operator: $admin
-					<p class=advanced>Server: $server
+				</fieldset>
+				<fieldset class=advanced>
+					<p>Built: $lastBuildTime
+					<p><a href="/index0.html">Items</a>: $itemsIndexed
+					<p><a href="/data.html">Files</a>: $filesTotal
+					<p><a href="/authors.html">Authors</a>: $authorCount
+					<p>Server: $server
 					<p>Version: $versionShort
 				</fieldset>
-			</td>
-		</tr>
-
-		<tr class=statusbar>
-			<td>
-				Ready
 			</td>
 		</tr>
 	</table>
