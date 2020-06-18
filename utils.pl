@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 
 use strict;
 use warnings;
@@ -1276,10 +1276,11 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	}
 
 	if (index($file, 'html/') > -1) {
-		WriteLog('old-style call to PutHtmlFile, please fix');
+		WriteLog('WARNING! old-style call to PutHtmlFile, please fix');
 		if (GetConfig('admin/debug')) {
 			die('old-style call to PutHtmlFile, please fix');
 		}
+		return;
 	}
 
 	# keeps track of whether home page has been written at some point
