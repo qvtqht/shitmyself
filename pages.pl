@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 
 use strict;
 use warnings;
@@ -1115,7 +1115,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
 			# default template
-			if (length($message) < 140) {
+			if (length($message) <= 140) {
+				# for text 140 characters or fewer, use item-short.template
 				$itemTemplate = GetTemplate("item/item-short.template");
 			} else {
 				$itemTemplate = GetTemplate("item/item2.template");
@@ -1405,6 +1406,8 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	my $attributeName = shift;
 	chomp $attributeName;
 
+	#WriteLog('GetThemeAttribute(' . $attributeName . ')');
+
 	# default theme
 #	my $themeName = 'theme.dark';
 #	my $themeName = 'theme.win95';
@@ -1518,6 +1521,13 @@ sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns 
 		# capitalize caption
 		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
+		if (GetConfig('html/emoji_icons')) {
+            my $menuItemEmoji = GetString($menuItemName, 'emoji', 1);
+            if ($menuItemEmoji) {
+                $menuItemCaption = $menuItemEmoji;
+            }
+		}
+
 		# add menu item to output
 		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
 	}
@@ -1598,7 +1608,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
 	if (GetConfig('admin/js/enable')) {
-		$topMenuTemplate = AddAttributeToTag($topMenuTemplate, 'a href="/etc.html"', 'onclick', "if (window.ShowAll) { this.onclick = 'alert();'; return ShowAll(this); } else { return true; }");
+		$topMenuTemplate = AddAttributeToTag(
+			$topMenuTemplate,
+			'a href="/etc.html"',
+			'onclick',
+			"if (window.ShowAll) { this.removeAttribute('onclick'); return ShowAll(this); } else { return true; }"
+		);
 	}
 
 	my $menuItems = GetMenuFromList('menu');
@@ -1736,7 +1751,7 @@ sub GetTopItemsPage { # returns page with top items listing
 		my $columnHeadings = '';
 
 		$itemListingWrapper = GetWindowTemplate(
-			'Top Threads',
+			'Top Approved Threads',
 			'<a href="/write.html">New Topic</a><br>',
 			$columnHeadings,
 			$itemListings,
@@ -1773,7 +1788,7 @@ sub GetStatsTable() {
 
 	###
 
-	my $statsTable = GetTemplate('stats2.template');
+	my $statsTable = GetTemplate('stats.template');
 
 	if ($adminId) {
 		$statsTable =~ s/\$admin/$adminLink/;
@@ -1801,16 +1816,12 @@ sub GetStatsTable() {
 	}
 
 
-	my $filesTotal = trim(`find $TXTDIR | grep \.txt\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.png\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.jpg\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.gif\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.bmp\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.jfif\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.webp\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.svg\$ | wc -l`);
+	# count total number of files
+	my $filesTotal = 0;
+	$filesTotal += trim(`find $TXTDIR -name \\\*.txt | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+	#todo optimize
 	#todo config/admin/upload/allow_files
-	
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
@@ -1839,12 +1850,14 @@ sub GetStatsPage { # returns html for stats page
 	return $statsPage;
 }
 
-sub EnableJsDebug { # $scriptTemplate ; enables javascript debug output by uncommenting any lines which begin with //alert('DEBUG:
+sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
+# works by uncommenting any lines which begin with //alert('DEBUG:
 	my $scriptTemplate = shift;
 
-	# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-	# $scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/g;
+	$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 
+	#todo add option to do this instead
+	#$scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/g;
 
 	return $scriptTemplate;
 }
@@ -1864,12 +1877,15 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
 	if (GetConfig('html/fresh_js')) {
-		# if clock is enabled, automatically add it
+		# if fresh_js is enabled, automatically add it
+		#todo move this upwards, shouldn't be decided here
 		push @scriptNames, 'fresh';
 	}
 
 	if (GetConfig('admin/force_profile')) {
 		# if force_profile is enabled, automatically add it
+		#todo move this upwards, shouldn't be decided here
+
 		push @scriptNames, 'force_profile';
 	}
 
@@ -2380,7 +2396,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 
 		if (!$authorFriends) {
-			$authorFriends = '(has no friends)';
+			$authorFriends = '(no friends, or very private)';
 		}
 
 		# wrap list of friends in wrapper
@@ -2471,7 +2487,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	#	$txtIndex .= GetTemplate('voteframe.template');
 
 	# Add javascript warning to the bottom of the page
-	$txtIndex .= GetTemplate("jswarning.template");
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex .= GetTemplate("jswarning.template");
+	}
 
 	# Close html
 	$txtIndex .= GetPageFooter();
@@ -2560,7 +2578,6 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	my $pageTitle = GetConfig('home_title');
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
-
 	$html .= $htmlStart;
 
 	if (defined($currentPageNumber)) {
@@ -2569,11 +2586,9 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	}
 
 	$html .= '<p>';
-
 	$html .= GetTemplate('maincontent.template');
 
 	my $itemList = ''; # the "filling" part of the page, with all the items templated
-
 	my $itemComma = ''; # separator between items
 
 	foreach my $row (@files) {
@@ -2626,7 +2641,6 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	}
 
 	$html .= $itemList;
-
 	$html .= '<p>';
 
 	#	$txtIndex .= GetTemplate('voteframe.template');
@@ -2635,8 +2649,10 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		$html .= GetPageLinks($currentPageNumber);
 	}
 
-	# Add javascript warning to the bottom of the page
-	$html .= GetTemplate("jswarning.template");
+	if (GetConfig('admin/js/enable')) {
+		# Add javascript warning to the bottom of the page
+		$html .= GetTemplate("jswarning.template");
+	}
 
 	# Close html
 	$html .= GetPageFooter();
@@ -2653,6 +2669,9 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	}
 	#my $PAGE_THRESHOLD = 5;
 
+	#my $whereClause = "','||tags_list||',' LIKE '%,approve,%'";
+
+	#my $itemCount = DBGetItemCount($whereClause);
 	#my $itemCount = DBGetItemCount("item_type = 'text'");
 	my $itemCount = DBGetItemCount();
 
@@ -2692,6 +2711,9 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+			# if ($whereClause) {
+			# 	$queryParams{'where_clause'} = $whereClause;
+			# }
 
 			my @ft = DBGetItemList(\%queryParams);
 
@@ -2938,9 +2960,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 		$welcomePage .= GetWindowTemplate('Welcome', '', '', $welcomePageContent, '');
 
+		$welcomePage .= GetPageFooter();
+
 		$welcomePage = InjectJs($welcomePage, qw(avatar settings profile));
 
 		PutHtmlFile('welcome.html', $welcomePage);
+		PutHtmlFile('index.html', $welcomePage);
 	}
 
 	{
@@ -3007,7 +3032,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
             '', #menubar
             '', #columns
 			$tokensPageContent,
-            'Ready'
+            ''
         );
 
         $tokensPage .= $tokensPageWindow;
@@ -3218,9 +3243,9 @@ sub GetUploadPage { # returns html for upload page
 	$html .= GetPageFooter();
 
 	if (GetConfig('php/enable')) {
-		$html = InjectJs($html, qw(settings avatar write translit write_php profile));
+		$html = InjectJs($html, qw(settings avatar profile));
 	} else {
-		$html = InjectJs($html, qw(settings avatar write translit profile));
+		$html = InjectJs($html, qw(settings avatar profile));
 	}
 
 	return $html;
@@ -3297,16 +3322,12 @@ sub GetEventAddPage { # get html for /event.html
 	if (GetConfig('brc/enable')) {;
 		# if brc mode is enabled, add fields for burning man location
 		my $brcLocationTemplate = GetTemplate('event/brc_location.template');
-		
 		$eventAddForm =~ s/\$brcLocation/$brcLocationTemplate/g;
-	} else {
-		$eventAddForm =~ s/\$brcLocation//g;
-	}
 
-	if (GetConfig('brc/enable')) {
 		my $brcAddressForm = GetTemplate('form/brc_address.template');
 		$eventAddForm =~ s/\$brcAddressForm/$brcAddressForm/;
 	} else {
+		$eventAddForm =~ s/\$brcLocation//g;
 		$eventAddForm =~ s/\$brcAddressForm//;
 	}
 
@@ -3408,12 +3429,15 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $settingsPage = GetTemplate('form/settings.template');
-	$txtIndex .= $settingsPage;
+	my $settingsTemplate = GetTemplate('form/settings.template');
+	$txtIndex .= $settingsTemplate;
+
+	my $statsTable = GetStatsTable();
+	$txtIndex .= $statsTable;
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback));
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
 		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/;
@@ -3855,7 +3879,7 @@ if ($arg1) {
 		MakeSummaryPages();
 	}
 	else {
-		print ("--summary\n");
+		print ("pages.pl: --summary\n");
 		print ("item_id\n");
 	}
 }
