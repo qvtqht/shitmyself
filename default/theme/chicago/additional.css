@@ -1,3 +1,4 @@
+/* begin theme/chicago/additional.css */
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -66,3 +67,4 @@ input:focus, textarea:focus {
 	border: 1pt inset $colorWindow;
 	background-color: $colorWindow;
 }
+/* end theme/chicago/additional.css */

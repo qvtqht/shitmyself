@@ -1,3 +1,4 @@
+/* begin template/css/blink.css */
 blink {
 	-webkit-animation: 2s linear infinite condemned_blink_effect; // for Safari 4.0 - 8.0
 	animation: 2s linear infinite condemned_blink_effect;
@@ -24,3 +25,4 @@ blink {
 		visibility: visible;
 	}
 }
+/* end template/css/blink.css */
