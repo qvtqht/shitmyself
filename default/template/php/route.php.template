@@ -168,39 +168,36 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			}
 		}
 
-// todo finish porting below
-//		if ($script eq 'voting') {
-//			# for voting.js we need to fill in some theme colors
-//			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
-//			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
-//
-//			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
-//			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
-//		}
-//
-//		if ($script eq 'settings') {
-//			# for settings.js we also need to fill in some theme colors
-//			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
-//			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-//
-//			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
-//			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
-//		}
-//
-//		if (index($scriptTemplate, '>') > -1) {
-//			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-//			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
-//		}
-//
-//		if (GetConfig('admin/js/debug')) {
-//			#uncomment all javascript debug alert statements
-//			#and replace them with confirm()'s which stop on no/cancel
-//			#
-//			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
-//			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-//			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-//		}
-//
+		if ($script == 'voting') {
+			// for voting.js we need to fill in some theme colors
+			$colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
+			$colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
+
+			$scriptTemplate = str_replace('$colorSuccessVoteUnsigned', $colorSuccessVoteUnsigned, $scriptTemplate);
+			$scriptTemplate = str_replace('$colorSuccessVoteSigned', $colorSuccessVoteSigned, $scriptTemplate);
+		}
+
+		if ($script == 'settings') {
+			// for settings.js we also need to fill in some theme colors
+			$colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+			$colorHighlightBeginner = GetThemeColor('highlight_beginner');
+
+			$scriptTemplate = str_replace('$colorHighlightAdvanced', $colorHighlightAdvanced, $scriptTemplate);
+			$scriptTemplate = str_replace('$colorHighlightBeginner', $colorHighlightBeginner, $scriptTemplate);
+		}
+
+		if (index($scriptTemplate, '>') > -1) {
+			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
+			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+		}
+
+		if (GetConfig('admin/js/debug')) {
+			#uncomment all javascript debug alert statements
+			#and replace them with confirm()'s which stop on no/cancel
+			#
+			$scriptTemplate = str_replace("//alert('DEBUG:", "if(!window.dbgoff)dbgoff=!confirm('DEBUG:", $scriptTemplate);
+		}
+
 		// add to the snowball of javascript
 		$scriptsText .= $scriptTemplate;
 	}
@@ -235,6 +232,16 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 	// if (preg_match(aa/bb/aabb..html) {
 	// generate item page
 	// } #todo
+//
+//	//'/abcde'
+//	$pathText = substr($path, 1);
+//	if (file_exists('top/' . $pathText . '.html')) {
+//		print 'foo';
+//	} else {
+//		print 'top/' . $pathText . '.html';
+//	}
+
+	//print $path;
 
 	if (
 		$path == '/stats.html' ||
@@ -247,6 +254,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		WriteLog('$pwd = ' . $pwd);
 
 		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
+		// #todo why is this set here when it's also passed into the function?
 
 		if (GetConfig('admin/php/regrow_404_pages')) {
 			// attempt to make page on the fly
@@ -322,9 +330,7 @@ if (GetConfig('admin/php/route_enable')) {
 					}
 
 					if (!$clientHasCookie) {
-						$registerResponse = StoreServerResponse('This community requires a registration cookie.');
-
-						header('Location: /profile.html?message=' . $registerResponse);
+						RedirectWithResponse('/profile.html', 'This community requires a registration cookie.');
 					}
 				}
 			}
@@ -367,7 +373,7 @@ if (GetConfig('admin/php/route_enable')) {
 							$messageId = $_GET['message'];
 
 							if ($messageId == 'test') {
-								$newMessageId = StoreServerResponse('
+								$testMessage = '
 									Over the firewall,
 									out the antenna,
 									into the router,
@@ -378,12 +384,9 @@ if (GetConfig('admin/php/route_enable')) {
 									over their firewall,
 									into the forums ....
 									nothing but NET
-								');
-								$newUrl = GetConfig('admin/my_host') . $path . '?message=' . $newMessageId;
+								';
 
-								if (!$redirectUrl) {
-									$redirectUrl = $newUrl;
-								}
+								RedirectWithResponse($path, $testMessage);
 							}
 
 							if (preg_match('/^[a-f0-9]{8}$/', $messageId)) {
@@ -395,7 +398,7 @@ if (GetConfig('admin/php/route_enable')) {
 								$redirectUrl = $path;
 							}
 						} else {
-							WriteLog('$_GET[message] NOT exists');
+							WriteLog('$_GET[message] NOT set');
 						}
 
 						if (
@@ -556,6 +559,7 @@ if (GetConfig('admin/php/route_enable')) {
 					WriteLog('$path not specified, using HandleNotFound()');
 					$html = HandleNotFound($path, '');
 				}
+			// if ($path == '/404.html' || $pathFull && substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot)
 			} else {
 				// #todo when does this actually happen?
 				// smarter 404 handler
@@ -812,6 +816,10 @@ if (GetConfig('admin/php/route_enable')) {
 	if ($_GET['path']) {
 		if (file_exists($path)) {
 			$html = get_file_contents($path);
+			print $html;
+		}
+		else if (file_exists($path . '.html')) {
+			$html = get_file_contents($path . '.html');
 			print $html;
 		}
 	}
