@@ -20,7 +20,7 @@
 					<p></p>
 
 					<fieldset>
-						<legend>Interface Mode<noscript>*</noscript><br></legend>
+						<legend>Interface and Appearance<noscript>*</noscript><br></legend>
 
 						<p><nobr>
 							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }">
@@ -29,12 +29,6 @@
 							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
 							<input type=submit name=ui class=advanced value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
 						</nobr></p>
-					</fieldset>
-
-					<p></p>
-
-					<fieldset>
-						<legend>Voting<noscript>*</noscript><br></legend>
 
 						<p>
 							<label for=chkWantToVote>
