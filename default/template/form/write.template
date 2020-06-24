@@ -5,7 +5,7 @@
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
 				<td>
-					<font color=$colorTitlebarText><b>New Message</b></font><br>
+					<font color=$colorTitlebarText><b>Write Message</b></font><br>
 				</td>
 			</tr>
 
@@ -20,7 +20,7 @@
 							</p>
 						</noscript>
 
-						<label for="comment" class=beginner>Enter some text to share:<br></label>
+						<label for="comment" class=beginner>Share with Everyone:<br></label>
 
 						<textarea
 							class=txtarea
@@ -37,13 +37,13 @@
 							<input
 								type=submit
 								onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"
-								value="Send Message"
+								value="Send Now"
 								name=addtext
 								id=addtext
 							>
-						</p>
 
-						<span id=spanSignAs></span>
+							<span id=spanSignAs></span>
+						</p>
 
 						<span>
 							<p id=lblWriteLengthWarning class=warning style="display: none">
