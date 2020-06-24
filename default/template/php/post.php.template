@@ -23,6 +23,59 @@ if ($stopTimeConfig) {
 
 $redirectUrl = ''; // where we're going after this is all over
 
+function GetItemPlaceholderPage ($comment) {
+
+	// escape comment for output as html
+	$commentHtml =
+		nl2br(
+			str_replace(
+				'  ',
+				' &nbsp;',
+				htmlspecialchars(
+					wordwrap(
+						trim($comment),
+						80,
+						' ',
+						true
+					),
+					ENT_QUOTES|ENT_SUBSTITUTE,
+					"UTF-8"
+				)
+			),
+			0
+		)
+	;
+
+	// template for temporary placeholder for html file
+	// overwritten later by update.pl
+	$commentHtmlTemplate = GetTemplate('item_processing.template');
+
+	// get theme name from config and associated background and foreground colors
+	$themeName = trim(GetConfig('html/theme'));
+	WriteLog('$themeName = ' . $themeName);
+	// color values
+	$colorWindow = GetConfig('theme/' . $themeName . '/color/window');
+	$colorText = GetConfig('theme/' . $themeName . '/color/text');
+	WriteLog('$colorWindow = ' . $colorWindow);
+	WriteLog('$colorText = ' . $colorText);
+
+	// replace placeholders with colors in template
+	$commentHtmlTemplate = str_replace('$colorWindow', $colorWindow, $commentHtmlTemplate);
+	$commentHtmlTemplate = str_replace('$colorText', $colorText, $commentHtmlTemplate);
+
+	// insert html-ized comment into template
+	$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
+
+	// here we do gpg stuff, it's nothing for now
+	//$gpgStuff = GpgParse($filePath);##
+	//WriteLog('$gpgStuff: ' . print_r($gpgStuff, 1));##
+//	$commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
+
+	$pageTemplate = $commentHtmlTemplate;
+
+	return $pageTemplate;
+}
+
 function ProcessNewComment ($comment) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
@@ -148,54 +201,9 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
 		file_put_contents($filePath, $comment);
 		// this could probably just be a rename() #todo
 
-
-		// escape comment for output as html
-		$commentHtml =
-			nl2br(
-				str_replace(
-					'  ',
-					' &nbsp;',
-					htmlspecialchars(
-						wordwrap(
-							trim($comment),
-							80,
-							' ',
-							true
-						),
-						ENT_QUOTES|ENT_SUBSTITUTE,
-						"UTF-8"
-					)
-				),
-				0
-			)
-		;
-
 		// check if html file already exists. if it does, leave it alone
 		if (!file_exists($fileHtmlPath)) {
-			// template for temporary placeholder for html file
-			// overwritten later by update.pl
-			$commentHtmlTemplate = GetTemplate('item_processing.template');
-
-			// get theme name from config and associated background and foreground colors
-			$themeName = trim(GetConfig('html/theme'));
-			WriteLog('$themeName = ' . $themeName);
-			// color values
-			$colorWindow = GetConfig('theme/' . $themeName . '/color/window');
-			$colorText = GetConfig('theme/' . $themeName . '/color/text');
-			WriteLog('$colorWindow = ' . $colorWindow);
-			WriteLog('$colorText = ' . $colorText);
-
-			// replace placeholders with colors in template
-			$commentHtmlTemplate = str_replace('$colorWindow', $colorWindow, $commentHtmlTemplate);
-			$commentHtmlTemplate = str_replace('$colorText', $colorText, $commentHtmlTemplate);
-
-			// insert html-ized comment into template
-			$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
-
-			// here we do gpg stuff, it's nothing for now
-			//$gpgStuff = GpgParse($filePath);##
-			//WriteLog('$gpgStuff: ' . print_r($gpgStuff, 1));##
-//			$commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
+			$commentHtmlTemplate = GetItemPlaceholderPage($comment);
 
 			// store file
 			WriteLog("file_put_contents($fileHtmlPath, $commentHtmlTemplate)");
@@ -374,9 +382,12 @@ if (isset($comment) && $comment) {
 
 	            $finishTime = time() - $postPhpStartTime;
 
-				$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
+				//$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
 
-				$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor;
+				//$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor;
+				RedirectWithResponse($returnToUrlPath, "Success! Reply posted. <small>in $finishTime"."s</small>");
+				// #todo add anchorto support ?
+
 				// issue #1: not using RedirectWithResponse()
 				// issue #2: ie does not like redirecting to a url with an anchor tag, because it tries to include that in the request
 				// issue #3: mosaic doesn't like relative redirects, need to include own domain in return url
@@ -410,14 +421,7 @@ if (!$redirectUrl && $fileUrlPath) {
 	$itemPostedServerResponse = "Success! Item posted. <small class=advanced> in $finishTime"."s</small>";
 	//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
-	$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
-
-    $redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
-}
-
-if ($redirectUrl) {
-	WriteLog('Location: ' . $redirectUrl);
-	RedirectWithResponse($redirectUrl, "Success! <small>in $finishTime"."s</small>");
+	RedirectWithResponse($fileUrlPath, $itemPostedServerResponse);
 }
 
 print($html);
