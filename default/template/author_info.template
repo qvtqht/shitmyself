@@ -16,8 +16,7 @@
 
 		<tr class=menubar>
 			<td colspan=2>
-				<a href="/write.html?vouch=$fingerprint">Vouch</a> |
-				<a href="/write.html?nuke=$fingerprint">Nuke</a>
+				<a href="/write.html?vouch=$fingerprint">Vouch</a>
 			</td>
 		</tr>
 
