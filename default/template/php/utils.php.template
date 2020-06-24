@@ -527,7 +527,7 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 // calls StoreServerResponse($message)
 // then creates url with message= attribute
 // sends header to go to that url
-	WriteLog('RedirectWithResponse()');
+	WriteLog("RedirectWithResponse($url, $message)");
 
 	// should only redirect once per session
 	static $redirected = 0;
@@ -567,7 +567,7 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		$redirectUrl = $url . '?message=' . $responseId;
 	} else {
 		// there's already a question mark, we need to use the & syntax
-		if (substr($url, strlen($url) - 1, 1) == '&') {
+		if (substr($url, strlen($url) - 1, 1) == '&' || substr($url, strlen($url) - 1, 1) == '?') {
 			// query ends with & already, we don't need to add one
 			$redirectUrl = $url . 'message=' . $responseId;
 		} else {
