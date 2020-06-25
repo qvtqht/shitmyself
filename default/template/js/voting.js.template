@@ -116,9 +116,10 @@ function IncrementTagLink (t) { // increments number of votes in tag button
 	}
 }
 
-function signVote(t, token) { // signs a vote from referenced vote button
+function signVote (t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
-// token = full voting token, in the format >>fileHash\n#tag
+// token = full voting token, in the format (gt)(gt)fileHash\n#tag
+// where (gt) is a greater-than sign, omitted here
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
