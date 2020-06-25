@@ -43,12 +43,26 @@ function freshCallback() { // callback for requesting HEAD for current page
 			} else {
 				window.lastEtag = eTag;
 			}
-		}
 
-		if (clock) { // reset
-		    //alert('DEBUG: freshCallback() setting clock.style.backgroundColor = clockBaselineColor');
 
-			clock.style.backgroundColor = clockBaselineColor;
+			if (window.freshMd5thisPage) {
+				var freshMd5 = freshClient.getResponseHeader("Fresh-MD5"); // md5 header contains page 'fingerprint'
+
+				if (freshMd5 != freshMd5thisPage) {
+					//alert('DEBUG: perhaps something changed?');
+
+
+					if (clock) { // reset
+						//alert('DEBUG: freshCallback() setting clock.style.backgroundColor = clockBaselineColor');
+
+						clock.style.backgroundColor = 'orange';
+					}
+				} else {
+
+				}
+			} else {
+
+			}
 		}
 	}
 
@@ -56,11 +70,6 @@ function freshCallback() { // callback for requesting HEAD for current page
 }
 
 function CheckIfFresh() {
-	var clock = document.getElementById('txtClock');
-	if (clock) {
-		clock.style.backgroundColor = '#88ee00'; //#todo templatize
-	}
-
 	var mypath = window.mypath;
 
 	if (!mypath) {
@@ -69,8 +78,9 @@ function CheckIfFresh() {
 	}
 
 	freshClient = new XMLHttpRequest();
+	//freshClient.open("HEAD", mypath + '?' + new Date().getTime(), true);
 	freshClient.open("HEAD", mypath, true);
-
+	freshClient.setRequestHeader('Cache-Control', 'no-cache');
 	freshClient.onreadystatechange = freshCallback;
 
 	freshClient.send();
@@ -83,13 +93,11 @@ function AmIFresh() {
 
 	if (intFreshTimeout < 0) {
 		//alert('DEBUG: AmIFresh: intFreshTimeout < 0; return');
-
 		return;
 	}
 
 	if (timeoutFresh) {
 		//alert('DEBUG: AmIFresh: clearTimeout(timeoutFresh)');
-
 		clearTimeout(timeoutFresh);
 	}
 
@@ -97,15 +105,15 @@ function AmIFresh() {
 		//alert('DEBUG: AmIFresh: window.XMLHttpRequest feature check passed');
 
 		if (!intFreshTimeout) {
-			intFreshTimeout = 1000;
+			intFreshTimeout = 5000;
 		} else {
 			CheckIfFresh();
 		}
 
-		intFreshTimeout = intFreshTimeout * 1.5;
+		intFreshTimeout = intFreshTimeout * 2;
 		
-		if (5000 < intFreshTimeout) {
-			intFreshTimeout = 5000;
+		if (50000 < intFreshTimeout) {
+			intFreshTimeout = 50000;
 		} 
 
 		//alert('DEBUG: AmIFresh: setting timeout to ' + intFreshTimeout);
