@@ -353,7 +353,7 @@ if (GetConfig('admin/php/route_enable')) {
 					$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
 					if ($path != '/404.html' && file_exists($pathRel)) {
 						WriteLog("file_exists($pathRel) was true");
-						
+
 						if ($path == '/settings.html') {
 							if (isset($_GET['chkWantToVote']) && isset($_GET['query']) && $_GET['query'] == 'ui=Admin') {
 								include_once('cookie.php');
@@ -820,16 +820,17 @@ if (GetConfig('admin/php/route_enable')) {
 	// this is a fallback, and shouldn't really be here
 	// but it helps compensate for another bug
 
-	//print "oh no! route_enable is false, but route.php was called!";
+	print "oh no! route_enable is false, but route.php was called!"; //#todo
+
 	if ($_GET['path']) {
-		if (file_exists($path)) {
-			$html = get_file_contents($path);
-			print $html;
-		}
-		else if (file_exists($path . '.html')) {
-			$html = get_file_contents($path . '.html');
-			print $html;
-		}
+//		if (file_exists($path)) {
+//			$html = get_file_contents($path);
+//			print $html;
+//		}
+//		else if (file_exists($path . '.html')) {
+//			$html = get_file_contents($path . '.html');
+//			print $html;
+//		}
 	}
 }
 
