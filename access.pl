@@ -61,12 +61,19 @@ foreach (@submitReceivers) {
 
 ##################
 
-sub AddHost { # adds a host to config/system/my_hosts
+sub AddHost { # adds host to config/system/my_hosts
 # $host
 # $ownAlias = whether it belongs to this instance
 
 	my $host = shift;
 	chomp ($host);
+
+	# don't need to do it more than once per script run
+	state %hostsAdded;
+	if ($hostsAdded{$host}) {
+		return;
+	}
+	$hostsAdded{$host} = 1;
 
 	my $ownAlias = shift;
 	chomp ($ownAlias);
@@ -77,10 +84,9 @@ sub AddHost { # adds a host to config/system/my_hosts
 		AddItemToConfigList('system/my_hosts', $host);
 	}
 
-	AddItemToConfigList('pull_hosts', $host);
+	AddItemToConfigList('system/pull_hosts', $host);
 
 	return;
-
 }
 
 sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
@@ -162,21 +168,24 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	my $vhostParse = shift;
 	# Whether we use the vhost log format
 
-	#This hash will hold the previous lines we've already processed
-	my %prevLines;
-
 	#Count of the new items/actions
 	my $newItemCount = 0;
 
-	#If processed.log exists, we load it into %prevLines
-	#This is how we will know if we've already looked at a line in the log file
-	if (-e "./log/processed.log") {
-		open (LOGFILELOG, "./log/processed.log");
-		foreach my $procLine (<LOGFILELOG>) {
-			chomp $procLine;
-			$prevLines{$procLine} = 0;
+	#This hash will hold the previous lines we've already processed
+	my %prevLines;
+	{
+		WriteLog("Loading processed.log...\n");
+
+		#If processed.log exists, we load it into %prevLines
+		#This is how we will know if we've already looked at a line in the log file
+		if (-e "./log/processed.log") {
+			open(LOGFILELOG, "./log/processed.log");
+			foreach my $procLine (<LOGFILELOG>) {
+				chomp $procLine;
+				$prevLines{$procLine} = 0;
+			}
+			close(LOGFILELOG);
 		}
-		close (LOGFILELOG);
 	}
 
 	WriteLog("Processing $logfile...\n");
