@@ -39,6 +39,7 @@ function StripHeavyTags ($html) { // strips heavy tags from page replaces with b
 		$html = preg_replace('/\<\/th\>/', '; ', $html);
 		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
 		$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/:\<\/td\>\<td\>/', ': ', $html);
 		$html = preg_replace('/\<\/td\>/', '; ', $html);
 		$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br><hr>', $html);
 		$html = preg_replace('/\<\/table\>/', '<br><hr>', $html);
