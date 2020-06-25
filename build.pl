@@ -100,8 +100,9 @@ UpdateUpdateTime();
 BuildMessage "require('./pages.pl')...";
 require './pages.pl';
 
-BuildMessage "require('./generate.pl')...";
-require('./generate.pl');
+#PutHtmlFile("/index.html", '<a href="/write.html">write.html</a>');
+MakeSummaryPages();
+#PutHtmlFile("/index.html", GetFile('html/help.html'));
 
 if (GetConfig('admin/lighttpd/enable')) {
 	BuildMessage("admin/lighttpd/enable was true");
@@ -119,6 +120,9 @@ if (GetConfig('admin/lighttpd/enable')) {
 	if (GetConfig('admin/http_auth/enable')) {
 		my $basicAuthUserFile = GetTemplate('lighttpd/lighttpd_password.template');
 		PutFile('config/lighttpd_password.conf', $basicAuthUserFile);
+
+		my $htpasswdAuthUserFile = GetTemplate('htaccess/htpasswd.template');
+		PutFile('config/lighttpd_htpasswd.conf', $htpasswdAuthUserFile);
 	}
 } else {
 	BuildMessage("admin/lighttpd/enable was false");
@@ -126,6 +130,11 @@ if (GetConfig('admin/lighttpd/enable')) {
 
 if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
+}
+
+if (GetConfig('admin/build/generate_after')) {
+	BuildMessage "require('./generate.pl')...";
+	require('./generate.pl');
 }
 
 PutFile('config/admin/build_end', GetTime());
