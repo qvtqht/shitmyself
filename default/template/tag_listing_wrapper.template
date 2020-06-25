@@ -13,11 +13,6 @@
 			<th align=left class=beginner>Information</th>
 		</tr>
 		$tagListings
-		<tr class=statusbar>
-			<td colspan=3>
-				Ready
-			</td>
-		</tr>
 	</table>
 </font>
 <!-- / tag_listing_wrapper.template -->
