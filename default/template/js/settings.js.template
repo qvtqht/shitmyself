@@ -163,15 +163,15 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			}
 			showBeginnerLastAction = displayValue + bgColor;
 		}
-
-		if (window.freshIntervalId) {
-			if (window.freshIntervalId) {
-				clearTimeout(window.freshIntervalId);
-			}
-			if (GetPrefs('notify_on_change')) {
-				CheckIfFresh();
-			}
-		}
+// #todo
+//		if (window.freshTimeoutId) {
+//			if (window.freshTimeoutId) {
+//				clearTimeout(window.freshTimeoutId);
+//			}
+//			if (GetPrefs('notify_on_change')) {
+//				CheckIfFresh();
+//			}
+//		}
 
 		if (window.setAva) {
 			setAva(); // #todo caching similar to above
