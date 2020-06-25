@@ -1,10 +1,11 @@
 // == begin fresh.js
+var freshClient;
+
 function freshCallback() { // callback for requesting HEAD for current page
-	var clock = document.getElementById('txtClock');
+//alert('DEBUG: freshCallback() this.readyState = ' + this.readyState);
 
-	//alert('DEBUG: freshCallback() this.readyState = ' + this.readyState);
-
-	if (this.readyState == this.HEADERS_RECEIVED || this.status == 200) { // headers received -- what we've been waiting for
+	if (this.readyState == this.HEADERS_RECEIVED || this.status == 200) {
+	// headers received -- what we've been waiting for
 		// document.title = 'DEBUG: callback received 200';
 	    //alert('DEBUG: freshCallback() this.readyState == this.HEADERS_RECEIVED');
 
@@ -15,24 +16,33 @@ function freshCallback() { // callback for requesting HEAD for current page
 		if (eTag) { // if eTag header has a value
 			if (window.myOwnETag) {
 				if (eTag != myOwnETag) {
-					document.title = 'freshCallback: y ' + window.myOwnETag + ';' + new Date().getTime();
+					//document.title = 'freshCallback: y ' + window.myOwnETag + ';' + new Date().getTime();
 
-					//alert('DEBUG: perhaps something changed?');
+					var ariaAlert;
+					ariaAlert = document.getElementById('ariaAlert');
+					if (!ariaAlert) {
+						ariaAlert = document.createElement('p');
+						ariaAlert.setAttribute('role', 'alert');
+						ariaAlert.setAttribute('id', 'ariaAlert');
+						ariaAlert.innerHTML = 'Page has changed. Reload to view.';
+						//document.body.appendChild(ariaAlert);
+						document.body.insertBefore(ariaAlert, document.body.firstChild);
+					}
 
-					if (clock) { // reset
-						clock.style.backgroundColor = 'orange';
+					if (document.title.substring(0,2) != '! ') {
+						document.title = '! ' + document.title;
+					}
 
-						if (window.freshIntervalId) {
-							clearInterval(window.freshIntervalId);
-						}
-						window.intFreshTimeout = -1;
+					if (window.freshTimeoutId) {
+						clearTimeout(window.freshTimeoutId);
 					}
 				} else {
-					document.title = 'freshCallback: x ' + window.myOwnETag + ';' + new Date().getTime();
+					//document.title = 'freshCallback: x ' + window.myOwnETag + ';' + new Date().getTime();
 
-					if (!window.freshIntervalId) {
-						window.freshIntervalId = setInterval('CheckIfFresh()', 30000);
+					if (window.freshTimeoutId) {
+						clearTimeout(window.freshTimeoutId);
 					}
+					window.freshTimeoutId = setTimeout('CheckIfFresh()', 3000);
 				}
 			}
 		}
@@ -42,7 +52,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 }
 
 function CheckIfFresh() {
-	document.title = 'CheckIfFresh: ' + new Date().getTime();
+	//document.title = 'CheckIfFresh: ' + new Date().getTime();
 	
 	if (window.XMLHttpRequest && window.myOwnETag) {
 		var mypath = window.mypath;
@@ -59,8 +69,6 @@ function CheckIfFresh() {
 		freshClient.onreadystatechange = freshCallback;
 
 		freshClient.send();
-	} else {
-		alert(window.myOwnETag + 'abc');
 	}
 }
 
