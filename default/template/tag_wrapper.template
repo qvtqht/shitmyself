@@ -1,0 +1,17 @@
+<!-- tag_wrapper.template -->
+<font face=arial><p>
+	<table cellspacing=0 cellpadding=5 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<td>
+				<font color=$colorTitlebarText><small><b>Tags</b></small></font>
+			</td>
+		</tr>
+
+		<tr class=body>
+			<td class=content>
+				<p class=pagination>$tagLinks</p>
+			</td>
+		</tr>
+	</table>
+</p></font>
+<!-- / tag_wrapper.template -->
