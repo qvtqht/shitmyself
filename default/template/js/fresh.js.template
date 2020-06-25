@@ -1,29 +1,11 @@
 // == begin fresh.js
-var freshClient;
-var timeoutFresh;
-
-var clockBaselineColor; // color the clock started out at when the page loaded
-
-if (!clockBaselineColor && document.getElementById) {
-	var clock = document.getElementById('txtClock');
-	if (clock) {
-		clockBaselineColor = clock.style.color;
-	}
-}
-
 function freshCallback() { // callback for requesting HEAD for current page
-    //alert('DEBUG: freshCallback() begins');
-
 	var clock = document.getElementById('txtClock');
-
-	//alert('DEBUG: freshCallback() clock = ' + clock);
 
 	//alert('DEBUG: freshCallback() this.readyState = ' + this.readyState);
 
-//	if (1 || this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
 	if (this.readyState == this.HEADERS_RECEIVED || this.status == 200) { // headers received -- what we've been waiting for
 		// document.title = 'DEBUG: callback received 200';
-
 	    //alert('DEBUG: freshCallback() this.readyState == this.HEADERS_RECEIVED');
 
 		var eTag = freshClient.getResponseHeader("ETag"); // etag header contains page 'fingerprint'
@@ -31,37 +13,27 @@ function freshCallback() { // callback for requesting HEAD for current page
 		//alert('DEBUG: eTag = ' + eTag);
 
 		if (eTag) { // if eTag header has a value
-			if (window.lastEtag) { // if we already saved one
-				if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
-					// still fresh, no change
-				} else {
-					// etag was different from last one we saw
-					document.title = 'DEBUG: perhaps something changed?';
-				}
+			if (window.myOwnETag) {
+				if (eTag != myOwnETag) {
+					document.title = 'freshCallback: y ' + window.myOwnETag + ';' + new Date().getTime();
 
-				window.lastEtag = eTag;
-			} else {
-				window.lastEtag = eTag;
-			}
-
-
-			if (window.freshMd5thisPage) {
-				var freshMd5 = freshClient.getResponseHeader("Fresh-MD5"); // md5 header contains page 'fingerprint'
-
-				if (freshMd5 != freshMd5thisPage) {
 					//alert('DEBUG: perhaps something changed?');
 
-
 					if (clock) { // reset
-						//alert('DEBUG: freshCallback() setting clock.style.backgroundColor = clockBaselineColor');
-
 						clock.style.backgroundColor = 'orange';
+
+						if (window.freshIntervalId) {
+							clearInterval(window.freshIntervalId);
+						}
+						window.intFreshTimeout = -1;
 					}
 				} else {
+					document.title = 'freshCallback: x ' + window.myOwnETag + ';' + new Date().getTime();
 
+					if (!window.freshIntervalId) {
+						window.freshIntervalId = setInterval('CheckIfFresh()', 30000);
+					}
 				}
-			} else {
-
 			}
 		}
 	}
@@ -70,64 +42,35 @@ function freshCallback() { // callback for requesting HEAD for current page
 }
 
 function CheckIfFresh() {
-	var mypath = window.mypath;
+	document.title = 'CheckIfFresh: ' + new Date().getTime();
+	
+	if (window.XMLHttpRequest && window.myOwnETag) {
+		var mypath = window.mypath;
 
-	if (!mypath) {
-		mypath = window.location;
-		window.mypath = mypath;
-	}
-
-	freshClient = new XMLHttpRequest();
-	//freshClient.open("HEAD", mypath + '?' + new Date().getTime(), true);
-	freshClient.open("HEAD", mypath, true);
-	freshClient.setRequestHeader('Cache-Control', 'no-cache');
-	freshClient.onreadystatechange = freshCallback;
-
-	freshClient.send();
-}
-
-var intFreshTimeout = 0;
-
-function AmIFresh() {
-	//alert('DEBUG: AmIFresh: begin');
-
-	if (intFreshTimeout < 0) {
-		//alert('DEBUG: AmIFresh: intFreshTimeout < 0; return');
-		return;
-	}
-
-	if (timeoutFresh) {
-		//alert('DEBUG: AmIFresh: clearTimeout(timeoutFresh)');
-		clearTimeout(timeoutFresh);
-	}
-
-	if (window.XMLHttpRequest) {
-		//alert('DEBUG: AmIFresh: window.XMLHttpRequest feature check passed');
-
-		if (!intFreshTimeout) {
-			intFreshTimeout = 5000;
-		} else {
-			CheckIfFresh();
+		if (!mypath) {
+			mypath = window.location;
+			window.mypath = mypath;
 		}
 
-		intFreshTimeout = intFreshTimeout * 2;
-		
-		if (50000 < intFreshTimeout) {
-			intFreshTimeout = 50000;
-		} 
+		freshClient = new XMLHttpRequest();
+		//freshClient.open("HEAD", mypath + '?' + new Date().getTime(), true);
+		freshClient.open("HEAD", mypath, true);
+		freshClient.setRequestHeader('Cache-Control', 'no-cache');
+		freshClient.onreadystatechange = freshCallback;
 
-		//alert('DEBUG: AmIFresh: setting timeout to ' + intFreshTimeout);
-
-		timeoutFresh = setTimeout('AmIFresh()', intFreshTimeout);
+		freshClient.send();
+	} else {
+		alert(window.myOwnETag + 'abc');
 	}
 }
 
 if (window.GetPrefs) {
 	var needNotify = GetPrefs('notify_on_change') || 0;
 	if (needNotify == 1) { // check value of want_to_vote preference
-		AmIFresh();
+//		CheckIfFresh();
 	}
 }
+
 
 //alert('DEBUG: fresh.js');
 

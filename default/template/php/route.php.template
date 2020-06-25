@@ -502,6 +502,13 @@ if (GetConfig('admin/php/route_enable')) {
 						WriteLog('$html = file_get_contents($pathRel);');
 						$html = file_get_contents($pathRel);
 
+						if (GetConfig('admin/js/enable') && GetConfig('html/fresh_js')) {
+							//fresh-md5 fresh_js
+							$md5 = md5_file($pathRel);
+							header('ETag: ' . $md5);
+							$html .= "<script>window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); }</script>";
+						}
+
 						if ($path == '/write.html') {
 							if (file_exists('write.php')) {
 								include('write.php');

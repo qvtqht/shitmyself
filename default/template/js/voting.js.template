@@ -85,11 +85,6 @@ function signCallback (signed) {
 
 	if (PingUrl(url)) {
 		// todo incrememnt counter
-		if (window.AmIFresh) {
-			// if fresh.js is included, decrease check interval
-			intFreshTimeout = 1000;
-			AmIFresh();
-		}
 	}
 }
 
@@ -141,11 +136,6 @@ function signVote (t, token) { // signs a vote from referenced vote button
 
 			if (PingUrl(t.href)) {
 				// todo increment counter
-				if (window.AmIFresh) {
-					// if fresh.js is included, decrease check interval
-					intFreshTimeout = 1000;
-					AmIFresh();
-				}
 			}
 		} else {
 			// there is a private key
