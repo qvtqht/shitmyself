@@ -415,7 +415,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('author', $gpgKey);
 
-			DBAddPageTouch('scores', 1);
+			if (GetConfig('admin/index/make_primary_pages')) {
+				MakePage('author', $gpgKey);
+			}
 
 			DBAddPageTouch('scores');
 
@@ -480,6 +482,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					$detokenedMessage =~ s/$reconLine//;
 
 					DBAddPageTouch('item', $parentHash);
+
+					if (GetConfig('admin/index/make_primary_pages')) {
+						MakePage('item', $parentHash);
+					}
 				}
 			}
 
@@ -648,7 +654,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							DBAddPageTouch('author', $hasCookie);
 
-							DBAddPageTouch('scores', 1);
+							if (GetConfig('admin/index/make_primary_pages')) {
+								MakePage('author', $hasCookie);
+							}
 
 							DBAddPageTouch('scores');
 
@@ -698,7 +706,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							foreach my $itemParent (@itemParents) {
 								DBAddTitle($itemParent, $titleGiven);
 
-								DBAddTitle('flush'); #todo refactor this out
+								DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+								DBAddPageTouch('item', $itemParent);
+
+								if (GetConfig('admin/index/make_primary_pages')) {
+									MakePage('item', $itemParent);
+								}
 							}
 
 							if ($hasCookie) {
