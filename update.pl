@@ -111,6 +111,10 @@ sub ProcessTextFile { #add new textfile to index
 
 	# get file's hash from git
 	my $fileHash = GetFileHash($file);
+	
+	if (!$fileHash) {
+		return 0;
+	}
 
 	WriteLog('ProcessTextFile: $fileHash = ' . $fileHash);
 
@@ -126,37 +130,7 @@ sub ProcessTextFile { #add new textfile to index
 	}
 
 	if (GetConfig('admin/organize_files')) {
-		# organize files aka rename to hash-based path
-		my $fileHashPath = GetFileHashPath($file);
-
-		WriteLog('ProcessTextFile: organize: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
-
-		if ($fileHashPath) {
-			WriteLog('ProcessTextFile: $fileHashPath = ' . $fileHashPath);
-
-			if (-e $fileHashPath) {
-				WriteLog('ProcessTextFile: Warning: file already exists = ' . $fileHashPath);
-			}
-
-			if ($fileHashPath && $file ne $fileHashPath) {
-				WriteLog('ProcessTextFile: renaming ' . $file . ' to ' . $fileHashPath);
-				rename($file, $fileHashPath);
-
-				if (-e $fileHashPath) {
-					WriteLog('ProcessTextFile: rename succeeded, changing value of $file');
-
-					$file = $fileHashPath;
-
-					WriteLog('ProcessTextFile: $file is now ' . $file);
-				} else {
-					WriteLog("ProcessTextFile: WARNING: rename failed, from $file to $fileHashPath");
-				}
-			} else {
-				WriteLog('ProcessTextFile: did not need to rename ' . $file);
-			}
-		} else {
-			WriteLog('ProcessTextFile: $fileHashPath is missing');
-		}
+		$file = OrganizeFile($file);
 	} else {
 		WriteLog("ProcessTextFile: organize_files is off, continuing");
 	}
@@ -174,8 +148,8 @@ sub ProcessTextFile { #add new textfile to index
 		return 0;
 	}
 
-	WriteLog('ProcessTextFile: return 1');
-	return 1;
+	WriteLog('ProcessTextFile: return ' . $fileHash);
+	return $fileHash;
 
 	# run commands to
 	#	  add changed file to git repo
@@ -194,7 +168,7 @@ sub ProcessTextFile { #add new textfile to index
 
 } # ProcessTextFile
 
-sub ProcessImageFile { #add new image to index
+sub ProcessImageFile { # $file ; add new image to index
 	WriteLog('ProcessImageFile() begins');
 
 	my $file = shift;
@@ -210,6 +184,10 @@ sub ProcessImageFile { #add new image to index
 
 	# get file's hash from git
 	my $fileHash = GetFileHash($file);
+
+	if (!$fileHash) {
+		return 0;
+	}
 
 	WriteLog('ProcessImageFile: $fileHash = ' . $fileHash);
 
@@ -261,7 +239,7 @@ sub ProcessImageFile { #add new image to index
 	# }
 
 	if (!GetCache('indexed/' . $fileHash)) {
-		WriteLog('ProcessImageFile: ProcessImageFile (' . $file . ') not in cache/indexed, calling IndexImageFile');
+		WriteLog('ProcessImageFile: ProcessImageFile(' . $file . ') not in cache/indexed, calling IndexImageFile');
 
 		IndexImageFile($file);
 		IndexImageFile('flush');
@@ -273,8 +251,8 @@ sub ProcessImageFile { #add new image to index
 		return 0;
 	}
 
-	WriteLog('ProcessImageFile: return 1');
-	return 1;
+	WriteLog('ProcessImageFile: return ' . $fileHash);
+	return $fileHash;
 }
 
 if (!$arg1) {
@@ -433,7 +411,7 @@ if (!$arg1) {
 
 					# If the file exists, and is not a directory, process it
 					if (-e $file && !-d $file) {
-						$filesProcessed += ProcessTextFile($file);
+						$filesProcessed += (ProcessTextFile($file) ? 1 : 0);
 					}
 					else {
 						# this should not happen
@@ -462,37 +440,25 @@ if (!$arg1) {
 				WriteLog("update.pl: ImageProcessing: cd $SCRIPTDIR");
 				WriteLog(`cd "$SCRIPTDIR"`);
 
-				#
-				# print('update.pl: $SCRIPTDIR = ' . $SCRIPTDIR);
-				# print "\n";
-				# print('update.pl: $HTMLDIR = ' . $HTMLDIR);
-				# print "\n";
-				# print('update.pl: $TXTDIR = ' . $TXTDIR);
-				# print "\n";
-				# print('update.pl: $IMAGEDIR = ' . $IMAGEDIR);
-				# print "\n";
-				# die;
-
-
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.png\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.png\\\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.gif\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.gif\\\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jpg\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.jpg\\\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.bmp\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.bmp\\\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.svg\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.svg\\\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jfif\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.jfif\\\$";
 				push @files, split("\n", `$findCommand`);
 
-				$findCommand = "find \"$IMAGEDIR\" | grep -i \.webp\$";
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \\\.webp\\\$";
 				push @files, split("\n", `$findCommand`);
 				#todo config/admin/upload/allow_files
 
@@ -526,7 +492,7 @@ if (!$arg1) {
 
 					# If the file exists, and is not a directory, process it
 					if (-e $file && !-d $file) {
-						$filesProcessed += ProcessImageFile($file);
+						$filesProcessed += (ProcessImageFile($file) ? 1 : 0);
 					}
 					else {
 						# this should not happen
@@ -537,9 +503,7 @@ if (!$arg1) {
 				IndexImageFile('flush');
 			}
 
-
 			#####
-
 
 			RemoveEmptyDirectories($TXTDIR);
 			RemoveEmptyDirectories($IMAGEDIR);
@@ -604,16 +568,14 @@ if (!$arg1) {
 
 		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.txt') { #$arg1 =~ m/\.txt$/
 
-			my $filesProcessed = ProcessTextFile($arg1);
+			my $fileProcessed = ProcessTextFile($arg1);
 
-			if ($filesProcessed > 0) {
+			if ($fileProcessed) {
 				IndexTextFile('flush');
 
 				WriteIndexedConfig();
 
-				MakeSummaryPages();
-
-				my $pagesProcessed = BuildTouchedPages();
+				MakePage('item', $fileProcessed);
 			}
 		}
 
@@ -627,15 +589,14 @@ if (!$arg1) {
 			lc(substr($arg1, length($arg1) - 5, 5)) eq '.jfif'
 			#todo config/admin/upload/allow_files
 		) { #$arg1 =~ m/\.txt$/
+			my $fileProcessed = ProcessImageFile($arg1);
 
-			my $filesProcessed = ProcessImageFile($arg1);
-
-			if ($filesProcessed > 0) {
+			if ($fileProcessed) {
 				IndexImageFile('flush');
 
 				MakeSummaryPages();
 
-				my $pagesProcessed = BuildTouchedPages();
+				MakePage('item', $fileProcessed);
 			}
 		}
 
