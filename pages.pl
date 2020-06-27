@@ -1876,7 +1876,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
-	if (GetConfig('html/fresh_js')) {
+	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
 		# if fresh_js is enabled, automatically add it
 		#todo move this upwards, shouldn't be decided here
 		push @scriptNames, 'fresh';
@@ -2009,7 +2009,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 		push @scriptNames, 'clock';
 	}
 
-	if (GetConfig('html/fresh_js')) {
+	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
 		# if clock is enabled, automatically add it
 		push @scriptNames, 'fresh';
 	}

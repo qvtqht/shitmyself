@@ -131,7 +131,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 //		$scriptNames[] = 'clock';
 //	}
 //
-//	if (GetConfig('html/fresh_js')) {
+//	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
 //		// if clock is enabled, automatically add it
 //		$scriptNames[] = 'fresh';
 //	}
@@ -501,6 +501,13 @@ if (GetConfig('admin/php/route_enable')) {
 
 						WriteLog('$html = file_get_contents($pathRel);');
 						$html = file_get_contents($pathRel);
+
+						if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
+							//fresh-md5 fresh_js
+							$md5 = md5_file($pathRel);
+							header('ETag: ' . $md5);
+							$html .= "<script>window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); }</script>";
+						}
 
 						if ($path == '/write.html') {
 							if (file_exists('write.php')) {
