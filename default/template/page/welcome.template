@@ -1,0 +1,14 @@
+<!-- welcome.template -->
+
+<p>Welcome to the welcome page. Thank you for stopping by.</p>
+
+<p>Share something important</p> <!-- folds out write form if possible, otherwise write form is already visible -->
+
+<p>Tell us about yourself</p> <!-- goes to profile page -->
+
+<p>Read what's new</p> <!-- goes to topics page? -->
+
+<p><a href="/manual.html">Technical details</a></p>
+
+<!-- / welcome.template -->
+

@@ -1,5 +1,5 @@
 <tr>
-	<td><a href="$link">$authorAvatar</a>($authorScore)</td>
+	<td>$authorLink($authorScore)</td>
 	<td>$authorLastSeen</td>
 	<td>$authorVoteButtons</td>
 </tr>

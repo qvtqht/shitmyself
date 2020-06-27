@@ -392,9 +392,17 @@ sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to
 	#	#write to config/
 }
 
-sub GetString { # Returns string from config/string/en/..., with special rules:
+sub GetString { # $stringKey, $language ; Returns string from config/string/en/
+# language defaults to 'en'
+
 	my $stringKey = shift;
 	my $language = shift;
+    state %strings;
+
+    if (defined($strings{$stringKey})) {
+    # assumes $language is always the same, may need refactor later
+        return $strings{$stringKey};
+    }
 
 	my $defaultLanguage = 'en';
 
@@ -405,8 +413,6 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 	if (!$language) {
 		$language = $defaultLanguage;
 	}
-
-	state %strings;
 
 	if (!defined($strings{$stringKey})) {
 		my $string = GetConfig('string/' . $language . '/'.$stringKey);
@@ -427,11 +433,9 @@ sub GetString { # Returns string from config/string/en/..., with special rules:
 			chomp ($string);
 
 			$strings{$stringKey} = $string;
-		}
-	}
 
-	if (defined($strings{$stringKey})) {
-		return $strings{$stringKey};
+			return $string;
+		}
 	}
 }
 
@@ -467,25 +471,25 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 	WriteLog("GetFileHash()");
 
 	my $fileName = shift;
-
 	chomp $fileName;
-
 	WriteLog("GetFileHash($fileName)");
 
-	return sha1_hex(GetFile($fileName));
-	#
-	#	my $gitOutput = GitPipe('hash-object -w "' . $fileName. '"');
-	#
-	#	if ($gitOutput) {
-	#		WriteLog($gitOutput);
-	#		chomp($gitOutput);
-	#
-	#		WriteLog("GetFileHash($fileName) = $gitOutput");
-	#
-	#		return $gitOutput;
-	#	} else {
-	#		return;
-	#	}
+	if (-e $fileName) {
+		if ((lc(substr($fileName, length($fileName) - 4, 4)) eq '.txt')) {
+			my $fileContent = GetFile($fileName);
+
+			if (index($fileContent, "\n-- \n") > -1) {
+				# exclude footer content from hashing
+				$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
+			}
+
+			return sha1_hex($fileContent);
+		} else {
+			return sha1_hex(GetFile($fileName));
+		}
+	} else {
+		return;
+	}
 }
 
 sub GetRandomHash { # returns a random sha1-looking hash, lowercase
@@ -497,7 +501,7 @@ sub GetRandomHash { # returns a random sha1-looking hash, lowercase
 	return $randomString;
 }
 
-sub GetTemplate { # returns specified template from template directory
+sub GetTemplate { # $templateName ; returns specified template from template directory
 # returns empty string if template not found
 # here is how the template file is chosen:
 # 1. template's existence is checked in config/template/ or default/template/
@@ -952,6 +956,19 @@ sub GetClockFormattedTime() { # returns current time in appropriate format from 
 	#formats supported: union, epoch (default)
 
 	my $clockFormat = GetConfig('html/clock_format');
+	chomp $clockFormat;
+
+	if ($clockFormat eq '24hour') {
+	    my $time = GetTime();
+
+        my $hours = strftime('%H', localtime $time);
+        my $minutes = strftime('%M', localtime $time);
+        my $seconds = strftime('%S', localtime $time);
+
+        my $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+
+        return $clockFormattedTime;
+    }
 
 	if ($clockFormat eq 'union') {
 		my $time = GetTime();
@@ -1200,7 +1217,7 @@ sub ReplaceStrings {
 	return $content;
 }
 
-sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to html tag;
+sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds attr=value to html tag;
 	WriteLog('AddAttributeToTag() begin');
 
 	my $html = shift; # chunk of html to work with
@@ -1212,6 +1229,7 @@ sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to
 
 	my $tagAttribute = '';
 	if ($attributeValue =~ m/\w/) {
+		# attribute value contains whitespace, must be enclosed in double quotes
 		$tagAttribute = $attributeName . '="' . $attributeValue . '"';
 	} else {
 		$tagAttribute = $attributeName . '=' . $attributeValue . '';
@@ -1219,7 +1237,7 @@ sub AddAttributeToTag { # $html, $tag, $attrName, $attrValue; adds attr=value to
 
 	#todo this is sub-optimal
 	$html =~ s/\<$tag\w/<$tag $tagAttribute /i;
-	$html =~ s/\<$tag/<$tag $tagAttribute /i;
+	$html =~ s/\<$tag/<$tag $tagAttribute /i; #  is this right/necessary? #todo
 	$html =~ s/\<$tag>/<$tag $tagAttribute>/i;
 
 	#WriteLog('AddAttributeToTag: $html after: '.$html);
@@ -1258,10 +1276,11 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	}
 
 	if (index($file, 'html/') > -1) {
-		WriteLog('old-style call to PutHtmlFile, please fix');
+		WriteLog('WARNING! old-style call to PutHtmlFile, please fix');
 		if (GetConfig('admin/debug')) {
 			die('old-style call to PutHtmlFile, please fix');
 		}
+		return;
 	}
 
 	# keeps track of whether home page has been written at some point
@@ -1336,6 +1355,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		# it may be wiser to use str_replace here
 		$content =~ s/src="\//src="$subDir/ig;
 		$content =~ s/href="\//href="$subDir/ig;
+		$content =~ s/action="\//action="$subDir/ig;
 		$content =~ s/\.src = '\//.src = '$subDir/ig;
 		$content =~ s/\.location = '\//.location = '$subDir/ig;
 	}
@@ -1580,9 +1600,9 @@ sub IsAdmin { # returns 1 if parameter equals GetAdminKey() or GetServerKey(), o
 	#
 	#	if ($adminKey eq $key) {
 	if ($key eq GetAdminKey() || $key eq GetServerKey()) {
-		return 1;
+		return 1; # is admin, return true;
 	} else {
-		return 0;
+		return 0; # not admin, return false;
 	}
 }
 

@@ -85,33 +85,22 @@ if (!-e $IMAGEDIR) {
 BuildMessage "Looking for files...";
 
 BuildMessage "MakeAddedIndex()...";
-
 MakeAddedIndex();
-
-BuildMessage "MakeVoteIndex()...";
-
-MakeVoteIndex();
-
-BuildMessage "MakeAddedIndex()...";
-
 MakeAddedIndex();
 
 BuildMessage "WriteConfigFromDatabase()...";
-
 WriteConfigFromDatabase();
 
-BuildMessage "DBAddPageTouch('summary', 0)...";
-
-DBAddPageTouch('summary', 0);
+BuildMessage "DBAddPageTouch('summary')...";
+DBAddPageTouch('summary');
 
 BuildMessage("UpdateUpdateTime()...");
-
 UpdateUpdateTime();
 
+BuildMessage "require('./pages.pl')...";
 require './pages.pl';
 
 BuildMessage "require('./generate.pl')...";
-
 require('./generate.pl');
 
 if (GetConfig('admin/lighttpd/enable')) {
@@ -126,6 +115,11 @@ if (GetConfig('admin/lighttpd/enable')) {
 	
 	BuildMessage('PutFile(\'config/lighttpd.conf\', $lighttpdConf);');
 	PutFile('config/lighttpd.conf', $lighttpdConf);
+
+	if (GetConfig('admin/http_auth/enable')) {
+		my $basicAuthUserFile = GetTemplate('lighttpd/lighttpd_password.template');
+		PutFile('config/lighttpd_password.conf', $basicAuthUserFile);
+	}
 } else {
 	BuildMessage("admin/lighttpd/enable was false");
 }
@@ -133,13 +127,6 @@ if (GetConfig('admin/lighttpd/enable')) {
 if (GetConfig('admin/lighttpd/enable')) {
 	system('killall lighttpd; time ./lighttpd.pl &');
 }
-
-my $filesLeftCommand = 'find $TXTDIR | grep "\.txt$" | wc -l';
-my $filesLeft = `$filesLeftCommand`; #todo
-
-WriteLog('build.pl: $filesLeft = ' . $filesLeft);
-
-PutConfig('admin/update/files_left', $filesLeft);
 
 PutFile('config/admin/build_end', GetTime());
 

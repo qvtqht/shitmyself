@@ -1,3 +1,4 @@
+/* begin css/default.css */
 .tag-flag,
 .tag-troll,
 .tag-spam,
@@ -59,12 +60,9 @@ div.txt {
 	padding: 5pt;
 }
 
-#addtext {
-	width: 100%
-}
-#a383 {
-	color: black;
-	background-color: yellow;
+#a383, #spanLoadingIndicator {
+	color: $colorText;
+	background-color: $colorHighlightBeginner;
 	padding: 1pt;
 	position: fixed;
 	top: 0;
@@ -75,5 +73,5 @@ div.txt {
 	font-size: smaller;
 }
 #a383 a {
-
 }
+/* end css/default.css */

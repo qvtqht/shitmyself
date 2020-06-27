@@ -1,6 +1,8 @@
 <?php
 
-function WriteLog ($text) { // writes to debug log if enabled
+//Header('Content-type: text/html');
+
+function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 // the debug log is stored as a static variable in this function
 // when a blank (false) argument is passed, returns entire log as html
 
@@ -15,7 +17,11 @@ function WriteLog ($text) { // writes to debug log if enabled
 	}
 
     //#todo sanity check for $text being a string
-	$logText .= '<tt class=advanced>' . time() . ':' . htmlspecialchars($text) . "<br></tt>\n";
+    if ($dontEscape) {
+		$logText .= '<tt class=advanced>' . time() . ':' . $text . "<br></tt>\n";
+    } else {
+		$logText .= '<tt class=advanced>' . time() . ':' . htmlspecialchars($text) . "<br></tt>\n";
+	}
 }
 
 //
@@ -56,20 +62,34 @@ function WriteLog ($text) { // writes to debug log if enabled
 
 
 function GetMyVersion () { // returns current git commit id
+// it is cached in config/admin/my_version
+// otherwise it's looked up with: git rev-parse HEAD
+
+	WriteLog('GetMyVersion: begin');
+
+	// store it here so that we don't have to look up every time
 	static $myVersion;
 
 	if ($myVersion) {
+		WriteLog('GetMyVersion: return from static: ' . $myVersion);
 		return $myVersion;
 	}
 
 	$myVersion = GetConfig('admin/my_version');
 
 	if (!$myVersion) {
+		WriteLog('GetMyVersion: git rev-parse HEAD... ');
 		$myVersion = `git rev-parse HEAD`;
+		WriteLog('GetMyVersion: got ' . $myVersion);
+
+		//save to config so that we don't have to call git next time
+		//PutConfig('admin/my_version', $myVersion);
+		file_put_contents('../config/admin/my_version', $myVersion); //#todo PutConfig()
 	}
 
 	$myVersion = trim($myVersion);
 
+	WriteLog('GetMyVersion: return from static: ' . $myVersion);
 	return $myVersion;
 }
 
@@ -90,13 +110,30 @@ function GpgParsePubkey ($filePath) { // #todo parse file with gpg public key
     return array();
 }
 
+function GetFileHash ($fileName) { // returns hash of file contents
+	WriteLog("GetFileHash($fileName)");
+
+	if ((strtolower(substr($fileName, length($fileName) - 4, 4)) == '.txt')) {
+		$fileContent = GetFile($fileName);
+
+		if (index($fileContent, "\n-- \n") > -1) {
+			// exclude signature from hash content
+			$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
+		}
+
+		return sha1($fileContent);
+	} else {
+		return sha1_file($fileName);
+	}
+}
+
 function GpgParseSignedMessage ($filePath) { // #todo #untested parses gpg signed message
 	$gpgCommand = 'gpg2'; // todo add gpg1 support
 	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
 
 	if (GetConfig('admin/gpg/capture_stderr_output')) {
 	    // capture stderr output
-    	$gpgStderr = '2>&1';
+    	$gpgStderr = ' 2>&1';
     } else {
     	if (GetConfig('admin/php/debug')) {
     	    // if debug is on, let it go to stderr
@@ -149,7 +186,7 @@ function GpgParseSignedMessage ($filePath) { // #todo #untested parses gpg signe
     }
 
     $txt = file_get_contents($filePath);
-    $fileHash = sha1_file($filePath);
+    $fileHash = GetFileHash($filePath);
 
     $returnValues['isSigned'] = $isSigned;
     $returnValues['text'] = $txt;
@@ -206,7 +243,7 @@ function GpgParse ($filePath) { // #todo #untested
 
 		$txt = file_get_contents($filePath); // contains text file contents
 
-		$fileHash = sha1_file($filePath);
+		$fileHash = GetFileHash($filePath);
 
         $cachePath = "./cache/" . GetMyVersion() . "/gpg/php/$fileHash.cache";
         // this is where we will cache results for later use
@@ -372,7 +409,8 @@ function GetFile ($file) { // gets file contents
 
 function PutFile ($file, $content) { // puts file contents
 	return file_put_contents($file, $content);
-//	return file_force_contents($file, $content);
+	// #todo account for non-existing sub-dirs
+	// return file_force_contents($file, $content);
 }
 
 function GetCache ($cacheName) { // get cache contents by key/name
@@ -485,12 +523,86 @@ function GetHtmlFilename ($hash) { // gets html filename based on hash
 	return $fileHtmlPath;
 }
 
+function RedirectWithResponse ($url, $message) { // redirects to page with server message
+// calls StoreServerResponse($message)
+// then creates url with message= attribute
+// sends header to go to that url
+	WriteLog("RedirectWithResponse($url, $message)");
+
+	// should only redirect once per session
+	static $redirected = 0;
+	if ($redirected > 0) {
+		WriteLog('Warning! RedirectWithResponse() called more than once!');
+		return;
+	}
+	$redirected++;
+
+	if (headers_sent()) {
+		// problem, can't redirect if headers already sent;
+		// we will print a message instead, but this is definitely a problem
+
+		WriteLog('WARNING! Trying to redirect when headers have already been sent!');
+	}
+
+
+	$responseId = StoreServerResponse($message);
+
+	if (substr($url, 0, 1) == '/') {
+	// todo perhaps account for './' also?
+		$protocol = 'http';
+		if (isset($_SERVER['HTTPS'])) {
+			$protocol = 'https';
+		}
+
+		if ($_SERVER['HTTP_HOST']) {
+			$url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $url;
+		}
+		elseif (GetConfig('admin/my_domain')) {
+			$url = 'http://' . GetConfig('admin/my_domain') . $url;
+		}
+	}
+
+	if (index($url, '?') < 0) {
+		// no question mark, append ?message=
+		$redirectUrl = $url . '?message=' . $responseId;
+	} else {
+		// there's already a question mark, we need to use the & syntax
+		if (substr($url, strlen($url) - 1, 1) == '&' || substr($url, strlen($url) - 1, 1) == '?') {
+			// query ends with & already, we don't need to add one
+			$redirectUrl = $url . 'message=' . $responseId;
+		} else {
+			// there's no & at the end, so append &message
+			$redirectUrl = $url . '&message=' . $responseId;
+		}
+	}
+
+	if (GetConfig('admin/php/debug_server_response') || headers_sent()) {
+		// #warning, this is not a good pattern, don't copy this code. the html will be printed unescaped.
+		// doing it in this case because we want to make a clickable link
+		WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug is true)</font>', 1);
+
+		// #todo template the html
+		print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a></div><hr>';
+	} else {
+		// do the redirect
+		header('Location: ' . $redirectUrl);
+	}
+}
+
 function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) { // returns html for window template
 // uses template/window/standard.template by default
+
+	// stores number of columns if they exist
+	// if no columns, remains at 0
+	// whether there are columns or not determines:
+	// * column headers
+	// * colspan= in non-column cells
 	$contentColumnCount = 0;
 
+	// base template
 	$windowTemplate = GetTemplate('window/standard.template');
 
+	// titlebar, if there's a title
 	if ($windowTitle) {
 		$windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar = str_replace('$windowTitle', $windowTitle, $windowTitlebar);
@@ -500,6 +612,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$windowTemplate =~ str_replace('$windowTitlebar', '', $windowTemplate);
 	}
 
+	// menubar, if there is menubar content
 	if ($windowMenubarContent) {
 		$windowMenubar = GetTemplate('window/menubar.template');
 		$windowMenubar = str_replace('$windowMenubarContent', $windowMenubarContent, $windowMenubar);
@@ -510,6 +623,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		//#todo currently results in an empty menubar
 	}
 
+	// column headings from the $columnHeadings variable
 	if ($columnHeadings) {
 		$windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
 		$windowHeaderColumns = '';
@@ -537,6 +651,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$contentColumnCount = 0;
 	}
 
+	// main window content, aka body
 	if ($windowBody) {
 		if (index(strtolower($windowBody), '<tr') == -1) {
 			// put content into a table row and cell if missing
@@ -548,12 +663,18 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$windowTemplate = str_replace('$windowBody', '', $windowTemplate);
 	}
 
-	if ($windowBody) {
-		$windowTemplate = str_replace('$windowStatus', $windowStatus, $windowTemplate);
+	// statusbar
+	if ($windowStatus) {
+		$windowStatusTemplate = GetTemplate('window/status.template');
+
+		$windowStatusTemplate = str_replace('$windowStatus', $windowStatus, $windowStatusTemplate);
+
+		$windowTemplate = str_replace('$windowStatus', $windowStatusTemplate, $windowTemplate);
 	} else {
 		$windowTemplate = str_replace('$windowStatus', '', $windowTemplate);
 	}
 
+	// fill in the column count if necessary
 	if ($contentColumnCount) {
 		$windowTemplate = str_replace('$contentColumnCount', $contentColumnCount, $windowTemplate);
 	} else {
@@ -606,12 +727,50 @@ function GetTime () { // returns time()
 	return time();
 }
 
+function AddAttributeToTag ($html, $tag, $attributeName, $attributeValue) { // adds attr=value to html tag;
+	WriteLog('AddAttributeToTag() begin');
+
+	$tagAttribute = '';
+	if (preg_match('/\w/', $attributeValue)) {
+		WriteLog('AddAttributeToTag: whitespace match true');
+		// attribute value contains whitespace, must be enclosed in double quotes
+		$tagAttribute = $attributeName . '="' . $attributeValue . '"';
+	} else {
+		WriteLog('AddAttributeToTag: whitespace match false');
+		$tagAttribute = $attributeName . '=' . $attributeValue . '';
+	}
+
+	WriteLog('AddAttributeToTag: $tagAttribute is ' . $tagAttribute);
+
+	// todo this is sub-optimal
+	$html = preg_replace("/\<$tag\w/i", "<$tag $tagAttribute ", $html);
+	$html = preg_replace("/\<$tag/i", "<$tag $tagAttribute ", $html); // is this right/necessary? #todo
+	$html = preg_replace("/\<$tag\>/i", "<$tag $tagAttribute>", $html);
+
+	return $html;
+}
+
 function GetClockFormattedTime () { // returns current time in appropriate format from config
 //formats supported: union, epoch (default)
 
 	WriteLog("GetClockFormattedTime()");
 
 	$clockFormat = GetConfig('html/clock_format');
+
+	if ($clockFormat == '24hour') {
+	    $time = GetTime();
+
+		// #todo make it perl-equivalent with localtime($time)
+        $hours = strftime('%H', $time);
+        $minutes = strftime('%M', $time);
+        $seconds = strftime('%S', $time);
+
+        $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+
+		WriteLog("GetClockFormattedTime: return $clockFormattedTime");
+
+		return $clockFormattedTime;
+    }
 
 	if ($clockFormat == 'union') {
 		// union square clock format
@@ -650,11 +809,12 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 
 		WriteLog("GetClockFormattedTime: return $clockFormattedTime");
 
-
 		return $clockFormattedTime;
 	}
 
-	WriteLog("GetClockFormattedTime: return GetTime()");
+	// default is epoch
+
+	WriteLog("GetClockFormattedTime: return default, aka epoch, aka GetTime()");
 
 	return GetTime();
 }

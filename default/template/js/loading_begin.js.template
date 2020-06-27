@@ -1,6 +1,9 @@
 // begin loading_begin.js
-
-function addLoadingIndicator() {
+function addLoadingIndicator() { // adds loading indicator bar (to top of page, depending on style)
+	var spanLoadingIndicator = document.createElement('span');
+	spanLoadingIndicator.setAttribute('id', 'spanLoadingIndicator');
+	spanLoadingIndicator.innerHTML = 'Loading...';
+	document.body.appendChild(spanLoadingIndicator);
 }
 
 if (document.createElement) {
@@ -34,5 +37,4 @@ if (document.createElement) {
 	a383LightModeLink = a383LightModeLink + '?light=1';
 	var a383expandTimeout = setTimeout('a383.innerHTML = a383.innerHTML + \' For faster service, you can try <a href="' + a383LightModeLink + '"' + a383gt + 'light mode</a' + a383gt + '.\';', 3000);
 }
-
 // end loading_begin.js

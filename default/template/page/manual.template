@@ -8,33 +8,37 @@
 
 <p>The Profile page is where you can create an <u>identity</u> for yourself.</p>
 
-<p>The "Profile" item in the top menu is italicized when you are signed in.</p>
+<p>To create a profile, press the Register button. You may be prompted for a user name.</p>
 
-<p>To create a key, enter a name, and press "Create".</p>
+<p>To refresh profile, click "refresh profile" link. (Sometimes, profiles may disappear due to server flush.)</p>
 
-<p>To create a public profile, use the "Create Public Profile" button..</p>
+<p>To sign out, use the Sign Out button. This is permanent.</p>
 
-<p>To sign out, use the Sign Out button. You can undo this for a few seconds with the Undo button.</p>
+<p>If you want to use the profile again later, use the "save as file" button. (Technical note: JavaScript is required.)</p>
+
+<p>For privacy, the top menu interface shows no indication of your signed-in status. Some other pages may reflect signed-in status, such as the Write page.</p>
 
 <!-- -->
 
-<a name=write><h3>Write</h3></a>
+<a name=write><h3>Create</h3></a>
 
-<p>The Write page allows you to post something to the board.</p>
+<p>The Create page allows you to post something to the board.</p>
 
 <p>If you are signed in, it will be posted under your account. Otherwise, it will not be signed.</p>
 
 <p>Press Send Message to submit it to the message board.</p>
 
-<p>Your message may not be posted immediately.</p>
+<p>Your message may not be posted immediately, depending on server configuration and state.</p>
+
+<p>In order for your message to appear, it must be approved. You can do this yourself on Compost page.</p>
 
 <!-- -->
 
 <a name=topics><h3>Topics</h3></a>
 
-<p>Topics page displays the currently active discussion topics.</p>
+<p>Topics/Top page displays the currently active discussion topics.</p>
 
-<p>You can start your own by just posting a message.</p>
+<p>You can start your own by just posting a message. Remember to press #approve on it.</p>
 
 <!-- -->
 
@@ -43,6 +47,8 @@
 <p>Events page lists events that have been posted.</p>
 
 <p>You can post a new event using Add Event page.</p>
+
+<p>Events functionality is very basic at this time.</p>
 
 <!-- -->
 

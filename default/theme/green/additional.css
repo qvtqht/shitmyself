@@ -1,3 +1,4 @@
+/* begin theme/green/additional.css */
 body, table, .item, #txtClock, input {
 	font-family: courier;
 	font-size: 14pt;
@@ -31,8 +32,10 @@ button, input[type=button], input[type=submit], input[type=checkbox] {
 }
 a:focus, a:active {
     color: #40ff40;
-    background-color: green;
+    background-color: #004000;
 }
 input:focus, textarea:focus {
-    background-color: green;
+    background-color: #004000;
+    color: #40ff40;
 }
+/* end theme/green/additional.css */

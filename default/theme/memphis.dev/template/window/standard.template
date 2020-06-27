@@ -1,0 +1,9 @@
+<!-- window/standard.template -->
+
+<div class="window" style="width: 300px">
+	<div class="window-body">
+		<p>$windowBody</p>
+	</div>
+</div>
+
+<!-- / window/standard.template -->

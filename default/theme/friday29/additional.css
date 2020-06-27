@@ -1,3 +1,4 @@
+/* begin theme/friday29/additional.css */
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -6,12 +7,9 @@ body {
 .dialog {
 	box-shadow: 5pt 5pt 5pt #aabbcc;
 }
-input[type=text], input[type=password], select, option, textarea {
-	background-color: $colorInputBackground;
-	color: $colorInputText;
-}
 #txtClock {
-	border: 1pt inset $colorWindow;
+	border: 0;
+	background-color: $colorWindow;
 }
 .statusbar td {
 	border: 0;
@@ -20,18 +18,22 @@ input[type=text], input[type=password], select, option, textarea {
 a:focus, a:active {
     background-color: orange;
 }
-input:focus, textarea:focus {
-    background-color: orange;
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+textarea:focus {
+	background-color: $colorInputBackground;
 }
 #serverResponse {
-/* messages from server */
+/* responses from server */
     background-color: $colorHighlightAlert;
     color: $colorText;
     padding: 5pt;
     spacing: 5pt;
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    width: 50%;
     border: $borderDialog;
 }
+#aBackToTop {
+	background-color: $colorHighlightBeginner;
+}
+/* end theme/friday29/additional.css */

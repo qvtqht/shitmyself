@@ -1,0 +1,7 @@
+<!-- window/body_standard.template -->
+<tr class=body>
+	<td class=content>
+		<p>$windowBodyContent
+	</td>
+</tr>
+<!-- / window/body_standard.template -->

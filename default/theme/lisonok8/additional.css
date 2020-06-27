@@ -1,0 +1,55 @@
+/* begin theme/lisonok8/additional.css */
+body {
+	font-family: helvetica;
+	font-size: 14pt;
+	background-color: $colorBackground;
+}
+input[type=submit], input[type=button] {
+	padding: 8pt;
+	border: 0;
+	border-radius: 8pt;
+	color: #f0f0a0;
+	background-color: #80a020;
+	font-weight: bold;
+	font-family: helvetica;
+	font-size: large;
+}
+input[type=submit]:active, input[type=button]:active {
+	color: magenta;
+    background-color: #c0a0ff;
+    background: 0;
+}
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+#txtClock {
+	border: 1pt inset $colorWindow;
+}
+.statusbar td {
+	border: 0;
+    padding: 2pt;
+}
+a:focus, a:active, input:focus, input:active {
+    color: magenta;
+    background-color: #c0a0ff;
+}
+#serverResponse {
+/* messages from server */
+    background-color: $colorHighlightAlert;
+    color: cyan;
+    padding: 8pt;
+    spacing: 8pt;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    border: $borderDialog;
+}
+#txtClock {
+	background-color: #404040;
+	color: #40ff00;
+	font-size: large;
+	font-family: digital, fixedsys, monospace;
+}
+/* end theme/lisonok8/additional.css */

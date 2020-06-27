@@ -1,3 +1,69 @@
+shim/polyfill idea
+	createElement, addChild --> request for server to build form
+	
+
+
+
+Automatically underline-colorize links using hash of url
+
+server response could stick around at the ?message= url until user clicks thanks
+	would require cleaning up the cache every x hours
+
+setting for manual seen/unseen marking?
+
+[back to top] button
+	when clicked, change to "back to ..." button
+		which returns to where user was scrolled down
+			credit: pikabu
+
+cornerstone
+
+Windows and Mac installers
+==========================
+
+toys: geek code generator
+
+TESTS
+=====
+each template should contain certain $placeholders
+
+name: libreforum LibreForum
+
+continue segregating languages
+ 	move addtagattribute js snippets to templates
+ 	move template under admin/
+ 		is that ok?
+
+ logged in indicator
+ 	set by js
+ 	set by php
+ 	in template as span with id
+ 	just like on profile page
+ 	needs coiokie php
+
+ overthrow_password
+ 	the password is a hash of a known-to-admin string
+ 	for x days, the entire password must be matched
+
+Ideas from nullprogram
+	Tags page has good layout.
+		Large text "Articles tagged 'foo'" at the top
+		One-line date + title listing
+		Reverse-chron
+		RSS button
+	Top bar has two columns, bio and links
+	Public inbox (actually link to src hut)
+	
+
+primary tag list
+	image
+	hastext/hastitle
+	reply (placed under parent)
+	pubkey
+	==
+	items marked with tag are placed under that tag's directory
+	
+
 What year was browser released quiz
 	Can be multiple choice
 		Voting takes you to the item, which tells you if correct?

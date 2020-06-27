@@ -1,11 +1,4 @@
 <!-- settings.template -->
-<noscript>
-	<p>
-		Client-side settings require JavaScript...<br>
-		Aside from this page, the site should work for you.
-	</p>
-</noscript>
-
 <form id=frmSettings name=frmSettings>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
@@ -17,8 +10,25 @@
 
 			<tr class=body>
 				<td class=content>
+					<noscript><fieldset>
+						<legend>Notice About JavaScript<br></legend>
+
+						<b>JavaScript</b> is optional on this site.<br>
+						However, settings marked * won't work without it.<br>
+					</fieldset></noscript>
+
+					<p></p>
+
 					<fieldset>
-						<legend>Voting<br></legend>
+						<legend>Interface and Appearance<noscript>*</noscript><br></legend>
+
+						<p><nobr>
+							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }">
+							<input type=submit name=ui value="Intermediate" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
+							<input type=submit name=ui class=advanced value="Advanced" onclick="if (window.modeChange) { return modeChange('advanced'); }">
+							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
+							<input type=submit name=ui class=advanced value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
+						</nobr></p>
 
 						<p>
 							<label for=chkWantToVote>
@@ -28,21 +38,7 @@
 						</p>
 					</fieldset>
 
-					<p>
-
-					<fieldset>
-						<legend>Interface Mode<br></legend>
-
-						<p><nobr>
-							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }" style="font-size: large">
-							<input type=submit name=ui value="Intermediate" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
-							<input type=submit name=ui class=advanced value="Advanced" onclick="if (window.modeChange) { return modeChange('advanced'); }">
-							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
-							<input type=submit name=ui class=advanced name=ui value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
-						</nobr></p>
-					</fieldset>
-
-					<p>
+					<p></p>
 
 					<fieldset class=admin>
 						<legend>Admin</legend>
@@ -50,7 +46,7 @@
 							<span class=beginner>Set site-wide appearance and colors:<br></span>
 
 							<label for=optTheme>theme:
-								<select name=setconfig/html/theme id=optTheme>
+								<select name=optTheme id=optTheme>
 									<option value=friday29>friday29</option>
 									<option value=chicago>chicago</option>
 									<option value=dark>dark</option>

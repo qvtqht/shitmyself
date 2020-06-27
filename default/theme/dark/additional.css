@@ -1,3 +1,4 @@
+/* begin theme/dark/additional.css */
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -57,3 +58,4 @@ fieldset {
     border: 2pt $colorPrimary double;
     display: block
 }
+/* end theme/dark/additional.css */

@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 use strict;
 use warnings;
 use utf8;
@@ -104,7 +105,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 #	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 
 	# vote
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by);");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, ballot_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
 
 	# item_attribute
@@ -573,6 +574,7 @@ sub DBGetLatestConfig { # Returns everything from config_latest view
 #}
 
 sub SqliteGetValue { # Returns the first column from the first row returned by sqlite $query
+#todo perhaps use SqliteQuery2() ?
 	my $query = shift;
 	chomp $query;
 
@@ -817,13 +819,13 @@ sub DBAddTitle { # Add entry to item_title table
 		return;
 	}
 
-	my $title = shift;
-
 	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
 		DBAddTitle('flush');
 		$query = '';
 		@queryParams = ();
 	}
+
+	my $title = shift;
 
 	#todo sanity checks
 
@@ -835,6 +837,8 @@ sub DBAddTitle { # Add entry to item_title table
 
 	$query .= '(?, ?)';
 	push @queryParams, $hash, $title;
+
+	#todo add hastitle tag
 }
 
 sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
@@ -1068,12 +1072,12 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	}
 
 	my $pageParam = shift;
-	my $touchTime = GetTime();
 
 	if (!$pageParam) {
 		$pageParam = 0;
 	}
 
+	my $touchTime = GetTime();
 
 	if ($pageName eq 'author') {
 		# cascade refresh items which are by this author
@@ -1312,7 +1316,7 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 	push @queryParams, $itemHash, $parentHash;
 }
 
-sub DBAddItem { # Adds a new item to database
+sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError ; Adds a new item to database
 # $filePath = path to text file
 # $itemName = item's 'name' (currently hash)
 # $authorKey = author's gpg fingerprint
@@ -1600,7 +1604,7 @@ sub DBAddBrcRecord { # $fileHash, $hours, $minutes, $street, $signedBy ; adds re
 
 ###
 
-sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a new vote (tag) record to an item based on vote/ token
+sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash ; Adds a new vote (tag) record to an item based on vote/ token
 	state $query;
 	state @queryParams;
 
@@ -1636,6 +1640,7 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a n
 	my $ballotTime = shift;
 	my $voteValue = shift;
 	my $signedBy = shift;
+	my $ballotHash = shift;
 
 	if (!$ballotTime) {
 		WriteLog("DBAddVoteRecord() called without \$ballotTime! Returning.");
@@ -1655,14 +1660,20 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy ; Adds a n
 		$signedBy = '';
 	}
 
+	if ($ballotHash) {
+		chomp $ballotHash;
+	} else {
+		$ballotHash = '';
+	}
+
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by) VALUES ";
+		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by, ballot_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= '(?, ?, ?, ?)';
-	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy;
+	$query .= '(?, ?, ?, ?, ?)';
+	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash;
 
 	DBAddPageTouch('tag', $voteValue);
 }

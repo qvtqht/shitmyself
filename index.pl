@@ -35,30 +35,6 @@ WriteLog( "Using $SCRIPTDIR as install root...\n");
 #	}
 #}
 
-sub MakeVoteIndex { # Indexes any votes recorded in log/votes.log into database
-	WriteLog( "MakeVoteIndex()\n");
-
-	my $voteLog = GetFile("log/votes.log");
-
-	#This is how long anonymous votes are counted for;
-	my $voteLimit = GetConfig('admin/vote_limit');
-
-	my $currentTime = GetTime();
-
-	if (defined($voteLog) && $voteLog) {
-		my @voteRecord = split("\n", GetFile("log/votes.log"));
-
-		foreach (@voteRecord) {
-			my ($fileHash, $ballotTime, $voteValue) = split('\|', $_);
-
-			if ($currentTime - $ballotTime <= $voteLimit) {
-				DBAddVoteRecord($fileHash, $ballotTime, $voteValue);
-			}
-		}
-		DBAddVoteRecord("flush");
-	}
-}
-
 sub MakeAddedIndex { # reads from log/added.log and puts it into added_time table
 	WriteLog( "MakeAddedIndex()\n");
 
@@ -400,9 +376,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('tag', 'admin');
 
-			DBAddPageTouch('scores', 0);
+			DBAddPageTouch('scores');
 
-			DBAddPageTouch('stats', 0);
+			DBAddPageTouch('stats');
 		}
 
 		if ($isSigned && $gpgKey) {
@@ -423,9 +399,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				WriteLog('IndexTextFile: NOT unlinking avatar caches for ' . $gpgKey);
 			}
 
-			DBAddPageTouch('scores', 0);
+			DBAddPageTouch('scores');
 
-			DBAddPageTouch('stats', 0);
+			DBAddPageTouch('stats');
 		}
 
 		if ($alias) {
@@ -441,10 +417,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('scores', 1);
 
-			DBAddPageTouch('stats', 1);
+			DBAddPageTouch('scores');
+
+			DBAddPageTouch('stats');
 		}
 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
 		my $itemName = TrimPath($file);
 
@@ -466,9 +444,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					DBAddPageTouch('author', $cookieValue);
 
-					DBAddPageTouch('scores', 0);
+					DBAddPageTouch('scores');
 
-					DBAddPageTouch('stats', 0);
+					DBAddPageTouch('stats');
 				}
 			}
 		}
@@ -592,13 +570,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									# add a record to the vote table
 									if ($isSigned) {
 										# include author's key if message is signed
-										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey);
+										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
 									}
 									else {
 										if ($hasCookie) {
-											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie);
+											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
 										} else {
-											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag);
+											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
 										}
 									}
 
@@ -634,6 +612,113 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					AppendFile('log/deleted.log', $fileHash);
 				}
+			}
+		}
+
+		if (GetConfig('admin/token/my_name_is')) {
+		# "my name is" token
+			if ($hasCookie) {
+			   #my @myNameIsLines = ($message =~ m/^(my name is )/([A-Za-z0-9 _]+))$/mg);
+				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_ ]+)\r?$/mg);
+				# my @setConfigLines = ($message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg);
+
+
+				WriteLog('@myNameIsLines = ' . scalar(@myNameIsLines));
+
+				if (@myNameIsLines) {
+					#my $lineCount = @myNameIsLines / 2;
+
+					while (@myNameIsLines) {
+						my $myNameIsToken = shift @myNameIsLines;
+						my $nameGiven = shift @myNameIsLines;
+
+						chomp $nameGiven;
+
+						my $reconLine;
+						$reconLine = $myNameIsToken . $nameGiven;
+
+						if ($nameGiven && $hasCookie) {
+							DBAddKeyAlias($hasCookie, $nameGiven, $fileHash);
+
+							UnlinkCache('avatar/' . $hasCookie);
+							UnlinkCache('avatar.color/' . $hasCookie);
+							UnlinkCache('pavatar/' . $hasCookie);
+
+							DBAddKeyAlias('flush');
+
+							DBAddPageTouch('author', $hasCookie);
+
+							DBAddPageTouch('scores', 1);
+
+							DBAddPageTouch('scores');
+
+							DBAddPageTouch('stats');
+						}
+
+
+						$message =~ s/$reconLine/[My name is: $nameGiven for $hasCookie.]/g;
+					}
+				}
+			}
+		}
+
+		if (GetConfig('admin/token/title')) {
+		# title token is enabled
+			if ($hasParent) {
+				WriteLog('$hasParent was true for ' . $fileHash);
+
+				WriteLog('$message = ' . $message);
+
+				# looks for lines beginning with title: and text after
+				# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+                my @setTitleToLines = ($message =~ m/^(title: )([a-zA-Z0-9_.;:\(\) ]+)\r?$/msig);
+
+                # todo improve regex to include punctuation
+                # todo allow non-latin characters
+
+				WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
+
+				if (@setTitleToLines) { # means we found at least one title: token;
+
+					#my $lineCount = @setTitleToLines / 2;
+
+					while (@setTitleToLines) {
+						my $setTitleToToken = shift @setTitleToLines;
+						my $titleGiven = shift @setTitleToLines;
+
+						chomp $setTitleToToken;
+						chomp $titleGiven;
+
+						my $reconLine;
+						$reconLine = $setTitleToToken . $titleGiven;
+
+						if ($titleGiven && $hasParent) {
+						    chomp $titleGiven;
+
+							foreach my $itemParent (@itemParents) {
+								DBAddTitle($itemParent, $titleGiven);
+
+								DBAddTitle('flush'); #todo refactor this out
+							}
+
+							if ($hasCookie) {
+								DBAddPageTouch('author', $hasCookie);
+							}
+
+							if ($isSigned) {
+								DBAddPageTouch('author', $gpgKey);
+							}
+
+							DBAddPageTouch('scores');
+
+							DBAddPageTouch('stats');
+						}
+
+						$message =~ s/$reconLine/[Title: $titleGiven]/g;
+					}
+				}
+			} else {
+				WriteLog('$hasParent was false for ' . $fileHash);
 			}
 		}
 
@@ -706,49 +791,37 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
 							);
 
-							if
-							(
-								#
-									( # either user is admin ...
-										IsAdmin($gpgKey)
-									)
-								||
-									( # ... or it can't be under admin/
-										substr(lc($configKey), 0, 5) ne 'admin'
-									)
-								&&
-									( # not admin, but may be allowed to edit key ...
-										#
-											( # if signed and signed editing allowed
-												$isSigned
-													&&
-													GetConfig('admin/signed_can_config')
-											)
-										||
-											( # if cookied and cookied editing allowed
-												$hasCookie
-													&&
-												GetConfig('admin/cookied_can_config')
-											)
-										||
-											( # ... or if anyone is allowed to edit
-												GetConfig('admin/anyone_can_config')
-											)
-										#
-									)
-								#
-							)
-							{
+							my $canConfig = 0;
+							if (IsAdmin($gpgKey)) {
+								$canConfig = 1;
+							}
+							if (substr(lc($configKey), 0, 5) ne 'admin') {
+								if (GetConfig('admin/signed_can_config')) {
+									if ($isSigned) {
+										$canConfig = 1;
+									}
+								}
+								if (GetConfig('admin/cookied_can_config')) {
+									if ($hasCookie) {
+										$canConfig = 1;
+									}
+								}
+								if (GetConfig('admin/anyone_can_config')) {
+									$canConfig = 1;
+								}
+							}
+
+							if ($canConfig)	{
 								# checks passed, we're going to update/reset a config entry
 								DBAddVoteRecord($fileHash, $addedTime, 'config');
 
 								if ($configAction eq 'resetconfig') {
 									DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-									$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
+									$message =~ s/$reconLine/Successful config reset: $configKey will be reset to default./g;
 								}
 								else {
 									DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-									$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
+									$message =~ s/$reconLine/Successful config change: $configKey = $configValue/g;
 								}
 
 								$detokenedMessage =~ s/$reconLine//g;
@@ -798,7 +871,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
                             # add record to vote weight table
 							DBAddVoteWeight($voterId, $voterWt, $fileHash);
 							DBAddPageTouch('author', $voterId);
-							DBAddPageTouch('scores', 0);
+							DBAddPageTouch('scores');
 						}
 
                         # tag item as having a vouch action
@@ -1160,7 +1233,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					DBAddPageTouch('tag', 'event');
 
-					DBAddPageTouch('events', 1);
+					DBAddPageTouch('events');
 				}
 			}
 		}
@@ -1382,7 +1455,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
-		DBAddPageTouch('top', 1);
+		DBAddPageTouch('top');
 
 		if ($hasParent == 0) {
 #			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
@@ -1405,20 +1478,20 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('author', $gpgKey);
 
-			DBAddPageTouch('scores', 1);
+			DBAddPageTouch('scores');
 		} elsif ($hasCookie) {
 			DBAddPageTouch('author', $hasCookie);
 
-			DBAddPageTouch('scores', 1);
+			DBAddPageTouch('scores');
 		}
 
-		DBAddPageTouch('stats', 1);
+		DBAddPageTouch('stats');
 		
-		DBAddPageTouch('events', 1);
+		DBAddPageTouch('events');
 											 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
-		DBAddPageTouch('index', 1);
+		DBAddPageTouch('index');
 
 		DBAddPageTouch('flush');
 	}
@@ -1494,8 +1567,19 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 	my $fileHash;            # git's hash of file blob, used as identifier
 
 
-	if (-e $file && (substr(lc($file), length($file) -4, 4) eq ".jpg" || substr(lc($file), length($file) -4, 4) eq ".gif" || substr(lc($file), length($file) -4, 4) eq ".png")) {
-	#if (-e $file && (substr(lc($file), length($file) -4, 4) eq ".jpg" || substr(lc($file), length($file) -4, 4) eq ".gif")) {
+	if (
+		-e $file &&
+		(
+			substr(lc($file), length($file) -4, 4) eq ".jpg" ||
+			substr(lc($file), length($file) -4, 4) eq ".gif" ||
+			substr(lc($file), length($file) -4, 4) eq ".png" ||
+			substr(lc($file), length($file) -4, 4) eq ".bmp" ||
+			substr(lc($file), length($file) -4, 4) eq ".svg" ||
+			substr(lc($file), length($file) -5, 5) eq ".jfif" ||
+			substr(lc($file), length($file) -5, 5) eq ".webp"
+			#todo config/admin/upload/allow_files
+		)
+	) {
 		my $fileHash = GetFileHash($file);
 
 		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
@@ -1557,7 +1641,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			$addedTimeIsNew = 1;
 		}
 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
 		my $itemName = TrimPath($file);
 
@@ -1574,6 +1658,14 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			# make 420x420 thumbnail
 			if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
 				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
+				WriteLog('IndexImageFile: ' . $convertCommand);
+
+				my $convertCommandResult = `$convertCommand`;
+				WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
+			}
+			# make 42x42 thumbnail
+			if (!-e "$HTMLDIR/thumb/thumb_42_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 42x42 -strip $HTMLDIR/thumb/thumb_42_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
 				my $convertCommandResult = `$convertCommand`;
@@ -1600,17 +1692,17 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		DBAddVoteRecord($fileHash, $addedTime, 'image');
 		# add image tag
 
-		DBAddPageTouch('top', 1);
+		DBAddPageTouch('top');
 
 		DBAddPageTouch('tag', 'image');
 
 		DBAddPageTouch('item', $fileHash);
 
-		DBAddPageTouch('stats', 1);
+		DBAddPageTouch('stats');
 
-		DBAddPageTouch('rss', 1);
+		DBAddPageTouch('rss');
 
-		DBAddPageTouch('index', 1);
+		DBAddPageTouch('index');
 
 		DBAddPageTouch('flush');
 	}

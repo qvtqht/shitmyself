@@ -193,8 +193,8 @@
 			<tr class=details bgcolor="$colorWindow">
 				<td>
 					<p id=eventCreate>
-						<input value="Create Event" type="submit" style="cursor: click;" id=eventCreateButton><br>
-						<span class=beginner>Please press button to send</span>
+						<input value="Create Event" type="submit" style="cursor: click;" id=eventCreateButton>
+						<span class=beginner><-- Press button to create event!</span>
 					</p>
 
 					<p>

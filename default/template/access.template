@@ -1,0 +1,12 @@
+<!-- access.template ; for letting user switch accessibility mode -->
+<h3><a href="/access.html?light=1">Light Mode</a></h3>
+<p class=beginner>
+	Light mode is designed for accessibility <br>
+	by any user, device, connection, client, or service.
+</p>
+
+<h3><a href="/access.html?light=0">Pretty Mode</a></h3>
+<p class=beginner>
+	Pretty Mode has more features.<br>
+</p>
+<!-- / access.template -->

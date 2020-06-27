@@ -1,0 +1,128 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<!-- keyboard.template -->
+<form>
+<style type="text/css">
+    <!--
+        td, input {
+            font-family: monospace;
+            font-size: medium;
+        }
+        #tblKeyboard td {
+            border: 2pt outset #808080;
+            border-radius: 5pt;
+            background-color: #c0c0c0;
+            cursor: pointer;
+        }
+        #tblKeyboard td:active:hover {
+            border: 2pt inset #808080;
+        }
+        #tblKeyboard {
+            border-radius: 5pt;
+            background-color: #f5f5dc;
+        }
+    -->
+</style>
+<script>
+    <!--
+        function tbl1(e) {
+            if (e.target.nodeName == 'TD') {
+                var txtComment = parent.frames['main'].document.compose.comment;
+                if (txtComment) {
+                    var newLetter = e.target.innerHTML;
+                    if (newLetter == '&nbsp;') {
+                        newLetter = ' ';
+                    }
+                    if (newLetter == 'Enter') {
+                        newLetter = "\n";
+                    }
+                    if (newLetter == 'Back') {
+                        txtComment.value = txtComment.value.substring(0, txtComment.value.length - 1);
+                    } else {
+                        txtComment.value = txtComment.value + '' + newLetter;
+                    }
+                }
+            }
+        }
+    // -->
+</script>
+<table border=2 cellspacing=3 cellpadding=5 align=center style="font-family: sans-serif" id=tblKeyboard onclick="tbl1(event);">
+<!-- colspans for each row should add up to 30 -->
+    <tr>
+        <td colspan=2>`</td>
+        <td colspan=2>1</td>
+        <td colspan=2>2</td>
+        <td colspan=2>3</td>
+        <td colspan=2>4</td>
+        <td colspan=2>5</td>
+        <td colspan=2>6</td>
+        <td colspan=2>7</td>
+        <td colspan=2>8</td>
+        <td colspan=2>9</td>
+        <td colspan=2>0</td>
+        <td colspan=2>-</td>
+        <td colspan=2>=</td>
+        <td colspan=4>Back</td>
+    </tr>
+    <tr>
+        <td colspan=3>Tab</td>
+        <td colspan=2>Q</td>
+        <td colspan=2>W</td>
+        <td colspan=2>E</td>
+        <td colspan=2>R</td>
+        <td colspan=2>T</td>
+        <td colspan=2>Y</td>
+        <td colspan=2>U</td>
+        <td colspan=2>I</td>
+        <td colspan=2>O</td>
+        <td colspan=2>P</td>
+        <td colspan=2>{</td>
+        <td colspan=2>}</td>
+        <td colspan=3>\</td>
+    </tr>
+    <tr>
+        <td colspan=4>Caps</td>
+        <td colspan=2>A</td>
+        <td colspan=2>S</td>
+        <td colspan=2>D</td>
+        <td colspan=2>F</td>
+        <td colspan=2>G</td>
+        <td colspan=2>H</td>
+        <td colspan=2>J</td>
+        <td colspan=2>K</td>
+        <td colspan=2>L</td>
+        <td colspan=2>;</td>
+        <td colspan=2>'</td>
+        <td colspan=4>Enter</td>
+    </tr>
+    <tr>
+        <td colspan=5>Shift</td>
+        <td colspan=2>Z</td>
+        <td colspan=2>X</td>
+        <td colspan=2>C</td>
+        <td colspan=2>V</td>
+        <td colspan=2>B</td>
+        <td colspan=2>N</td>
+        <td colspan=2>M</td>
+        <td colspan=2>,</td>
+        <td colspan=2>.</td>
+        <td colspan=2>/</td>
+        <td colspan=5>Shift</td>
+    </tr>
+    <tr>
+        <td colspan=3>?</td>
+        <td colspan=3>#</td>
+        <td colspan=3>@</td>
+        <td colspan=9>&nbsp;</td>
+        <td colspan=3>@</td>
+        <td colspan=3>#</td>
+        <td colspan=3>*</td>
+        <td colspan=3>!</td>
+    </tr>
+</table>
+</form>
+<!-- / keyboard.template -->
+</body></html>

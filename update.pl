@@ -48,6 +48,55 @@ my $currentTime = GetTime2();
 
 my $locked = 0;
 
+sub OrganizeFile { # $file ; renames file based on hash of its contents
+	my $file = shift;
+	chomp $file;
+
+	if (!-e $file) {
+		return $file; #todo is this right?
+	}
+
+	if (!GetConfig('admin/organize_files')) {
+		WriteLog('WARNING! OrganizeFile() was called when admin/organize_files was false.');
+	}
+
+	# organize files aka rename to hash-based path
+	my $fileHashPath = GetFileHashPath($file);
+
+	WriteLog('OrganizeFile: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
+
+	if ($fileHashPath) {
+		WriteLog('OrganizeFile: $fileHashPath = ' . $fileHashPath);
+
+		if (-e $fileHashPath) {
+			WriteLog('OrganizeFile: Warning: file already exists = ' . $fileHashPath);
+		}
+
+		if ($fileHashPath && $file ne $fileHashPath) {
+			WriteLog('OrganizeFile: renaming ' . $file . ' to ' . $fileHashPath);
+			rename($file, $fileHashPath);
+
+			if (-e $fileHashPath) {
+				WriteLog('OrganizeFile: rename succeeded, changing value of $file');
+
+				$file = $fileHashPath;
+
+				WriteLog('OrganizeFile: $file is now ' . $file);
+			} else {
+				WriteLog("OrganizeFile: WARNING: rename failed, from $file to $fileHashPath");
+			}
+		} else {
+			WriteLog('OrganizeFile: did not need to rename ' . $file);
+		}
+	} else {
+		WriteLog('OrganizeFile: $fileHashPath is missing');
+	}
+
+	WriteLog("OrganizeFile: returning $file");
+
+	return $file;
+}
+
 sub ProcessTextFile { #add new textfile to index
 	my $file = shift;
 
@@ -434,6 +483,20 @@ if (!$arg1) {
 				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jpg\$";
 				push @files, split("\n", `$findCommand`);
 
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.bmp\$";
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.svg\$";
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.jfif\$";
+				push @files, split("\n", `$findCommand`);
+
+				$findCommand = "find \"$IMAGEDIR\" | grep -i \.webp\$";
+				push @files, split("\n", `$findCommand`);
+				#todo config/admin/upload/allow_files
+
+
 				# if ($filesLimit > scalar(@files)) {
 				# 	$filesLimit = scalar(@files);
 				# }
@@ -527,22 +590,6 @@ if (!$arg1) {
 		WriteLog($newLastFlow);
 		PutConfig('admin/update/last', $newLastFlow);
 
-		my $filesLeftCommand = 'find ' . $TXTDIR . ' | grep "\.txt$" | wc -l';
-		my $filesLeft = `$filesLeftCommand`; #todo
-
-		if (-e $IMAGEDIR) {
-			my $imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.png" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.gif" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-			$imageFilesLeftCommand = 'find "' . $IMAGEDIR . '" | grep "\.jpg" | wc -l';
-			$filesLeft += `$imageFilesLeftCommand`; #todo
-		}
-
-		WriteLog('update.pl: $filesLeft = ' . $filesLeft);
-
-		PutConfig('admin/update/files_left', $filesLeft);
-
 		unlink('cron.lock');
 
 		WriteLog("======update.pl DONE! ======");
@@ -570,7 +617,16 @@ if (!$arg1) {
 			}
 		}
 
-		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.png' || lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' || lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg') { #$arg1 =~ m/\.txt$/
+		if (
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.png' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.bmp' ||
+			lc(substr($arg1, length($arg1) - 4, 4)) eq '.svg' ||
+			lc(substr($arg1, length($arg1) - 5, 5)) eq '.webp' ||
+			lc(substr($arg1, length($arg1) - 5, 5)) eq '.jfif'
+			#todo config/admin/upload/allow_files
+		) { #$arg1 =~ m/\.txt$/
 
 			my $filesProcessed = ProcessImageFile($arg1);
 

@@ -1,13 +1,36 @@
-<!-- profile.template -->
+<!-- form/profile.template -->
+<form action="/profile.html" name=frmProfile>
 
-$noJsInformation
+<fieldset id=fldRegistration>
+	<p>Registration uses cookies.</p>
 
-<p id=loading class=loading></p>
+	<span id=spanSignedInStatus></span>
 
-$formIdCurrent
+	<p>Handle: <b><span id=lblHandle></span></b>
 
-$formIdCreate
+	<p>Fingerprint: <span id=lblFingerprint></span>
 
-$formIdAdmin
+	<p class=advanced>OpenPGP: <span id=lblSigningIndicator>No</span></p>
 
-<!-- / profile.template -->
+	<p>
+		<input
+			type=submit
+			name=btnRegister
+			onclick="if (window.btnRegister_Click) { return btnRegister_Click(this); }"
+			id=btnRegister
+			value="Enter"
+		>
+		<input
+			type=submit
+			name=btnSignOut
+			onclick="if (window.btnSignOut_Click) { return btnSignOut_Click(this); }"
+			id=btnSignOut
+			value="Exit"
+		>
+	</p>
+
+	<span id=spanProfileLink></span>
+</fieldset>
+
+</form>
+<!-- / form/profile.template -->

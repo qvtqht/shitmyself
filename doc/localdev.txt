@@ -2,7 +2,9 @@ How I do local dev on this thing:
 
 ===
 
-I have a Fedora LXDE VM. Onto it, I have installed the following packages:
+I develop on Fedora LXDE. I've had success running it as a VM on a Mac for an isolated dev enviro.
+
+Onto it, I have installed the following packages:
 
 perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
 (also in README)
@@ -15,11 +17,20 @@ Otherwise I get many unwanted results in global search.
 
 ===
 
-To "build" the html site, I run "./clean-build". This deletes a lot of things in config, beware.
+After editing templates, I run ./clean.sh, and then ./build.pl
 
-To start the http server, I use "./lighttpd.sh". The site is then accessible at http://localhost:3000/
+To re-import existing data into the newly-built site, I run "./update.pl --all"
 
-To keep the site updating as I interact with it, I run "./loop.pl", which just keeps running update.pl in a loop.
+To test the non-realtime update features (update.pl), I run ./loop.pl, which just runs update.pl in a loop.
+
+===
+
+Other than Perl, most of the other code lives under default/template.
+
+This is the place to edit code, not config/ and not html/
+
+Both config/ and html/ are cleaned up by clean.sh.
+	This also makes new templates take effect on the next build.
 
 ===
 
@@ -30,20 +41,22 @@ I exclude html/ config/ log/ cache/ from my project.
 Otherwise I accidentally change a cached file which gets overwritten later.
 
 Perl
-There is a config file in config/admin/default.
+There is a config file in config/admin/debug.
 Unlike other settings, the value of the file is not checked, and its presence enables debug mode.
 In debug mode any calls to WriteLog() are output to log/log.log
 
 PHP
-In utils.php, there is a function called WriteLog()
-In this function, there is an if statement of the form "if (0) {"
-To enable debugging, change the 0 to a 1.
-Note: Debug output may interfere with cookies
+There is a config file called config/admin/php/debug.
+When it's content is 1, it will dump debugging output (everything that's been sent to WriteLog()) at the bottom of every page.
+This output is marked as class=advanced, so you may have to click More to see it.
 
 JavaScript
-Some of the JS has statements beginning with "alert('DEBUG:"
-I have ensured that each statement only spans one line, so global search and replace can be used to enable/disable
-To disable, global search and replace "alert('DEBUG:" with "//alert('DEBUG:"
-To enable, do the opposite
-This can also be accomplished by setting admin/js/debug=1
+There is a config file called config/admin/js/debug.
+When this is set to 1, any JS injected into pages will have debug output enabled.
+	This is done by the InjectJS() function.
+The way it works is the JS code has statements beginning with "alert('DEBUG:"
+	I have ensured that each statement only spans one line
+Each JS template has header and footer comments which name the template file
 
+HTML, CSS
+Same as JS, each template has a header and footer comment, which facilitates finding where the code is stored.

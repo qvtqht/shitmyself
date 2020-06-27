@@ -54,7 +54,7 @@ sub GenerateDialogPage { # generates page with dialog
 
 			$windowContents = GetTemplate('404.template');
 
-			# todo look up in list/looking_for
+			# todo choose random item from list/looking_for
 			my $lookingFor = 'kittens';
 			$windowContents =~ s/looking for kittens/looking for $lookingFor/;
 
@@ -62,12 +62,9 @@ sub GenerateDialogPage { # generates page with dialog
 			$pageTemplate = '';
 
 			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('htmlstart.template');
-
 			$pageTemplate .= GetTemplate('maincontent.template');
-
-			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, 'Ready');
+			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, '');
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
-
 			$pageTemplate .= GetPageFooter();
 
 			$pageTemplate = InjectJs($pageTemplate, qw(settings profile));
@@ -102,7 +99,7 @@ sub GetStylesheet { # returns style template based on config
 	return $styleSheet;
 }
 
-sub GetAuthorLink { # returns avatar'ed link for an author id
+sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author id
 	my $gpgKey = shift; # author's fingerprint
 	my $showPlain = shift; # 1 to display avatar without colors
 
@@ -119,7 +116,7 @@ sub GetAuthorLink { # returns avatar'ed link for an author id
 		return;
 	}
 
-	my $authorUrl = "/author/$gpgKey/";
+	my $authorUrl = "/author/$gpgKey/index.html";
 
 	my $authorAvatar = '';
 	if ($showPlain) {
@@ -172,10 +169,18 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	my $windowBody = shift;
 	my $windowStatus = shift;
 
+
+	# stores number of columns if they exist
+	# if no columns, remains at 0
+	# whether there are columns or not determines:
+	# * column headers
+	# * colspan= in non-column cells
 	my $contentColumnCount = 0;
 
+	# base template
 	my $windowTemplate = GetTemplate('window/standard.template');
 
+	# titlebar, if there is a title
 	if ($windowTitle) {
 		my $windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
@@ -185,6 +190,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$windowTemplate =~ s/\$windowTitlebar//g;
 	}
 
+	# menubar, if there is menubar content
 	if ($windowMenubarContent) {
 		my $windowMenubar = GetTemplate('window/menubar.template');
 		$windowMenubar =~ s/\$windowMenubarContent/$windowMenubarContent/;
@@ -195,6 +201,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		#todo currently results in an empty menubar
 	}
 
+	# column headings
 	if ($columnHeadings) {
 		my $windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
 		my $windowHeaderColumns = '';
@@ -218,6 +225,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$contentColumnCount = 0;
 	}
 
+	# main window content, aka body
 	if ($windowBody) {
 		if (index(lc($windowBody), '<tr') == -1) {
 			$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
@@ -228,12 +236,18 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 		$windowTemplate =~ s/\$windowBody//g;
 	}
 
+	# statusbar
 	if ($windowStatus) {
-		$windowTemplate =~ s/\$windowStatus/$windowStatus/g;
+        my $windowStatusTemplate = GetTemplate('window/status.template');
+
+        $windowStatusTemplate =~ s/\$windowStatus/$windowStatus/g;
+
+        $windowTemplate =~ s/\$windowStatus/$windowStatusTemplate/g;
 	} else {
 		$windowTemplate =~ s/\$windowStatus//g;
 	}
 
+	# fill in column counts if necessary
 	if ($contentColumnCount) {
 		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
 	} else {
@@ -520,231 +534,272 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 	return $txtIndex;
 }
 
-sub GetItemPage {	# returns html for individual item page. %file as parameter
-	# %file {
-	#		file_hash = git's file hash
-	#		file_path = path where text file is stored
-	#		item_title = title, if any
-	#		author_key = author's fingerprint
-	#		vote_buttons = 1 to display vote buttons
-	#		display_full_hash = 1 to display full hash for permalink (otherwise shortened)
-	#		show_vote_summary = 1 to display all votes recieved separately from vote buttons
-	#		show_quick_vote = 1 to display quick vote buttons
-	#		vote_buttons = 1 to display vote buttons (checkboxes)
-	#		format_avatars = 1 to format fingerprint-looking strings into avatars
-	#		child_count = number of child items for this item
-	#		template_name = name of template to use (item.template is default)
-	#		remove_token = reply token to remove from message (used for displaying replies)
-	#	}
+sub GetItemPage {
+    # returns html for individual item page. %file as parameter
+    # %file {
+    #		file_hash = git's file hash
+    #		file_path = path where text file is stored
+    #		item_title = title, if any
+    #		author_key = author's fingerprint
+    #		vote_buttons = 1 to display vote buttons
+    #		display_full_hash = 1 to display full hash for permalink (otherwise shortened)
+    #		show_vote_summary = 1 to display all votes recieved separately from vote buttons
+    #		show_quick_vote = 1 to display quick vote buttons
+    #		vote_buttons = 1 to display vote buttons (checkboxes)
+    #		format_avatars = 1 to format fingerprint-looking strings into avatars
+    #		child_count = number of child items for this item
+    #		template_name = name of template to use (item.template is default)
+    #		remove_token = reply token to remove from message (used for displaying replies)
+    #	}
 
-	# we're expecting a reference to a hash as the first parameter
-	# todo sanity checks here, it will probably break if anything else is supplied
-	my %file = %{shift @_};
-	
-	# create $fileHash and $filePath variables, since we'll be using them a lot
-	my $fileHash = $file{'file_hash'};
-	my $filePath = $file{'file_path'};
+    # we're expecting a reference to a hash as the first parameter
+    # todo sanity checks here, it will probably break if anything else is supplied
+    my %file = %{shift @_};
 
-	WriteLog("GetItemPage(" . $file{'file_path'} . ")");
+    # create $fileHash and $filePath variables, since we'll be using them a lot
+    my $fileHash = $file{'file_hash'};
+    my $filePath = $file{'file_path'};
 
-	# initialize variable which will contain page html
-	my $txtIndex = "";
+    WriteLog("GetItemPage(" . $file{'file_path'} . ")");
 
-	my $title = ''; # title for <title>
-	my $titleHtml = ''; # title for <h1>
+    # initialize variable which will contain page html
+    my $txtIndex = "";
 
-	if (defined($file{'item_title'}) && $file{'item_title'}) {
-		WriteLog("GetItemPage: defined(item_title) = true!");
+    my $title = '';     # title for <title>
+    my $titleHtml = ''; # title for <h1>
 
-		$title = HtmlEscape($file{'item_title'});
-		$titleHtml = HtmlEscape($file{'item_title'});
+    if (defined($file{'item_title'}) && $file{'item_title'}) {
+        WriteLog("GetItemPage: defined(item_title) = true!");
 
-		$title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
-	} else {
-		WriteLog("GetItemPage: defined(item_title) = false!");
+        $title = HtmlEscape($file{'item_title'});
+        $titleHtml = HtmlEscape($file{'item_title'});
 
-		$title = $file{'file_hash'};
-		$titleHtml = $file{'file_hash'};
-	}
+        $title .= ' (' . substr($file{'file_hash'}, 0, 8) . '..)';
+    }
+    else {
+        WriteLog("GetItemPage: defined(item_title) = false!");
 
-	if (defined($file{'author_key'}) && $file{'author_key'}) {
-		# todo the .txt extension should not be hard-coded
-		my $alias = GetAlias($file{'author_key'});
-		$alias = HtmlEscape($alias);
+        $title = $file{'file_hash'};
+        $titleHtml = $file{'file_hash'};
+    }
 
-		$title .= " by $alias";
-	}
+    if (defined($file{'author_key'}) && $file{'author_key'}) {
+        # todo the .txt extension should not be hard-coded
+        my $alias = GetAlias($file{'author_key'});
+        $alias = HtmlEscape($alias);
 
-	# Get the HTML page template
-	my $htmlStart = GetPageHeader($title, $titleHtml, 'item');
+        $title .= " by $alias";
+    }
 
-	$txtIndex .= $htmlStart;
+    # Get the HTML page template
+    my $htmlStart = GetPageHeader($title, $titleHtml, 'item');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+    $txtIndex .= $htmlStart;
 
-	#$file{'vote_buttons'} = 1;
-	$file{'display_full_hash'} = 1;
-	$file{'show_vote_summary'} = 1;
-	$file{'show_quick_vote'} = 1;
-	$file{'vote_buttons'} = 1;
-	$file{'format_avatars'} = 1;
+    $txtIndex .= GetTemplate('maincontent.template');
 
-	if (!$file{'item_title'}) {
-		$file{'item_title'} = 'Untitled';
-	}
+    $file{'display_full_hash'} = 1;
+    $file{'show_vote_summary'} = 1;
+    $file{'show_quick_vote'} = 1;
+    $file{'vote_buttons'} = 1;
+    $file{'format_avatars'} = 1;
 
-	my $itemTemplate = GetItemTemplate(\%file); # GetItemPage()
+    if (!$file{'item_title'}) {
+        $file{'item_title'} = 'Untitled';
+    }
 
-	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
+    my $itemTemplate = GetItemTemplate(\%file); # GetItemPage()
 
-	$file{'show_easyfind'} = 1;
+    WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
-	# if this item has a child_count, we want to print all the child items below
-	if ($file{'child_count'}) {
-		# get item's children (replies) and store in @itemReplies
-		my @itemReplies = DBGetItemReplies($file{'file_hash'});
+    $file{'show_easyfind'} = 1;
 
-		#debug message
-		WriteLog('@itemReplies = ' . @itemReplies);
+    # if this item has a child_count, we want to print all the child items below
+    if ($file{'child_count'}) {
+        # get item's children (replies) and store in @itemReplies
+        my @itemReplies = DBGetItemReplies($file{'file_hash'});
 
-		# this will contain the replies as html output
-		my $allReplies = '';
+        #debug message
+        WriteLog('@itemReplies = ' . @itemReplies);
 
-		# start with a horizontal rule to separate from above content
-		$allReplies = '<hr size=3>' . $allReplies;
+        # this will contain the replies as html output
+        my $allReplies = '';
 
-		# this will store separator between items.
-		# first item doesn't need separator above it
-		my $replyComma = '';
+        # start with a horizontal rule to separate from above content
+        $allReplies = '<hr size=3>' . $allReplies;
 
-		foreach my $replyItem (@itemReplies) {
-			# output info about item to debug
-			WriteLog('$replyItem: ' . $replyItem);
-			foreach my $replyVar ($replyItem) {
-				WriteLog($replyVar);
-			}
+        # this will store separator between items.
+        # first item doesn't need separator above it
+        my $replyComma = '';
 
-			DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
+        foreach my $replyItem (@itemReplies) {
+            # output info about item to debug
+            WriteLog('$replyItem: ' . $replyItem);
+            foreach my $replyVar ($replyItem) {
+                WriteLog($replyVar);
+            }
 
-			# use item-small template to display the reply items
-			$$replyItem{'template_name'} = 'item/item-small.template';
-			
-			# if the child item contains a reply token for our parent item
-			# we want to remove it, to reduce redundant information on the page
-			# to do this, we pass the remove_token parameter to GetItemTemplate() below
-			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
+            DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
 
-			$$replyItem{'vote_return_to'} = $file{'file_hash'};
+            # use item-small template to display the reply items
+            $$replyItem{'template_name'} = 'item/item-small.template';
 
-			# Get the reply template			
-			my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
-			
-			# output it to debug
-			WriteLog('$replyTemplate');
-			WriteLog($replyTemplate);
+            # if the child item contains a reply token for our parent item
+            # we want to remove it, to reduce redundant information on the page
+            # to do this, we pass the remove_token parameter to GetItemTemplate() below
+            $$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
 
-			# if the reply item has children also, output the children
-			# threads are currently limited to 2 steps
-			# eventually, recurdsion can be used to output more levels
-			if ($$replyItem{'child_count'}) {
-				my $subRepliesTemplate = ''; # will store the sub-replies html output
-													  
-				my $subReplyComma = ''; # separator for sub-replies
+            $$replyItem{'vote_return_to'} = $file{'file_hash'};
 
-				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
-				foreach my $subReplyItem (@subReplies) {
-					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
+            $$replyItem{'trim_long_text'} = 1;
 
-					$$subReplyItem{'template_name'} = 'item/item-small.template';
-					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
-					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
+            # Get the reply template
+            my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
 
-					WriteLog('$$subReplyItem{\'remove_token\'} = ' . $$subReplyItem{'remove_token'});
-					WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
-					WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
+            # output it to debug
+            WriteLog('$replyTemplate');
+            WriteLog($replyTemplate);
 
-					my $subReplyTemplate = GetItemTemplate($subReplyItem); # GetItemPage()
+            # if the reply item has children also, output the children
+            # threads are currently limited to 2 steps
+            # eventually, recurdsion can be used to output more levels
+            if ($$replyItem{'child_count'}) {
+                my $subRepliesTemplate = ''; # will store the sub-replies html output
 
-					if ($subReplyComma eq '') {
-						$subReplyComma = '<hr size=4>';
-					} else {
-						$subReplyTemplate = $subReplyComma . $replyTemplate;
-					}
+                my $subReplyComma = ''; # separator for sub-replies
 
-					$subRepliesTemplate .= $subReplyTemplate;
-				}
-				$replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
-			} else {
-				$replyTemplate =~ s/<replies><\/replies>//;
-			}
+                my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
+                foreach my $subReplyItem (@subReplies) {
+                    DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
 
-			if ($replyTemplate) {
-				if ($replyComma eq '') {
-					$replyComma = '<hr size=5>';
-#					$replyComma = '<p>';
-				} else {
-					$replyTemplate = $replyComma . $replyTemplate;
-				}
+                    $$subReplyItem{'template_name'} = 'item/item-small.template';
+                    $$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
+                    $$subReplyItem{'vote_return_to'} = $file{'file_hash'};
 
-				$allReplies .= $replyTemplate;
-			} else {
-				WriteLog('Warning: replyTemplate is missing for some reason!');
-			}
-		}
+                    WriteLog('$$subReplyItem{\'remove_token\'} = ' . $$subReplyItem{'remove_token'});
+                    WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
+                    WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
 
-		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
-	}
+                    $$subReplyItem{'trim_long_text'} = 1;
 
-	
-	if ($itemTemplate) {
-		$txtIndex .= $itemTemplate;
-	}
+                    my $subReplyTemplate = GetItemTemplate($subReplyItem); # GetItemPage()
 
-	if (GetConfig('replies') == 1) {
-		my $replyForm;
-		my $replyTag = GetTemplate('replytag.template');
-		my $replyFooter;
-		my $replyTo;
-		my $prefillText;
-		my $fileContents;
+                    if ($subReplyComma eq '') {
+                        $subReplyComma = '<hr size=4>';
+                    }
+                    else {
+                        $subReplyTemplate = $subReplyComma . $replyTemplate;
+                    }
 
-		$fileContents = GetFile($file{'file_path'});
+                    $subRepliesTemplate .= $subReplyTemplate;
+                }
+                $replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
+            }
+            else {
+                $replyTemplate =~ s/<replies><\/replies>//;
+            }
 
-		$replyForm = GetTemplate('form/reply3.template');
-#		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
+            if ($replyTemplate) {
+                if ($replyComma eq '') {
+                    $replyComma = '<hr size=5>';
+                    #					$replyComma = '<p>';
+                }
+                else {
+                    $replyTemplate = $replyComma . $replyTemplate;
+                }
+
+                $allReplies .= $replyTemplate;
+            }
+            else {
+                WriteLog('Warning: replyTemplate is missing for some reason!');
+            }
+        }
+
+        $itemTemplate =~ s/<replies><\/replies>/$allReplies/;
+    }
+
+    if ($itemTemplate) {
+        $txtIndex .= $itemTemplate;
+    }
+
+    if (GetConfig('replies')) {
+    	# add reply form bottom of page
+
+        my $replyForm;
+        my $replyTag = GetTemplate('replytag.template');
+        my $replyFooter;
+        my $replyTo;
+        my $prefillText;
+        my $fileContents;
+
+        $fileContents = GetFile($file{'file_path'});
+
+        $replyForm = GetTemplate('form/reply.template');
 		$replyFooter = '';
+
+        #		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
+		#
+		# if ($file{'author_key'}) {
+		# 	$replyTo = $file{'author_key'};
+		# } else {
+		# 	$replyTo = $file{'file_hash'};
+		# }
+		#todo $replyTo should be $file{'author_key'} only if item is pubkey
+
 		$replyTo = $file{'file_hash'};
 
-		$prefillText = "";
-
-		if (!$prefillText) {
-			$prefillText = "";
+		if (GetConfig('admin/js/enable')) {
+			$replyForm =~ s/(\<input type=submit )/$1 onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"/i;
 		}
 
-		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
-		# $replyForm =~ s/\$extraFields/$replyTag/g;
-		$replyForm =~ s/\$replyFooter/$replyFooter/g;
-		$replyForm =~ s/\$replyTo/$replyTo/g;
-		# $replyForm =~ s/\$prefillText/$prefillText/g;
+        $prefillText = "";
 
-		if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
-			# my $postHtml = '\/post\.html';
-			$replyForm =~ s/\/post\.html/\/post.php/g;
-		}
+        if (!$prefillText) {
+            $prefillText = "";
+        }
 
-		if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
-			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
-		}
+        $replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
+        # $replyForm =~ s/\$extraFields/$replyTag/g;
+        $replyForm =~ s/\$replyFooter/$replyFooter/g;
+        $replyForm =~ s/\$replyTo/$replyTo/g;
+        # $replyForm =~ s/\$prefillText/$prefillText/g;
 
-		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
 
-		$txtIndex .= $replyForm;
-	}
+		# at the top of reply.template, there is a placeholder for the voting buttons
+		# this will put them there
+		my $votesSummary = GetItemVoteButtons($file{'file_hash'});
+		$replyForm =~ s/\$votesSummary/$votesSummary/g;
 
-	# end page with footer
-	$txtIndex .= GetPageFooter();
+        if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
+            # my $postHtml = '\/post\.html';
+            $replyForm =~ s/\/post\.html/\/post.php/g;
+        }
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write_buttons timestamp));
+        if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
+        	# add onkeydown event which calls translitKey if feature is enabled
+        	# translit substitutes typed characters with a different character set
+            $replyForm = AddAttributeToTag(
+            	$replyForm,
+            	'textarea',
+            	'onkeydown',
+            	'if (window.translitKey) { translitKey(event, this); } else { return true; }'
+			);
+        }
+
+        #$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
+
+        $txtIndex .= $replyForm;
+    }
+
+    # end page with footer
+    $txtIndex .= GetPageFooter();
+
+    if (GetConfig('replies')) {
+    	# if replies is on, include write.js and write_buttons.js
+        $txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write write_buttons timestamp));
+    } else {
+        $txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit timestamp));
+    }
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
@@ -763,7 +818,7 @@ sub GetHtmlLink {
 	}
 }
 
-sub GetItemVoteButtons { # get vote buttons for item in html form
+sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
 	my $fileHash = shift; # item's file hash
 	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
 	my $returnTo = shift; # (optional) what page to return to instead of current (for use by post.php)
@@ -908,6 +963,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# show_easyfind = show/hide easyfind words
 	# item_type = 'txt' or 'image'
 	# vote_return_to = page to redirect user to after voting, either item hash or url
+	# trim_long_text = trim text if it is longer than config/number/item_long_threshold
 
 	# get %file hash from supplied parameters
 	my %file = %{shift @_};
@@ -935,7 +991,16 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		# get formatted/post-processed message for this item
 		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
 
-		WriteLog($message);
+		# WriteLog($message);
+
+		if (exists($file{'trim_long_text'}) && $file{'trim_long_text'}) {
+			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
+
+			if (length($message) > $itemLongThreshold) {
+				$message = substr($message, 0, $itemLongThreshold) . "\n" . '[ Long message has been trimmed ]';
+				# if item is long, trim it
+			}
+		}
 
 		if ($file{'item_type'}) {
 			$itemType = $file{'item_type'};
@@ -996,12 +1061,26 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$message = FormatForWeb($message);
 		}
 
+		#if (index($message, "<br>\n--\n<br>\n") > -1) {
+		if (
+		    GetConfig('html/hide_dashdash_signatures') && index($message, "<br>\n-- <br>\n") > -1
+        ) {
+			$message =~ s/(.+)<br>\n-- <br>\n(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/sm;
+			#$message = 'hi';
+			
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+		}
+
+
 		# if any references to other items, replace with link to item
 		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
 		#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
 
 		if ($itemHash) {
-			$message =~ s/\[([a-z]+)\]/GetItemVoteButtons($itemHash, $1)/ge;
+			$message =~ s/\[\[([a-z]+)\]\]/GetItemVoteButtons($itemHash, $1)/ge;
 		}
 
 		WriteLog('GetItemTemplate: $message is: ' . $message);
@@ -1035,13 +1114,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# if template_name is specified, use that as the template
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
-			# otherwise, determine template based on item length (config/item_long_threshold)
-			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
-			if (length($message) > $itemLongThreshold) {
-				# if item is long, use template/item/itemlong.template
-				$itemTemplate = GetTemplate("item/item2.template");
+			# default template
+			if (length($message) <= 140) {
+				# for text 140 characters or fewer, use item-short.template
+				$itemTemplate = GetTemplate("item/item-short.template");
 			} else {
-				# otherwise use template/item/item.template
 				$itemTemplate = GetTemplate("item/item2.template");
 			}
 		}
@@ -1051,29 +1128,25 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $authorLink; # author's link
 
 		if ($gpgKey) {
-			# if theres a $gpgKey, set up related variables
-
-			$authorUrl = "/author/$gpgKey/";
-			$authorAvatar = GetAvatar($gpgKey);
-
-			$authorAvatar = trim($authorAvatar);
-
-			# generate $authorLink from template
-			$authorLink = GetTemplate('authorlink.template');
-
-			$authorLink =~ s/\$authorUrl/$authorUrl/g;
-			$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
+			# get author link for this gpg key
+			$authorLink = GetAuthorLink($gpgKey);
 		} else {
 			# if no author, no $authorLink
 			$authorLink = ''; #todo put it into GetItemTemplate() logic instead
 		}
 		$authorLink = trim($authorLink);
 
-		# set up $permalinkTxt, which links to the .txt version of the file
 		my $permalinkTxt = $file{'file_path'};
-		# strip the 'html/' prefix on the file's path, replace with /
-		# todo relative links
-		$permalinkTxt =~ s/$HTMLDIR\//\//;
+
+		{
+		    #todo still does not work perfectly, this
+			# set up $permalinkTxt, which links to the .txt version of the file
+
+			# strip the 'html/' prefix on the file's path, replace with /
+			# todo relative links
+			$permalinkTxt =~ s/$HTMLDIR\//\//;
+			$permalinkTxt =~ s/^html\//\//;
+		}
 
 		# set up $permalinkHtml, which links to the html page for the item
 		my $permalinkHtml = '/' . GetHtmlFilename($itemHash);
@@ -1157,9 +1230,13 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			my $imageContainer = GetTemplate('item/container/image.template');
 
 			my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
+			my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
 			my $imageAlt = $itemTitle;
 
+			# $imageSmallUrl is a smaller image, used in the "lowsrc" attribute for img tag
+
 			$imageContainer =~ s/\$imageUrl/$imageUrl/g;
+			$imageContainer =~ s/\$imageSmallUrl/$imageSmallUrl/g;
 			$imageContainer =~ s/\$imageAlt/$imageAlt/g;
 
 			$itemText = $imageContainer;
@@ -1167,6 +1244,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemClass = "image";
 		} # $itemType eq 'image'
 		elsif ($itemType eq 'image') {
+		    $itemText = 'itemType eq image, but images disabled';
 			WriteLog('$itemType eq image, but images disabled');
 		}
 
@@ -1177,7 +1255,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if ($authorLink) {
 			$itemTemplate =~ s/\$authorLink/[$authorLink]/g;
 		} else {
-			$itemTemplate =~ s/\$authorLink//g;
+			$itemTemplate =~ s/\$authorLink;//g;
+			# if there is no authorlink needed,
+			# get rid of the semicolon after the placeholder as well
 		}
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
@@ -1201,7 +1281,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		} else {
 			$itemTemplate =~ s/\$replyCount/0/g;
 		}
-
 
 		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 		#todo this call is only needed if show_vote_summary or show_qiuck_vote
@@ -1285,8 +1364,19 @@ sub GetPageFooter { # returns html for page footer
 
 	$txtFooter =~ s/\$disclaimer/$disclaimer/g;
 
+	$txtFooter = FillThemeColors($txtFooter);
+
 	if (GetConfig('admin/js/enable') && GetConfig('admin/js/loading')) {
 		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(loading_end));
+	}
+
+	if (GetConfig('html/back_to_top_button')) {
+		# add back to top button to the bottom of the page, right before </body>
+		my $backToTopTemplate = GetTemplate('html/back_to_top_button.template');
+		$backToTopTemplate = FillThemeColors($backToTopTemplate);
+		$txtFooter =~ s/\<\/body>/$backToTopTemplate<\/body>/i;
+
+		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(back_to_top_button));
 	}
 
 	return $txtFooter;
@@ -1316,6 +1406,8 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	my $attributeName = shift;
 	chomp $attributeName;
 
+	#WriteLog('GetThemeAttribute(' . $attributeName . ')');
+
 	# default theme
 #	my $themeName = 'theme.dark';
 #	my $themeName = 'theme.win95';
@@ -1338,7 +1430,7 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	return trim($attributeValue);
 }
 
-sub FillThemeColors {
+sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	my $html = shift;
 	chomp($html);
 
@@ -1393,7 +1485,7 @@ sub FillThemeColors {
 	return $html;
 }
 
-sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on referenced list
+sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns html menu based on referenced list
 # $listName is reference to a list in config/list, e.g. config/list/menu
 # $separator is what is inserted between menu items
 
@@ -1406,18 +1498,16 @@ sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on r
 		return;
 	}
 
-	my $listText = GetConfig('list/' . $listName);
+	my $templateName = shift;
+	if (!$templateName) {
+		$templateName = 'menuitem.template';
+	}
+	chomp $templateName;
+
+	my $listText = GetConfig('list/' . $listName); #list/menu
 	my @menuList = split("\n", $listText);
 
-	my $separator = shift;
-	if (!$separator) {
-		$separator = '';
-	} else {
-		chomp $separator;
-	}
-
 	my $menuItems = ''; # output html which will be returned
-	my $comma = ''; # separator (filled after first item)
 
 	foreach my $menuItem (@menuList) {
 		my $menuItemName = $menuItem;
@@ -1431,16 +1521,15 @@ sub GetMenuFromList { # $listName, $separator = ''; returns html menu based on r
 		# capitalize caption
 		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
-		# add separator
-		$menuItems .= $comma;
+		if (GetConfig('html/emoji_icons')) {
+            my $menuItemEmoji = GetString($menuItemName, 'emoji', 1);
+            if ($menuItemEmoji) {
+                $menuItemCaption = $menuItemEmoji;
+            }
+		}
 
 		# add menu item to output
-		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption);
-
-		if (!$comma) {
-			# set separator after first item
-			$comma = $separator;
-		}
+		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
 	}
 
 	# return template we've built
@@ -1501,6 +1590,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #		$currentTime = trim($currentTime);
 
 		$clock =~ s/\$currentTime/$currentTime/;
+	} else {
+		$clock = '+';
 	}
 
 	# Get the HTML page template
@@ -1516,13 +1607,22 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $adminKey = GetAdminKey();
 
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
+	if (GetConfig('admin/js/enable')) {
+		$topMenuTemplate = AddAttributeToTag(
+			$topMenuTemplate,
+			'a href="/etc.html"',
+			'onclick',
+			"if (window.ShowAll) { this.removeAttribute('onclick'); return ShowAll(this); } else { return true; }"
+		);
+	}
 
 	my $menuItems = GetMenuFromList('menu');
-	$menuItems .= '<span class=advanced><br><small>' . GetMenuFromList('menu_advanced') . '</small></span>';
+	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
 	#todo move html to template
 
-	my $selfLink = '/index.html';
+	my $selfLink = '/access.html';
 
+	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
 
@@ -1651,7 +1751,7 @@ sub GetTopItemsPage { # returns page with top items listing
 		my $columnHeadings = '';
 
 		$itemListingWrapper = GetWindowTemplate(
-			'Top Threads',
+			'Top Approved Threads',
 			'<a href="/write.html">New Topic</a><br>',
 			$columnHeadings,
 			$itemListings,
@@ -1688,7 +1788,7 @@ sub GetStatsTable() {
 
 	###
 
-	my $statsTable = GetTemplate('stats2.template');
+	my $statsTable = GetTemplate('stats.template');
 
 	if ($adminId) {
 		$statsTable =~ s/\$admin/$adminLink/;
@@ -1716,13 +1816,12 @@ sub GetStatsTable() {
 	}
 
 
-	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
-	# my $filesLeft = GetConfig('admin/update/files_left') || 0;
-	my $filesTotal = trim(`find $TXTDIR | grep \.txt\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.png\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.jpg\$ | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR | grep \.gif\$ | wc -l`);
-
+	# count total number of files
+	my $filesTotal = 0;
+	$filesTotal += trim(`find $TXTDIR -name \\\*.txt | wc -l`);
+	$filesTotal += trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+	#todo optimize
+	#todo config/admin/upload/allow_files
 
 	$lastBuildTime = GetTimestampElement($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
@@ -1751,6 +1850,18 @@ sub GetStatsPage { # returns html for stats page
 	return $statsPage;
 }
 
+sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
+# works by uncommenting any lines which begin with //alert('DEBUG:
+	my $scriptTemplate = shift;
+
+	$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+
+	#todo add option to do this instead
+	#$scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/g;
+
+	return $scriptTemplate;
+}
+
 sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my $html = shift;     # html we're going to inject into
 
@@ -1765,18 +1876,16 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
-	if (GetConfig('html/clock')) {
-		# if clock is enabled, automatically add its js
-		push @scriptNames, 'clock';
-	}
-
 	if (GetConfig('html/fresh_js')) {
-		# if clock is enabled, automatically add it
+		# if fresh_js is enabled, automatically add it
+		#todo move this upwards, shouldn't be decided here
 		push @scriptNames, 'fresh';
 	}
 
 	if (GetConfig('admin/force_profile')) {
 		# if force_profile is enabled, automatically add it
+		#todo move this upwards, shouldn't be decided here
+
 		push @scriptNames, 'force_profile';
 	}
 
@@ -1785,6 +1894,13 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 	# loop through all the scripts
 	foreach my $script (@scriptNames) {
+		if ($script eq 'clock') {
+			my $clockFormat = GetConfig('html/clock_format');
+			if ($clockFormat eq 'epoch' || $clockFormat eq 'union' || $clockFormat eq '24hour') {
+				$script = 'clock/' . $clockFormat;
+			}
+		}
+
 		# only inject each script once, otherwise move on
 		if (defined($scriptsDone{$script})) {
 			next;
@@ -1817,6 +1933,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
 		}
 
+		#if ($script eq 'settings' || $script eq 'loading_begin') {
 		if ($script eq 'settings') {
 			# for settings.js we also need to fill in some theme colors
 			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
@@ -1837,7 +1954,9 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			#
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+
+			#$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+			$scriptTemplate = EnableJsDebug($scriptTemplate);
 		}
 
 		# add to the snowball of javascript
@@ -1905,6 +2024,13 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 
 	# loop through all the scripts
 	foreach my $script (@scriptNames) {
+		if ($script eq 'clock') {
+			my $clockFormat = GetConfig('html/clock_format');
+			if ($clockFormat eq 'epoch' || $clockFormat eq 'union' || $clockFormat eq '24hour') {
+				$script = 'clock/' . $clockFormat;
+			}
+		}
+
 		# only inject each script once, otherwise move on
 		if (defined($scriptsDone{$script})) {
 			next;
@@ -1957,7 +2083,10 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 			#
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
 			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+
+			#$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+			$scriptTemplate = EnableJsDebug($scriptTemplate);
+
 		}
 
 		# add to the snowball of javascript
@@ -1969,7 +2098,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 
-	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
+	$scriptInject = '<!-- InjectJs2: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
 	if ($injectMode ne 'append' && index($html, $htmlTag) > -1) {
 		# replace it into html, right before the closing </body> tag
@@ -2031,7 +2160,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 			$authorVoteButtons = '-';
 		}
 
-		my $authorLink = "/author/" . $authorKey . "/";
+		my $authorLink = GetAuthorLink($authorKey);
 
 #		my $authorFriendKey = $authorFriend->{'author_key'};
 
@@ -2041,7 +2170,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorLastSeen = GetTimestampElement($authorLastSeen);
 #		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 #
-		$authorItemTemplate =~ s/\$link/$authorLink/g;
+		$authorItemTemplate =~ s/\$authorLink/$authorLink/g;
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
@@ -2267,7 +2396,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 
 		if (!$authorFriends) {
-			$authorFriends = '(has no friends)';
+			$authorFriends = '(no friends, or very private)';
 		}
 
 		# wrap list of friends in wrapper
@@ -2337,6 +2466,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 			my $itemTemplate = '';
 			if ($message) {
 #				$row->{'show_quick_vote'} = 1;
+				$row->{'trim_long_text'} = 1;
+
 				$itemTemplate = GetItemTemplate($row); # GetReadPage()
 			} else {
 				$itemTemplate = '<p>Problem decoding message</p>';
@@ -2356,7 +2487,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 	#	$txtIndex .= GetTemplate('voteframe.template');
 
 	# Add javascript warning to the bottom of the page
-	$txtIndex .= GetTemplate("jswarning.template");
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex .= GetTemplate("jswarning.template");
+	}
 
 	# Close html
 	$txtIndex .= GetPageFooter();
@@ -2380,8 +2513,14 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	# 	return '';
 	# }
 
+	my $templateName = shift;
+	if (!$templateName) {
+		$templateName = 'menuitem.template';
+	}
+	chomp $templateName;
+
 	my $menuItem = '';
-	$menuItem = GetTemplate('menuitem.template');
+	$menuItem = GetTemplate($templateName);
 
 	#my $color = GetThemeColor('link');
 	# my $colorSourceHash = md5_hex($caption);
@@ -2404,11 +2543,11 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	# my $firstLetter = substr($caption, 0, 1);
 	# $caption = substr($caption, 1);
 
-	my $color = substr(md5_hex($caption), 0, 6);
+	#my $color = substr(md5_hex($caption), 0, 6);
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
-	$menuItem =~ s/\$color/$color/g;
+	#$menuItem =~ s/\$color/$color/g;
 	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
 
 	return $menuItem;
@@ -2439,7 +2578,6 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	my $pageTitle = GetConfig('home_title');
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
-
 	$html .= $htmlStart;
 
 	if (defined($currentPageNumber)) {
@@ -2448,11 +2586,9 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	}
 
 	$html .= '<p>';
-
 	$html .= GetTemplate('maincontent.template');
 
 	my $itemList = ''; # the "filling" part of the page, with all the items templated
-
 	my $itemComma = ''; # separator between items
 
 	foreach my $row (@files) {
@@ -2490,6 +2626,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$row->{'vote_buttons'} = 1;
 			$row->{'show_vote_summary'} = 1;
 			$row->{'display_full_hash'} = 0;
+			$row->{'trim_long_text'} = 0;
 
 			my $itemTemplate;
 			$itemTemplate = GetItemTemplate($row); # GetIndexPage()
@@ -2504,7 +2641,6 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	}
 
 	$html .= $itemList;
-
 	$html .= '<p>';
 
 	#	$txtIndex .= GetTemplate('voteframe.template');
@@ -2513,8 +2649,10 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		$html .= GetPageLinks($currentPageNumber);
 	}
 
-	# Add javascript warning to the bottom of the page
-	$html .= GetTemplate("jswarning.template");
+	if (GetConfig('admin/js/enable')) {
+		# Add javascript warning to the bottom of the page
+		$html .= GetTemplate("jswarning.template");
+	}
 
 	# Close html
 	$html .= GetPageFooter();
@@ -2531,6 +2669,9 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	}
 	#my $PAGE_THRESHOLD = 5;
 
+	#my $whereClause = "','||tags_list||',' LIKE '%,approve,%'";
+
+	#my $itemCount = DBGetItemCount($whereClause);
 	#my $itemCount = DBGetItemCount("item_type = 'text'");
 	my $itemCount = DBGetItemCount();
 
@@ -2570,6 +2711,9 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+			# if ($whereClause) {
+			# 	$queryParams{'where_clause'} = $whereClause;
+			# }
 
 			my @ft = DBGetItemList(\%queryParams);
 
@@ -2649,6 +2793,15 @@ sub GetLighttpdConfig {
 
 		$conf .= "\n" . $ssiConf;
 	}
+	if (GetConfig('admin/http_auth/enable')) {
+		my $basicAuthConf = GetTemplate('lighttpd/lighttpd_basic_auth.conf.template');
+
+		WriteLog('$basicAuthConf beg =====');
+		WriteLog($basicAuthConf);
+		WriteLog('$basicAuthConf end =====');
+
+		$conf .= "\n" . $basicAuthConf;
+	}
 	
 	return $conf;
 }
@@ -2677,12 +2830,14 @@ sub MakeJsTestPages {
 	PutHtmlFile("jstest2.html", $jsTest2);
 }
 
-sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
+sub MakeSummaryPages { # generates and writes all "summary" and "static" pages StaticPages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 # js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
 
 	PutHtmlFile("test.html", GetTemplate('test.template'));
+	PutHtmlFile("kbd.html", GetTemplate('keyboard.template'));
+	PutHtmlFile("frame.html", GetTemplate('keyboard_frame.template'));
 
 	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
 
@@ -2691,7 +2846,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Submit page
 	my $submitPage = GetWritePage();
 	PutHtmlFile("write.html", $submitPage);
-	PutHtmlFile("create.html", $submitPage);
+
+	# Upload page
+	my $uploadPage = GetUploadPage();
+	PutHtmlFile("upload.html", $uploadPage);
 
 	# Add Event page
 	my $eventAddPage = GetEventAddPage();
@@ -2700,20 +2858,20 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Stats page
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("stats.html", $statsPage);
-
-	{ # clock test page
-		my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
-		my $clockTestPage = '<html><body>';
-		$clockTestPage .= $clockTest;
-		$clockTestPage .= '</body></html>';
-		$clockTestPage = InjectJs($clockTestPage, qw(clock));
-		PutHtmlFile("clock.html", $clockTestPage);
-	}
+	#
+	# { # clock test page
+	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
+	# 	my $clockTestPage = '<html><body>';
+	# 	$clockTestPage .= $clockTest;
+	# 	$clockTestPage .= '</body></html>';
+	# 	$clockTestPage = InjectJs($clockTestPage, qw(clock));
+	# 	PutHtmlFile("clock.html", $clockTestPage);
+	# }
 
 	{
 		my $fourOhFourPage = GenerateDialogPage('404'); #GetTemplate('404.template');
 		if (GetConfig('html/clock')) {
-			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock));
+			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock)); #todo this causes duplicate clock script
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
 	}
@@ -2727,6 +2885,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	# Settings page
 	my $settingsPage = GetSettingsPage();
 	PutHtmlFile("settings.html", $settingsPage);
+
+	# Access page
+	my $accessPage = GetAccessPage();
+	PutHtmlFile("access.html", $accessPage);
 
 	# More page
 	my $etcPage = GetEtcPage();
@@ -2786,6 +2948,27 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 	}
 
 	{
+		# Welcome page
+
+		my $title = 'Welcome';
+
+		my $welcomePage = GetPageHeader($title, $title, 'welcome');
+
+		$welcomePage .= GetTemplate('maincontent.template');
+
+		my $welcomePageContent = GetTemplate('page/welcome.template');
+
+		$welcomePage .= GetWindowTemplate('Welcome', '', '', $welcomePageContent, '');
+
+		$welcomePage .= GetPageFooter();
+
+		$welcomePage = InjectJs($welcomePage, qw(avatar settings profile));
+
+		PutHtmlFile('welcome.html', $welcomePage);
+		PutHtmlFile('index.html', $welcomePage);
+	}
+
+	{
 		# Help page
 		my $tfmPage = GetPageHeader("Help", "Help", 'help');
 
@@ -2798,7 +2981,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 			'', #menubar
 			'', #columns
 			$tfmPageContent,
-			'Ready'
+			''
 		);
 
 		$tfmPage .= $tfmPageWindow;
@@ -2836,22 +3019,30 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		PutHtmlFile("manual_advanced.html", $tfmPage);
 	}
 
+    {
+        # Tokens Reference page
+        my $tokensPage = GetPageHeader("Tokens Reference", "Tokens Reference", 'manual_tokens');
 
-	# Tokens Reference page
-	my $tokensPage = GetPageHeader("Tokens Reference", "Tokens Reference", 'manual_tokens');
+        $tokensPage .= GetTemplate('maincontent.template');
 
-	$tokensPage .= GetTemplate('maincontent.template');
+        my $tokensPageContent = GetTemplate('page/manual_tokens.template');
 
-	my $tokensPageTemplate = GetTemplate('page/manual_tokens.template');
+        my $tokensPageWindow = GetWindowTemplate(
+            'Tokens Reference',
+            '', #menubar
+            '', #columns
+			$tokensPageContent,
+            ''
+        );
 
-	$tokensPage .= $tokensPageTemplate;
+        $tokensPage .= $tokensPageWindow;
 
-	$tokensPage .= GetPageFooter();
+        $tokensPage .= GetPageFooter();
 
-	$tokensPage = InjectJs($tokensPage, qw(settings avatar));
+        $tokensPage = InjectJs($tokensPage, qw(settings avatar));
 
-	PutHtmlFile("manual_tokens.html", $tokensPage);
-
+        PutHtmlFile("manual_tokens.html", $tokensPage);
+    }
 
 	# Blank page
 	PutHtmlFile("blank.html", "");
@@ -2882,14 +3073,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
 	if (GetConfig('admin/js/debug')) {
-		$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		#$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		$crypto2JsTemplate = EnableJsDebug($crypto2JsTemplate);
 	}
 	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
 	my $avatarJsTemplate = GetTemplate('js/avatar.js.template');
 	if (GetConfig('admin/js/debug')) {
-		$avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		# $avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		$avatarJsTemplate = EnableJsDebug($avatarJsTemplate);
+
 	}
 	PutHtmlFile("avatar.js", $avatarJsTemplate);
 
@@ -2900,6 +3094,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 
 	# .htaccess file for Apache
 	my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
+
 	if (GetConfig('admin/php/enable')) {
 		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php.template');
 
@@ -2920,7 +3115,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		PutFile($PHPDIR . '/test2.php', $test2PhpTemplate);
 
 		my $adminPhpTemplate = GetTemplate('php/admin.php.template');
-		PutFile($PHPDIR . '/admin.php', $adminPhpTemplate);
+		PutFile($PHPDIR . '/config.php', $adminPhpTemplate);
 
 		my $testPhpTemplate = GetTemplate('php/test.php.template');
 		PutFile($PHPDIR . '/test.php', $testPhpTemplate);
@@ -2940,7 +3135,21 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 		my $routePhpTemplate = GetTemplate('php/route.php.template');
 		PutFile($PHPDIR . '/route.php', $routePhpTemplate);
 	}
-	PutHtmlFile(".htaccess", $HtaccessTemplate);
+
+	if (GetConfig('admin/http_auth/enable')) {
+		my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
+		$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+		#todo this currently has a one-account template
+		#todo add generating of template for both lighttpd and htaccess
+
+		$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
+
+		my $HtpasswdTemplate .= GetTemplate('htaccess/htpasswd.template');
+		PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
+		chmod 0644, "$HTMLDIR/.htpasswd";
+	}
+
+	PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 	PutHtmlFile("favicon.ico", '');
 
@@ -2965,13 +3174,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages
 sub GetUploadWindow {
 	my $uploadForm = GetTemplate('form/upload.template');
 
-	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, 'Ready');
+	my $allowFiles = GetConfig('admin/image/allow_files');
+
+	$uploadForm =~ s/\$allowFiles/$allowFiles/gms;
+
+	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, '');
 
 	return $uploadWindow;
 }
 
-sub GetWriteForm {
-	my $writeForm = GetTemplate('form/write4.template');
+sub GetWriteForm { # returns write form (for composing text message)
+	my $writeForm = GetTemplate('form/write.template');
 
 	if (GetConfig('admin/php/enable')) {
 
@@ -3017,6 +3230,27 @@ sub GetWriteForm {
 	return $writeForm;
 }
 
+sub GetUploadPage { # returns html for upload page
+	my $html = '';
+	my $title = 'Upload';
+
+	$html .= GetPageHeader($title, $title, 'upload');
+
+	$html .= GetTemplate('maincontent.template');
+
+	$html .= GetUploadWindow();
+
+	$html .= GetPageFooter();
+
+	if (GetConfig('php/enable')) {
+		$html = InjectJs($html, qw(settings avatar profile));
+	} else {
+		$html = InjectJs($html, qw(settings avatar profile));
+	}
+
+	return $html;
+}
+
 sub GetWritePage { # returns html for write page
 	# $txtIndex stores html page output
 	my $txtIndex = "";
@@ -3036,9 +3270,6 @@ sub GetWritePage { # returns html for write page
 
 	my $writeForm = GetWriteForm();
 	$txtIndex .= $writeForm;
-
-	my $uploadForm = GetUploadWindow();
-	$txtIndex .= $uploadForm;
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		my $itemCounts = GetTemplate('form/itemcount.template');
@@ -3091,16 +3322,12 @@ sub GetEventAddPage { # get html for /event.html
 	if (GetConfig('brc/enable')) {;
 		# if brc mode is enabled, add fields for burning man location
 		my $brcLocationTemplate = GetTemplate('event/brc_location.template');
-		
 		$eventAddForm =~ s/\$brcLocation/$brcLocationTemplate/g;
-	} else {
-		$eventAddForm =~ s/\$brcLocation//g;
-	}
 
-	if (GetConfig('brc/enable')) {
 		my $brcAddressForm = GetTemplate('form/brc_address.template');
 		$eventAddForm =~ s/\$brcAddressForm/$brcAddressForm/;
 	} else {
+		$eventAddForm =~ s/\$brcLocation//g;
 		$eventAddForm =~ s/\$brcAddressForm//;
 	}
 
@@ -3138,7 +3365,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $profileWindowContents = GetTemplate('form/profile2.template');
+	my $profileWindowContents = GetTemplate('form/profile.template');
 
 	if (GetConfig('admin/gpg/use_gpg2')) {
 		my $gpg2Choices = GetTemplate('gpg2.choices.template');
@@ -3153,20 +3380,21 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 #		'<a class=advanced href="/gpg.html">Signatures</a>',
 		'',
 		$profileWindowContents,
-		'Ready'
+		''
 	);
 
 	$txtIndex .= $profileWindow;
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings utils profile2));
-
 	if (GetConfig('admin/js/enable')) {
+		$txtIndex = InjectJs($txtIndex, qw(settings utils profile2));
+
+		# these two lines are different, regex is hard sometimes
 		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
 		$txtIndex =~ s/<body>/<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }">/;
 	} else {
-
+		# js is disabled
 	}
 
 	#
@@ -3174,6 +3402,21 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
+}
+
+sub GetAccessPage { # returns html for accessibility mode page, /access.html
+	my $html = '';
+
+	my $title = 'Access';
+
+	$html = GetPageHeader($title, $title, 'access');
+	$html .= GetTemplate('maincontent.template');
+	my $accessTemplate = GetTemplate('access.template');
+	$accessTemplate = GetWindowTemplate('Select Accessibility Mode', '', '', $accessTemplate, '');
+	$html .= $accessTemplate;
+	$html .= GetPageFooter();
+
+	return $html;
 }
 
 sub GetSettingsPage { # returns html for settings page (/settings.html)
@@ -3186,12 +3429,15 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $settingsPage = GetTemplate('form/settings.template');
-	$txtIndex .= $settingsPage;
+	my $settingsTemplate = GetTemplate('form/settings.template');
+	$txtIndex .= $settingsTemplate;
+
+	my $statsTable = GetStatsTable();
+	$txtIndex .= $statsTable;
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
+	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback));
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
 		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/;
@@ -3210,27 +3456,14 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
-	my $menuItems = '';
-	#todo move html to template
-	$menuItems .= '<h3>' . GetMenuItem("/settings.html", 'Settings') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/authors.html", 'Authors') . '</h3>';
-	# $menuItems .= '<h3>' . GetMenuItem("/events.html", 'Events') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/tags.html", 'Tags') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/index0.html", 'Compost', 'voter') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/stats.html", 'Status') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/data.html", 'Data') . '</h3>';
-	$menuItems .= '<h3>' . GetMenuItem("/profile.html", 'Profile') . '</h3>';
-
-	# my $menuItems;
-	# $menuItems .= GetMenuFromList('menu', '<br>');
-	# $menuItems .= '<br>';
-	# $menuItems .= GetMenuFromList('menu_advanced', '<br>');
+	my $menuItems = GetMenuFromList('menu', 'menuitem-p.template');
+	$menuItems .= GetMenuFromList('menu_advanced', 'menuitem-p.template');
 
 	my $etcPageContent = GetTemplate('etc.template');
 
 	$etcPageContent =~ s/\$etcMenuItems/$menuItems/;
 
-	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, 'Ready');
+	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, '');
 
 	$txtIndex .= $etcPageWindow;
 
@@ -3407,7 +3640,6 @@ sub MakeDataPage { # returns html for /data.html
 		# -q for quiet
 		# -r for recursive
 
-		system("zip -qr $HTMLDIR/hike.tmp.zip $TXTDIR log/votes.log");
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 		
 		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyVersion() . "/index.sqlite3");
@@ -3546,6 +3778,10 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	elsif ($pageType eq 'top') {
 		my $topItemsPage = GetTopItemsPage();
 		PutHtmlFile("top.html", $topItemsPage);
+
+		if (GetConfig('home_page') eq 'top') {
+			PutHtmlFile("index.html", $topItemsPage);
+		}
 	}
 	#
 	# stats page
@@ -3556,7 +3792,7 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	#
 	# index pages (queue)
 	elsif ($pageType eq 'index') {
-		#WriteIndexPages();
+		WriteIndexPages();
 	}
 	#
 	# rss feed
@@ -3643,7 +3879,7 @@ if ($arg1) {
 		MakeSummaryPages();
 	}
 	else {
-		print ("--summary\n");
+		print ("pages.pl: --summary\n");
 		print ("item_id\n");
 	}
 }

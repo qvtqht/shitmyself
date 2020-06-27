@@ -20,7 +20,7 @@ function SetHtmlClock ($html) { // #todo sets html clock on page if present
 
 function StripHeavyTags ($html) { // strips heavy tags from page replaces with basic ones
 	$tags = array(
-		'table', 'tr', 'td', 'span', 'fieldset', 'legend', 'font',
+		'table', 'tr', 'td', 'th', 'span', 'fieldset', 'legend', 'font',
 		'script', 'style', 'big'
 	);
 
@@ -38,15 +38,16 @@ function StripHeavyTags ($html) { // strips heavy tags from page replaces with b
 
 		$html = preg_replace('/\<\/th\>/', '; ', $html);
 		$html = preg_replace('/\<br\>\<\/td\>/', '; ', $html);
-		$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br id3>', $html);
+		$html = preg_replace('/\<\/td\>\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/:\<\/td\>\<td\>/', ': ', $html);
 		$html = preg_replace('/\<\/td\>/', '; ', $html);
-		$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br id4><hr>', $html);
-		$html = preg_replace('/\<\/table\>/', '<br id5><hr>', $html);
-		$html = preg_replace('/\<\/tr\>/', '<br id6>', $html);
-		$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br id7>', $html);
-		$html = preg_replace('/\<\/fieldset\>/', '<br id8>', $html);
-		$html = preg_replace('/\<\/legend\>/', '<br id9>', $html);
-		$html = preg_replace('/\<\/a\>\<a/', '</a>; <a id10', $html);
+		$html = preg_replace('/\<\/tr\>\<\/table\>/', '<br><hr>', $html);
+		$html = preg_replace('/\<\/table\>/', '<br><hr>', $html);
+		$html = preg_replace('/\<\/tr\>/', '<br>', $html);
+		$html = preg_replace('/\<\/fieldset\>\<\/td\>/', '<br>', $html);
+		$html = preg_replace('/\<\/fieldset\>/', '<br>', $html);
+		$html = preg_replace('/\<\/legend\>/', '<br>', $html);
+		$html = preg_replace('/\<\/a\>\<a/', '</a>; <a', $html);
 		$html = preg_replace('/; ;/', '; ', $html);
 	}
 
@@ -168,39 +169,36 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			}
 		}
 
-// todo finish porting below
-//		if ($script eq 'voting') {
-//			# for voting.js we need to fill in some theme colors
-//			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
-//			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
-//
-//			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
-//			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
-//		}
-//
-//		if ($script eq 'settings') {
-//			# for settings.js we also need to fill in some theme colors
-//			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
-//			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-//
-//			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
-//			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
-//		}
-//
-//		if (index($scriptTemplate, '>') > -1) {
-//			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-//			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
-//		}
-//
-//		if (GetConfig('admin/js/debug')) {
-//			#uncomment all javascript debug alert statements
-//			#and replace them with confirm()'s which stop on no/cancel
-//			#
-//			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
-//			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-//			$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-//		}
-//
+		if ($script == 'voting') {
+			// for voting.js we need to fill in some theme colors
+			$colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
+			$colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
+
+			$scriptTemplate = str_replace('$colorSuccessVoteUnsigned', $colorSuccessVoteUnsigned, $scriptTemplate);
+			$scriptTemplate = str_replace('$colorSuccessVoteSigned', $colorSuccessVoteSigned, $scriptTemplate);
+		}
+
+		if ($script == 'settings') {
+			// for settings.js we also need to fill in some theme colors
+			$colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+			$colorHighlightBeginner = GetThemeColor('highlight_beginner');
+
+			$scriptTemplate = str_replace('$colorHighlightAdvanced', $colorHighlightAdvanced, $scriptTemplate);
+			$scriptTemplate = str_replace('$colorHighlightBeginner', $colorHighlightBeginner, $scriptTemplate);
+		}
+
+		if (index($scriptTemplate, '>') > -1) {
+			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
+			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+		}
+
+		if (GetConfig('admin/js/debug')) {
+			#uncomment all javascript debug alert statements
+			#and replace them with confirm()'s which stop on no/cancel
+			#
+			$scriptTemplate = str_replace("//alert('DEBUG:", "if(!window.dbgoff)dbgoff=!confirm('DEBUG:", $scriptTemplate);
+		}
+
 		// add to the snowball of javascript
 		$scriptsText .= $scriptTemplate;
 	}
@@ -235,6 +233,16 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 	// if (preg_match(aa/bb/aabb..html) {
 	// generate item page
 	// } #todo
+//
+//	//'/abcde'
+//	$pathText = substr($path, 1);
+//	if (file_exists('top/' . $pathText . '.html')) {
+//		print 'foo';
+//	} else {
+//		print 'top/' . $pathText . '.html';
+//	}
+
+	//print $path;
 
 	if (
 		$path == '/stats.html' ||
@@ -247,6 +255,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		WriteLog('$pwd = ' . $pwd);
 
 		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
+		// #todo why is this set here when it's also passed into the function?
 
 		if (GetConfig('admin/php/regrow_404_pages')) {
 			// attempt to make page on the fly
@@ -276,14 +285,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 	}
 
-	if (!$html && file_exists('404.html')) {
+	if ((!isset($html) || !$html) && file_exists('404.html')) {
 		// something strange happened, and $html is still blank
 		// try to get 404.html into it
 		WriteLog('HandleNotFound: Fallback which should not happen');
 		$html = file_get_contents('404.html');
 	}
 
-	if (!$html) {
+	if (!isset($html) || !$html) {
 		// evidently, 404.html didn't work, just use some hard-coded html
 		WriteLog('HandleNotFound: Fallback which should not happen');
 		$html = '<html><body>404</body></html>';
@@ -322,9 +331,7 @@ if (GetConfig('admin/php/route_enable')) {
 					}
 
 					if (!$clientHasCookie) {
-						$registerResponse = StoreServerResponse('This community requires a registration cookie.');
-
-						header('Location: /profile.html?message=' . $registerResponse);
+						RedirectWithResponse('/profile.html', 'This community requires a registration cookie.');
 					}
 				}
 			}
@@ -354,6 +361,11 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 						}
 
+						if (isset($_GET['txtClock'])) {
+							$_GET['message'] = 'test';
+							WriteLog('setting message = test');
+						}
+
 						if (
 							isset($_GET['message'])
 						)
@@ -362,7 +374,7 @@ if (GetConfig('admin/php/route_enable')) {
 							$messageId = $_GET['message'];
 
 							if ($messageId == 'test') {
-								$newMessageId = StoreServerResponse('
+								$testMessage = '
 									Over the firewall,
 									out the antenna,
 									into the router,
@@ -373,12 +385,9 @@ if (GetConfig('admin/php/route_enable')) {
 									over their firewall,
 									into the forums ....
 									nothing but NET
-								');
-								$newUrl = $path . '?message=' . $newMessageId;
+								';
 
-								if (!$redirectUrl) {
-									$redirectUrl = $newUrl;
-								}
+								RedirectWithResponse($path, $testMessage);
 							}
 
 							if (preg_match('/^[a-f0-9]{8}$/', $messageId)) {
@@ -390,28 +399,17 @@ if (GetConfig('admin/php/route_enable')) {
 								$redirectUrl = $path;
 							}
 						} else {
-							WriteLog('$_GET[message] NOT exists');
+							WriteLog('$_GET[message] NOT set');
 						}
 
 						if (
-							isset($_GET['chkUpgrade']) &&
-							isset($_GET['btnUpgrade'])
-						)
-						{
-							WriteLog('Upgrade requested');
-
-							//WriteLog(`/home/ily/hike/upgrade.pl`);
-						}
-
-						if (
-							isset($_GET['setconfig/html/theme']) &&
-							isset($_GET['setconfig/html/theme']) &&
+							isset($_GET['optTheme']) &&
 							isset($_GET['btnSetTheme'])
 						)
 						{
 							WriteLog('Theme change requested');
 
-							$newTheme = $_GET['setconfig/html/theme'];
+							$newTheme = $_GET['optTheme'];
 							$themeUpdateFile = 'setconfig/html/theme=' . $newTheme;
 
 							// write file
@@ -429,12 +427,28 @@ if (GetConfig('admin/php/route_enable')) {
 								file_put_contents('../config/html/theme', $newTheme);
 							}
 
-							$responseThemeChanged = StoreServerResponse('Theme update: ' . $newTheme);
-							if (!$redirectUrl) {
-								$redirectUrl = '/settings.html?message=' . $responseThemeChanged;
-							}
+							$responseThemeChanged = RedirectWithResponse('/settings.html', 'Requested theme change: ' . $newTheme);
 						}
 
+						//						if (!isset($_SERVER['PHP_AUTH_USER'])) {
+						////							header('WWW-Authenticate: Basic realm="My Realm"');
+						////							header('HTTP/1.0 401 Unauthorized');
+						//							echo 'Text to send if user hits Cancel button';
+						//							exit;
+						//						} else {
+						//							echo "<p>Hello {$_SERVER['PHP_AUTH_USER']}.</p>";
+						//							echo "<p>You entered {$_SERVER['PHP_AUTH_PW']} as your password.</p>";
+						//						}
+
+						if (
+							isset($_GET['chkUpgrade']) &&
+							isset($_GET['btnUpgrade'])
+						)
+						{
+							WriteLog('Upgrade requested');
+
+							$responseOverthrow = RedirectWithResponse('/settings.html', 'Upgrade requested, but not yet implemented.');
+						}
 
 						if (
 							isset($_GET['chkFlush']) &&
@@ -442,6 +456,8 @@ if (GetConfig('admin/php/route_enable')) {
 						)
 						{
 							WriteLog('Flush requested');
+
+							RedirectWithResponse('/settings.html', 'Flush requested, but not yet implemented.');
 						}
 
 						if (
@@ -452,7 +468,12 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('Overthrow requested');
 
 							if (GetConfig('admin/allow_deop')) {
-								if (time() - GetConfig('admin/admin_last_action') > 60) {
+								$overthrowInterval = GetConfig('admin/overthrow_interval');
+								if (!$overthrowInterval) {
+									$overthrowInterval = 34387200;
+								}
+
+								if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
 
 									//PutConfig('admin/admin_last_action', 0);
@@ -462,19 +483,16 @@ if (GetConfig('admin/php/route_enable')) {
 										unlink('../admin.key');
 										WriteLog('Overthrow successful');
 
-										$responseOverthrow = StoreServerResponse('Overthrow successful! Register to become operator.');
-										$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+										RedirectWithResponse('/settings.html', 'Overthrow successful! Register to become operator.');
 									} else {
 										WriteLog('Overthrow already in effect: admin.key missing');
 
-										$responseOverthrow = StoreServerResponse('Overthrow already happened! Register to become operator.</a>');
-										$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+										RedirectWithResponse('/settings.html', 'Overthrow already happened! Register to become operator.</a>');
 									}
 								} else {
 									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
 
-									$responseOverthrow = StoreServerResponse('Overthrow conditions not met, overthrow unsuccessful');
-									$redirectUrl = '/settings.html?message=' . $responseOverthrow;
+									RedirectWithResponse('/settings.html', 'Overthrow unsuccessful, conditions not met. This incident will be reported.');
 								}
 							} else {
 								WriteLog('Overthrow conditions not met');
@@ -497,7 +515,7 @@ if (GetConfig('admin/php/route_enable')) {
 
 									// #todo validate $vouchValue
 									$vouchToken =
-										'vouch/' . $vouchValue . '/31337' .
+										'vouch/' . htmlspecialchars($vouchValue) . '/31337' .
 										"\n" .
 										"\n" .
 										"I vouch for this author because ...\n\n"
@@ -508,6 +526,28 @@ if (GetConfig('admin/php/route_enable')) {
 									$html = str_ireplace('</textarea>', $vouchToken . '</textarea>' , $html);
 								} else {
 									WriteLog('vouch request not found');
+								}
+
+								if (isset($_GET['name']) && $_GET['name']) {
+									WriteLog('name request found');
+
+									$nameValue = $_GET['name'];
+
+									WriteLog('$nameValue = ' . $nameValue);
+
+									// #todo validate $vouchValue
+									$nameToken =
+										'my name is ' . htmlspecialchars($nameValue) .
+										"\n" .
+										"\n" .
+										"I like to ...\n\n"
+									;
+
+									WriteLog('$nameToken = ' . $nameToken);
+
+									$html = str_ireplace('</textarea>', $nameToken . '</textarea>' , $html);
+								} else {
+									WriteLog('my name is request not found');
 								}
 							}
 						}
@@ -520,6 +560,7 @@ if (GetConfig('admin/php/route_enable')) {
 					WriteLog('$path not specified, using HandleNotFound()');
 					$html = HandleNotFound($path, '');
 				}
+			// if ($path == '/404.html' || $pathFull && substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot)
 			} else {
 				// #todo when does this actually happen?
 				// smarter 404 handler
@@ -584,7 +625,18 @@ if (GetConfig('admin/php/route_enable')) {
 			// base template for server message, not including js
 			$serverResponseTemplate = GetTemplate('server_response.template');
 
+			if (GetConfig('admin/js/enable')) {
+				// add javascript call to close server response message
+				// for the entire server response message table
+				$serverResponseTemplate = AddAttributeToTag(
+					$serverResponseTemplate,
+					'table',
+					'onclick',
+					"if (window.serverResponseOk) { return serverResponseOk(this); }"
+				);
+			}
 
+			// fill in the theme color for $colorHighlightAlert
 			$colorHighlightAlert = GetThemeColor('highlight_alert');
 			$serverResponseTemplate = str_replace('$colorHighlightAlert', $colorHighlightAlert, $serverResponseTemplate);
 
@@ -592,25 +644,42 @@ if (GetConfig('admin/php/route_enable')) {
 			// no escaping, because it can contain html formatting
 			$serverResponseTemplate = str_replace('$serverResponse', $serverResponse, $serverResponseTemplate);
 
-			//$serverResponseTemplate = GetWindowTemplate('title', '', '', 'hi', 'ready');
-
 			$messageInjected = 0;
 			
-			if (!$lightMode && isset($_GET['anchorto']) && $_GET['anchorto']) {
-				// if there is an anchorto parameter, we will put the server message next to the anchor
-				// unless we are in light mode, because then we want the message at the top of the page
+			if (isset($_GET['anchorto']) && $_GET['anchorto']) {
+				// anchorto means we can add a # to the "Thanks" link which goes straight to the relevant item
 
 				$anchorTo = $_GET['anchorto'];
 
 				if (index($html, "<a name=$anchorTo>") > -1) {
 					// same as below, same message applies
-					$serverResponseTemplate = str_replace('<a href=#maincontent', '<a href="' . $path . '#' . $anchorTo . '"', $serverResponseTemplate);
 
-					$replaceWhat = "<a name=$anchorTo>";
-					$replaceWith = "<a name=$anchorTo>" . $serverResponseTemplate;
-					$html = str_replace($replaceWhat, $replaceWith, $html);
+					if (GetConfig('admin/js/enable')) {
+						// add javascript call to close server response message for the 'thanks' link
+						$serverResponseTemplate = AddAttributeToTag(
+							$serverResponseTemplate,
+							'a href=#maincontent',
+							'onclick',
+							"if (window.serverResponseOk) { return serverResponseOk(this); } else { return true; }"
+						);
+					}
 
-					$messageInjected = 1;
+					$serverResponseTemplate = str_replace(
+						'<a href=#maincontent',
+						'<a href="' . $path . '#' . $anchorTo . '"',
+						$serverResponseTemplate
+					);
+
+					if (!$lightMode == GetConfig('admin/php/server_response_attach_to_anchor')) {
+						// if server_response_attach_to_anchor, we will put the server message next to the anchor
+						// unless we are in light mode, because then we want the message at the top of the page
+
+						$replaceWhat = "<a name=$anchorTo>";
+						$replaceWith = "<a name=$anchorTo>" . $serverResponseTemplate;
+						$html = str_replace($replaceWhat, $replaceWith, $html);
+
+						$messageInjected = 1;
+					}
 				}
 			}
 
@@ -636,11 +705,11 @@ if (GetConfig('admin/php/route_enable')) {
 				// inject server_response.js for hiding the server message popup
 				$html = InjectJs($html, array('server_response'), 'before', '</head>');
 
-				// add onkeydown event to body tag, which responds to escape and spacebar keys
-				// spacebar is added for qutebrowser's normal mode, which doesn't let esc through
+				// add onkeydown event to body tag, which responds to escape key
 				// known issue: if there's non-32 whitespace, this may not work right
-				$replaceWhat = '<body ';
 				$replaceWith = '<body onkeydown="if (event.keyCode && event.keyCode == 27) { if (window.bodyEscPress) { return bodyEscPress(); } }"';
+
+				$replaceWhat = '<body ';
 				$html = str_replace($replaceWhat, $replaceWith . ' ', $html);
 				$replaceWhat = '<body>';
 				$html = str_replace($replaceWhat, $replaceWith . '>', $html);
@@ -649,7 +718,8 @@ if (GetConfig('admin/php/route_enable')) {
 
 		if ($redirectUrl) {
 			// if we've come up with a place to redirect to, do it now
-			header('Location: ' . $redirectUrl);
+
+			//header('Location: ' . $redirectUrl);
 		}
 
 		if ($path == '/profile.html') {
@@ -676,6 +746,10 @@ if (GetConfig('admin/php/route_enable')) {
 
 			$html = str_replace('<span id=lblHandle></span>', "<span id=lblHandle>$handle</span>", $html);
 			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);
+
+			if (isset($cookie) && $cookie) {
+				$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
+			}
 		}
 
 		if (function_exists('WriteLog') && GetConfig('admin/php/debug')) {
@@ -689,7 +763,7 @@ if (GetConfig('admin/php/route_enable')) {
 
 		if ($lightMode) {
 			$html = StripComments($html);
-			$html = StripWhitespace($html);
+			$html = StripWhitespace($html);                          
 			$html = CleanBodyTag($html);
 			$html = StripHeavyTags($html);
 
@@ -698,9 +772,19 @@ if (GetConfig('admin/php/route_enable')) {
 				$pathSelf = substr($pathSelf, 0, strpos($pathSelf, '?'));
 			}
 
+			//			$html = str_replace(
+			//				'</body>',
+			//				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
+			//				$html
+			//			);
 			$html = str_replace(
-				'</body>',
-				'<p>(Using site in lightweight mode. If you want, <a href="' . $pathSelf . '?light=0">switch to full mode</a>.)</p></body>',
+				'>Accessibility mode<',
+				'><font color=orange>Accessibility mode is ON</font><',
+				$html
+			);
+			$html = str_replace(
+				'>Light Mode<',
+				'><font color=#008000>* Light Mode (selected)</font><',
 				$html
 			);
 			//
@@ -711,6 +795,12 @@ if (GetConfig('admin/php/route_enable')) {
 			//	);
 
 			//#todo perhaps strip onclick, onkeypress, etc., and style
+		} else {
+			$html = str_replace(
+				'>Pretty Mode<',
+				'><font color=#008000>* Pretty Mode (selected)</font><',
+				$html
+			);
 		}
 
 		////////////////////////////
@@ -727,6 +817,10 @@ if (GetConfig('admin/php/route_enable')) {
 	if ($_GET['path']) {
 		if (file_exists($path)) {
 			$html = get_file_contents($path);
+			print $html;
+		}
+		else if (file_exists($path . '.html')) {
+			$html = get_file_contents($path . '.html');
 			print $html;
 		}
 	}

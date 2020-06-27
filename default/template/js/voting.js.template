@@ -10,24 +10,68 @@
 //	// server-side shove an image into it as needed
 //}
 
-function PingUrl(url) { // loads arbitrary url via image
+function PingUrlCallback () {
+	var xmlhttp = window.xmlhttp;
+
+	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		//alert('DEBUG: PingUrlCallback() found status 200');
+
+//		window.location.replace(xmlhttp.responseURL);
+//		document.open();
+//		document.write(xmlhttp.responseText);
+//		document.close();
+	}
+}
+
+function PingUrl (url) { // loads arbitrary url via image or xhr
 // compatible with most js
-	if (document.images) {
-		if (document.images.length) {
-			// use last image on page, if possible. this should be the special pixel image.
-			var img = document.images[document.images.length - 1];
+	//alert('DEBUG: PingUrl() begins');
 
-			if (img) {
-				img.setAttribute("src", url);
-			}
+	if (window.XMLHttpRequest) {
+		//alert('DEBUG: PingUrl: window.XMLHttpRequest was true');
+
+		var xmlhttp;
+		if (window.xmlhttp) {
+			xmlhttp = window.xmlhttp;
 		} else {
-			var img = document.images[0];
+			window.xmlhttp = new XMLHttpRequest();
+			xmlhttp = window.xmlhttp;
+		}
 
-			if (img) {
-				img.setAttribute("src", url);
+        xmlhttp.onreadystatechange = window.PingUrlCallback;
+
+        xmlhttp.open("HEAD", url, true);
+        xmlhttp.send();
+
+        return false;
+	} else {
+		//alert('DEBUG: PingUrl: using image method, no xhr here');
+
+		if (document.images) {
+			//alert('DEBUG: PingUrl: document.images was true');
+
+			if (document.images.length) {
+				// use last image on page, if possible. this should be the special pixel image.
+				var img = document.images[document.images.length - 1];
+
+				if (img) {
+					img.setAttribute("src", url);
+
+					return false;
+				}
+			} else {
+				var img = document.images[0];
+
+				if (img) {
+					img.setAttribute("src", url);
+
+					return false;
+				}
 			}
 		}
 	}
+
+	return true;
 }
 
 
@@ -49,22 +93,52 @@ function signCallback (signed) {
 	}
 }
 
-function signVote(t, token) { // signs a vote from referenced vote button
+function IncrementTagLink (t) { // increments number of votes in tag button
+// adds a number if there isn't one already
+// #todo adapt to accommodate buttons as well
+
+	if (t.innerHTML) {
+		// update count in vote link
+		//alert('DEBUG: signVote: t.innerHTML');
+		var ih = t.innerHTML;
+		if (ih.indexOf('(') == -1) {
+			//alert('DEBUG: signVote: ( not found');
+			t.innerHTML = ih + '(1)';
+		} else {
+			//alert('DEBUG: signVote: ( found');
+
+			var numVal = ih.substring(ih.indexOf('(') + 1, ih.indexOf(')'));
+			var newVal = parseInt(numVal) + 1;
+			var hashTag = ih.substring(0, ih.indexOf('('));
+			t.innerHTML = hashTag + '(' + newVal + ')';
+		}
+		//alert('DEBUG: signVote: finished with t.innerHTML');
+	}
+}
+
+function signVote (t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
-// token = full voting token, in the format vote/fileHash/ballotTime/voteValue/checksum
+// token = full voting token, in the format (gt)(gt)fileHash\n#tag
+// where (gt) is a greater-than sign, omitted here
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
-		var privkey = getPrivateKey();
 		// get private key
-	
+
+		if (GetPrefs(token)) {
+			// don't let user vote twice basic
+			return 0;
+		}
+
+		IncrementTagLink(t);
+
+		var privkey = getPrivateKey();
+		//alert('DEBUG: signVote: privkey: ' + !!privkey);
+
 		if (!privkey) {
-		// if there is no private key, just do a basic unsigned vote;
-			t.enabled = false;
-			t.style.backgroundColor = '$colorSuccessVoteUnsigned'; //#todo
-			t.style.color = '$colorSuccessVoteUnsigned'; //#todo
-			t.style.borderRadius = '5pt'; //#todo
-	
+			//alert('DEBUG: !privkey');
+			// if there is no private key, just do a basic unsigned vote;
+
 			if (PingUrl(t.href)) {
 				// todo increment counter
 				if (window.AmIFresh) {
@@ -74,24 +148,15 @@ function signVote(t, token) { // signs a vote from referenced vote button
 				}
 			}
 		} else {
-		// there is a private key
-
-			// change the button's appearance, for appearance of responsiveness
-			t.enabled = false;
-			t.style.backgroundColor = '$colorSuccessVoteSigned'; //#todo
-			t.style.color = '$colorSuccessVoteSigned';
-			t.style.borderRadius = '5pt'; //#todo
+			// there is a private key
+			//alert('DEBUG: privkey is true');
 
 			// load the private key into openpgp
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-
 			var options;
-
 			options = new Object();
-
 			options.data = token;
 			options.privateKeys = privKeyObj;
-
 			openpgp.config.show_version = false;
 			openpgp.config.show_comment = false;
 
@@ -99,20 +164,22 @@ function signVote(t, token) { // signs a vote from referenced vote button
 			openpgp.sign(options).then(signCallback);
 		}
 
-		return false;
+		// remember that we voted for this already
+		SetPrefs(token, 1);
+
+		return false; // cancel link click-through
 	} else {
-//	    if (document.images) {
-//	        var myUrl = window.location;
-//	    	document.images[0].src = '/post.html?mydomain=' + myUrl;
-//
-//	    	//alert('DEBUG: t = ' + t);
-//
-//	    	return false;
-//	    }
+		//	    if (document.images) {
+		//	        var myUrl = window.location;
+		//	    	document.images[0].src = '/post.html?mydomain=' + myUrl;
+		//
+		//	    	//alert('DEBUG: t = ' + t);
+		//
+		//	    	return false;
+		//	    }
 	}
 
-	// return true so that calling link goes to its target
-	return true;
+	return true; // allow link click to happen
 }
 
 // == end voting.js

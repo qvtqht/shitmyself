@@ -1,6 +1,5 @@
-<pre>
-
 <?php
+/* begin php/admin.php.template */
 
 echo(time());
 
@@ -43,3 +42,5 @@ foreach ($default as $d) {
 		print "<br>";
 	}
 }
+
+/* end php/admin.php.template */

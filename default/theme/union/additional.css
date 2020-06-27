@@ -1,3 +1,4 @@
+/* begin theme/union/additional.css */
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -39,7 +40,8 @@ button, input {
     left: 15%;
     width: 70%;
     border: 2pt $colorPrimary double;
-    font-size: x-large;
+    font-size: xx-large;
+	border-radius: 5pt;
 }
 a:focus, a:active {
     color: red;
@@ -48,3 +50,4 @@ a:focus, a:active {
 input:focus, textarea:focus, button:focus, *:focus {
     background-color: orange !important;
 }
+/* end theme/union/additional.css */

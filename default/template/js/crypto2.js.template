@@ -24,7 +24,7 @@ function SimpleBenchmark() { // simple benchmark
     return (i / time());
 }
 
-function MakeKey() { //makes key using default settings
+function MakeKey () { //makes key using default settings
 // once key is generated, store it to localStorage
 
 	//alert('DEBUG: MakeKey() begin');
@@ -46,85 +46,96 @@ function MakeKey() { //makes key using default settings
 
 		username = prompt('Choose your handle:', 'Anonymous');
 
-		if (! username.trim()) {
-			username = 'Anonymous';
-		}
+		//alert('DEBUG: username: ' + username);
 
-		openpgp.initWorker({path:'openpgp.worker.js'});
-
-		var options;
-		if (bits == 512 || bits == 1024 || bits == 2048 || bits == 4096) {
-			options = {
-				userIds: [{ name: username }],
-				numBits: bits,
-				passphrase: ''
-			};
+		if (username == null) {
+			//alert('DEBUG: username == null is true');
 		} else {
-			options = {
-				userIds: [{ name: username }],
-				curve: bits,
-				passphrase: ''
-			};
+			//alert('DEBUG: username == null is false');
+
+			if (!username || !username.trim()) {
+				username = 'Anonymous';
+			}
+
+			//alert('DEBUG: username: ' + username);
+
+			openpgp.initWorker({path:'openpgp.worker.js'});
+
+			var options;
+			if (bits == 512 || bits == 1024 || bits == 2048 || bits == 4096) {
+				options = {
+					userIds: [{ name: username }],
+					numBits: bits,
+					passphrase: ''
+				};
+			} else {
+				options = {
+					userIds: [{ name: username }],
+					curve: bits,
+					passphrase: ''
+				};
+			}
+
+			openpgp.config.show_version = false;
+			openpgp.config.show_comment = false;
+
+			openpgp.generateKey(options).then(
+				function(key) {
+					var privkey = key.privateKeyArmored; // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
+					var pubkey = key.publicKeyArmored;   // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
+					var revocationCertificate = key.revocationCertificate; // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
+
+					openpgp.key.readArmored(privkey);
+
+					// read it into pgp object
+					var privKeyObj = openpgp.key.readArmored(privkey);;
+
+					// get the public key out of it
+					var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+					// store the armored version into localStorage
+					var pubkey = pubKeyObj.armor();
+
+					// get the fingerprint as uppercase hex and store it
+					var myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
+
+					// get username out of key
+					var myUsername = pubKeyObj.users[0].userId.userid;
+
+					//var gt = String.fromCharCode(62);
+					var gt = unescape('%3E');
+
+					var avatar = escapeHTML(myUsername);
+
+					window.localStorage.setItem('privatekey', privkey);
+					window.localStorage.setItem('publickey', pubkey);
+					window.localStorage.setItem('fingerprint', myFingerprint);
+					window.localStorage.setItem('avatar', avatar);
+
+					document.cookie = "test=" + myFingerprint;
+
+					//alert('DEBUG: about to share public key');
+
+					window.location = '/profile.html?' + myFingerprint;
+
+					//	if (window.sharePubKey) {
+					//		//alert('DEBUG: window.sharePubKey exists. calling');
+					//		//sharePubKey();
+					//
+					//		return true;
+					//	} else {
+					//		//alert('DEBUG: window.sharePubKey does NOT exist, using widow.location');
+					//
+					//		window.location = '/write.html#inspubkey';
+					//		return true;
+					//	}
+				}
+			);
+
+			return false;
+
 		}
 
-		openpgp.config.show_version = false;
-		openpgp.config.show_comment = false;
-
-		openpgp.generateKey(options).then(
-			function(key) {
-				var privkey = key.privateKeyArmored; // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
-				var pubkey = key.publicKeyArmored;   // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
-				var revocationCertificate = key.revocationCertificate; // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
-
-				openpgp.key.readArmored(privkey);
-
-				// read it into pgp object
-				var privKeyObj = openpgp.key.readArmored(privkey);;
-
-				// get the public key out of it
-				var pubKeyObj = privKeyObj.keys[0].toPublic();
-
-				// store the armored version into localstorage
-				var pubkey = pubKeyObj.armor();
-
-				// get the fingerprint as uppercase hex and store it
-				var myFingerprint = pubKeyObj.primaryKey.keyid.toHex().toUpperCase();
-
-				// get username out of key
-				var myUsername = pubKeyObj.users[0].userId.userid;
-
-//				var gt = String.fromCharCode(62);
-            	var gt = unescape('%3E');
-
-				var avatar = escapeHTML(myUsername);
-
-				window.localStorage.setItem('privatekey', privkey);
-				window.localStorage.setItem('publickey', pubkey);
-				window.localStorage.setItem('fingerprint', myFingerprint);
-				window.localStorage.setItem('avatar', avatar);
-
-				document.cookie = "test=" + myFingerprint;
-
-				//alert('DEBUG: about to share public key');
-
-				window.location = '/profile.html?' + myFingerprint;
-
-//				if (window.sharePubKey) {
-//				    //alert('DEBUG: window.sharePubKey exists. calling');
-//
-//				    //sharePubKey();
-//
-//				    return true;
-//				} else {
-//				    //alert('DEBUG: window.sharePubKey does NOT exist, using widow.location');
-//
-//				    //window.location = '/write.html#inspubkey';
-//				    return true;
-//                }
-			}
-		);
-
-		return false;
 	}
 
 	return true;
@@ -140,7 +151,7 @@ function getPrivateKey() { // get private key from local storage
 		var privateKey = localStorage.getItem("privatekey");
 
 		if (privateKey) {
-		    //alert('DEBUG: getPrivateKey: found something in localStorage: ' + privateKey);
+		    //alert('DEBUG: getPrivateKey: found something in localStorage: ' + !!privateKey);
 
 			return privateKey;
 		} else {
@@ -164,7 +175,7 @@ function getPublicKey() { // get public key from local storage
 		var publicKey = localStorage.getItem("publickey");
 
 		if (publicKey) {
-		    //alert('DEBUG: getPublicKey: found in localStorage: ' . publicKey);
+		    //alert('DEBUG: getPublicKey: found in localStorage: ' + publicKey);
 
 			return publicKey;
 		} else {
@@ -177,7 +188,7 @@ function getPublicKey() { // get public key from local storage
 	}
 }
 
-function setPrivateKeyFromTxt(newKey) { // set the current private key and refresh the pubkey, fingerprint, and avatar too
+function setPrivateKeyFromTxt (newKey) { // set the current private key and refresh the pubkey, fingerprint, and avatar too
 	var gt = unescape('%3E'); // greater thean symbol, which we hide from mosaic
 
     //window.localStorage.setItem("privatekey", newKey);
@@ -237,12 +248,34 @@ function setPrivateKeyFromTxt(newKey) { // set the current private key and refre
 
     document.cookie = "test=" + myFingerprint;
 
-    //window.location = '/profile.html?' + myFingerprint;
+    window.location = '/profile.html?' + myFingerprint;
 
     // this will submit public key as an item to the board
-    window.location = '/write.html#inspubkey';
+    if (window.PubKeyPing) {
+    	PubKeyPing();
+    } else {
+    	window.location = '/write.html#inspubkey';
+	}
 }
 
+function getUsername () { // returns pgp username
+// #todo cache it
+    var openpgp = window.openpgp;
+
+    if (openpgp) {
+		// read it into pgp object
+		var privKeyObj = openpgp.key.readArmored(getPrivateKey());
+
+		// get the public key out of it
+		var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+		var myUsername = pubKeyObj.users[0].userId.userid;
+
+		return myUsername;
+	}
+
+	return '';
+}
 
 function signMessage() { // find the compose textbox and sign whatever is in it
 // if message is already signed or is a public key, exit

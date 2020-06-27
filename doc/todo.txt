@@ -1,3 +1,177 @@
+Priorities
+===============================
+page rebuilding by php
+allows building and updating without pre-building all the html
+fast page updates with perl (fix targeting in index.pl and update.pl)
+#bug long comments no longer sent via post!
+
+Image exif strip
+
+Create .nfo for image
+
+auto urls from title
+
+#bug two message= after submitting post
+
+move some config/default settings to system/ tree
+
+/admin ==> /top/admin.html (if exists)
+
+hide/disable with note unavailable features
+	e.g. gui registration with js=0 and php=0
+	light mode without php
+
+
+gpg feature checks
+
+make clean.sh safer
+	maybe change to clean.pl for easier writing
+	first, use find to select all the files which need to be deleted
+	then, double-check that they're in proper directory
+	then, delete each one
+
+#moderator
+
+"paste a lot of text" form
+	method=post
+	"warning: this method is less reliable, but allows more text"
+
+route.php
+	if (page has a priority in page_touch) {
+		remake page before serving
+	}
+
+timestamp title/tooltip/alt should be a human-readable timestamp
+	perhaps same as clock_format??
+
+profile page
+	without js
+		should not say anything about pgp
+	without php
+		shouldn't say cookies
+	without js or php
+		should show message that profiles are only available using pgp
+
+new comments since last visit
+	store in localstorage: page key, last visit
+	highlight new comments
+
+
+
+When displaying thread, OP's top-replies should be sorted first
+
+make setconfig token not sensitive to whitespace differences
+
+detect client-side advanced mode
+	flip class=beginner nodes to hidden by default during page pre-process
+		eliminate page jump
+
+import rss
+
+#bug
+list of tags has issues in light mode
+
+make setting to prefer post over get when possible
+	this will help avoid tripping up dreamhost's mod_security when sharing pubkey
+
+address possibility of mismatch between cookie and localstorage
+
+custom 401 page
+
+when replying to public key, replyto should be author's fingerprint, not item's hash
+
+
+Profile page
+	if js
+		somehow check if logged-in state has changed
+			because when returning to cached page, old values preserved
+	
+
+Provide cookieless sessions via url prefix
+	example.com/abcdefghi/top/agree.html
+
+.nfo support for non-txt files, which cannot have ""\n-- \n" footer-signature
+
+Include relevant library repos in lib/
+	Include only necessary files
+	But also the .git/config file
+	And also import script from lib/ to template/
+
+Stream of vouched items
+
+Parametrized item output
+	Sorting / Filtering
+	RSS
+
+SQL Query Log
+
+GetButtonTemplate?
+
+
+Allow tags:
+<i></i>
+<b></b>
+
+Installer
+	For techies
+	For regulars
+
+Display one-liner text in larger font and with no title
+
+Tag permissions system
+
+Setup modes (collection of config presets)
+	Forum, public
+	Forum, private
+	Weblog
+
+Register from any page without leaving page
+
+If you are looking for the $_FILES['error'] code explanations, be sure to read:
+
+Handling File Uploads - Error Messages Explained
+http://www.php.net/manual/en/features.file-upload.errors.php
+
+25 sparticvs at popebp dot com ¶7 years ago
+A note of security: Don't ever trust $_FILES["image"]["type"]. It takes whatever is sent from the browser, so don't trust this for the image type.  I recommend using finfo_open (http://www.php.net/manual/en/function.finfo-open.php) to verify the MIME type of a file. It will parse the MAGIC in the file and return it's type...this can be trusted (you can also use the "file" program on Unix, but I would refrain from ever making a System call with your PHP code...that's just asking for problems).
+
+
+
+#bug loading indicator doesn't go away on pages without openpgp.js
+
+Reply form
+==========
+	add writeSubmit() call
+	refactor for writeSubmit() to be called with form reference
+	add write.js to page conditional on replies enabled
+
+janitor role
+============
+
+content packs
+=============
+	questions (russian)
+	gay in russia book
+	little prince
+		
+
+facebook login
+==============
+	facebook developer account
+	registered facebook app
+	facebook js sdk
+	enter redirect url in dashboard
+		need redirect url
+	check login status on client-side
+	receive redirect
+		check against local id
+			hash-based?
+
+twilio integration
+==================
+
+"fingerprint me" token
+
 For an item page with a reply box
 	Move the voting/response hash tag buttons to the reply form
 
@@ -842,7 +1016,7 @@ re-add write-small to home page
 		page needs to work before crypto.js is loaded,
 			then buttons are integrated into the page, ideally without reflow
 
-make it easy to switch admin
+make it easy to switch admin x
 	remember admin actions as admin actions when admin changes
 		alternatively, multiple admins
 
@@ -855,10 +1029,6 @@ Nicer-looking threading
 	"Reply" buttons on the item page and the child items
 Generate one page for each thread
 	Crawl the thread tree and build a graph
-
-Use shortened hashes to identify posts
-	Make checkbox names shorter
-	Make HTML files names shorter
 
 Check for, download, and install dependencies
 	gpg
@@ -876,21 +1046,12 @@ Make it possible to restore from private key without creating new ID first.
 Bug: Why does update.pl do a bunch of stuff right after a rebuild?
 	Items need to be added to the sub-repo whenever rebuilding
 
-Bug: When there are 0 items, top menu is not populated with avatar
-
 Make JS load more tolerable on slower connections
 	* minify the js (and test)
 	* https://stackoverflow.com/questions/20014933/progress-of-loading-external-js-file
 
 ** Fix the bug with messages by new users not being processed correctly **
 	This happens if the message is indexed before the public key
-
-Make the private key form more friendly
-	Disable Copy button when there is no text
-		Also, if there is a different private key in the clipboard
-	Make a Paste button
-	Disable the Restore button if there's nothing to restore?
-	Make the Restore button automatically paste if there is a private key in the clipboard
 
 Adjust avatars: number of asterisks should reflect
 	number of votes/replies/responses the author has attracted
@@ -909,8 +1070,6 @@ Add verification that default/ is consistent with repository
 
 Auto-generate server key if one does not exist
 	Store its id in config/admin/server_key_id
-
-changelog should include what's changed between the two versions
 
 Ensure that maincontent tags are present at the right place on all pages
 	<main id=maincontent><a name=maincontent></a>
@@ -1004,10 +1163,6 @@ Add roles directory
 
 Add client-side handling of HTTP 431 messages when submitting something new
 
-config/require_username
-    config/username_mask
-        All just client-side js, since we can't control what people do with their own gpg
-
 Function to add file to index and update affected pages
 
 Untagged page = all untagged posts
@@ -1023,10 +1178,6 @@ No pubkey and/or bad sig should result in big red warning on page/listing +
 
 Front-end signature checks/indicators in input boxes +
 
-site ui elements/forms/areas should be a different color than all the user-entered text content
-
-vote with signature --> write page, but not submitted
-	still count as anon vote? +
 
 js fallback for saving via "more options" link on write-small.template
 
@@ -1034,18 +1185,13 @@ js fallback for saving via "more options" link on write-small.template
 Hide voting, weight-setting, and other messages from home page
    Add an /all page that displays a feed of everything
 
-In reply box, if >> line goes missing, replace it somehow without annoying the user.
-
 When private key is pasted into [restore] textarea,
    automatically check it for presence of private key
       restore if it validates
 
-Make access.pl make a new text file instead of adding to votes.log
-
 Ensure caches are deleted when a vote occurs
 
 Merge vote and reply forms
-   With JS, make the checkboxes appear/disappear inside the textbox as vote/ lines
 
 Add a message that appears the first time someone is posting something, like on HN
 
@@ -1116,6 +1262,8 @@ Cookie auth via secret URL per public key, encrypted for that key
 ===
 
 Add CSRF token to reply form
+
+
 Add support for messages with multiple ENC_TOs
    Add loop
    Limit to 5? 10?
@@ -1134,6 +1282,8 @@ PHP handler for event.html
 
 #bug on iOS, the ticking clock causes the "paste" command to be inaccessible
 	When a textarea is held down, the Paste command appears briefly, but disappears as soon as the page needs to refresh
+		make clock off by default?
+		add clock in settings?
 
 Generate version page for each version mentioned in changelog
 

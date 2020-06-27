@@ -8,33 +8,31 @@
 
 <p>A token is just a bit of text which tells the system to do something.</p>
 
-<h4>Adding a Vote</h4>
+<p>For example, you may submit a "<code><b>my name is ...</b></code>" token to share your name.</p>
+
+<p>Other examples include <code><b>title: ...</b></code></p>
+
+<p>A #hashtag is also a type of token you may already be familiar with.</p>
+
+<p>The rest of this document is a reference of tokens the system supports.</p>
+
+<p>If you want to learn more about this system, this is a good place to look.</p>
+
+<p>If something is unclear, please comment with your question.</p>
 
 <!-- -->
 
-<h4>Reply</h4>
+<h2>Reply</h2>
 
 <p>Example: <code>>>0123456789abcdef</code></p>
 
 <p>On a line by itself, this will reference the message which has that identifier.)</p>
 
+<p>The reply token is used in conjunction with either reply text or other tokens.</p>
 
-<h4>Vote</h4>
+<p>For example, the "title:" token, used with a reply token, will suggest that title for the item referenced.</p>
 
-<p>Voting is the process of applying a <b>tag</b> to an <b>item</b>.</p>
-
-<p style="font-size: larger">item + tag [+ author] = vote</p>
-
-<p>Example: <code>vote/0123456789abcdef/accept/1550000000</code></p>
-
-<p>Add vote of "accept" to the referenced item, with a timestamp of 1550000000.</p>
-
-<p>
-	Some vote actions carry additional consequences.
-	For example, voting "friend" on a user, will add them to your friends list.
-	Voting "remove" on an item which is yours (or as admin) results in removal of that item.
-</p>
-
+<!-- -->
 
 <h4>Configure</h4>
 
@@ -46,7 +44,7 @@
 
 <p>Example: <code>resetconfig/string/en/page_intro/post</code></p>
 
-<p>Settings under the admin/ tree are always restricted to admin.</p>
+<p>Settings under the <code>admin/</code> tree are always restricted to admin.</p>
 
 <p>
 	Notes:
@@ -55,15 +53,22 @@
 	If the item is found, its contents will be used as the value.
 </p>
 
-<p>Restricted to admin users, unless config/anyone_can_config=1 and/or config/signed_can_config=1.</p>
+<p>
+	Restricted to admin users, unless <br>
+	config/anyone_can_config=1 and/or<br>
+	config/signed_can_config=1 and/or<br>
+	config/cookied_can_config=1
+</p>
 
+<!-- -->
 
 <h4>Hashtags</h4>
 
 <p>Example: <code>#meta</code></p>
 
-<p>Translates to a tag-item vote being added.</p>
+<p>Translates to vote being added to parent.</p>
 
+<!-- -->
 
 <h4>Vouch</h4>
 
@@ -75,6 +80,7 @@
 
 <p>Requires signing by admin user.</p>
 
+<!-- -->
 
 <h4>Timestamp and Client Fingerprint</h4>
 
@@ -84,6 +90,7 @@
 
 <p>Records item as having been added at that time and/or by that client ID.</p>
 
+<!-- -->
 
 <h4>Event</h4>
 
@@ -93,6 +100,7 @@
 
 <p>Params: start time (epoch), duration (seconds)</p>
 
+<!-- -->
 
 <h4>Latitude-Logitude Location</h4>
 
@@ -102,12 +110,12 @@
 
 <p>Two negative or positive decimal values, with up to 9 digits after the decimal point.</p>
 
+<!-- -->
 
 <h4>Black Rock City (Burning Man) Location</h4>
 
 <p>Specifies an address in Black Rock City, in the form of avenue (between 2:00 - 10:00) and street (one letter A-ZZ)</p>
 
 <p>Example: <code>brc/4:20/A</code></p>
-
 
 <!-- / manual_tokens.template -->

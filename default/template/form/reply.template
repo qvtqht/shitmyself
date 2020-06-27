@@ -1,10 +1,31 @@
 <!-- reply.template -->
-<a name=reply></a>
-<form class=reply action="/post.html" id=compose>
-<big><b><i>Reply</i></b></big><br>
-<textarea rows=4 cols=40 style="width: 100%;" id=comment name=comment>$replyFooter</textarea><br>
-<span id=replySignedContainer></span>
-<input type=submit value="Reply Unsigned">
-<input type=hidden name=replyto id=replyto value="$replyTo">
+<p><a name=reply></a>
+<form class=reply action="/post.html" id=compose name=compose>
+	<font face=arial>
+		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+			<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+				<td>
+					<font color=$colorTitlebarText><b>Reply</b></font>
+				</td>
+			</tr>
+
+			<tr class=body>
+				<td class=content>
+					<p><span class=advanced>$votesSummary<br></span>
+					<textarea
+						wrap=soft
+						rows=4
+						cols=60
+						style="min-width: 360px; height: 80px;"
+						id=comment
+						name=comment
+					>$replyFooter</textarea><br>
+					<input type=submit value="Send Reply">
+					<span id=replySignedContainer></span>
+					<input type=hidden name=replyto id=replyto value="$replyTo">
+				</td>
+			</tr>
+		</table>
+	</font>
 </form>
 <!-- / reply.template -->

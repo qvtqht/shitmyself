@@ -15,7 +15,7 @@ older devices which cannot be upgraded, average library, school, or homeless she
 I also wanted it to be Tor-friendly, which has similar limitations.
 
 
-Do you think many people still use browsers like Mosaic, Netscape, Internet Explorer?
+Do you think people still use browsers like Mosaic, Netscape, Internet Explorer?
 
 I think that yes, they are occasionally used by people.
 

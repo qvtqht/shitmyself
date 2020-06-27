@@ -20,7 +20,7 @@ if (!window.openpgp && document.head && document.head.appendChild && document.ge
 }
 
 
-if (!window.MakeKey && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
+if (!(window.MakeKey) && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading crypto2.js');
 
 	var script2 = document.createElement('script');
@@ -51,7 +51,7 @@ function btnSignOut_Click(t) { // event for 'Sign Out' button's click
 	return true;
 }
 
-function btnRegister_Click(t) { // event for 'Register' button's click
+function btnRegister_Click (t) { // event for 'Register' button's click
 // t is clicked button's "this" object
 	//alert('DEBUG: btnRegister_Click() begin');
 
@@ -62,13 +62,25 @@ function btnRegister_Click(t) { // event for 'Register' button's click
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
 
 		if (window.MakeKey) {
-			//alert('DEBUG: btnRegister_Click: window.MakeKey exists');
+			//alert('DEBUG: btnRegister_Click: window.MakeKey exists, calling MakeKey()');
 
 			var intKeyGenResult = MakeKey();
 
 			//alert('DEBUG: btnRegister_Click: intKeyGenResult = ' + intKeyGenResult);
 
 			SetPrefs('last_pubkey_ping', 0);
+
+			if (intKeyGenResult) {
+				//alert('DEBUG: calling PubKeyPing()');
+				if (window.addLoadingIndicator) {
+					addLoadingIndicator();
+				}
+				PubKeyPing();
+			} else {
+				//alert('DEBUG: NOT calling PubKeyPing(), because intKeyGenResult was false');
+			}
+
+			//alert('DEBUG: returning intKeyGenResult = ' + intKeyGenResult);
 
 			return intKeyGenResult;
 		}
@@ -101,7 +113,7 @@ function getUserFp() { // retrieve stored user fingerprint from localstorage
 	return null;
 }
 
-function sharePubKey() { // shares current user's public key via injected form and iframe
+function sharePubKey () { // shares current user's public key via injected form and iframe
 	//alert('DEBUG: profile2.js: sharePubKey() begins');
 
 	var pubKey = getPublicKey();
@@ -109,6 +121,10 @@ function sharePubKey() { // shares current user's public key via injected form a
 	//alert('DEBUG: sharePubKey: pubKey = ' + (pubKey ? pubKey : '(false)'));
 
 	if (pubKey) {
+		if (window.addLoadingIndicator) {
+			addLoadingIndicator();
+		}
+
 //		//alert('DEBUG: sharePubKey: creating iframe');
 //
 //		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
@@ -186,27 +202,29 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				fieldset.appendChild(hrDivider);
 
 				// add [go to profile] link
-				var pProfileLink = document.createElement('p');
-				var aProfile = document.createElement('a');
-				aProfile.setAttribute('href', '/author/' + getUserFp());
-				aProfile.setAttribute('id', 'linkGoToProfile');
-				aProfile.innerHTML = 'go to profile';
-				pProfileLink.appendChild(aProfile);
-				fieldset.appendChild(pProfileLink);
+				var pProfileLink = document.getElementById('spanProfileLink');
+				if (pProfileLink && pProfileLink.innerHTML) {
+					// profile link already there, and contains profile link
+				} else {
+					// profile link not there or the p is empty
+					if (!pProfileLink) {
+						pProfileLink = document.createElement('p');
+					}
 
-				// add [go to profile] link
-				var pProfileShareLink = document.createElement('p');
-				var aProfileShare = document.createElement('a');
-				aProfileShare.setAttribute('href', '/write.html#inspubkey');
-				aProfileShare.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(); }');
-				aProfileShare.setAttribute('id', 'linkProfileShare');
-				aProfileShare.innerHTML = 'create profile';
-				pProfileShareLink.appendChild(aProfileShare);
-				fieldset.appendChild(pProfileShareLink);
+					aProfile = document.createElement('a');
 
-				// add horizontal rule
-				var hrDivider = document.createElement('hr');
-				fieldset.appendChild(hrDivider);
+					aProfile.setAttribute('href', '/author/' + getUserFp() + '/index.html');
+					aProfile.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(); }');
+					aProfile.setAttribute('id', 'linkGoToProfile');
+					aProfile.innerHTML = 'Go to profile';
+
+					pProfileLink.appendChild(aProfile);
+					fieldset.appendChild(pProfileLink);
+
+					// add horizontal rule
+					var hrDivider = document.createElement('hr');
+					fieldset.appendChild(hrDivider);
+				}
 
 				// add [save as file] link
 				var pSaveKeyAsTxt = document.createElement('p');
@@ -214,7 +232,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aSaveKeyAsTxt.setAttribute('href', '#');
 				aSaveKeyAsTxt.setAttribute('id', 'linkSavePrivateKey');
 				aSaveKeyAsTxt.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { return SavePrivateKeyAsTxt(); }');
-				aSaveKeyAsTxt.innerHTML = 'save as file';
+				aSaveKeyAsTxt.innerHTML = 'Save as file';
 				pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
 				fieldset.appendChild(pSaveKeyAsTxt);
 
@@ -225,16 +243,30 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aShowPrivateKey.setAttribute('href', '#');
 				aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
 				aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
-				aShowPrivateKey.innerHTML = 'show private key';
+				aShowPrivateKey.innerHTML = 'Show private key';
 				pShowPrivateKey.appendChild(aShowPrivateKey);
 				fieldset.appendChild(pShowPrivateKey);
 			} else {
 				//alert('DEBUG: AddPrivateKeyLinks: privateKey: false');
 
+				// add horizontal rule
+				var hrDivider = document.createElement('hr');
+				fieldset.appendChild(hrDivider);
+
 				var pLoadKeyFromTxt = document.createElement('p');
 
 				//alert('DEBUG: AddPrivateKeyLinks: creating file input...');
 
+				// label for "load from file" button
+				var labelLoadFromFile = document.createElement('label');
+				labelLoadFromFile.setAttribute('for', 'fileLoadKeyFromText');
+				labelLoadFromFile.innerHTML = 'Load from file:';
+
+				// line break after label
+				var brLoadFromFile = document.createElement('br');
+				labelLoadFromFile.appendChild(brLoadFromFile);
+
+				// "load from file" button itself
 				var fileLoadKeyFromText = document.createElement('input');
 				fileLoadKeyFromText.setAttribute('type', 'file');
 				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
@@ -243,7 +275,8 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
 
 				// pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
-				pLoadKeyFromTxt.appendChild(fileLoadKeyFromText);
+				labelLoadFromFile.appendChild(fileLoadKeyFromText);
+				pLoadKeyFromTxt.appendChild(labelLoadFromFile);
 
 				fieldset.appendChild(pLoadKeyFromTxt);
 			}
@@ -273,9 +306,9 @@ function ShowPrivateKey() { // displays private key in textarea
 			var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
 			if (linkShowPrivateKey) {
 				if (txtPrivateKey.style.display == 'none') {
-					linkShowPrivateKey.innerHTML = 'show private key';
+					linkShowPrivateKey.innerHTML = 'Show private key';
 				} else {
-					linkShowPrivateKey.innerHTML = 'hide private key';
+					linkShowPrivateKey.innerHTML = 'Hide private key';
 				}
 			}
 
@@ -301,7 +334,7 @@ function ShowPrivateKey() { // displays private key in textarea
 
 			var linkShowPrivateKey = document.getElementById('linkShowPrivateKey');
 			if (linkShowPrivateKey) {
-				linkShowPrivateKey.innerHTML = 'hide private key';
+				linkShowPrivateKey.innerHTML = 'Hide private key';
 			}
 
 			txtPrivKey.focus();
@@ -311,7 +344,7 @@ function ShowPrivateKey() { // displays private key in textarea
 	}
 }
 
-function openFile(event) {
+function openFile (event) {
 	//alert('DEBUG: openFile() begin');
 
 	var input = event.target;
@@ -327,17 +360,60 @@ function openFile(event) {
 }
 
 
-function LoadPrivateKeyFromTxt(text) {
+function LoadPrivateKeyFromTxt (text) {
 	if (window.setPrivateKeyFromTxt) {
 		setPrivateKeyFromTxt(text);
 	}
 }
 
-function SavePrivateKeyAsTxt() {
+function StripToFilename (text) { // strips provided text to only filename-valid characters
+	if (!text) return '';
+
+	text = text.trim();
+
+	if (!text) return '';
+
+	var charsAllowed = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_';
+
+	for (var i = 0; i < text.length; i++) {
+		if (-1 < charsAllowed.indexOf(text.substr(i, 1))) {
+			// ok
+		} else {
+			text = text.substr(0, i) + '' + text.substr(i + 1);
+			i = i - 1;
+		}
+	}
+
+	return text;
+}
+
+function getUsername2 () { // returns pgp username
+// #todo cache it
+    var openpgp = window.openpgp;
+
+    if (openpgp) {
+		// read it into pgp object
+		var privKeyObj = openpgp.key.readArmored(getPrivateKey());
+
+		// get the public key out of it
+		var pubKeyObj = privKeyObj.keys[0].toPublic();
+
+		var myUsername = pubKeyObj.users[0].userId.userid;
+
+		return myUsername;
+	}
+
+	return '';
+}
+
+function SavePrivateKeyAsTxt() { // initiates "download" of private key as text file
 	var myFp = getUserFp();
+	var myUsername = getUsername2();
 	var text = getPrivateKey();
 
-	DownloadAsTxt(myFp + '.txt', text);
+	myUsername = StripToFilename(myUsername);
+
+	return DownloadAsTxt(myUsername + '_' + myFp + '.txt', text);
 }
 
 function CallLoadPrivateKey() {
@@ -379,70 +455,54 @@ function PubkeyCheckProfileExists(fp) { // PLACEHOLDER checks if profile exists
 	//alert('DEBUG: profileUrl = ' + profileUrl);
 
 	if (1) { //#todo
-		//alert('DEBUG: lastPubkeyPing: profile exists');
+		//alert('DEBUG: lastPubKeyPing: profile exists');
 		return true;
 	} else {
-		//alert('DEBUG: lastPubkeyPing: profile NOT FOUND');
+		//alert('DEBUG: lastPubKeyPing: profile NOT FOUND');
 		return false;
 	}
 }
 
-function PubkeyPing() { // checks if user's public key is on server
+function PubKeyPing() { // checks if user's public key is on server
 // uploads it to server if it is missing
 //
 	//alert('DEBUG: PubKeyPing() begin');
 
-	var lastPubkeyPing = GetPrefs('last_pubkey_ping');
+	var lastPubKeyPing = GetPrefs('last_pubkey_ping');
 
-	if (lastPubkeyPing && (time() < (lastPubkeyPing + 3600))) {
-		//alert('DEBUG: PubkeyPing: lastPubkeyPing+10 = ' + (lastPubkeyPing+10) + ' < time() = ' + time());
+	if (lastPubKeyPing && (time() < (lastPubKeyPing + 3600))) {
+		//alert('DEBUG: PubKeyPing: lastPubKeyPing+10 = ' + (lastPubKeyPing+10) + ' < time() = ' + time());
 	} else {
-		//alert('DEBUG: PubkeyPing: lastPubkeyPing was false or stale, doing a check at ' + time());
+		//alert('DEBUG: PubKeyPing: lastPubKeyPing was false or stale, doing a check at ' + time());
 
 		if (window.getUserFp) {
-			//alert('DEBUG; PubkeyPing: window.getUserFp check passed');
+			//alert('DEBUG; PubKeyPing: window.getUserFp check passed');
 
 			var myFingerprint = getUserFp();
 
-			//alert('DEBUG: PubkeyPing: myFingerprint = ' + myFingerprint);
+			//alert('DEBUG: PubKeyPing: myFingerprint = ' + myFingerprint);
 
 			if (myFingerprint) {
 				if (0 && PubkeyCheckProfileExists(myFingerprint)) {
-					//alert('DEBUG: PubkeyPing: profile already exists');
+					//alert('DEBUG: PubKeyPing: profile already exists');
 				} else {
 					if (window.sharePubKey) {
-						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check passed, doing it...');
-
-						if (document.getElementById) {
-							var serverResponse = document.getElementById('serverResponse');
-							if (serverResponse) {
-								var hr = document.createElement('hr');
-								serverResponse.appendChild(hr);
-
-								var center = document.createElement('p');
-								center.style.fontWeight = 'bold';
-								center.style.textAlign = 'center';
-
-								center.innerHTML = 'Please meditate while profile is created...';
-								serverResponse.appendChild(center);
-							}
-						}
-
+						//alert('DEBUG: PubKeyPing: lastPubKeyPing: window.sharePubKey check passed, doing it...');
 						sharePubKey();
 					} else {
-						//alert('DEBUG: PubkeyPing: lastPubkeyPing: window.sharePubKey check FAILED');
+						//alert('DEBUG: PubKeyPing: lastPubKeyPing: window.sharePubKey check FAILED');
 					}
 				}
 			} else {
-				//alert('DEBUG: PubkeyPing: myFingerprint: false');
+				//alert('DEBUG: PubKeyPing: myFingerprint: false');
 			}
 
-			//alert('DEBUG: PubkeyPing: lastPubkeyPing check complete, saving time');
+			//alert('DEBUG: PubKeyPing: lastPubKeyPing check complete, saving time');
 
-			lastPubkeyPing = time();
-			SetPrefs('last_pubkey_ping', lastPubkeyPing);
+			lastPubKeyPing = time();
+			SetPrefs('last_pubkey_ping', lastPubKeyPing);
 		} else {
-			//alert('DEBUG: PubkeyPing: window.getUserFp check FAILED');
+			//alert('DEBUG: PubKeyPing: window.getUserFp check FAILED');
 		}
 	}
 }
@@ -466,7 +526,7 @@ function ProfileOnLoad() { // onload event for profile page
 				lblSigningIndicator = document.getElementById('lblSigningIndicator');
 
 				if (pk) {
-					//alert('DEBUG: ProfileOnLoad: pk = GetPrivateKey() = ' + pk);
+					//alert('DEBUG: ProfileOnLoad: pk = GetPrivateKey() = ' + !!pk);
 
 					if (lblSigningIndicator) {
 						lblSigningIndicator.innerHTML = 'Yes';
@@ -492,8 +552,8 @@ function ProfileOnLoad() { // onload event for profile page
 						}
 					}
 
-					//alert('DEBUG: ProfileOnLoad: calling PubkeyPing()');
-					PubkeyPing();
+					//alert('DEBUG: ProfileOnLoad: calling PubKeyPing()');
+					PubKeyPing();
 				} else {
 					//alert('DEBUG: pk = false')
 					if (lblSigningIndicator) {
@@ -501,7 +561,7 @@ function ProfileOnLoad() { // onload event for profile page
 						if (window.openpgp) {
 							//alert('DEBUG: window.openpgp check passed, setting no (available)');
 
-							lblSigningIndicator.innerHTML = 'No (Available)';
+							lblSigningIndicator.innerHTML = 'Available';
 
 							AddPrivateKeyLinks();
 						} else {

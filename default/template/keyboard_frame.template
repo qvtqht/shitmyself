@@ -1,0 +1,10 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<frameset rows="*,190">
+<frame src="write.html" name=main>
+<frame src="kbd.html" name=kbd>
+</frameset>
+<noframes><a href="/write.html">write.html</a></noframes>
+</html>
