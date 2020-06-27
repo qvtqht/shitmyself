@@ -28,28 +28,49 @@ use Digest::SHA qw(sha1_hex);
 
 
 my $SCRIPTDIR = cwd();
+if (!$SCRIPTDIR) {
+	die ('Sanity check failed: $SCRIPTDIR is false!');
+}
+
 my $HTMLDIR = $SCRIPTDIR . '/html';
 my $TXTDIR = $HTMLDIR . '/txt';
 my $IMAGEDIR = $HTMLDIR . '/txt';
+my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyVersion();
 
+{
+	# make a list of some directories that need to exist
 
-# make a list of some directories that need to exist
-my @dirsThatShouldExist = ("log", "$HTMLDIR", "$HTMLDIR/txt", "$HTMLDIR/image", "$HTMLDIR/thumb", "cache", "$HTMLDIR/author", "$HTMLDIR/action", "$HTMLDIR/top", "config", "$HTMLDIR/upload");
-push @dirsThatShouldExist, 'cache/' . GetMyVersion();
-push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
-push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
-push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
-push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
-push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
+	#todo de-uglify
 
+	my @dirsThatShouldExist = (
+		"log",
+		"$HTMLDIR",
+		"$HTMLDIR/txt",
+		"$HTMLDIR/image",
+		"$HTMLDIR/thumb",
+		"cache",
+		"$HTMLDIR/author",
+		"$HTMLDIR/action",
+		"$HTMLDIR/top",
+		"config",
+		"$HTMLDIR/upload"
+	);
 
-# create directories that need to exist
-foreach(@dirsThatShouldExist) {
-	if (!-d && !-e $_) {
-		mkdir $_;
-	}
-	if (!-e $_ || !-d $_) {
-		die("$_ should exist, but it doesn't. aborting.");
+	push @dirsThatShouldExist, 'cache/' . GetMyVersion();
+	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
+	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
+	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
+	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
+	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
+
+	# create directories that need to exist
+	foreach (@dirsThatShouldExist) {
+		if (!-d && !-e $_) {
+			mkdir $_;
+		}
+		if (!-e $_ || !-d $_) {
+			die("$_ should exist, but it doesn't. aborting.");
+		}
 	}
 }
 
@@ -342,21 +363,18 @@ sub GetGpgMajorVersion { # get the first number of the version which 'gpg --vers
 	return $gpgVersion;
 }
 
-sub GetMyVersion { # Get the currently installed version (current commit's hash from git)
-	# returns current git commit hash as version
+sub GetMyVersion { # Get the currently checked out version (current commit's hash from git)
 	state $myVersion;
 
 	if ($myVersion) {
+		# if we already looked it up once, return that
 		return $myVersion;
 	}
 
 	$myVersion = `git rev-parse HEAD`;
-
 	chomp($myVersion);
-
 	return $myVersion;
 }
-
 
 sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to config/ directory (unfinished)
 	#	print("1");
@@ -392,35 +410,42 @@ sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to
 	#	#write to config/
 }
 
-sub GetString { # $stringKey, $language ; Returns string from config/string/en/
-# language defaults to 'en'
+sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from config/string/en/
+# $stringKey = 'menu/top'
+# $language = 'en'
+# $noSubstitute = returns empty string if no exact match
+	my $defaultLanguage = 'en';
 
 	my $stringKey = shift;
 	my $language = shift;
-    state %strings;
-
-    if (defined($strings{$stringKey})) {
-    # assumes $language is always the same, may need refactor later
-        return $strings{$stringKey};
-    }
-
-	my $defaultLanguage = 'en';
+	my $noSubstitute = shift;
 
 	if (!$language) {
 		$language = GetConfig('language');
 	}
-
 	if (!$language) {
 		$language = $defaultLanguage;
 	}
 
-	if (!defined($strings{$stringKey})) {
-		my $string = GetConfig('string/' . $language . '/'.$stringKey);
+    state %strings; #memo
+    my $memoKey = $stringKey.'/'.$language.'/'.($noSubstitute?1:0);
 
-		if ($string) {
-			chomp ($string);
+	if (defined($strings{$memoKey})) {
+	    #memo match
+		return $strings{$memoKey};
+	}
 
-			$strings{$stringKey} = $string;
+	my $string = GetConfig('string/' . $language . '/'.$stringKey);
+	if ($string) {
+	    # exact match
+		chomp ($string);
+
+		$strings{$memoKey} = $string;
+	} else {
+	    # no match, dig deeper...
+		if ($noSubstitute) {
+			$strings{$memoKey} = '';
+			return '';
 		} else {
 			if ($language ne $defaultLanguage) {
 				$string = GetString($stringKey, $defaultLanguage);
@@ -430,9 +455,9 @@ sub GetString { # $stringKey, $language ; Returns string from config/string/en/
 				$string = $stringKey;
 			}
 
-			chomp ($string);
+			chomp($string);
 
-			$strings{$stringKey} = $string;
+			$strings{$memoKey} = $string;
 
 			return $string;
 		}
