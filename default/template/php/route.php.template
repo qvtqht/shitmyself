@@ -503,7 +503,7 @@ if (GetConfig('admin/php/route_enable')) {
 						$html = file_get_contents($pathRel);
 
 						if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
-							//fresh-md5 fresh_js
+							// fresh_js fresh.js
 							$md5 = md5_file($pathRel);
 							header('ETag: ' . $md5);
 							$html .= "<script>window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); }</script>";
