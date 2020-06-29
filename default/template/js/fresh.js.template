@@ -2,15 +2,6 @@
 var freshClient;
 var timeoutFresh;
 
-var clockBaselineColor; // color the clock started out at when the page loaded
-
-if (!clockBaselineColor && document.getElementById) {
-	var clock = document.getElementById('txtClock');
-	if (clock) {
-		clockBaselineColor = clock.style.color;
-	}
-}
-
 function freshCallback() { // callback for requesting HEAD for current page
     //alert('DEBUG: freshCallback() begins');
 
@@ -21,7 +12,10 @@ function freshCallback() { // callback for requesting HEAD for current page
 	//alert('DEBUG: freshCallback() this.readyState = ' + this.readyState);
 
 //	if (1 || this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
-	if (this.readyState == this.HEADERS_RECEIVED || this.status == 200) { // headers received -- what we've been waiting for
+	if (
+		this.readyState == this.HEADERS_RECEIVED ||
+		this.status == 200
+	) { // headers received -- what we've been waiting for
 		// document.title = 'DEBUG: callback received 200';
 
 	    //alert('DEBUG: freshCallback() this.readyState == this.HEADERS_RECEIVED');
@@ -31,37 +25,27 @@ function freshCallback() { // callback for requesting HEAD for current page
 		//alert('DEBUG: eTag = ' + eTag);
 
 		if (eTag) { // if eTag header has a value
-			if (window.lastEtag) { // if we already saved one
-				if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
-					// still fresh, no change
-				} else {
-					// etag was different from last one we saw
-					document.title = 'DEBUG: perhaps something changed?';
-				}
+			if (window.myOwnETag) {
+				var freshETag = freshClient.getResponseHeader("ETag"); // ETag header contains page 'fingerprint'
 
-				window.lastEtag = eTag;
-			} else {
-				window.lastEtag = eTag;
-			}
-
-
-			if (window.freshMd5thisPage) {
-				var freshMd5 = freshClient.getResponseHeader("Fresh-MD5"); // md5 header contains page 'fingerprint'
-
-				if (freshMd5 != freshMd5thisPage) {
+				if (freshETag != window.myOwnETag) {
 					//alert('DEBUG: perhaps something changed?');
-
-
-					if (clock) { // reset
-						//alert('DEBUG: freshCallback() setting clock.style.backgroundColor = clockBaselineColor');
-
-						clock.style.backgroundColor = 'orange';
-					}
 				} else {
 
 				}
 			} else {
+				if (window.lastEtag) { // if we already saved one
+					if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
+						// still fresh, no change
+					} else {
+						// etag was different from last one we saw
+						document.title = 'DEBUG: perhaps something changed?';
+					}
 
+					//window.lastEtag = eTag;
+				} else {
+					window.lastEtag = eTag;
+				}
 			}
 		}
 	}
