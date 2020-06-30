@@ -5,7 +5,10 @@ include_once('utils.php');
 if (!empty($_FILES['uploaded_file'])) {
 	$path = "image/";
 	WriteLog('$path = ' . $path);
-	$path = $path . basename($_FILES['uploaded_file']['name']);
+
+	// #todo make this nicer
+	$path = $path . time() . '_' . basename($_FILES['uploaded_file']['name']);
+
 	WriteLog('$path = ' . $path);
 
 	WriteLog(print_r($_FILES, 1));
