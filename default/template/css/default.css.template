@@ -75,3 +75,6 @@ div.txt {
 #a383 a {
 }
 /* end css/default.css */
+noscript {
+	color: c08000;
+}
