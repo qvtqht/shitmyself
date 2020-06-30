@@ -1,49 +1,49 @@
 // == begin fresh.js
 var freshClient;
-
-function ReplacePageWithNewContent () {
-	window.location.replace(window.newPageLocation);
-	document.open();
-	document.write(window.newPageContent);
-	document.close();
-
-	return 0;
-}
-
-function StoreNewPageContent () {
-	var xmlhttp = window.xmlhttp2;
-
-	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		//alert('DEBUG: PingUrlCallbackReplaceCurrentPage() found status 200');
-		window.newPageContent = xmlhttp.responseText;
-		window.newPageLocation = xmlhttp.responseURL;
-
-		//window.location.replace(xmlhttp.responseURL);
-//		document.open();
-//		document.write(xmlhttp.responseText);
-//		document.close();
-	}
-}
-
-function FetchNewPageContent (url) {
-	if (window.XMLHttpRequest) {
-		//alert('DEBUG: PingUrl: window.XMLHttpRequest was true');
-
-		var xmlhttp;
-		if (window.xmlhttp2) {
-			xmlhttp = window.xmlhttp2;
-		} else {
-			window.xmlhttp2 = new XMLHttpRequest();
-			xmlhttp = window.xmlhttp2;
-		}
-        xmlhttp.onreadystatechange = window.StoreNewPageContent;
-        xmlhttp.open("GET", url, true);
-		xmlhttp.setRequestHeader('Cache-Control', 'no-cache');
-        xmlhttp.send();
-
-        return false;
-	}
-}
+//
+//function ReplacePageWithNewContent () {
+//	window.location.replace(window.newPageLocation);
+//	document.open();
+//	document.write(window.newPageContent);
+//	document.close();
+//
+//	return 0;
+//}
+//
+//function StoreNewPageContent () {
+//	var xmlhttp = window.xmlhttp2;
+//
+//	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//		//alert('DEBUG: PingUrlCallbackReplaceCurrentPage() found status 200');
+//		window.newPageContent = xmlhttp.responseText;
+//		window.newPageLocation = xmlhttp.responseURL;
+//
+//		//window.location.replace(xmlhttp.responseURL);
+////		document.open();
+////		document.write(xmlhttp.responseText);
+////		document.close();
+//	}
+//}
+//
+//function FetchNewPageContent (url) {
+//	if (window.XMLHttpRequest) {
+//		//alert('DEBUG: PingUrl: window.XMLHttpRequest was true');
+//
+//		var xmlhttp;
+//		if (window.xmlhttp2) {
+//			xmlhttp = window.xmlhttp2;
+//		} else {
+//			window.xmlhttp2 = new XMLHttpRequest();
+//			xmlhttp = window.xmlhttp2;
+//		}
+//        xmlhttp.onreadystatechange = window.StoreNewPageContent;
+//        xmlhttp.open("GET", url, true);
+//		xmlhttp.setRequestHeader('Cache-Control', 'no-cache');
+//        xmlhttp.send();
+//
+//        return false;
+//	}
+//}
 
 
 function freshCallback() { // callback for requesting HEAD for current page
@@ -69,11 +69,18 @@ function freshCallback() { // callback for requesting HEAD for current page
 						ariaAlert = document.createElement('p');
 						ariaAlert.setAttribute('role', 'alert');
 						ariaAlert.setAttribute('id', 'ariaAlert');
-						ariaAlert.innerHTML = 'Page has changed. <a href="#" onclick="return ReplacePageWithNewContent();">Refresh</a>';
+						ariaAlert.innerHTML = 'Page has changed. ';
+
+						var a = document.createElement('a');
+						a.setAttribute('href', '#');
+						a.setAttribute('onclick', 'location.reload()');
+						a.innerHTML = 'Reload';
+						ariaAlert.appendChild(a);
+
 						//document.body.appendChild(ariaAlert);
 						document.body.insertBefore(ariaAlert, document.body.firstChild);
 						//window.newPageContent =
-						FetchNewPageContent(window.mypath + '?' + new Date().getTime());
+						//FetchNewPageContent(window.mypath + '?' + new Date().getTime());
 					}
 
 
@@ -90,7 +97,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 					if (window.freshTimeoutId) {
 						clearTimeout(window.freshTimeoutId);
 					}
-					window.freshTimeoutId = setTimeout('CheckIfFresh()', 3000);
+					window.freshTimeoutId = setTimeout('CheckIfFresh()', 15000);
 				}
 			}
 		}
