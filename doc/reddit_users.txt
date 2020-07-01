@@ -1,0 +1,3 @@
+Threads are archived when you say they're archived.
+
+

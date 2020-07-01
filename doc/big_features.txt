@@ -1,0 +1,40 @@
+flush un-approved items
+	include approved items' children
+		this also means the items which gave them #approve
+
+content packs
+	quotes
+	informational packs
+
+sms notifications
+
+reply by sms
+
+tag permission system
+
+video
+
+email notifications
+
+reply by email
+
+import rss
+
+ability to add more usernames/passwords for first login
+
+buttons to insert hash tags into textarea
+
+flush (by filter, typically #approve)
+
+tree of trust
+	encourage to #admin previous admin
+
+set profile image
+
+offline functionality
+	offline availability of pages
+	save composed messages
+	voting offline
+
+windows and mac installers
+

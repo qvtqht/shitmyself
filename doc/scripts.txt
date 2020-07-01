@@ -1,0 +1,39 @@
+clean.sh
+	purges cache/
+	removes html/*.html
+	removes config/template/*
+
+open-database
+	opens index.sqlite3 in sqlitebrowser
+	for browsing indexed data
+
+build.pl
+	builds new index and website, but does not import data
+
+access.pl
+	reads access log from web server and parses actions submitted by clients.
+	common log format can be symlinked to log/access.log
+	-or-
+	change the path in in config/admin/access_log_path
+
+index.pl
+	generates sqlite database called index.sqlite3
+	contains data from html/txt/, log/, and config/
+
+generate.pl
+	generates static website using the sqlite database, and config/
+	also generates some non-static elements such as .htaccess, PHP files
+
+lighttpd.pl
+	starts a local instance of lighttpd to serve the website
+	http://localhost:2784/
+	lighttpd.conf, included
+
+update.pl
+	runs access.pl
+	looks for any changes in html/txt/
+		if any changes, "fills in" sqlite db-index and then html/
+
+validate.pl
+	(in the future will) compare the results of index.pl+generate.pl vs update.pl
+

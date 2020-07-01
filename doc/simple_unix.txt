@@ -1,0 +1,7 @@
+The strengths that come from UNIX are that it's a worldview where easy things are easy
+and hard things are possible, and Perl has taken to that idea in particular.
+There's a really old UNIX idea that if something could be represented as
+a simple flat text file it ought to be, because then you can edit with regular tools
+rather than going into a database or something [similarly cumbersome and proprietary].
+
+

@@ -1,0 +1,8 @@
+Provide accessibility for any still available web browser or client.
+	Because
+		some people have older devices
+		the web is about interoperability
+		it's more likely to be compatible with in unforeseen circumstances
+
+
+

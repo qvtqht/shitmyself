@@ -1,0 +1,15 @@
+log of moving acc'ty mode setting from settings page to its own page ; 
+======================================================================
+
+Added to MakeSummaryPages()
+
+# Access page
+my $accessPage = GetAccessPage();
+PutHtmlFile("access.html", $accessPage);
+
+
+Added access.template
+
+Added GetAccessPage() 
+
+Add default/string/en/page_intro/access
