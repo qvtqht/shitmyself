@@ -1,8 +1,11 @@
 // begin loading_begin.js
-function addLoadingIndicator() { // adds loading indicator bar (to top of page, depending on style)
+function addLoadingIndicator(strMessage) { // adds loading indicator bar (to top of page, depending on style)
+	if (!strMessage) {
+		strMessage = 'Loading...';
+	}
 	var spanLoadingIndicator = document.createElement('span');
 	spanLoadingIndicator.setAttribute('id', 'spanLoadingIndicator');
-	spanLoadingIndicator.innerHTML = 'Loading...';
+	spanLoadingIndicator.innerHTML = strMessage;
 	document.body.appendChild(spanLoadingIndicator);
 }
 
