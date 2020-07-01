@@ -64,7 +64,7 @@ div.txt {
 	padding: 5pt;
 }
 
-#a383, #spanLoadingIndicator {
+#a383, #spanLoadingIndicator, #ariaAlert {
 	color: $colorText;
 	background-color: $colorHighlightBeginner;
 	padding: 1pt;
@@ -79,3 +79,6 @@ div.txt {
 #a383 a {
 }
 /* end css/default.css */
+noscript {
+	color: c08000;
+}
