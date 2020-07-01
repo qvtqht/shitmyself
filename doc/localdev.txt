@@ -41,22 +41,31 @@ I exclude html/ config/ log/ cache/ from my project.
 Otherwise I accidentally change a cached file which gets overwritten later.
 
 Perl
-There is a config file in config/admin/debug.
-Unlike other settings, the value of the file is not checked, and its presence enables debug mode.
+====
+config/admin/debug
+==================
+Unlike other settings, the value of the file is not checked, its mere presence enables debug mode.
 In debug mode any calls to WriteLog() are output to log/log.log
 
 PHP
-There is a config file called config/admin/php/debug.
-When it's content is 1, it will dump debugging output (everything that's been sent to WriteLog()) at the bottom of every page.
-This output is marked as class=advanced, so you may have to click More to see it.
+===
+config/admin/php/debug=1
+========================
+Will dump all WriteLog() output at the bottom of every page.
+Marked as class=advanced, click More to see it.
+config/admin/php/debug_server_response=1
+========================================
+Change redirect behavior, providing a link at the top instead of redirecting
 
 JavaScript
-There is a config file called config/admin/js/debug.
-When this is set to 1, any JS injected into pages will have debug output enabled.
-	This is done by the InjectJS() function.
-The way it works is the JS code has statements beginning with "alert('DEBUG:"
-	I have ensured that each statement only spans one line
+==========
+onfig/admin/js/debug=1
+======================
+Any JS injected into pages will have debug output enabled by InjectJS() function.
+Works by uncommenting any statements beginning with "alert('DEBUG:"
+	Each statement only spans one line
 Each JS template has header and footer comments which name the template file
 
 HTML, CSS
+=========
 Same as JS, each template has a header and footer comment, which facilitates finding where the code is stored.

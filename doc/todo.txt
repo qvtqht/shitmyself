@@ -5,6 +5,9 @@ allows building and updating without pre-building all the html
 fast page updates with perl (fix targeting in index.pl and update.pl)
 #bug long comments no longer sent via post!
 
+Need a timer to reset submit buttons from "Meditate" back to initial state
+	When user navigates Back to page they submitted from
+
 Image exif strip
 
 Create .nfo for image

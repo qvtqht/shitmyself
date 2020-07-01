@@ -1,3 +1,5 @@
+if certain file reports error, try rolling it back one version
+
 shim/polyfill idea
 	createElement, addChild --> request for server to build form
 	
