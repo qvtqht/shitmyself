@@ -5,3 +5,5 @@ log/*
 admin.key
 cron.lock
 server.key.secret
+html/*
+_Deparsed_XSubs.pm
