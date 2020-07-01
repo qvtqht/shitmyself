@@ -1,0 +1,89 @@
+The Risks of Electronic Communication
+Tom Van Vleck
+[The first part of this note began as a handout for people new to my group, to save them from embarrassment & lost productivity. I have updated it with the comments and suggestions of many friends and colleagues. I am interested in further suggestions for improving it.]
+
+If you're tempted to
+
+broadcast or post a funny message
+send or post an angry message
+be sarcastic or ironic
+criticize others in public
+post a message or send mail late at night
+send a message about a person that you wouldn't want them to see
+please think twice. Ask somebody else to talk you out of it. Ask me.
+
+It's easy to damage your reputation and productivity by saying the wrong thing: it's ten times as easy to do this with electronic communication.
+
+By using electronic mail, USENET news groups, electronic bulletin board systems, irc, chat, and so forth, you can make a fool of yourself to many strangers rapidly.
+
+Sending an electronic message is a lot more permanent than saying something; long after your feelings change, the words are still there. Unlike messages on paper, electronic messages are hard to stop once you've sent them: they can be delivered and read seconds after you send them. And electronic messages are awfully easy to copy and resend -- you can't be sure who will read them eventually and form a negative impression of you for sending them.
+
+Messages you post to news groups are remembered forever. Anyone can issue a simple command to search all posted messages for a keyword, or for your name. When you post a message, ask yourself if you'd like a potential employer to read it several years from now.
+
+Broadcast Messages and Netnews
+If you're mad at the company, and really want to hurt it, don't broadcast a message; just kick in the monitor on your desk. In a big company, it costs about as much, and the advantage of wrecking your tube is that fewer people will know about it, and the consequences won't go on as long.
+
+If you're not mad at the company, weigh the cost of company resources your broadcast will consume against the possible benefit of this broadcast.
+
+Jokes
+What seems hilarious when you type it in may offend others. And somehow, people are more offended by offensive jokes when they come through the electronic medium than they would be by the same joke told face to face. People also misunderstand electronic messages, because tone of voice doesn't come along with the message; and when they misunderstand, they get mad. My rule is
+
+Computers and humor have nothing to do with each other.
+
+After all, what joke can be repeated a million times a second and stay funny for long?
+
+Anger
+If you're upset with someone, talk to him or her in person. If you send an angry message, it is likely to make the problem, whatever it is, worse. Because people often react quickly to online messages, without reading them carefully, each emotional message causes more and stronger emotion in the receiver.
+
+Sarcasm and Irony
+You can't count on sarcasm and irony getting through. Some people read hastily; others just take your words literally and don't understand that you really meant the opposite of what you wrote. Even a smiley or "just kidding" won't always work.
+
+Public Criticism
+If you are tempted to criticize another person, don't do it online. This includes everything from flaming others to spelling corrections. People are touchy; if they feel attacked, they attack back. It's very hard to disagree with somebody in a way that lets dialogue continue. Search for non-judgmental ways of disagreeing: try saying "That doesn't work, because.." instead of "That's wrong."
+
+Suppose somebody says something really dumb. Lots of times, the thing that works best is to pretend you didn't notice. Pointing out that the remark was dumb won't work, we know that; the person is just going to dig in and push back. Arguing, saying what you think is smart instead, may not work either, no matter how nice you are, because some people take any disagreement as criticism. If you ignore the remark entirely, though, you've done the best thing you can to kill it off.
+
+Some news and mail systems have a feature called a "kill file" that silently hides messages if they're from a given sender or about a chosen topic. If you have this feature, use it. If you don't, pretend you do: you can ignore completely any message that you disagree with, and then you don't have to react to it.
+
+Late Nights
+Be especially careful about messages you compose late at night. Some mysterious influence seems to start operating after a certain hour, 9PM or so, which makes us think we're typing in sensible messages, when in fact they are subject to severe misunderstanding. "Oh, not me," you say. Well, even so, could the message wait? If it can, my advice is to save it in a file and look at it tomorrow morning. Chances are you'll want to make some changes to make it more clear and more polite.
+
+Personal Remarks
+Making derogatory remarks about others is a bad idea. Doing it behind their back is worse. Doing it in public is worse still. And doing it in a way that suppresses the human side of the communication, the smile or "just kidding" shrug you might have included face to face, makes it even worse. Electronic messages are the last place for any kind of uncomplimentary remark. I know of a case where a mail user hit REPLY instead of FORWARD and accidentally sent a nasty crack about someone to that person. Just don't do it.
+
+Know Your Tools
+If you insist on posting a message or sending mail, make sure you do it the right way, use the correct mail class, and avoid spamming people. Read your company's mail policy. If you don't know, ask.
+
+Electronic mail is insecure. Your most private message can be read by others as it travels through the internet. System administrators at your company, at your intended recipient's company, and at points in between, can read your message. And a security breakin, or a software bug, might allow others to read your message also. Unless you are sure that you are using a secure channel, don't send any kind of information in a mail message that you wouldn't announce in public.
+
+If you are replying to a message, check the list of recipients; your software may have copied this list from a previous message, and your message may be unwelcome in some of the places you're about to send it. Sometimes a spammer will send a message to many inappropriate news groups; then people will make things worse by responding to the message saying "this is off topic" -- spamming the news groups again.
+
+Never count on being able to cancel a message. A recipient or agent may read it before your cancel catches up with the message. Some mail systems send the recipient another copy of the message if you cancel it after they have read it.
+
+(So the worst thing you can do is to broadcast a racist or sexist joke that isn't funny, to an inappropriate destination; and then try to cancel it. People actually do this.)
+
+The USENET pledge, a modest proposal
+I am figuring out and adopting a code of network behavior for myself. I invite you to join me.
+
+I will respect others. If I disagree with their ideas or behavior, I will do so courteously, without personal attack. I will remember that the way I see things is not the only possible right way.
+
+I will conserve bandwidth. If I have no value to add, I won't post.
+
+Generalizations, analogies, jokes, sarcasm, and irony are too much fun to give up entirely, but they are often misinterpreted. I will try to imagine how others might read my posts.
+
+If I think others' network behavior is incorrect, I will not respond, complain, comment, or correct. I will ignore. I will lead by positive example.
+
+If I am angry or tired, I will save my posting and look at it when I am clear-headed before sending it.
+
+I will stick to the subject.
+
+I will not put bumper stickers or my pedigree at the end of every message. The best length for a .sig is zero lines.
+
+Rules Are Made to Be Broken
+You may do things differently from some of the suggestions above. So do I. For instance, I post humor sometimes. Cautiously.
+
+Similarly, there are times when I put .sig-like stuff at the end of a message: for example, if I send mail asking someone to call me, I append my phone number. And if I were speaking as a representative of my employer, I might append the company name and title. Another justification for .sig files might be software that doesn't put a valid From address in your messages. But I think cute quotations are a mistake.
+
+June, 1995
+
+
