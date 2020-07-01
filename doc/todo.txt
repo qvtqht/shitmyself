@@ -1,3 +1,6 @@
+when changing versions
+	see which configs are changing from being the default to not being the default anymore
+
 Priorities
 ===============================
 page rebuilding by php
