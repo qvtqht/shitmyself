@@ -1901,6 +1901,12 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			}
 		}
 
+		if ($script eq 'translit') {
+			if (!GetConfig('admin/js/translit')) {
+				next;
+			}
+		}
+
 		# only inject each script once, otherwise move on
 		if (defined($scriptsDone{$script})) {
 			next;
@@ -1931,6 +1937,13 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+		}
+
+		if ($script eq 'profile') {
+			# for profile.js we need to fill in current admin id
+			my $currentAdminId = GetAdminKey || '-';
+
+			$scriptTemplate =~ s/\$currentAdminId/$currentAdminId/g;
 		}
 
 		#if ($script eq 'settings' || $script eq 'loading_begin') {
@@ -2251,7 +2264,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 			@files = DBGetItemList(\%queryParams);
 		}
-		if ($pageType eq 'tag') {
+		if ($pageType eq 'tag') { #/tag/
 			$pageParam = shift;
 			my $tagName = $pageParam;
 			chomp($tagName);
