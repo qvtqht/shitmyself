@@ -8,6 +8,10 @@
 	color: $colorTagNegative;
 }
 
+.tag-remove {
+	font-weight: bold;
+}
+
 .tag-accept,
 .tag-friend,
 .tag-attend {
