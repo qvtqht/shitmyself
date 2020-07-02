@@ -310,7 +310,6 @@ default/template/form/wikireply.template
 default/template/form/itemvote.template
 default/template/form/write2.template
 default/template/form/reply.template
-default/template/form/profile2.template
 default/template/form/id_admin.template
 default/template/form/event_add.template
 default/template/form/write.template
