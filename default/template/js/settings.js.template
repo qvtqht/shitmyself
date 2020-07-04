@@ -164,12 +164,11 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			showBeginnerLastAction = displayValue + bgColor;
 		}
 
-		if (window.timeoutFresh) {
-			if (timeoutFresh) {
-				clearTimeout(timeoutFresh);
-			}
+		if (window.freshTimeoutId) {
+			clearTimeout(window.freshTimeoutId);
+
 			if (GetPrefs('notify_on_change')) {
-				AmIFresh();
+				CheckIfFresh();
 			}
 		}
 
