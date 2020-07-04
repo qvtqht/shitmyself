@@ -405,6 +405,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		if ($alias) {
+			# pubkey
+
 			DBAddKeyAlias($gpgKey, $alias, $fileHash);
 
 			UnlinkCache('avatar/' . $gpgKey);
@@ -415,7 +417,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddPageTouch('author', $gpgKey);
 
-			DBAddPageTouch('scores', 1);
+			if (GetConfig('admin/index/make_primary_pages')) {
+				MakePage('author', $gpgKey);
+			}
 
 			DBAddPageTouch('scores');
 
@@ -480,6 +484,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					$detokenedMessage =~ s/$reconLine//;
 
 					DBAddPageTouch('item', $parentHash);
+
+					if (GetConfig('admin/index/make_primary_pages')) {
+						MakePage('item', $parentHash);
+					}
 				}
 			}
 
@@ -616,12 +624,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		if (GetConfig('admin/token/my_name_is')) {
-		# "my name is" token
+			# "my name is" token
 			if ($hasCookie) {
-			   #my @myNameIsLines = ($message =~ m/^(my name is )/([A-Za-z0-9 _]+))$/mg);
 				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_ ]+)\r?$/mg);
-				# my @setConfigLines = ($message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg);
-
 
 				WriteLog('@myNameIsLines = ' . scalar(@myNameIsLines));
 
@@ -648,7 +653,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							DBAddPageTouch('author', $hasCookie);
 
-							DBAddPageTouch('scores', 1);
+							if (GetConfig('admin/index/make_primary_pages')) {
+								MakePage('author', $hasCookie);
+							}
 
 							DBAddPageTouch('scores');
 
@@ -662,8 +669,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
+		# title:
 		if (GetConfig('admin/token/title')) {
-		# title token is enabled
+		# title: token is enabled
 			if ($hasParent) {
 				WriteLog('$hasParent was true for ' . $fileHash);
 
@@ -671,10 +679,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				# looks for lines beginning with title: and text after
 				# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-                my @setTitleToLines = ($message =~ m/^(title: )([a-zA-Z0-9_.;:\(\) ]+)\r?$/msig);
-
-                # todo improve regex to include punctuation
-                # todo allow non-latin characters
+                my @setTitleToLines = ($message =~ m/^(title: )(.+)$/ig);
+				# m = multi-line
+				# s = multi-line
+				# g = all instances
+				# i = case-insensitive
 
 				WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
@@ -683,6 +692,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					#my $lineCount = @setTitleToLines / 2;
 
 					while (@setTitleToLines) {
+						# loop through all found title: token lines
 						my $setTitleToToken = shift @setTitleToLines;
 						my $titleGiven = shift @setTitleToLines;
 
@@ -698,7 +708,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							foreach my $itemParent (@itemParents) {
 								DBAddTitle($itemParent, $titleGiven);
 
-								DBAddTitle('flush'); #todo refactor this out
+								DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+								DBAddPageTouch('item', $itemParent);
+
+								if (GetConfig('admin/index/make_primary_pages')) {
+									MakePage('item', $itemParent);
+								}
 							}
 
 							if ($hasCookie) {
@@ -749,7 +765,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 
-				my @resetConfigLines = ($message =~ m/^(resetconfig)\/([a-z0-9\/_]+)/mg);
+				my @resetConfigLines = ($message =~ m/^(resetconfig)\/([a-z0-9\/_.]+)/mg);
 
 				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
 
@@ -1740,7 +1756,7 @@ sub WriteIndexedConfig { # writes config indexed in database into config/
 sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteLog( "MakeIndex()...\n");
 
-	my @filesToInclude = split("\n", `find $TXTDIR | grep -i \.txt\$`);
+	my @filesToInclude = split("\n", `find $TXTDIR -name \\\*.txt`);
 
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
@@ -1790,7 +1806,7 @@ sub IndexFile {
 my $arg1 = shift;
 if ($arg1) {
 	if ($arg1 eq '--all') {
-		print "--all\n";
+		print "index.pl: --all\n";
 
 		MakeIndex();
 
