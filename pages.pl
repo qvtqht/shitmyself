@@ -464,6 +464,43 @@ sub GetEventsPage { # returns html for events page
 
 }
 
+sub GetTagsList { # returns html-formatted list of tags (vote counts)
+# tag_wrapper.template, tag.template
+	my $voteCounts;
+	$voteCounts = DBGetVoteCounts();
+	my @voteCountsArray = @{$voteCounts};
+
+	my $voteItemsWrapper = GetTemplate('tag_wrapper.template');
+
+	my $voteItems = '';
+
+	my $voteItemTemplateTemplate = GetTemplate('tag.template');
+	while (@voteCountsArray) {
+		my $voteItemTemplate = $voteItemTemplateTemplate;
+
+		my $tag = shift @voteCountsArray;
+
+		my $tagName = @{$tag}[0]; #todo assoc-array
+		my $tagCount = @{$tag}[1];
+
+		my $voteItemLink = "/top/" . $tagName . ".html";
+
+		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
+		$voteItemTemplate =~ s/\$tagName/$tagName/g;
+		$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
+
+		$voteItems .= $voteItemTemplate;
+	}
+
+	if (!$voteItems) {
+		# $voteItems = GetTemplate('tag_listing_empty.template');
+	}
+
+	$voteItemsWrapper =~ s/\$tagLinks/$voteItems/g;
+
+	return $voteItemsWrapper;
+} # GetTagsList
+
 sub GetTagsPage { # returns html for tags listing page (sorted by number of uses)
 # $title = title of page
 # $titleHtml = title of page, html-formatted
@@ -2599,6 +2636,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		#pagination links
 		$html .= GetPageLinks($currentPageNumber);
 	}
+	$html .= GetTagsList();
 
 	$html .= '<p>';
 	$html .= GetTemplate('maincontent.template');
