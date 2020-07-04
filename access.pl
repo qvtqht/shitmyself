@@ -61,12 +61,19 @@ foreach (@submitReceivers) {
 
 ##################
 
-sub AddHost { # adds a host to config/system/my_hosts
+sub AddHost { # add host to config/system/my_hosts
 # $host
 # $ownAlias = whether it belongs to this instance
 
 	my $host = shift;
 	chomp ($host);
+
+	# don't need to do it more than once per script run
+	state %hostsAdded;
+	if ($hostsAdded{$host}) {
+		return;
+	}
+	$hostsAdded{$host} = 1;
 
 	my $ownAlias = shift;
 	chomp ($ownAlias);
@@ -77,10 +84,9 @@ sub AddHost { # adds a host to config/system/my_hosts
 		AddItemToConfigList('system/my_hosts', $host);
 	}
 
-	AddItemToConfigList('pull_hosts', $host);
+	AddItemToConfigList('system/pull_hosts', $host);
 
 	return;
-
 }
 
 sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
