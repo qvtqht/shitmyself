@@ -11,7 +11,7 @@
 		</tr>
 		<tr bgcolor=$colorWindow class=menubar>
 			<td>
-				<big style="padding:5pt"><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big></big>
+				<big><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big></big>
 				<a href="/etc.html">More</a>
 			</td>
 			<td align=right>$clock</td>
