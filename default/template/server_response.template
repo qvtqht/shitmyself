@@ -7,7 +7,7 @@
     cellpadding=5
     cellspacing=0
 ><tr><td align=center><font size=5>
-    <b>$serverResponse</b>
+    <b role=status>$serverResponse</b>
     <a href=#maincontent
         tabindex=1
         id=sro
