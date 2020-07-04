@@ -9,9 +9,9 @@ function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 
 	//alert('DEBUG: dvorakKey() begins');
 
-	var nl = '$'; // new letter
+	var nl; // new letter
 
-	var key = '$'; // pressed key
+	var key; // pressed key
 
 	if (e.key) {
 	// for browsers which return event.key
@@ -90,8 +90,8 @@ function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 		}
 	}
 
-	if (nl == '$') {
-	// new letter was never changed from $ character,
+	if (!nl) {
+	// new letter was never changed from empty state,
 	// which is not part of the possible outputs,
 	// so we do not need to replace the input.
 		return true;
@@ -140,9 +140,9 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 
 	//alert('DEBUG: translitKey() begins');
 
-	var nl = '$'; // new letter
+	var nl; // new letter
 
-	var key = '$'; // pressed key
+	var key; // pressed key
 
 	if (e.key) {
 	// for browsers which return event.key
@@ -249,10 +249,10 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		}
 	}
 
-	if (nl == '$') {
-	// new letter was never changed from $ character,
-	// which is not part of the possible outputs,
-	// so we do not need to replace the input.
+	if (!nl) {
+		// new letter was never changed from empty state,
+		// which is not part of the possible outputs,
+		// so we do not need to replace the input.
 		return true;
 	}
 
