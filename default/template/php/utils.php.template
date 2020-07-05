@@ -582,7 +582,7 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug is true)</font>', 1);
 
 		// #todo template the html
-		print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a></div><hr>';
+		print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a><br>Message: '.htmlspecialchars($message).'</div><hr>';
 	} else {
 		// do the redirect
 		header('Location: ' . $redirectUrl);
