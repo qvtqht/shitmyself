@@ -14,6 +14,14 @@ When a user creates a new account, they are taken to profile.html, and then 20s 
 User can't create account from Write or Reply page
 	Need: Checkbox to create account in the process of posting
 Emoji menu breaks older browsers
+	Need: ???
+	It's disabled by default, but makes navigation much nicer
+Data export is currently not possible
+	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
+	Need: Generate zip files of forum data:
+		By thread (with all dependencies like authors, votes, etc.)
+		By date (with all deps)
+		By author (with all deps)
 
 
 when changing versions
