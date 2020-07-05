@@ -1319,7 +1319,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		return $homePageWritten;
 	}
 
-
+	my $fileProvided = $file;
 	$file = "$HTMLDIR/$file";
 
 	# controls whether linked urls are converted to relative format
@@ -1415,39 +1415,52 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 
 	PutFile($file, $content);
 
-	# this is a special hook for generating index.html, aka the home page
-	# if the current file matches config/home_page, write index.html
-	# change the title to home_title while at it
-	if ($file eq GetConfig('home_page')) {
+	if (index($content, '$') > -1) {
+		# test for $ character in html output, warn/crash if it is there
+		if (!($fileProvided eq 'openpgp.js')) {
+			WriteLog('WARNING! PutHtmlFile: $content contains $ symbol!');
+			if (GetConfig('admin/debug')) {
+				die($content . "\n" . $fileProvided);
+			}
+			#return;
+		}
+	}
+
+	if ($fileProvided eq GetConfig('home_page') || "$fileProvided.html" eq GetConfig('home_page')) {
+		# this is a special hook for generating index.html, aka the home page
+		# if the current file matches config/home_page, write index.html
+		# change the title to home_title while at it
+
 		my $homePageTitle = GetConfig('home_title');
 		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle<\/title>/;
-		PutFile ($HTMLDIR . '/index.html', $content);
+		PutFile($HTMLDIR . '/index.html', $content);
 		$homePageWritten = 1;
 	}
 
-	# filling in 404 pages, using 404.log
-	if ($itemHash) {
-		# clean up the log file
-		system ('sort log/404.log | uniq > log/404.log.uniq ; mv log/404.log.uniq log/404.log');
-
-		# store log file in static variable for future
-		state $log404;
-		if (!$log404) {
-			$log404 = GetFile('log/404.log');
-		}
-
-		# if hash is found in 404 log, we will fill in the html page
-		# pretty sure this code doesn't work #todo
-		if ($log404 =~ m/$itemHash/) {
-			my $aliasUrl = GetItemMessage($itemHash); # url is stored inside message
-
-			if ($aliasUrl =~ m/\.html$/) {
-				if (!-e "$HTMLDIR/$aliasUrl") { # don't clobber existing files
-					PutHtmlFile($aliasUrl, $content); # put html file in place (#todo replace with ln -s)
-				}
-			}
-		}
-	}
+	# if ($itemHash) {
+	# 	# filling in 404 pages, using 404.log
+	#
+	# 	# clean up the log file
+	# 	system ('sort log/404.log | uniq > log/404.log.uniq ; mv log/404.log.uniq log/404.log');
+	#
+	# 	# store log file in static variable for future
+	# 	state $log404;
+	# 	if (!$log404) {
+	# 		$log404 = GetFile('log/404.log');
+	# 	}
+	#
+	# 	# if hash is found in 404 log, we will fill in the html page
+	# 	# pretty sure this code doesn't work #todo
+	# 	if ($log404 =~ m/$itemHash/) {
+	# 		my $aliasUrl = GetItemMessage($itemHash); # url is stored inside message
+	#
+	# 		if ($aliasUrl =~ m/\.html$/) {
+	# 			if (!-e "$HTMLDIR/$aliasUrl") { # don't clobber existing files
+	# 				PutHtmlFile($aliasUrl, $content); # put html file in place (#todo replace with ln -s)
+	# 			}
+	# 		}
+	# 	}
+	# }
 }
 
 sub GetFileAsHashKeys { # returns file as hash of lines
