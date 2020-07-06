@@ -1363,7 +1363,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 
 		# first we determine how many levels deep our current file is
 		# we do this by counting slashes in $file
-		my $count = ($file =~ s/\//\//g);
+		my $count = ($fileProvided =~ s/\//\//g) + 1;
 
 		# then we build the path prefix.
 		# the same prefix is used on all links
