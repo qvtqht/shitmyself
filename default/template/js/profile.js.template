@@ -116,57 +116,59 @@ function getUserFp() { // retrieve stored user fingerprint from localstorage
 function sharePubKey () { // shares current user's public key via injected form and iframe
 	//alert('DEBUG: profile.js: sharePubKey() begins');
 
-	var pubKey = getPublicKey();
+	if (window.getPublicKey) {
+		var pubKey = getPublicKey();
 
-	//alert('DEBUG: sharePubKey: pubKey = ' + (pubKey ? pubKey : '(false)'));
+		//alert('DEBUG: sharePubKey: pubKey = ' + (pubKey ? pubKey : '(false)'));
 
-	if (pubKey) {
-		if (window.addLoadingIndicator) {
-			addLoadingIndicator('Creating profile...');
+		if (pubKey) {
+			if (window.addLoadingIndicator) {
+				addLoadingIndicator('Creating profile...');
+			}
+
+	//		//alert('DEBUG: sharePubKey: creating iframe');
+	//
+	//		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
+	//		ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
+	//	//	ifrSharePubKey.setAttribute("height", "11");
+	//	//	ifrSharePubKey.setAttribute("width", "11");
+	//		// #todo pre-createElement browsers
+	//		document.body.appendChild(ifrSharePubKey);
+
+			//alert('DEBUG: sharePubKey: creating form');
+
+			var form = document.createElement('form');
+			form.setAttribute("action", "/post.html");
+			form.setAttribute("method", "get");
+			//form.setAttribute("target", "ifrSharePubKey");
+
+			//alert('DEBUG: sharePubKey: creating input');
+
+			var txtComment = document.createElement('input');
+			txtComment.setAttribute("type", "hidden");
+			txtComment.setAttribute("value", pubKey);
+			txtComment.setAttribute("name", "comment");
+
+			//alert('DEBUG: sharePubKey: adding txtComment to form');
+
+			form.appendChild(txtComment);
+
+			//alert('DEBUG: sharePubKey: adding form to body');
+
+			//document.getElementsByTagName('body')[0].appendChild(form);
+
+			document.body.appendChild(form);
+
+			//alert('DEBUG: submitting form');
+
+			form.submit();
+
+			return false;
+		} else {
+			//alert('DEBUG: pubKey was FALSE');
+
+			return true;
 		}
-
-//		//alert('DEBUG: sharePubKey: creating iframe');
-//
-//		var ifrSharePubKey = document.createElement('iframe'); //#todo pre-iframe browsers
-//		ifrSharePubKey.setAttribute("name", "ifrSharePubKey");
-//	//	ifrSharePubKey.setAttribute("height", "11");
-//	//	ifrSharePubKey.setAttribute("width", "11");
-//		// #todo pre-createElement browsers
-//		document.body.appendChild(ifrSharePubKey);
-
-		//alert('DEBUG: sharePubKey: creating form');
-
-		var form = document.createElement('form');
-		form.setAttribute("action", "/post.html");
-		form.setAttribute("method", "get");
-		//form.setAttribute("target", "ifrSharePubKey");
-
-		//alert('DEBUG: sharePubKey: creating input');
-
-		var txtComment = document.createElement('input');
-		txtComment.setAttribute("type", "hidden");
-		txtComment.setAttribute("value", pubKey);
-		txtComment.setAttribute("name", "comment");
-
-		//alert('DEBUG: sharePubKey: adding txtComment to form');
-
-		form.appendChild(txtComment);
-
-		//alert('DEBUG: sharePubKey: adding form to body');
-
-		//document.getElementsByTagName('body')[0].appendChild(form);
-
-		document.body.appendChild(form);
-
-		//alert('DEBUG: submitting form');
-
-		form.submit();
-
-		return false;
-	} else {
-		//alert('DEBUG: pubKey was FALSE');
-
-		return true;
 	}
 
 /////
