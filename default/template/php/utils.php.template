@@ -820,25 +820,26 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 }
 
 
-function setcookie2 ($key, $value) { //wrapper for setcookie() which sets cookie with parameters and ie3 compatibility
+function setcookie2 ($key, $value) { // sets cookie with ie3 compatibility
 	WriteLog('setcookie2(' . $key . ',' . $value . ')');
 
-	$date = new Datetime('+2 years');
-	$cookieDate = $date->format(DateTime::COOKIE);
-	Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/');
+	$cookieDateFormat = "D, d-M-Y H:i:s";
+	$cookieDate = date($cookieDateFormat, time() + 86400*2*365) . ' GMT';
+	// timezone hard-coding is not important here, but it's not important here
+	Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/', false);
 
 	//setcookie($key, $value, time()+86400, '/'); //#todo ie3 compat
 }
 
-function unsetcookie2 ($key) { // wrapper for setcookie() to remove a cookie
+function unsetcookie2 ($key) { // remove cookie in most compatible way
 	WriteLog('unsetcookie2(' . $key . ')');
 
-	//setcookie($key, '', time()-86400, '/');
+	//setcookie($key, '', time()-86400*2*365, '/');
 
-//	$date = new Datetime('- 10 years');
-//	$cookieDate = $date->format(DateTime::COOKIE);
-//
-	//Header('Set-Cookie: ' . $key . '=delete; expires=' . $cookieDate . '; path=/');
-	Header("Set-Cookie: $key=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/");
+	$date = new Datetime('- 10 years');
+	$cookieDateFormat = "D, d-M-Y H:i:s";
+	$cookieDate = $date->format($cookieDateFormat);
+
+	Header("Set-Cookie: $key=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/", false);
 }
 
