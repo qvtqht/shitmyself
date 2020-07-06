@@ -30,7 +30,7 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 	if (isset($_COOKIE['test']) && $_COOKIE['test']) {
 		WriteLog('test cookie found');
 
-		if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { # todo actual auth
+		if (0 && preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { // #todo actual auth
 			WriteLog('test cookie override!');
 
 			$cookie = $_COOKIE['test'];
@@ -62,7 +62,6 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 			WriteLog('$cookie not found, creating new one...');
 
 			$cookie = strtoupper(substr(md5(rand()), 16));
-
 			$checksum = md5($cookie . '/' . $secret);
 
 			setcookie2('cookie', $cookie);
