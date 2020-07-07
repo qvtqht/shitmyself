@@ -1,3 +1,6 @@
+
+add heic files support to image upload
+
 What's Broken Right Now?
 ========================
 People who don't know password get big white 401 page and no additional information
