@@ -83,3 +83,11 @@ voter id should (debatable) be generated once per page, but is currently generat
 when an encrypted message has multiple recipients, only the first is used.
 
 server_key_id is tricky, must be 16 chars all caps
+
+In IE 5.5. item pages return a JavaScript error
+	Seems to be related to either whitespace or comments
+	Exact cause unknown
+	Workarounds
+		Press OK on the javascript error message, rest of the site works
+		Disable JS on browser
+		Use Light Mode to strip JS
