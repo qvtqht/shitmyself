@@ -479,8 +479,12 @@ sub GetEventsPage { # returns html for events page
 
 }
 
-sub GetTagsList { # returns html-formatted list of tags (vote counts)
+sub GetTagsList { # $tagSelected ; returns html-formatted tags list
 # tag_wrapper.template, tag.template
+
+	my $tagSelected = shift || '';
+	chomp $tagSelected;
+
 	my $voteCounts;
 	$voteCounts = DBGetVoteCounts();
 	my @voteCountsArray = @{$voteCounts};
@@ -497,14 +501,18 @@ sub GetTagsList { # returns html-formatted list of tags (vote counts)
 
 		my $tagName = @{$tag}[0]; #todo assoc-array
 		my $tagCount = @{$tag}[1];
-
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
-		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
-		$voteItemTemplate =~ s/\$tagName/$tagName/g;
-		$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
+		if ($tagSelected && $tag eq $tagSelected) {
+			$voteItems .= "<b>$tag</b>";
+		} # if ($tagSelected && $tag eq $tagSelected)
+		else {
+			$voteItemTemplate =~ s/\$link/$voteItemLink/g;
+			$voteItemTemplate =~ s/\$tagName/$tagName/g;
+			$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
 
-		$voteItems .= $voteItemTemplate;
+			$voteItems .= $voteItemTemplate;
+		}
 	}
 
 	if (!$voteItems) {
