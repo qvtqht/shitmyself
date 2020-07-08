@@ -2834,7 +2834,7 @@ sub GetLighttpdConfig {
 	
 	my $docRoot = $pwd . '/' . 'html' . '/';
 	my $serverPort = GetConfig('admin/lighttpd/port') || 2784;
-	my $errorFilePrefix = $docRoot . 'error-';
+	my $errorFilePrefix = $docRoot . 'error/error-';
 	
 	$conf =~ s/\$serverDocumentRoot/$docRoot/;
 	$conf =~ s/\$serverPort/$serverPort/;
@@ -3230,6 +3230,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	if (GetConfig('admin/http_auth/enable')) {
 		my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
 		$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+
+		my $errorDocumentRoot = "$HTMLDIR/error/";
+		$HtaccessHttpAuthTemplate =~ s/\$errorDocumentRoot/$errorDocumentRoot/g;
 		#todo this currently has a one-account template
 		#todo add generating of template for both lighttpd and htaccess
 

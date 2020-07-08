@@ -54,6 +54,7 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyVersion();
 		"$HTMLDIR/top",
 		"config",
 		"$HTMLDIR/upload"
+		"$HTMLDIR/error"
 	);
 
 	push @dirsThatShouldExist, 'cache/' . GetMyVersion();
