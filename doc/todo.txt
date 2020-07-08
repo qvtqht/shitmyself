@@ -3,6 +3,9 @@ add heic files support to image upload
 
 What's Broken Right Now?
 ========================
+Rebuild times are long due to generating a page for each item
+	Need: lazy-generate pages with PHP is enabled
+	Need: Avoid generating pages for items with a parent
 People who don't know password get big white 401 page and no additional information
 	Need: 403 page which gives additional options
 		lighttpd
