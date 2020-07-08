@@ -1825,7 +1825,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 		my %returnValues;
 
 		if (-e $cachePath) {
-			WriteLog("GpgParse cache hit! $cachePath");
+			WriteLog("GpgParse: cache hit! $cachePath");
 
 			%returnValues = %{retrieve($cachePath)};
 
@@ -2060,7 +2060,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 			store \%returnValues, $cachePath;
 		}
 
-		WriteLog("GpgParse success! $cachePath");
+		WriteLog("GpgParse: success! $cachePath");
 
 		WriteLog("===END GPG PARSE===");
 
@@ -2068,7 +2068,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 	} else {
 		die;
 
-		WriteLog('GpgParse fail! no $fileHash');
+		WriteLog('GpgParse: fail! no $fileHash');
 
 		WriteLog("===END GPG PARSE===");
 
