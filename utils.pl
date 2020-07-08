@@ -53,7 +53,7 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyVersion();
 		"$HTMLDIR/action",
 		"$HTMLDIR/top",
 		"config",
-		"$HTMLDIR/upload"
+		"$HTMLDIR/upload",
 		"$HTMLDIR/error"
 	);
 
