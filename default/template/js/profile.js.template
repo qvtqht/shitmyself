@@ -91,11 +91,11 @@ function btnRegister_Click (t) { // event for 'Register' button's click
 	return true;
 }
 
-function getUserFp() { // retrieve stored user fingerprint from localstorage
+function getUserFp () { // retrieve stored user fingerprint from LocalStorage
 	//alert('DEBUG: getUserFp() begin');
 
 	if (window.localStorage) {
-		// localstorage mode
+		// LocalStorage mode
 		var fingerprint = localStorage.getItem('fingerprint');
 		if (fingerprint) {
 			return fingerprint;
