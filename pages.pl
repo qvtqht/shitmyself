@@ -3182,23 +3182,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	#PutHtmlFile("settings.js", GetTemplate('js/settings.js.template'));
 	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
-
-	# .htaccess file for Apache
-	my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
-
 	if (GetConfig('admin/php/enable')) {
-		$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php.template');
-
-		my $rewriteSetting = GetConfig('admin/php/rewrite');
-		if ($rewriteSetting) {
-			if ($rewriteSetting eq 'all') {
-				$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php_rewrite_all.template');
-			}
-			if ($rewriteSetting eq 'query') {
-				$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php_rewrite_query.template');
-			}
-		}
-
 		my $postPhpTemplate = GetTemplate('php/post.php.template');
 		PutFile($PHPDIR . '/post.php', $postPhpTemplate);
 
@@ -3227,23 +3211,51 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutFile($PHPDIR . '/route.php', $routePhpTemplate);
 	}
 
-	if (GetConfig('admin/http_auth/enable')) {
-		my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
-		$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+	{
+		# .htaccess file for Apache
+		my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
 
-		my $errorDocumentRoot = "$HTMLDIR/error/";
-		$HtaccessHttpAuthTemplate =~ s/\$errorDocumentRoot/$errorDocumentRoot/g;
-		#todo this currently has a one-account template
-		#todo add generating of template for both lighttpd and htaccess
+		# here, we inject the contents of 401.template into .htaccess
+		# this is a kludge until i figure out how to do it properly
+		# 401.template should not contain any " characters
+		#
+		my $text401 = GetTemplate('401.template');
+		$text401 =~ s/\n//g;
+		$text401 = '"' . $text401 . '"';
+		$HtaccessTemplate =~ s/\/error\/error-401\.html/$text401/g;
 
-		$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
+		if (GetConfig('admin/php/enable')) {
+			$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php.template');
 
-		my $HtpasswdTemplate .= GetTemplate('htaccess/htpasswd.template');
-		PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
-		chmod 0644, "$HTMLDIR/.htpasswd";
+			my $rewriteSetting = GetConfig('admin/php/rewrite');
+			if ($rewriteSetting) {
+				if ($rewriteSetting eq 'all') {
+					$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php_rewrite_all.template');
+				}
+				if ($rewriteSetting eq 'query') {
+					$HtaccessTemplate .= "\n" . GetTemplate('htaccess/htaccess_php_rewrite_query.template');
+				}
+			}
+		}
+
+		if (GetConfig('admin/http_auth/enable')) {
+			my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
+			$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+
+			my $errorDocumentRoot = "$HTMLDIR/error/";
+			$HtaccessHttpAuthTemplate =~ s/\$errorDocumentRoot/$errorDocumentRoot/g;
+			#todo this currently has a one-account template
+			#todo add generating of template for both lighttpd and htaccess
+
+			$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
+
+			my $HtpasswdTemplate .= GetTemplate('htaccess/htpasswd.template');
+			PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
+			chmod 0644, "$HTMLDIR/.htpasswd";
+		}
+
+		PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 	}
-
-	PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 
 	PutHtmlFile("favicon.ico", '');
 
