@@ -71,7 +71,9 @@ dir-listing.activate = "enable"
 # enable 404 error handler
 # use server.error-handler instead of server.error-handler-404
 # because the latter returns http 200, which we don't want
-server.error-handler = "/404.html"
+#server.error-handler = "/404.html"
+
+server.errorfile-prefix = "$errorFilePrefix"
 
 server.http-parseopts = (
 	"url-ctrls-reject" => "disable"
