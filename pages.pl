@@ -71,6 +71,21 @@ sub GenerateDialogPage { # generates page with dialog
 
 			return $pageTemplate;
 		}
+		if ($pageName eq '401') {
+			$pageTitle = '401 Access Denied';
+
+			$windowContents = GetTemplate('401.template');
+
+			my $pageTemplate;
+			$pageTemplate = '';
+
+			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '401'); #GetTemplate('htmlstart.template');
+			$pageTemplate .= GetTemplate('maincontent.template');
+			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, '');
+			$pageTemplate .= GetPageFooter();
+
+			return $pageTemplate;
+		}
 		if ($pageName eq 'ok') {
 		}
 	}
@@ -2811,9 +2826,11 @@ sub GetLighttpdConfig {
 	
 	my $docRoot = $pwd . '/' . 'html' . '/';
 	my $serverPort = GetConfig('admin/lighttpd/port') || 2784;
+	my $errorFilePrefix = $docRoot . 'error-';
 	
 	$conf =~ s/\$serverDocumentRoot/$docRoot/;
 	$conf =~ s/\$serverPort/$serverPort/;
+	$conf =~ s/\$errorFilePrefix/$errorFilePrefix/;
 
 	if (GetConfig('admin/php/enable')) {
 		my $phpConf = GetTemplate('lighttpd/lighttpd_php.conf.template');
@@ -2934,6 +2951,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock)); #todo this causes duplicate clock script
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
+		PutHtmlFile("error-404.html", $fourOhFourPage);
+	}
+
+	{
+		my $accessDeniedPage = GenerateDialogPage('401'); #GetTemplate('401.template');
+		PutHtmlFile("error-401.html", $accessDeniedPage);
 	}
 
 
