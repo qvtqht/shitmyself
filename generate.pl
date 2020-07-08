@@ -1,5 +1,22 @@
 #!/usr/bin/perl
 
+# generate.pl
+#
+# generates all the static html files
+# summary/static files like write.html and stats.html
+# all the item files like /ab/cd/abcdef0123.html
+#
+# the idea is to re-generate all of the frontend, and this is largely successful
+#
+# happens in 3 steps:
+# 1. query/touch_all.sh, which sets page_touch.priority++
+# 2. calls update.pl --all, which builds all the touched pages
+# 3. some legacy stuff follows, which is not yet covered by MakePage()
+#
+# the large commented out areas is what's already been replaced by MakePage()
+#
+#
+
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -18,17 +35,11 @@ require './pages.pl';
 
 my $HTMLDIR = "html";
 
-#print `query/touch_all.sh`;
-
 MakeSummaryPages();
 
-print `time ./update.pl --all`;
-#
-# #todo if (which( tmux etc))
-# {
-#     print `./tmux-update.sh`;
-# }
+print `query/touch_all.sh`;
 
+print `time ./update.pl --all`;
 
 #
 #
