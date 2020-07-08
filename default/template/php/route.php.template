@@ -728,6 +728,11 @@ if (GetConfig('admin/php/route_enable')) {
 				$replaceWhat = '<body>';
 				$html = str_replace($replaceWhat, $replaceWith . '>', $html);
 			}
+
+			if ($messageInjected) {
+				// ask browser to not cache page if it contains server response
+				header('Pragma: no-cache');
+			}
 		}
 
 		if ($redirectUrl) {
