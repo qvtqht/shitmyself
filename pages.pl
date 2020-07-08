@@ -3777,6 +3777,32 @@ sub MakeDataPage { # returns html for /data.html
 	PutHtmlFile("data.html", $dataPage);
 }
 
+sub GetItemPageFromHash {
+#todo unfinished
+
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	WriteLog("GetItemPageFromHash($fileHash)");
+
+	# get item list using DBGetItemList()
+	# #todo clean this up a little, perhaps crete DBGetItem()
+	my @files = DBGetItemList({'where_clause' => "WHERE file_hash = '$fileHash'"});
+
+	if (scalar(@files)) {
+		my $file = $files[0];
+
+		WriteLog('GetItemPageFromHash: my $filePage = GetItemPage($file = "' . $file . '")');
+		my $filePage = GetItemPage($file);
+
+		return $filePage;
+	} else {
+		WriteLog("pages.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
+
+		return '';
+	}
+}
+
 sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $pageParam
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
