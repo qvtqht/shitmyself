@@ -2948,7 +2948,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	if (GetConfig('admin/php/enable')) {
 		# create write_post.html for longer messages if admin/php/enable
+		
 		$submitPage =~ s/method=get/method=post/g;
+		if (index(lc($submitPage), 'method=post') == -1) {
+			$submitPage =~ s/\<form /<form method=post /g;
+		}
+		if (index(lc($submitPage), 'method=post') == -1) {
+			$submitPage =~ s/\<form/<form method=post /g;
+		}
 		$submitPage =~ s/please click here/you're in the right place/g;
 		PutHtmlFile("write_post.html", $submitPage);
 	}
