@@ -181,10 +181,18 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					WriteLog('After: ' . $fileHashPath);
 
 					if (-e $fileHashPath) {
+						# new file already exists, rename only if not larger
 						WriteLog("Warning: $fileHashPath already exists!");
-					}
 
-					rename ($file, $fileHashPath);
+						if (-s $fileHashPath > -s $file) {
+							unlink ($file);
+						} else {
+							rename ($file, $fileHashPath);
+						}
+					} else {
+						# new file does not exist, safe to rename
+						rename ($file, $fileHashPath);
+					}
 
 					# if new file exists
 					if (-e $fileHashPath) {

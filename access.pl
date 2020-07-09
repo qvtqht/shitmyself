@@ -504,8 +504,21 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							
 							if ($hashFilename) {
 								if ($pathedFilename ne $hashFilename) {
-									rename($pathedFilename, $hashFilename);
-									$pathedFilename = $hashFilename;
+									if (-e $hashFilename) {
+										# if $hashFilename already exists and it's larger,
+										# leave it alone, and remove file we just created instead
+										#
+										if (-s $hashFilename > -s $pathedFilename) {
+											unlink ($pathedFilename);
+											$pathedFilename = $hashFilename;
+										} else {
+											rename($pathedFilename, $hashFilename);
+											$pathedFilename = $hashFilename;
+										}
+									} else {
+										rename($pathedFilename, $hashFilename);
+										$pathedFilename = $hashFilename;
+									}
 								}
 							} else {
 								WriteLog('WARNING: tried to organize file, but $hashFilename was false');

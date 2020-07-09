@@ -74,7 +74,20 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 
 		if ($fileHashPath && $file ne $fileHashPath) {
 			WriteLog('OrganizeFile: renaming ' . $file . ' to ' . $fileHashPath);
-			rename($file, $fileHashPath);
+
+			if (-e $fileHashPath) {
+				# new file already exists, rename only if not larger
+				WriteLog("Warning: $fileHashPath already exists!");
+
+				if (-s $fileHashPath > -s $file) {
+					unlink ($file);
+				} else {
+					rename ($file, $fileHashPath);
+				}
+			} else {
+				# new file does not exist, safe to rename
+				rename ($file, $fileHashPath);
+			}
 
 			if (-e $fileHashPath) {
 				WriteLog('OrganizeFile: rename succeeded, changing value of $file');
