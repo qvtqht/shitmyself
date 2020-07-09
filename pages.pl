@@ -1285,7 +1285,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 				my $adminContainer = GetTemplate('item/container/admin.template');
 
-				my $colorAdmin = GetThemeColor('admin') || 'red';
+				my $colorAdmin = GetThemeColor('admin') || '#800000';
 				$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
 
 				$adminContainer =~ s/\$message/$itemText/g;
@@ -2411,7 +2411,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 			my $descText = '<b>Admin.</b>';
 			my $adminContainer = GetTemplate('item/container/admin.template');
-			my $colorAdmin = GetThemeColor('admin') || 'red';
+			my $colorAdmin = GetThemeColor('admin') || '#800000';
 			$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
 			$adminContainer =~ s/\$message/$descText/g;
 
