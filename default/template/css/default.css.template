@@ -67,6 +67,7 @@ div.txt {
 #a383, #spanLoadingIndicator, #ariaAlert {
 	color: $colorText;
 	background-color: $colorHighlightBeginner;
+	padding: 3pt;
 	padding: 1pt;
 	position: fixed;
 	top: 0;
@@ -75,6 +76,7 @@ div.txt {
 	margin: 0;
 	font-family: tahoma, arial, sans-serif;
 	font-size: smaller;
+	font-weight: bold;
 }
 #a383 a {
 }
