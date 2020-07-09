@@ -1,3 +1,9 @@
+#BUG footers are lost when rebuilding
+	Problem: organize_file overwrites existing file which has footer-signature with one which does not
+	xSolution: Only rename file to hashed-path if larger file not already there
+	Problem: organize_files is implemented 3 times in 3 differnet places
+	Solution: Switch everything to OrganizeFies()
+
 
 fix config/admin/accept_404_url_text
 
