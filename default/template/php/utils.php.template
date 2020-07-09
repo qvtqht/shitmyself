@@ -317,30 +317,6 @@ function DoUpdate () { // #todo #untested
 
 		WriteLog(`cd "$pwd"`);
 	}
-
-//		if (!file_exists($scriptDir . 'cron.lock')) {
-//			WriteLog('cron.lock no exist, trying index.pl');
-//
-//			if (file_exists($scriptDir . '/index.pl')) {
-//				WriteLog('index.pl found, calling');
-//
-//				WriteLog('cd "' . $scriptDir . '" ; perl ./index.pl "' . $filePath . '"');
-//
-////				WriteLog(`cd "$scriptDir" ; perl ./index.pl "$filePath"`);
-//			}
-//
-//			if (file_exists($scriptDir . '/touched.pl')) {
-//				WriteLog('touched.pl found, calling');
-//
-//				WriteLog('cd "' . $scriptDir . '" ; perl ./touched.pl');
-//
-////				WriteLog(`cd "$scriptDir" ; perl ./touched.pl`);
-//			}
-
-//		} else {
-//
-//		}
-
 }
 
 function GetConfig ($configKey) { // get value for config value $configKey
@@ -464,7 +440,7 @@ function CacheExists ($cacheName) { // Check whether specified cache entry exist
 		$myVersion = GetMyVersion();
 	}
 
-	$cacheName = '..cache/' . $myVersion . '/' . $cacheName;
+	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
 
 	if (file_exists($cacheName)) {
 		return 1;
@@ -473,9 +449,8 @@ function CacheExists ($cacheName) { // Check whether specified cache entry exist
 	}
 }
 
-
-function StoreServerResponse ($message) { // adds server message and returns message id
-// stores server message in cache/sm[message_id]
+function StoreServerResponse ($message) { // adds server response message and returns message id
+// stores message in cache/sm[message_id]
 // returns message id which can be passed to next page load via ?message=
 
     // #todo static $messages array
@@ -487,7 +462,7 @@ function StoreServerResponse ($message) { // adds server message and returns mes
     	return;
     }
 
-    $messageId = md5($message . time()); // #todo better?
+    $messageId = md5($message . time()); // #todo can be better?
     $messageId = substr($messageId, 0, 8);
 
 	PutCache('sm' . $messageId, $message);
@@ -499,10 +474,9 @@ function RetrieveServerResponse ($messageId) { // retrieves response message for
 	WriteLog("RetrieveServerResponse($messageId)");
 
 	$message = GetCache('sm' . $messageId);
-
 	if ($message) {
+		// message was found, remove it
 		WriteLog("RetrieveServerResponse: Message found, deleting");
-
 		UnlinkCache('sm' . $messageId);
 	}
 
@@ -523,10 +497,11 @@ function GetHtmlFilename ($hash) { // gets html filename based on hash
 	return $fileHtmlPath;
 }
 
-function RedirectWithResponse ($url, $message) { // redirects to page with server message
+function RedirectWithResponse ($url, $message) { // redirects to page with server message parameter added to url
 // calls StoreServerResponse($message)
-// then creates url with message= attribute
-// sends header to go to that url
+// then creates url with message= parameter
+// sends Location: header to redirect to said url
+
 	WriteLog("RedirectWithResponse($url, $message)");
 
 	// should only redirect once per session
@@ -663,7 +638,7 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$windowTemplate = str_replace('$windowBody', '', $windowTemplate);
 	}
 
-	// statusbar
+	// status bar
 	if ($windowStatus) {
 		$windowStatusTemplate = GetTemplate('window/status.template');
 
@@ -684,7 +659,8 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 	return $windowTemplate;
 }
 
-function GetThemeAttribute ($attributeName) { // returns theme color from config/theme/
+function GetThemeAttribute ($attributeName) { // returns theme color from config/theme/...
+// uses GetConfig(), which means look first in config/ and then in default/
 	$themeName = GetConfig('html/theme');
 
 	$attributePath = 'theme/' . $themeName . '/' . $attributeName;
@@ -700,7 +676,6 @@ function GetThemeAttribute ($attributeName) { // returns theme color from config
 
 function GetThemeColor ($colorName) { // returns theme color based on html/theme
 	$colorName = 'color/' . $colorName;
-
 	$color = GetThemeAttribute($colorName);
 
 	if (!$color) {
@@ -709,6 +684,7 @@ function GetThemeColor ($colorName) { // returns theme color based on html/theme
 	}
 
 	if (preg_match('/^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/', $color)) {
+	// color value looks like a 6-digit hex value without a # prefix, so add the prefix
 		WriteLog('GetThemeColor: Color found missing its # prefix: ' . $color);
 
 		$color = '#' . $color;
@@ -724,6 +700,7 @@ function GetThemeColor ($colorName) { // returns theme color based on html/theme
 }
 
 function GetTime () { // returns time()
+// why this wrapper? so that we can use a different base for epoch time than 1970-01-01
 	return time();
 }
 
@@ -742,7 +719,7 @@ function AddAttributeToTag ($html, $tag, $attributeName, $attributeValue) { // a
 
 	WriteLog('AddAttributeToTag: $tagAttribute is ' . $tagAttribute);
 
-	// todo this is sub-optimal
+	// #todo this is sub-optimal
 	$html = preg_replace("/\<$tag\w/i", "<$tag $tagAttribute ", $html);
 	$html = preg_replace("/\<$tag/i", "<$tag $tagAttribute ", $html); // is this right/necessary? #todo
 	$html = preg_replace("/\<$tag\>/i", "<$tag $tagAttribute>", $html);
@@ -825,20 +802,13 @@ function setcookie2 ($key, $value) { // sets cookie with ie3 compatibility
 
 	$cookieDateFormat = "D, d-M-Y H:i:s";
 	$cookieDate = date($cookieDateFormat, time() + 86400*2*365) . ' GMT';
-	// timezone hard-coding is not important here, but it's not important here
-	Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/', false);
+	// timezone hard-coding is not important here
 
-	//setcookie($key, $value, time()+86400, '/'); //#todo ie3 compat
+	Header('Set-Cookie: ' . $key . '=' . $value . '; expires=' . $cookieDate . '; path=/', false);
 }
 
 function unsetcookie2 ($key) { // remove cookie in most compatible way
 	WriteLog('unsetcookie2(' . $key . ')');
-
-	//setcookie($key, '', time()-86400*2*365, '/');
-
-	$date = new Datetime('- 10 years');
-	$cookieDateFormat = "D, d-M-Y H:i:s";
-	$cookieDate = $date->format($cookieDateFormat);
 
 	Header("Set-Cookie: $key=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/", false);
 }
