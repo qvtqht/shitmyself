@@ -285,13 +285,11 @@ sub InjectBodyOnload { #injects <body onload event into supplied html
 }
 
 sub GetPageLinks { # $currentPageNumber ; returns html for pagination links
-
 	my $currentPageNumber = shift; #
 
 	state $pageLinks; # stores generated links html in case we need them again
 
 	my $pageLimit = GetConfig('page_limit'); # number of items per page
-
 	my $itemCount = DBGetItemCount(); # item count
 
 	WriteLog("GetPageLinks($currentPageNumber)");
@@ -479,11 +477,18 @@ sub GetEventsPage { # returns html for events page
 
 }
 
-sub GetTagsList { # $tagSelected ; returns html-formatted tags list
+sub GetTagLinks { # $tagSelected ; returns html-formatted tags list
 # tag_wrapper.template, tag.template
 
-	my $tagSelected = shift || '';
-	chomp $tagSelected;
+	my $tagSelected = shift;
+
+	if (!$tagSelected) {
+		$tagSelected = '';
+	} else {
+		chomp $tagSelected;
+	}
+
+	WriteLog("GetTagLinks($tagSelected)");
 
 	my $voteCounts;
 	$voteCounts = DBGetVoteCounts();
@@ -497,15 +502,16 @@ sub GetTagsList { # $tagSelected ; returns html-formatted tags list
 	while (@voteCountsArray) {
 		my $voteItemTemplate = $voteItemTemplateTemplate;
 
-		my $tag = shift @voteCountsArray;
+		my $tagArrayRef = shift @voteCountsArray;
 
-		my $tagName = @{$tag}[0]; #todo assoc-array
-		my $tagCount = @{$tag}[1];
+		my $tagName = @{$tagArrayRef}[0]; #todo assoc-array
+		my $tagCount = @{$tagArrayRef}[1];
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
-		if ($tagSelected && $tag eq $tagSelected) {
-			$voteItems .= "<b>$tag</b>";
-		} # if ($tagSelected && $tag eq $tagSelected)
+		if ($tagName eq $tagSelected) {
+			#todo template this
+			$voteItems .= "<b>#$tagName</b>\n";
+		}
 		else {
 			$voteItemTemplate =~ s/\$link/$voteItemLink/g;
 			$voteItemTemplate =~ s/\$tagName/$tagName/g;
@@ -522,7 +528,7 @@ sub GetTagsList { # $tagSelected ; returns html-formatted tags list
 	$voteItemsWrapper =~ s/\$tagLinks/$voteItems/g;
 
 	return $voteItemsWrapper;
-} # GetTagsList
+} # GetTagLinks()
 
 sub GetTagsPage { # returns html for tags listing page (sorted by number of uses)
 # $title = title of page
@@ -2654,12 +2660,12 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
 	$html .= $htmlStart;
-
-	if (defined($currentPageNumber)) {
-		#pagination links
-		$html .= GetPageLinks($currentPageNumber);
-	}
-	$html .= GetTagsList();
+	#
+	# if (defined($currentPageNumber)) {
+	# 	#pagination links
+	# 	$html .= GetPageLinks($currentPageNumber);
+	# }
+	$html .= GetTagLinks();
 
 	$html .= '<p>';
 	$html .= GetTemplate('maincontent.template');
