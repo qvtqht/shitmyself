@@ -91,3 +91,7 @@ In IE 5.5. item pages return a JavaScript error
 		Press OK on the javascript error message, rest of the site works
 		Disable JS on browser
 		Use Light Mode to strip JS
+
+config/admin/accept_404_url_text
+	this is broken, because it doesn't filter all the regular requests
+	e.g. /stats.html?123412521544

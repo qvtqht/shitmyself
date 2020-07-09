@@ -1,4 +1,6 @@
 
+fix config/admin/accept_404_url_text
+
 add heic files support to image upload
 
 What's Broken Right Now?
@@ -6,13 +8,13 @@ What's Broken Right Now?
 Rebuild times are long due to generating a page for each item
 	Need: lazy-generate pages with PHP is enabled
 	Need: Avoid generating pages for items with a parent
-People who don't know password get big white 401 page and no additional information
-	Need: 403 page which gives additional options
-		lighttpd
-		apache
-		page content
-		page generation
-		additional directory for error templates?
+xPeople who don't know password get big white 401 page and no additional information
+	xNeed: 403 page which gives additional options
+		xlighttpd
+		xapache
+		xpage content
+		xpage generation
+		xadditional directory for error templates?
 When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
 	Need: Message that public profile will be created shortly
 	Need: Background profile create request
