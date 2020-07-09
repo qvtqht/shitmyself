@@ -246,7 +246,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		# if there is no gpg content, the attributes are still populated as possible
 
 		$txt = $gpgResults{'text'};          # contents of the text file
-		$message = $gpgResults{'message'};   # message which will be displayed once tokes are processed
+		$message = $gpgResults{'message'};   # message which will be displayed once tokens are processed
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
 		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
 
@@ -634,7 +634,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (GetConfig('admin/token/my_name_is')) {
 			# "my name is" token
 			if ($hasCookie) {
-				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_ ]+)\r?$/mg);
+				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_ ]+)\r?$/mig);
 
 				WriteLog('@myNameIsLines = ' . scalar(@myNameIsLines));
 
@@ -646,6 +646,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						my $nameGiven = shift @myNameIsLines;
 
 						chomp $nameGiven;
+						$nameGiven = trim($nameGiven);
 
 						my $reconLine;
 						$reconLine = $myNameIsToken . $nameGiven;
@@ -687,7 +688,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				# looks for lines beginning with title: and text after
 				# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-                my @setTitleToLines = ($message =~ m/^(title: )(.+)$/ig);
+                my @setTitleToLines = ($message =~ m/^(title: )(.+)$/mig);
 				# m = multi-line
 				# s = multi-line
 				# g = all instances
@@ -706,6 +707,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 						chomp $setTitleToToken;
 						chomp $titleGiven;
+						$titleGiven = trim($titleGiven);
 
 						my $reconLine;
 						$reconLine = $setTitleToToken . $titleGiven;
