@@ -2558,11 +2558,12 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 			$alias = HtmlEscape($alias);
 
-			WriteLog('GetTemplate("item/item.template") 2');
 			my $itemTemplate = '';
 			if ($message) {
 #				$row->{'show_quick_vote'} = 1;
 				$row->{'trim_long_text'} = 1;
+
+				WriteLog('GetReadPage: GetItemTemplate($row)');
 
 				$itemTemplate = GetItemTemplate($row); # GetReadPage()
 			} else {
@@ -2984,7 +2985,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	{
 		my $fourOhFourPage = GenerateDialogPage('404'); #GetTemplate('404.template');
 		if (GetConfig('html/clock')) {
-			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock)); #todo this causes duplicate clock script
+			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock fresh)); #todo this causes duplicate clock script
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
 		PutHtmlFile("error-404.html", $fourOhFourPage);
