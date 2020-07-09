@@ -2375,10 +2375,20 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 	my $htmlStart = GetPageHeader($title, $titleHtml, 'read_' . $pageType);
 
+	if ($pageType) {
+		$htmlStart =~ s/\$tagSelected/$pageParam/;
+		# $pageParam is the chosen tag for this page
+	}
+
 	$txtIndex .= $htmlStart;
 
 	#<span class="replies">last reply at [unixtime]</span>
 	#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
+
+	if ($pageType eq 'tag') {
+		# add tag buttons with selected tag emphasized
+		$txtIndex .= GetTagLinks($pageParam);
+	}
 
 	$txtIndex .= GetTemplate('maincontent.template');
 
