@@ -1645,7 +1645,6 @@ sub IsAdmin { # returns 1 if parameter equals GetAdminKey() or GetServerKey(), o
 	}
 }
 
-
 sub GetServerKey { # Returns server's public key, 0 if there is none
 	state $serversKey;
 
@@ -2673,6 +2672,16 @@ sub Sha1Test {
 	print(`php -r "print(sha1_file('utils.pl'));"`);
 
 	print "\n";
+}
+
+sub GetPasswordLine { # $username, $password ; returns line for .htpasswd file
+	my $username = shift;
+	chomp $username;
+
+	my $password = shift;
+	chomp $password;
+
+	return $username.":".crypt($password,$username)."\n";
 }
 
 1;
