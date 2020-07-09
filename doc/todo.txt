@@ -3,11 +3,21 @@ fix config/admin/accept_404_url_text
 
 add heic files support to image upload
 
+multiple image selection and upload
+
+paste image from clipboard
+
 What's Broken Right Now?
 ========================
+Changing the current git commit breaks the site
+	This is *kind of* by design, because the commit ID is part of the cache path
+	That way there is no incompatible cache
+	Need: A way to recover
 Rebuild times are long due to generating a page for each item
+	Good: Site is fast to come back up
 	Need: lazy-generate pages with PHP is enabled
 	Need: Avoid generating pages for items with a parent
+	Need: "Site is rebuilding right now" message?
 xPeople who don't know password get big white 401 page and no additional information
 	xNeed: 403 page which gives additional options
 		xlighttpd
@@ -19,6 +29,7 @@ When a user creates a new account, they are taken to profile.html, and then 20s 
 	Need: Message that public profile will be created shortly
 	Need: Background profile create request
 	Need: Server-side profile create trigger
+	Bug: Loading indicator, if it shows up, is auto-hidden, even though now we are waiting for profile to be created.
 User can't create account from Write or Reply page
 	Need: Checkbox to create account in the process of posting
 Emoji menu breaks older browsers
