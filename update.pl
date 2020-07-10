@@ -110,7 +110,7 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	return $file;
 }
 
-sub ProcessTextFile { #add new textfile to index
+sub ProcessTextFile { # $file ; add new text file to index
 	my $file = shift;
 
 	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
