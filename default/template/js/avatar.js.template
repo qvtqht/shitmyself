@@ -63,11 +63,13 @@ if (window.localStorage && document.getElementById) {
 }
 
 function getAvatar () { // retrieve previously built avatar from localStorage (already in html form)
-	var myAvatar = localStorage.getItem("avatar");
-	if (!myAvatar || myAvatar.length == 0) {
-		return '';
-	} else {
-		return myAvatar;
+	if (window.localStorage) {
+		var myAvatar = localStorage.getItem("avatar");
+		if (!myAvatar || myAvatar.length == 0) {
+			return '';
+		} else {
+			return myAvatar;
+		}
 	}
 }
 
