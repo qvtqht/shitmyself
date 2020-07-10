@@ -119,7 +119,18 @@ function freshCallback() { // callback for requesting HEAD for current page
 function CheckIfFresh() {
 	//document.title = 'CheckIfFresh: ' + new Date().getTime();
 
-	if (window.XMLHttpRequest) {
+	var xhr = null;
+	if (window.XMLHttpRequest){
+    	xhr = new XMLHttpRequest();
+    }
+    else {
+    	if (window.ActiveXObject) {
+    		xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+    }
+
+
+	if (xhr) {
 		var mypath = window.mypath;
 
 		if (!mypath) {
@@ -127,7 +138,7 @@ function CheckIfFresh() {
 			window.mypath = mypath;
 		}
 
-		freshClient = new XMLHttpRequest();
+		freshClient = xhr;
 		//freshClient.open("HEAD", mypath + '?' + new Date().getTime(), true);
 		freshClient.open("HEAD", mypath, true);
 		freshClient.setRequestHeader('Cache-Control', 'no-cache');
