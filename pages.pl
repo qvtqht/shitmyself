@@ -2285,7 +2285,126 @@ sub GetScoreboardPage { #returns html for /authors.html
 	$txtIndex = InjectJs($txtIndex, qw(settings avatar timestamp profile voting));
 
 	return $txtIndex;
-}
+} # GetScoreboardPage()
+
+sub GetAuthorInfoBox {
+	my $authorKey = shift;
+	chomp $authorKey;
+
+	if (!$authorKey) {
+		return '';
+	}
+
+	my $authorInfoTemplate = GetTemplate('author_info.template');
+
+	my $authorAliasHtml = GetAlias($authorKey);
+	my $authorAvatarHtml = GetAvatar($authorKey);
+	my $authorImportance = 1;
+	my $authorScore = DBGetAuthorScore($authorKey) || 0;
+	my $itemCount = DBGetAuthorItemCount($authorKey);
+	my $authorDescription = '';
+	my $authorWeight = DBGetAuthorWeight($authorKey);
+	my $authorLastSeen = DBGetAuthorLastSeen($authorKey) || 0;
+
+	my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
+	my $publicKeyHashHtml = '';
+	if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
+		$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
+	} else {
+		$publicKeyHashHtml = '*';
+	}
+
+	if (IsServer($authorKey)) {
+		if ($authorDescription) {
+			$authorDescription .= '<br>';
+		}
+		$authorDescription .= '<b>Server signing key.</b>';
+	}
+
+	if (IsAdmin($authorKey)) {
+		if ($authorDescription) {
+			$authorDescription .= '<br>';
+		}
+
+		my $descText = '<b>Admin.</b>';
+		my $adminContainer = GetTemplate('item/container/admin.template');
+		my $colorAdmin = GetThemeColor('admin') || '#800000';
+		$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
+		$adminContainer =~ s/\$message/$descText/g;
+
+		$authorDescription = $adminContainer;
+	}
+
+	if ($authorDescription) {
+		$authorDescription .= '<br>';
+	}
+	$authorDescription .= GetItemVotesSummary($publicKeyHash);
+
+	my $profileVoteButtons = GetItemVoteButtons($publicKeyHash, 'pubkey');
+
+	$authorLastSeen = GetTimestampElement($authorLastSeen);
+
+	if (!$authorDescription) {
+		$authorDescription = '*';
+	}
+
+	if (!$publicKeyHash) {
+		$publicKeyHash = '*';
+	}
+
+	$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
+	$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
+	$authorInfoTemplate =~ s/\$fingerprint/$authorKey/g;
+	$authorInfoTemplate =~ s/\$importance/$authorImportance/;
+	$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
+	$authorInfoTemplate =~ s/\$itemCount/$itemCount/;
+	$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
+	$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
+	$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
+	$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;
+	if ($publicKeyHashHtml) {
+		$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
+	} else {
+		$authorInfoTemplate =~ s/\$publicKeyHash/*/g;
+	}
+
+	##### friends list begin #####
+
+	# get list of friends from db
+	my @authorFriendsArray = DBGetAuthorFriends($authorKey);
+
+	# generated html will reside here
+	my $authorFriends = '';
+
+	while (@authorFriendsArray) {
+		# get the friend's key
+		my $authorFriend = shift @authorFriendsArray;
+		my $authorFriendKey = $authorFriend->{'author_key'};
+
+		# get avatar (with link) for key
+		my $authorFriendAvatar .= GetAuthorLink($authorFriendKey);
+
+		# get friend list item template and insert linked avatar to it
+		my $authorFriendTemplate = GetTemplate('author/author_friends_item.template');
+		$authorFriendTemplate =~ s/\$authorFriendAvatar/$authorFriendAvatar/g;
+
+		# append it to list of friends html
+		$authorFriends .= $authorFriendTemplate;
+	}
+
+	if (!$authorFriends) {
+		$authorFriends = '(no friends, or very private)';
+	}
+
+	# wrap list of friends in wrapper
+	my $authorFriendsWrapper = GetTemplate('author/author_friends.template');
+	$authorFriendsWrapper =~ s/\$authorFriendsList/$authorFriends/;
+
+	# insert list of friends into authorinfo template
+	$authorInfoTemplate =~ s/\$authorFriends/$authorFriendsWrapper/;
+
+	return $authorInfoTemplate;
+} # GetAuthorInfoBox()
 
 sub GetReadPage { # generates page with item listing based on parameters
 	# GetReadPage
@@ -2309,7 +2428,10 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 	if (defined($pageType)) {
 		#$pageType can be 'author', 'tag'
+
 		if ($pageType eq 'author') {
+			# AUTHOR PAGE ##############################################################
+			
 			$pageParam = shift;
 			$authorKey = $pageParam;
 
@@ -2337,7 +2459,10 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 			@files = DBGetItemList(\%queryParams);
 		}
+
 		if ($pageType eq 'tag') { #/tag/
+			# TAG PAGE ##############################################################
+						
 			$pageParam = shift;
 			my $tagName = $pageParam;
 			chomp($tagName);
@@ -2364,24 +2489,30 @@ sub GetReadPage { # generates page with item listing based on parameters
 		#		@files = DBGetItemList(\%queryParams);
 	}
 
-	my $txtIndex = "";
+	# GENERATE PAGE ######
+
+	my $txtIndex = ""; # contains html output
 
 	# this will hold the title of the page
 	if (!$title) {
 		$title = GetConfig('home_title');
 	}
+
 	chomp $title;
 	$title = HtmlEscape($title);
 
 	my $htmlStart = GetPageHeader($title, $titleHtml, 'read_' . $pageType);
 
-	if ($pageType) {
+	if ($pageType eq 'tag') {
+		# fill in tag placeholder at top of page
+
 		$htmlStart =~ s/\$tagSelected/$pageParam/;
 		# $pageParam is the chosen tag for this page
 	}
 
 	$txtIndex .= $htmlStart;
 
+	#todo
 	#<span class="replies">last reply at [unixtime]</span>
 	#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
 
@@ -2393,117 +2524,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	if ($pageType eq 'author') {
-		my $authorInfoTemplate = GetTemplate('author_info.template');
-
-		my $authorAliasHtml = GetAlias($authorKey);
-		my $authorAvatarHtml = GetAvatar($authorKey);
-		my $authorImportance = 1;
-		my $authorScore = DBGetAuthorScore($authorKey) || 0;
-		my $itemCount = DBGetAuthorItemCount($authorKey);
-		my $authorDescription = '';
-		my $authorWeight = DBGetAuthorWeight($authorKey);
-		my $authorLastSeen = DBGetAuthorLastSeen($authorKey) || 0;
-
-		my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
-		my $publicKeyHashHtml = '';
-		if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
-			$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
-		} else {
-			$publicKeyHashHtml = '*';
-		}
-		
-		if (IsServer($authorKey)) {
-			if ($authorDescription) {
-				$authorDescription .= '<br>';
-			}
-			$authorDescription .= '<b>Server signing key.</b>';
-		}
-
-		if (IsAdmin($authorKey)) {
-			if ($authorDescription) {
-				$authorDescription .= '<br>';
-			}
-
-			my $descText = '<b>Admin.</b>';
-			my $adminContainer = GetTemplate('item/container/admin.template');
-			my $colorAdmin = GetThemeColor('admin') || '#800000';
-			$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
-			$adminContainer =~ s/\$message/$descText/g;
-
-			$authorDescription = $adminContainer;
-		}
-
-		if ($authorDescription) {
-			$authorDescription .= '<br>';
-		}
-		$authorDescription .= GetItemVotesSummary($publicKeyHash);
-
-		my $profileVoteButtons = GetItemVoteButtons($publicKeyHash, 'pubkey');
-		
-		$authorLastSeen = GetTimestampElement($authorLastSeen);
-
-		if (!$authorDescription) {
-			$authorDescription = '*';
-		}
-
-		if (!$publicKeyHash) {
-			$publicKeyHash = '*';
-		}
-
-		$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
-		$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
-		$authorInfoTemplate =~ s/\$fingerprint/$authorKey/g;
-		$authorInfoTemplate =~ s/\$importance/$authorImportance/;
-		$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
-		$authorInfoTemplate =~ s/\$itemCount/$itemCount/;
-		$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
-		$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
-		$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
-		$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;
-		if ($publicKeyHashHtml) {
-			$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
-		} else {
-			$authorInfoTemplate =~ s/\$publicKeyHash/*/g;
-		}
-
-
-		##### friends list begin #####
-
-		# get list of friends from db
-		my @authorFriendsArray = DBGetAuthorFriends($authorKey);
-
-		# generated html will reside here
-		my $authorFriends = '';
-
-		while (@authorFriendsArray) {
-			# get the friend's key
-			my $authorFriend = shift @authorFriendsArray;
-			my $authorFriendKey = $authorFriend->{'author_key'};
-
-			# get avatar (with link) for key
-			my $authorFriendAvatar .= GetAuthorLink($authorFriendKey);
-
-			# get friend list item template and insert linked avatar to it
-			my $authorFriendTemplate = GetTemplate('author/author_friends_item.template');
-			$authorFriendTemplate =~ s/\$authorFriendAvatar/$authorFriendAvatar/g;
-
-			# append it to list of friends html
-			$authorFriends .= $authorFriendTemplate;
-		}
-
-		if (!$authorFriends) {
-			$authorFriends = '(no friends, or very private)';
-		}
-
-		# wrap list of friends in wrapper
-		my $authorFriendsWrapper = GetTemplate('author/author_friends.template');
-		$authorFriendsWrapper =~ s/\$authorFriendsList/$authorFriends/;
-
-		# insert list of friends into authorinfo template
-		$authorInfoTemplate =~ s/\$authorFriends/$authorFriendsWrapper/;
-
-		# add authorinfo template to page
-		$txtIndex .= $authorInfoTemplate;
+		# author info box
+		$txtIndex .= GetAuthorInfoBox($authorKey);
 	}
 
 	my $itemComma = '';
@@ -2581,17 +2603,11 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 	}
 
-	#	$txtIndex .= GetTemplate('voteframe.template');
-
-	# Add javascript warning to the bottom of the page
-	if (GetConfig('admin/js/enable')) {
-		$txtIndex .= GetTemplate("jswarning.template");
-	}
-
 	# Close html
 	$txtIndex .= GetPageFooter();
 
 	if ($pageType eq 'author') {
+		# for author page, add itsyou.js, which will tell the user if the profile is theirs
 		$txtIndex = InjectJs($txtIndex, qw(itsyou settings timestamp voting profile));
 	} else {
 		$txtIndex = InjectJs($txtIndex, qw(settings voting timestamp profile));
@@ -2599,7 +2615,6 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 	return $txtIndex;
 } # GetReadPage
-
 
 sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (used for both top and footer menus)
 	my $address = shift;
@@ -2649,18 +2664,6 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 
 	return $menuItem;
 } # GetMenuItem
-
-sub GetMenuItemByKey {
-	my $key = shift;
-	chomp($key);
-
-	my $class = 'advanced';
-	if ($key eq 'index' || $key eq 'write' || $key eq 'settings') {
-		$class = 0;
-	}
-
-	return GetMenuItem("/$key.html", $key, $class);
-}
 
 sub GetIndexPage { # returns html for an index page, given an array of hash-refs containing item information
 	# Called from WriteIndexPages() and generate.pl
