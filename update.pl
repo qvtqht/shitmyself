@@ -49,6 +49,7 @@ my $currentTime = GetTime2();
 my $locked = 0;
 
 sub OrganizeFile { # $file ; renames file based on hash of its contents
+# filename is obtained using GetFileHashPath()
 	my $file = shift;
 	chomp $file;
 
@@ -72,7 +73,7 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 			WriteLog('OrganizeFile: Warning: file already exists = ' . $fileHashPath);
 		}
 
-		if ($fileHashPath && $file ne $fileHashPath) {
+		if ($fileHashPath && ($file ne $fileHashPath)) {
 			WriteLog('OrganizeFile: renaming ' . $file . ' to ' . $fileHashPath);
 
 			if (-e $fileHashPath) {
