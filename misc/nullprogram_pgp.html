@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<title>Why I've Retired My PGP Keys and What's Replaced It « null program</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="alternate" type="application/atom+xml" href="/feed/" title="Atom Feed"/>
+<link rel="pgpkey" type="application/pgp-keys" href="/download/Christopher-Wellons.asc"/>
+<link rel="stylesheet" href="/css/full.css"/>
+
+<main>
+<article class="single">
+  <h2><a href="/blog/2017/03/12/">Why I've Retired My PGP Keys and What's Replaced It</a></h2>
+  <time datetime="2017-03-12">
+    March 12, 2017
+  </time>
+  <div class="print-only url">
+    nullprogram.com/blog/2017/03/12/
+  </div>
+
+  <p><em>Update August 2019: I’ve got a PGP key again but only for signing. <a href="/blog/2019/07/10/">I
+use another of my own tools, <strong>passphrase2pgp</strong></a>, to manage it.</em></p>
+
+<p><strong>tl;dr</strong>: <a href="https://github.com/skeeto/enchive">Enchive</a> (rhymes with “archive”) has replaced my
+use of GnuPG.</p>
+
+<p>Two weeks ago I tried to encrypt a tax document for archival and
+noticed my PGP keys had just expired. GnuPG had (correctly) forbidden
+the action, requiring that I first edit the key and extend the
+expiration date. Rather than do so, I decided to take this opportunity
+to retire my PGP keys for good. Over time I’ve come to view PGP as
+largely a failure — it <a href="https://blog.filippo.io/giving-up-on-long-term-pgp/">never reached the critical mass</a>, the
+tooling has always <a href="https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/">been problematic</a>, and it’s now <a href="https://moxie.org/blog/gpg-and-me/">a dead
+end</a>. The only thing it’s been successful at is signing Linux
+packages, and even there it could be replaced with something simpler
+and better.</p>
+
+<p>I still have a use for PGP: encrypting sensitive files to myself for
+long term storage. I’ve also been using it to consistently to sign Git
+tags for software releases. However, very recently <a href="https://shattered.io/">this lost its
+value</a>, though I doubt anyone was verifying these signatures
+anyway. It’s never been useful for secure email, especially when <a href="https://josefsson.org/inline-openpgp-considered-harmful.html">most
+people use it incorrectly</a>. I only need to find a replacement
+for archival encryption.</p>
+
+<p>I could use an encrypted filesystem, but which do I use? I use LUKS to
+protect my laptop’s entire hard drive in the event of a theft, but for
+archival I want something a little more universal. Basically I want the
+following properties:</p>
+
+<ul>
+  <li>
+    <p>Sensitive content must not normally be in a decrypted state. PGP
+solves this by encrypting files individually. The archive filesystem
+can always be mounted. An encrypted volume would need to be mounted
+just prior to accessing it, during which everything would be
+exposed.</p>
+  </li>
+  <li>
+    <p>I should be able to encrypt files from any machine, even
+less-trusted ones. With PGP I can load my public key on any machine
+and encrypt files to myself. It’s like a good kind of ransomware.</p>
+  </li>
+  <li>
+    <p>It should be easy to back these files up elsewhere, even on
+less-trusted machines/systems. This isn’t reasonably possible with an
+encrypted filesystem which would need to be backed up as a huge
+monolithic block of data. With PGP I can toss encrypted files
+anywhere.</p>
+  </li>
+  <li>
+    <p>I don’t want to worry about per-file passphrases. Everything should
+be encrypted with/to the same key. PGP solves this by encrypting
+files to a recipient. This requirement prevents most stand-alone
+crypto tools from qualifying.</p>
+  </li>
+</ul>
+
+<p>I couldn’t find anything that fit the bill, so I did <strong>exactly what
+you’re not supposed to do and rolled my own: <a href="https://github.com/skeeto/enchive">Enchive</a></strong>. It
+was loosely inspired by <a href="http://www.tedunangst.com/flak/post/signify">OpenBSD’s signify</a>. It has the tiny
+subset of PGP features that I need — using modern algorithms — plus
+one more feature I’ve always wanted: the ability to <strong>generate a
+keypair from a passphrase</strong>. This means I can reliably access my
+archive keypair anywhere without doing something strange like
+<a href="/blog/2012/06/24/">uploading my private keys onto the internet</a>.</p>
+
+<h3 id="on-enchive">On Enchive</h3>
+
+<p>Here’s where I’d put the usual disclaimer about not using it for
+anything serious, blah blah blah. But really, I don’t care if anyone
+else uses Enchive. It exists just to scratch my own personal itch. If
+you have any doubts, don’t use it. I’m putting it out there in case
+anyone else is in the same boat. It would also be nice if any glaring
+flaws I may have missed were pointed out.</p>
+
+<p>Not expecting it to be available as a nice package, I wanted to make it
+trivial to build Enchive anywhere I’d need it. Except for including
+stdint.h in exactly one place to get the correct integers for crypto,
+it’s written in straight C89. All the crypto libraries are embedded, and
+there are no external dependencies. There’s even an “amalgamation” build,
+so <code class="language-plaintext highlighter-rouge">make</code> isn’t required: just point your system’s <code class="language-plaintext highlighter-rouge">cc</code> at it and you’re
+done.</p>
+
+<h4 id="algorithms">Algorithms</h4>
+
+<p>For encryption, Enchive uses <a href="https://cr.yp.to/ecdh.html">Curve25519</a>, <a href="https://cr.yp.to/chacha.html">ChaCha20</a>,
+and <a href="https://tools.ietf.org/html/rfc2104">HMAC-SHA256</a>.</p>
+
+<p>Rather than the prime-number-oriented RSA as used in classical PGP
+(yes, GPG 2 <em>can</em> do better), Curve25519 is used for the asymmetric
+cryptography role, using the relatively new elliptic curve
+cryptography. It’s stronger cryptography and the keys are <em>much</em>
+smaller. It’s a Diffie-Hellman function — an algorithm used to
+exchange cryptographic keys over a public channel — so files are
+encrypted by generating an ephemeral keypair and using this ephemeral
+keypair to perform a key exchange with the master keys. The ephemeral
+public key is included with the encrypted file and the ephemeral
+private key is discarded.</p>
+
+<p>I used the <a href="https://github.com/agl/curve25519-donna">“donna” implementation</a> in Enchive. Despite being
+the hardest to understand (mathematically), this is the easiest to
+use. It’s literally just one function of two arguments to do
+everything.</p>
+
+<p>Curve25519 only establishes the shared key, so next is the stream
+cipher ChaCha20. It’s keyed by the shared key to actually encrypt the
+data. This algorithm has the same author as Curve25519 (<a href="https://cr.yp.to/djb.html">djb</a>),
+so it’s natural to use these together. It’s really straightforward, so
+there’s not much to say about it.</p>
+
+<p>For the Message Authentication Code (MAC), I chose HMAC-SHA256. It
+prevents anyone from modifying the message. Note: This doesn’t prevent
+anyone who knows the master public key from replacing the file
+wholesale. That would be solved with a digital signature, but this
+conflicts with my goal of encrypting files without the need of my secret
+key. The MAC goes at the end of the file, allowing arbitrarily large
+files to be encrypted single-pass as a stream.</p>
+
+<p>There’s a little more to it (IV, etc.) and is described in detail in the
+README.</p>
+
+<h4 id="usage">Usage</h4>
+
+<p>The first thing you’d do is generate a keypair. By default this is done
+from <code class="language-plaintext highlighter-rouge">/dev/urandom</code>, in which case you should immediately back them up.
+But if you’re like me, you’ll be using Enchive’s <code class="language-plaintext highlighter-rouge">--derive</code> (<code class="language-plaintext highlighter-rouge">-d</code>)
+feature to create it from a passphrase. In that case, the keys are
+backed up in your brain!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ enchive keygen --derive
+secret key passphrase:
+secret key passphrase (repeat):
+passphrase (empty for none):
+passphrase (repeat):
+</code></pre></div></div>
+
+<p>The first prompt is for the secret key passphrase. This is converted
+into a Curve25519 keypair using an scrypt-like key derivation algorithm.
+The process requires 512MB of memory (to foil hardware-based attacks)
+and takes around 20 seconds.</p>
+
+<p>The second passphrase (or the only one when <code class="language-plaintext highlighter-rouge">--derive</code> isn’t used), is
+the <em>protection key</em> passphrase. The secret key is encrypted with this
+passphrase to protect it at rest. You’ll need to enter it any time you
+decrypt a file. The key derivation step is less aggressive for this key,
+but you could also crank it up if you like.</p>
+
+<p>At the end of this process you’ll have two new files under
+<code class="language-plaintext highlighter-rouge">$XDG_CONFIG_DIR/enchive</code>: <code class="language-plaintext highlighter-rouge">enchive.pub</code> (32 bytes) and <code class="language-plaintext highlighter-rouge">enchive.sec</code>
+(64 bytes). The first you can distribute anywhere you’d like to encrypt
+files; it’s not particularly sensitive. The second is needed to decrypt
+files.</p>
+
+<p>To encrypt a file for archival:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ enchive archive sensitive.zip
+</code></pre></div></div>
+
+<p>No prompt for passphrase. This will create <code class="language-plaintext highlighter-rouge">sensitive.zip.enchive</code>.</p>
+
+<p>To decrypt later:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ enchive extract sensitive.zip.enchive
+passphrase:
+</code></pre></div></div>
+
+<p>If you’ve got many files to decrypt, entering your passphrase over and
+over would get tiresome, so Enchive includes a key agent that keeps
+the protection key in memory for a period of time (15 minutes by
+default). Enable it with the <code class="language-plaintext highlighter-rouge">--agent</code> flag (it may be enabled by
+default someday).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ enchive --agent extract sensitive.zip.enchive
+</code></pre></div></div>
+
+<p>Unlike ssh-agent and gpg-agent, there’s no need to start the agent
+ahead of time. It’s started on demand as needed and terminates after
+the timeout. It’s completely painless.</p>
+
+<p>Both <code class="language-plaintext highlighter-rouge">archive</code> and <code class="language-plaintext highlighter-rouge">extract</code> operate stdin to stdout when no file is
+given.</p>
+
+<h3 id="feature-complete">Feature complete</h3>
+
+<p>As far as I’m concerned, Enchive is feature complete. It does
+everything I need, I don’t want it to do anything more, and at least
+two of us have already started putting it to use. The interface and
+file formats won’t change unless someone finds a rather significant
+flaw. There <em>is</em> some wiggle room to replace the algorithms in the
+future should Enchive have that sort of longevity.</p>
+
+
+
+  <ul class="tags">
+    
+    <li><a href="/tags/crypto/">crypto</a></li>
+    
+    <li><a href="/tags/openpgp/">openpgp</a></li>
+    
+  </ul>
+  <ol class="references print-only"></ol>
+
+  <div class="no-print comments">
+    <p>Have a comment on this article? Start a discussion in my
+    <a href="https://lists.sr.ht/~skeeto/public-inbox">public inbox</a>
+    by sending an email to
+    <a href="mailto:~skeeto/public-inbox@lists.sr.ht?Subject=Re%3A%20Why%20I've%20Retired%20My%20PGP%20Keys%20and%20What's%20Replaced%20It">
+        ~skeeto/public-inbox@lists.sr.ht
+    </a>
+    <span class="etiquette">
+    [<a href="https://man.sr.ht/lists.sr.ht/etiquette.md">mailing list etiquette</a>]
+    </span>,
+    or see
+    <a href="https://lists.sr.ht/~skeeto/public-inbox?search=Why+I%27ve+Retired+My+PGP+Keys+and+What%27s+Replaced+It">existing discussions</a>.
+    </p>
+
+    
+    
+    
+    <p>This post has
+    <a href="/blog/comments/#2017-03-12">archived comments</a>.
+    </p>
+    
+  </div>
+
+  <nav class="no-print">
+  
+    <div class="prev">
+      <span class="marker">«</span>
+      <a href="/blog/2017/03/01/">
+        OpenMP and pwrite()
+      </a>
+    </div>
+  
+  
+    <div class="next">
+      <span class="marker">»</span>
+      <a href="/blog/2017/03/30/">
+        How to Write Portable C Without Complicating Your Build
+      </a>
+    </div>
+  
+  </nav>
+</article>
+
+</main>
+
+<header>
+  <div class="container">
+    <div class="portrait identity"></div>
+    <h1 class="site-title identity"><a href="/">null program</a></h1>
+    <h2 class="full-name identity">Chris Wellons</h2>
+    <address class="identity">
+      <div><a id="email" href=""></a> (<a rel="publickey" type="application/pgp-keys" href="/download/Christopher-Wellons.asc">PGP</a>)</div>
+      <div><a id="public-inbox" href="mailto:~skeeto/public-inbox@lists.sr.ht">~skeeto/public-inbox@lists.sr.ht</a> (<a href="https://lists.sr.ht/~skeeto/public-inbox">view</a>)</div>
+    </address>
+    <nav>
+      <ul>
+        <li class="nav index"><a href="/index/">Index</a></li>
+        <li class="nav tags"><a href="/tags/">Categories</a></li>
+        <li class="nav toys"><a href="/toys/">Showcase</a></li>
+        <li class="nav about"><a href="/about/">About</a></li>
+        <li class="nav github"><a href="https://github.com/skeeto">GitHub</a></li>
+        <li class="nav feed"><a href="/feed/">Feed</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<footer>
+  <p>
+    All information on this blog, unless otherwise noted, is
+    hereby released into the public domain, with no rights
+    reserved.
+  </p>
+</footer>
+
+<script>
+
+// Google Analytics
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-24992716-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+
+window.addEventListener('load', function() {
+    var addr = 'wellons\u0040nullprogram\u002ecom';
+    var email = document.getElementById('email');
+    email.href = 'mailto:' + addr;
+    email.textContent = addr;
+
+    var articles = document.getElementsByTagName('article');
+    for (var i = 0; i < articles.length; i++) {
+        var links = articles[i].querySelectorAll('p > a');
+        var refs = articles[i].getElementsByClassName('references')[0];
+        for (var j = 0; j < links.length; j++) {
+            var ref = document.createElement('li');
+            ref.textContent = links[j].href;
+            refs.appendChild(ref);
+            var cite = document.createElement('sup');
+            cite.classList.add('print-only');
+            cite.classList.add('cite');
+            cite.textContent = j + 1;
+            links[j].parentNode.insertBefore(cite, links[j].nextSibling);
+        }
+    }
+});
+
+</script>
+
