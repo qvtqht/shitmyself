@@ -2991,12 +2991,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock fresh)); #todo this causes duplicate clock script
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
-		PutHtmlFile("error-404.html", $fourOhFourPage);
+		PutHtmlFile("error/error-404.html", $fourOhFourPage);
 	}
 
 	{
 		my $accessDeniedPage = GenerateDialogPage('401'); #GetTemplate('401.template');
-		PutHtmlFile("error-401.html", $accessDeniedPage);
+		PutHtmlFile("error/error-401.html", $accessDeniedPage);
 	}
 
 
