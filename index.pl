@@ -716,7 +716,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						    chomp $titleGiven;
 
 							foreach my $itemParent (@itemParents) {
-								DBAddTitle($itemParent, $titleGiven);
+								DBAddTitle($itemParent, $titleGiven, $fileHash, $addedTime);
 
 								DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
 

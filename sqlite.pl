@@ -77,12 +77,27 @@ sub SqliteMakeTables() { # creates sqlite schema
 	)");
 
 	# item_title
-	SqliteQuery2("CREATE TABLE item_title(
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		file_hash,
-		title
-	)");
-	SqliteQuery2("CREATE UNIQUE INDEX item_title_unique ON item_title(file_hash)");
+	SqliteQuery2("
+		CREATE TABLE item_title(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			file_hash,
+			source_item_hash,
+			source_item_timestamp,
+			title
+		)
+	");
+	SqliteQuery2("
+		CREATE VIEW item_title_latest AS
+		SELECT
+			file_hash,
+			title,
+			source_item_hash,
+			MAX(source_item_timestamp) AS source_item_timestamp
+		FROM item_title
+		GROUP BY file_hash
+		ORDER BY source_item_timestamp DESC
+	;");
+	#SqliteQuery2("CREATE UNIQUE INDEX item_title_unique ON item_title(file_hash)");
 
 	# item_parent
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
@@ -244,7 +259,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp,
-				IFNULL(item_title.title, '') AS item_title,
+				IFNULL(item_title_latest.title, '') AS item_title,
 				IFNULL(item_score.item_score, 0) AS item_score,
 				item.item_type AS item_type,
 				added_by.device_fingerprint AS added_by,
@@ -254,7 +269,7 @@ sub SqliteMakeTables() { # creates sqlite schema
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
-				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
+				LEFT JOIN item_title_latest ON ( item.file_hash = item_title_latest.file_hash)
 				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
 				LEFT JOIN added_by ON ( item.file_hash = added_by.file_hash)
 				LEFT JOIN item_tags_list ON ( item.file_hash = item_tags_list.file_hash )
@@ -805,6 +820,7 @@ sub DBAddTitle { # Add entry to item_title table
 	state @queryParams;
 
 	my $hash = shift;
+
 	if ($hash eq 'flush') {
 		WriteLog('DBAddTitle(flush)');
 
@@ -826,17 +842,26 @@ sub DBAddTitle { # Add entry to item_title table
 	}
 
 	my $title = shift;
+	my $sourceItemHash = shift;
+	my $sourceItemTimestamp = shift;
+
+	if (!$sourceItemHash) {
+		$sourceItemHash = '';
+	}
+	if (!$sourceItemTimestamp) {
+		$sourceItemTimestamp = '';
+	}
 
 	#todo sanity checks
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item_title(file_hash, title) VALUES ";
+		$query = "INSERT OR REPLACE INTO item_title(file_hash, title, source_item_hash, source_item_timestamp) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= '(?, ?)';
-	push @queryParams, $hash, $title;
+	$query .= '(?, ?, ?, ?)';
+	push @queryParams, $hash, $title, $sourceItemHash, $sourceItemTimestamp;
 
 	#todo add hastitle tag
 }
