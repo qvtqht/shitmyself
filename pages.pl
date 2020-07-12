@@ -3380,7 +3380,7 @@ sub GetUploadPage { # returns html for upload page
 
 	$html .= GetPageFooter();
 
-	if (GetConfig('php/enable')) {
+	if (GetConfig('admin/php/enable')) {
 		$html = InjectJs($html, qw(settings avatar profile));
 	} else {
 		$html = InjectJs($html, qw(settings avatar profile));
@@ -3418,7 +3418,7 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetPageFooter();
 
-	if (GetConfig('php/enable')) {
+	if (GetConfig('admin/php/enable')) {
 		$txtIndex = InjectJs($txtIndex, qw(settings avatar write translit write_php profile));
 	} else {
 		$txtIndex = InjectJs($txtIndex, qw(settings avatar write translit profile));
