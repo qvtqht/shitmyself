@@ -3,13 +3,8 @@
 include_once('utils.php');
 	
 if (!empty($_FILES['uploaded_file'])) {
-	$path = "image/";
-	WriteLog('$path = ' . $path);
-
-	// #todo make this nicer
-	$path = $path . time() . '_' . basename($_FILES['uploaded_file']['name']);
-
-	WriteLog('$path = ' . $path);
+	$basePath = "image/";
+	WriteLog('$basePath = ' . $basePath);
 
 	WriteLog(print_r($_FILES, 1));
 
@@ -53,6 +48,13 @@ if (!empty($_FILES['uploaded_file'])) {
 				echo "The problem may be related to the file's size";
 			}
 		} else {
+			$path = $basePath . basename($_FILES['uploaded_file']['name']);
+
+			if (file_exists($path)) {
+				// #todo make this nicer
+				$path = $basePath . time() . '_' . basename($_FILES['uploaded_file']['name']);
+			}
+
 			$moveFileResult = move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path);
 
 			if (!$moveFileResult) {
