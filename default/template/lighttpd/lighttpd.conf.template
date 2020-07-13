@@ -8,6 +8,7 @@ server.modules += (
 )
 #todo split this up into different features?
 
+# typically html/
 server.document-root = "$serverDocumentRoot" 
 
 # default port for local dev
@@ -17,7 +18,6 @@ server.port = $serverPort
 server.max-request-field-size = 16384 
 
 # mime types
-
 mimetype.assign = (
 	".html" => "text/html",
 	".htm" => "text/html",
@@ -73,12 +73,18 @@ dir-listing.activate = "enable"
 # because the latter returns http 200, which we don't want
 #server.error-handler = "/404.html"
 
+# this is where we will find error-401.html and error-404.html
+# typically under html/error/
+# build.pl will put absolute path here
 server.errorfile-prefix = "$errorFilePrefix"
 
+# when url-ctrls-reject is enabled, it interferes with submitting text via GET
 server.http-parseopts = (
 	"url-ctrls-reject" => "disable"
 )
 
+# enable caching
+# set to 1 minute because it doesn't work that well yet, but it's better than nothing.
 expire.url = (
 	"/" => "access plus 1 minutes"
 )
