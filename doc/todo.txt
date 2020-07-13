@@ -1,17 +1,3 @@
-#BUG footers are lost when rebuilding
-	Problem: organize_file overwrites existing file which has footer-signature with one which does not
-	xSolution: Only rename file to hashed-path if larger file not already there
-	Problem: organize_files is implemented 3 times in 3 differnet places
-	Solution: Switch everything to OrganizeFies()
-
-
-fix config/admin/accept_404_url_text
-
-add heic files support to image upload
-
-multiple image selection and upload
-
-paste image from clipboard
 
 What's Broken Right Now?
 ========================
@@ -41,12 +27,31 @@ User can't create account from Write or Reply page
 Emoji menu breaks older browsers
 	Need: ???
 	It's disabled by default, but makes navigation much nicer
-Data export is currently not possible
+Data export is currently only possible individually (zip files are not generated)
 	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
 	Need: Generate zip files of forum data:
 		By thread (with all dependencies like authors, votes, etc.)
 		By date (with all deps)
 		By author (with all deps)
+
+
+
+make a separate color for the top bar for the news theme
+
+#BUG footers are lost when rebuilding
+	Problem: organize_file overwrites existing file which has footer-signature with one which does not
+	xSolution: Only rename file to hashed-path if larger file not already there
+	Problem: organize_files is implemented 3 times in 3 differnet places
+	Solution: Switch everything to OrganizeFies()
+
+
+fix config/admin/accept_404_url_text
+
+add heic files support to image upload
+
+multiple image selection and upload
+
+paste image from clipboard
 
 
 when changing versions
