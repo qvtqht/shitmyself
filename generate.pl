@@ -215,30 +215,32 @@ print `time ./update.pl --all`;
 # PutHtmlFile('authors.html', $scoreboardPage);
 # PutHtmlFile('author/index.html', $scoreboardPage);
 
+##########################################
+
+
 WriteMessage("DBGetVoteCounts()...");
 
 my $voteCounts = DBGetVoteCounts();
 my @voteCountsArray = @{$voteCounts};
 
 my @allTagsList;
-
-while (@voteCountsArray) {
-	my $tag = pop @voteCountsArray;
-
-	my $tagName = @{$tag}[0];
-	#my $tagCount = @{$tag}[1];
-
-	WriteMessage("GetReadPage('tag', '$tagName')");
-
-	my $indexPage = GetReadPage('tag', $tagName);
-
-	unshift @allTagsList, $tagName;
-
-	PutHtmlFile('top/' . $tagName . '.html', $indexPage);
-}
+#
+# while (@voteCountsArray) {
+# 	my $tag = pop @voteCountsArray;
+#
+# 	my $tagName = @{$tag}[0];
+# 	#my $tagCount = @{$tag}[1];
+#
+# 	WriteMessage("GetReadPage('tag', '$tagName')");
+#
+# 	my $indexPage = GetReadPage('tag', $tagName);
+#
+# 	unshift @allTagsList, $tagName;
+#
+# 	PutHtmlFile('top/' . $tagName . '.html', $indexPage);
+# }
 
 WriteMessage("DBGetAllAppliedTags()...");
-
 my @tagsList = DBGetAllAppliedTags();
 
 WriteLog("DBGetAllAppliedTags returned " . scalar(@tagsList) . " items");
