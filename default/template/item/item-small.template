@@ -1,7 +1,6 @@
 <!-- item-small.template -->
 <a name=$itemAnchor>
 <table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-	$itemTitleTemplate
 	<tr>
 		<td>
 			<p>$itemText</p>
