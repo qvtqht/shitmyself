@@ -122,7 +122,13 @@ function signVote (t, token) { // signs a vote from referenced vote button
 
 		if (GetPrefs(token)) {
 			// don't let user vote twice basic
-			return 0;
+
+			if (window.addLoadingIndicator) {
+				// #todo make it go away after a few seconds and/or on click
+				addLoadingIndicator('Already added that tag to that item');
+			}
+
+			return false;
 		}
 
 		IncrementTagLink(t);
