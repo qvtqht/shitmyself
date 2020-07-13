@@ -128,6 +128,10 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 		# #			print $timestamp . " " . $text . "\n";
 		# 		}
 
+		#if (index(lc($text), 'warning') > -1) {
+			#die($text);
+		#}
+
 		return 1;
 	}
 
@@ -428,8 +432,9 @@ sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from 
 		$language = $defaultLanguage;
 	}
 
+	# this will store all looked up values so that we don't have to look them up again
     state %strings; #memo
-    my $memoKey = $stringKey.'/'.$language.'/'.($noSubstitute?1:0);
+    my $memoKey = $stringKey . '/' . $language . '/' . ($noSubstitute ? 1 : 0);
 
 	if (defined($strings{$memoKey})) {
 	    #memo match
@@ -1317,9 +1322,13 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 		$homePageWritten = 0;
 	}
 	if ($file eq 'check_homepage') {
+		# this is a special flag which returns the value of $homePageWritten
+		# allows caller to know whether home page has already been written
 		return $homePageWritten;
 	}
 
+	# remember what the filename provided is, so that we can use it later
+	# awkward #todo refactor
 	my $fileProvided = $file;
 	$file = "$HTMLDIR/$file";
 
