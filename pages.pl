@@ -67,6 +67,7 @@ sub GenerateDialogPage { # generates page with dialog
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 			$pageTemplate .= GetPageFooter();
 
+			# settings.js provides ui consistency with other pages
 			$pageTemplate = InjectJs($pageTemplate, qw(settings profile));
 
 			return $pageTemplate;
@@ -284,7 +285,7 @@ sub InjectBodyOnload { #injects <body onload event into supplied html
 	return $html;
 }
 
-sub GetPageLinks { # $currentPageNumber ; returns html for pagination links
+sub GetPageLinks { # $currentPageNumber ; returns html for pagination links with frame/window
 	my $currentPageNumber = shift; #
 
 	state $pageLinks; # stores generated links html in case we need them again
@@ -1939,6 +1940,10 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my $html = shift;     # html we're going to inject into
 
 	if (!GetConfig('admin/js/enable')) {
+		# if js is disabled globally, abort
+
+		WriteLog("InjectJs: WARNING: InjectJs called, but admin/js/enable is false");
+
 		return $html;
 	}
 
@@ -2505,6 +2510,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 
 	if ($pageType eq 'tag') {
 		# fill in tag placeholder at top of page
+		# this is where it says, "this page shows all items with tag $tagSelected
 
 		$htmlStart =~ s/\$tagSelected/$pageParam/;
 		# $pageParam is the chosen tag for this page
@@ -2634,7 +2640,7 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	my $menuItem = '';
 	$menuItem = GetTemplate($templateName);
 
-	#my $color = GetThemeColor('link');
+	# my $color = GetThemeColor('link');
 	# my $colorSourceHash = md5_hex($caption);
 	# my $menuColorMode = GetThemeAttribute('menu_color_mode') ? 1 : 0;
 	# for (my $colorSelectorI = 0; $colorSelectorI < 6; $colorSelectorI++) {
@@ -2659,7 +2665,7 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 
 	$menuItem =~ s/\$address/$address/g;
 	$menuItem =~ s/\$caption/$caption/g;
-	#$menuItem =~ s/\$color/$color/g;
+	# $menuItem =~ s/\$color/$color/g;
 	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
 
 	return $menuItem;
@@ -2679,11 +2685,15 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
 	$html .= $htmlStart;
+
+	# no pagination links at the top now that we have tag buttons
 	#
 	# if (defined($currentPageNumber)) {
 	# 	#pagination links
 	# 	$html .= GetPageLinks($currentPageNumber);
 	# }
+
+	# put tag selector at top of page
 	$html .= GetTagLinks();
 
 	$html .= '<p>';
@@ -2792,13 +2802,13 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 		my $lastPage = ceil($itemCount / $pageLimit);
 
 		for ($i = 0; $i < $lastPage; $i++) {
-			my $percent = (($i+1) / $lastPage) * 100;
+			my $percent = (($i + 1) / $lastPage) * 100;
 			WriteMessage("*** WriteIndexPages: " . ($i+1) . "/$lastPage ($percent %) ");
 
 			my %queryParams;
 			my $offset = $i * $pageLimit;
 
-			#$queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
+			# $queryParams{'where_clause'} = "WHERE item_type = 'text' AND IFNULL(parent_count, 0) = 0";
 
 			# this code prevents the last page from being largely empty
 			# it moves the offset back so that the last page is the same
@@ -3570,6 +3580,7 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $settingsTemplate = GetTemplate('form/settings.template');
 	$txtIndex .= $settingsTemplate;
 
+	# stats are displayed on settings page also
 	my $statsTable = GetStatsTable();
 	$txtIndex .= $statsTable;
 
