@@ -1,6 +1,11 @@
 
 What's Broken Right Now?
 ========================
+Upgrading still requires backend work
+	Need: Straightforward way to do basic upgrade
+		pull
+		rebuild
+		user feedback
 Changing the current git commit breaks the site
 	This is *kind of* by design, because the commit ID is part of the cache path
 	That way there is no incompatible cache
@@ -10,13 +15,6 @@ Rebuild times are long due to generating a page for each item
 	Need: lazy-generate pages with PHP is enabled
 	Need: Avoid generating pages for items with a parent
 	Need: "Site is rebuilding right now" message?
-xPeople who don't know password get big white 401 page and no additional information
-	xNeed: 403 page which gives additional options
-		xlighttpd
-		xapache
-		xpage content
-		xpage generation
-		xadditional directory for error templates?
 When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
 	Need: Message that public profile will be created shortly
 	Need: Background profile create request
