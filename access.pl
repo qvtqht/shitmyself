@@ -61,7 +61,7 @@ foreach (@submitReceivers) {
 
 ##################
 
-sub AddHost { # add host to config/system/my_hosts
+sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 # $host
 # $ownAlias = whether it belongs to this instance
 
