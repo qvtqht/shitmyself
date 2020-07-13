@@ -307,22 +307,23 @@ if (!$arg1) {
 		# this will store the new item count we get from access.log
 		my $newItemCount;
 
-		# time limit
+		# time limit -- how long this script is allowed to run for
 		my $timeLimit = GetConfig('admin/update/limit_time');
-		my $startTime = GetTime2();
 		#todo validation
 
+		# time the script started (now)
+		my $startTime = GetTime2();
+
 		if ($timeLimit) {
+			# default to 60 seconds
 			$timeLimit = 60;
 		}
 
+		# get list of access log path(s)
 		my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
 		my @accessLogPaths;
 		if ($accessLogPathsConfig) {
 			@accessLogPaths = split("\n", $accessLogPathsConfig);
-		}
-		else {
-			push @accessLogPaths, GetConfig('admin/access_log_path');
 		}
 
 		#todo re-test this
@@ -341,28 +342,29 @@ if (!$arg1) {
 			}
 		}
 
-		if (!-e 'html') {
-			system('mkdir html');
-		}
+		{ # sanity checks: $HTMLDIR and $TXTDIR should exist
+			if (!-e $HTMLDIR) {
+				system("mkdir $HTMLDIR");
+			}
 
-		if (!-d 'html') {
-			WriteLog('Problem? html is not a directory!');
-		}
+			if (!-d $HTMLDIR) {
+				WriteLog("Problem? $HTMLDIR is not a directory!");
+			}
 
-		if (!-e $TXTDIR) {
-			system("mkdir $TXTDIR");
-		}
+			if (!-e $TXTDIR) {
+				system("mkdir $TXTDIR");
+			}
 
-		if (!-d $TXTDIR) {
-			WriteLog("Problem? $TXTDIR is not a directory!");
+			if (!-d $TXTDIR) {
+				WriteLog("Problem? $TXTDIR is not a directory!");
+			}
 		}
 
 		my $filesProcessedTotal = 0;
 		my $filesProcessed = 1;
+		my $pagesProcessed = 0;
 
-		my $pagesProcessed;
 		$pagesProcessed = BuildTouchedPages();
-
 
 		# See if update/file_limit setting exists
 		# This limits the number of files to process per launch of update.pl
@@ -372,6 +374,7 @@ if (!$arg1) {
 			$filesLimit = 100;
 		}
 
+		# this loop alternates processing batches of new files and new pages until there's nothing left to do
 		while ($filesProcessed > 0 || $pagesProcessed > 1) {
 			WriteLog('while loop: $filesProcessed: ' . $filesProcessed . '; $pagesProcessed: ' . $pagesProcessed);
 
@@ -385,22 +388,19 @@ if (!$arg1) {
 				my $findCommand;
 				my @files;
 
-				#prioritize files with a public key in them
+				# prioritize files with a public key
 				$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" ' . $TXTDIR;
 				push @files, split("\n", `$findCommand`);
 
-				#prioritize files with a public key in them
+				# prioritize files with a setconfig token
 				$findCommand = 'grep -rl "setconfig" ' . $TXTDIR;
 				push @files, split("\n", `$findCommand`);
 
+				# add all other text files
 				$findCommand = "find $TXTDIR | grep -i \.txt\$";
 				push @files, split("\n", `$findCommand`);
-				#
-				# if ($filesLimit > scalar(@files)) {
-				# 	$filesLimit = scalar(@files);
-				# }
 
-				# Go through all the changed files
+				# Go through all the files
 				foreach my $file (@files) {
 					if ($filesProcessed >= $filesLimit) {
 						WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
@@ -437,14 +437,15 @@ if (!$arg1) {
 
 				WriteIndexedConfig();
 
-
 				# TEXT FILE PROCESSING PART ENDS HERE
 				############
 			}
 			#####
 
 			if (-e $IMAGEDIR) {
-				# IMAGE PROCESSING PART BEGINS HERE
+				###########
+				# IMAGE FILE PROCESSING PART BEGINS HERE
+
 				my $findCommand;
 				my @files;
 
@@ -476,10 +477,6 @@ if (!$arg1) {
 				push @files, split("\n", `$findCommand`);
 				#todo config/admin/upload/allow_files
 
-
-				# if ($filesLimit > scalar(@files)) {
-				# 	$filesLimit = scalar(@files);
-				# }
 
 				# Go through all the changed files
 				foreach my $file (@files) {
@@ -515,6 +512,9 @@ if (!$arg1) {
 				}
 
 				IndexImageFile('flush');
+
+				# IMAGE FILE PROCESSING PART ENDS HERE
+				###########
 			}
 
 			#####
