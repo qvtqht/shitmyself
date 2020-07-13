@@ -128,6 +128,7 @@ function signVote (t, token) { // signs a vote from referenced vote button
 				addLoadingIndicator('Already added that tag to that item');
 			}
 
+			// returning false will keep the link from navigating to non-js fallback
 			return false;
 		}
 

@@ -165,9 +165,11 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 		}
 
 		if (window.freshTimeoutId) {
+			// reset the page change notifier state
 			clearTimeout(window.freshTimeoutId);
 
 			if (GetPrefs('notify_on_change')) {
+				// check if page has changed, notify user if so
 				CheckIfFresh();
 			}
 		}
