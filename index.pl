@@ -36,7 +36,7 @@ WriteLog( "Using $SCRIPTDIR as install root...\n");
 #}
 
 sub MakeAddedIndex { # reads from log/added.log and puts it into added_time table
-	WriteLog( "MakeAddedIndex()\n");
+	WriteLog("MakeAddedIndex()\n");
 
 	if (GetConfig('admin/read_added_log')) {
 		my $addedLog = GetFile('log/added.log');
@@ -230,14 +230,14 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	my @allowedActions;		# contains actions allowed to signer of message
 
-#	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
-#todo add support for .md (markdown) files
+	#	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
+	#todo add support for .md (markdown) files
 
-#	if (substr(lc($file), length($file) -4, 4) eq ".jpg") {
-#		my $itemName = 'image...';
-#		my $fileHash = GetFileHash($file);
-#		DBAddItem($file, $itemName, '',      $fileHash, 'jpg');
-#	} #aug29
+	#	if (substr(lc($file), length($file) -4, 4) eq ".jpg") {
+	#		my $itemName = 'image...';
+	#		my $fileHash = GetFileHash($file);
+	#		DBAddItem($file, $itemName, '',      $fileHash, 'jpg');
+	#	} #aug29
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
 		my %gpgResults = GpgParse($file);
@@ -652,25 +652,27 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						$reconLine = $myNameIsToken . $nameGiven;
 
 						if ($nameGiven && $hasCookie) {
-							DBAddKeyAlias($hasCookie, $nameGiven, $fileHash);
 
+							# remove alias caches
 							UnlinkCache('avatar/' . $hasCookie);
 							UnlinkCache('avatar.color/' . $hasCookie);
 							UnlinkCache('pavatar/' . $hasCookie);
 
+							# add alias
+							DBAddKeyAlias($hasCookie, $nameGiven, $fileHash);
 							DBAddKeyAlias('flush');
 
+							# touch author page
 							DBAddPageTouch('author', $hasCookie);
 
 							if (GetConfig('admin/index/make_primary_pages')) {
 								MakePage('author', $hasCookie);
 							}
 
+							# touch pages which are affected
 							DBAddPageTouch('scores');
-
 							DBAddPageTouch('stats');
 						}
-
 
 						$message =~ s/$reconLine/[My name is: $nameGiven for $hasCookie.]/g;
 					}
