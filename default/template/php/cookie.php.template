@@ -19,10 +19,14 @@ if (isset($_GET['btnRegister'])) {
 }
 
 if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
+	// user requested to sign out
+
+	// unset relevant cookies
 	unsetcookie2('test');
 	unsetcookie2('cookie');
 	unsetcookie2('checksum');
 
+	// redirect with signed out message
 	RedirectWithResponse('/profile.html', 'Signed out. Thank you for visiting.');
 
 	WriteLog('all cookies unset');
@@ -78,8 +82,7 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 			unsetcookie2('checksum');
 			unsetcookie2('test');
 
-			$responseWrongChecksum = StoreServerResponse('Signed out due to checksum mismatch. Please notify operator.');
-			header('Location: /profile.html?message=' . $responseWrongChecksum);
+			RedirectWithResponse('/profile.html', 'Signed out due to checksum mismatch. Please notify operator.');
 		}
 
 		if ($responseSignedIn) {
