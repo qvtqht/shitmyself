@@ -1,5 +1,8 @@
 // begin translit.js.template -- substitutes typed characters with different character set
 
+function translateKeyEvent(key, altState, toLayout) {
+}
+
 function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
 	var gt = unescape('%3E');
 
