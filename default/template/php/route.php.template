@@ -506,14 +506,21 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 						}
 
+						// user asked for a particular file, and that's what we'll give them
 						WriteLog('$html = file_get_contents($pathRel);');
 						$html = file_get_contents($pathRel);
 
 						if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
+							// because javascript cannot access the page's headers
+							// we will put the ETag value at the end of the page
+							// as window.myOwnETag
+							// this allows the script to compare it to the ETag value
+							// returned by the server when requesting HEAD for current page
 							// fresh_js fresh.js
 							$md5 = md5_file($pathRel);
 							header('ETag: ' . $md5);
-							$html .= "<script>window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); }</script>";
+							$html .= "<script><!-- window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); } // --></script>";
+							// #todo this should probably be templated and added using InjectJs()
 						}
 
 						if ($path == '/write.html') {
