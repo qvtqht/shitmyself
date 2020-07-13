@@ -1,15 +1,19 @@
 # htaccess.template
 #
-# WARNING
+# ATTENTION!# ATTENTION! # ATTENTION! # ATTENTION! # ATTENTION!
 # if you're not editing htaccess.template, you're editing the wrong file
 # if this file is called .htaccess, it will be overwritten
+# ATTENTION!# ATTENTION! # ATTENTION! # ATTENTION! # ATTENTION!
 
 AddDefaultCharset utf-8
 
+# 404 page
 ErrorDocument 404 /error/error-404.html
+
+# 401 page
+# because i'm apache noob, this will actually be replaced
+# by a double-quoted string with equivalent text by build.pl
 ErrorDocument 401 /error/error-401.html
 
-#RewriteEngine On
-#RewriteRule ^action/.+ /ok.html
-
+# for manifest files
 AddType text/cache-manifest .manifest
