@@ -23,7 +23,7 @@ if ($stopTimeConfig) {
 
 $redirectUrl = ''; // where we're going after this is all over
 
-function GetItemPlaceholderPage ($comment) {
+function GetItemPlaceholderPage ($comment) { // generate temporary placeholder page for comment
 
 	// escape comment for output as html
 	$commentHtml =
