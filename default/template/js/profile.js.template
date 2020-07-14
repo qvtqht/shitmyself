@@ -361,7 +361,6 @@ function openFile (event) {
 	}
 }
 
-
 function LoadPrivateKeyFromTxt (text) {
 	if (window.setPrivateKeyFromTxt) {
 		setPrivateKeyFromTxt(text);
@@ -418,20 +417,7 @@ function SavePrivateKeyAsTxt() { // initiates "download" of private key as text 
 	return DownloadAsTxt(myUsername + '_' + myFp + '.txt', text);
 }
 
-function CallLoadPrivateKey() {
-	//alert('DEBUG: CallLoadPrivateKey() begins');
-
-	if (document.getElementById) {
-		var fileLoadKeyFromText = document.getElementById('fileLoadKeyFromText');
-
-		//alert('DEBUG: CallLoadPrivateKey: fileLoadKeyFromText: ' + !!fileLoadKeyFromText);
-
-		if (fileLoadKeyFromText) {
-			fileLoadKeyFromText.click();
-		}
-	}
-}
-
+// override cookie if we have a profile in LocalStorage
 if (document.cookie) {
 	//alert('DEBUG: cookie=' + document.cookie);
 } else {
