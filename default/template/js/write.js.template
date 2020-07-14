@@ -58,9 +58,9 @@ function writeOnload() { // onload handler for write page
         if (pubKey) {
             //alert('DEBUG: pubKey was true, adding options...');
 
-            if (window.PubKeyPing) {
-            	PubKeyPing();
-            }
+//            if (window.PubKeyPing) {
+//            	PubKeyPing();
+//            }
 //
 //            var spanInsPubKey = document.getElementById('spanInsPubKey')
 //			if (spanInsPubKey) {
