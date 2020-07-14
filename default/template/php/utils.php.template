@@ -2,6 +2,24 @@
 
 //Header('Content-type: text/html');
 
+function GetScriptDir() { // returns base script directory.
+	$scriptDir = '$scriptDirPlaceholderForTemplating';
+	// this placeholder is populated by pages.pl when template is written
+
+	if ($scriptDir == '$'.'scriptDirPlaceholderForTemplating') {
+		// this is a sanity check to make sure the placeholder was correctly populated
+		return;
+	}
+
+	if (index($scriptDir, '"') != -1) {
+		// $scriptDir contains double-quote, this is bad, as it will break things
+
+		return;
+	}
+
+	return $scriptDir;
+}
+
 function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 // the debug log is stored as a static variable in this function
 // when a blank (false) argument is passed, returns entire log as html
@@ -303,7 +321,7 @@ function DoUpdate () { // #todo #untested
 
 	WriteLog('$pwd = ' . $pwd);
 
-	$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
+	$scriptDir = GetScriptDir();
 
 	WriteLog('$scriptDir = ' . $scriptDir);
 
@@ -312,6 +330,27 @@ function DoUpdate () { // #todo #untested
 		WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl --all');
 
 		WriteLog(`cd "$scriptDir" ; perl ./update.pl --all`);
+
+		WriteLog('cd "' . $pwd . '"');
+
+		WriteLog(`cd "$pwd"`);
+	}
+}
+
+function DoUpgrade () {
+	$pwd = getcwd();
+
+	WriteLog('$pwd = ' . $pwd);
+
+	$scriptDir = GetScriptDir();
+
+	WriteLog('$scriptDir = ' . $scriptDir);
+
+	if (file_exists($scriptDir . '/upgrade.pl')) {
+		WriteLog('upgrade.pl found, calling upgrade.pl');
+		WriteLog('cd "' . $scriptDir . '" ; perl ./upgrade.pl');
+
+		WriteLog(`cd "$scriptDir" ; perl ./upgrade.pl`);
 
 		WriteLog('cd "' . $pwd . '"');
 
