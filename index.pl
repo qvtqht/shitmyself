@@ -634,7 +634,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (GetConfig('admin/token/my_name_is')) {
 			# "my name is" token
 			if ($hasCookie) {
-				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_ ]+)\r?$/mig);
+				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9_\. ]+)\r?$/mig);
 
 				WriteLog('@myNameIsLines = ' . scalar(@myNameIsLines));
 
