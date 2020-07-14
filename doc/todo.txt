@@ -1,6 +1,3 @@
-
-
-
 What's Broken Right Now?
 ========================
 Upgrading still requires backend work
