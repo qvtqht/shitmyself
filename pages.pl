@@ -3247,6 +3247,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutFile($PHPDIR . '/cookie.php', $cookiePhpTemplate);
 
 		my $utilsPhpTemplate = GetTemplate('php/utils.php.template');
+        $utilsPhpTemplate =~ s/\$scriptDirPlaceholderForTemplating/$SCRIPTDIR/g;
 		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
 
 		my $routePhpTemplate = GetTemplate('php/route.php.template');
