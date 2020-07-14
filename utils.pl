@@ -371,7 +371,9 @@ sub GetGpgMajorVersion { # get the first number of the version which 'gpg --vers
 sub GetMyVersion { # Get the currently checked out version (current commit's hash from git)
 	state $myVersion;
 
-	if ($myVersion) {
+	my $ignoreSaved = shift;
+
+	if (!$ignoreSaved && $myVersion) {
 		# if we already looked it up once, return that
 		return $myVersion;
 	}
