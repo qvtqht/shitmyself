@@ -91,7 +91,7 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
 
 		// script directory is one level up from current directory,
 		// which we expect to be called "html"
-		$scriptDir = substr($pwd, 0, strlen($pwd) - 5); // trim html/
+		$scriptDir = GetScriptDir();
 		WriteLog('$scriptDir = ' . $scriptDir);
 
 		// $txtDir is where the text files live, in html/txt
