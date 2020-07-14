@@ -283,12 +283,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			WriteLog('$pathRel NO exist: ' . $pathRel);
 			if (file_exists('404.html')) {
 				$html = file_get_contents('404.html');
+				header("HTTP/1.0 404 Not Found");
 			}
 		}
 	} else {
 		// don't know how to handle this request, default to 404
 		if (file_exists('404.html')) {
 			$html = file_get_contents('404.html');
+			header("HTTP/1.0 404 Not Found");
 		}
 	}
 
@@ -454,7 +456,11 @@ if (GetConfig('admin/php/route_enable')) {
 						{
 							WriteLog('Upgrade requested');
 
-							$responseOverthrow = RedirectWithResponse('/settings.html', 'Upgrade requested, but not yet implemented.');
+							$responseOverthrow = RedirectWithResponse('/settings.html', 'Upgrade requested.');
+
+							//#todo check cookie for admin?
+
+							DoUpgrade();
 						}
 
 						if (
