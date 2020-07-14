@@ -442,7 +442,7 @@ function PubkeyCheckProfileExists(fp) { // PLACEHOLDER checks if profile exists
 
 	//alert('DEBUG: profileUrl = ' + profileUrl);
 
-	if (1) { //#todo
+	if (UrlExists(profileUrl)) {
 		//alert('DEBUG: lastPubKeyPing: profile exists');
 		return true;
 	} else {
@@ -471,7 +471,7 @@ function PubKeyPing () { // checks if user's public key is on server
 			//alert('DEBUG: PubKeyPing: myFingerprint = ' + myFingerprint);
 
 			if (myFingerprint) {
-				if (0 && PubkeyCheckProfileExists(myFingerprint)) {
+				if (PubkeyCheckProfileExists(myFingerprint)) {
 					//alert('DEBUG: PubKeyPing: profile already exists');
 				} else {
 					if (window.sharePubKey) {
