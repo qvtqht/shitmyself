@@ -9,12 +9,6 @@ fieldset {
 link {
 	text-decoration: none;
 }
-input    { font-family:monospace; font-size:10pt; }
-textarea { font-family:monospace; font-size:10pt; }
-input[type=text], input[type=password], select, option, textarea {
-	background-color: $colorInputBackground;
-	color: $colorInputText;
-}
 #txtClock {
 	border: 1pt inset $colorWindow;
 }
@@ -37,8 +31,17 @@ a:focus, a:active {
     color: white !important;
     background-color: teal !important;
 }
-input:focus, textarea:focus {
-	color: white !important;
-    background-color: teal !important;
+input {
+	font-family: monospace;
+	font-size: 10pt;
 }
+textarea {
+	font-family: monospace;
+	font-size:10pt;
+}
+input[type=text], input[type=password], select, option, textarea {
+	background-color: $colorInputBackground;
+	color: $colorInputText;
+}
+
 /* end theme/news/additional.css */
