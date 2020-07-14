@@ -6,12 +6,21 @@ use warnings;
 
 my $time = time();
 
-my $pullCommand = "time git pull --all >> html/txt/pull_$time.txt";
+my $upgradeLogFilename = "html/txt/upgrade_$time.txt";
+
+my $titleUpgradeLogCommand = "echo 'upgrade initiated at $time' >> $upgradeLogFilename";
+print (`$titleUpgradeLogCommand`);
+
+my $pullCommand = "time git pull --all >> $upgradeLogFilename";
 print(`$pullCommand`);
 
-my $cleanCommand = "time ./clean.sh >> html/txt/clean_$time.txt";
+my $cleanCommand = "time ./clean.sh >> $upgradeLogFilename";
 print(`$cleanCommand`);
 
-my $buildCommand = "time ./build.pl >> html/txt/build_$time.txt";
+my $buildCommand = "time ./build.pl >> $upgradeLogFilename";
 print(`$buildCommand`);
+
+$time = time();
+my $finishedUpgradeLogCommand = "echo 'upgrade finished at $time' >> $upgradeLogFilename";
+print (`$finishedUpgradeLogCommand`);
 
