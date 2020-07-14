@@ -4,8 +4,11 @@ use strict;
 use utf8;
 use warnings;
 
-my $time = time();
+require './utils.pl';
 
+my $versionBefore = GetMyVersion();
+
+my $time = time();
 my $upgradeLogFilename = "html/txt/upgrade_$time.txt";
 
 my $titleUpgradeLogCommand = "echo 'upgrade initiated at $time' >> $upgradeLogFilename";
@@ -14,11 +17,18 @@ print (`$titleUpgradeLogCommand`);
 my $pullCommand = "time git pull --all >> $upgradeLogFilename";
 print(`$pullCommand`);
 
-my $cleanCommand = "time ./clean.sh >> $upgradeLogFilename";
-print(`$cleanCommand`);
+my $versionAfter = GetMyVersion(1);
 
-my $buildCommand = "time ./build.pl >> $upgradeLogFilename";
-print(`$buildCommand`);
+if ($versionBefore ne $versionAfter) {
+    my $cleanCommand = "time ./clean.sh >> $upgradeLogFilename";
+    print(`$cleanCommand`);
+
+    my $buildCommand = "time ./build.pl >> $upgradeLogFilename";
+    print(`$buildCommand`);
+} else {
+    my $noUpgradeNeededCommand = "echo 'version no change' >> $upgradeLogFilename";
+    print(`$noUpgradeNeededCommand`);
+}
 
 $time = time();
 my $finishedUpgradeLogCommand = "echo 'upgrade finished at $time' >> $upgradeLogFilename";
