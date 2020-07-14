@@ -1,4 +1,6 @@
 
+
+
 What's Broken Right Now?
 ========================
 Upgrading still requires backend work
@@ -15,16 +17,8 @@ Rebuild times are long due to generating a page for each item
 	Need: lazy-generate pages with PHP is enabled
 	Need: Avoid generating pages for items with a parent
 	Need: "Site is rebuilding right now" message?
-When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
-	Need: Message that public profile will be created shortly
-	Need: Background profile create request
-	Need: Server-side profile create trigger
-	Bug: Loading indicator, if it shows up, is auto-hidden, even though now we are waiting for profile to be created.
 User can't create account from Write or Reply page
 	Need: Checkbox to create account in the process of posting
-Emoji menu breaks older browsers
-	Need: ???
-	It's disabled by default, but makes navigation much nicer
 Data export is currently only possible individually (zip files are not generated)
 	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
 	Need: Generate zip files of forum data:
@@ -32,6 +26,21 @@ Data export is currently only possible individually (zip files are not generated
 		By date (with all deps)
 		By author (with all deps)
 
+
+Emoji menu breaks older browsers
+	Need: ???
+	It's disabled by default, but makes navigation much nicer
+
+
+When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
+	Need: Message that public profile will be created shortly
+	Need: Background profile create request
+	Need: Server-side profile create trigger
+	Bug: Loading indicator, if it shows up, is auto-hidden, even though now we are waiting for profile to be created.
+
+
+
+"my name is" should follow similar rules as title: in terms of timestamp priority
 
 
 make a separate color for the top bar for the news theme
