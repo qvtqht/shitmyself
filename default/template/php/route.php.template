@@ -529,6 +529,11 @@ if (GetConfig('admin/php/route_enable')) {
 							// #todo this should probably be templated and added using InjectJs()
 						}
 
+						if ($path == '/settings.html') {
+							$noCacheFormElement = '<input type=hidden name=timestamp value=' . time() . '>';
+							$html = str_ireplace('</form>', $noCacheFormElement . '</form>' , $html);
+						}
+
 						if ($path == '/write.html') {
 							if (file_exists('write.php')) {
 								include('write.php');
