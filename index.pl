@@ -335,6 +335,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog("... \$addedTime is not set");
 		}
 
+		if (GetConfig('admin/logging/write_chain_log')) {
+			AddToChainLog($fileHash);
+		}
+
 		if (!$addedTime) {
 			# This file was not added through access.pl, and has
 			# not been indexed before, so it should get an added_time
@@ -1525,6 +1529,42 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	}
 } # IndexTextFile
 
+sub AddToChainLog { # $fileHash ; add line to log/chain.log
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	my $logFilePath = './log/chain.log';
+
+	if (`grep -q ^$fileHash $logFilePath`) { #todo remove fork
+		# hash already exists in chain, return
+		return;
+	}
+
+	my $newAddedTime = GetTime();
+	my $logLine = $fileHash . '|' . $newAddedTime;
+
+	my $lastLineAddedLog = `tail -n 1 $logFilePath`; #todo remove fork
+	if (!$lastLineAddedLog) {
+		$lastLineAddedLog = '';
+	}
+	chomp $lastLineAddedLog;
+	my $lastAndNewTogether = $lastLineAddedLog . '|' . $logLine;
+	my $checksum = md5_hex($lastAndNewTogether);
+
+	WriteLog('AddToChainLog: $lastLineAddedLog = ' . $lastLineAddedLog);
+	WriteLog('AddToChainLog: $lastAndNewTogether = ' . $lastAndNewTogether);
+	WriteLog('AddToChainLog: md5(' . $lastAndNewTogether . ') = $$checksum  = ' . $checksum);
+
+	my $newLineAddedLog = $logLine . '|' . $checksum;
+
+	WriteLog('AddToChainLog: $newLineAddedLog = ' . $newLineAddedLog);
+
+	if (!$lastLineAddedLog || ($newLineAddedLog ne $lastLineAddedLog)) {
+		#todo replace hard-coded path with $LOGPATH
+		AppendFile($logFilePath, $newLineAddedLog);
+	}
+}
+
 sub IndexImageFile { # indexes one image file into database, $file = path to file
 	# Reads a given $file, gets its attributes, puts it into the index database
 	# If ($file eq 'flush), flushes any queued queries
@@ -1661,6 +1701,10 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 				# add new line to added.log
 				my $logLine = $fileHash . '|' . $newAddedTime;
 				AppendFile('./log/added.log', $logLine);
+			}
+
+			if (GetConfig('admin/logging/write_chain_log')) {
+				AddToChainLog($fileHash);
 			}
 
 			# store it in index, since that's what we're doing here
