@@ -237,56 +237,41 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 }
 
 function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing the missing page
-	// if (preg_match(aa/bb/aabb..html) {
-	// generate item page
-	// } #todo
-//
-//	//'/abcde'
-//	$pathText = substr($path, 1);
-//	if (file_exists('top/' . $pathText . '.html')) {
-//		print 'foo';
-//	} else {
-//		print 'top/' . $pathText . '.html';
-//	}
+	if (GetConfig('admin/php/regrow_404_pages')) {
+		$SCRIPTDIR = GetScriptDir();
 
-	//print $path;
+		if (preg_match('/^\/[a-f0-9]{2}\/[a-f0-9]{2}\/([a-f0-9]{8})/', $path, $itemHashMatch)) {
+			$itemHash = $itemHashMatch[1];
 
-	if (
-		$path == '/stats.html' ||
-		$path == '/write.html'
-	) {
-		// currently able to handle these pages
-
-		// remember current working directory, we'll need it later
-		$pwd = getcwd();
-		WriteLog('$pwd = ' . $pwd);
-
-		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
-		// #todo why is this set here when it's also passed into the function?
-
-		if (GetConfig('admin/php/regrow_404_pages')) {
-			// attempt to make page on the fly
-			
-			WriteLog("cd .. ; ./pages.pl --summary");
-			WriteLog(`cd .. ; ./pages.pl --summary`);
+			$pagesPlArgument = $itemHash;
+		}
+		if (
+			$path == '/stats.html' ||
+			$path == '/write.html'
+		) {
+			$pagesPlArgument = '--summary';
 		}
 
-		if ($pwd) {
+		if (isset($pagesPlArgument) && $pagesPlArgument) {
+			$pwd = getcwd();
+			WriteLog('$pwd = ' . $pwd);
+
+			WriteLog("cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument");
+			WriteLog(`cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument`);
+
 			WriteLog("cd $pwd");
 			WriteLog(`cd $pwd`);
 		}
 
+		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
+
 		if ($pathRel && file_exists($pathRel)) {
 			WriteLog('$pathRel exist: ' . $pathRel);
 			$html = file_get_contents($pathRel);
-		} else {
-			WriteLog('$pathRel NO exist: ' . $pathRel);
-			if (file_exists('404.html')) {
-				$html = file_get_contents('404.html');
-				header("HTTP/1.0 404 Not Found");
-			}
 		}
-	} else {
+	}
+
+	if (!isset($html) || !$html) {
 		// don't know how to handle this request, default to 404
 		if (file_exists('404.html')) {
 			$html = file_get_contents('404.html');
