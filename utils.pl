@@ -908,8 +908,8 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 	if (!defined($hash) || !$hash) {
 		if (WriteLog("Warning! GetHtmlFilename() called without parameter")) {
 
-			my $trace = Devel::StackTrace->new;
-			print $trace->as_string; # like carp
+			#my $trace = Devel::StackTrace->new;
+			#print $trace->as_string; # like carp
 		}
 
 		return;
@@ -917,12 +917,12 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 
 	WriteLog("GetHtmlFilename(\$hash = $hash)");
 
-	if (!IsSha1($hash)) {
+	if (!IsItem($hash)) {
 		WriteLog("Warning! GetHtmlFilename() called with parameter that isn't a SHA-1. Returning.");
 		WriteLog("$hash");
-
-		my $trace = Devel::StackTrace->new;
-		print $trace->as_string; # like carp
+		#
+		# my $trace = Devel::StackTrace->new;
+		# print $trace->as_string; # like carp
 
 		return;
 	}
