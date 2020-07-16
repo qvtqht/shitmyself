@@ -1,3 +1,9 @@
+handle 414 errors (request too long)
+	happens when write.html is used without js
+		and long text is submitted
+			lighttpd has longer limits than apache, it seems
+				at least the apache dreamhost uses
+
 feature: export current config
 
 upgrade.pl
