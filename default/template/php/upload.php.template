@@ -66,7 +66,7 @@ if (!empty($_FILES['uploaded_file'])) {
 				$pwd = getcwd();
 				WriteLog('$pwd = ' . $pwd);
 
-				if (GetConfig('admin/php/update_on_post')) {
+				if (GetConfig('admin/php/update_all_on_post')) {
 					WriteLog("cd .. ; ./update.pl \"html/$path\"");
 					WriteLog(`cd .. ; ./update.pl "html/$path"`);
 				}
