@@ -578,6 +578,8 @@ if (!$arg1) {
 	WriteLog('Found argument ' . $arg1);
 
 	if (-e $arg1 && length($arg1) > 5) {
+		# file exists, let's update what's related to it
+
 		WriteLog('File ' . $arg1 . ' exists');
 
 		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.txt') { #$arg1 =~ m/\.txt$/
@@ -615,7 +617,8 @@ if (!$arg1) {
 		}
 
 		unlink('cron.lock');
-	} else {
+	} # if (-e $arg1 && length($arg1) > 5)
+	else {
 		print('File ' . $arg1 . ' DOES NOT EXIST' . "\n");
 		WriteLog('File ' . $arg1 . ' DOES NOT EXIST');
 	}
