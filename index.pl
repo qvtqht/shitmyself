@@ -39,10 +39,12 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 	WriteLog("MakeAddedIndex()\n");
 
 	if (GetConfig('admin/read_added_log')) {
-		my $addedLog = GetFile('log/added.log');
+		# my $addedLog = GetFile('log/added.log');
+		my $addedLog = GetFile('html/chain.log');
 
 		if (defined($addedLog) && $addedLog) {
-			my @addedRecord = split("\n", GetFile("log/added.log"));
+			my @addedRecord = split("\n", $addedLog);
+			# my @addedRecord = split("\n", GetFile("log/added.log"));
 
 			foreach(@addedRecord) {
 				my ($fileHash, $addedTime) = split('\|', $_);
@@ -335,10 +337,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog("... \$addedTime is not set");
 		}
 
-		if (GetConfig('admin/logging/write_chain_log')) {
-			AddToChainLog($fileHash);
-		}
-
 		if (!$addedTime) {
 			# This file was not added through access.pl, and has
 			# not been indexed before, so it should get an added_time
@@ -346,17 +344,21 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# up and put into the database on the next cycle
 			# unless we add provisions for that here #todo
 
+			if (GetConfig('admin/logging/write_chain_log')) {
+				AddToChainLog($fileHash);
+			}
+
 			WriteLog("... No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
 
 			# current time
 			my $newAddedTime = GetTime();
 			$addedTime = $newAddedTime; #todo is this right? confirm
 
-			if (GetConfig('admin/logging/write_added_log')) {
-				# add new line to added.log
-				my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
-				AppendFile('./log/added.log', $logLine);
-			}
+			# if (GetConfig('admin/logging/write_added_log')) {
+			# 	# add new line to added.log
+			# 	my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
+			# 	AppendFile('./log/added.log', $logLine);
+			# }
 
 			# store it in index, since that's what we're doing here
 			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
@@ -1533,9 +1535,14 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	my $fileHash = shift;
 	chomp $fileHash;
 
-	my $logFilePath = './log/chain.log';
+	my $logFilePath = "$HTMLDIR/chain.log";
 
-	if (`grep -q ^$fileHash $logFilePath`) { #todo remove fork
+	my $findExistingCommand = "grep ^$fileHash $logFilePath";
+	my $findExistingResult = `$findExistingCommand`;
+
+	WriteLog("AddToChainLog: $findExistingCommand returned $findExistingResult");
+
+	if ($findExistingResult) { #todo remove fork
 		# hash already exists in chain, return
 		return;
 	}
@@ -1697,11 +1704,11 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			my $newAddedTime = GetTime();
 			$addedTime = $newAddedTime; #todo is this right? confirm
 
-			if (GetConfig('admin/logging/write_added_log')) {
-				# add new line to added.log
-				my $logLine = $fileHash . '|' . $newAddedTime;
-				AppendFile('./log/added.log', $logLine);
-			}
+			# if (GetConfig('admin/logging/write_added_log')) {
+			# 	# add new line to added.log
+			# 	my $logLine = $fileHash . '|' . $newAddedTime;
+			# 	AppendFile('./log/added.log', $logLine);
+			# }
 
 			if (GetConfig('admin/logging/write_chain_log')) {
 				AddToChainLog($fileHash);

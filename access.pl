@@ -536,17 +536,23 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						# Remember when this file was added
 						my $addedTime = GetTime();
 
-						if (GetConfig('admin/logging/write_added_log')) {
-							# #Add a line to the added.log that records the timestamp internally
 
-							my $addedLog = $fileHash . '|' . $addedTime;
-							AppendFile('./log/added.log', $addedLog);
 
-							if (GetConfig('admin/access_log_call_index')) {
-								WriteLog('access.pl: access_log_call_index is true, therefore DBAddAddedTimeRecord(' . $fileHash . ',' . $addedTime . ')');
-								DBAddAddedTimeRecord($fileHash, $addedTime);
-							}
+						if (GetConfig('admin/logging/write_chain_log')) {
+							AddToChainLog($fileHash);
 						}
+
+						# if (GetConfig('admin/logging/write_added_log')) {
+						# 	# #Add a line to the added.log that records the timestamp internally
+						#
+						# 	my $addedLog = $fileHash . '|' . $addedTime;
+						# 	AppendFile('./log/added.log', $addedLog);
+						#
+						# 	if (GetConfig('admin/access_log_call_index')) {
+						# 		WriteLog('access.pl: access_log_call_index is true, therefore DBAddAddedTimeRecord(' . $fileHash . ',' . $addedTime . ')');
+						# 		DBAddAddedTimeRecord($fileHash, $addedTime);
+						# 	}
+						# }
 
 						# Tell debug console about file save completion
 						WriteLog("Seems like PutFile() worked! $addedTime");
