@@ -1066,7 +1066,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	if ($pageName eq 'tag') {
 		# if a tag page is being updated,
 		# then the tags summary page must be updated also
-		DBAddPageTouch('tags', '0');
+		DBAddPageTouch('tags');
 	}
 
 	if ($pageName eq 'flush') {
