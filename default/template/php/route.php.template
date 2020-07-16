@@ -414,11 +414,11 @@ if (GetConfig('admin/php/route_enable')) {
 							// this quick hack doesn't work yet for lack of SetConfig() in php code
 							//
 							//SetConfig('html/theme', $newTheme);
-							file_put_contents('../config/html/theme', $newTheme);
+							//file_put_contents('../config/html/theme', $newTheme);
 							//
 
 							if (GetConfig('theme/' . $newTheme . '/additional.css')) {
-								file_put_contents('../config/html/theme', $newTheme);
+								//file_put_contents('../config/html/theme', $newTheme);
 							}
 
 							$responseThemeChanged = RedirectWithResponse('/settings.html', 'Requested theme change: ' . $newTheme);
