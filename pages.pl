@@ -3905,7 +3905,7 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 
 		# get item list using DBGetItemList()
 		# #todo clean this up a little, perhaps crete DBGetItem()
-		my @files = DBGetItemList({'where_clause' => "WHERE file_hash = '$fileHash'"});
+		my @files = DBGetItemList({'where_clause' => "WHERE file_hash LIKE '$fileHash%'"});
 
 		if (scalar(@files)) {
 			my $file = $files[0];
