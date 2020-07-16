@@ -76,7 +76,7 @@ function GetItemPlaceholderPage ($comment) { // generate temporary placeholder p
 	return $pageTemplate;
 }
 
-function ProcessNewComment ($comment) { // saves new comment to .txt file and calls indexer
+function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
 
@@ -113,34 +113,34 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
 		$fileName = $txtDir . $hash . '.txt';
 		WriteLog('$fileName = ' . $fileName);
 
-        // standard signature separator
+		// standard signature separator
 		$signatureSeparator = "\n-- \n";
 
 		if (GetConfig('admin/http_auth/enable') && isset($_SERVER['PHP_AUTH_USER']) && GetConfig('admin/logging/record_http_auth_username')) {
 			// record user's http-auth username if we're doing that and it exists
 			if ($_SERVER['PHP_AUTH_USER']) {
-                $comment .= $signatureSeparator;
-                $signatureSeparator = "\n";
+				$comment .= $signatureSeparator;
+				$signatureSeparator = "\n";
 
-                $comment .= 'Authorization: ' . $_SERVER['PHP_AUTH_USER'];
+				$comment .= 'Authorization: ' . $_SERVER['PHP_AUTH_USER'];
 			}
 		}
 
 		if (GetConfig('admin/logging/record_cookie') && isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
-		    // if there's a cookie variable and cookie logging is enabled
-		    if (index($comment, 'PGP SIGNED MESSAGE') == -1 || GetConfig('admin/logging/record_cookie_when_signed')) {
-		        // don't add cookie if message appears signed. this is a temporary measure to mitigate duplicate messages
-		        // because access.pl doesn't know how to save cookies yet. record_cookie_when_signed=0 by default
+			// if there's a cookie variable and cookie logging is enabled
+			if (index($comment, 'PGP SIGNED MESSAGE') == -1 || GetConfig('admin/logging/record_cookie_when_signed')) {
+				// don't add cookie if message appears signed. this is a temporary measure to mitigate duplicate messages
+				// because access.pl doesn't know how to save cookies yet. record_cookie_when_signed=0 by default
 
-                $comment .= $signatureSeparator;
-                $signatureSeparator = "\n";
+				$comment .= $signatureSeparator;
+				$signatureSeparator = "\n";
 
-                $comment .= 'Cookie: ' . $_COOKIE['cookie'];
-            }
+				$comment .= 'Cookie: ' . $_COOKIE['cookie'];
+			}
 		}
 
 		if (GetConfig('admin/logging/record_http_host') && $_SERVER['HTTP_HOST']) {
-		    // record host if it's enabled
+			// record host if it's enabled
 			$comment .= $signatureSeparator;
 			$signatureSeparator = "\n";
 
@@ -224,16 +224,43 @@ function ProcessNewComment ($comment) { // saves new comment to .txt file and ca
 		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 	}
 
-    if (GetConfig('admin/php/update_on_post')) {
-        WriteLog("cd .. ; ./update.pl --all");
-        WriteLog(`cd .. ; ./update.pl --all`);
-//        WriteLog("cd .. ; ./update.pl \"$filePath\"");
-//        WriteLog(`cd .. ; ./update.pl "$filePath"`);
-    }
+	if (GetConfig('admin/php/update_on_post')) {
+		WriteLog('ProcessNewComment: admin/php/update_on_post is TRUE');
 
-	if ($pwd) {
-		WriteLog("cd $pwd");
-		WriteLog(`cd $pwd`);
+		WriteLog("cd .. ; ./update.pl \"$filePath\"");
+		WriteLog(`cd .. ; ./update.pl "$filePath"`);
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+
+		if (isset($replyTo) && $replyTo) {
+			WriteLog("\$replyTo = $replyTo");
+			if (IsItem($replyTo)) {
+				WriteLog("cd .. ; ./pages.pl \"$replyTo\"");
+				WriteLog(`cd .. ; ./pages.pl "$replyTo"`);
+
+				if ($pwd) {
+					WriteLog("cd $pwd");
+					WriteLog(`cd $pwd`);
+				}
+			}
+		} else {
+			WriteLog("\$replyTo not found");
+		}
+	}
+
+	if (GetConfig('admin/php/update_all_on_post')) {
+		WriteLog("cd .. ; ./update.pl --all");
+		WriteLog(`cd .. ; ./update.pl --all`);
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+	} else {
+		WriteLog('ProcessNewComment: admin/php/update_on_post is FALSE');
 	}
 
 	//return $fileUrlPath;
@@ -306,7 +333,7 @@ if (isset($comment) && $comment) {
 
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
-	    RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
+		RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
 	} elseif (strtolower($comment) == 'stop') {
 		$stopTime = time();
 		$stopTimeConfig = GetConfig('admin/stop');
@@ -324,18 +351,18 @@ if (isset($comment) && $comment) {
 			$comment .= "\n\n" . $replyToToken;
 		}
 
-		$newFileHash = ProcessNewComment($comment);
+		$newFileHash = ProcessNewComment($comment, $replyTo);
 		// path for client's (browser's) path to html file
 		$fileUrlPath = '/' . GetHtmlFilename($newFileHash);
 
 		if (!$redirectUrl && strpos($comment, 'PUBLIC KEY BLOCK')) {
-            // if user is submitting a public key, chances are
-            // they just registered, so lazily redirect them
-            // to the profile page instead.
-            // #todo relative url support
-            // #todo better flow for registration -> profile page
+			// if user is submitting a public key, chances are
+			// they just registered, so lazily redirect them
+			// to the profile page instead.
+			// #todo relative url support
+			// #todo better flow for registration -> profile page
 
-            $finishTime = time() - $postPhpStartTime;
+			$finishTime = time() - $postPhpStartTime;
 
 
 			$profileId = preg_match(
@@ -360,7 +387,7 @@ if (isset($comment) && $comment) {
 				// profile.html
 			}
 
-            RedirectWithResponse($redirectUrl, "Success! Profile created! <small>in $finishTime"."s</small>");
+			RedirectWithResponse($redirectUrl, "Success! Profile created! <small>in $finishTime"."s</small>");
 
 
 //		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
@@ -380,7 +407,7 @@ if (isset($comment) && $comment) {
 
 				$newItemAnchor = substr($newFileHash, 0, 8);
 
-	            $finishTime = time() - $postPhpStartTime;
+				$finishTime = time() - $postPhpStartTime;
 
 				//$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
 
@@ -427,5 +454,5 @@ if (!$redirectUrl && $fileUrlPath) {
 print($html);
 
 if (GetConfig('admin/php/debug')) {
-    print(WriteLog(''));
+	print(WriteLog(''));
 }
