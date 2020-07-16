@@ -1754,18 +1754,22 @@ sub IsSha1 { # returns 1 if parameter is in sha1 hash format, 0 otherwise
 	}
 }
 
-sub IsItem { # returns 1 if parameter is in item hash format (40 lowercase hex chars), 0 otherwise
+sub IsItem { # $string ; returns 1 if parameter is in item hash format (40 or 8 lowercase hex chars), 0 otherwise
 	my $string = shift;
 
 	if (!$string) {
 		return 0;
 	}
 
-	if ($string =~ m/[0-9a-f]{40}/) {
+	if ($string =~ m/^[0-9a-f]{40}$/) {
 		return 1;
-	} else {
-		return 0;
 	}
+
+	if ($string =~ m/^[0-9a-f]{8}$/) {
+		return 1;
+	}
+
+	return 0;
 }
 
 sub IsMd5 { # returns 1 if parameter is md5 hash, 0 otherwise
