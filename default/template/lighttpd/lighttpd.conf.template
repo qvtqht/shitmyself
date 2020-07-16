@@ -22,6 +22,7 @@ mimetype.assign = (
 	".html" => "text/html",
 	".htm" => "text/html",
 	".txt" => "text/plain",
+	".log" => "text/plain",
 	".css" => "text/css",
 	".js" => "text/javascript",
 

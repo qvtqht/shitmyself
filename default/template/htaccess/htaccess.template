@@ -17,3 +17,4 @@ ErrorDocument 401 /error/error-401.html
 
 # for manifest files
 AddType text/cache-manifest .manifest
+AddType text/plain .log
