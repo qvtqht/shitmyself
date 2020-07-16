@@ -1,18 +1,29 @@
+feature: export current config
+
+upgrade.pl
+==========
+	0. dump current schema
+	1. upgrade
+	2. dump new schema
+	3. compare new schema to previous schema
+	4. if exact match, rename index.sqlite3 
+
+
+styles to add
+=============
+	borg
+	bor
+	reddit
+	lobster
+	
+
 What's Broken Right Now?
 ========================
-Upgrading still requires backend work
-	Need: Straightforward way to do basic upgrade
-		pull
-		rebuild
-		user feedback
-Changing the current git commit breaks the site
-	This is *kind of* by design, because the commit ID is part of the cache path
-	That way there is no incompatible cache
-	Need: A way to recover
 Rebuild times are long due to generating a page for each item
 	Good: Site is fast to come back up
 	Need: lazy-generate pages with PHP is enabled
 	Need: Avoid generating pages for items with a parent
+		Perhaps: Remove permalinks from reply items
 	Need: "Site is rebuilding right now" message?
 User can't create account from Write or Reply page
 	Need: Checkbox to create account in the process of posting
@@ -23,12 +34,15 @@ Data export is currently only possible individually (zip files are not generated
 		By date (with all deps)
 		By author (with all deps)
 
-
+Less Important Things Which Need Fixing
+=======================================
+Changing the current git commit breaks the site
+	This is *kind of* by design, because the commit ID is part of the cache path
+	That way there is no incompatible cache
+	Need: A way to recover
 Emoji menu breaks older browsers
 	Need: ???
 	It's disabled by default, but makes navigation much nicer
-
-
 When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
 	Need: Message that public profile will be created shortly
 	Need: Background profile create request
@@ -38,6 +52,7 @@ When a user creates a new account, they are taken to profile.html, and then 20s 
 
 
 "my name is" should follow similar rules as title: in terms of timestamp priority
+	perhaps there should be a combined item_attribute table?
 
 
 make a separate color for the top bar for the news theme
