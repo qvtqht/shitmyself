@@ -8,7 +8,6 @@ if (!empty($_FILES['uploaded_file'])) {
 
 	WriteLog(print_r($_FILES, 1));
 
-	WriteLog('trying to move_uploaded_file(' . $_FILES['uploaded_file']['tmp_name'] . ',' . $path . ')');
 //
 //	if (file_exists($path)) {
 //		//		$hash = GetFileHash($path);
@@ -49,6 +48,8 @@ if (!empty($_FILES['uploaded_file'])) {
 			}
 		} else {
 			$path = $basePath . basename($_FILES['uploaded_file']['name']);
+
+			WriteLog('trying to move_uploaded_file(' . $_FILES['uploaded_file']['tmp_name'] . ',' . $path . ')');
 
 			if (file_exists($path)) {
 				// #todo make this nicer
