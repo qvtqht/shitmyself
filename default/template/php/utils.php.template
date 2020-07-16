@@ -835,6 +835,27 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 	return GetTime();
 }
 
+function IsItem ($string) { # returns 1 if parameter is in item hash format (40 or 8 lowercase hex chars), 0 otherwise
+	WriteLog("IsItem($string)");
+
+	if (!$string) {
+		WriteLog("IsItem: NO STRING!");
+		return 0;
+	}
+
+	if (preg_match('/^[0-9a-f]{40}$/', $string)) {
+		WriteLog("IsItem: matched 40 chars");
+		return 1;
+	}
+
+	if (preg_match('/^[0-9a-f]{8}$/', $string)) {
+		WriteLog("IsItem: matched 8 chars");
+		return 1;
+	}
+
+	WriteLog("IsItem: NO MATCH!");
+	return 0;
+}
 
 function setcookie2 ($key, $value) { // sets cookie with ie3 compatibility
 	WriteLog('setcookie2(' . $key . ',' . $value . ')');
