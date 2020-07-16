@@ -4054,6 +4054,10 @@ if ($arg1) {
 		print ("recognized --summary\n");
 		MakeSummaryPages();
 	}
+	elsif ($arg1 eq '--index') {
+		print ("recognized --index\n");
+		WriteIndexPages();
+	}
 	else {
 		print ("pages.pl: --summary\n");
 		print ("item_id\n");
