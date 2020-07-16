@@ -1109,6 +1109,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 		# todo probably put this in another function
 		# could also be done as
 		# foreach (author's items) { DBAddPageTouch('item', $item); }
+		#todo this is kind of a hack, sould be refactored, probably
 
 		# touch all of author's items too
 		my $queryAuthorItems = "
@@ -1152,13 +1153,41 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time) VALUES ";
+		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time, priority) VALUES ";
 	} else {
 		$query .= ',';
 	}
 
-	$query .= '(?, ?, ?)';
-	push @queryParams, $pageName, $pageParam, $touchTime;
+	#todo this is kind of a hack, shouldn't be here in the db layer
+	my $priority = 1;
+	if (
+		GetConfig('admin/php/regrow_404_pages') &&
+		($pageName eq 'item') ||
+		($pageName eq 'index')
+	) {
+		# deprioritize item pages
+		# this is not the bes tplace for it #todo
+		$priority = 0;
+	}
+
+	#todo
+	# https://stackoverflow.com/a/34939386/128947
+	# insert or replace into poet (_id,Name, count) values (
+	# 	(select _id from poet where Name = "SearchName"),
+	# 	"SearchName",
+	# 	ifnull((select count from poet where Name = "SearchName"), 0) + 1)
+	#
+	# https://stackoverflow.com/a/3661644/128947
+	# INSERT OR REPLACE INTO observations
+	# VALUES (:src, :dest, :verb,
+	#   COALESCE(
+	#     (SELECT occurrences FROM observations
+	#        WHERE src=:src AND dest=:dest AND verb=:verb),
+	#     0) + 1);
+
+
+	$query .= '(?, ?, ?, ?)';
+	push @queryParams, $pageName, $pageParam, $touchTime, $priority;
 }
 
 sub DBGetVoteCounts { # Get total vote counts by tag value
