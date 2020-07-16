@@ -1,3 +1,9 @@
+something to validate chain.log
+	validate hashes
+	validate that all timestamps are in order
+	see if items still exist
+		what to do about missing items?
+
 handle 414 errors (request too long)
 	happens when write.html is used without js
 		and long text is submitted
@@ -28,6 +34,10 @@ What's Broken Right Now?
 Rebuild times are long due to generating a page for each item
 	Good: Site is fast to come back up
 	Need: lazy-generate pages with PHP is enabled
+		xItem
+		Tag
+		Author
+		Other
 	Need: Avoid generating pages for items with a parent
 		Perhaps: Remove permalinks from reply items
 	Need: "Site is rebuilding right now" message?
