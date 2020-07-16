@@ -3231,7 +3231,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		my $test2PhpTemplate = GetTemplate('php/test2.php.template');
 		PutFile($PHPDIR . '/test2.php', $test2PhpTemplate);
 
-		my $adminPhpTemplate = GetTemplate('php/admin.php.template');
+		my $adminPhpTemplate = GetTemplate('php/config.php.template');
 		PutFile($PHPDIR . '/config.php', $adminPhpTemplate);
 
 		my $testPhpTemplate = GetTemplate('php/test.php.template');

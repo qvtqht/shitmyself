@@ -1,5 +1,5 @@
 <?php
-/* begin php/admin.php.template */
+/* begin php/config.php.template */
 
 echo(time());
 
@@ -43,4 +43,4 @@ foreach ($default as $d) {
 	}
 }
 
-/* end php/admin.php.template */
+/* end php/config.php.template */
