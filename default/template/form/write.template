@@ -28,7 +28,7 @@
 							id=comment
 							title="Enter some text to share."
 							rows=9
-							cols=60
+							cols=32
 							name=comment
 							autofocus
 							wrap=soft
