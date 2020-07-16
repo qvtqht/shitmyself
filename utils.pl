@@ -1398,6 +1398,13 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	}
 
 	# fill in colors
+	my $colorTopMenuTitlebarText = GetThemeColor('top_menu_titlebar_text');
+	$content =~ s/\$colorTopMenuTitlebarText/$colorTopMenuTitlebarText/g;#
+
+	my $colorTopMenuTitlebar = GetThemeColor('top_menu_titlebar');
+	$content =~ s/\$colorTopMenuTitlebar/$colorTopMenuTitlebar/g;
+
+	# fill in colors
 	my $colorTitlebarText = GetThemeColor('titlebar_text');#
 	$content =~ s/\$colorTitlebarText/$colorTitlebarText/g;#
 
