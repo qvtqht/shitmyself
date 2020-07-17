@@ -1,3 +1,21 @@
+Testing Results July 17 2020
+============================
+ie6 "sign as undefined" on reply form
+konq too
+
+#vote links don't work without js
+
+w3m reports redirect loop when logging in
+
+opera 3.62 has issues logging in
+   redirect problem? caching problem?
+
+list of voted items is not cleared when logging out
+	bug or not
+		should this list be re-downlaoded on login
+		and somehow updated?
+
+
 something to validate chain.log
 	validate hashes
 	validate that all timestamps are in order
