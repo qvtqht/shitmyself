@@ -1322,7 +1322,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (index($itemText, '$') > -1) {
 			# this is a kludge, should be a better solution
 			#$itemText = '<code>item text contained disallowed character</code>';
-			$itemText = s/\$/%/g;
+			$itemText =~ s/\$/%/g;
 		}
 
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
