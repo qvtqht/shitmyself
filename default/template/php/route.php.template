@@ -441,11 +441,11 @@ if (GetConfig('admin/php/route_enable')) {
 						{
 							WriteLog('Upgrade requested');
 
-							$responseOverthrow = RedirectWithResponse('/settings.html', 'Upgrade requested.');
-
 							//#todo check cookie for admin?
 
 							DoUpgrade();
+
+							RedirectWithResponse('/settings.html', 'Upgrade complete. Press Update to re-import content.');
 						}
 
 						if (
