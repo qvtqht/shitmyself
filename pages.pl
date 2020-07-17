@@ -1321,7 +1321,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		if (index($itemText, '$') > -1) {
 			# this is a kludge, should be a better solution
-			$itemText = '<code>item text contained disallowed character</code>';
+			#$itemText = '<code>item text contained disallowed character</code>';
+			$itemText = s/\$/%/g;
 		}
 
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
@@ -2251,7 +2252,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 			$authorVoteButtons = '-';
 		}
 
-		my $authorLink = GetAuthorLink($authorKey);
+		my $authorLink = GetAuthorLink($authorKey) || '(blank)';
 
 #		my $authorFriendKey = $authorFriend->{'author_key'};
 
@@ -2261,7 +2262,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorLastSeen = GetTimestampElement($authorLastSeen);
 #		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 #
-		$authorItemTemplate =~ s/\$authorLink/$authorLink/g;
+		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
