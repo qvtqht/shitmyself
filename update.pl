@@ -315,8 +315,8 @@ if (!$arg1) {
 		my $startTime = GetTime2();
 
 		if ($timeLimit) {
-			# default to 60 seconds
-			$timeLimit = 60;
+			# default to 10 seconds
+			$timeLimit = 10;
 		}
 
 		# get list of access log path(s)
@@ -407,12 +407,12 @@ if (!$arg1) {
 						last;
 					}
 
+					if ((GetTime2() - $startTime) > $timeLimit) {
+						WriteLog("Time limit reached, exiting loop");
+						last;
+					}
+
 					WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
-					#
-					# if ((GetTime2() - $startTime) > $timeLimit) {
-					# 	WriteLog("Time limit reached, exiting loop");
-					# 	last;
-					# }
 
 					# Trim the file path
 					chomp $file;
@@ -485,12 +485,13 @@ if (!$arg1) {
 						last;
 					}
 
+
+					if ((GetTime2() - $startTime) > $timeLimit) {
+						WriteLog("Time limit reached, exiting loop");
+						last;
+					}
+
 					WriteMessage('ProcessImageFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
-					#
-					# if ((GetTime2() - $startTime) > $timeLimit) {
-					# 	WriteLog("Time limit reached, exiting loop");
-					# 	last;
-					# }
 
 					# Trim the file path
 					chomp $file;
