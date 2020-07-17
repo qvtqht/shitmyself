@@ -14,7 +14,7 @@ function serverResponseOk (t) { // function which hides server response message
 		t = document.getElementById('serverResponse');
 	}
 
-	if (t && t.parentElement && t.parentElement.style) {
+	if (t && t.parentElement && t.parentElement.style && t.nodeName) {
 		// this will traverse and hide everything from the OK button up to
 		// but not including <body
 		// previously, this just said:  t.parentElement.style.display = 'none';
