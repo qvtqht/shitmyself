@@ -1,3 +1,8 @@
+allow aliasing of
+
+#bigtodo: remove dependencies on external pm modules
+
+
 netscape 4: suggested files for image upload are *.html
 
 Testing Results July 17 2020
