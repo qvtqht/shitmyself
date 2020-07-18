@@ -978,7 +978,7 @@ sub GetDigitColor() { # returns a 2-char color that corresponds to a digit for c
 	return $digitColor;
 }
 
-sub GetTime() { # Returns time in epoch format.
+sub GetTime () { # Returns time in epoch format.
 	# Just returns time() for now, but allows for converting to 1900-epoch time
 	# instead of Unix epoch
 	#	return (time() + 2207520000);
