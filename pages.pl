@@ -3990,8 +3990,17 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	}
 }
 
-sub BuildTouchedPages { # builds pages returned by DBGetTouchedPages();
+sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGetTouchedPages();
 # DBGetTouchedPages() means select * from page_touch where priority > 0
+
+	my $timeLimit = shift;
+	if (!$timeLimit) {
+		$timeLimit = 0;
+	}
+	my $startTime = shift;
+	if (!$startTime) {
+		$startTime = 0;
+	}
 
 	my $pagesLimit = GetConfig('admin/update/limit_page');
 	if (!$pagesLimit) {
@@ -4015,6 +4024,11 @@ sub BuildTouchedPages { # builds pages returned by DBGetTouchedPages();
 	# in this case, 'touch' means when an item that affects the page
 	# is updated or added
 	foreach my $page (@touchedPagesArray) {
+		if ($timeLimit && $startTime && ((time() - $startTime) > $timeLimit)) {
+			WriteMessage("BuildTouchedPages: Time limit reached, exiting loop");
+			last;
+		}
+
 		$pagesProcessed++;
 		#	if ($pagesProcessed > $pagesLimit) {
 		#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");

@@ -31,7 +31,7 @@ require './index.pl';
 require './access.pl';
 require './pages.pl';
 
-sub GetTime2() { # returns epoch time
+sub GetTime2 () { # returns epoch time
 	# this is identical to GetTime() in utils.pl
 	# #todo replace at some point
 	#	return (time() + 2207520000);
@@ -271,7 +271,8 @@ sub ProcessImageFile { # $file ; add new image to index
 
 if (!$arg1) {
 	print "must supply filename or --all\n";
-} elsif ($arg1 eq '--all') {
+}
+elsif ($arg1 eq '--all') {
 	require './sqlite.pl';
 	require './index.pl';
 	require './access.pl';
@@ -312,7 +313,7 @@ if (!$arg1) {
 		#todo validation
 
 		# time the script started (now)
-		my $startTime = GetTime2();
+		my $startTime = time();
 
 		if ($timeLimit) {
 			# default to 10 seconds
@@ -364,7 +365,7 @@ if (!$arg1) {
 		my $filesProcessed = 1;
 		my $pagesProcessed = 0;
 
-		$pagesProcessed = BuildTouchedPages();
+		$pagesProcessed = BuildTouchedPages($timeLimit, $startTime);
 
 		# See if update/file_limit setting exists
 		# This limits the number of files to process per launch of update.pl
@@ -377,6 +378,11 @@ if (!$arg1) {
 		# this loop alternates processing batches of new files and new pages until there's nothing left to do
 		while ($filesProcessed > 0 || $pagesProcessed > 1) {
 			WriteLog('while loop: $filesProcessed: ' . $filesProcessed . '; $pagesProcessed: ' . $pagesProcessed);
+
+			if ((time() - $startTime) > $timeLimit) {
+				WriteMessage("Time limit reached, exiting loop");
+				last;
+			}
 
 			$filesProcessed = 0;
 			$pagesProcessed = 0;
@@ -407,8 +413,8 @@ if (!$arg1) {
 						last;
 					}
 
-					if ((GetTime2() - $startTime) > $timeLimit) {
-						WriteLog("Time limit reached, exiting loop");
+					if ((time() - $startTime) > $timeLimit) {
+						WriteMessage("Time limit reached, exiting loop");
 						last;
 					}
 
@@ -485,9 +491,8 @@ if (!$arg1) {
 						last;
 					}
 
-
-					if ((GetTime2() - $startTime) > $timeLimit) {
-						WriteLog("Time limit reached, exiting loop");
+					if ((time() - $startTime) > $timeLimit) {
+						WriteMessage("Time limit reached, exiting loop");
 						last;
 					}
 
@@ -516,7 +521,7 @@ if (!$arg1) {
 
 				# IMAGE FILE PROCESSING PART ENDS HERE
 				###########
-			}
+			} # if (-e $IMAGEDIR)
 
 			#####
 
@@ -554,10 +559,11 @@ if (!$arg1) {
 			#}
 
 			WriteLog('update.pl: Building touched pages... $pagesProcessed = ' . $pagesProcessed);
-			$pagesProcessed += BuildTouchedPages();
+			$pagesProcessed += BuildTouchedPages($timeLimit, $startTime);
 			WriteLog('update.pl: Finished building touched pages... $pagesProcessed = ' . $pagesProcessed);
 
 			$filesProcessedTotal += $filesProcessed;
+
 		} # while ($filesProcessed > 0 || $pagesProcessed > 1)
 
 		WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
@@ -575,7 +581,8 @@ if (!$arg1) {
 		WriteLog("Items/files processed: $filesProcessed");
 		WriteLog("Pages processed: $pagesProcessed");
 	}
-} elsif ($arg1) {
+} # elsif ($arg1 eq '--all')
+elsif ($arg1) {
 	WriteLog('Found argument ' . $arg1);
 
 	if (-e $arg1 && length($arg1) > 5) {
@@ -623,6 +630,6 @@ if (!$arg1) {
 		print('File ' . $arg1 . ' DOES NOT EXIST' . "\n");
 		WriteLog('File ' . $arg1 . ' DOES NOT EXIST');
 	}
-}
+} # elsif ($arg1)
 
 1;
