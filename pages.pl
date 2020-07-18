@@ -20,8 +20,7 @@ my $SCRIPTDIR = cwd();
 my $HTMLDIR = $SCRIPTDIR . '/html';
 my $PHPDIR = $SCRIPTDIR . '/html';
 my $TXTDIR = $HTMLDIR . '/txt';
-my $IMAGEDIR = $HTMLDIR . '/txt';
-
+my $IMAGEDIR = $HTMLDIR . '/image';
 
 #use List::Uniq ':all';
 
@@ -1890,11 +1889,14 @@ sub GetStatsTable() {
 		$lastBuildTime = 0;
 	}
 
-
 	# count total number of files
 	my $filesTotal = 0;
+
 	$filesTotal += trim(`find $TXTDIR -name \\\*.txt | wc -l`);
-	$filesTotal += trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+	if (GetConfig('admin/image/enable') {
+		$filesTotal += trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+	}
+
 	#todo optimize
 	#todo config/admin/upload/allow_files
 
