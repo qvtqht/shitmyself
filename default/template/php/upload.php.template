@@ -91,9 +91,7 @@ if (!empty($_FILES['uploaded_file'])) {
 				$redirectUrl = '';
 
 				if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
-					$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
-
-					RedirectWithResponse($redirectUrl, 'Success! Thank you for uploading this beautiful pictures!');
+					RedirectWithResponse($fileUrlPath, 'Success! Thank you for uploading this beautiful pictures!');
 				} else {
 					RedirectWithResponse('/post.html', 'Image uploaded, and should appear shortly after it is processed.');
 				}
