@@ -1,3 +1,5 @@
+netscape 4: suggested files for image upload are *.html
+
 Testing Results July 17 2020
 ============================
 ie6 "sign as undefined" on reply form
