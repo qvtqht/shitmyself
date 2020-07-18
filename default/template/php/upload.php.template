@@ -67,6 +67,10 @@ if (!empty($_FILES['uploaded_file'])) {
 				WriteLog('$pwd = ' . $pwd);
 
 				if (GetConfig('admin/php/update_all_on_post')) {
+					WriteLog("cd .. ; ./update.pl --all");
+					WriteLog(`cd .. ; ./update.pl --all`);
+				}
+				elseif (GetConfig('admin/php/update_on_post')) {
 					WriteLog("cd .. ; ./update.pl \"html/$path\"");
 					WriteLog(`cd .. ; ./update.pl "html/$path"`);
 				}
@@ -87,22 +91,11 @@ if (!empty($_FILES['uploaded_file'])) {
 				$redirectUrl = '';
 
 				if (!$redirectUrl && file_exists($fileHtmlPath) && $fileUrlPath) {
-					$itemPostedServerResponse = "Success! Image posted!";
-					//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
-
-					$itemPostedServerResponseId = StoreServerResponse($itemPostedServerResponse);
-
 					$redirectUrl = $fileUrlPath . '?message=' . $itemPostedServerResponseId;
-				}
 
-				if ($redirectUrl) {
-					WriteLog('Location: ' . $redirectUrl);
-
-					if (GetConfig('admin/php/debug')) {
-                    	// don't redirect
-					} else {
-						header('Location: ' . $redirectUrl);
-					}
+					RedirectWithResponse($redirectUrl, 'Success! Thank you for uploading this beautiful pictures!');
+				} else {
+					RedirectWithResponse('/post.html', 'Image uploaded, and should appear shortly after it is processed.');
 				}
 			}
 		}
