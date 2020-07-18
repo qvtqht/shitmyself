@@ -500,7 +500,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					DBAddPageTouch('item', $parentHash);
 
 					if (GetConfig('admin/index/make_primary_pages')) {
-						MakePage('item', $parentHash);
+						MakePage('item', $parentHash, 1);
 					}
 				}
 			}
@@ -731,7 +731,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								DBAddPageTouch('item', $itemParent);
 
 								if (GetConfig('admin/index/make_primary_pages')) {
-									MakePage('item', $itemParent);
+									MakePage('item', $itemParent, 1);
 								}
 							}
 

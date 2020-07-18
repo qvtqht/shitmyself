@@ -1893,7 +1893,7 @@ sub GetStatsTable() {
 	my $filesTotal = 0;
 
 	$filesTotal += trim(`find $TXTDIR -name \\\*.txt | wc -l`);
-	if (GetConfig('admin/image/enable') {
+	if (GetConfig('admin/image/enable')) {
 		$filesTotal += trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
 	}
 
@@ -3865,11 +3865,16 @@ sub GetItemPageFromHash {
 	}
 }
 
-sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $pageParam
+sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it into $HTMLDIR directory; $pageType, $pageParam
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
 	my $pageType = shift;
 	my $pageParam = shift;
+	my $priority = shift;
+
+	if (!$priority) {
+		$priority = 0;
+	}
 
 	#todo sanity checks
 
@@ -3903,6 +3908,10 @@ sub MakePage { # make a page and write it into $HTMLDIR directory; $pageType, $p
 	#
 	# if $pageType eq item, generate that item's page
 	elsif ($pageType eq 'item') {
+		if (GetConfig('admin/php/regrow_404_pages') && !$priority) {
+			return;
+		}
+
 		# get the item's hash from the param field
 		my $fileHash = $pageParam;
 
@@ -4065,7 +4074,7 @@ my $arg1 = shift;
 if ($arg1) {
 	if (IsItem($arg1)) {
 		print ("recognized item identifier\n");
-		MakePage('item', $arg1);
+		MakePage('item', $arg1, 1);
 	}
 	elsif ($arg1 eq '--summary') {
 		print ("recognized --summary\n");

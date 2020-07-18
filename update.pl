@@ -599,7 +599,7 @@ elsif ($arg1) {
 
 				WriteIndexedConfig();
 
-				MakePage('item', $fileProcessed);
+				MakePage('item', $fileProcessed, 1);
 			}
 		}
 
@@ -620,7 +620,7 @@ elsif ($arg1) {
 
 				MakeSummaryPages();
 
-				MakePage('item', $fileProcessed);
+				MakePage('item', $fileProcessed, 1);
 			}
 		}
 
