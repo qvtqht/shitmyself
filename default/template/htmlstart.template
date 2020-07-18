@@ -1,17 +1,17 @@
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<HTML>
+<HEAD>
+<META CHARSET="utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1">
+<META HTTP-equiv="Content-Type" CONTENT="text/html; charset=utf-8">
 <LINK REL="alternate" TITLE="RSS Feed" HREF="/rss.xml" TYPE="application/rss+xml">
-<title>$title</title>
-<style type="text/css">
+<TITLE>$title</TITLE>
+<STYLE type="text/css">
 <!--
 $styleSheet
 -->
-</style>
-</head>
-<body>
+</STYLE>
+</HEAD>
+<BODY>
 <b>$topMenu</b>
 <p class=beginner>$introText</p>
 <p>
