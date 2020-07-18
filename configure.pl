@@ -38,6 +38,8 @@ sub WriteMessage { # $message ; print a line to user
 	my $message = shift;
 	chomp $message;
 
+	WriteLog('Message: ' . $message);
+
 	print $message . "\n";
 
 	# AppendFile('html/status.txt', $message);
