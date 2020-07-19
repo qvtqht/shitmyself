@@ -121,7 +121,7 @@ if (GetConfig('admin/lighttpd/enable')) {
 		my $basicAuthUserFile = GetTemplate('lighttpd/lighttpd_password.template');
 		PutFile('config/lighttpd_password.conf', $basicAuthUserFile);
 
-		my $htpasswdAuthUserFile = GetTemplate('htaccess/htpasswd.template');
+		my $htpasswdAuthUserFile = GetConfig('admin/http_auth/htpasswd');
 		PutFile('config/lighttpd_htpasswd.conf', $htpasswdAuthUserFile);
 	}
 } else {
