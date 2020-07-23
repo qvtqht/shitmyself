@@ -150,7 +150,7 @@ function CheckIfFresh() {
 
 if (window.GetPrefs) {
 	var needNotify = GetPrefs('notify_on_change') || 0;
-	if (needNotify == 1) { // check value of want_to_vote preference
+	if (needNotify == 1) { // check value of notify_on_change preference
 		CheckIfFresh();
 	}
 }
