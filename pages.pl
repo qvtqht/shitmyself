@@ -1595,7 +1595,7 @@ sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns 
 		# capitalize caption
 		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
-		if (GetConfig('html/emoji_icons')) {
+		if (GetConfig('html/emoji_menu')) {
 			my $menuItemEmoji = GetString($menuItemName, 'emoji', 1);
 			if ($menuItemEmoji) {
 				$menuItemCaption = $menuItemEmoji;
