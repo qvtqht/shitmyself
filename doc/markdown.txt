@@ -1,18 +1,24 @@
+Why Markdown support is a low priority for this project
+(or If I had a nickel for every time Markdown fucked something up unexpectedly)
+
 My experience with Markdown is that it often causes unexpected content reformatting in ways the author did not intend. Example scenarios include:
 
 * Links to URLs ending with ) symbol
 * Text-art which includes \ symbol
 * Numbered lists which do not go in order
 * Words containing * and _ symbols
-* Lines which the user separated, but are joined together
 
-Other things, which are simple in plain-text, are made more difficult with Markdown.
+Other things, which are simple in plain-text, are made more difficult with Markdown:
 
-Code formatting, adding titles to links, and line-breaks are all cumbersome, IMO.
+* Code formatting
+* Adding titles to links
+* Making line-breaks
+* Pasting copied text
 
-Markdown is also whitespace-sensitive, which is a major disadvantage when using copy-paste.
 
-For these reasons, I intend to never make Markdown a default of any kind.
+For these reasons, I intend to never make Markdown a default in any way.
+
+Implementing Markdown support is also a low priority.
 
 Optional support for Markdown will probably be added in the future, enabled by #markdown tag.
 
