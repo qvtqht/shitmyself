@@ -451,8 +451,7 @@ if (!$redirectUrl && $fileUrlPath) {
 	RedirectWithResponse($fileUrlPath, $itemPostedServerResponse);
 }
 
-print($html);
-
 if (GetConfig('admin/php/debug')) {
-	print(WriteLog(''));
+    $html = str_replace('</body>', WriteLog('') . '</body>', $html);
 }
+print($html);
