@@ -1,4 +1,60 @@
-allow aliasing of
+move/copy update buton to operator dialog
+	move/copy backend piece from post.php to route.php
+
+de-emoji for accessibility mode
+
+#mean hashtag
+	[x] hide mean people
+
+#BUG #security image filenames are not shell-escaped before update.pl (?) is called
+	reproduce: try an image with an ` in the name
+
+What's Keeping Website From Being Used?
+=======================================
+Rebuild times are long due to generating a page for each item
+	Good: Site is fast to come back up
+	Need: lazy-generate pages with PHP is enabled
+		xItem
+		xTag
+		Author
+		Other
+	Need: Avoid generating pages for items with a parent
+		Perhaps: Remove permalinks from reply items
+	Need: "Site is rebuilding right now" message?
+User can't create account from Write or Reply page
+	Need: Checkbox to create account in the process of posting
+Data export is currently only possible individually (zip files are not generated)
+	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
+	Need: Generate zip files of forum data:
+		By thread (with all dependencies like authors, votes, etc.)
+		By date (with all deps)
+		By author (with all deps)
+
+Less Important Things Which Need Fixing
+=======================================
+Changing the current git commit breaks the site
+	This is *kind of* by design, because the commit ID is part of the cache path
+	That way there is no incompatible cache
+	Need: A way to recover
+Emoji menu breaks older browsers
+	Need: ???
+	It's disabled by default, but makes navigation much nicer
+When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
+	Need: Message that public profile will be created shortly
+	Need: Background profile create request
+	Need: Server-side profile create trigger
+	Bug: Loading indicator, if it shows up, is auto-hidden, even though now we are waiting for profile to be created.
+
+
+wherever file counts are done with find
+	cache it so that not recounting every time
+
+get rid of /author/ pages
+	just set parent to author
+
+allow aliasing of ??
+
+
 
 #bigtodo: remove dependencies on external pm modules
 
@@ -53,42 +109,6 @@ styles to add
 	reddit
 	lobster
 	
-
-What's Broken Right Now?
-========================
-Rebuild times are long due to generating a page for each item
-	Good: Site is fast to come back up
-	Need: lazy-generate pages with PHP is enabled
-		xItem
-		Tag
-		Author
-		Other
-	Need: Avoid generating pages for items with a parent
-		Perhaps: Remove permalinks from reply items
-	Need: "Site is rebuilding right now" message?
-User can't create account from Write or Reply page
-	Need: Checkbox to create account in the process of posting
-Data export is currently only possible individually (zip files are not generated)
-	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
-	Need: Generate zip files of forum data:
-		By thread (with all dependencies like authors, votes, etc.)
-		By date (with all deps)
-		By author (with all deps)
-
-Less Important Things Which Need Fixing
-=======================================
-Changing the current git commit breaks the site
-	This is *kind of* by design, because the commit ID is part of the cache path
-	That way there is no incompatible cache
-	Need: A way to recover
-Emoji menu breaks older browsers
-	Need: ???
-	It's disabled by default, but makes navigation much nicer
-When a user creates a new account, they are taken to profile.html, and then 20s later to profile page
-	Need: Message that public profile will be created shortly
-	Need: Background profile create request
-	Need: Server-side profile create trigger
-	Bug: Loading indicator, if it shows up, is auto-hidden, even though now we are waiting for profile to be created.
 
 
 
