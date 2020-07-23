@@ -207,6 +207,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				var pProfileLink = document.getElementById('spanProfileLink');
 				if (pProfileLink && pProfileLink.innerHTML) {
 					// profile link already there, and contains profile link
+					// #todo bind js event to profile create
 				} else {
 					// profile link not there or the p is empty
 					if (!pProfileLink) {
