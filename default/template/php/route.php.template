@@ -18,7 +18,41 @@ function SetHtmlClock ($html) { // #todo sets html clock on page if present
     return $html;
 }
 
+function TrimPath ($string) { // Trims the directories AND THE FILE EXTENSION from a file path
+	while (index($string, "/") >= 0) {
+		$string = substr($string, index($string, "/") + 1);
+	}
+
+	if (index($string, '.') >= 0) {
+		$string = substr($string, 0, index($string, ".") + 0);
+	}
+
+	return $string;
+}
+
+function TranslateEmoji ($html) { // replaces emoji with respective text
+	WriteLog('TranslateEmoji()');
+
+	// this could be optimized a lot. A LOT.
+
+	$scriptDir = GetScriptDir();
+	if ($scriptDir) {
+		$emojiList = explode("\n", `find $scriptDir/config/string/emoji`);
+		foreach ($emojiList as $emojiFile) {
+			$emojiName = TrimPath($emojiFile);
+			$emojiEmoji = GetFile($emojiFile);
+			$html = str_replace($emojiEmoji, '[' . $emojiName . ']', $html);
+		}
+	}
+
+//	$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
+
+    return $html;
+}
+
 function StripHeavyTags ($html) { // strips heavy tags from page replaces with basic ones
+	WriteLog('StripHeavyTags()');
+
 	$tags = array(
 		'table', 'tr', 'td', 'th', 'span', 'fieldset', 'legend', 'font',
 		'script', 'style', 'big'
@@ -237,18 +271,37 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 }
 
 function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing the missing page
+	WriteLog("HandleNotFound($path, $pathRel)");
+
 	if (GetConfig('admin/php/regrow_404_pages')) {
+		WriteLog('HandleNotFound: admin/php/regrow_404_pages was true');
+
 		$SCRIPTDIR = GetScriptDir();
 
 		if (preg_match('/^\/[a-f0-9]{2}\/[a-f0-9]{2}\/([a-f0-9]{8})/', $path, $itemHashMatch)) {
+			WriteLog('HandleNotFound: found item hash');
 			$itemHash = $itemHashMatch[1];
-
 			$pagesPlArgument = $itemHash;
 		}
+		if (preg_match('/^\/top\/([a-zA-Z0-9]+)\.html/', $path, $hashTagMatch)) {
+			WriteLog('HandleNotFound: found hashtag');
+			$hashTag = $hashTagMatch[1];
+			$pagesPlArgument = '\#' . $hashTag;
+		}
 		if (
-			$path == '/stats.html' ||
-			$path == '/write.html'
+			$path == '/top.html' ||
+			$path == '/write.html' ||
+			$path == '/upload.html' ||
+			$path == '/authors.html' ||
+			$path == '/profile.html' ||
+			$path == '/etc.html' ||
+			$path == '/events.html' ||
+			$path == '/tags.html' ||
+			$path == '/settings.html' ||
+			$path == '/help.html' ||
+			$path == '/manual.html'
 		) {
+			WriteLog('HandleNotFound: found a summary page');
 			$pagesPlArgument = '--summary';
 		}
 
@@ -313,7 +366,7 @@ if (GetConfig('admin/php/route_enable')) {
 			$pathFull = realpath('.'.$path);
 
 			if ($path == '/profile.html') {
-				
+
 			} else {
 				// if registration is required, redirect user to profile.html
 				if (GetConfig('admin/force_profile')) {
@@ -347,7 +400,7 @@ if (GetConfig('admin/php/route_enable')) {
 					$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
 					if ($path != '/404.html' && file_exists($pathRel)) {
 						WriteLog("file_exists($pathRel) was true");
-						
+
 						if ($path == '/settings.html') {
 							if (isset($_GET['chkWantToVote']) && isset($_GET['query']) && $_GET['query'] == 'ui=Admin') {
 								include_once('cookie.php');
@@ -508,10 +561,13 @@ if (GetConfig('admin/php/route_enable')) {
 							// this allows the script to compare it to the ETag value
 							// returned by the server when requesting HEAD for current page
 							// fresh_js fresh.js
-							$md5 = md5_file($pathRel);
-							header('ETag: ' . $md5);
-							$html .= "<script><!-- window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); } // --></script>";
-							// #todo this should probably be templated and added using InjectJs()
+							if (index($html, 'CheckIfFresh()') > -1) {
+								// only need to do it if the script is included in page
+								$md5 = md5_file($pathRel);
+								header('ETag: ' . $md5);
+								$html .= "<script><!-- window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); } // --></script>";
+								// #todo this should probably be templated and added using InjectJs()
+							}
 						}
 
 						//if ($path == '/settings.html') {
@@ -617,12 +673,12 @@ if (GetConfig('admin/php/route_enable')) {
 				}
 			} else {
 				// if there is no cookie set, set it
-				
+
 				setcookie2('light', $lightMode);
 			}
 		} else {
 			// no requests for light mode change, check if there is a cookie
-			
+
 			if (isset($_COOKIE['light'])) {
 				// cookie is set
 				$lightMode = $_COOKIE['light'] ? 1 : 0;
@@ -662,7 +718,7 @@ if (GetConfig('admin/php/route_enable')) {
 			$serverResponseTemplate = str_replace('$serverResponse', $serverResponse, $serverResponseTemplate);
 
 			$messageInjected = 0;
-			
+
 			if (isset($_GET['anchorto']) && $_GET['anchorto']) {
 				// anchorto means we can add a # to the "Thanks" link which goes straight to the relevant item
 
@@ -770,7 +826,11 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = str_replace('<span id=lblFingerprint></span>', "<span id=lblFingerprint>$fingerprint</span>", $html);
 
 			if (isset($cookie) && $cookie) {
-				$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
+				if (GetConfig('admin/js/enable')) {
+					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html" onclick="if (window.sharePubKey) { return sharePubKey(); }">Go to profile</a></p></span>', $html);
+				} else {
+					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
+				}
 			}
 		}
 
@@ -784,10 +844,13 @@ if (GetConfig('admin/php/route_enable')) {
 		}
 
 		if ($lightMode) {
+			WriteLog('route.php: $lightMode is true!');
+
 			$html = StripComments($html);
-			$html = StripWhitespace($html);                          
+			$html = StripWhitespace($html);
 			$html = CleanBodyTag($html);
 			$html = StripHeavyTags($html);
+			$html = TranslateEmoji($html);
 
 			$pathSelf = $_SERVER['REQUEST_URI'];
 			if (! (strpos($pathSelf, '?') === false)) {
@@ -805,8 +868,8 @@ if (GetConfig('admin/php/route_enable')) {
 				$html
 			);
 			$html = str_replace(
-				'>Light Mode<',
-				'><font color=#008000>* Light Mode (selected)</font><',
+				'>Turn On Light Mode<',
+				'><strong><big>** Light Mode Is Currently Selected **</big></strong><',
 				$html
 			);
 			//
@@ -819,8 +882,8 @@ if (GetConfig('admin/php/route_enable')) {
 			//#todo perhaps strip onclick, onkeypress, etc., and style
 		} else {
 			$html = str_replace(
-				'>Pretty Mode<',
-				'><font color=#008000>* Pretty Mode (selected)</font><',
+				'>Turn Off Light Mode<',
+				'><strong><big>** Light Mode is Currently Turned Off **</big></strong><',
 				$html
 			);
 		}
@@ -839,11 +902,21 @@ if (GetConfig('admin/php/route_enable')) {
 	if ($_GET['path']) {
 		if (file_exists($path)) {
 			$html = get_file_contents($path);
-			print $html;
 		}
 		else if (file_exists($path . '.html')) {
 			$html = get_file_contents($path . '.html');
-			print $html;
+			if (GetConfig('admin/php/debug')) {
+				$html = str_replace('</body>', WriteLog('') . '</body>', $html);
+			}
+		}
+
+		if ($html) {
+			if (GetConfig('admin/php/debug')) {
+				$html = str_replace('</body>', WriteLog('') . '</body>', $html);
+			}
+			print($html);
+		} else {
+			print('Technical issue encountered. Please contact maintainer.');
 		}
 	}
 }

@@ -4076,6 +4076,10 @@ if ($arg1) {
 		print ("recognized item identifier\n");
 		MakePage('item', $arg1, 1);
 	}
+	elsif (substr($arg1, 0, 1) eq '#') {
+		print ("recognized hash tag $arg1\n");
+		MakePage('tag', substr($arg1, 1));
+	}
 	elsif ($arg1 eq '--summary') {
 		print ("recognized --summary\n");
 		MakeSummaryPages();
@@ -4085,8 +4089,10 @@ if ($arg1) {
 		WriteIndexPages();
 	}
 	else {
-		print ("pages.pl: --summary\n");
-		print ("item_id\n");
+		print ("Available arguments:\n");
+		print ("--summary for all summary pages\n");
+		print ("--index for all index pages\n");
+		print ("item_id for one item's page\n");
 	}
 }
 else {
