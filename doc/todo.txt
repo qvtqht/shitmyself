@@ -1,7 +1,7 @@
 move/copy update buton to operator dialog
 	move/copy backend piece from post.php to route.php
 
-de-emoji for accessibility mode
+de-emoji for accessibility mode x
 
 #mean hashtag
 	[x] hide mean people
@@ -11,6 +11,8 @@ de-emoji for accessibility mode
 
 What's Keeping Website From Being Used?
 =======================================
+Where to find newest posts??
+Search
 Rebuild times are long due to generating a page for each item
 	Good: Site is fast to come back up
 	Need: lazy-generate pages with PHP is enabled
@@ -59,7 +61,7 @@ allow aliasing of ??
 #bigtodo: remove dependencies on external pm modules
 
 
-netscape 4: suggested files for image upload are *.html
+netscape 4: suggested files for image upload are *.html #bug
 
 Testing Results July 17 2020
 ============================
