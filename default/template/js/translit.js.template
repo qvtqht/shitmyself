@@ -158,6 +158,9 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		// magic, not sure if this actually works
 		// what browsers is this for?
 		key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
+	} else if (key.toString && key.toString.length == 1) {
+		//should check that it's a string and only 1 char
+		key = key.toString;
 	}
 	//alert('DEBUG: key: ' + key);
 
