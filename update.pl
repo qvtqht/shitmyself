@@ -23,13 +23,18 @@ my $arg1 = shift;
 if ($arg1) {
 	print($arg1 . "\n");
 } else {
-	print ("arg1 missing\n\nplease specify --all or name of file\n");
+	print ("arg1 missing, assuming shallow update is requested\n");
 }
 
 require './sqlite.pl';
 require './index.pl';
 require './access.pl';
 require './pages.pl';
+
+################################
+
+UnlinkCache('count_txt');
+UnlinkCache('count_image');
 
 sub GetTime2 () { # returns epoch time
 	# this is identical to GetTime() in utils.pl
@@ -269,10 +274,10 @@ sub ProcessImageFile { # $file ; add new image to index
 	return $fileHash;
 }
 
-if (!$arg1) {
-	print "must supply filename or --all\n";
-}
-elsif ($arg1 eq '--all') {
+# if (!$arg1) {
+# 	print "must supply filename or --all\n";
+# }
+if (!defined($arg1) || $arg1 eq '--all') {
 	require './sqlite.pl';
 	require './index.pl';
 	require './access.pl';
@@ -315,31 +320,36 @@ elsif ($arg1 eq '--all') {
 		# time the script started (now)
 		my $startTime = time();
 
-		if ($timeLimit) {
+		if (!$timeLimit) {
 			# default to 10 seconds
+			WriteLog('update.pl: config/admin/update/limit_time not found, defaulting to 10 seconds');
 			$timeLimit = 10;
 		}
 
-		# get list of access log path(s)
-		my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
-		my @accessLogPaths;
-		if ($accessLogPathsConfig) {
-			@accessLogPaths = split("\n", $accessLogPathsConfig);
-		}
+		if (1) { #todo #meta #tk
+			WriteMessage('Reading access.log...');
 
-		#todo re-test this
-		foreach my $accessLogPath (@accessLogPaths) {
-			# Check to see if access log exists
-			if (-e $accessLogPath) {
-				#Process the access log (access.pl)
-				$newItemCount += ProcessAccessLog($accessLogPath, 0);
-
-				WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
-
-				$counter{'access_log'} += $newItemCount;
+			# get list of access log path(s)
+			my $accessLogPathsConfig = GetConfig('admin/access_log_path_list');
+			my @accessLogPaths;
+			if ($accessLogPathsConfig) {
+				@accessLogPaths = split("\n", $accessLogPathsConfig);
 			}
-			else {
-				WriteLog("WARNING: Could not find $accessLogPath");
+
+			#todo re-test this
+			foreach my $accessLogPath (@accessLogPaths) {
+				# Check to see if access log exists
+				if (-e $accessLogPath) {
+					#Process the access log (access.pl)
+					$newItemCount += ProcessAccessLog($accessLogPath, 0);
+
+					WriteLog("Processed $accessLogPath; \$newItemCount = $newItemCount");
+
+					$counter{'access_log'} += $newItemCount;
+				}
+				else {
+					WriteLog("WARNING: Could not find $accessLogPath");
+				}
 			}
 		}
 
@@ -379,7 +389,7 @@ elsif ($arg1 eq '--all') {
 		while ($filesProcessed > 0 || $pagesProcessed > 1) {
 			WriteLog('while loop: $filesProcessed: ' . $filesProcessed . '; $pagesProcessed: ' . $pagesProcessed);
 
-			if ((time() - $startTime) > $timeLimit) {
+			if ((!defined($arg1) || ($arg1 ne '--all')) && (time() - $startTime) > $timeLimit) {
 				WriteMessage("Time limit reached, exiting loop");
 				last;
 			}
