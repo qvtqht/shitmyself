@@ -17,6 +17,8 @@
 #
 #
 
+print "Loading...\n";
+
 use strict;
 use warnings FATAL => 'all';
 use utf8;
@@ -35,9 +37,13 @@ require './pages.pl';
 
 my $HTMLDIR = "html";
 
+print "MakeSummaryPages()...\n";
+
 MakeSummaryPages();
 
 print `query/touch_all.sh`;
+
+print "update.pl --all ...\n";
 
 print `time ./update.pl --all`;
 
