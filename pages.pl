@@ -800,7 +800,7 @@ sub GetItemPage {
 
 		$fileContents = GetFile($file{'file_path'});
 
-		$replyForm = GetTemplate('form/reply.template');
+		$replyForm = GetTemplate('form/write/reply.template');
 		$replyFooter = '';
 
 		#		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
@@ -1187,7 +1187,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				# for text 140 characters or fewer, use item-short.template
 				$itemTemplate = GetTemplate("item/item-short.template");
 			} else {
-				$itemTemplate = GetTemplate("item/item2.template");
+				$itemTemplate = GetTemplate("item/item.template");
 			}
 		}
 
@@ -3336,7 +3336,7 @@ sub GetUploadWindow {
 }
 
 sub GetWriteForm { # returns write form (for composing text message)
-	my $writeForm = GetTemplate('form/write.template');
+	my $writeForm = GetTemplate('form/write/write.template');
 
 	if (GetConfig('admin/php/enable')) {
 
@@ -3592,8 +3592,8 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback));
 	if (GetConfig('admin/js/enable')) {
-		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /;
-		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/;
+		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /i;
+		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/i;
 	}
 
 	return $txtIndex;
