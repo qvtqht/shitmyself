@@ -3,6 +3,7 @@
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 var showVoterLastAction = '';
+var showMeaniesLastAction = '';
 var showAdminLastAction = '';
 
 var timerShowAdvanced;
@@ -85,6 +86,7 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
 //handles class=voting based on 'want_to_vote' preference
+//handles class=tag-abuse based on 'show_meanies' preference
 //force parameter
 // 1 = does not re-do setTimeout (called this way from checkboxes)
 // 0 = previous preference values are remembered, and are not re-done (called by timer)
@@ -106,7 +108,27 @@ function ShowAdvanced(force) { // show or hide controls based on preferences
 			for (var i = 0; i < elemVoter.length; i++) {
 				SetElementVisible(elemVoter[i], displayVoter, 0, 0);
 			}
+			showVoterLastAction = displayVoter;
 		}
+
+		///////////
+
+		var displayMeanies = 'none'; // no voting controls by default
+		if (GetPrefs('show_meanies') == 1) {
+		    // check value of show_meanies preference
+			displayMeanies = 'initial'; // display
+		}
+
+		if (force || showMeaniesLastAction != displayMeanies) {
+			var elemMeanies = document.getElementsByClassName('tag-abuse');
+
+			for (var i = 0; i < elemMeanies.length; i++) {
+				SetElementVisible(elemMeanies[i], displayMeanies, 0, 0);
+			}
+			showMeaniesLastAction = displayMeanies;
+		}
+
+		///////////
 
 		var displayAdmin = 'none'; // not voting by default
 		if (GetPrefs('show_admin') == 1) { // check value of show_admin preference
@@ -234,13 +256,13 @@ function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefVa
 	return 1;
 }
 
-function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles affected elements
+function saveCheckbox (id, ths, prefKey) { // saves value of checkbox, toggles affected elements
 // id = id of pane to hide or show; not required
 // ths = "this" of calling checkbox)
 // prefKey = key of preference value to set with checkbox
 //
 // this function is a bit of a mess, could use a refactor #todo
-//	alert('saveCheckbox ' + id + ths + prefKey);
+	//alert('DEBUG: saveCheckbox(' + id + ',' + ths + ',' + prefKey);
 
 	// this will look for pane with id=id and show/hide it if it exists
 	// used on the profile page
@@ -251,8 +273,13 @@ function saveCheckbox(id, ths, prefKey) { // saves value of checkbox, toggles af
 		}
 	}
 
+	var checkboxState = (ths.checked ? 1 : 0);
+	//alert('DEBUG: checkboxState = ' + checkboxState);
+
 	// saves checkbox's value as 0/1 value to prefs(prefKey)
 	SetPrefs(prefKey, (ths.checked ? 1 : 0));
+
+	//alert('DEBUG: after SetPrefs, GetPrefs(' + prefKey + ') returns: ' + GetPrefs(prefKey));
 
 	// call ShowAdvanced(1) to update ui appearance
 	ShowAdvanced(1);
@@ -307,6 +334,7 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 		} else if (ab == 'admin') {
             SetPrefs('show_admin', 1);
             SetPrefs('want_to_vote', 1);
+            SetPrefs('show_meanies', 1);
 		}
 
 		ShowAdvanced(1);
@@ -329,11 +357,17 @@ function SettingsOnload() { // onload function for preferences page
 	// based on preference state
 		var pane;
 
-
 		if (GetPrefs('want_to_vote') == 1) {
 			var cb = document.getElementById('chkWantToVote');
 			if (cb) {
 				cb.checked = 1;
+			}
+		}
+
+		if (GetPrefs('show_meanies') == 1) {
+			var cbM = document.getElementById('chkShowMeanies');
+			if (cbM) {
+				cbM.checked = 1;
 			}
 		}
 

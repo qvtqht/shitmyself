@@ -32,8 +32,13 @@
 
 						<p>
 							<label for=chkWantToVote>
-								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="saveCheckbox(0, this, 'want_to_vote');">
+								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="if (window.saveCheckbox) { saveCheckbox(0, this, 'want_to_vote'); }">
 								I am <u>human</u> and I want to <u>vote</u>
+							</label>
+							<br>
+							<label for=chkShowMeanies>
+								<input type=checkbox id=chkShowMeanies name=chkShowMeanies onchange="if (window.saveCheckbox) { saveCheckbox(0, this, 'show_meanies'); }">
+								Show me everything, including <u>mean people</u>
 							</label>
 						</p>
 					</fieldset>
