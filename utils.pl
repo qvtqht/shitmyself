@@ -80,6 +80,7 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 }
 
 sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/log.log
+	print '.';
 	my $text = shift;
 	if (!$text) {
 		$text = '(empty string)';
@@ -1149,9 +1150,9 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 	}
 
 	WriteLog("PutFile: $file, (\$content), $binMode");
-	WriteLog("==== \$content ====");
-	WriteLog($content);
-	WriteLog("====");
+	#WriteLog("==== \$content ====");
+	#WriteLog($content);
+	#WriteLog("====");
 
 	if (open (my $fileHandle, ">", $file)) {
 		WriteLog("PutFile: file handle opened for $file");
@@ -1282,7 +1283,19 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 	return $html;
 }
 
-sub PutHtmlFile { # writes content to html file, with special rules; parameters: $file, $content
+sub RemoveHtmlFile { # $file ; removes existing html file
+	my $file = shift;
+	if (!$file) {
+		return;
+	}
+	my $fileProvided = $file;
+	$file = "$HTMLDIR/$file";
+	if (-e $file) {
+		unlink($file);
+	}
+} # RemoveHtmlFile()
+
+sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, with special rules; parameters: $file, $content
 	# the special rules are:
 	# * if config/admin/html/ascii_only is set, all non-ascii characters are stripped from output to file
 	# * if $file matches config/home_page, the output is also written to index.html
@@ -1484,7 +1497,7 @@ sub PutHtmlFile { # writes content to html file, with special rules; parameters:
 	# 		}
 	# 	}
 	# }
-}
+} # PutHtmlFile()
 
 sub GetFileAsHashKeys { # returns file as hash of lines
 	# currently not used, can be used for detecting matching lines later
@@ -1724,7 +1737,7 @@ sub GetAdminKey { # Returns admin's public key, 0 if there is none
 	return 0;
 }
 
-sub TrimPath { # Trims the directories AND THE FILE EXTENSION from a file path
+sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a file path
 	my $string = shift;
 
 	while (index($string, "/") >= 0) {
