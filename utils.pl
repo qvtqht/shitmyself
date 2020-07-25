@@ -32,10 +32,14 @@ if (!$SCRIPTDIR) {
 	die ('Sanity check failed: $SCRIPTDIR is false!');
 }
 
+sub GetMyCacheVersion {
+	return 'a';
+}
+
 my $HTMLDIR = $SCRIPTDIR . '/html';
 my $TXTDIR = $HTMLDIR . '/txt';
 my $IMAGEDIR = $HTMLDIR . '/txt';
-my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyVersion();
+my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 
 {
 	# make a list of some directories that need to exist
@@ -57,12 +61,12 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyVersion();
 		"$HTMLDIR/error"
 	);
 
-	push @dirsThatShouldExist, 'cache/' . GetMyVersion();
-	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/key';
-	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/file';
-	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/avatar';
-	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/message';
-	push @dirsThatShouldExist, 'cache/' . GetMyVersion() . '/gpg';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion();
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/key';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/file';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/avatar';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/message';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg';
 
 	# create directories that need to exist
 	foreach (@dirsThatShouldExist) {
@@ -224,7 +228,7 @@ sub GetCache { # get cache by cache key
 
 	state $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	# cache name prefixed by current version
@@ -306,7 +310,7 @@ sub PutCache { # stores value in cache; $cacheName, $content
 
 	state $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
@@ -320,7 +324,7 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 
 	state $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
@@ -336,7 +340,7 @@ sub CacheExists { # Check whether specified cache entry exists, return 1 (exists
 
 	state $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
@@ -1842,7 +1846,7 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 	if ($fileHash) {
 
 		my $cachePath;
-		$cachePath = "./cache/" . GetMyVersion() . "/gpg/$fileHash.cache";
+		$cachePath = "./cache/" . GetMyCacheVersion() . "/gpg/$fileHash.cache";
 
 		my %returnValues;
 
@@ -2515,7 +2519,7 @@ sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cac
 	WriteLog("GetItemMessage($itemHash)");
 
 	my $message;
-	my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
+	my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
 
 	if (-e $messageCacheName) {
 		$message = GetFile($messageCacheName);

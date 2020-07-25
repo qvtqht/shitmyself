@@ -10,7 +10,7 @@ use 5.010;
 
 require './utils.pl';
 
-my $SqliteDbName = './cache/' . GetMyVersion() . '/index.sqlite3'; # path to sqlite db
+my $SqliteDbName = './cache/' . GetMyCacheVersion() . '/index.sqlite3'; # path to sqlite db
 
 my $dbh; # handle for sqlite interface
 

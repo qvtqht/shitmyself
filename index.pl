@@ -1467,7 +1467,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		if ($message) {
 			# cache the processed message text
-			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$fileHash";
+			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$fileHash";
 			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
 		} else {
@@ -1800,7 +1800,7 @@ sub WriteIndexedConfig { # writes config indexed in database into config/
 		if (IsSha1($configValue)) {
 			WriteLog("It's a hash, try to look it up...");
 
-			if (-e 'cache/' . GetMyVersion() . "/message/$configValue") {
+			if (-e 'cache/' . GetMyCacheVersion() . "/message/$configValue") {
 				WriteLog("Lookup of $configValue successful");
 				$configValue = GetCache("message/$configValue");
 			} else {

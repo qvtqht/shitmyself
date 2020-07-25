@@ -79,6 +79,10 @@ function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 //}
 
 
+function GetMyCacheVersion () { // returns current cache version
+	return 'a';
+}
+
 function GetMyVersion () { // returns current git commit id
 // it is cached in config/admin/my_version
 // otherwise it's looked up with: git rev-parse HEAD
@@ -263,7 +267,7 @@ function GpgParse ($filePath) { // #todo #untested
 
 		$fileHash = GetFileHash($filePath);
 
-        $cachePath = "./cache/" . GetMyVersion() . "/gpg/php/$fileHash.cache";
+        $cachePath = "./cache/" . GetMyCacheVersion() . "/gpg/php/$fileHash.cache";
         // this is where we will cache results for later use
         // php's cache is separate from perl's because it's in a different format
 
@@ -434,7 +438,7 @@ function GetCache ($cacheName) { // get cache contents by key/name
 
 	static $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	// cache name prefixed by current version
@@ -452,7 +456,7 @@ function PutCache ($cacheName, $content) { // stores value in cache
 //#todo sanity checks and error handling
 	static $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
@@ -463,7 +467,7 @@ function PutCache ($cacheName, $content) { // stores value in cache
 function UnlinkCache ($cacheName) { // removes cache by unlinking file it's stored in
 	static $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
@@ -476,7 +480,7 @@ function UnlinkCache ($cacheName) { // removes cache by unlinking file it's stor
 function CacheExists ($cacheName) { // Check whether specified cache entry exists, return 1 (exists) or 0 (not)
 	static $myVersion;
 	if (!$myVersion) {
-		$myVersion = GetMyVersion();
+		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;

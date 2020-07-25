@@ -2562,7 +2562,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			my $isAdmin = 0;
 
 			my $message;
-			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
+			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
 			WriteLog('$messageCacheName (1) = ' . $messageCacheName);
 			if ($gpgKey) {
 				$message = GetFile($messageCacheName);
@@ -2728,7 +2728,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			my $isAdmin = 0;
 
 			my $message;
-			my $messageCacheName = "./cache/" . GetMyVersion() . "/message/$itemHash";
+			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
 			WriteLog('$messageCacheName (3) = ' . $messageCacheName);
 			if (-e $messageCacheName) {
 				$message = GetFile($messageCacheName);
@@ -3795,7 +3795,7 @@ sub MakeDataPage { # returns html for /data.html
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 		
-		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyVersion() . "/index.sqlite3");
+		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyCacheVersion() . "/index.sqlite3");
 		rename("$HTMLDIR/index.sqlite3.zip.tmp", "$HTMLDIR/index.sqlite3.zip");
 
 		PutCache('last_zip', GetTime());
