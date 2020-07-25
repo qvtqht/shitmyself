@@ -66,11 +66,15 @@ if (!empty($_FILES['uploaded_file'])) {
 				$pwd = getcwd();
 				WriteLog('$pwd = ' . $pwd);
 
-				if (GetConfig('admin/php/update_all_on_post')) {
+				if (GetConfig('admin/php/post/update_all_on_post')) {
 					WriteLog("cd .. ; ./update.pl --all");
 					WriteLog(`cd .. ; ./update.pl --all`);
 				}
-				elseif (GetConfig('admin/php/update_on_post')) {
+				elseif (GetConfig('admin/php/post/update_on_post')) {
+					WriteLog("cd .. ; ./update.pl");
+					WriteLog(`cd .. ; ./update.pl`);
+				}
+				elseif (GetConfig('admin/php/post/update_item_on_post')) {
 					WriteLog("cd .. ; ./update.pl \"html/$path\"");
 					WriteLog(`cd .. ; ./update.pl "html/$path"`);
 				}
@@ -100,4 +104,10 @@ if (!empty($_FILES['uploaded_file'])) {
 	}
 
 	print WriteLog('');
+//#todo
+// if (GetConfig('admin/php/debug')) {
+//	$html = str_replace('</body>', WriteLog('') . '</body>', $html);
+// }
+// print($html);
+
 }
