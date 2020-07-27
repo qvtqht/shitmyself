@@ -46,6 +46,8 @@
 							<span id=spanSignAs></span>
 						</p>
 
+						<p><a href="/frame.html" target=_top>Show keyboard (beta)</a></p>
+
 						<span>
 							<p id=lblWriteLengthWarning class=warning style="display: none">
 							</p>
