@@ -944,7 +944,17 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 			my $tagButton = GetTemplate('vote2button.template');
 
 			if ($jsEnabled) {
-				$tagButton = AddAttributeToTag($tagButton, 'a', 'onclick', "if (window.signVote) { var gt = unescape('%3E'); return signVote(this, gt+gt+'\$fileHash\\n#\$voteValue'); }")
+				$tagButton = AddAttributeToTag(
+					$tagButton,
+					'a',
+					'onclick',
+					trim("
+						if (window.signVote) {
+							var gt = unescape('%3E');
+							return signVote(this, gt+gt+'\$fileHash\\n#\$voteValue');
+						}
+					")
+				);
 			}
 
 			my $quickTagCaption = GetString($quickTagValue);
@@ -1190,6 +1200,16 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$itemTemplate = GetTemplate("item/item.template");
 			}
 		}
+
+		if (GetConfig('admin/js/enable')) {
+			$itemTemplate = AddAttributeToTag(
+				$itemTemplate,
+				'a href="/etc.html"',
+				'onclick',
+				"if (window.ShowAll) { this.removeAttribute('onclick'); return ShowAll(this); } else { return true; }"
+			);
+		}
+
 
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
@@ -1892,9 +1912,14 @@ sub GetStatsTable() {
 	# count total number of files
 	my $filesTotal = 0;
 
-	$filesTotal += trim(`find $TXTDIR -name \\\*.txt | wc -l`);
+	my $filesTxt = GetCache('count_txt') || trim(`find $TXTDIR -name \\\*.txt | wc -l`);
+	PutCache('count_txt', $filesTxt);
+	$filesTotal += $filesTxt;
+
 	if (GetConfig('admin/image/enable')) {
-		$filesTotal += trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+		my $filesImage =  GetCache('count_image') || trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+		PutCache('count_image', $filesImage);
+		$filesTotal += $filesImage;
 	}
 
 	#todo optimize
@@ -2528,6 +2553,10 @@ sub GetReadPage { # generates page with item listing based on parameters
 	if ($pageType eq 'tag') {
 		# add tag buttons with selected tag emphasized
 		$txtIndex .= GetTagLinks($pageParam);
+
+		if ($pageParam eq 'image') {
+			$txtIndex .= GetUploadWindow();
+		}
 	}
 
 	$txtIndex .= GetTemplate('maincontent.template');
@@ -2951,6 +2980,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 # js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
 
+	WriteIndexPages(); #todo factor this out.
+
 	PutHtmlFile("test.html", GetTemplate('test.template'));
 	PutHtmlFile("kbd.html", GetTemplate('keyboard.template'));
 	PutHtmlFile("frame.html", GetTemplate('keyboard_frame.template'));
@@ -3285,19 +3316,22 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		}
 
 		if (GetConfig('admin/http_auth/enable')) {
-			my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
-			$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
-
-			my $errorDocumentRoot = "$HTMLDIR/error/";
-			$HtaccessHttpAuthTemplate =~ s/\$errorDocumentRoot/$errorDocumentRoot/g;
-			#todo this currently has a one-account template
-			#todo add generating of template for both lighttpd and htaccess
-
-			$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
-
 			my $HtpasswdTemplate .= GetConfig('admin/http_auth/htpasswd');
-			PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
-			chmod 0644, "$HTMLDIR/.htpasswd";
+			my $HtaccessHttpAuthTemplate = GetTemplate('htaccess/htaccess_htpasswd.template');
+
+			if ($HtpasswdTemplate & $HtaccessHttpAuthTemplate) {
+				PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
+				chmod 0644, "$HTMLDIR/.htpasswd";
+
+				$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
+
+				my $errorDocumentRoot = "$HTMLDIR/error/";
+				$HtaccessHttpAuthTemplate =~ s/\$errorDocumentRoot/$errorDocumentRoot/g;
+				#todo this currently has a one-account template
+				#todo add generating of template for both lighttpd and htaccess
+
+				$HtaccessTemplate .= "\n" . $HtaccessHttpAuthTemplate;
+			}
 		}
 
 		PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
@@ -3876,6 +3910,8 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		$priority = 0;
 	}
 
+	$priority = 1 // #override temp #todo #hack #bug
+
 	#todo sanity checks
 
 	WriteLog('MakePage(' . $pageType . ', ' . $pageParam . ')');
@@ -3885,17 +3921,29 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	# tag page, get the tag name from $pageParam
 	if ($pageType eq 'tag') {
 		my $tagName = $pageParam;
+		my $targetPath = "top/$tagName.html";
+
+		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+			RemoveHtmlFile($targetPath);
+			return;
+		}
 
 		WriteLog("pages.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
 
 		my $tagPage = GetReadPage('tag', $tagName);
 
-		PutHtmlFile("top/$tagName.html", $tagPage);
+		PutHtmlFile($targetPath, $tagPage);
 	}
 	#
 	# author page, get author's id from $pageParam
 	elsif ($pageType eq 'author') {
 		my $authorKey = $pageParam;
+		my $targetPath = "author/$authorKey/index.html";
+
+		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+			RemoveHtmlFile($targetPath);
+			return;
+		}
 
 		my $authorPage = GetReadPage('author', $authorKey);
 
@@ -3903,17 +3951,22 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			mkdir ("$HTMLDIR/author/$authorKey");
 		}
 
-		PutHtmlFile("author/$authorKey/index.html", $authorPage);
+		PutHtmlFile($targetPath, $authorPage);
 	}
 	#
 	# if $pageType eq item, generate that item's page
 	elsif ($pageType eq 'item') {
-		if (GetConfig('admin/php/regrow_404_pages') && !$priority) {
-			return;
-		}
-
 		# get the item's hash from the param field
 		my $fileHash = $pageParam;
+
+		# get item page's path #todo refactor this into a function
+		#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
+		my $targetPath = GetHtmlFilename($fileHash);
+
+		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+			RemoveHtmlFile($targetPath);
+			return;
+		}
 
 		# get item list using DBGetItemList()
 		# #todo clean this up a little, perhaps crete DBGetItem()
@@ -3921,10 +3974,6 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 		if (scalar(@files)) {
 			my $file = $files[0];
-
-			# get item page's path #todo refactor this into a function
-			#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
-			my $targetPath = GetHtmlFilename($fileHash);
 
 			# create a subdir for the first 2 characters of its hash if it doesn't exist already
 			if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
@@ -4037,6 +4086,7 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 	foreach my $page (@touchedPagesArray) {
 		if ($timeLimit && $startTime && ((time() - $startTime) > $timeLimit)) {
 			WriteMessage("BuildTouchedPages: Time limit reached, exiting loop");
+			WriteMessage("BuildTouchedPages: " . time() . " - $startTime > $timeLimit");
 			last;
 		}
 
@@ -4076,6 +4126,10 @@ if ($arg1) {
 		print ("recognized item identifier\n");
 		MakePage('item', $arg1, 1);
 	}
+	elsif (IsFingerprint($arg1)) {
+		print ("recognized author fingerprint\n");
+		MakePage('author', $arg1, 1);
+	}
 	elsif (substr($arg1, 0, 1) eq '#') {
 		print ("recognized hash tag $arg1\n");
 		MakePage('tag', substr($arg1, 1));
@@ -4092,12 +4146,9 @@ if ($arg1) {
 		print ("Available arguments:\n");
 		print ("--summary for all summary pages\n");
 		print ("--index for all index pages\n");
-		print ("item_id for one item's page\n");
+		print ("item id for one item's page\n");
+		print ("author fingerprint for one item's page\n");
 	}
-}
-else {
-	print ("--summary\n");
-	print ("item_id\n");
 }
 
 1;
