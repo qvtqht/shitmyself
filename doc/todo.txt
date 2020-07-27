@@ -1,3 +1,5 @@
+in netscape 3, light mode sometimes turns off without asking
+
 move/copy update buton to operator dialog
 	move/copy backend piece from post.php to route.php
 
