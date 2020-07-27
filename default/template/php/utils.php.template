@@ -86,6 +86,7 @@ function GetMyCacheVersion () { // returns current cache version
 function GetMyVersion () { // returns current git commit id
 // it is cached in config/admin/my_version
 // otherwise it's looked up with: git rev-parse HEAD
+// todo add parameter to ignore memo and re-get version number
 
 	WriteLog('GetMyVersion: begin');
 
@@ -372,7 +373,9 @@ function GetConfig ($configKey) { // get value for config value $configKey
 	$configDir = '../config'; // config is stored here
 	$defaultDir = '../default'; // defaults are stored here
 
-	WriteLog('GetConfig('.$configKey.'); $configDir = "' . $configDir . '", $defaultDir = "' . $defaultDir . '", pwd = "' . getcwd() . '"');
+	$pwd = getcwd();
+
+	WriteLog('GetConfig('.$configKey.'); $pwd = "' . $pwd . '", $configDir = "' . $configDir . '", $defaultDir = "' . $defaultDir . '", pwd = "' . getcwd() . '"');
 
 	WriteLog('GetConfig: Checking in ' . $configDir . '/' . $configKey );
 
@@ -381,10 +384,11 @@ function GetConfig ($configKey) { // get value for config value $configKey
 
 		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} elseif (file_exists($defaultDir . '/' . $configKey)) {
-		WriteLog('GetConfig: found in default/');
+		WriteLog('GetConfig: not found in config/, but found in default/');
 
 		WriteLog("GetConfig: copy ($defaultDir/$configKey, $configDir/$configKey);"); // copy to config/
 		copy ($defaultDir . '/' . $configKey, $configDir . '/' . $configKey); // copy to config/
+		//#todo this copy should be copy_with_dir_creation
 
 		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} else {
@@ -594,7 +598,7 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		}
 	}
 
-	if (GetConfig('admin/php/debug_server_response') || headers_sent()) {
+	if (GetConfig('admin/php/debug') || GetConfig('admin/php/debug_server_response') || headers_sent()) {
 		// #warning, this is not a good pattern, don't copy this code. the html will be printed unescaped.
 		// doing it in this case because we want to make a clickable link
 		WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug is true)</font>', 1);
