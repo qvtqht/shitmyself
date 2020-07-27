@@ -244,10 +244,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		}
 
 		my $recordTimestamp = 0;   # do we need to record timestamp?
-		my $recordFingerprint = 0; # do we need to record timestamp?
+		my $recordFingerprint = 0; # do we need to record fingerprint?
 		my $recordDebugInfo = 0;   # do we need to record debug info?
 
 		if (!defined($hostname) || !defined($logName) || !defined($fullName) || !defined($date) || !defined($gmt) || !defined($req) || !defined($file) || !defined($proto) || !defined($status) || !defined($length) || !defined($ref)) {
+			# something is missing, better ignore it to be safe.
 			LogError('Broken line in access.log: ' . $line);
 			next;
 		}
