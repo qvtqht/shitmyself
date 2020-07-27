@@ -49,7 +49,8 @@ touch html/post.html
 echo "rm -v log/log.log"
 rm -v log/log.log
 
-
 echo "mkdir -p html/txt"
 mkdir -p html/txt
 
+echo "killall lighttpd"
+killall lighttpd
