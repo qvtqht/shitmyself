@@ -1,0 +1,8 @@
+foreach author=admin
+	foreach item where author is parent
+		foreach hashtag presen in item
+			foreach item.child
+				child.tags_child_can_extend_to_others.add(hashtag)
+
+select 
+

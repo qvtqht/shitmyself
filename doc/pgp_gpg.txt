@@ -1,0 +1,6 @@
+Project uses only a small subset of PGP/GnuPG at this time.
+
+Simple public/private key pairs
+
+Message signing and verification using key pair
+
