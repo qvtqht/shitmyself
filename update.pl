@@ -326,7 +326,10 @@ if (!defined($arg1) || $arg1 eq '--all') {
 			$timeLimit = 10;
 		}
 
-		if (1) { #todo #meta #tk
+		if ((time()-(GetConfig('admin/access_log_last_seen')||0)) > 3600) { #todo make this more configurable
+			#do not process access.log more than once per hour
+			PutConfig('admin/access_log_last_seen', time());
+
 			WriteMessage('Reading access.log...');
 
 			# get list of access log path(s)
@@ -351,7 +354,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 					WriteLog("WARNING: Could not find $accessLogPath");
 				}
 			}
-		}
+		} # access.log/access.pl
 
 		{ # sanity checks: $HTMLDIR and $TXTDIR should exist
 			if (!-e $HTMLDIR) {
