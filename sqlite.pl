@@ -912,7 +912,9 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 
 	WriteLog("DBGetTouchedPages($touchedPageLimit)");
 
-	#todo remove hardcoding
+	# todo remove hardcoding
+	# sorted by most recent (touch_time DESC) so that most recently touched pages are updated first.
+	# this allows us to call a shallow update and still expect what we just did to be updated.
 	my $query = "
 		SELECT 
 			page_name,
@@ -1048,6 +1050,9 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo any successes deleting stuff should result in a refresh for the affected page
 }
 
+sub DBAddItemAlias {
+}
+
 sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an entry to page_touch table
 # page_touch table is used for determining which pages need to be refreshed
 # is called from IndexTextFile() to schedule updates for pages affected by a newly indexed item
@@ -1112,9 +1117,10 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 		#todo this is kind of a hack, sould be refactored, probably
 
 		# touch all of author's items too
+		#todo fix awkward time() concat
 		my $queryAuthorItems = "
 			UPDATE page_touch
-			SET priority = (priority + 1)
+			SET priority = (priority + 1), touch_time = " . time() . "
 			WHERE
 				page_name = 'item' AND
 				page_param IN (
@@ -1161,7 +1167,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	#todo this is kind of a hack, shouldn't be here in the db layer
 	my $priority = 1;
 	if (
-		GetConfig('admin/php/regrow_404_pages') &&
+		GetConfig('admin/pages/lazy_page_generation') &&
 		($pageName eq 'item') ||
 		($pageName eq 'index')
 	) {
