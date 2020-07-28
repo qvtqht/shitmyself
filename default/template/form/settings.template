@@ -48,22 +48,13 @@
 					<fieldset class=admin>
 						<legend>Admin</legend>
 						<p>
-							<span class=beginner>Set site-wide appearance and colors:<br></span>
-
-							<label for=optTheme>theme:
-								<select name=optTheme id=optTheme>
-									<option value=friday29>friday29</option>
-									<option value=chicago>chicago</option>
-									<option value=dark>dark</option>
-									<option value=green>green</option>
-									<option value=news>news</option>
-									<option value=union>union</option>
-								</select>
-							</label>
-							<input type=submit value=Set name=btnSetTheme>
+							<span class=beginner>
+								To activate, check the box, then press button.<br>
+								This helps prevent accidental activation.
+							</span>
 						</p>
 						<p>
-							<span class=beginner>Upgrade to latest version:<br></span>
+							<span class=beginner>Upgrade software to latest version:<br></span>
 							<label for=chkUpgrade>
 								<input type=checkbox id=chkUpgrade name=chkUpgrade>
 								Upgrade
