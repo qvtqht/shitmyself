@@ -68,13 +68,19 @@ div.txt {
 	color: $colorText;
 	background-color: $colorHighlightBeginner;
 	padding: 3pt;
-	padding: 1pt;
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	margin: 0;
 	font-family: tahoma, arial, sans-serif;
+	font-size: smaller;
+	font-weight: bold;
+}
+.notification {
+	color: $colorText;
+	background-color: $colorHighlightBeginner;
+	padding: 3pt;
 	font-size: smaller;
 	font-weight: bold;
 }
