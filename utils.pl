@@ -57,6 +57,9 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 		"$HTMLDIR/action",
 		"$HTMLDIR/top",
 		"config",
+		"config/admin",
+		"config/admin/php",
+		"config/admin/php/post",
 		"$HTMLDIR/upload",
 		"$HTMLDIR/error"
 	);
