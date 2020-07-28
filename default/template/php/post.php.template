@@ -117,6 +117,7 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		$signatureSeparator = "\n-- \n";
 
 		if (GetConfig('admin/http_auth/enable') && isset($_SERVER['PHP_AUTH_USER']) && GetConfig('admin/logging/record_http_auth_username')) {
+			WriteLog('Recording http auth username... $_SERVER[PHP_AUTH_USER]: ' . $_SERVER['PHP_AUTH_USER']);
 			// record user's http-auth username if we're doing that and it exists
 			if ($_SERVER['PHP_AUTH_USER']) {
 				$comment .= $signatureSeparator;
@@ -124,6 +125,8 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 
 				$comment .= 'Authorization: ' . $_SERVER['PHP_AUTH_USER'];
 			}
+		} else {
+			WriteLog('NOT recording http auth username...');
 		}
 
 		if (GetConfig('admin/logging/record_cookie') && isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
