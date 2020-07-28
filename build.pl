@@ -128,10 +128,6 @@ if (GetConfig('admin/lighttpd/enable')) {
 	BuildMessage("admin/lighttpd/enable was false");
 }
 
-if (GetConfig('admin/lighttpd/enable')) {
-	system('killall lighttpd; time ./lighttpd.pl &');
-}
-
 if (GetConfig('admin/build/generate_after')) {
 	BuildMessage "require('./generate.pl')...";
 	require('./generate.pl');
@@ -162,6 +158,10 @@ if (GetConfig('admin/build/loop_after')) {
 	WriteLog('Starting loop.pl...');
 
 	system('perl ./loop.pl');
+}
+
+if (GetConfig('admin/lighttpd/enable')) {
+	system('screen -d -m perl ./lighttpd.pl');
 }
 
 
