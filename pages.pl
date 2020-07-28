@@ -862,9 +862,9 @@ sub GetItemPage {
 
 	if (GetConfig('replies')) {
 		# if replies is on, include write.js and write_buttons.js
-		$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit write write_buttons timestamp));
+		$txtIndex = InjectJs($txtIndex, qw(settings avatar voting utils profile translit write write_buttons timestamp));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(settings avatar voting profile translit timestamp));
+		$txtIndex = InjectJs($txtIndex, qw(settings avatar voting utils profile translit timestamp));
 	}
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
@@ -3224,6 +3224,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
 		PutHtmlFile("openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
 	}
+
+	PutHtmlFile("sha512.js", GetTemplate('js/sha512.js'));
+
 
 	# Write form javascript
 #	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
