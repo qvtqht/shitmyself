@@ -115,6 +115,8 @@ function signVote (t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
 // token = full voting token, in the format (gt)(gt)fileHash\n#tag
 // where (gt) is a greater-than sign, omitted here
+	//alert('DEBUG: signVote(' + t + ',' + token +')');
+
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
 	// needs better compatibility for older browsers
@@ -123,9 +125,16 @@ function signVote (t, token) { // signs a vote from referenced vote button
 		if (GetPrefs(token)) {
 			// don't let user vote twice basic
 
-			if (window.addLoadingIndicator) {
+			if (window.displayNotification) {
 				// #todo make it go away after a few seconds and/or on click
-				addLoadingIndicator('Already added that tag to that item');
+				window.duplicateVoteTries ? window.duplicateVoteTries++ : window.duplicateVoteTries = 1;
+				if (window.duplicateVoteTries >= 3) {
+					displayNotification('Hey! What do you think you\'re doing?', t);
+				} else {
+					displayNotification('Already added that tag to that item', t);
+				}
+			} else {
+				//alert('DEBUG: window.displayNotification() was missing');
 			}
 
 			// returning false will keep the link from navigating to non-js fallback
