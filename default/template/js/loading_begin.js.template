@@ -1,5 +1,7 @@
 // begin loading_begin.js
-function addLoadingIndicator(strMessage) { // adds loading indicator bar (to top of page, depending on style)
+var a383WaitToShow = 3000;
+
+function addLoadingIndicator (strMessage) { // adds loading indicator bar (to top of page, depending on style)
 	if (!strMessage) {
 		strMessage = 'Loading...';
 	}
@@ -7,7 +9,7 @@ function addLoadingIndicator(strMessage) { // adds loading indicator bar (to top
 	spanLoadingIndicator.setAttribute('id', 'spanLoadingIndicator');
 	spanLoadingIndicator.innerHTML = strMessage;
 	document.body.appendChild(spanLoadingIndicator);
-}
+} // addLoadingIndicator()
 
 if (document.createElement) {
 	var a383d = new Date();
@@ -26,7 +28,7 @@ if (document.createElement) {
 		if (window.localStorage) {
 			var a383lastLoadTime = localStorage.getItem('last_load_time');
 
-			if (a383lastLoadTime && 3000 < a383lastLoadTime) {
+			if (a383lastLoadTime && (a383WaitToShow < a383lastLoadTime)) {
 				a383.style.display = 'block';
 			} else {
 				a383.style.display = 'none';
