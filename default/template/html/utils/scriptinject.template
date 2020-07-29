@@ -1,4 +1,6 @@
+<!-- html/utils/scriptinject.template -->
 <script language=javascript><!--
 $javascript
 // -->
 </script>
+<!-- / html/utils/scriptinject.template -->
