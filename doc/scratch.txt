@@ -1,3 +1,19 @@
+
+
+asdfasdfasd
+
+<form action=/post.html>
+	<select name=comment>
+		<option value="#test">test</option>
+	</select>
+	<input type=text name=replyto value="$fileHash">
+	<input type=submit>
+</form>
+
+
+
+
+
 Added Support for phonetic Russian typing in text fields.
 
 This is definitely a "scratching my own itch" feature, primarily intended for desktop.
