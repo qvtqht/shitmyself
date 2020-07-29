@@ -308,18 +308,18 @@ function setPublicKey(publicKey) {
 	window.localStorage.setItem("publickey", publicKey);
 }
 
-function getPublicKeyFromPrivateKey(privateKey) {
+function getPublicKeyFromPrivateKey (privateKey) {
 	var openpgp = window.openpgp;
 	openpgp.initWorker({path:'openpgp.worker.js'});
 
 	var privKeyObj = openpgp.key.readArmored(privateKey).keys[0];
 }
 
-function makePrivateKey(username, bits) {
-	if (typeof(Storage) !== "undefined") {
+function makePrivateKey (username, bits) { // generate private key with provided username and algorithm
+	if (window.localStorage) {
 		var privateKey = getPrivateKey();
 
-		if (privateKey === null || privateKey.length === 0) {
+		if (!privateKey) {
 			var privkey;
 			var pubkey;
 
