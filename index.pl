@@ -471,6 +471,15 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		my @itemParents;
 
+		if (GetConfig('admin/token/quote')) {
+			# > token
+			my @quoteLines = ($message =~ m/^\>([0-9a-f]{40})/mg);
+
+			if (@quoteLines) {
+				# wrap it in blockquote or something
+			}
+		}
+
 		# look for quoted message ids
 		if (GetConfig('admin/token/reply') && $message) {
 			# >> token
