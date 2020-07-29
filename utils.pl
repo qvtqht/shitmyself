@@ -2260,14 +2260,12 @@ sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based lay
 }
 
 sub WriteMessage { # Writes timestamped message to console (stdout)
-	# Even if debug mode is 0
 	my $text = shift;
 	chomp $text;
 
 	my $timestamp = GetTime();
 
-	print $timestamp . ' ' . $text . "\n";
-	#print ".";
+	print "\n$timestamp $text";
 
 	WriteLog($text);
 }

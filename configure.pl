@@ -40,7 +40,9 @@ sub WriteMessage { # $message ; print a line to user
 
 	WriteLog('Message: ' . $message);
 
-	print $message . "\n";
+	my $timestamp = GetTime();
+
+	print "\n$timestamp . ' ' . $message";
 
 	# AppendFile('html/status.txt', $message);
 }
