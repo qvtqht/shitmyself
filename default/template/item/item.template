@@ -1,4 +1,4 @@
-<!-- item2.template -->
+<!-- item/item.template -->
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		$itemTitleTemplate
@@ -24,4 +24,4 @@
 
 <replies></replies>
 
-<!-- / item2.template -->
+<!-- / item/item.template -->
