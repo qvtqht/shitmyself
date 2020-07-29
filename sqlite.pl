@@ -179,19 +179,8 @@ sub SqliteMakeTables() { # creates sqlite schema
 	;");
 
 
-#	SqliteQuery2("CREATE TABLE type(type_mask, type_name)");
-#	#todo currently unpopulated
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(1, 'text');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(2, 'reply');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(4, 'vote');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(8, 'pubkey');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(16, 'decode_error');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(32, 'image');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(64, 'video');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(128, 'event');");
-#	SqliteQuery2("INSERT INTO type(type_mask, type_name) VALUES(256, 'markdown');");
-
 	### VIEWS BELOW ############################################
+	############################################################
 
 	# parent_count view
 	SqliteQuery2("
@@ -399,25 +388,27 @@ sub EscapeShellChars { # escapes string for including in shell command
 	return $string;
 }
 
-# sub SqliteQuery {
-# 	my $query = shift;
-#
-# 	if (!$query) {
-# 		WriteLog("SqliteQuery called without query");
-#
-# 		return;
-# 	}
-#
-# 	chomp $query;
-#
-# 	$query = EscapeShellChars($query);
-#
-# 	WriteLog( "$query\n");
-#
-# 	my $results = `sqlite3 "$SqliteDbName" "$query"`;
-#
-# 	return $results;
-# }
+sub SqliteQuery { # performs sqlite query via sqlite3 command
+#todo add caching in flat file
+#todo add parsing into array?
+	my $query = shift;
+
+	if (!$query) {
+		WriteLog("SqliteQuery called without query");
+
+		return;
+	}
+
+	chomp $query;
+
+	$query = EscapeShellChars($query);
+
+	WriteLog( "$query\n");
+
+	my $results = `sqlite3 "$SqliteDbName" "$query"`;
+
+	return $results;
+}
 
 #
 #sub DBGetVotesTable {
@@ -1420,6 +1411,10 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 		$authorKey = '';
 	}
 
+	if ($authorKey) {
+		DBAddItemParent($fileHash, DBGetAuthorPublicKeyHash($authorKey));
+	}
+
 	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError);");
 
 	if (!$query) {
@@ -2010,18 +2005,6 @@ sub DBGetItemListByTagList { #get list of items by taglist (as array)
 	
 	#todo this is currently an "OR" select, but it should be an "AND" select.
 
-			#todo do it correctly like this:
-#	$sth = $dbh->prepare( "
-#            SELECT name, location
-#            FROM megaliths
-#            WHERE name = ?
-#            AND mapref = ?
-#            AND type LIKE ?
-#        " );
-#	$sth->bind_param( 1, "Avebury" );
-#	$sth->bind_param( 2, $mapreference );
-#	$sth->bind_param( 3, "%Stone Circle%" );
-
 	return DBGetItemList(\%queryParams);
 }
 
@@ -2312,32 +2295,6 @@ sub DBGetItemFields { # Returns fields we typically need to request from item_fl
 	return $itemFields;
 }
 
-#sub DBGetTopAuthors {
-#	my $query = "
-#		SELECT
-#			author_key,
-#			author_alias,
-#			author_score,
-#			author_weight,
-#			last_seen,
-#			item_count
-#		FROM author_flat
-#		ORDER BY author_score DESC
-#		LIMIT 50;
-#	";
-#
-#	my @queryParams;
-#
-#	my $sth = $dbh->prepare($query);
-#	$sth->execute(@queryParams);
-#
-#	my $ref = $sth->fetchall_arrayref();
-#
-#	$sth->finish();
-#
-#	return $ref;
-#}
-
 sub DBGetTopAuthors { # Returns top-scoring authors from the database
 	my $query = "
 		SELECT
@@ -2366,7 +2323,7 @@ sub DBGetTopAuthors { # Returns top-scoring authors from the database
 	return @resultsArray;
 }
 
-sub DBGetTopItems { # get top items minus changelog and flag (hard-coded for now)
+sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 	my $itemFields = DBGetItemFields();
 
 	my $whereClause;
@@ -2466,6 +2423,6 @@ sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash 
 	$sth->finish();
 
 	return %voteTotals;
-}
+} # DBGetItemVoteTotals()
 
 1;
