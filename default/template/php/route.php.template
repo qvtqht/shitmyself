@@ -294,6 +294,8 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$pagesPlArgument = '\#' . $hashTag;
 		}
 		if (
+			$path == '/' ||
+			$path == '/index.html' ||
 			$path == '/top.html' ||
 			$path == '/write.html' ||
 			$path == '/upload.html' ||
@@ -926,49 +928,6 @@ if (GetConfig('admin/php/route_enable')) {
 	}
 }
 
-//
-//if (isset($_GET['path']) && $_GET['path']) {
-//	$path = $_GET['path'];
-//	if ($path == '/') {
-//		$path = '/index.html';
-//	}
-//	$filePath = '.' . $path;
-//
-//	if (file_exists($filePath)) {
-//	// if it's an exact match for the file, return the file
-//	// #todo make sure it's under the web root ;)
-//
-//		$html = file_get_contents('.' . $path);
-//		print $html;
-//	} else {
-//		if (strpos($path, '?')) {
-//			$qm = strpos($path, '?'); // position of question mark
-//
-//			$file = substr($path, 0, $qm);
-//
-//			if (file_exists('.' . $file)) {
-//			// #todo make sure it's under the web root ;)
-//				$html = file_get_contents('.' . $file);
-//				$html = 'php' . $html;
-//				print $html;
-//			}
-//
-//		} else {
-//			// if file like '/aa/bb/aabbcc...html
-//			// it's an item
-//			// look for it
-//			// otherwise ...
-//		}
-//	}
-//}
-
-// #todo if any of the url matches [0-9a-fA-F]{32} or {16} ...
-// ... check if html page exists
-// ... ... if it does, return it and with appropriate expire headers too, which may be challenging
-// ... ... maybe the redirector at the http server level should include "if file exists return it"
-// ... do a lookup in the sqlite table for author and/or item
-// ... ... if found, generate, return, and store html page
-// ... ... otherwise, ??? 404 page?
-//
-
-//print 'hello world';
+if (GetConfig('admin/php/debug')) {
+	print WriteLog('');
+}
