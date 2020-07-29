@@ -71,7 +71,7 @@ div.txt {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
+	width: 97%;
 	margin: 0;
 	font-family: tahoma, arial, sans-serif;
 	font-size: smaller;
