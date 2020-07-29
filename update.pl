@@ -283,6 +283,11 @@ if (!defined($arg1) || $arg1 eq '--all') {
 	require './access.pl';
 	require './pages.pl';
 
+	my $noLimits = 0;
+	if (defined($arg1) && $arg1 eq '--all') {
+		$noLimits = 1;
+	}
+
 	if (!$locked) {
 		# WriteLog('End requires');
 
@@ -392,7 +397,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 		while ($filesProcessed > 0 || $pagesProcessed > 1) {
 			WriteLog('while loop: $filesProcessed: ' . $filesProcessed . '; $pagesProcessed: ' . $pagesProcessed);
 
-			if ((!defined($arg1) || ($arg1 ne '--all')) && (time() - $startTime) > $timeLimit) {
+			if (!$noLimits && (time() - $startTime) > $timeLimit) {
 				WriteMessage("Time limit reached, exiting loop");
 				last;
 			}
@@ -426,7 +431,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 						last;
 					}
 
-					if ((time() - $startTime) > $timeLimit) {
+					if (!$noLimits && (time() - $startTime) > $timeLimit) {
 						WriteMessage("Time limit reached, exiting loop");
 						last;
 					}
@@ -504,7 +509,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 						last;
 					}
 
-					if ((time() - $startTime) > $timeLimit) {
+					if (!$noLimits && (time() - $startTime) > $timeLimit) {
 						WriteMessage("Time limit reached, exiting loop");
 						last;
 					}
@@ -572,7 +577,12 @@ if (!defined($arg1) || $arg1 eq '--all') {
 			#}
 
 			WriteLog('update.pl: Building touched pages... $pagesProcessed = ' . $pagesProcessed);
-			$pagesProcessed += BuildTouchedPages($timeLimit, $startTime);
+
+			if ($noLimits) {
+				$pagesProcessed += BuildTouchedPages();
+			} else {
+				$pagesProcessed += BuildTouchedPages($timeLimit, $startTime);
+			}
 			WriteLog('update.pl: Finished building touched pages... $pagesProcessed = ' . $pagesProcessed);
 
 			$filesProcessedTotal += $filesProcessed;
