@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/html">
+<!-- keyboard_netscape.template -->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+<form>
+<style type="text/css">
+    <!--
+        td, input {
+            font-family: monospace;
+            font-size: medium;
+        }
+    -->
+</style>
+<script>
+    <!--
+        function tbl1(e) {
+            if (e.target.nodeName == 'TD') {
+                var txtComment = parent.frames['main'].document.compose.comment;
+                if (txtComment) {
+                    var newLetter = e.target.innerHTML;
+                    if (newLetter == '&nbsp;') {
+                        newLetter = ' ';
+                    }
+                    if (newLetter == 'Enter') {
+                        newLetter = "\n";
+                    }
+                    if (newLetter == 'Back') {
+                        txtComment.value = txtComment.value.substring(0, txtComment.value.length - 1);
+                    } else {
+                        txtComment.value = txtComment.value + '' + newLetter;
+                    }
+                }
+            }
+        }
+        function hi(letter) {
+            var text = letter;
+            alert("'" + text + "'");
+
+            for (var i = 0; i < text.length; i++) {
+                alert(i);
+                if (!text.substr(i, 1).equals(' ')) {
+                    // ok
+                } else {
+                    if (i == 0) {
+                        text = text.substr(i + 1);
+                    } else {
+                        text = text.substr(0, i) + '' + text.substr(i + 1);
+                    }
+                    i = i - 1;
+                }
+            }
+
+            alert("'" + text + "'");
+            parent.frames['main'].document.compose.comment.value += '' + text;
+        }
+    // -->
+</script>
+
+<form action=/">
+    <input type=button onclick=hi(this.value) value=" A ">
+</form>
+
+<!-- / keyboard_netscape.template -->
+</body></html>
