@@ -92,19 +92,14 @@ function DownloadAsTxt(filename, text) {
 
 
 function displayNotification (strMessage, thisButton) { // adds loading indicator bar (to top of page, depending on style)
-	if (!strMessage) {
-		strMessage = 'Loading...';
-	}
+	var spanNotification = document.createElement('span');
+	spanNotification.setAttribute('class', 'notification');
+	spanNotification.innerHTML = strMessage;
+
 	if (thisButton) {
-		var spanNotification = document.createElement('span');
-		spanNotification.setAttribute('class', 'notification');
-		spanNotification.innerHTML = strMessage;
 		thisButton.parentNode.appendChild(spanNotification); //#todo figure out why this doesn't actually work
 		thisButton.after(spanNotification);
 	} else {
-		var spanNotification = document.createElement('span');
-		spanNotification.setAttribute('class', 'notification');
-		spanNotification.innerHTML = strMessage;
 		document.body.appendChild(spanNotification);
 	}
 } // displayNotification()
