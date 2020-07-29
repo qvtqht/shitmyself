@@ -70,6 +70,8 @@ function getAvatar () { // retrieve previously built avatar from localStorage (a
 		} else {
 			return myAvatar;
 		}
+	} else {
+		return 'Anonymous*';
 	}
 }
 
