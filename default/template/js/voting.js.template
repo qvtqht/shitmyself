@@ -173,6 +173,13 @@ function signVote (t, token) { // signs a vote from referenced vote button
 		// remember that we voted for this already
 		SetPrefs(token, 1);
 
+
+		if (window.displayNotification) {
+			displayNotification('Success!', t);
+		} else {
+			//alert('DEBUG: window.displayNotification() was missing');
+		}
+
 		return false; // cancel link click-through
 	} else {
 		//	    if (document.images) {
