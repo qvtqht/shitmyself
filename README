@@ -18,6 +18,10 @@ for deployment using apache or lighttpd
 4. if you want faster updates (at the expense of attack surface), use the php module, which will trigger updates too
 5. when upgrading (e.g. git pull) you must re-run build.pl
 
+repl.it
+=======
+support is in testing
+
 requirements
 ============
 * Perl 5.010+
