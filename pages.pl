@@ -2911,6 +2911,8 @@ sub GetLighttpdConfig {
 		my $phpConf = GetTemplate('lighttpd/lighttpd_php.conf.template');
 
 		my $phpCgiPath = `which php-cgi`;
+        chomp($phpCgiPath);
+
 		if ($phpCgiPath) {
     		$phpConf =~ s/\/bin\/php-cgi/$phpCgiPath/g;
         } else {
