@@ -1,0 +1,6 @@
+ things i try to avoid when writing this
+
+whitespace sensitivity
+reasons: makes code more brittle, e.g. copy-paste
+
+
