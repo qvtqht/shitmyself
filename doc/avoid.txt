@@ -1,6 +1,12 @@
- things i try to avoid when writing this
+things i try to avoid when writing this
 
+general
+=======
 whitespace sensitivity
 reasons: makes code more brittle, e.g. copy-paste
 
 
+html
+====
+ul/li tags
+reasons: they break copy-paste functionality
