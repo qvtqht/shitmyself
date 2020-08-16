@@ -1000,7 +1000,7 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 	WriteLog('GetItemVoteButtons returning: ' . $tagButtons);
 
 	return $tagButtons;
-}
+} # GetItemVoteButtons()
 
 sub GetItemVotesSummary { # returns html with list of tags applied to item, and their counts
 	my $fileHash = shift;
@@ -2909,6 +2909,10 @@ sub GetLighttpdConfig {
 
 	if (GetConfig('admin/php/enable')) {
 		my $phpConf = GetTemplate('lighttpd/lighttpd_php.conf.template');
+
+		my $phpCgiPath = `which php-cgi`;
+
+		$phpConf =~ s/\/bin\/php-cgi/$phpCgiPath/g;
 		
 		WriteLog('$phpConf beg =====');
 		WriteLog($phpConf);
