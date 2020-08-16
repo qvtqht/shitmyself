@@ -1357,6 +1357,16 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 
 	my $parentHash = shift;
 
+	if (!$parentHash) {
+		WriteLog('DBAddItemParent: WARNING! $parentHash missing');
+		return;
+	}
+
+	if ($itemHash eq $parentHash) {
+		WriteLog('DBAddItemParent: WARNING! $itemHash eq $parentHash');
+		return;
+	}
+
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO item_parent(item_hash, parent_hash) VALUES ";
 	} else {
