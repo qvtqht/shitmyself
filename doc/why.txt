@@ -4,7 +4,7 @@ Portable
 	All forum data is stored as plain text files, improving archivability.
 	Data is housed by the service provider without lock-down.
 
-Durable
+Durable/Decentralized
 	Archives all data, or just segments, can be downloaded and replicated by anyone.
 	Can be cloned and re-hosted, with portable user accounts usable across all copies.
 
@@ -27,14 +27,20 @@ Transparent
 	Meta-moderation is possible by voting on the votes, and so on.
 	Best content (and friends) for each user can be found with vote comparison.
 	Ballot stuffing and other abuse easily detectable with data analysis.
+	Validation chain prevents deletion without a trace.
 
 Art-friendly
 	Text-art is accomodated with a monospace font and preserving whitespace layout.
+	Compatible with historic browsers to allow time-period-accurate installations.
 
 User-empowering
 	User "account", aka the private key, remains in user's possession and control.
 	Identity can be used across multiple servers without "federation".
+	Registration is not required, and registering does not require email.
 
 Advertising, Spam, and Censorship Resistant
 	Avoids becoming a spam and advertising target by making over-growth more difficult.
 	User-centric operation allows easy migration in case of undesirable changes.
+
+Compatible and Accessible
+    Tested thoroughly by many devices, configurations, platforms, browsers, users.
