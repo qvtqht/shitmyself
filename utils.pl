@@ -515,6 +515,15 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 	chomp $fileName;
 	WriteLog("GetFileHash($fileName)");
 
+    #todo normalize path (static vs full)
+	state %memoFileHash;
+	if ($memoFileHash{$fileName}) {
+		WriteLog('GetFileHash: memo hit ' . $memoFileHash{$fileName});
+		return $memoFileHash{$fileName};
+	}
+
+	WriteLog('GetFileHash: memo miss');
+
 	if (-e $fileName) {
 		if ((lc(substr($fileName, length($fileName) - 4, 4)) eq '.txt')) {
 			my $fileContent = GetFile($fileName);
@@ -524,9 +533,13 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 				$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
 			}
 
-			return sha1_hex($fileContent);
+			$memoFileHash{$fileName} = sha1_hex($fileContent);
+
+			return $memoFileHash{$fileName};
 		} else {
-			return sha1_hex(GetFile($fileName));
+		    $memoFileHash{$fileName} = sha1_hex(GetFile($fileName));
+
+			return $memoFileHash{$fileName};
 		}
 	} else {
 		return;
