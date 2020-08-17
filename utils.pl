@@ -2497,6 +2497,50 @@ sub DeleteFile { #delete file with specified file hash (incomplete)
 	}
 }
 
+sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log and removes it if found
+# only one or the other is required
+    my $file = shift;
+
+    if ($file && !-e $file) {
+        return 1;
+    }
+
+    my $fileHash = shift;
+
+    if (!$fileHash) {
+    	$fileHash = GetFileHash($file);
+    }
+
+    # if the file is present in deleted.log, get rid of it and its page, return
+    if ($fileHash && -e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+        # write to log
+        WriteLog("... $fileHash exists in deleted.log, removing $file");
+
+		{
+			# unlink the file itself
+			if (-e $file) {
+				unlink($file);
+			}
+
+			WriteLog('$fileHash = ' . $fileHash);
+
+			my $htmlFilename = GetHtmlFilename($fileHash);
+
+			if ($htmlFilename) {
+				$htmlFilename = $HTMLDIR . '/' . $htmlFilename;
+
+				if (-e $htmlFilename) {
+					unlink($htmlFilename);
+				}
+			}
+        }
+
+        return 1;
+    }
+
+    return 0;
+} # IsFileDeleted()
+
 sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog('GetItemEasyFind()');
 
