@@ -16,6 +16,7 @@ de-emoji for accessibility mode x
 
 What's Keeping Website From Being Used?
 =======================================
+Much confusion
 Where to find newest posts??
 Search
 Rebuild times are long due to generating a page for each item
@@ -23,7 +24,7 @@ Rebuild times are long due to generating a page for each item
 	Need: lazy-generate pages with PHP is enabled
 		xItem
 		xTag
-		Author
+		xAuthor
 		Other
 	Need: Avoid generating pages for items with a parent
 		Perhaps: Remove permalinks from reply items
@@ -57,7 +58,7 @@ wherever file counts are done with find
 	cache it so that not recounting every time
 
 get rid of /author/ pages
-	just set parent to author
+	instead set parent to author's pubkey item
 
 allow aliasing of ??
 
@@ -1438,3 +1439,6 @@ Generate version page for each version mentioned in changelog
 
 If Item is being deleted, all its actions should be undone
     Most db entries should already have a source item field
+
+
+
