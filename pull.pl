@@ -100,9 +100,8 @@ sub PushItemToHost { #pushes an item to host via /post.html
 	my $fileName = shift;
 	my $fileHash = shift;
 
-	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-		WriteLog("PushItemToHost: $fileHash exists in deleted.log, skipping");
-
+	if (IsFileDeleted($fileName, $fileHash)) {
+		WriteLog("PushItemToHost: IsFileDeleted() returned true, skipping");
 		return;
 	}
 
@@ -152,9 +151,8 @@ sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 	chomp $fileName;
 	chomp $hash;
 
-	if (GetFile('log/deleted.log') =~ $hash) {
-		WriteLog("PullItemFromHost: $hash exists in deleted.log, skipping");
-
+	if (IsFileDeleted(0, $hash)) {
+		WriteLog("PullItemFromHost: IsFileDeleted() returned true, skipping");
 		return;
 	}
 

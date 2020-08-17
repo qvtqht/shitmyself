@@ -304,26 +304,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		WriteLog('... $file = ' . $file . ', $fileHash = ' . $fileHash);
 
 		# if the file is present in deleted.log, get rid of it and its page, return
-		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-			# write to log
-			WriteLog("... $fileHash exists in deleted.log, removing $file");
-
-			# unlink the file itself
-			if (-e $file) {
-				unlink($file);
-			}
-
-			WriteLog('$fileHash = ' . $fileHash);
-
-			my $htmlFilename = GetHtmlFilename($fileHash);
-
-			if ($htmlFilename) {
-				$htmlFilename = $HTMLDIR . '/' . $htmlFilename;
-
-				if (-e $htmlFilename) {
-					unlink($htmlFilename);
-				}
-			}
+		if (IsFileDeleted($file, $fileHash)) {
+			WriteLog('... IsFileDeleted() returned true, returning');
 
 			return;
 		}
@@ -1675,27 +1657,9 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		WriteLog('IndexImageFile: $file = ' . ($file?$file:'false') . '; $fileHash = ' . ($fileHash?$fileHash:'false') . '; $addedTime = ' . ($addedTime?$addedTime:'false'));
 
 		# if the file is present in deleted.log, get rid of it and its page, return
-		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
+		if (IsFileDeleted($file, $fileHash)) {
 			# write to log
-			WriteLog("... $fileHash exists in deleted.log, removing $file");
-
-			# unlink the file itself
-			if (-e $file) {
-				unlink($file);
-			}
-
-			WriteLog('$fileHash = ' . $fileHash);
-
-			my $htmlFilename = GetHtmlFilename($fileHash);
-
-			if ($htmlFilename) {
-				#unlink html filename
-				$htmlFilename = "$HTMLDIR/$htmlFilename";
-
-				if (-e $htmlFilename) {
-					unlink($htmlFilename);
-				}
-			}
+			WriteLog("... IsFileDeleted() returned true, returning");
 
 			return;
 		}

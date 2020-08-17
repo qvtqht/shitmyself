@@ -138,14 +138,11 @@ sub ProcessTextFile { # $file ; add new text file to index
 	WriteLog('ProcessTextFile: $fileHash = ' . $fileHash);
 
 	# if deletion of this file has been requested, skip
-	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-		unlink($file);
-		WriteLog("ProcessTextFile: $fileHash exists in deleted.log, file removed and skipped");
-
+	if (IsFileDeleted($file, $fileHash)) {
+		WriteLog("ProcessTextFile: IsFileDeleted() returned true, skipping");
 		WriteLog('ProcessTextFile: return 0');
+
 		return 0;
-	} else {
-		WriteLog("ProcessTextFile: $fileHash was not in log/deleted.log, continuing");
 	}
 
 	if (GetConfig('admin/organize_files')) {
@@ -210,15 +207,12 @@ sub ProcessImageFile { # $file ; add new image to index
 
 	WriteLog('ProcessImageFile: $fileHash = ' . $fileHash);
 
-	# if deletion of this file has been requested, skip
-	if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-		unlink($file);
-		WriteLog("ProcessImageFile: $fileHash exists in deleted.log, file removed and skipped");
-
+	if (IsFileDeleted($file, $fileHash)) {
+		# if deletion of this file has been requested, skip
+		WriteLog("ProcessImageFile: IsFileDeleted() returned true, skipping");
 		WriteLog('ProcessImageFile: return 0');
+
 		return 0;
-	} else {
-		WriteLog("ProcessImageFile: $fileHash was not in log/deleted.log, continuing");
 	}
 
 	# if (GetConfig('admin/organize_files')) {

@@ -3724,12 +3724,11 @@ sub GetRssFile { # returns rss feed for current site
 	foreach my $file(@files) {
 		my $fileHash = $file->{'file_hash'};
 
-		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
+		if (IsFileDeleted(0, $fileHash)) {
+			WriteLog("generate.pl: IsFileDeleted() returned true, skipping");
 
 			return;
 		}
-
 
 		#
 		#"item_flat.file_path file_path,
