@@ -43,9 +43,9 @@ optional
 SSI
 PHP
 
-Debian, Ubuntu, and other apt-based
+Debian, Ubuntu, Mint, Trisquel, and other apt-based
 ===================================
-sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 ImageMagick
+sudo apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick
 
 Redhat, Centos, Fedora, and other yum-based
 ===========================================
