@@ -1,6 +1,5 @@
 config/*
 cache/*
-.idea/*
 log/*
 admin.key
 cron.lock
