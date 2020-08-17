@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="win98_icons">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/contrib/win98_icons/win98_icons.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
