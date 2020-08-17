@@ -73,7 +73,6 @@ sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 	if ($hostsAdded{$host}) {
 		return;
 	}
-	$hostsAdded{$host} = 1;
 
 	my $ownAlias = shift;
 	chomp ($ownAlias);
@@ -85,6 +84,8 @@ sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 	}
 
 	AddItemToConfigList('system/pull_hosts', $host);
+
+	$hostsAdded{$host} = 1;
 
 	return;
 }
