@@ -83,7 +83,8 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 }
 
 sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/log.log
-	print '.';
+	WriteMessage('.');
+
 	my $text = shift;
 	if (!$text) {
 		$text = '(empty string)';
@@ -2276,6 +2277,11 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	my $text = shift;
 	chomp $text;
 
+	if ($text eq '.') {
+		print ".";
+		return;
+	}
+
 	my $timestamp = GetTime();
 
 	print "\n$timestamp $text";
@@ -2533,6 +2539,8 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
 					unlink($htmlFilename);
 				}
 			}
+
+
         }
 
         return 1;
