@@ -8,6 +8,7 @@ use POSIX;
 use POSIX 'strftime';
 use Data::Dumper;
 use Cwd qw(cwd);
+use Digest::MD5 qw(md5_hex);
 
 #use Devel::StackTrace;
 
@@ -87,6 +88,7 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 
 	my $text = shift;
 	if (!$text) {
+
 		$text = '(empty string)';
 	}
 	chomp $text;
@@ -1950,21 +1952,24 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 			if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
 				WriteLog("Found public key header!");
 
-				WriteLog("$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr");
-				my $gpg_result = `$gpgCommand --keyid-format LONG "$filePath" $gpgStderr`;
+				my $gpgGetPubKeyResulCommand = "$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr";
+				WriteLog($gpgGetPubKeyResulCommand);
+				my $gpg_result = `$gpgGetPubKeyResulCommand`;
 				WriteLog($gpg_result);
 
-				WriteLog("$gpgCommand --import \"$filePath\" $gpgStderr");
-				my $gpgImportKeyResult = `$gpgCommand --import "$filePath" $gpgStderr`;
-				WriteLog($gpgImportKeyResult);
+				# WriteLog("$gpgCommand --import \"$filePath\" $gpgStderr");
+				# my $gpgImportKeyResult = `$gpgCommand --import "$filePath" $gpgStderr`;
+				# WriteLog($gpgImportKeyResult);
 
 				foreach (split("\n", $gpg_result)) {
 					chomp;
 					WriteLog("Looking for returned alias in $_");
 
+					my $currentLine = $_;
+
 					# gpg 1
 					if (($gpgCommand eq 'gpg' || $gpgCommand eq 'gpg1') && !GetConfig('admin/gpg/use_gpg2')) {
-						WriteLog('$gpgCommand is gpg');
+						WriteLog('$gpgCommand is gpg, use_gpg2 is FALSE');
 
 						if (substr($_, 0, 4) eq 'pub ') {
 							my @split = split(" ", $_, 4);
@@ -1982,12 +1987,16 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 					# gpg 2
 					elsif ($gpgCommand eq 'gpg2' || GetConfig('admin/gpg/use_gpg2')) {
-						if (substr($_, 0, 4) eq 'pub ') {
+						WriteLog('hitongpg2, using gpg2 output tokens');
+
+						WriteLog($currentLine);
+
+						if (substr($currentLine, 0, 4) eq 'pub ') {
 							WriteLog('gpg2 ; pub hit');
 
-							WriteLog('$_ is ' . $_ . ' .. going to split it');
+							WriteLog('$currentLine is ' . $currentLine . ' .. going to split it');
 
-							my @split = split(" ", $_, 4); # 4 limits it to 4 fields
+							my @split = split(" ", $currentLine, 4); # 4 limits it to 4 fields
 							$gpg_key = $split[1];
 
 							WriteLog($split[0] . '|' . $split[1] . '|' . $split[2] . '|' . $split[3]);
@@ -1998,18 +2007,20 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 							WriteLog('$gpg_key = ' . $gpg_key);
 						}
-						if (substr($_, 0, 3) eq 'uid' && !$alias) {
+						if (substr($_, 0, 3) eq 'uid') {
 							WriteLog('gpg2: uid hit');
 
-							WriteLog('$_ is ' . $_);
+							WriteLog('$currentLine is ' . $currentLine);
 
-							my @split = split(' ', $_, 2);
+							my @split = split(' ', $currentLine, 2);
 
 							$alias = $split[1];
 							$alias = trim($alias);
 
 							WriteLog('$alias is now ' . $alias);
 						}
+					} else {
+						WriteLog('WARNING: gpg public key lookup fallthrough...');
 					}
 				}
 
@@ -2026,6 +2037,9 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 				} else {
 					$message = "Problem! Public key item did not parse correctly. Try changing admin/gpg/gpg_command";
+
+					$gpg_key = uc(substr(md5_hex($message), 0, 16));
+					$alias = '(Error)';
 				}
 
 				$isSigned = 1;
@@ -2090,6 +2104,11 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 			if (!$isSigned) {
 				$message = $txt;
+			}
+
+			if ($verifyError) {
+				$message = "[There was a problem with verifying this signed message.]\n\n" . $message;
+
 			}
 			#
 			#		if ($isSigned) {
