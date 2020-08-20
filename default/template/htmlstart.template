@@ -13,5 +13,4 @@ $styleSheet
 </head>
 <body>
 <b>$topMenu</b>
-<p class=beginner>$introText</p>
 <p>
