@@ -1,12 +1,8 @@
 <html>
 <head>
-	<script type="text/javascript" src="prefs.js"></script>
+	<script type="text/javascript" src="sha512.js"></script>
 </head>
 <body>
-
-<a href=# onclick="return PrefsTest();">PrefsTest()</a>
-
-asdf
 
 <fieldset>
 	<legend>Interface Mode</legend>
@@ -14,6 +10,26 @@ asdf
 	<label for=radioInterfaceAdvanced><input type=radio id=radioInterfaceAdvanced name=interfaceMode value=intermed> Advanced</label>
 	<label for=radioInterfaceExpert><input type=radio id=radioInterfaceExpert name=interfaceMode value=expert> Expert</label>
 </fieldset>
+
+<script>
+<!--
+var fp = '14D0C4897A173E5C';
+var i = 0;
+done = 0;
+
+while(!done) {
+	var h = hex_sha512(fp + '|' + i);
+	i = i + 1;
+	if (h.substring(0, 3) == '111') {
+		done = 1;
+	}
+	if (1000000 < i) {
+		done = 2;
+	}
+}
+alert(done + ': ' + fp + ',' + i + ',' + h);
+-->
+</script>
 
 </body>
 </html>
