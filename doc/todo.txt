@@ -1,3 +1,13 @@
+/my_bookmarks.php
+	returns all my votes based on cookie
+		as list of txt urls?
+		or?
+	allows pulling from another site
+
+If Item is being deleted, all its actions should be undone
+    Most db entries should already have a source item field
+
+
 #bug when clicking reply link on listings page and it goes to item's page, reply textbox does not become focused
 
 
@@ -1436,9 +1446,3 @@ PHP handler for event.html
 		add clock in settings?
 
 Generate version page for each version mentioned in changelog
-
-If Item is being deleted, all its actions should be undone
-    Most db entries should already have a source item field
-
-
-
