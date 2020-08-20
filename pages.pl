@@ -666,7 +666,7 @@ sub GetItemPage {
 
 	$file{'display_full_hash'} = 1;
 	$file{'show_vote_summary'} = 1;
-	$file{'show_quick_vote'} = 1;
+	# $file{'show_quick_vote'} = 1;
 	$file{'vote_buttons'} = 1;
 	$file{'format_avatars'} = 1;
 
@@ -1053,6 +1053,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		my $isTextart = 0; # if textart, need extra formatting
 		my $isSurvey = 0; # if survey, need extra formatting
+		my $isTooLong = 0; # if survey, need extra formatting
 
 		my $alias; # stores author's alias / name
 		my $isAdmin = 0; # author is admin? (needs extra styles)
@@ -1071,7 +1072,28 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		# WriteLog($message);
 
-		if (exists($file{'trim_long_text'}) && $file{'trim_long_text'}) {
+		if ($file{'tags_list'}) {
+			# if there is a list of tags, check to see if there is a 'textart' tag
+
+			# split the tags list into @itemTags array
+			my @itemTags = split(',', $file{'tags_list'});
+
+			# loop through all the tags in @itemTags
+			while (scalar(@itemTags)) {
+				my $thisTag = pop @itemTags;
+				if ($thisTag eq 'textart') {
+					$isTextart = 1; # set isTextart to 1 if 'textart' tag is present
+				}
+				if ($thisTag eq 'survey') {
+					$isSurvey = 1; # set $isSurvey to 1 if 'survey' tag is present
+				}
+				if ($thisTag eq 'toolong') {
+					$isTooLong = 1; # set $isTooLong to 1 if 'survey' tag is present
+				}
+			}
+		}
+
+		if ($isTooLong && exists($file{'trim_long_text'}) && $file{'trim_long_text'}) {
 			my $itemLongThreshold = GetConfig('number/item_long_threshold') || 1024;
 
 			if (length($message) > $itemLongThreshold) {
@@ -1106,24 +1128,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			#todo make it so that post does not need to be trimmed, but extra \n\n after the token is removed
 		} else {
 			WriteLog('$file{\'remove_token\'} is not set');
-		}
-
-		if ($file{'tags_list'}) {
-			# if there is a list of tags, check to see if there is a 'textart' tag
-
-			# split the tags list into @itemTags array
-			my @itemTags = split(',', $file{'tags_list'});
-
-			# loop through all the tags in @itemTags
-			while (scalar(@itemTags)) {
-				my $thisTag = pop @itemTags;
-				if ($thisTag eq 'textart') {
-					$isTextart = 1; # set isTextart to 1 if 'textart' tag is present
-				}
-				if ($thisTag eq 'survey') {
-					$isSurvey = 1; # set $isSurvey to 1 if 'survey' tag is present
-				}
-			}
 		}
 
 		# } elsif ($isSurvey) {
@@ -2765,7 +2769,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 				$message = GetFile($file);
 			}
 
-			$row->{'show_quick_vote'} = 1;
+			# $row->{'show_quick_vote'} = 1;
 			$row->{'vote_buttons'} = 1;
 			$row->{'show_vote_summary'} = 1;
 			$row->{'display_full_hash'} = 0;
