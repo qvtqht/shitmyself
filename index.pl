@@ -680,72 +680,59 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		# title:
 		if (GetConfig('admin/token/title')) {
 		# title: token is enabled
-			if ($hasParent) {
-				WriteLog('$hasParent was true for ' . $fileHash);
+			WriteLog('title token found for ' . $fileHash);
 
-				WriteLog('$message = ' . $message);
+			WriteLog('$message = ' . $message);
 
-				# looks for lines beginning with title: and text after
-				# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-                my @setTitleToLines = ($message =~ m/^(title: )(.+)$/mig);
-				# m = multi-line
-				# s = multi-line
-				# g = all instances
-				# i = case-insensitive
+			# looks for lines beginning with title: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @setTitleToLines = ($message =~ m/^(title:)(.+)$/mig);
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
 
-				WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
+			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
-				if (@setTitleToLines) { # means we found at least one title: token;
+			if (@setTitleToLines) { # means we found at least one title: token;
+				#my $lineCount = @setTitleToLines / 2;
+				while (@setTitleToLines) {
+					# loop through all found title: token lines
+					my $setTitleToToken = shift @setTitleToLines;
+					my $titleGiven = shift @setTitleToLines;
 
-					#my $lineCount = @setTitleToLines / 2;
+					chomp $setTitleToToken;
+					chomp $titleGiven;
+					$titleGiven = trim($titleGiven);
 
-					while (@setTitleToLines) {
-						# loop through all found title: token lines
-						my $setTitleToToken = shift @setTitleToLines;
-						my $titleGiven = shift @setTitleToLines;
+					my $reconLine;
+					$reconLine = $setTitleToToken . $titleGiven;
 
-						chomp $setTitleToToken;
+					if ($titleGiven) {
 						chomp $titleGiven;
-						$titleGiven = trim($titleGiven);
-
-						my $reconLine;
-						$reconLine = $setTitleToToken . $titleGiven;
-
-						if ($titleGiven && $hasParent) {
-						    chomp $titleGiven;
-
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
 							foreach my $itemParent (@itemParents) {
 								DBAddTitle($itemParent, $titleGiven, $fileHash, $addedTime);
-
 								DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
-
 								DBAddPageTouch('item', $itemParent);
-
 								if (GetConfig('admin/index/make_primary_pages')) {
 									MakePage('item', $itemParent, 1);
 								}
 							}
+						} else {
+							# no parents, so set title to self
 
-							if ($hasCookie) {
-								DBAddPageTouch('author', $hasCookie);
-							}
+							WriteLog('Item has no parent, adding title to itself');
 
-							if ($isSigned) {
-								DBAddPageTouch('author', $gpgKey);
-							}
-
-							DBAddPageTouch('scores');
-
-							DBAddPageTouch('stats');
+							DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+							DBAddTitle($fileHash, $titleGiven);
 						}
-
-						$message =~ s/$reconLine/[Title: $titleGiven]/g;
 					}
+					$message =~ s/$reconLine/[Title: $titleGiven]/g;
 				}
-			} else {
-				WriteLog('$hasParent was false for ' . $fileHash);
 			}
-		}
+		} # title: token
 
 		#look for setconfig and resetconfig
 		if (GetConfig('admin/token/setconfig') && $message) {
