@@ -81,9 +81,9 @@ sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 
 	if ($ownAlias) {
 		AddItemToConfigList('system/my_hosts', $host);
+	} else {
+		AddItemToConfigList('system/pull_hosts', $host);
 	}
-
-	AddItemToConfigList('system/pull_hosts', $host);
 
 	$hostsAdded{$host} = 1;
 
@@ -270,6 +270,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		if (substr($date, 0, 1) ne '[') {
 			LogError('Date Format Wrong: ' . $line);
 			next;
+		}
+
+		if ($hostname) {
+			AddHost($hostname, 1);
 		}
 
 		# Split $date into $time and $date
