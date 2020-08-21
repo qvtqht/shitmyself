@@ -438,6 +438,10 @@ sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from 
 	my $language = shift;
 	my $noSubstitute = shift;
 
+	if (!$stringKey) {
+		WriteLog('GetString: WARNING! called without $stringKey, exiting');
+		return;
+	}
 	if (!$language) {
 		$language = GetConfig('language');
 	}

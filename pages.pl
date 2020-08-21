@@ -1609,25 +1609,27 @@ sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns 
 
 	foreach my $menuItem (@menuList) {
 		my $menuItemName = $menuItem;
-		my $menuItemUrl	= '/' . $menuItemName . '.html';
+		if ($menuItemName) {
+			my $menuItemUrl	= '/' . $menuItemName . '.html';
 
-		# this avoids creating duplicate urls but currently breaks light mode
-		# if ($menuItemName eq 'index') {
-		# 	$menuItemUrl = '/';
-		# }
+			# this avoids creating duplicate urls but currently breaks light mode
+			# if ($menuItemName eq 'index') {
+			# 	$menuItemUrl = '/';
+			# }
 
-		# capitalize caption
-		my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
+			# capitalize caption
+			my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
-		if (GetConfig('html/emoji_menu')) {
-			my $menuItemEmoji = GetString($menuItemName, 'emoji', 1);
-			if ($menuItemEmoji) {
-				$menuItemCaption = $menuItemEmoji;
+			if (GetConfig('html/emoji_menu')) {
+				my $menuItemEmoji = GetString($menuItemName, 'emoji', 1);
+				if ($menuItemEmoji) {
+					$menuItemCaption = $menuItemEmoji;
+				}
 			}
-		}
 
-		# add menu item to output
-		$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
+			# add menu item to output
+			$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
+		}
 	}
 
 	# return template we've built
