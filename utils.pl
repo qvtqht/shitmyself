@@ -862,6 +862,11 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 	WriteLog("Looking for config value in config/$configName ...");
 
 	if (-e "config/$configName") {
+		if (-d "config/$configName") {
+			WriteLog('GetConfig: WARNING! $configName was a directory, returning');
+			return;
+		}
+
 		WriteLog("-e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
 
 		my $configValue = GetFile("config/$configName");
