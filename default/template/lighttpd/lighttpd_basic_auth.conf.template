@@ -9,7 +9,6 @@ auth.require = (
 	"/" => (
 		"method"  => "basic",
 		"realm" => "stars",
-		#"require" => "user=AzureDiamond"
 		"require" => "valid-user"
 	)
 )
