@@ -31,21 +31,30 @@ function writeOnload() { // onload handler for write page
 				if (window.getAvatar) {
 					var spanSignAs = document.getElementById('spanSignAs');
 
-					var lblSignAs = document.createElement('label');
-					lblSignAs.setAttribute('for', 'chkSignAs');
+					var btnSignAs = document.createElement('submit');
+					btnSignAs.setAttribute('onclick', 'return signMessage()');
+					btnSignAs.setAttribute('class', 'advanced');
+					btnSignAs.innerHTML = 'Sign as ' + getAvatar();
 
-					var chkSignAs = document.createElement('input');
-					//chkSignAs.setAttribute('name', 'signAs');
-					chkSignAs.setAttribute('id', 'chkSignAs');
-					chkSignAs.setAttribute('type', 'checkbox');
-					chkSignAs.setAttribute('checked', 1);
-					// this checkbox being checked means signMessage() is called in writeSubmit()
+					spanSignAs.appendChild(btnSignAs);
 
-					lblSignAs.innerHTML = 'Sign as ' + getAvatar();
+					if (0) {
+						var lblSignAs = document.createElement('label');
+						lblSignAs.setAttribute('for', 'chkSignAs');
 
-					lblSignAs.appendChild(chkSignAs);
+						var chkSignAs = document.createElement('input');
+						//chkSignAs.setAttribute('name', 'signAs');
+						chkSignAs.setAttribute('id', 'chkSignAs');
+						chkSignAs.setAttribute('type', 'checkbox');
+						chkSignAs.setAttribute('checked', 1);
+						// this checkbox being checked means signMessage() is called in writeSubmit()
 
-					spanSignAs.appendChild(lblSignAs);
+						lblSignAs.innerHTML = 'Sign as ' + getAvatar();
+
+						lblSignAs.appendChild(chkSignAs);
+
+						spanSignAs.appendChild(lblSignAs);
+					}
 				}
 			}
 //
