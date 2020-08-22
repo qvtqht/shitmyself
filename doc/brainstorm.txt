@@ -1,3 +1,7 @@
+if a file has multiple dates
+	that could be sign of journal format
+		how to read journal format?
+
 keyboard
 input input input br
 input input br

@@ -1,3 +1,49 @@
+on profile page
+	put "logged in state" value on page load into page
+		then check if value is same as value determined by js
+			if different, take some action (change shown state, and/or reload page?)
+
+"singleton" tags like #motd
+
+tables should regrow if they are missing
+	currently ./build.pl is required after ./clean
+
+Features would help me
+======================
+Offline outbox
+Offline web app with all content
+Recognize URLs
+	scrape
+	screenshot
+	present
+Recognize typical date formats
+
+
+What's Keeping Website From Being Used?
+=======================================
+Much confusion
+Where to find newest posts??
+Search
+Rebuild times are long due to generating a page for each item
+	Good: Site is fast to come back up
+	Need: lazy-generate pages with PHP is enabled
+		xItem
+		xTag
+		xAuthor
+		Other
+	Need: Avoid generating pages for items with a parent
+		Perhaps: Remove permalinks from reply items
+	Need: "Site is rebuilding right now" message?
+User can't create account from Write or Reply page
+	Need: Checkbox to create account in the process of posting
+Data export is currently only possible individually (zip files are not generated)
+	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
+	Need: Generate zip files of forum data:
+		By thread (with all dependencies like authors, votes, etc.)
+		By date (with all deps)
+		By author (with all deps)
+
+
 /my_bookmarks.php
 	returns all my votes based on cookie
 		as list of txt urls?
@@ -23,30 +69,6 @@ de-emoji for accessibility mode x
 
 #BUG #security image filenames are not shell-escaped before update.pl (?) is called
 	reproduce: try an image with an ` in the name
-
-What's Keeping Website From Being Used?
-=======================================
-Much confusion
-Where to find newest posts??
-Search
-Rebuild times are long due to generating a page for each item
-	Good: Site is fast to come back up
-	Need: lazy-generate pages with PHP is enabled
-		xItem
-		xTag
-		xAuthor
-		Other
-	Need: Avoid generating pages for items with a parent
-		Perhaps: Remove permalinks from reply items
-	Need: "Site is rebuilding right now" message?
-User can't create account from Write or Reply page
-	Need: Checkbox to create account in the process of posting
-Data export is currently only possible individually (zip files are not generated)
-	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
-	Need: Generate zip files of forum data:
-		By thread (with all dependencies like authors, votes, etc.)
-		By date (with all deps)
-		By author (with all deps)
 
 Less Important Things Which Need Fixing
 =======================================

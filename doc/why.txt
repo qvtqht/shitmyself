@@ -1,5 +1,12 @@
 Why Use This?
 
+Here try to explain why you would want to use this.
+At the top, less technical. The further you go, the more technical it gets.
+
+Provable
+	Provable reliability of information, consensus, voting results.
+	Provable privacy by limiting access to data storage devices.
+
 Portable
 	All forum data is stored as plain text files, improving archivability.
 	Data is housed by the service provider without lock-down.
@@ -44,3 +51,5 @@ Advertising, Spam, and Censorship Resistant
 
 Compatible and Accessible
     Tested thoroughly by many devices, configurations, platforms, browsers, users.
+	Compatible with browsers including Mosaic, Netscape, IE, Lynx, and w3m.
+	Supports all web servers which can write standard access.log format.

@@ -1,0 +1,20 @@
+Philosopher AI
+
+New topic
+philosopher ai, do insects have sentience?
+
+The question of whether or not insect's are sentient is a tricky one. Insect's are generally not considered to be on the same level as "higher" animals, but that doesn't mean they don't have any sort of sentience at all.
+The first thing we have to consider is what sentience even means. I'm going to make the assumption here that you want your question to be asking about whether or not insects can feel pain and have a general awareness of their surroundings.
+If we are going to talk about feeling pain, the first thing that must be decided is whether or not insects have a central nervous system. A large part of what makes us sentient beings is our ability to feel and perceive things with our senses.
+Insect's don't have a central nervous system, which means they do not feel pain. They do however possess a decentralized nervous system made up of multiple ganglia and nerves that extend throughout their bodies.
+Because of the decentralized nervous system insects have, they do not have a feeling of pain. Instead, if we can take their behavior as an indication that they do feel pain and are in fact sentient, then insect's will still display signs that show this.
+Insect's that are injured or have their exoskeleton damaged will change their behavior and attempt to cover up any exposed area. This can be interpreted as an indication that insect's are indeed sentient.
+You are getting an AI to generate text on different topics.
+
+This is an experiment in what one might call "prompt engineering", which is a way to utilize OpenAI's newest neural network named GPT-3.
+
+GPT-3 is a language model, meaning that when it is given some text, it generates predictions for what might come next. It is remarkably good at adapting to different contexts, as defined by the user input, plus a pre-programmed prompt (in this case hidden from the user).
+
+Please remember that the AI will generate different outputs each time; and that it lacks any specific opinions or knowledge -- it merely mimics opinions or understanding, proven by how it can produce conflicting outputs on different attempts.
+
+by Murat Ayfer
