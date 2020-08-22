@@ -24,13 +24,13 @@
 
 						<p><nobr>
 							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }">
-							<input type=submit name=ui value="Intermediate" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
-							<input type=submit name=ui class=advanced value="Advanced" onclick="if (window.modeChange) { return modeChange('advanced'); }">
+							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
+							<input type=submit name=ui class=advanced value="Expert" onclick="if (window.modeChange) { return modeChange('advanced'); }">
 							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
 							<input type=submit name=ui class=advanced value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
 						</nobr></p>
 
-						<p>
+						<p class=advanced>
 							<label for=chkWantToVote>
 								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="if (window.saveCheckbox) { saveCheckbox(0, this, 'want_to_vote'); }">
 								I am <u>human</u> and I want to <u>vote</u>
