@@ -2342,7 +2342,6 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 		WHERE 
 			(',' || tags_list || ',' LIKE '%,approve,%')
 			AND (',' || tags_list || ',' NOT LIKE '%,flag,%')
-			AND parent_count = 0
 
 	"; #todo remove hardcoding here
 
