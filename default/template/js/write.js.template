@@ -31,10 +31,12 @@ function writeOnload() { // onload handler for write page
 				if (window.getAvatar) {
 					var spanSignAs = document.getElementById('spanSignAs');
 
-					var btnSignAs = document.createElement('submit');
-					btnSignAs.setAttribute('onclick', 'return signMessage()');
+					var btnSignAs = document.createElement('input');
+					btnSignAs.setAttribute('onclick', 'signMessage();this.submit()');
 					btnSignAs.setAttribute('class', 'advanced');
-					btnSignAs.innerHTML = 'Sign as ' + getAvatar();
+					btnSignAs.setAttribute('type', 'submit');
+					btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
+					//btnSignAs.innerHTML = 'Sign as ' + getAvatar();
 
 					spanSignAs.appendChild(btnSignAs);
 
