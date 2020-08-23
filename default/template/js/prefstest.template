@@ -20,10 +20,10 @@ done = 0;
 while(!done) {
 	var h = hex_sha512(fp + '|' + i);
 	i = i + 1;
-	if (h.substring(0, 3) == '111') {
+	if (h.substring(0, 3) == '11111') {
 		done = 1;
 	}
-	if (1000000 < i) {
+	if (10000 < i) {
 		done = 2;
 	}
 }
