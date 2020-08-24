@@ -1957,7 +1957,8 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 			if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
 				WriteLog("Found public key header!");
 
-				my $gpgGetPubKeyResulCommand = "$gpgCommand --keyid-format LONG \"$filePath\" $gpgStderr";
+				my $gpgGetPubKeyResulCommand = "$gpgCommand --import --keyid-format LONG \"$filePath\" $gpgStderr";
+				# not been tested with gpg1 #todo add if statement to not use --import with gpg1
 				WriteLog($gpgGetPubKeyResulCommand);
 				my $gpg_result = `$gpgGetPubKeyResulCommand`;
 				WriteLog($gpg_result);
@@ -1992,23 +1993,24 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 
 					# gpg 2
 					elsif ($gpgCommand eq 'gpg2' || GetConfig('admin/gpg/use_gpg2')) {
-						WriteLog('hitongpg2, using gpg2 output tokens');
+						WriteLog('using gpg2 output tokens');
 
 						WriteLog($currentLine);
 
-						if (substr($currentLine, 0, 4) eq 'pub ') {
-							WriteLog('gpg2 ; pub hit');
+						if (substr($currentLine, 0, 9) eq 'gpg: key ') {
+							WriteLog('gpg2 ; prefix hit');
 
 							WriteLog('$currentLine is ' . $currentLine . ' .. going to split it');
 
-							my @split = split(" ", $currentLine, 4); # 4 limits it to 4 fields
-							$gpg_key = $split[1];
+							my @split = split(" ", $currentLine);
+							$gpg_key = $split[2];
+							$gpg_key = substr($gpg_key, 0, 16);
 
 							WriteLog($split[0] . '|' . $split[1] . '|' . $split[2] . '|' . $split[3]);
 							#$alias = $split[3];
-
-							@split = split("/", $gpg_key);
-							$gpg_key = $split[1];
+							#
+							# @split = split("/", $gpg_key);
+							# $gpg_key = $split[1];
 
 							WriteLog('$gpg_key = ' . $gpg_key);
 						}
@@ -2217,7 +2219,8 @@ sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-b
 	#	$text =~ s/\n /<br>&nbsp;/g;
 	#	$text =~ s/^ /&nbsp;/g;
 	#	$text =~ s/  / &nbsp;/g;
-	$text =~ s/\n/<br>\n/g;
+	$text =~ s/\R\R/<p>/g;
+	$text =~ s/\R/<br>/g;
 
 	if (GetConfig('admin/html/allow_tag/code')) {
 		$text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>$1<\/code>/msgi;

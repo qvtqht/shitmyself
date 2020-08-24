@@ -1,0 +1,10 @@
+Why does lazy-loading of images suck? Let me count the ways...
+Lazy-loading sucks for anyone whose connection is not stable or always on.
+
+It also sucks for offlining content you want to read later and archiving.
+
+It's also incompatible with many older browsers, not that anyone seems to care about that.
+
+It's also incompatible with nojs browsers, so most of the images on this blog are white space or blurry preloaders.
+
+Even if everything is working perfectly, the user will see distracting movement as they scroll down the page.

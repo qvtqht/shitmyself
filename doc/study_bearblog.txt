@@ -1,0 +1,13 @@
+sendgrid for sending emails
+motivation : writing
+	writer's system
+- not available for self-hosting
+https://somewordsfor.me/
+
+create new post
+[x] is page
+[x] publish
+[x] show in feed
+tags: a,b,c
+
+:
