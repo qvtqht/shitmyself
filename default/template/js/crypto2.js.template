@@ -326,14 +326,15 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 			// look for a replyto field
 
 			if (replyTo) {
-			    // if replyto exists, prepend it contents to the message as a >> token
+			    // if replyto exists, prepend it contents to the message as a gtgt token
 
 				var replyToId = replyTo.value;
 
 				if (replyToId) {
-					if (-1 < message.indexOf('>>' + replyToId)) {
+					var gt = unescape('%3E');
+					if (-1 < message.indexOf(gt + gt + replyToId)) {
 					} else {
-						message = '>>' + replyToId + '\n\n' + message;
+						message = gt + gt + replyToId + '\n\n' + message;
 					}
 				}
 			}
