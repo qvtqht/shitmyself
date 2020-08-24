@@ -36,10 +36,6 @@ Transparent
 	Ballot stuffing and other abuse easily detectable with data analysis.
 	Validation chain prevents deletion without a trace.
 
-Art-friendly
-	Text-art is accomodated with a monospace font and preserving whitespace layout.
-	Compatible with historic browsers to allow time-period-accurate installations.
-
 User-empowering
 	User "account", aka the private key, remains in user's possession and control.
 	Identity can be used across multiple servers without "federation".
@@ -49,7 +45,10 @@ Advertising, Spam, and Censorship Resistant
 	Avoids becoming a spam and advertising target by making over-growth more difficult.
 	User-centric operation allows easy migration in case of undesirable changes.
 
-Compatible and Accessible
+Friendly, Compatible, Accessible
+	Compatible with historic browsers to allow time-period-accurate installations.
     Tested thoroughly by many devices, configurations, platforms, browsers, users.
-	Compatible with browsers including Mosaic, Netscape, IE, Lynx, and w3m.
+    Tested for accessibilty by vision, mobility, and connectivity impaired users.
+	Tested with Mosaic, Netscape, IE, Opera, iOS, Android, Lynx, w3m, and more.
+	Text-art is accomodated with a monospace font and preserving whitespace layout.
 	Supports all web servers which can write standard access.log format.
