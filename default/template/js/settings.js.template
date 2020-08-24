@@ -8,7 +8,7 @@ var showAdminLastAction = '';
 
 var timerShowAdvanced;
 
-function SetElementVisible(element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
+function SetElementVisible (element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
 // also sets background color
 // used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
 
@@ -82,7 +82,7 @@ function ShowAll (t) { // shows all elements, overriding settings
     return true;
 }
 
-function ShowAdvanced(force) { // show or hide controls based on preferences
+function ShowAdvanced (force) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
 //handles class=voting based on 'want_to_vote' preference
