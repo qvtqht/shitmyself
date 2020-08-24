@@ -1,4 +1,4 @@
-// begin server_response.js.template
+// begin server_response.js
 
 function serverResponseOk (t) { // function which hides server response message
 // can be called with t pointing to OK button -or- 0
@@ -93,4 +93,4 @@ function bodyEscPress(keyCode) { // called when user presses esc on a page with 
 //serverResponseTimeout = setTimeout('serverResponseOk()', 15000);
 //serverResponseTimeout = setTimeout('serverResponseShrink()', 5000);
 
-// end server_response.js.template
+// end server_response.js

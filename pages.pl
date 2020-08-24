@@ -1995,12 +1995,12 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	if (!GetConfig('admin/js/enable')) {
 		# if js is disabled globally, abort
 
-		WriteLog("InjectJs: WARNING: InjectJs called, but admin/js/enable is false");
+		WriteLog("InjectJs: WARNING: InjectJs() called, but admin/js/enable is false");
 
 		return $html;
 	}
 
-	my @scriptNames = @_; # array of names of script templates (minus the .js.template suffix)
+	my @scriptNames = @_; # array of names of script templates (minus the .js suffix)
 
 	my $scriptsText = '';  # will contain all the js we want to inject
 	my $scriptsComma = ''; # separator between scripts, will be set to \n\n after first script
@@ -2052,13 +2052,10 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptsText .= $scriptsComma;
 		}
 
-		my $scriptTemplate = GetTemplate("js/$script.js.template");
+		my $scriptTemplate = GetTemplate("js/$script.js");
 
 		if (!$scriptTemplate) {
 			WriteLog("InjectJs: WARNING: Missing script contents for $script");
-			if (GetConfig('admin/debug')) {
-				die('InjectJs: Missing script contents');
-			}
 		}
 
 		if ($script eq 'voting') {
@@ -2141,7 +2138,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	my $injectMode = shift;
 	my $htmlTag = shift;
 
-	my @scriptNames = @_; # array of names of script templates (minus the .js.template suffix)
+	my @scriptNames = @_; # array of names of script templates (minus the .js suffix)
 
 	my $scriptsText = '';  # will contain all the js we want to inject
 	my $scriptsComma = ''; # separator between scripts, will be set to \n\n after first script
@@ -2189,13 +2186,10 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 			$scriptsText .= $scriptsComma;
 		}
 
-		my $scriptTemplate = GetTemplate("js/$script.js.template");
+		my $scriptTemplate = GetTemplate("js/$script.js");
 
 		if (!$scriptTemplate) {
 			WriteLog("InjectJs: WARNING: Missing script contents for $script");
-			if (GetConfig('admin/debug')) {
-				die('InjectJs: Missing script contents');
-			}
 		}
 
 		if ($script eq 'voting') {
@@ -2986,17 +2980,17 @@ sub GetLighttpdConfig {
 }
 
 sub MakeJsTestPages {
-	my $jsTestPage = GetTemplate('js/test.js.template');
+	my $jsTestPage = GetTemplate('js/test.js');
 	PutHtmlFile("jstest.html", $jsTestPage);
 
-	my $jsTest2Page = GetTemplate('js/test2.js.template');
+	my $jsTest2Page = GetTemplate('js/test2.js');
 	#	$jsTest2Page = InjectJs($jsTest2Page, qw(sha512.js));
 	PutHtmlFile("jstest2.html", $jsTest2Page);
 
-	my $jsTest3Page = GetTemplate('js/test3.js.template');
+	my $jsTest3Page = GetTemplate('js/test3.js');
 	PutHtmlFile("jstest3.html", $jsTest3Page);
 
-	my $jsTest4Page = GetTemplate('js/test4.js.template');
+	my $jsTest4Page = GetTemplate('js/test4.js');
 	PutHtmlFile("jstest4.html", $jsTest4Page);
 
 
@@ -3250,20 +3244,20 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 
 	# Zalgo javascript
-	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js.template'));
+	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js'));
 
 
 	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
 		# OpenPGP javascript
-		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js.template'));
-		PutHtmlFile("openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js.template'));
+		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js'));
+		PutHtmlFile("openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js'));
 	}
 
 	PutHtmlFile("sha512.js", GetTemplate('js/sha512.js'));
 
 
 	# Write form javascript
-#	my $cryptoJsTemplate = GetTemplate('js/crypto.js.template');
+#	my $cryptoJsTemplate = GetTemplate('js/crypto.js');
 #	my $prefillUsername = GetConfig('prefill_username') || '';
 #	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
 
@@ -3275,7 +3269,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	}
 	#PutHtmlFile("crypto.js", $cryptoJsTemplate);
 
-	my $crypto2JsTemplate = GetTemplate('js/crypto2.js.template');
+	my $crypto2JsTemplate = GetTemplate('js/crypto2.js');
 	if (GetConfig('admin/js/debug')) {
 		#$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 		$crypto2JsTemplate = EnableJsDebug($crypto2JsTemplate);
@@ -3283,7 +3277,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
-	my $avatarJsTemplate = GetTemplate('js/avatar.js.template');
+	my $avatarJsTemplate = GetTemplate('js/avatar.js');
 	if (GetConfig('admin/js/debug')) {
 		# $avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 		$avatarJsTemplate = EnableJsDebug($avatarJsTemplate);
@@ -3292,7 +3286,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("avatar.js", $avatarJsTemplate);
 
 	# Write settings javascript
-	#PutHtmlFile("settings.js", GetTemplate('js/settings.js.template'));
+	#PutHtmlFile("settings.js", GetTemplate('js/settings.js'));
 	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
 	if (GetConfig('admin/php/enable')) {

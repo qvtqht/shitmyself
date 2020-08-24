@@ -1,4 +1,4 @@
-// begin translit.js.template -- substitutes typed characters with different character set
+// begin translit.js -- substitutes typed characters with different character set
 
 function translateKeyEvent(key, altState, toLayout) {
 }
@@ -350,4 +350,4 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 //}
 
 
-// end translit.js.template
+// end translit.js

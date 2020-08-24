@@ -1,4 +1,4 @@
-// begin profile.js.template
+// begin profile.js
 //
 //if (window.localStorage && window.Promise) {
 //
@@ -612,4 +612,4 @@ function GetCookie (cname) { // get cookie value
 	return "";
 }
 
-// end profile.js.template
+// end profile.js

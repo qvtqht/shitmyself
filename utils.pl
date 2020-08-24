@@ -587,9 +587,9 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		# if template doesn't exist
 		# and we are in debug mode
 		# report the issue
-		WriteLog("GetTemplate: WARNING! template/$filename does not exist, exiting");
+		WriteLog("GetTemplate: WARNING! template/$filename does not exist");
 
-		die("GetTemplate: WARNING! template/$filename does not exist, exiting");
+		#die("GetTemplate: WARNING! template/$filename does not exist, exiting");
 	}
 
 	#information about theme
@@ -832,10 +832,9 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 
 	WriteLog("GetConfig($configName)");
 
-	#	if ($configName =~ /^[a-z0-9_]{1,32}$/) {
-	#		print("WARNING! GetConfig() sanity check failed!");
-	#		print("\$configName = $configName");
-	#		die();
+	#	if ($configName =~ /^[a-z0-9_\/]{1,255}$/) {
+	#		WriteLog("GetConfig: WARNING! Sanity check failed!");
+	#		WriteLog("\$configName = $configName");
 	#		return;
 	#	}
 	#
@@ -847,27 +846,29 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 	}
 
 	if ($token && $token eq 'uncache') {
+		WriteLog('GetConfig: uncache requested, complying');
+		# uncache token to remove cached (memoized) value
 		if (exists($configLookup{$configName})) {
 			delete($configLookup{$configName});
 		}
 	}
 
 	if (exists($configLookup{$configName})) {
-		WriteLog('$configLookup already contains value, returning that...');
-		WriteLog('$configLookup{$configName} is ' . $configLookup{$configName});
+		WriteLog('GetConfig: $configLookup already contains value, returning that...');
+		WriteLog('GetConfig: $configLookup{$configName} is ' . $configLookup{$configName});
 
 		return $configLookup{$configName};
 	}
 
-	WriteLog("Looking for config value in config/$configName ...");
+	WriteLog("GetConfig: Looking for config value in config/$configName ...");
+
+	if (-d "config/$configName") {
+		WriteLog('GetConfig: WARNING! $configName was a directory, returning');
+		return;
+	}
 
 	if (-e "config/$configName") {
-		if (-d "config/$configName") {
-			WriteLog('GetConfig: WARNING! $configName was a directory, returning');
-			return;
-		}
-
-		WriteLog("-e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
+		WriteLog("GetConfig: -e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
 
 		my $configValue = GetFile("config/$configName");
 
@@ -881,17 +882,16 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 
 		return $configValue;
 	} else {
-		WriteLog("-e config/$configName returned false, looking in defaults...");
+		WriteLog("GetConfig: -e config/$configName returned false, looking in defaults...");
 
 		if (-e "default/$configName") {
-			WriteLog("-e default/$configName returned true, proceeding to GetFile(), etc...");
+			WriteLog("GetConfig: -e default/$configName returned true, proceeding to GetFile(), etc...");
 
 			my $configValue = GetFile("default/$configName");
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 
-			WriteLog('PutConfig(' . $configName . ', ' . $configValue .');');
-
+			WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
 			PutConfig($configName, $configValue);
 
 			return $configValue;
@@ -904,7 +904,7 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 	}
 
 	return;
-}
+} # GetConfig()
 
 sub ConfigKeyValid { #checks whether a config key is valid 
 	# valid means passes character sanitize
@@ -1483,10 +1483,6 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		# test for $ character in html output, warn/crash if it is there
 		if (!($fileProvided eq 'openpgp.js')) {
 			WriteLog('WARNING! PutHtmlFile: $content contains $ symbol!');
-			if (GetConfig('admin/debug')) {
-				die($content . "\n" . $fileProvided);
-			}
-			#return;
 		}
 	}
 
