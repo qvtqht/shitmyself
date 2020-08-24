@@ -1,3 +1,16 @@
+top menu should be refreshed based on settings
+	hide some pages if they're not possible
+		e.g. profile, settings
+	add links to tags which have >x items
+
+index page should trim long items regardless of #toolong
+
+top of item should also link to item, not just bottom
+
+how to colapse an item
+
+
+
 on profile page
 	put "logged in state" value on page load into page
 		then check if value is same as value determined by js
