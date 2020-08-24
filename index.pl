@@ -49,10 +49,10 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 			foreach(@addedRecord) {
 				my ($fileHash, $addedTime) = split('\|', $_);
 
-				DBAddAddedTimeRecord($fileHash, $addedTime);
+				DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
 			}
 
-			DBAddAddedTimeRecord('flush');
+			DBAddItemAttribute('flush');
 		}
 	}
 }
@@ -139,7 +139,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	if ($file eq 'flush') {
 		WriteLog("IndexTextFile(flush)");
 
-		DBAddAddedTimeRecord('flush');
 		DBAddAuthor('flush');
 		DBAddKeyAlias('flush');
 		DBAddItem('flush');
@@ -149,8 +148,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddVoteWeight('flush');
 		DBAddPageTouch('flush');
 		DBAddConfigValue('flush');
-		DBAddTitle('flush');
-		DBAddItemClient('flush');
 		DBAddItemAttribute('flush');
 		DBAddLocationRecord('flush');
 		DBAddBrcRecord('flush');
@@ -343,7 +340,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# }
 
 			# store it in index, since that's what we're doing here
-			DBAddAddedTimeRecord($gpgResults{'gitHash'}, $newAddedTime);
+			DBAddItemAttribute($gpgResults{'gitHash'}, 'add_timestamp', $newAddedTime);
 
 			$addedTimeIsNew = 1;
 		}
@@ -713,9 +710,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						if ($hasParent) {
 							# has parent(s), so add title to each parent
 							foreach my $itemParent (@itemParents) {
-								DBAddTitle($itemParent, $titleGiven, $fileHash, $addedTime);
+								DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
+
 								DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
 								DBAddPageTouch('item', $itemParent);
+
 								if (GetConfig('admin/index/make_primary_pages')) {
 									MakePage('item', $itemParent, 1);
 								}
@@ -726,7 +726,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							WriteLog('Item has no parent, adding title to itself');
 
 							DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
-							DBAddTitle($fileHash, $titleGiven);
+							DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
 						}
 					}
 					$message =~ s/$reconLine/[Title: $titleGiven]/g;
@@ -977,7 +977,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							DBAddItemParent($fileHash, $itemHash);
 
-							DBAddItemClient($fileHash, $itemAddedBy);
+							DBAddItemAttribute($fileHash, 'added_by', $itemAddedBy);
 						}
 
 						#DBAddVoteWeight('flush');
@@ -1430,9 +1430,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
 					}
 
-					DBAddTitle($fileHash, $title);
-
-					DBAddTitle('flush'); #todo refactor this out
+					DBAddItemAttribute($fileHash, 'title', $title, $addedTime);
 
 					DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
 				}
@@ -1563,11 +1561,10 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 	if ($file eq 'flush') {
 		WriteLog("IndexTextFile(flush)");
 
-		DBAddAddedTimeRecord('flush');
+		DBAddItemAttribute('flush');
 		DBAddItem('flush');
 		DBAddVoteRecord('flush');
 		DBAddPageTouch('flush');
-		DBAddTitle('flush');
 
 		return;
 	}
@@ -1675,7 +1672,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			}
 
 			# store it in index, since that's what we're doing here
-			DBAddAddedTimeRecord($fileHash, $newAddedTime);
+			DBAddItemAttribute($fileHash, 'add_timestamp', $newAddedTime);
 
 			$addedTimeIsNew = 1;
 		}
@@ -1725,8 +1722,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 		DBAddItem('flush');
 
-		#DBAddTitle($fileHash, 'TITLEE');
-		DBAddTitle($fileHash, $itemName);
+		DBAddItemAttribute($fileHash, 'title', $itemName, $addedTime);
 
 		DBAddVoteRecord($fileHash, $addedTime, 'image');
 		# add image tag

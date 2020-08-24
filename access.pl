@@ -564,8 +564,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						# 	AppendFile('./log/added.log', $addedLog);
 						#
 						# 	if (GetConfig('admin/access_log_call_index')) {
-						# 		WriteLog('access.pl: access_log_call_index is true, therefore DBAddAddedTimeRecord(' . $fileHash . ',' . $addedTime . ')');
-						# 		DBAddAddedTimeRecord($fileHash, $addedTime);
+						# 		WriteLog('access.pl: access_log_call_index is true, therefore DBAddItemAttribute(' . $fileHash . ',add_timestamp,' . $addedTime . ')');
+						# 		DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
 						# 	}
 						# }
 
@@ -630,7 +630,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								}
 							}
 
-							DBAddAddedTimeRecord($fileHash, $addedTime);
+							DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
 						}
 
 						if (GetConfig('admin/access_log_call_index')) {

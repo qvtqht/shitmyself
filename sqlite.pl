@@ -41,15 +41,6 @@ sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
 }
 
 sub SqliteMakeTables() { # creates sqlite schema 
-
-	# added_time
-	SqliteQuery2("CREATE TABLE added_time(file_hash, add_timestamp INTEGER);");
-	SqliteQuery2("CREATE UNIQUE INDEX added_time_unique ON added_time(file_hash);");
-
-	# added_by (client)
-	SqliteQuery2("CREATE TABLE added_by(file_hash, device_fingerprint);");
-	SqliteQuery2("CREATE UNIQUE INDEX added_by_unique ON added_by(file_hash)");
-
 	# author
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
 
@@ -76,28 +67,73 @@ sub SqliteMakeTables() { # creates sqlite schema
 		verify_error
 	)");
 
-	# item_title
+	# item_attribute
 	SqliteQuery2("
-		CREATE TABLE item_title(
+		CREATE TABLE item_attribute(
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			file_hash,
-			source_item_hash,
-			source_item_timestamp,
-			title
+			attribute,
+			value,
+			epoch,
+			source
 		)
 	");
 	SqliteQuery2("
-		CREATE VIEW item_title_latest AS
+		CREATE UNIQUE INDEX item_attribute_unique ON item_attribute (
+			file_hash,
+			attribute,
+			value,
+			epoch,
+			source
+		)
+	");
+	SqliteQuery2("
+		CREATE VIEW item_attribute_latest AS
 		SELECT
 			file_hash,
-			title,
-			source_item_hash,
-			MAX(source_item_timestamp) AS source_item_timestamp
-		FROM item_title
-		GROUP BY file_hash
-		ORDER BY source_item_timestamp DESC
+			attribute,
+			value,
+			source,
+			MAX(epoch) AS epoch
+		FROM item_attribute
+		GROUP BY file_hash, attribute
+		ORDER BY epoch DESC
 	;");
-	#SqliteQuery2("CREATE UNIQUE INDEX item_title_unique ON item_title(file_hash)");
+
+
+
+	# added_time
+	SqliteQuery("
+		CREATE VIEW added_time AS
+		SELECT
+			file_hash,
+			value AS add_timestamp
+		FROM item_attribute_latest
+		WHERE attribute = 'add_timestamp'
+	");
+
+	# item_title
+	SqliteQuery("
+		CREATE VIEW item_title AS
+		SELECT
+			file_hash,
+			value AS title
+		FROM item_attribute_latest
+		WHERE attribute = 'title'
+	");
+#
+# 	SqliteQuery2("
+# 		CREATE VIEW item_title_latest AS
+# 		SELECT
+# 			file_hash,
+# 			title,
+# 			source_item_hash,
+# 			MAX(source_item_timestamp) AS source_item_timestamp
+# 		FROM item_title
+# 		GROUP BY file_hash
+# 		ORDER BY source_item_timestamp DESC
+# 	;");
+# 	#SqliteQuery2("CREATE UNIQUE INDEX item_title_unique ON item_title(file_hash)");
 
 	# item_parent
 	SqliteQuery2("CREATE TABLE item_parent(item_hash, parent_hash)");
@@ -122,10 +158,6 @@ sub SqliteMakeTables() { # creates sqlite schema
 	# vote
 	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, ballot_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
-
-	# item_attribute
-	SqliteQuery2("CREATE TABLE item_attribute(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, attribute);");
-	SqliteQuery2("CREATE UNIQUE INDEX item_attribute_unique ON item_attribute (file_hash, attribute);");
 
 	# item_page
 	SqliteQuery2("CREATE TABLE item_page(item_hash, page_name, page_param);");
@@ -169,6 +201,10 @@ sub SqliteMakeTables() { # creates sqlite schema
 	# page_touch
 	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER, priority DEFAULT 1);");
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
+
+	# queue
+	SqliteQuery2("CREATE TABLE queue(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
+	SqliteQuery2("CREATE UNIQUE INDEX queue_touch_unique ON queue(action, param);");
 
 	# config
 	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, file_hash);");
@@ -248,19 +284,17 @@ sub SqliteMakeTables() { # creates sqlite schema
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp,
-				IFNULL(item_title_latest.title, '') AS item_title,
+				IFNULL(item_title.title, '') AS item_title,
 				IFNULL(item_score.item_score, 0) AS item_score,
 				item.item_type AS item_type,
-				added_by.device_fingerprint AS added_by,
 				tags_list AS tags_list
 			FROM
 				item
 				LEFT JOIN child_count ON ( item.file_hash = child_count.parent_hash)
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
-				LEFT JOIN item_title_latest ON ( item.file_hash = item_title_latest.file_hash)
+				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
 				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
-				LEFT JOIN added_by ON ( item.file_hash = added_by.file_hash)
 				LEFT JOIN item_tags_list ON ( item.file_hash = item_tags_list.file_hash )
 	");
 	SqliteQuery2("
@@ -806,57 +840,6 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	return;
 }
 
-sub DBAddTitle { # Add entry to item_title table
-	state $query;
-	state @queryParams;
-
-	my $hash = shift;
-
-	if ($hash eq 'flush') {
-		WriteLog('DBAddTitle(flush)');
-
-		if ($query) {
-			$query .= ';';
-			SqliteQuery2($query, @queryParams);
-
-			$query = '';
-			@queryParams = ();
-		}
-
-		return;
-	}
-
-	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
-		DBAddTitle('flush');
-		$query = '';
-		@queryParams = ();
-	}
-
-	my $title = shift;
-	my $sourceItemHash = shift;
-	my $sourceItemTimestamp = shift;
-
-	if (!$sourceItemHash) {
-		$sourceItemHash = '';
-	}
-	if (!$sourceItemTimestamp) {
-		$sourceItemTimestamp = '';
-	}
-
-	#todo sanity checks
-
-	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item_title(file_hash, title, source_item_hash, source_item_timestamp) VALUES ";
-	} else {
-		$query .= ',';
-	}
-
-	$query .= '(?, ?, ?, ?)';
-	push @queryParams, $hash, $title, $sourceItemHash, $sourceItemTimestamp;
-
-	#todo add hastitle tag
-}
-
 sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 	state $query;
 	state @queryParams;
@@ -1023,7 +1006,7 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo item_page should have all the child items for replies
 
 	#file_hash
-	my @tables = qw(added_by added_time author_alias config item item_attribute item_title vote vote_weight);
+	my @tables = qw(author_alias config item item_attribute item_title vote vote_weight);
 
 	foreach (@tables) {
 		my $query = "DELETE FROM $_ WHERE file_hash = '$hash'";
@@ -1039,9 +1022,6 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	}
 
 	#todo any successes deleting stuff should result in a refresh for the affected page
-}
-
-sub DBAddItemAlias {
 }
 
 sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an entry to page_touch table
@@ -1400,6 +1380,8 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 
 			$query = '';
 			@queryParams = ();
+
+			DBAddItemAttribute('flush');
 		}
 
 		return;
@@ -1417,6 +1399,8 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	my $itemType = shift;
 	my $verifyError = shift;
 
+	#DBAddItemAttribute($fileHash, 'attribute', 'value', 'epoch', 'source');
+
 	if (!$authorKey) {
 		$authorKey = '';
 	}
@@ -1432,10 +1416,18 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	} else {
 		$query .= ",";
 	}
-
 	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError;
 
 	$query .= "(?, ?, ?, ?, ?, ?)";
+
+	if ($authorKey) {
+		DBAddItemAttribute($fileHash, 'author_key', $authorKey);
+	}
+	DBAddItemAttribute($fileHash, 'sha1', $fileHash);
+	DBAddItemAttribute($fileHash, 'item_type', $itemType);
+	if ($verifyError) {
+		DBAddItemAttribute($fileHash, 'verify_error', '1');
+	}
 }
 
 sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ token 
@@ -1743,12 +1735,36 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHa
 	DBAddPageTouch('tag', $voteValue);
 }
 
+sub DBGetItemAttribute { # $fileHash, [$attribute]
+	my $fileHash = shift;
+	my $attribute = shift;
 
+	if ($fileHash) {
+		$fileHash =~ s/[^a-f0-9,]//g;
+	} else {
+		return;
+	}
+	if (!$fileHash) {
+		return;
+	}
 
-sub DBAddItemAttribute { # adds record to item_attribute table ; currently unused
-	# DBAddItemAttribute
-	# $fileHash
-	# $attribute
+	if ($attribute) {
+		$attribute =~ s/[^a-zA-Z0-9_]//g;
+	} else {
+		$attribute = '';
+	}
+
+	my $query = "SELECT attribute, value FROM item_attribute WHERE file_hash = '$fileHash'";
+	if ($attribute) {
+		$query .= " AND attribute = '$attribute'";
+	}
+
+	my $results = SqliteQuery($query);
+	return $results;
+} #DBGetItemAttribute()
+
+sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add attribute to item
+# currently no constraints
 
 	state $query;
 	state @queryParams;
@@ -1773,7 +1789,7 @@ sub DBAddItemAttribute { # adds record to item_attribute table ; currently unuse
 	}
 
 	if (!$fileHash) {
-		WriteLog("DBAddItemAttribute() called without \$fileHash! Returning.");
+		WriteLog('DBAddItemAttribute() called without $fileHash! Returning.');
 	}
 
 	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
@@ -1782,145 +1798,40 @@ sub DBAddItemAttribute { # adds record to item_attribute table ; currently unuse
 	}
 
 	my $attribute = shift;
+	my $value = shift;
+	my $epoch = shift;
+	my $source = shift;
+
+	if (!$attribute) {
+		WriteLog('WARNING! DBAddItemAttribute() called without $attribute');
+	}
+	if (!$value) {
+		WriteLog('WARNING! DBAddItemAttribute() called without $value');
+	}
+
 
 	chomp $fileHash;
 	chomp $attribute;
+	chomp $value;
+
+	if (!$epoch) {
+		$epoch = '';
+	}
+	if (!$source) {
+		$source = '';
+	}
+
+	chomp $epoch;
+	chomp $source;
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item_attribute(file_hash, attribute) VALUES ";
+		$query = "INSERT OR REPLACE INTO item_attribute(file_hash, attribute, value, epoch, source) VALUES ";
 	} else {
 		$query .= ",";
 	}
 
-	$query .= '(?, ?)';
-	push @queryParams, $fileHash, $attribute;
-}
-
-
-sub DBAddAddedTimeRecord { # Adds a new record to added_time, typically from log/added.log or from an addedtime token
-	# This records the time that the file was first submitted or picked up by the indexer
-	#	$fileHash = file's hash
-	#	$addedTime = time it was added
-	#
-	state $query;
-	state @queryParams;
-
-	my $fileHash = shift;
-	chomp $fileHash;
-
-	if ($fileHash eq 'flush') {
-		WriteLog("DBAddAddedTimeRecord(flush)");
-
-		if ($query) {
-			$query .= ';';
-
-			SqliteQuery2($query, @queryParams);
-
-			$query = '';
-			@queryParams = ();
-		}
-
-		return;
-	}
-
-	if (!IsSha1($fileHash)) {
-		WriteLog('DBAddAddedTimeRecord called with invalid parameter! returning');
-		return;
-	}
-
-	my $addedTime = shift;
-	chomp $addedTime;
-
-	WriteLog('DBAddAddedTimeRecord(' . $fileHash . ',' . $addedTime . ')');
-
-	if (!$addedTime =~ m/\d{9,10}/) { #todo is this clean enough?
-		WriteLog('DBAddAddedTimeRecord called with invalid parameter! returning');
-		return;
-	}
-
-	if ($query && length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams()) {
-		DBAddAddedTimeRecord('flush');
-		$query = '';
-		@queryParams = ();
-	}
-
-	$fileHash = SqliteEscape($fileHash);
-	$addedTime = SqliteEscape($addedTime);
-
-	if (!$query) {
-		$query = "INSERT OR REPLACE INTO added_time(file_hash, add_timestamp) VALUES ";
-	} else {
-		$query .= ',';
-	}
-
-	$query .= '(?, ?)';
-	push @queryParams, $fileHash, $addedTime;
-}
-
-sub DBAddItemClient { # Adds a new record to added_by, which stores client fingerprint attached to item
-# $fileHash = item identifier
-# $addedClient = client identifier
-	state $query;
-	state @queryParams;
-
-	WriteLog('DBAddItemClient()');
-
-	my $fileHash = shift;
-	chomp $fileHash;
-
-	WriteLog('DBAddItemClient(' . $fileHash . ')');
-
-	if ($fileHash eq 'flush') {
-		WriteLog("DBAddItemClient(flush)");
-
-		if ($query) {
-			$query .= ';';
-
-			SqliteQuery2($query, @queryParams);
-
-			$query = '';
-			@queryParams = ();
-		}
-
-		return;
-	}
-
-#	if (!IsSha1($fileHash)) {
-#		WriteLog('DBAddItemClient called with invalid parameter! returning');
-#		return;
-#	}
-
-	my $addedClient = shift;
-	chomp $addedClient;
-
-	WriteLog("DBAddItemClient($fileHash, $addedClient)");
-#
-#	if (!($addedClient =~ m/\[0-9a-f]{32}/)) { #todo is this clean enough?
-#		WriteLog('DBAddItemClient() called with invalid parameter! returning');
-#		return;
-#	}
-
-	if ($query && length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams()) {
-		DBAddItemClient('flush');
-
-		$query = '';
-		@queryParams = ();
-	}
-
-	#todo is this redundant?
-#	$fileHash = SqliteEscape($fileHash);
-#	$addedClient = SqliteEscape($addedClient);
-
-	if (!$query) {
-		$query = "INSERT OR REPLACE INTO added_by(file_hash, device_fingerprint) VALUES ";
-	} else {
-		$query .= ',';
-	}
-
-	$query .= '(?, ?)';
-	push @queryParams, $fileHash, $addedClient;
-
-	WriteLog($query);
+	$query .= '(?, ?, ?, ?, ?)';
+	push @queryParams, $fileHash, $attribute, $value, $epoch, $source;
 }
 
 sub DBGetAddedTime { # return added time for item specified
