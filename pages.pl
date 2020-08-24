@@ -662,6 +662,25 @@ sub GetItemPage {
 
 	$txtIndex .= $htmlStart;
 
+	{
+	#my $itemInfoTemplate = GetTemplate('item_info.template');
+		my $itemInfoTemplate;
+
+		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
+		$itemAttributes = trim($itemAttributes);
+
+		my $trTr = '</td></tr><tr><td>';
+		$itemAttributes =~ s/\n/$trTr/gi;
+		my $tdTd = '</td><td>';
+		$itemAttributes =~ s/\|/$tdTd/gi;
+		$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
+
+		my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
+		$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
+
+		$txtIndex .= $itemAttributesWindow;
+	}
+
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	$file{'display_full_hash'} = 1;
@@ -2658,56 +2677,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 	}
 
 	return $txtIndex;
-} # GetReadPage
-
-sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (used for both top and footer menus)
-	my $address = shift;
-	my $caption = shift;
-
-	# if (!-e "$HTMLDIR/$address") {
-	#	#don't make a menu item if file doesn't exist
-	# 	return '';
-	# }
-
-	my $templateName = shift;
-	if (!$templateName) {
-		$templateName = 'menuitem.template';
-	}
-	chomp $templateName;
-
-	my $menuItem = '';
-	$menuItem = GetTemplate($templateName);
-
-	# my $color = GetThemeColor('link');
-	# my $colorSourceHash = md5_hex($caption);
-	# my $menuColorMode = GetThemeAttribute('menu_color_mode') ? 1 : 0;
-	# for (my $colorSelectorI = 0; $colorSelectorI < 6; $colorSelectorI++) {
-	# 	my $char = substr($colorSourceHash, $colorSelectorI, 1);
-	# 	if (!$menuColorMode) {
-	# 		if ($char eq 'd' || $char eq 'e' || $char eq 'f') {
-	# 			$char = 'c';
-	# 		}
-	# 	}
-	# 	if ($menuColorMode) {
-	# 		if ($char eq '0' || $char eq '1' || $char eq '2') {
-	# 			$char = '3';
-	# 		}
-	# 	}
-	# 	$color .= $char;
-	# }
-
-	# my $firstLetter = substr($caption, 0, 1);
-	# $caption = substr($caption, 1);
-
-	#my $color = substr(md5_hex($caption), 0, 6);
-
-	$menuItem =~ s/\$address/$address/g;
-	$menuItem =~ s/\$caption/$caption/g;
-	# $menuItem =~ s/\$color/$color/g;
-	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
-
-	return $menuItem;
-} # GetMenuItem
+} # GetReadPage()
 
 sub GetIndexPage { # returns html for an index page, given an array of hash-refs containing item information
 	# Called from WriteIndexPages() and generate.pl
@@ -2784,7 +2754,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 			if ($itemComma eq '') {
 				$itemComma = '<hr>';
-#				$itemComma = '<p>';
+				#				$itemComma = '<p>';
 			}
 		}
 	}
@@ -2810,6 +2780,55 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	return $html;
 }
+
+sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (used for both top and footer menus)
+	my $address = shift;
+	my $caption = shift;
+
+	# if (!-e "$HTMLDIR/$address") {
+	#	#don't make a menu item if file doesn't exist
+	# 	return '';
+	# }
+
+	my $templateName = shift;
+	if (!$templateName) {
+		$templateName = 'menuitem.template';
+	}
+	chomp $templateName;
+
+	my $menuItem = '';
+	$menuItem = GetTemplate($templateName);
+
+	# my $color = GetThemeColor('link');
+	# my $colorSourceHash = md5_hex($caption);
+	# my $menuColorMode = GetThemeAttribute('menu_color_mode') ? 1 : 0;
+	# for (my $colorSelectorI = 0; $colorSelectorI < 6; $colorSelectorI++) {
+	# 	my $char = substr($colorSourceHash, $colorSelectorI, 1);
+	# 	if (!$menuColorMode) {
+	# 		if ($char eq 'd' || $char eq 'e' || $char eq 'f') {
+	# 			$char = 'c';
+	# 		}
+	# 	}
+	# 	if ($menuColorMode) {
+	# 		if ($char eq '0' || $char eq '1' || $char eq '2') {
+	# 			$char = '3';
+	# 		}
+	# 	}
+	# 	$color .= $char;
+	# }
+
+	# my $firstLetter = substr($caption, 0, 1);
+	# $caption = substr($caption, 1);
+
+	#my $color = substr(md5_hex($caption), 0, 6);
+
+	$menuItem =~ s/\$address/$address/g;
+	$menuItem =~ s/\$caption/$caption/g;
+	# $menuItem =~ s/\$color/$color/g;
+	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
+
+	return $menuItem;
+} # GetMenuItem()
 
 sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	my $pageLimit = GetConfig('page_limit');

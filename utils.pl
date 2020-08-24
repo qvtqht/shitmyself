@@ -34,7 +34,7 @@ if (!$SCRIPTDIR) {
 }
 
 sub GetMyCacheVersion {
-	return 'a';
+	return 'b';
 }
 
 my $HTMLDIR = $SCRIPTDIR . '/html';
