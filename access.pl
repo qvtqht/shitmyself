@@ -150,7 +150,7 @@ sub LogError {
 }
 
 sub ProcessAccessLog { # reads an access log and writes .txt files as needed
-# ProcessAccessLog (
+# ProcessAccessLog(
 #	access log file path
 #   parse mode:
 #		0 = default site log
@@ -202,8 +202,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 	# The following section parses the access log
 	# Thank you, StackOverflow
+	my $lineCounter;
 	foreach my $line (<LOGFILE>) {
 		WriteLog($line);
+
+		$lineCounter++;
 
 		#Check to see if we've already processed this line
 		# by hashing it and looking for its hash in %prevLines
@@ -430,6 +433,12 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 						if ($paramName eq 'replyto') {
 							if (IsItem($urlParam)) {
+								my $replyToId = $paramValue;
+
+								if (!($message =~ /\>\>$replyToId/)) {
+									$message .= "\n\n>>$replyToId";
+								}
+							} else {
 								my $replyToId = $paramValue;
 
 								if (!($message =~ /\>\>$replyToId/)) {
@@ -826,6 +835,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 				#				}
 			}
 		}
+
+		WriteMessage($lineCounter);
 	}
 
 	# Close the log file handle
@@ -843,6 +854,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	PutFile("log/processed.log", $newPrevLines);
 
 	return $newItemCount;
-}
+} # ProcessAccessLog()
+
+
 
 1;
