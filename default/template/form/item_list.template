@@ -1,0 +1,10 @@
+<form>
+<input type=text name=txtTagsInclude>
+<input type=text name=txtTagsExclude>
+<select name=selSort>
+<option value=newest>Newest</option>
+<option value=oldest>Oldest</option>
+<option value=loudest>Loudest</option>
+</select>
+</form>
+
