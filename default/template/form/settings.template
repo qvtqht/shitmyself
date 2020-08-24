@@ -85,12 +85,6 @@
 					</fieldset>
 				</td>
 			</tr>
-
-			<tr class=statusbar>
-				<td>
-					Ready
-				</td>
-			</tr>
 		</table>
 	</font>
 </form>
