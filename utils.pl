@@ -1957,11 +1957,11 @@ sub GpgParse { # Parses a text file containing GPG-signed message, and returns i
 			if (substr($trimmedTxt, 0, length($gpg_pubkey_header)) eq $gpg_pubkey_header) {
 				WriteLog("Found public key header!");
 
-				my $gpgGetPubKeyResulCommand = "$gpgCommand --import --keyid-format LONG \"$filePath\" $gpgStderr";
+				my $gpgGetPubKeyResultCommand = "$gpgCommand --import --keyid-format LONG \"$filePath\" $gpgStderr";
 				# not been tested with gpg1 #todo add if statement to not use --import with gpg1
-				WriteLog($gpgGetPubKeyResulCommand);
-				my $gpg_result = `$gpgGetPubKeyResulCommand`;
-				WriteLog($gpg_result);
+				WriteLog('$gpgGetPubKeyResultCommand: ' . $gpgGetPubKeyResultCommand);
+				my $gpg_result = `$gpgGetPubKeyResultCommand`;
+				WriteLog('$gpg_result: ' . $gpg_result);
 
 				# WriteLog("$gpgCommand --import \"$filePath\" $gpgStderr");
 				# my $gpgImportKeyResult = `$gpgCommand --import "$filePath" $gpgStderr`;
