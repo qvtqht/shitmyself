@@ -680,13 +680,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		# title:
 		if (GetConfig('admin/token/title')) {
 		# title: token is enabled
-			WriteLog('title token found for ' . $fileHash);
-
-			WriteLog('$message = ' . $message);
 
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @setTitleToLines = ($message =~ m/^(title:)(.+)$/mig);
+			my @setTitleToLines = ($message =~ m/^(title: )(.+)$/mig);
 			# m = multi-line
 			# s = multi-line
 			# g = all instances
@@ -695,6 +692,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
 			if (@setTitleToLines) { # means we found at least one title: token;
+				WriteLog('title token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
 				#my $lineCount = @setTitleToLines / 2;
 				while (@setTitleToLines) {
 					# loop through all found title: token lines
