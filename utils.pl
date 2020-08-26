@@ -152,20 +152,6 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 }
 
 
-# capture gpg's stderr output if capture_stderr_output is set
-# the value of $gpgStderr will be appended to gpg commands in GpgParse()
-# this block should be moved into GpgParse() probably
-my $gpgStderr;
-if (GetConfig('admin/gpg/capture_stderr_output')) {
-	$gpgStderr = '2>&1';
-} else {
-	if (GetConfig('admin/debug')) {
-		$gpgStderr = '';
-	} else {
-		$gpgStderr = ' 2>/dev/null';
-	}
-}
-
 #sub GitPipe { # runs git with proper prefix, suffix, and post-command pipe
 ## $gitCommand = git command (excluding the 'git' part)
 ## $commandsFollowing = what follows after the git command (and after the command suffix)
@@ -207,25 +193,6 @@ if (GetConfig('admin/gpg/capture_stderr_output')) {
 #	return $gitCommandResult;
 #}
 
-# figure out whether to use gpg or gpg2 command for gpg stuff
-# it might be stored in config
-my $gpgCommand = trim(GetConfig('admin/gpg/gpg_command'));
-if (!$gpgCommand) {
-	if (GetConfig('admin/gpg/use_gpg2')) {
-		$gpgCommand = 'gpg2';
-	}
-	else {
-		# if not in config, use whatever version we have as `gpg`
-		if (GetGpgMajorVersion() eq '2') {
-			$gpgCommand = 'gpg2';
-		}
-		else {
-			$gpgCommand = 'gpg';
-		}
-	}
-}
-WriteLog("utils.pl init: admin/gpg/use_gpg2 = " . GetConfig('admin/gpg/use_gpg2'));
-WriteLog("utils.pl init: \$gpgCommand = $gpgCommand");
 
 sub GetCache { # get cache by cache key
 	# comes from cache/ directory, under current git commit
@@ -2183,16 +2150,15 @@ sub ServerSign { # Signs a given file with the server's key
 	}
 
 	# verify that key exists in gpg keychain
-	WriteLog("$gpgCommand --list-keys $serverKeyId $gpgStderr");
-	#my $gpgCommand = GetConfig('admin/gpg/gpg_command');
+	WriteLog("gpg --list-keys $serverKeyId");
 
-	my $serverKey = `$gpgCommand --list-keys $serverKeyId $gpgStderr`;
+	my $serverKey = `gpg --list-keys $serverKeyId`;
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
 	if (!-e "$TXTDIR/server.key.txt") {
-		WriteLog("$gpgCommand --batch --yes --armor --export $serverKeyId $gpgStderr");
-		my $gpgOutput = `$gpgCommand --batch --yes --armor --export $serverKeyId $gpgStderr`;
+		WriteLog("gpg --batch --yes --armor --export $serverKeyId");
+		my $gpgOutput = `gpg --batch --yes --armor --export $serverKeyId`;
 
 		PutFile($TXTDIR . '/server.key.txt', $gpgOutput);
 
@@ -2203,12 +2169,8 @@ sub ServerSign { # Signs a given file with the server's key
 	if ($serverKey) {
 		WriteLog("We have a server key, so go ahead and sign the file.");
 
-		#todo this is broken with gpg2
-		# should start with $gpgCommand
-		#		WriteLog("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		#		system("gpg --batch --yes --default-key $serverKeyId --clearsign \"$file\"");
-		WriteLog("$gpgCommand --batch --yes -u $serverKeyId --clearsign \"$file\" $gpgStderr");
-		system("$gpgCommand --batch --yes -u $serverKeyId --clearsign \"$file\" $gpgStderr");
+		WriteLog("gpg --batch --yes -u $serverKeyId --clearsign \"$file\"");
+		system("gpg --batch --yes -u $serverKeyId --clearsign \"$file\"");
 
 		if (-e "$file.asc") {
 			WriteLog("Sign appears successful, rename .asc file to .txt");
