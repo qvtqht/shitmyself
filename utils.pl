@@ -1872,7 +1872,7 @@ sub GpgParse {
 		$returnValues{'isSigned'} = 1;
 		$returnValues{'key'} = $1;
 	}
-	if ($gpgStderrOutput =~ /\"([a-zA-Z0-9]+)\"/) {
+	if ($gpgStderrOutput =~ /\"([a-zA-Z0-9 ]+)\"/) {
 		$returnValues{'alias'} = $1;
 	} else {
 		$returnValues{'alias'} = 'Anonymouse';
