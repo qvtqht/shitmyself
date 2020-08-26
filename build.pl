@@ -161,7 +161,7 @@ if (GetConfig('admin/build/loop_after')) {
 }
 
 if (GetConfig('admin/lighttpd/enable')) {
-	system('screen -d -m perl ./lighttpd.pl');
+	system('screen -S lighttpd -d -m perl ./lighttpd.pl');
 }
 
 
