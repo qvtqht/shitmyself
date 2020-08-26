@@ -1006,7 +1006,7 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo item_page should have all the child items for replies
 
 	#file_hash
-	my @tables = qw(author_alias config item item_attribute item_title vote vote_weight);
+	my @tables = qw(author_alias config item item_attribute vote vote_weight);
 
 	foreach (@tables) {
 		my $query = "DELETE FROM $_ WHERE file_hash = '$hash'";
