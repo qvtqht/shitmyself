@@ -1424,6 +1424,7 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 		DBAddItemAttribute($fileHash, 'author_key', $authorKey);
 	}
 	DBAddItemAttribute($fileHash, 'sha1', $fileHash);
+	DBAddItemAttribute($fileHash, 'md5', md5_hex(GetFile($filePath)));
 	DBAddItemAttribute($fileHash, 'item_type', $itemType);
 	if ($verifyError) {
 		DBAddItemAttribute($fileHash, 'verify_error', '1');
@@ -1836,10 +1837,14 @@ sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add 
 
 sub DBGetAddedTime { # return added time for item specified
 	my $fileHash = shift;
+	if (!$fileHash) {
+		WriteLog('DBGetAddedTime: warning: $fileHash missing');
+		return;
+	}
 	chomp ($fileHash);
 
 	if (!IsSha1($fileHash)) {
-		WriteLog('DBGetAddedTime called with invalid parameter! returning');
+		WriteLog('DBGetAddedTime: warning: called with invalid parameter! returning');
 		return;
 	}
 
