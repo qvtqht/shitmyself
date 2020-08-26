@@ -325,7 +325,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 			$timeLimit = 10;
 		}
 
-		if ((time()-(GetConfig('admin/access_log_last_seen')||0)) > 100) { #todo make this more configurable
+		if ((time()-(GetConfig('admin/access_log_last_seen')||0)) > 60) { #todo make this more configurable
 			#do not process access.log more than once per 100 seconds
 			PutConfig('admin/access_log_last_seen', time());
 
