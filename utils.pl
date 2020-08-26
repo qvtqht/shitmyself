@@ -27,6 +27,16 @@ use Storable;
 #use Time::Piece;
 use Digest::SHA qw(sha1_hex);
 
+sub GetDir {
+	my $dirName = shift;
+	if (!$dirName) {
+		return;
+	}
+	my $scriptDir = cwd();
+	if ($dirName eq 'html') {
+		return $scriptDir . '/html';
+	}
+}
 
 my $SCRIPTDIR = cwd();
 if (!$SCRIPTDIR) {
