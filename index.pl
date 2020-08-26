@@ -244,6 +244,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		# see what gpg says about the file.
 		# if there is no gpg content, the attributes are still populated as possible
 
+		# $txt = $gpgResults{'text'};          # contents of the text file
 		$txt = $gpgResults{'text'};          # contents of the text file
 		$message = $gpgResults{'message'};   # message which will be displayed once tokens are processed
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
@@ -258,18 +259,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
 
 		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
-		$fileHash = $gpgResults{'gitHash'};                # hash provided by git for the file
+		$fileHash = GetFileHash($file);                # hash provided by git for the file
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; #
 
 		# $fileMeta = GetItemMeta($fileHash, $file);
 
 		# $message .= "\n-- \n" . $fileMeta;
-
-		if (GetConfig('admin/gpg/capture_stderr_output')) {
-			if (index($message, 'gpg: Signature made ')) {
-				$message =~ s/gpg: Signature made /\n-- \ngpg: Signature made /g;
-			}
-		}
 
 		if (IsServer($gpgKey)) {
 			#todo
@@ -281,6 +276,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			#push @allowedactions setconfig
 		}
 
+		if (!$alias) {
+			$alias = '(alias)';
+		}
 		WriteLog("IndexTextFile: \$alias = $alias");
 
 		if ($gpgKey) {
@@ -294,8 +292,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		# this is used to store $message minus any tokens found
 		# in the end, we will see if it is empty, and set flags accordingly
 
-		$addedTime = DBGetAddedTime($gpgResults{'gitHash'});
+		$addedTime = DBGetAddedTime($fileHash);
 		# get the file's added time.
+
+		if (!$file || !$fileHash) {
+			WriteLog('IndexTextFile: warning: $file or $fileHash missing; returning');
+			return;
+		}
 
 		# debug output
 		WriteLog('... $file = ' . $file . ', $fileHash = ' . $fileHash);
@@ -308,7 +311,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		# debug output
-		WriteLog("... " . $gpgResults{'gitHash'});
+		WriteLog("... " . $fileHash);
 		if ($addedTime) {
 			WriteLog("... \$addedTime = $addedTime");
 		}
@@ -327,7 +330,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				AddToChainLog($fileHash);
 			}
 
-			WriteLog("... No added time found for " . $gpgResults{'gitHash'} . " setting it to now.");
+			WriteLog("... No added time found for " . $fileHash . " setting it to now.");
 
 			# current time
 			my $newAddedTime = GetTime();
@@ -340,7 +343,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# }
 
 			# store it in index, since that's what we're doing here
-			DBAddItemAttribute($gpgResults{'gitHash'}, 'add_timestamp', $newAddedTime);
+			DBAddItemAttribute($fileHash, 'add_timestamp', $newAddedTime);
 
 			$addedTimeIsNew = 1;
 		}
