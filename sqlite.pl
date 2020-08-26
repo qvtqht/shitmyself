@@ -1420,12 +1420,18 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 
 	$query .= "(?, ?, ?, ?, ?, ?)";
 
+	my $filePathRelative = $filePath;
+	my $htmlDir = GetDir('html');
+	$filePathRelative =~ s/$htmlDir\//\//;
+
 	if ($authorKey) {
 		DBAddItemAttribute($fileHash, 'author_key', $authorKey);
 	}
 	DBAddItemAttribute($fileHash, 'sha1', $fileHash);
 	DBAddItemAttribute($fileHash, 'md5', md5_hex(GetFile($filePath)));
 	DBAddItemAttribute($fileHash, 'item_type', $itemType);
+	DBAddItemAttribute($fileHash, 'file_path', $filePathRelative);
+
 	if ($verifyError) {
 		DBAddItemAttribute($fileHash, 'verify_error', '1');
 	}
