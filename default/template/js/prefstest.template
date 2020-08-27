@@ -13,21 +13,6 @@
 
 <script>
 <!--
-var fp = '14D0C4897A173E5C';
-var i = 0;
-done = 0;
-
-while(!done) {
-	var h = hex_sha512(fp + '|' + i);
-	i = i + 1;
-	if (h.substring(0, 3) == '11111') {
-		done = 1;
-	}
-	if (10000 < i) {
-		done = 2;
-	}
-}
-alert(done + ': ' + fp + ',' + i + ',' + h);
 -->
 </script>
 
