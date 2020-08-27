@@ -105,8 +105,4 @@ function displayNotification (strMessage, thisButton) { // adds loading indicato
 	}
 } // displayNotification()
 
-function makeCoin() {
-	return 1;
-}
-
 // == end utils.js
