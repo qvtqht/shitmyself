@@ -1,9 +1,34 @@
-admin/access_log_path
+config is stored in individual files
+
+default/ directory has all the defaults
+
+config/ directory overrides the defaults
+
+===
+
+most config is 0/1 or one-line string
+
+config/admin/debug is a special one, file must be absent for debug to be off
+
+===
+
+example:
+
+echo 1 > config/admin/js/enable
+# enable javascript module
+
+echo 0 > config/admin/php/enable
+# disable php module
+
+===
+
+admin/access_log_path_list
 this is where access.pl will look for the access log from the web server.
+it's a list of file paths, separated by \n
 default: log/access.log
 
 admin/admin_imprint
-if not 0, the first public key to be posted to the board will be imprinted as the admin
+if not 0, if admin.key is missing, next public key to be posted becomes admin
 default: 0
 
 admin/allow_broken_signatures #todo
@@ -21,34 +46,27 @@ admin/clean_house_window #todo
 I suppose this would determine how frequently the house is cleaned
 
 admin/html/ascii_only
-if not 0, only ascii characters will be output to the website
+if not 0, only ascii characters will be output to html
 default: 0
 
-admin/cron_continue
-if not 0, cron.pl will run in a loop for this many seconds, looking for new access log entries
-default: 0
+admin/debug
+if 1, debug messages will be written to log/log.log
+ATTENTION: this is a special one. you must delete config/admin/debug to turn off debug mode
+default: (no file)
 
-debug
-if 1, debug messages will be written to stdout
-default: 0
-
-emotions
+tagset/emotion
 list of emotions to include on voting pages
 
-flags
+tagset/flag
 values provided to users as reasons to flag a post
 one on each line
-
-admin/git_cron_pull
-if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
-default: 0
 
 home_title
 title of home page
 default: Welcome!
 
 item_long_threshold
-how many characters an item can be before it is considered "long" and is cut off when displayed in listings
+how many characters an item can be before it is considered "long" and is cut off when displayed in some listings
 default: 1024
 
 logo_text
@@ -67,38 +85,28 @@ default: Anonymous
 theme/color_primary
 list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
 
-admin/access_log_path
+admin/access_log_path_list
 this is where access.pl will look for the access log from the web server.
+\n-separated list
 default: log/access.log
 
-access_update
-if not 0, access.pl will try to fill in the index and website when new items are submitted
-#todo this is not fully built yet
-default: 0
-
 admin/admin_imprint
-if not 0, the first public key to be posted to the board will be imprinted as the admin
+if not 0, when public key posted to board, will be imprinted as root admin
 default: 0
 
 admin/html/ascii_only
-if not 0, only ascii characters will be output to the website
+if not 0, only ascii characters will be output to html portions of website
+all other characters will be stripped
+#todo some conversion if possible, from e.g. cyrillic unicode chars to koi8-r, but it is some work...
 default: 0
 
-admin/cron_continue
-if not 0, cron.pl will run in a loop for this many seconds, looking for new access log entries
+admin/debug
+if present, debug messages will be written to log/log.log
 default: 0
 
-debug
-if 1, debug messages will be written to stdout
-default: 0
-
-flags
+tagset/flag
 values provided to users as reasons to flag a post
 one on each line
-
-admin/git_cron_pull
-if not 0, cron.pl will do a "git stash; git pull" in order to stay updated from repo
-default: 0
 
 admin/server_sign_anon_votes #todo
 not built, but would turn this off even if server key is set
