@@ -224,6 +224,7 @@ function GetPrefs(prefKey) { // get prefs value from localstorage
 		var prefValue = prefsObj[prefKey];
 
 		if (!prefValue && prefValue != 0) {
+			// defaults are set here currently
 			if (prefKey == 'beginner' || prefKey == 'beginner_highlight') {
 				prefValue = 1;
 			}
