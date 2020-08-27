@@ -991,7 +991,69 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					}
 				}
 			}
+		} #addedby token
+
+		# look for addedby, which adds an added time for an item token
+		# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
+		if (GetConfig('admin/token/coin') && $message) {
+			my @coinLines = ($message =~ m/^([0-9A-F]{16}) ([0-9]{10}) (0\.[0-9]+)/mg);
+
+			if (@coinLines) {
+				WriteLog(". coin token found!");
+				#my $lineCount = @coinLines / 3;
+			#
+			# 	if ($isSigned) {
+			# 		WriteLog("... isSigned");
+			# 		if (IsServer($gpgKey)) {
+			# 			WriteLog("... isServer");
+						while (@coinLines) {
+			 				WriteLog("... \@coinLines");
+			 				my $authorKey = shift @coinLines;
+			 				my $mintedAt = shift @coinLines;
+			 				my $checksum = shift @coinLines;
+
+							WriteLog("... $authorKey, $mintedAt, $checksum");
+
+			 				my $reconLine = "$authorKey $mintedAt $checksum";
+
+			 				#$message .= sha512_hex($reconLine);
+
+			 				my $hash = sha512_hex($reconLine);
+
+			 				if (
+			 					substr($hash, 0, 4) eq '1337'
+			 						&&
+								(
+									$authorKey eq $gpgKey
+										||
+									$authorKey eq $hasCookie
+								)
+			 				) {
+								$message =~ s/$reconLine/[coin]/g;
+
+								DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
+
+								#DBAddItemAttribute('
+								#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
+							} else {
+								$message =~ s/$reconLine/[coin not accepted at this server]/g;
+							}
+
+			 				WriteLog("... $reconLine");
+
+			 				$detokenedMessage =~ s/$reconLine//g;
+			 			}
+			#
+			# 			#DBAddVoteWeight('flush');
+			#
+			# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
+			#
+			# 			DBAddPageTouch('tag', 'device');
+			# 		}
+			# 	}
+			}
 		}
+
 
 		# look for sha512 tokens, which adds a sha512 hash for an item token
 		# sha512/766053fcfb4e835c4dc2770e34fd8f644f276305/07a1fdc887e71547178dc45b115eac83bc86c4a4a34f8fc468dc3bda0738a47a49bd27a3428b28a0419a5bd2bf926f1ac43964c7614e1cce9438265c008c4cd3
