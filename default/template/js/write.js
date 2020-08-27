@@ -32,13 +32,24 @@ function writeOnload() { // onload handler for write page
 					var spanSignAs = document.getElementById('spanSignAs');
 
 					var btnSignAs = document.createElement('input');
-					btnSignAs.setAttribute('onclick', 'signMessage();this.submit()');
-					btnSignAs.setAttribute('class', 'advanced');
+					btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
 					btnSignAs.setAttribute('type', 'submit');
 					btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
 					//btnSignAs.innerHTML = 'Sign as ' + getAvatar();
 
 					spanSignAs.appendChild(btnSignAs);
+
+					if (window.makeCoin) {
+						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
+						if (spanWriteAdvanced) {
+							var btnMakeCoin = document.createElement('input');
+							btnMakeCoin.setAttribute('type', 'button');
+							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
+							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
+							spanWriteAdvanced.appendChild(btnMakeCoin);
+						}
+
+					}
 
 					if (0) {
 						var lblSignAs = document.createElement('label');
