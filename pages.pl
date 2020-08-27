@@ -3499,13 +3499,21 @@ sub GetWritePage { # returns html for write page
 
 	$txtIndex .= GetPageFooter();
 
-	if (GetConfig('admin/php/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(settings avatar write translit write_php profile));
-	} else {
-		$txtIndex = InjectJs($txtIndex, qw(settings avatar write translit profile));
+	if (GetConfig('admin/js/enable')) {
+
+		my @js = qw(settings avatar write profile utils);
+		if (GetConfig('admin/php/enable')) {
+			push @js, 'write_php';
+		}
+		if (GetConfig('admin/token/coin')) {
+			push @js, 'coin', 'sha512';
+		}
+		if (GetConfig('admin/js/translit')) {
+			push @js, 'translit';
+		}
+
+		$txtIndex = InjectJs($txtIndex, @js);
 	}
-	#$txtIndex = InjectJs($txtIndex, qw(avatar write settings profile geo));
-	#$txtIndex = InjectJs($txtIndex, qw(clock));
 
 	# add call to writeOnload to page
 	if (GetConfig('admin/js/enable')) {
