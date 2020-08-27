@@ -63,7 +63,7 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	}
 
 	if (!GetConfig('admin/organize_files')) {
-		WriteLog('WARNING! OrganizeFile() was called when admin/organize_files was false.');
+		WriteLog('OrganizeFile: warning: was called when admin/organize_files was false.');
 	}
 
 	# organize files aka rename to hash-based path

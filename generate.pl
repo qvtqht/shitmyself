@@ -305,7 +305,7 @@ if (GetConfig('tag_cloud_page')) {
 # if ($homePageHasBeenWritten) {
 # 	WriteLog("Home Page has been written! Yay!");
 # } else {
-# 	WriteLog("Warning! Home Page has not been written! Fixing that");
+# 	WriteLog("warning: Home Page has not been written! Fixing that");
 #
 # 	if (-e $HTMLDIR.'/'.GetConfig('home_page')) {
 # 		PutHtmlFile('index.html', GetFile($HTMLDIR . '/' . GetConfig('home_page')));

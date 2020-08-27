@@ -1338,12 +1338,12 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 	my $parentHash = shift;
 
 	if (!$parentHash) {
-		WriteLog('DBAddItemParent: WARNING! $parentHash missing');
+		WriteLog('DBAddItemParent: warning: $parentHash missing');
 		return;
 	}
 
 	if ($itemHash eq $parentHash) {
-		WriteLog('DBAddItemParent: WARNING! $itemHash eq $parentHash');
+		WriteLog('DBAddItemParent: warning: $itemHash eq $parentHash');
 		return;
 	}
 
@@ -1810,10 +1810,10 @@ sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add 
 	my $source = shift;
 
 	if (!$attribute) {
-		WriteLog('WARNING! DBAddItemAttribute() called without $attribute');
+		WriteLog('DBAddItemAttribute: warning: called without $attribute');
 	}
 	if (!$value) {
-		WriteLog('WARNING! DBAddItemAttribute() called without $value');
+		WriteLog('DBAddItemAttribute: warning: called without $value');
 	}
 
 

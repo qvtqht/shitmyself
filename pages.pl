@@ -2086,7 +2086,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 		if (index($scriptTemplate, '>') > -1) {
 			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+			WriteLog('InjectJs(): warning: Inject script "' . $script . '" contains > character');
 		}
 
 		if (GetConfig('admin/js/debug')) {
@@ -2117,7 +2117,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	} else {
 		# if there was no </body> tag, just append at the end
 		$html .= "\n\n" . $scriptInject;
-		WriteLog('InjectJs(): WARNING! $html does not contain </body>');
+		WriteLog('InjectJs(): warning: $html does not contain </body>');
 	}
 
 	return $html;
@@ -2212,7 +2212,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 
 		if (index($scriptTemplate, '>') > -1) {
 			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+			WriteLog('InjectJs(): warning: Inject script "' . $script . '" contains > character');
 		}
 
 		if (GetConfig('admin/js/debug')) {
@@ -2250,7 +2250,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	} else {
 		# if there was no </body> tag, just append at the end
 		if ($injectMode ne 'append') {
-			WriteLog('InjectJs: WARNING! $html does not contain $htmlTag, falling back to append mode');
+			WriteLog('InjectJs: warning: $html does not contain $htmlTag, falling back to append mode');
 		}
 		$html .= "\n" . $scriptInject;
 	}
@@ -2935,7 +2935,7 @@ sub GetLighttpdConfig {
 		if ($phpCgiPath) {
     		$phpConf =~ s/\/bin\/php-cgi/$phpCgiPath/g;
         } else {
-            WriteLog('GetLighttpdConfig: WARNING! php enabled with lighttpd, but php-cgi missing');
+            WriteLog('GetLighttpdConfig: warning: php enabled with lighttpd, but php-cgi missing');
         }
 		
 		WriteLog('$phpConf beg =====');
@@ -3429,7 +3429,6 @@ sub GetWriteForm { # returns write form (for composing text message)
 	# # these are not present in the template
 	# $writeForm =~ s/\$extraFields/poop/g;
 	$writeForm =~ s/\$initText/$initText/g;
-
 
 	if (GetConfig('admin/js/enable')) {
 		# $replyForm = AddAttributeToTag($replyForm, 'textarea', 'style', 'background-color: red important!; border: 10pt solid red; width: 1000px;');

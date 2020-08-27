@@ -269,7 +269,7 @@ sub EnsureSubdirs { # ensures that subdirectories for a file exist
 	chomp $fullPath;
 
 	if (substr($fullPath, 0, 1) eq '/') {
-		#WriteLog('EnsureSubdirs: WARNING! $fullPath should not begin with a /;' . $fullPath);
+		#WriteLog('EnsureSubdirs: warning: $fullPath should not begin with a /;' . $fullPath);
 	}
 
 	WriteLog("EnsureSubdirs($fullPath)");
@@ -418,7 +418,7 @@ sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from 
 	my $noSubstitute = shift;
 
 	if (!$stringKey) {
-		WriteLog('GetString: WARNING! called without $stringKey, exiting');
+		WriteLog('GetString: warning: called without $stringKey, exiting');
 		return;
 	}
 	if (!$language) {
@@ -566,9 +566,9 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		# if template doesn't exist
 		# and we are in debug mode
 		# report the issue
-		WriteLog("GetTemplate: WARNING! template/$filename does not exist");
+		WriteLog("GetTemplate: warning: template/$filename does not exist");
 
-		#die("GetTemplate: WARNING! template/$filename does not exist, exiting");
+		#die("GetTemplate: warning: template/$filename does not exist, exiting");
 	}
 
 	#information about theme
@@ -594,7 +594,7 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		return $template;
 	} else {
 		#if result is blank, report it
-		WriteLog("GetTemplate: WARNING! GetTemplate() returning empty string for $filename.");
+		WriteLog("GetTemplate: warning: GetTemplate() returning empty string for $filename.");
 		return '';
 	}
 }
@@ -812,7 +812,7 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 	WriteLog("GetConfig($configName)");
 
 	#	if ($configName =~ /^[a-z0-9_\/]{1,255}$/) {
-	#		WriteLog("GetConfig: WARNING! Sanity check failed!");
+	#		WriteLog("GetConfig: warning: Sanity check failed!");
 	#		WriteLog("\$configName = $configName");
 	#		return;
 	#	}
@@ -842,7 +842,7 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 	WriteLog("GetConfig: Looking for config value in config/$configName ...");
 
 	if (-d "config/$configName") {
-		WriteLog('GetConfig: WARNING! $configName was a directory, returning');
+		WriteLog('GetConfig: warning: $configName was a directory, returning');
 		return;
 	}
 
@@ -875,37 +875,35 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 
 			return $configValue;
 		} else {
-			#WriteLog("WARNING! Tried to get value of config with no default value: $configName");
+			WriteLog("GetConfig: warning: Tried to get value of config with no default value: $configName");
 
-			#WriteLog("-e default/$configName returned false");
-			#die();
+			return;
 		}
 	}
 
+	WriteLog('GetConfig: warning: reached end of function, which should not happen');
 	return;
 } # GetConfig()
 
 sub ConfigKeyValid { #checks whether a config key is valid 
 	# valid means passes character sanitize
 	# and exists in default/
-	WriteLog('ConfigKeyValid()');
-
 	my $configName = shift;
 
 	WriteLog('ConfigKeyValid($configName)');
 
 	if ($configName =~ /^[a-z0-9_\/]{1,64}$/) {
-		WriteLog("WARNING! ConfigKeyValid() sanity check failed!");
+		WriteLog("ConfigKeyValid: warning: sanity check failed!");
 	}
 
-	WriteLog('ConfigKeyValid(\$configName sanity check passed)');
+	WriteLog('ConfigKeyValid: $configName sanity check passed:');
 
 	if (-e "default/$configName") {
-		WriteLog("default/$configName exists!");
+		WriteLog("ConfigKeyValid: default/$configName exists");
 
 		return 1;
 	} else {
-		WriteLog("default/$configName NOT exist!");
+		WriteLog("ConfigKeyValid: default/$configName NOT exist!");
 
 		return 0;
 	}
@@ -918,7 +916,7 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 	WriteLog("GetHtmlFilename()");
 
 	if (!defined($hash) || !$hash) {
-		if (WriteLog("Warning! GetHtmlFilename() called without parameter")) {
+		if (WriteLog("GetHtmlFilename: warning: called without parameter")) {
 
 			#my $trace = Devel::StackTrace->new;
 			#print $trace->as_string; # like carp
@@ -927,10 +925,10 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 		return;
 	}
 
-	WriteLog("GetHtmlFilename(\$hash = $hash)");
+	WriteLog("GetHtmlFilename($hash)");
 
 	if (!IsItem($hash)) {
-		WriteLog("Warning! GetHtmlFilename() called with parameter that isn't a SHA-1. Returning.");
+		WriteLog("GetHtmlFilename: warning: called with parameter that isn't a SHA-1. Returning.");
 		WriteLog("$hash");
 		#
 		# my $trace = Devel::StackTrace->new;
@@ -1332,14 +1330,6 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		$content = '';
 	}
 
-	if (index($file, 'html/') > -1) {
-		WriteLog('WARNING! old-style call to PutHtmlFile, please fix');
-		if (GetConfig('admin/debug')) {
-			die('old-style call to PutHtmlFile, please fix');
-		}
-		return;
-	}
-
 	# keeps track of whether home page has been written at some point
 	# this value is returned if $file is 'check_homepage'
 	# then we can write the default homepage in its place
@@ -1461,7 +1451,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	if (index($content, '$') > -1) {
 		# test for $ character in html output, warn/crash if it is there
 		if (!($fileProvided eq 'openpgp.js')) {
-			WriteLog('WARNING! PutHtmlFile: $content contains $ symbol!');
+			WriteLog('PutHtmlFile: warning: $content contains $ symbol!');
 		}
 	}
 
