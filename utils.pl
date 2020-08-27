@@ -870,8 +870,12 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 
-			WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
-			PutConfig($configName, $configValue);
+			#if (-e 'config/admin/debug') {
+				# this preserves default settings, so that even if defaults change in the future
+				# the same value will remain for current instance
+				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
+				PutConfig($configName, $configValue);
+			#}
 
 			return $configValue;
 		} else {
