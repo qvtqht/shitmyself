@@ -43,8 +43,10 @@
 								id=addtext
 							>
 
-							<span id=spanSignAs></span>
+							<span id=spanSignAs class=advanced></span>
 						</p>
+
+						<span id=spanWriteAdvanced class=advanced></span>
 
 						<p><a href="/frame.html" target=_top>Show keyboard (beta)</a></p>
 
