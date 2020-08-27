@@ -1,3 +1,6 @@
+#publish tag
+with and without target server name/alias
+
 idea from some thread
 >A personalized web spider rancher and search engine that seeds itself based on your browsing history. I’d also want
 >to be able to federate it or allow collaboration with other individuals groups.
