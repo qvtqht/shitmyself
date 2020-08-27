@@ -11,6 +11,7 @@ use 5.010;
 require './utils.pl';
 
 my $SqliteDbName = './cache/' . GetMyCacheVersion() . '/index.sqlite3'; # path to sqlite db
+#my $SqliteDbName = './cache/' . GetMyCacheVersion() . '.sqlite3'; # path to sqlite db
 
 my $dbh; # handle for sqlite interface
 
@@ -40,7 +41,7 @@ sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
 	SqliteConnect();
 }
 
-sub SqliteMakeTables() { # creates sqlite schema 
+sub SqliteMakeTables { # creates sqlite schema
 	# author
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
 
@@ -205,6 +206,17 @@ sub SqliteMakeTables() { # creates sqlite schema
 	# queue
 	SqliteQuery2("CREATE TABLE queue(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
 	SqliteQuery2("CREATE UNIQUE INDEX queue_touch_unique ON queue(action, param);");
+	#
+	# action      param           touch_time     priority
+	# make_page   author/abc
+	# index_file  path/abc.txt
+	# read_log    log/access.log
+	# find_new_files
+	# make_thumb  path/abc.jpg
+	# annotate_votes   (vote starts with valid=0, must be annotated)
+	#
+
+
 
 	# config
 	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, file_hash);");
