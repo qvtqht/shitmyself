@@ -1,0 +1,38 @@
+client-side preferences are accessed using:
+
+GetPrefs(key)
+SetPrefs(key, value)
+
+===
+
+preferences are stored in LocalStorage
+
+planned is cookie alternative
+
+===
+
+the following prefs are supported:
+
+show_advanced
+display non-essential controls
+
+advanced_highlight
+highlight non-essential conrols
+
+beginner
+display hints and explanations
+
+beginner_highlight
+hide hints and explanations
+
+notify_on_change (preference not implemented, no gui, but it's always on)
+display notice when page has changed
+
+show_admin
+display administrtive/operator controls
+
+want_to_vote (implemented client-side only)
+display voting buttons
+
+show_meanies (not implemented)
+display content marked "#mean"

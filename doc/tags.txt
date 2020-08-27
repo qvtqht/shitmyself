@@ -1,0 +1,21 @@
+special tags
+============
+
+#admin
+can apply any other tag
+
+#moderator
+can #remove
+
+#vouch
+can apply all tags parent can
+
+#remove
+item is removed, if user has privileges
+
+#textart
+item is rendered with whitespace preserved and monospace font
+
+#approve
+item can appear on top items page
+

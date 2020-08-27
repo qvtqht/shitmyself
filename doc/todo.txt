@@ -1,3 +1,5 @@
+config/admin/force_profile is broken
+
 top menu should be refreshed based on settings
 	hide some pages if they're not possible
 		e.g. profile, settings
@@ -216,8 +218,6 @@ hide/disable with note unavailable features
 	e.g. gui registration with js=0 and php=0
 	light mode without php
 
-
-gpg feature checks
 
 make clean.sh safer
 	maybe change to clean.pl for easier writing
@@ -846,11 +846,10 @@ and (',' || item_flat.tags_list || ',')  not like '%,pubkey,%'
 and (',' || item_flat.tags_list || ',')  not like '%,reply,%';
 
 Installer/dependency installer
-	which gpg
-		which apt-get
-			install debian modules
-		which yum
-			install fedora modules
+	which apt-get
+		install debian modules
+	which yum
+		install fedora modules
 
 Add number of unprocessed text files to stats page
 
@@ -1081,8 +1080,6 @@ In Queue index pages, votes/replies should include parent message in a box
 
 With SSI calculate user's fingerprint and direct them to /fp/abcdef
 
-Redirect gpg stderr output 2>/dev/null
-
 Import data from FB, G+, IG, etc.
 
 Build threads page
@@ -1138,8 +1135,6 @@ Try to do a clean install from git clone again
 			Solution: run build.sh manually first time
 		access.pl does not work without log/access.log
 			Run ./lighttpd.pl and hit the server at least once
-		gpg_command was set to gpg, but gpg2 is required on fedora28
-			Change config/admin/gpg_command to gpg2
 
 Add quick way to transition cache to new version without clean-build
 	Or possibly fallback to old cache if new cache is missing
