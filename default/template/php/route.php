@@ -230,7 +230,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 
 		if (index($scriptTemplate, '>') > -1) {
 			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-			WriteLog('InjectJs(): WARNING! Inject script "' . $script . '" contains > character');
+			WriteLog('InjectJs: warning: Inject script "' . $script . '" contains > character');
 		}
 
 		if (GetConfig('admin/js/debug')) {
@@ -262,7 +262,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 		}
 	} else {
 		if ($injectMode != 'append') {
-			WriteLog('InjectJs: WARNING! $html does not contain $htmlTag, falling back to append mode');
+			WriteLog('InjectJs: warning: $html does not contain $htmlTag, falling back to append mode');
 		}
 		$html .= "\n" . $scriptInject;
 	}
@@ -528,7 +528,7 @@ if (GetConfig('admin/php/route_enable')) {
 							if (GetConfig('admin/allow_deop')) {
 								$overthrowInterval = GetConfig('admin/overthrow_interval');
 								if (!$overthrowInterval) {
-									$overthrowInterval = 34387200;
+									$overthrowInterval = 1;
 								}
 
 								if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {

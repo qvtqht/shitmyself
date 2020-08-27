@@ -3290,32 +3290,35 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
 	if (GetConfig('admin/php/enable')) {
-		my $postPhpTemplate = GetTemplate('php/post.php.template');
+		my $postPhpTemplate = GetTemplate('php/post.php');
 		PutFile($PHPDIR . '/post.php', $postPhpTemplate);
 
-		my $test2PhpTemplate = GetTemplate('php/test2.php.template');
+		my $test2PhpTemplate = GetTemplate('php/test2.php');
 		PutFile($PHPDIR . '/test2.php', $test2PhpTemplate);
 
-		my $adminPhpTemplate = GetTemplate('php/config.php.template');
+		my $adminPhpTemplate = GetTemplate('php/config.php');
 		PutFile($PHPDIR . '/config.php', $adminPhpTemplate);
 
-		my $testPhpTemplate = GetTemplate('php/test.php.template');
+		my $testPhpTemplate = GetTemplate('php/test.php');
 		PutFile($PHPDIR . '/test.php', $testPhpTemplate);
 
-		my $writePhpTemplate = GetTemplate('php/write.php.template');
+		my $writePhpTemplate = GetTemplate('php/write.php');
 		PutFile($PHPDIR . '/write.php', $writePhpTemplate);
 
-		my $uploadPhpTemplate = GetTemplate('php/upload.php.template');
+		my $uploadPhpTemplate = GetTemplate('php/upload.php');
 		PutFile($PHPDIR . '/upload.php', $uploadPhpTemplate);
 
-		my $cookiePhpTemplate = GetTemplate('php/cookie.php.template');
+		my $cookiePhpTemplate = GetTemplate('php/cookie.php');
 		PutFile($PHPDIR . '/cookie.php', $cookiePhpTemplate);
 
-		my $utilsPhpTemplate = GetTemplate('php/utils.php.template');
+		my $cookieTestPhpTemplate = GetTemplate('php/cookietest.php');
+		PutFile($PHPDIR . '/cookietest.php', $cookieTestPhpTemplate);
+
+		my $utilsPhpTemplate = GetTemplate('php/utils.php');
         $utilsPhpTemplate =~ s/\$scriptDirPlaceholderForTemplating/$SCRIPTDIR/g;
 		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
 
-		my $routePhpTemplate = GetTemplate('php/route.php.template');
+		my $routePhpTemplate = GetTemplate('php/route.php');
 		PutFile($PHPDIR . '/route.php', $routePhpTemplate);
 	}
 

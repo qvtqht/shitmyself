@@ -80,7 +80,8 @@ function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 
 
 function GetMyCacheVersion () { // returns current cache version
-	return 'a';
+	$myCacheVersion = 'b';
+	return $myCacheVersion;
 }
 
 function GetMyVersion () { // returns current git commit id
@@ -150,78 +151,6 @@ function GetFileHash ($fileName) { // returns hash of file contents
 	}
 }
 
-function GpgParseSignedMessage ($filePath) { // #todo #untested parses gpg signed message
-	$gpgCommand = 'gpg2'; // todo add gpg1 support
-	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
-
-	if (GetConfig('admin/gpg/capture_stderr_output')) {
-	    // capture stderr output
-    	$gpgStderr = ' 2>&1';
-    } else {
-    	if (GetConfig('admin/php/debug')) {
-    	    // if debug is on, let it go to stderr
-    		$gpgStderr = '';
-    	} else {
-    	    // if not in debug mode, send it to /dev/null
-    		$gpgStderr = ' 2>/dev/null';
-    	}
-    }
-
-////////////////
-
-    WriteLog("GpgParseSignedMessage($filePath)");
-
-    $gpgResult = `$gpgCommand --verify --status-fd 1 "$filePath" $gpgStderr`;
-    WriteLog('$gpgResult = ' . "$gpgCommand --verify --status-fd 1 \"$filePath\" $gpgStderr");
-    WriteLog('$gpgResult: ' . $gpgResult);
-
-    $key_id_prefix = '';
-    $key_id_suffix = '';
-
-    $verifyError = 0;
-
-    if (index($gpgResult, "[GNUPG:] GOODSIG ") >= 0) {
-        $key_id_prefix = "[GNUPG:] GOODSIG ";
-        $key_id_suffix = " ";
-    }
-
-    $keyExpired = 0;
-    if (index($gpgResult, "[GNUPG:] EXPKEYSIG ") >= 0) {
-        $key_id_prefix = "[GNUPG:] EXPKEYSIG ";
-        $key_id_suffix = " ";
-
-        $keyExpired = 1;
-    }
-
-    WriteLog('$key_id_prefix = ' . $key_id_prefix);
-    WriteLog('$key_id_suffix = ' . $key_id_suffix);
-
-    if ($key_id_prefix && (!$verifyError || GetConfig('admin/allow_broken_signatures'))) {
-        // Extract the key fingerprint from GPG's output.
-        $gpg_key = substr($gpgResult, index($gpgResult, $key_id_prefix) + length($key_id_prefix));
-        $gpg_key = substr($gpg_key, 0, index($gpg_key, $key_id_suffix));
-
-        WriteLog("$gpgCommand --decrypt \"$filePath\" $gpgStderr");
-
-        $message = `$gpgCommand --decrypt "$filePath" $gpgStderr`;
-
-        $isSigned = 1;
-    }
-
-    $txt = file_get_contents($filePath);
-    $fileHash = GetFileHash($filePath);
-
-    $returnValues['isSigned'] = $isSigned;
-    $returnValues['text'] = $txt;
-    $returnValues['message'] = $message;
-    $returnValues['key'] = $gpg_key;
-    $returnValues['keyExpired'] = $keyExpired;
-    $returnValues['gitHash'] = $fileHash;
-    $returnValues['verifyError'] = $verifyError;
-
-    return $returnValues;
-}
-
 function file_force_contents ($dir, $contents) { // ensures parent directories exist before writing file
 // #todo clean this function up
 
@@ -238,87 +167,6 @@ function file_force_contents ($dir, $contents) { // ensures parent directories e
     }
 
     return file_put_contents("$dir/$file", $contents);
-}
-
-
-function GpgParse ($filePath) { // #todo #untested
-	$gpgCommand = 'gpg2'; // todo add gpg1 support
-	$gpgStderr = ''; // string appended to commands to capture stderr output if configured
-
-	if (GetConfig('admin/gpg/capture_stderr_output')) {
-	    // capture stderr output
-    	$gpgStderr = '2>&1';
-    } else {
-    	if (GetConfig('admin/php/debug')) {
-    	    // if debug is on, let it go to stderr
-    		$gpgStderr = '';
-    	} else {
-    	    // if not in debug mode, send it to /dev/null
-    		$gpgStderr = ' 2>/dev/null';
-    	}
-    }
-
-	WriteLog('GpgParse(' . $filePath . ')');
-
-	if (file_exists($filePath)) {
-	// file should exist
-		WriteLog('GpgParse: File exists');
-
-		$txt = file_get_contents($filePath); // contains text file contents
-
-		$fileHash = GetFileHash($filePath);
-
-        $cachePath = "./cache/" . GetMyCacheVersion() . "/gpg/php/$fileHash.cache";
-        // this is where we will cache results for later use
-        // php's cache is separate from perl's because it's in a different format
-
-        if (file_exists($cachePath)) {
-            // if file at $cachePath exists, means we've already done this before, just return cached data
-            WriteLog('GpgParse: ' . $cachePath . ' exists');
-            $returnValues = unserialize(file_get_contents($cachePath));
-        } else {
-            // no cache, gotta do the dirty work...
-
-            $message = $txt; // will contain message output for user including results of parsing in place of tokens
-
-            if ($fileHash) {
-            // sanity check, but if there is no $fileHash, something is wrong and we shouldn't keep going
-                WriteLog('GpgParse: $fileHash = ' . $fileHash);
-
-                $returnValues = array(); // will store return values from function
-
-                // this is where it gets ugly...
-
-                WriteLog('GpgParse: beginning search...');
-
-                // what to look for to figure out message type
-                $gpgMessageHeader = "-----BEGIN PGP SIGNED MESSAGE-----"; // Signed messages header
-                $gpgPubkeyHeader = "-----BEGIN PGP PUBLIC KEY BLOCK-----"; // Public key header
-                $gpgEncryptedHeader = "-----BEGIN PGP MESSAGE-----"; // Encrypted message header
-
-                $trimmedTxt = trim($txt);
-
-                if (strpos($txt, $gpgMessageHeader) !== false) {
-                    $returnValues = GpgParseSignedMessage($filePath);
-
-                    file_force_contents($cachePath, serialize($returnValues));
-
-                    return $returnValues;
-                }
-
-                if (strpos($txt, $gpgPubkeyHeader) !== false) {
-                    $returnValues = GpgParsePubkey($filePath);
-
-                    file_put_contents($cachePath, serialize($returnValues));
-
-                    return $returnValues;
-                }
-            }
-		}
-	} else {
-		WriteLog('GpgParse(' . $filePath . ') -- file does not exist');
-		return '';
-	}
 }
 
 function DoUpdate () { // #todo #untested
@@ -458,12 +306,16 @@ function GetCache ($cacheName) { // get cache contents by key/name
 
 function PutCache ($cacheName, $content) { // stores value in cache
 //#todo sanity checks and error handling
+	WriteLog("PutCache($cacheName, $content)");
+
 	static $myVersion;
 	if (!$myVersion) {
 		$myVersion = GetMyCacheVersion();
 	}
 
 	$cacheName = '../cache/' . $myVersion . '/' . $cacheName;
+
+	WriteLog('PutCache: $cacheName = ' . $cacheName);
 
 	return PutFile($cacheName, $content);
 }
@@ -500,6 +352,8 @@ function StoreServerResponse ($message) { // adds server response message and re
 // stores message in cache/sm[message_id]
 // returns message id which can be passed to next page load via ?message=
 
+	WriteLog("StoreServerResponse($message)");
+
     // #todo static $messages array
     // #todo push message to array
 
@@ -514,6 +368,8 @@ function StoreServerResponse ($message) { // adds server response message and re
 
 	PutCache('sm' . $messageId, $message);
 
+	WriteLog("StoreServerResponse: $messageId, cache written");
+
 	return $messageId;
 }
 
@@ -523,8 +379,10 @@ function RetrieveServerResponse ($messageId) { // retrieves response message for
 	$message = GetCache('sm' . $messageId);
 	if ($message) {
 		// message was found, remove it
-		WriteLog("RetrieveServerResponse: Message found, deleting");
-		UnlinkCache('sm' . $messageId);
+		WriteLog("RetrieveServerResponse: Message found, not deleting");
+		// UnlinkCache('sm' . $messageId);
+	} else {
+		WriteLog('RetrieveServerResponse: warning: message not found!');
 	}
 
 	return $message;
@@ -554,7 +412,7 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 	// should only redirect once per session
 	static $redirected = 0;
 	if ($redirected > 0) {
-		WriteLog('Warning! RedirectWithResponse() called more than once!');
+		WriteLog('RedirectWithResponse: warning: called more than once!');
 		return;
 	}
 	$redirected++;
@@ -563,7 +421,7 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		// problem, can't redirect if headers already sent;
 		// we will print a message instead, but this is definitely a problem
 
-		WriteLog('WARNING! Trying to redirect when headers have already been sent!');
+		WriteLog('RedirectWithResponse: warning: Trying to redirect when headers have already been sent!');
 	}
 
 

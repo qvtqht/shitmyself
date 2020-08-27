@@ -90,7 +90,7 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 		}
 	} // if (isset($_COOKIE['test']) && $_COOKIE['test'])
 	else {
-		if (isset($_GET['request']) && ($_GET['request'] == 'Register')) { // WARNING! $_GET['request'] may be set by code above
+		if (isset($_GET['request']) && ($_GET['request'] == 'Register')) { // caution: $_GET['request'] may be set by code above
 			setcookie2('test', '1');
 			header('Location: /profile.html?' . time());
 		}
