@@ -760,11 +760,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			) {
 				# preliminary conditions
 
-				my @setConfigLines = ($message =~ m/^(setconfig)\/([a-z0-9\/_.]+)=(.+?)$/mg);
+				my @setConfigLines = ($message =~ m/^#(setconfig) ([a-z0-9\/_.]+) (.+?)$/mg);
 
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 
-				my @resetConfigLines = ($message =~ m/^(resetconfig)\/([a-z0-9\/_.]+)/mg);
+				my @resetConfigLines = ($message =~ m/^#(resetconfig) ([a-z0-9\/_.]+)/mg);
 
 				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
 
@@ -788,10 +788,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 						my $reconLine;
 						if ($configAction eq 'setconfig') {
-							$reconLine = "setconfig/$configKey=$configValue";
+							$reconLine = "#$configAction $configKey $configValue";
 						}
 						else {
-							$reconLine = "resetconfig/$configKey";
+							$reconLine = "#$configAction $configKey";
 						}
 
 						if (ConfigKeyValid($configKey)) {
