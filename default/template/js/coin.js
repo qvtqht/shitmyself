@@ -52,7 +52,7 @@ function makeCoin(t) {
 	} else {
 		if (t) {
 			t.value = 'No coin. ' + i + ' iterations.';
-			return;
+			return '';
 		}
 	}
 }

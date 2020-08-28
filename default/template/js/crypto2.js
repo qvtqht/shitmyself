@@ -213,7 +213,7 @@ function setPrivateKeyFromTxt (newKey) { // set the current private key and refr
             //alert('DEBUG: setPrivateKeyFromTxt: window.openpgp already exists');
         }
     } else {
-        return;
+        return '';
     }
 
     var openpgp = window.openpgp;

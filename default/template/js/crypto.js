@@ -73,7 +73,7 @@ function signoutCounterDecrement() {
 	var ct = window.confct;
 
 	if (!window.privKeyTrash) {
-		return;
+		return '';
 	}
 
 	if (ct) {

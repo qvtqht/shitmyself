@@ -22,13 +22,13 @@ function commentOnChange(t, formId) {
 	if (intCommentOnChangeLastValue <= 1024 && t.value.length <= 1024) {
 	    //alert('DEBUG: commentOnChange() intCommentOnChangeLastValue <= 1024 && t.value.length <= 1024, return');
 
-		return;
+		return '';
 	}
 
 	if (1024 < intCommentOnChangeLastValue && 1024 < t.value.length) {
 	    //alert('DEBUG: commentOnChange() 1024 < intCommentOnChangeLastValue && 1024 < t.value.length, return');
 
-		return;
+		return '';
 	}
 
 	intCommentOnChangeLastValue = t.value.length;
