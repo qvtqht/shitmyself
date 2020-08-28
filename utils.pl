@@ -1876,13 +1876,14 @@ sub GpgParse {
 		$returnValues{'isSigned'} = 1;
 		$returnValues{'key'} = $1;
 	}
-	if ($gpgStderrOutput =~ /\"([a-zA-Z0-9 ]+)\"/) {
-		$returnValues{'alias'} = $1;
-	} else {
-		$returnValues{'alias'} = 'Anonymouse';
-	}
 
 	if ($pubKeyFlag) {
+		if ($gpgStderrOutput =~ /\"([a-zA-Z0-9 ]+)\"/) {
+			$returnValues{'alias'} = $1;
+		} else {
+			$returnValues{'alias'} = '?????';
+		}
+
 		my $message;
 		$message = GetTemplate('message/user_reg.template');
 		$message =~ s/\$name/$returnValues{'alias'}/g;
