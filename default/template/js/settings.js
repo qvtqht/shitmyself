@@ -211,7 +211,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 	}
 }
 
-function GetPrefs(prefKey) { // get prefs value from localstorage
+function GetPrefs (prefKey) { // get prefs value from localstorage
 	if (window.localStorage) {
 		var currentPrefs = localStorage.getItem('prefs1');
 
@@ -234,7 +234,7 @@ function GetPrefs(prefKey) { // get prefs value from localstorage
 	}
 }
 
-function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefValue
+function SetPrefs (prefKey, prefValue) { // set prefs key prefKey to value prefValue
     //alert('DEBUG: SetPrefs(' + prefKey + ', ' + prefValue + ')');
 
 	if (window.localStorage) {
@@ -257,22 +257,14 @@ function SetPrefs(prefKey, prefValue) { // set prefs key prefKey to value prefVa
 	return 1;
 }
 
-function saveCheckbox (id, ths, prefKey) { // saves value of checkbox, toggles affected elements
+function SaveCheckbox (ths, prefKey) { // saves value of checkbox, toggles affected elements
 // id = id of pane to hide or show; not required
 // ths = "this" of calling checkbox)
 // prefKey = key of preference value to set with checkbox
 //
 // this function is a bit of a mess, could use a refactor #todo
-	//alert('DEBUG: saveCheckbox(' + id + ',' + ths + ',' + prefKey);
 
-	// this will look for pane with id=id and show/hide it if it exists
-	// used on the profile page
-	if (document.getElementById && id) {
-		var pane = document.getElementById(id);
-		if (pane) {
-			pane.style.display=(ths.checked ? 'block' : 'none')
-		}
-	}
+	//alert('DEBUG: SaveCheckbox(' + ths + ',' + prefKey);
 
 	var checkboxState = (ths.checked ? 1 : 0);
 	//alert('DEBUG: checkboxState = ' + checkboxState);
@@ -288,20 +280,8 @@ function saveCheckbox (id, ths, prefKey) { // saves value of checkbox, toggles a
 	return 1;
 }
 
-function ResetSettings() {
-	if (window.localStorage) {
-		if (confirm('Reset all settings to their defaults?')) {
-			localStorage.removeItem('prefs1');
-
-			ShowAdvanced(1);
-
-			//location.reload(); //#todo make this not necessary
-		}
-	}
-}
-
-function modeChange(ab) { // updates several settings to change to "ui mode" (beginner, advanced, etc.)
-    //alert('DEBUG: modeChange(' + ab + ')');
+function SetInterfaceMode (ab) { // updates several settings to change to "ui mode" (beginner, advanced, etc.)
+    //alert('DEBUG: SetInterfaceMode(' + ab + ')');
 
 	if (window.localStorage && window.SetPrefs) {
 		if (ab == 'beginner') {
@@ -311,6 +291,7 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
+			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
@@ -318,24 +299,24 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
             SetPrefs('show_admin', 0);
-		} else if (ab == 'advanced') {
+		} else if (ab == 'expert') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
 			SetPrefs('notify_on_change', 1);
             SetPrefs('show_admin', 0);
-		} else if (ab == 'minimal') {
-			SetPrefs('show_advanced', 0);
-			SetPrefs('advanced_highlight', 0);
-			SetPrefs('beginner', 0);
-			SetPrefs('beginner_highlight', 0);
-			SetPrefs('notify_on_change', 0);
-//            SetPrefs('show_admin', 0);
-		} else if (ab == 'admin') {
-            SetPrefs('show_admin', 1);
-            SetPrefs('want_to_vote', 1);
-            SetPrefs('show_meanies', 1);
+// 		} else if (ab == 'minimal') {
+// 			SetPrefs('show_advanced', 0);
+// 			SetPrefs('advanced_highlight', 0);
+// 			SetPrefs('beginner', 0);
+// 			SetPrefs('beginner_highlight', 0);
+// 			SetPrefs('notify_on_change', 0);
+// //            SetPrefs('show_admin', 0);
+// 		} else if (ab == 'operator') {
+//             SetPrefs('show_admin', 1);
+//             SetPrefs('want_to_vote', 1);
+//             SetPrefs('show_meanies', 1);
 		}
 
 		ShowAdvanced(1);
@@ -349,6 +330,21 @@ function modeChange(ab) { // updates several settings to change to "ui mode" (be
 
 	return true;
 }
+
+
+function LoadCheckbox (c, prefKey) { // updates checkbox state to reflect settings
+// c = checkbox
+// prefKey = key of preference value
+//
+	//alert('DEBUG: LoadCheckbox(' + ths + ',' + prefKey);
+	var checkboxState = GetPrefs(prefKey);
+	//alert('DEBUG: checkboxState = ' + checkboxState);
+
+	c.checked = (checkboxState ? 1 : 0);
+
+	return 1;
+}
+
 
 function SettingsOnload() { // onload function for preferences page
 	//alert('DEBUG: SettingsOnload() begin');
@@ -372,6 +368,19 @@ function SettingsOnload() { // onload function for preferences page
 			}
 		}
 
+		if (GetPrefs('sign_by_default') == 1) {
+			var cbM = document.getElementById('chkSignByDefault');
+			if (cbM) {
+				cbM.checked = 1;
+			}
+		}
+
+		if (GetPrefs('show_admin') == 1) {
+			var cbM = document.getElementById('chkShowAdmin');
+			if (cbM) {
+				cbM.checked = 1;
+			}
+		}
 
 		ShowAdvanced(0); // call ShowAdvanced
 	}

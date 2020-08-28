@@ -22,23 +22,32 @@
 					<fieldset>
 						<legend>Interface and Appearance<noscript>*</noscript><br></legend>
 
-						<p><nobr>
-							<input type=submit name=ui value="Easy" onclick="if (window.modeChange) { return modeChange('beginner'); }">
-							<input type=submit name=ui value="Advanced" onclick="if (window.modeChange) { return modeChange('intermediate'); }">
-							<input type=submit name=ui class=advanced value="Expert" onclick="if (window.modeChange) { return modeChange('advanced'); }">
-							<input type=submit name=ui class=advanced value="Minimal" onclick="if (window.modeChange) { return modeChange('minimal'); }">
-							<input type=submit name=ui class=advanced value="Operator" onclick="if (window.modeChange) { return modeChange('admin'); }">
-						</nobr></p>
+						<p>
+							<input type=submit name=ui value="beginner" onclick="if (window.modeChange) { return SetInterfaceMode('beginner'); }">
+							<input type=submit name=ui value="intermediate" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('intermediate'); }">
+							<input type=submit name=ui value="expert" class=advanced onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('expert'); }">
+							<span class=beginner><br>Use these buttons to adjust interface</span>
+						</p>
 
 						<p class=advanced>
+							<label for=chkSignByDefault>
+								<input type=checkbox id=chkSignByDefault name=chkSignByDefault onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'sign_by_default'); }">
+								Sign message automatically when sending
+							</label>
+							<br>
 							<label for=chkWantToVote>
-								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="if (window.saveCheckbox) { saveCheckbox(0, this, 'want_to_vote'); }">
-								I am <u>human</u> and I want to <u>vote</u>
+								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'want_to_vote'); }">
+								I want to vote, show me voting options
 							</label>
 							<br>
 							<label for=chkShowMeanies>
-								<input type=checkbox id=chkShowMeanies name=chkShowMeanies onchange="if (window.saveCheckbox) { saveCheckbox(0, this, 'show_meanies'); }">
-								Show me everything, including <u>mean people</u>
+								<input type=checkbox id=chkShowMeanies name=chkShowMeanies onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_meanies'); }">
+								Show everything, including <u>objectionable content</u>
+							</label>
+							<br>
+							<label for=chkShowAdmin>
+								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
+								Show operator controls
 							</label>
 						</p>
 					</fieldset>
@@ -49,7 +58,7 @@
 						<legend>Admin</legend>
 						<p>
 							<span class=beginner>
-								To activate, check the box, then press button.<br>
+								To activate, check box, then press button.<br>
 								This helps prevent accidental activation.
 							</span>
 						</p>
@@ -73,7 +82,7 @@
 							<input type=submit name=btnFlush id=btnFlush value=Flush>
 						</p>
 						<p>
-							<span class=beginner>Overthrow current operator/top moderator<br></span>
+							<span class=beginner>Overthrow current operator/top moderator:<br></span>
 
 							<label for=chkOverthrow>
 								<input type=checkbox id=chkOverthrow name=chkOverthrow>
