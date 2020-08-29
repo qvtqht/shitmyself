@@ -1892,8 +1892,13 @@ sub GetTopItemsPage { # returns page with top items listing
 	return $htmlOutput;
 } #GetTopItemsPage
 
-sub GetStatsTable() {
-	my $itemsIndexed = DBGetItemCount();
+sub GetStatsTable {
+	my $templateName = shift;
+	if (!$templateName) {
+		$templateName = 'stats.template';
+	}
+
+	state $itemsIndexed; $itemsIndexed = $itemsIndexed || DBGetItemCount();
 	my $authorCount = DBGetAuthorCount();
 
 	my $adminId = GetAdminKey();
@@ -1905,9 +1910,17 @@ sub GetStatsTable() {
 	my $versionFull = GetMyVersion();
 	my $versionShort = substr($versionFull, 0, 8);
 
+	my $lastUpdateTime = GetConfig('system/last_update_time');
+	$lastUpdateTime = GetTimestampElement($lastUpdateTime);
+
+	my $lastBuildTime = GetConfig('admin/build_end');
+	if (!defined($lastBuildTime) || !$lastBuildTime) {
+		$lastBuildTime = 0;
+	}
+
 	###
 
-	my $statsTable = GetTemplate('stats.template');
+	my $statsTable = GetTemplate($templateName);
 
 	if ($adminId) {
 		$statsTable =~ s/\$admin/$adminLink/;
@@ -1921,18 +1934,11 @@ sub GetStatsTable() {
 		$statsTable =~ s/\$server/(Not defined)/;
 	}
 
-	my $lastUpdateTime = GetConfig('system/last_update_time');
 	if (!defined($lastUpdateTime) || !$lastUpdateTime) {
 		$lastUpdateTime = 0;
 	}
 
-	$lastUpdateTime = GetTimestampElement($lastUpdateTime);
 	$statsTable =~ s/\$lastUpdateTime/$lastUpdateTime/;
-	##
-	my $lastBuildTime = GetConfig('admin/build_end');
-	if (!defined($lastBuildTime) || !$lastBuildTime) {
-		$lastBuildTime = 0;
-	}
 
 	# count total number of files
 	my $filesTotal = 0;
@@ -3053,6 +3059,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# Stats page
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("stats.html", $statsPage);
+
+
+	my $statsFooter = GetWindowTemplate(
+		'Stats',
+		'',
+		'',
+		GetStatsTable('stats-horizontal.template'),
+		''
+	);
+	PutHtmlFile("stats-footer.html", $statsFooter);
+
 	#
 	# { # clock test page
 	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
@@ -4071,6 +4088,15 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	elsif ($pageType eq 'stats') {
 		my $statsPage = GetStatsPage();
 		PutHtmlFile("stats.html", $statsPage);
+
+		my $statsFooter = GetWindowTemplate(
+			'<small>Stats</small>',
+			'',
+			'',
+			GetStatsTable('stats-horizontal.template'),
+			''
+		);
+		PutHtmlFile("stats-footer.html", $statsFooter);
 	}
 	#
 	# index pages (queue)
