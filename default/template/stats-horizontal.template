@@ -2,13 +2,14 @@
 
 <p>
 	<span class=beginner>Updated: </span>$lastUpdateTime |
-	<span class=beginner>Operator: </span>$admin |
+	<span class=beginner>Operator: </span>$admin
 	<span class=advanced>
+		|
 		<span class=beginner>Built: </span>$lastBuildTime |
-		<span class=beginner>Items: </span>$itemsIndexed |
-		<span class=beginner>Files: </span>$filesTotal |
-		<span class=beginner>Authors: </span>$authorCount |
-		<span class=beginner>Version: </span>$versionShort
+		$itemsIndexed items |
+		$filesTotal files |
+		$authorCount authors |
+		$versionShort
 	</span>
 </p>
 
