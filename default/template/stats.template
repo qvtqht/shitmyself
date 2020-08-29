@@ -20,9 +20,10 @@
 				<fieldset class=advanced>
 					<p><input type=submit name=comment value="Update">
 					<p>Built: $lastBuildTime
-					<p><a href="/index0.html">Items</a>: $itemsIndexed
-					<p><a href="/data.html">Files</a>: $filesTotal
-					<p><a href="/authors.html">Authors</a>: $authorCount
+					<p><a href="/index0.html">$itemsIndexed items</a>
+					<p><a href="/data.html">$filesTotal files</a>
+					<p><a href="/authors.html">$authorCount authors</a>
+					<p><a href="/chain.log">$chainLogLength</a>
 					<p>Server: $server
 					<p>Version: $versionShort
 				</fieldset>

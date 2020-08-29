@@ -1947,6 +1947,11 @@ sub GetStatsTable() {
 		$filesTotal += $filesImage;
 	}
 
+	my $chainLogLength = 0;
+	if (GetConfig('admin/logging/write_chain_log')) {
+		$chainLogLength = `wc -l html/chain.log`;
+	}
+
 	#todo optimize
 	#todo config/admin/upload/allow_files
 
