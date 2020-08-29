@@ -273,7 +273,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 		if (IsAdmin($gpgKey)) { #todo
 			#push @allowedactions vouch
-			#push @allowedactions setconfig
+			#push @allowedactions config
 		}
 
 		if (!$alias) {
@@ -737,8 +737,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		} # title: token
 
-		#look for setconfig and resetconfig
-		if (GetConfig('admin/token/setconfig') && $message) {
+		#look for #config and #resetconfig
+		if (GetConfig('admin/token/config') && $message) {
 			if (
 					IsAdmin($gpgKey) #admin can always config
 				||
@@ -758,36 +758,37 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						$hasCookie
 					)
 			) {
-				# preliminary conditions
+				# preliminary conditions met
 
-				my @setConfigLines = ($message =~ m/^#(setconfig) ([a-z0-9\/_.]+) (.+?)$/mg);
-
-				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
+				my @configLines = ($message =~ m/^#(config) ([a-z0-9\/_.]+) (.+?)$/mg);
+				WriteLog('@configLines = ' . scalar(@configLines));
 
 				my @resetConfigLines = ($message =~ m/^#(resetconfig) ([a-z0-9\/_.]+)/mg);
-
 				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
+				push @configLines, @resetConfigLines;
 
-				push @setConfigLines, @resetConfigLines;
-
+				my @setConfigLines = ($message =~ m/^#(setconfig) ([a-z0-9\/_.]+)/mg);
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
+				push @configLines, @setConfigLines;
 
-				if (@setConfigLines) {
-					#my $lineCount = @setConfigLines / 3;
+				WriteLog('@configLines = ' . scalar(@configLines));
 
-					while (@setConfigLines) {
-						my $configAction = shift @setConfigLines;
-						my $configKey = shift @setConfigLines;
+				if (@configLines) {
+					#my $lineCount = @configLines / 3;
+
+					while (@configLines) {
+						my $configAction = shift @configLines;
+						my $configKey = shift @configLines;
 						my $configValue;
-						if ($configAction eq 'setconfig') {
-							$configValue = shift @setConfigLines;
+						if ($configAction eq 'config' || $configAction eq 'config') {
+							$configValue = shift @configLines;
 						}
 						else {
 							$configValue = 'reset';
 						}
 
 						my $reconLine;
-						if ($configAction eq 'setconfig') {
+						if ($configAction eq 'config' || $configAction eq 'setconfig') {
 							$reconLine = "#$configAction $configKey $configValue";
 						}
 						else {
@@ -795,7 +796,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 
 						if (ConfigKeyValid($configKey)) {
-
 							WriteLog(
 								'ConfigKeyValid() passed! ' .
 									$reconLine .
@@ -832,11 +832,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 								if ($configAction eq 'resetconfig') {
 									DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-									$message =~ s/$reconLine/Successful config reset: $configKey will be reset to default./g;
+									$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
 								}
 								else {
 									DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-									$message =~ s/$reconLine/Successful config change: $configKey = $configValue/g;
+									$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
 								}
 
 								$detokenedMessage =~ s/$reconLine//g;

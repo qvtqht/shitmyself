@@ -541,7 +541,7 @@ This board is managed by John Bob
 [Accept as Admin]
 ---> elect/ABCDEF/admin
 
-setconfig/page/manual=foo
+#config page/manual foo
 	manual (hashes as foo)
 		<-- include abcd -->
 		<-- include defg -->

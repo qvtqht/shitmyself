@@ -192,9 +192,9 @@
 
 <p>All of the tokens in the removed item are undone at the next rebuild.</p>
 
-<h5>SetConfig</h5>
+<h5>#config</h5>
 
-<p>The <code>setconfig</code> token can always be applied by the admin.</p>
+<p>The <code>#config</code> token can always be applied by the admin.</p>
 
 <p>Settings under the <code>config/admin/</code> directory can only be set by the admin user.</p>
 

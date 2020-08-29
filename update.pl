@@ -410,8 +410,8 @@ if (!defined($arg1) || $arg1 eq '--all') {
 				$findCommand = 'grep -rl "BEGIN PGP PUBLIC KEY BLOCK" ' . $TXTDIR;
 				push @files, split("\n", `$findCommand`);
 
-				# prioritize files with a setconfig token
-				$findCommand = 'grep -rl "setconfig" ' . $TXTDIR;
+				# prioritize files with a #config token
+				$findCommand = 'grep -rl "#config" ' . $TXTDIR;
 				push @files, split("\n", `$findCommand`);
 
 				# add all other text files

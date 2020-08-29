@@ -22,8 +22,8 @@ Browsers which do not support Unicode display gibberish when faced with non-Asci
         e.g. if there are Cyrillic Unicode characters present, down-convert into koi8-r or
 
 When rebuilding site, the config settings are re-applied one by one as the items are indexed
-    This means, for example, theme values set with setconfig/html/theme will change, and you may see different themes applied on some pages
-    Partially remediated by loading items containing "setconfig" ahead of everything else except pubkeys
+    This means, for example, theme values set with "#config html/theme" will change, and you may see different themes applied on some pages
+    Partially remediated by loading items containing "#config" ahead of everything else except pubkeys
 
 Content returned via PHP shims has different headers
     there is no etag or time-created (FIXED, ETag generation added)

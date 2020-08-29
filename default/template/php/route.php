@@ -464,7 +464,7 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('Theme change requested');
 
 							$newTheme = $_GET['optTheme'];
-							$themeUpdateFile = 'setconfig/html/theme=' . $newTheme;
+							$themeUpdateFile = '#config html/theme ' . $newTheme;
 
 							// write file
 							// server sign
@@ -891,6 +891,14 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = str_replace(
 				'>Turn Off Light Mode<',
 				'><strong><big>** Light Mode is Currently Turned Off **</big></strong><',
+				$html
+			);
+		}
+
+		if (file_exists('stats-footer.html')) {
+			$html = str_replace(
+				'</body>',
+				file_get_contents('stats-footer.html') . '</body>',
 				$html
 			);
 		}

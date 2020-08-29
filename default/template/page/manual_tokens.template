@@ -36,15 +36,15 @@
 
 <h4>Configure</h4>
 
-<p>The setconfig and resetconfig tokens allow changing configuration.</p>
+<p>The #config and #resetconfig tokens allow changing configuration.</p>
 
-<p>Example: <code>setconfig/html/color_avatars=1</code></p>
+<p>Example: <code>#config html/color_avatars 1</code></p>
 
-<p>Example: <code>setconfig/string/en/page_intro/post=dc4f0b7833c04bcdf0a5e89b4be6bc9e11a1518f</code></p>
+<p>Example: <code>#config string/en/page_intro/post dc4f0b7833c04bcdf0a5e89b4be6bc9e11a1518f</code></p>
 
-<p>Example: <code>resetconfig/string/en/page_intro/post</code></p>
+<p>Example: <code>#resetconfig string/en/page_intro/post</code></p>
 
-<p>Settings under the <code>admin/</code> tree are always restricted to admin.</p>
+<p>Settings under the <code>admin/</code> tree are always restricted to admin users.</p>
 
 <p>
 	Notes:

@@ -255,7 +255,7 @@ new comments since last visit
 
 When displaying thread, OP's top-replies should be sorted first
 
-make setconfig token not sensitive to whitespace differences
+make #config token not sensitive to whitespace differences
 
 detect client-side advanced mode
 	flip class=beginner nodes to hidden by default during page pre-process
