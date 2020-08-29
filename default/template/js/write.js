@@ -30,28 +30,15 @@ function writeOnload() { // onload handler for write page
 				var gt = unescape('%3E');
 				if (window.getAvatar) {
 					var spanSignAs = document.getElementById('spanSignAs');
+					if (!GetPrefs('sign_by_default')) {
+						var btnSignAs = document.createElement('input');
+						btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
+						btnSignAs.setAttribute('type', 'submit');
+						btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
+						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a <button>
+						spanSignAs.appendChild(btnSignAs);
 
-					var btnSignAs = document.createElement('input');
-					btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
-					btnSignAs.setAttribute('type', 'submit');
-					btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
-					//btnSignAs.innerHTML = 'Sign as ' + getAvatar();
-
-					spanSignAs.appendChild(btnSignAs);
-
-					if (window.makeCoin) {
-						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
-						if (spanWriteAdvanced) {
-							var btnMakeCoin = document.createElement('input');
-							btnMakeCoin.setAttribute('type', 'button');
-							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
-							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
-							spanWriteAdvanced.appendChild(btnMakeCoin);
-						}
-
-					}
-
-					if (0) {
+					} else { // this is for the sign yes/no checkbox
 						var lblSignAs = document.createElement('label');
 						lblSignAs.setAttribute('for', 'chkSignAs');
 
@@ -67,6 +54,19 @@ function writeOnload() { // onload handler for write page
 						lblSignAs.appendChild(chkSignAs);
 
 						spanSignAs.appendChild(lblSignAs);
+					}
+
+
+					if (window.makeCoin) {
+						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
+						if (spanWriteAdvanced) {
+							var btnMakeCoin = document.createElement('input');
+							btnMakeCoin.setAttribute('type', 'button');
+							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
+							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
+							spanWriteAdvanced.appendChild(btnMakeCoin);
+						}
+
 					}
 				}
 			}
