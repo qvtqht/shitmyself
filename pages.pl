@@ -1963,6 +1963,7 @@ sub GetStatsTable() {
 	$statsTable =~ s/\$itemsIndexed/$itemsIndexed/;
 	$statsTable =~ s/\$authorCount/$authorCount/;
 	$statsTable =~ s/\$filesTotal/$filesTotal/;
+	$statsTable =~ s/\$chainLogLength/$chainLogLength/;
 
 	return $statsTable;
 }
