@@ -277,7 +277,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		if (!$alias) {
-			$alias = '(alias)';
+			$alias = '';
 		}
 		WriteLog("IndexTextFile: \$alias = $alias");
 
