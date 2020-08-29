@@ -291,6 +291,8 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
+			SetPrefs('show_meanies', 0);
+			SetPrefs('want_to_vote', 0);
 			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);

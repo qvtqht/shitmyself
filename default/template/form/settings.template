@@ -23,9 +23,9 @@
 						<legend>Interface and Appearance<noscript>*</noscript><br></legend>
 
 						<p>
-							<input type=submit name=ui value="beginner" onclick="if (window.modeChange) { return SetInterfaceMode('beginner'); }">
-							<input type=submit name=ui value="intermediate" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('intermediate'); }">
-							<input type=submit name=ui value="expert" class=advanced onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('expert'); }">
+							<input type=submit name=ui value="Beginner" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('beginner'); }">
+							<input type=submit name=ui value="Intermediate" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('intermediate'); }">
+							<input type=submit name=ui value="Expert" class=advanced onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('expert'); }">
 							<span class=beginner><br>Use these buttons to adjust interface</span>
 						</p>
 
