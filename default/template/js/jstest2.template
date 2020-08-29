@@ -1,4 +1,4 @@
-// begin jstest1.js
+// begin jstest2.template
 
 function RunTest() {
 	//alert('DEBUG: RunTest() begins');
@@ -90,4 +90,4 @@ function setTimeoutReturn() {
 	document.frmTest.txtWindowSetTimeoutReturn.value = 'true';
 }
 
-// end jstest1.js
+// end jstest2.template
