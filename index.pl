@@ -1896,6 +1896,12 @@ if ($arg1) {
 
 	}
 
+	if ($arg1 eq '--chain') {
+		print "index.pl: --chain\n";
+
+		MakeAddedIndex();
+	}
+
 	if (-e $arg1) {
 		IndexTextFile($arg1);
 		IndexTextFile('flush');
