@@ -252,21 +252,13 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		} else {
 			WriteLog("\$replyTo not found");
 		}
-	}
-
-	if (GetConfig('admin/php/post/update_on_post')) {
-		WriteLog("cd .. ; ./update.pl");
-		WriteLog(`cd .. ; ./update.pl`);
-
-		if ($pwd) {
-			WriteLog("cd $pwd");
-			WriteLog(`cd $pwd`);
-		}
 	} else {
-		WriteLog('ProcessNewComment: admin/php/post/update_on_post is FALSE');
+		WriteLog('ProcessNewComment: admin/php/post/update_item_on_post is FALSE');
 	}
 
 	if (GetConfig('admin/php/post/update_all_on_post')) {
+		WriteLog('ProcessNewComment: admin/php/post/update_all_on_post is TRUE');
+
 		WriteLog("cd .. ; ./update.pl --all");
 		WriteLog(`cd .. ; ./update.pl --all`);
 
@@ -276,6 +268,20 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		}
 	} else {
 		WriteLog('ProcessNewComment: admin/php/post/update_all_on_post is FALSE');
+
+		if (GetConfig('admin/php/post/update_on_post')) {
+			WriteLog('ProcessNewComment: admin/php/post/update_on_post is TRUE');
+
+			WriteLog("cd .. ; ./update.pl");
+			WriteLog(`cd .. ; ./update.pl`);
+
+			if ($pwd) {
+				WriteLog("cd $pwd");
+				WriteLog(`cd $pwd`);
+			}
+		} else {
+			WriteLog('ProcessNewComment: admin/php/post/update_on_post is FALSE');
+		}
 	}
 
 	//return $fileUrlPath;
