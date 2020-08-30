@@ -850,7 +850,18 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = SetHtmlClock($html);
 		}
 
+		if (GetConfig('admin/php/footer_stats') && file_exists('stats-footer.html')) {
+			// footer stats
+			$html = str_replace(
+				'</body>',
+				file_get_contents('stats-footer.html') . '</body>',
+				$html
+			);
+
+		} // footer stats
+
 		if ($lightMode) {
+			// light mode
 			WriteLog('route.php: $lightMode is true!');
 
 			$html = StripComments($html);
@@ -893,15 +904,8 @@ if (GetConfig('admin/php/route_enable')) {
 				'><strong><big>** Light Mode is Currently Turned Off **</big></strong><',
 				$html
 			);
-		}
+		} // light mode
 
-		if (file_exists('stats-footer.html')) {
-			$html = str_replace(
-				'</body>',
-				file_get_contents('stats-footer.html') . '</body>',
-				$html
-			);
-		}
 
 		////////////////////////////
 		print $html; // final output
