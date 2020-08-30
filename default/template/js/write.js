@@ -35,7 +35,7 @@ function writeOnload() { // onload handler for write page
 						btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
 						btnSignAs.setAttribute('type', 'submit');
 						btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
-						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a <button>
+						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a GTbuttonLT
 						spanSignAs.appendChild(btnSignAs);
 
 					} else { // this is for the sign yes/no checkbox
