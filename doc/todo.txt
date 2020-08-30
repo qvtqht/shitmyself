@@ -1,3 +1,43 @@
+write form
+
+...
+
+[keyboard]
+
+dropdown
+  system
+  dvorak
+  russian
+
+a s d f keyboard expando
+
+foreach table cell
+ if letter = a
+   change to b
+   (translitkeypress())
+
+===
+
+light mode
+	checkboxes for each option
+	when light mode page is opened
+		light mode is enabled, but not saved
+		"enable light mode" button
+	checkboxes for
+		remove clock
+		replace emoji
+		replace links with buttons
+	strip js+css+htmlcomments
+	
+
+if light mode default
+	welcome page
+		welcome to so and sos 
+		please choose
+			pretty mode
+			lightweight mode
+===
+
 config/admin/force_profile is broken
 
 top menu should be refreshed based on settings
