@@ -3529,7 +3529,8 @@ sub GetWritePage { # returns html for write page
 			push @js, 'write_php';
 		}
 		if (GetConfig('admin/token/coin')) {
-			push @js, 'coin', 'sha512';
+			push @js, 'coin';
+			# push @js, 'coin', 'sha512';
 		}
 		if (GetConfig('admin/js/translit')) {
 			push @js, 'translit';
