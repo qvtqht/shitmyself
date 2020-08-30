@@ -42,6 +42,12 @@ sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
 }
 
 sub SqliteMakeTables { # creates sqlite schema
+	my $existingTables = SqliteQuery('.tables');
+	if ($existingTables) {
+		WriteLog('SqliteMakeTables: warning: tables already exist');
+		return;
+	}
+
 	# author
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
 

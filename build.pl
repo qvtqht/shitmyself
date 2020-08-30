@@ -54,10 +54,10 @@ require './index.pl';
 #}
 #
 
-{ # clear and rebuild the sqlite db
-	BuildMessage "SqliteUnlinkDB()...";
-	SqliteUnlinkDb();
-
+{ # build the sqlite db if not available
+	# BuildMessage "SqliteUnlinkDB()...";
+	# SqliteUnlinkDb();
+	#
 	BuildMessage "SqliteConnect()...";
 	SqliteConnect();
 
