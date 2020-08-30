@@ -5,11 +5,10 @@
 	<span class=beginner>Operator: </span>$admin
 	<span class=advanced>
 		|
-		<span class=beginner>Built: </span>$lastBuildTime |
-		$itemsIndexed items |
-		$filesTotal files |
-		$authorCount authors |
-		$versionShort
+		<span class=beginner>Items: </span> $itemsIndexed |
+		<span class=beginner>Files: </span>$filesTotal |
+		<span class=beginner>Authors: </span>$authorCount |
+		<span class=beginner>Version: </span> $versionShort
 	</span>
 </p>
 
