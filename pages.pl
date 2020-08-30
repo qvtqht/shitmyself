@@ -662,25 +662,6 @@ sub GetItemPage {
 
 	$txtIndex .= $htmlStart;
 
-	{
-	#my $itemInfoTemplate = GetTemplate('item_info.template');
-		my $itemInfoTemplate;
-
-		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
-		$itemAttributes = trim($itemAttributes);
-
-		my $trTr = '</td></tr><tr><td>';
-		$itemAttributes =~ s/\n/$trTr/gi;
-		my $tdTd = '</td><td>';
-		$itemAttributes =~ s/\|/$tdTd/gi;
-		$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
-
-		my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
-		$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
-
-		$txtIndex .= $itemAttributesWindow;
-	}
-
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	$file{'display_full_hash'} = 1;
@@ -874,6 +855,25 @@ sub GetItemPage {
 		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
 
 		$txtIndex .= $replyForm;
+	}
+
+	{
+		#my $itemInfoTemplate = GetTemplate('item_info.template');
+		my $itemInfoTemplate;
+
+		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
+		$itemAttributes = trim($itemAttributes);
+
+		my $trTr = '</td></tr><tr><td>';
+		$itemAttributes =~ s/\n/$trTr/gi;
+		my $tdTd = '</td><td>';
+		$itemAttributes =~ s/\|/$tdTd/gi;
+		$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
+
+		my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
+		$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
+
+		$txtIndex .= $itemAttributesWindow;
 	}
 
 	# end page with footer
