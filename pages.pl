@@ -3056,20 +3056,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $eventAddPage = GetEventAddPage();
 	PutHtmlFile("event.html", $eventAddPage);
 
-	# Stats page
-	my $statsPage = GetStatsPage();
-	PutHtmlFile("stats.html", $statsPage);
-
-
-	my $statsFooter = GetWindowTemplate(
-		'Stats',
-		'',
-		'',
-		GetStatsTable('stats-horizontal.template'),
-		''
-	);
-	PutHtmlFile("stats-footer.html", $statsFooter);
-
+	PutStatsPages();
 	#
 	# { # clock test page
 	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
@@ -3963,6 +3950,20 @@ sub GetItemPageFromHash {
 	}
 }
 
+sub PutStatsPages {
+	my $statsPage = GetStatsPage();
+	PutHtmlFile("stats.html", $statsPage);
+
+	my $statsFooter = GetWindowTemplate(
+		'Stats',
+		'',
+		'',
+		GetStatsTable('stats-horizontal.template'),
+		''
+	);
+	PutHtmlFile("stats-footer.html", $statsFooter);
+}
+
 sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it into $HTMLDIR directory; $pageType, $pageParam
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
@@ -4087,17 +4088,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# stats page
 	elsif ($pageType eq 'stats') {
-		my $statsPage = GetStatsPage();
-		PutHtmlFile("stats.html", $statsPage);
-
-		my $statsFooter = GetWindowTemplate(
-			'<small>Stats</small>',
-			'',
-			'',
-			GetStatsTable('stats-horizontal.template'),
-			''
-		);
-		PutHtmlFile("stats-footer.html", $statsFooter);
+		PutStatsPages();
 	}
 	#
 	# index pages (queue)
