@@ -1016,56 +1016,58 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			if (@coinLines) {
 				WriteLog(". coin token found!");
 				#my $lineCount = @coinLines / 3;
-			#
-			# 	if ($isSigned) {
-			# 		WriteLog("... isSigned");
-			# 		if (IsServer($gpgKey)) {
-			# 			WriteLog("... isServer");
-						while (@coinLines) {
-			 				WriteLog("... \@coinLines");
-			 				my $authorKey = shift @coinLines;
-			 				my $mintedAt = shift @coinLines;
-			 				my $checksum = shift @coinLines;
+				#
+				# 	if ($isSigned) {
+				# 		WriteLog("... isSigned");
+				# 		if (IsServer($gpgKey)) {
+				# 			WriteLog("... isServer");
+				while (@coinLines) {
+					WriteLog("... \@coinLines");
+					my $authorKey = shift @coinLines;
+					my $mintedAt = shift @coinLines;
+					my $checksum = shift @coinLines;
 
-							WriteLog("... $authorKey, $mintedAt, $checksum");
+					WriteLog("... $authorKey, $mintedAt, $checksum");
 
-			 				my $reconLine = "$authorKey $mintedAt $checksum";
+					my $reconLine = "$authorKey $mintedAt $checksum";
 
-			 				#$message .= sha512_hex($reconLine);
+					#$message .= sha512_hex($reconLine);
 
-			 				my $hash = sha512_hex($reconLine);
+					my $hash = sha512_hex($reconLine);
 
-			 				if (
-			 					substr($hash, 0, 4) eq '1337'
-			 						&&
-								(
-									$authorKey eq $gpgKey
-										||
+					if (
+						substr($hash, 0, 4) eq '1337'
+							&&
+							(
+								$authorKey eq $gpgKey
+									||
 									$authorKey eq $hasCookie
-								)
-			 				) {
-								$message =~ s/$reconLine/[coin]/g;
+							)
+					) {
+						$message =~ s/$reconLine/[coin]/g;
 
-								DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
+						DBAddVoteRecord($fileHash, $addedTime, 'hascoin');
 
-								#DBAddItemAttribute('
-								#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
-							} else {
-								$message =~ s/$reconLine/[coin not accepted at this server]/g;
-							}
+						DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
 
-			 				WriteLog("... $reconLine");
+						#DBAddItemAttribute('
+						#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
+					} else {
+						$message =~ s/$reconLine/[coin not accepted]/g;
+					}
 
-			 				$detokenedMessage =~ s/$reconLine//g;
-			 			}
-			#
-			# 			#DBAddVoteWeight('flush');
-			#
-			# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
-			#
-			# 			DBAddPageTouch('tag', 'device');
-			# 		}
-			# 	}
+					WriteLog("... $reconLine");
+
+					$detokenedMessage =~ s/$reconLine//g;
+				}
+				#
+				# 			#DBAddVoteWeight('flush');
+				#
+				# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
+				#
+				# 			DBAddPageTouch('tag', 'device');
+				# 		}
+				# 	}
 			}
 		}
 
@@ -1548,8 +1550,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddPageTouch('top');
 
 		if ($hasParent == 0) {
-#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
-#		} else {
+			#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
+			#		} else {
 			DBAddVoteRecord($fileHash, $addedTime, 'topic');
 		}
 
@@ -1576,9 +1578,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		DBAddPageTouch('stats');
-		
+
 		DBAddPageTouch('events');
-											 
+
 		DBAddPageTouch('rss');
 
 		DBAddPageTouch('index');
@@ -1699,16 +1701,16 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 	if (
 		-e $file &&
-		(
-			substr(lc($file), length($file) -4, 4) eq ".jpg" ||
-			substr(lc($file), length($file) -4, 4) eq ".gif" ||
-			substr(lc($file), length($file) -4, 4) eq ".png" ||
-			substr(lc($file), length($file) -4, 4) eq ".bmp" ||
-			substr(lc($file), length($file) -4, 4) eq ".svg" ||
-			substr(lc($file), length($file) -5, 5) eq ".jfif" ||
-			substr(lc($file), length($file) -5, 5) eq ".webp"
-			#todo config/admin/upload/allow_files
-		)
+			(
+				substr(lc($file), length($file) -4, 4) eq ".jpg" ||
+					substr(lc($file), length($file) -4, 4) eq ".gif" ||
+					substr(lc($file), length($file) -4, 4) eq ".png" ||
+					substr(lc($file), length($file) -4, 4) eq ".bmp" ||
+					substr(lc($file), length($file) -4, 4) eq ".svg" ||
+					substr(lc($file), length($file) -5, 5) eq ".jfif" ||
+					substr(lc($file), length($file) -5, 5) eq ".webp"
+				#todo config/admin/upload/allow_files
+			)
 	) {
 		my $fileHash = GetFileHash($file);
 
