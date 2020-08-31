@@ -742,23 +742,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		#look for #config and #resetconfig
 		if (GetConfig('admin/token/config') && $message) {
 			if (
-					IsAdmin($gpgKey) #admin can always config
-				||
-					GetConfig('admin/anyone_can_config') # anyone can config
-				||
-					(
-						# signed can config
-						GetConfig('admin/signed_can_config')
+				IsAdmin($gpgKey) #admin can always config
+					||
+				GetConfig('admin/anyone_can_config') # anyone can config
+					||
+				(
+					# signed can config
+					GetConfig('admin/signed_can_config')
 						&&
-						$isSigned
-					)
-				||
-					(
-						# cookied can config
-						GetConfig('admin/cookied_can_config')
+					$isSigned
+				)
+					||
+				(
+					# cookied can config
+					GetConfig('admin/cookied_can_config')
 						&&
 						$hasCookie
-					)
+				)
 			) {
 				# preliminary conditions met
 
