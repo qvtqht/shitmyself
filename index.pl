@@ -679,11 +679,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		# title:
 		if (GetConfig('admin/token/title')) {
-		# title: token is enabled
+			# #title token is enabled
 
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @setTitleToLines = ($message =~ m/^(title: )(.+)$/mig);
+			my @setTitleToLines = ($message =~ m/^(title)(\W)(.+)$/mig);
 			# m = multi-line
 			# s = multi-line
 			# g = all instances
@@ -692,21 +692,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
 			if (@setTitleToLines) { # means we found at least one title: token;
-				WriteLog('title token found for ' . $fileHash);
+				WriteLog('#title token found for ' . $fileHash);
 				WriteLog('$message = ' . $message);
 
-				#my $lineCount = @setTitleToLines / 2;
+				#my $lineCount = @setTitleToLines / 3;
 				while (@setTitleToLines) {
 					# loop through all found title: token lines
 					my $setTitleToToken = shift @setTitleToLines;
+					my $titleSpace = shift @setTitleToLines;
 					my $titleGiven = shift @setTitleToLines;
 
 					chomp $setTitleToToken;
+					chomp $titleSpace;
 					chomp $titleGiven;
 					$titleGiven = trim($titleGiven);
 
 					my $reconLine;
-					$reconLine = $setTitleToToken . $titleGiven;
+					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
 
 					if ($titleGiven) {
 						chomp $titleGiven;
@@ -732,7 +734,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
 						}
 					}
-					$message =~ s/$reconLine/[Title: $titleGiven]/g;
+					$message =~ s/$reconLine/[title: $titleGiven]/g;
 				}
 			}
 		} # title: token
