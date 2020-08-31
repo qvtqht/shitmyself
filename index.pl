@@ -858,44 +858,44 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			}
 		}
-
-		#look for vouch
-		if (GetConfig('admin/token/vouch') && $message) {
-			# look for vouch, which adds a voting vouch for a user
-			# vouch/F82FCD75AAEF7CC8/20
-
-			if (IsAdmin($gpgKey) || $isSigned) {
-				# todo allow non-admin vouch from vouched
-				my @weightLines = ($message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg);
-
-				if (@weightLines) {
-					my $lineCount = @weightLines / 2;
-
-					if ($isSigned) {
-						while (@weightLines) {
-							my $voterId = shift @weightLines;
-							my $voterWt = shift @weightLines;
-							#my $voterAvatar = GetAvatar($voterId);
-							#bug calling GetAvatar before the index is generated results in an avatar without alias
-
-							my $reconLine = "vouch/$voterId/$voterWt";
-
-							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
-
-                            # add record to vote weight table
-							DBAddVoteWeight($voterId, $voterWt, $fileHash);
-							DBAddPageTouch('author', $voterId);
-							DBAddPageTouch('scores');
-						}
-
-                        # tag item as having a vouch action
-						DBAddVoteRecord($fileHash, $addedTime, 'vouch');
-						DBAddPageTouch('tag', 'vouch');
-					}
-				}
-			}
-		}
+		#
+		# #look for vouch
+		# if (GetConfig('admin/token/vouch') && $message) {
+		# 	# look for vouch, which adds a voting vouch for a user
+		# 	# vouch/F82FCD75AAEF7CC8/20
+		#
+		# 	if (IsAdmin($gpgKey) || $isSigned) {
+		# 		# todo allow non-admin vouch from vouched
+		# 		my @weightLines = ($message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg);
+		#
+		# 		if (@weightLines) {
+		# 			my $lineCount = @weightLines / 2;
+		#
+		# 			if ($isSigned) {
+		# 				while (@weightLines) {
+		# 					my $voterId = shift @weightLines;
+		# 					my $voterWt = shift @weightLines;
+		# 					#my $voterAvatar = GetAvatar($voterId);
+		# 					#bug calling GetAvatar before the index is generated results in an avatar without alias
+		#
+		# 					my $reconLine = "vouch/$voterId/$voterWt";
+		#
+		# 					$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
+		# 					$detokenedMessage =~ s/$reconLine//g;
+		#
+		#                     # add record to vote weight table
+		# 					DBAddVoteWeight($voterId, $voterWt, $fileHash);
+		# 					DBAddPageTouch('author', $voterId);
+		# 					DBAddPageTouch('scores');
+		# 				}
+		#
+		#                 # tag item as having a vouch action
+		# 				DBAddVoteRecord($fileHash, $addedTime, 'vouch');
+		# 				DBAddPageTouch('tag', 'vouch');
+		# 			}
+		# 		}
+		# 	}
+		# }
 
 		if (GetConfig('admin/token/addedtime') && $message) {
 			# look for addedtime, which adds an added time for an item
