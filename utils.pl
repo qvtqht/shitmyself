@@ -894,7 +894,12 @@ sub ConfigKeyValid { #checks whether a config key is valid
 	# and exists in default/
 	my $configName = shift;
 
-	WriteLog('ConfigKeyValid($configName)');
+	if (!$configName) {
+		WriteLog('ConfigKeyValid: warning: $configName parameter missing');
+		return 0;
+	}
+
+	WriteLog("ConfigKeyValid($configName)");
 
 	if ($configName =~ /^[a-z0-9_\/]{1,64}$/) {
 		WriteLog("ConfigKeyValid: warning: sanity check failed!");
@@ -1878,7 +1883,7 @@ sub GpgParse {
 	}
 
 	if ($pubKeyFlag) {
-		if ($gpgStderrOutput =~ /\"([a-zA-Z0-9 ]+)\"/) {
+		if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9]+)\"/) {
 			$returnValues{'alias'} = $1;
 		} else {
 			$returnValues{'alias'} = '?????';
@@ -2045,7 +2050,20 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	chomp $text;
 
 	if ($text eq '.') {
-		print ".";
+		state @chars;
+		if (!@chars) {
+			#@chars = qw(, . - ' `); # may generate warning
+			@chars = (',', '.', '-', "'", '`'); # may generate warning
+		}
+
+		#my @chars=('a'..'f','0'..'9');
+		print $chars[rand @chars];
+		# my $randomString;
+		# foreach (1..40) {
+		# 	$randomString.=$chars[rand @chars];
+		# }
+		# return $randomString;
+
 		return;
 	}
 
