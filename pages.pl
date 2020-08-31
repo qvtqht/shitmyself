@@ -864,16 +864,17 @@ sub GetItemPage {
 		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
 		$itemAttributes = trim($itemAttributes);
 
-		my $trTr = '</td></tr><tr><td>';
-		$itemAttributes =~ s/\n/$trTr/gi;
-		my $tdTd = '</td><td>';
-		$itemAttributes =~ s/\|/$tdTd/gi;
-		$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
+		{ # arrange into table
+			my $trTr = '</td></tr><tr><td>';
+			$itemAttributes =~ s/\n/$trTr/gi;
+			my $tdTd = '</td><td>';
+			$itemAttributes =~ s/\|/$tdTd/gi;
+			$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
 
-		my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
-		$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
-
-		$txtIndex .= $itemAttributesWindow;
+			my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
+			$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
+			$txtIndex .= $itemAttributesWindow;
+		}
 	}
 
 	# end page with footer
