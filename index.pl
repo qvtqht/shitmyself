@@ -762,99 +762,112 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			) {
 				# preliminary conditions met
 
-				my @configLines = ($message =~ m/^#(config) ([a-z0-9\/_.]+) (.+?)$/mg);
+				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W)(.+?)$/mg);
 				WriteLog('@configLines = ' . scalar(@configLines));
 
-				my @resetConfigLines = ($message =~ m/^#(resetconfig) ([a-z0-9\/_.]+)/mg);
+				my @resetConfigLines = ($message =~ m/(resetconfig)(\W)([a-z0-9\/_]+)/mg);
 				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
 				push @configLines, @resetConfigLines;
 
-				my @setConfigLines = ($message =~ m/^#(setconfig) ([a-z0-9\/_.]+)/mg);
+				my @setConfigLines = ($message =~ m/(setconfig)\W([a-z0-9\/_.]+)(\W)(.+?)/mg);
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 				push @configLines, @setConfigLines;
 
 				WriteLog('@configLines = ' . scalar(@configLines));
 
 				if (@configLines) {
-					#my $lineCount = @configLines / 3;
+					#my $lineCount = @configLines / 5;
 
 					while (@configLines) {
 						my $configAction = shift @configLines;
+						my $space1 = shift @configLines;
 						my $configKey = shift @configLines;
+						my $space2 = '';
 						my $configValue;
-						if ($configAction eq 'config' || $configAction eq 'config') {
+
+						if ($configAction eq 'config' || $configAction eq 'setconfig') {
+							$space2 = shift @configLines;
 							$configValue = shift @configLines;
 						}
 						else {
 							$configValue = 'reset';
 						}
+						$configValue = trim($configValue);
 
-						my $reconLine;
-						if ($configAction eq 'config' || $configAction eq 'setconfig') {
-							$reconLine = "#$configAction $configKey $configValue";
-						}
-						else {
-							$reconLine = "#$configAction $configKey";
-						}
+						if ($configAction && $configKey && $configValue) {
 
-						if (ConfigKeyValid($configKey)) {
-							WriteLog(
-								'ConfigKeyValid() passed! ' .
-									$reconLine .
-									'; IsAdmin() = ' . IsAdmin($gpgKey) .
-									'; isSigned = ' . $isSigned .
-									'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
-									'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
-									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
-							);
-
-							my $canConfig = 0;
-							if (IsAdmin($gpgKey)) {
-								$canConfig = 1;
+							my $reconLine;
+							if ($configAction eq 'config' || $configAction eq 'setconfig') {
+								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
 							}
-							if (substr(lc($configKey), 0, 5) ne 'admin') {
-								if (GetConfig('admin/signed_can_config')) {
-									if ($isSigned) {
-										$canConfig = 1;
-									}
-								}
-								if (GetConfig('admin/cookied_can_config')) {
-									if ($hasCookie) {
-										$canConfig = 1;
-									}
-								}
-								if (GetConfig('admin/anyone_can_config')) {
-									$canConfig = 1;
-								}
-							}
-
-							if ($canConfig)	{
-								# checks passed, we're going to update/reset a config entry
-								DBAddVoteRecord($fileHash, $addedTime, 'config');
-
-								if ($configAction eq 'resetconfig') {
-									DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-									$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
-								}
-								else {
-									DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-									$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
-								}
-
-								$detokenedMessage =~ s/$reconLine//g;
-
-								if ($configKey eq 'html/theme') {
-									# unlink cache/avatar.plain
-								}
+							elsif ($configAction eq 'resetconfig') {
+								$reconLine = "$configAction$space1$configKey";
 							}
 							else {
-								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not operator.]/g;
-								$detokenedMessage =~ s/$reconLine//g;
+								WriteLog('IndexTextFile: warning: $configAction fall-through when selecting $reconLine');
+								$reconLine = '';
 							}
-						}
-						else {
-							$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
+							WriteLog('IndexTextFile: #config: $reconLine = ' . $reconLine);
+
+							if (ConfigKeyValid($configKey) && $reconLine) {
+								WriteLog(
+									'ConfigKeyValid() passed! ' .
+										$reconLine .
+										'; IsAdmin() = ' . IsAdmin($gpgKey) .
+										'; isSigned = ' . $isSigned .
+										'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
+										'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
+										'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
+								);
+
+								my $canConfig = 0;
+								if (IsAdmin($gpgKey)) {
+									$canConfig = 1;
+								}
+								if (substr(lc($configKey), 0, 5) ne 'admin') {
+									if (GetConfig('admin/signed_can_config')) {
+										if ($isSigned) {
+											$canConfig = 1;
+										}
+									}
+									if (GetConfig('admin/cookied_can_config')) {
+										if ($hasCookie) {
+											$canConfig = 1;
+										}
+									}
+									if (GetConfig('admin/anyone_can_config')) {
+										$canConfig = 1;
+									}
+								}
+
+								if ($canConfig)	{
+									# checks passed, we're going to update/reset a config entry
+									DBAddVoteRecord($fileHash, $addedTime, 'config');
+
+									if ($configAction eq 'resetconfig') {
+										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
+										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
+									}
+									else {
+										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
+										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
+									}
+
+									$detokenedMessage =~ s/$reconLine//g;
+
+									if ($configKey eq 'html/theme') {
+										# unlink cache/avatar.plain
+									}
+								} # if ($canConfig)
+								else {
+									$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not operator.]/g;
+									$detokenedMessage =~ s/$reconLine//g;
+								}
+							} # if (ConfigKeyValid($configKey))
+							else {
+								#$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
+								#$detokenedMessage =~ s/$reconLine//g;
+							}
 						}
 					} # while
 				}
