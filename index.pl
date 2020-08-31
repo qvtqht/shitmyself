@@ -1859,26 +1859,26 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 
 	WriteIndexedConfig();
 
-    if (GetConfig('admin/image/enable')) {
-        my @imageFiles = split("\n", `find $HTMLDIR/image`);
+	if (GetConfig('admin/image/enable')) {
+		my @imageFiles = split("\n", `find $HTMLDIR/image`);
 
-        my $imageFilesCount = scalar(@imageFiles);
-        my $currentImageFile = 0;
+		my $imageFilesCount = scalar(@imageFiles);
+		my $currentImageFile = 0;
 
-        WriteLog('MakeIndex: $imageFilesCount = ' . $imageFilesCount);
+		WriteLog('MakeIndex: $imageFilesCount = ' . $imageFilesCount);
 
-        foreach my $imageFile (@imageFiles) {
-            $currentImageFile++;
+		foreach my $imageFile (@imageFiles) {
+			$currentImageFile++;
 
-            my $percentImageFiles = $currentImageFile / $imageFilesCount * 100;
+			my $percentImageFiles = $currentImageFile / $imageFilesCount * 100;
 
-            WriteMessage("*** MakeIndex: $currentImageFile/$imageFilesCount ($percentImageFiles %) $imageFile");
+			WriteMessage("*** MakeIndex: $currentImageFile/$imageFilesCount ($percentImageFiles %) $imageFile");
 
-            IndexImageFile($imageFile);
-        }
+			IndexImageFile($imageFile);
+		}
 
-        IndexImageFile('flush');
-    } # admin/image/enable
+		IndexImageFile('flush');
+	} # admin/image/enable
 }
 
 sub IndexFile {
