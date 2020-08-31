@@ -1760,7 +1760,7 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHa
 	DBAddPageTouch('tag', $voteValue);
 }
 
-sub DBGetItemAttribute { # $fileHash, [$attribute]
+sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute not specified
 	my $fileHash = shift;
 	my $attribute = shift;
 
