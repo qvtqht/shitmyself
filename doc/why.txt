@@ -1,32 +1,32 @@
 Why Use This?
-
-Here try to explain why you would want to use this.
-At the top, less technical. The further you go, the more technical it gets.
+	At the top, less technical. The further you go, the more technical it gets.
 
 Provable
-	Provable reliability of information, consensus, voting results.
-	Provable privacy by limiting access to data storage devices.
+	Provable reliability of information integrity with digital signatures.
+	Provable consensus and voting results -- full transparency.
+	Provable privacy by allowing end user to control physical access to data.
 
 Portable
-	All forum data is stored as plain text files, improving archivability.
+	All forum data is stored as plain text files, improving ability to archive.
 	Data is housed by the service provider without lock-down.
 
 Durable/Decentralized
-	Archives all data, or just segments, can be downloaded and replicated by anyone.
+	All data can be downloaded and replicated, in entirety or in segments.
 	Can be cloned and re-hosted, with portable user accounts usable across all copies.
 
 Accessible
 	Accessible to all beings, regardless of hardware, software, or configuration.
-	Bends over backwards to accommodate every known and testable client.
+	Tries very hard to accommodate every known and testable client.
 	Tested with hundreds of different browsers and configurations.
 	Full support for text-mode, no-JS, screen-readers, mouse-free, etc.
-	Using telnet will be easier than with most websites.
 	Registration is optional, unless operator changes default configuration.
+	Easier to access via telnet than with most websites.
 
 Securable
 	Can be operated as a static HTML website, for smaller attack surface.
-	(In this case, updates are pulled out of access.log intermittently.)
+		(In this case, updates are pulled out of access.log, intermittently.)
 	Optional PHP module for trading off some security for immediate updates.
+	Optional client-side JS module for easier client signatures.
 
 Transparent
 	Everything posted to the community is viewable and verifiable
@@ -52,3 +52,4 @@ Friendly, Compatible, Accessible
 	Tested with Mosaic, Netscape, IE, Opera, iOS, Android, Lynx, w3m, and more.
 	Text-art is accomodated with a monospace font and preserving whitespace layout.
 	Supports all web servers which can write standard access.log format.
+
