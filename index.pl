@@ -683,7 +683,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @setTitleToLines = ($message =~ m/^(title)(\W)(.+)$/mig);
+			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
 			# m = multi-line
 			# s = multi-line
 			# g = all instances
@@ -710,6 +710,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					my $reconLine;
 					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
 
+					WriteLog('title $reconLine = ' . $reconLine);
+
 					if ($titleGiven) {
 						chomp $titleGiven;
 						if ($hasParent) {
@@ -734,7 +736,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
 						}
 					}
-					$message =~ s/$reconLine/[title: $titleGiven]/g;
+					# $message =~ s/$reconLine/[title: $titleGiven]/g; #todo this is bad, should be a replace, not a regex
+					$message = str_replace($reconLine, $titleGiven, $message);
 				}
 			}
 		} # title: token
