@@ -342,13 +342,13 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 	if ((!isset($html) || !$html) && file_exists('404.html')) {
 		// something strange happened, and $html is still blank
 		// try to get 404.html into it
-		WriteLog('HandleNotFound: Fallback which should not happen');
+		WriteLog('HandleNotFound: warning: Fallback 1 which should not happen');
 		$html = file_get_contents('404.html');
 	}
 
 	if (!isset($html) || !$html) {
 		// evidently, 404.html didn't work, just use some hard-coded html
-		WriteLog('HandleNotFound: Fallback which should not happen');
+		WriteLog('HandleNotFound: warning: Fallback 2 which should not happen');
 		$html = '<html><body>404</body></html>';
 	}
 
