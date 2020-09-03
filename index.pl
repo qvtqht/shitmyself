@@ -1038,16 +1038,19 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $hash = sha512_hex($reconLine);
 
+					my $coinPrefix = GetConfig('coin/prefix');
+					my $coinPrefixLength = length($coinPrefix);
+
 					if (
-						substr($hash, 0, 4) eq '1337'
+						substr($hash, 0, $coinPrefixLength) eq $coinPrefix
 							&&
-							(
-								$authorKey eq $gpgKey
-									||
-									$authorKey eq $hasCookie
-							)
+						(
+							$authorKey eq $gpgKey
+								||
+							$authorKey eq $hasCookie
+						)
 					) {
-						$message =~ s/$reconLine/[coin]/g;
+						$message =~ s/$reconLine/[coin: $coinPrefix]/g;
 
 						DBAddVoteRecord($fileHash, $addedTime, 'hascoin');
 

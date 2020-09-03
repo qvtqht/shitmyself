@@ -2081,6 +2081,15 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
 		}
 
+		if ($script eq 'coin') {
+			# for voting.js we need to fill in some theme colors
+			my $coinPrefix = GetConfig('coin/prefix');;
+			my $coinCycleLimit = GetConfig('coin/cycle_limit');
+
+			$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$coinPrefix';/g;
+			$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $coinCycleLimit;/g;
+		}
+
 		if ($script eq 'profile') {
 			# for profile.js we need to fill in current admin id
 			my $currentAdminId = GetAdminKey() || '-';
