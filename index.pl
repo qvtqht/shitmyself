@@ -1038,33 +1038,49 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $hash = sha512_hex($reconLine);
 
-					my $coinPrefix = GetConfig('coin/prefix');
-					my $coinPrefixLength = length($coinPrefix);
+					my @acceptedCoinPrefix = split("\n", GetConfig('coin/accepted'));
+					push @acceptedCoinPrefix, GetConfig('coin/prefix');
 
-					if (
-						substr($hash, 0, $coinPrefixLength) eq $coinPrefix
-							&&
-						(
-							$authorKey eq $gpgKey
-								||
-							$authorKey eq $hasCookie
-						)
-					) {
-						$message =~ s/$reconLine/[coin: $coinPrefix]/g;
+					my $coinAccepted = 0;
 
-						DBAddVoteRecord($fileHash, $addedTime, 'hascoin');
+					foreach my $coinPrefix (@acceptedCoinPrefix) {
+						$coinPrefix = trim($coinPrefix);
+						if (!$coinPrefix) {
+							next;
+						}
 
-						DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
+						my $coinPrefixLength = length($coinPrefix);
+						if (
+							substr($hash, 0, $coinPrefixLength) eq $coinPrefix
+								&&
+							(
+								$authorKey eq $gpgKey
+									||
+								$authorKey eq $hasCookie
+							)
+						) {
+							$message =~ s/$reconLine/[coin: $coinPrefix]/g;
 
-						#DBAddItemAttribute('
-						#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
-					} else {
-						$message =~ s/$reconLine/[coin not accepted]/g;
-					}
+							DBAddVoteRecord($fileHash, $addedTime, 'hascoin');
 
-					WriteLog("... $reconLine");
+							DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
 
-					$detokenedMessage =~ s/$reconLine//g;
+							WriteLog("... $reconLine");
+
+							$detokenedMessage =~ s/$reconLine//g;
+
+							$coinAccepted = 1;
+
+							last;
+							#DBAddItemAttribute('
+							#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
+						}
+
+						if (!$coinAccepted) {
+							$message =~ s/$reconLine/[coin not accepted]/g;
+						}
+
+						}
 				}
 				#
 				# 			#DBAddVoteWeight('flush');
