@@ -1,3 +1,9 @@
+flush
+	if #approve or #keep
+		keep item and all its children
+	otherwise
+		archive
+
 #setresourcepassword
 	hashes password to htpasswd standard
 	uploads hashed password
