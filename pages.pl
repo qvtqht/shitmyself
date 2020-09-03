@@ -54,8 +54,8 @@ sub GenerateDialogPage { # generates page with dialog
 			$windowContents = GetTemplate('404.template');
 
 			# todo choose random item from list/looking_for
-			my $lookingFor = 'kittens';
-			$windowContents =~ s/looking for kittens/looking for $lookingFor/;
+			my $lookingFor = 'mittens';
+			$windowContents =~ s/looking for mittens/looking for $lookingFor/;
 
 			my $pageTemplate;
 			$pageTemplate = '';
@@ -1341,7 +1341,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (GetConfig('admin/image/enable') && $itemType eq 'image') {
 			my $imageContainer = GetTemplate('item/container/image.template');
 
-			my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
+			my $imageUrl = "/thumb/thumb_800_$fileHash.gif"; #todo hardcoding no
+			# my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
 			my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
 			my $imageAlt = $itemTitle;
 
@@ -1780,7 +1781,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	my $title = 'Topics';
 	my $titleHtml = 'Topics';
 
-	$htmlOutput = GetPageHeader($title, $titleHtml, 'top'); # <html><head>...</head><body>
+	$htmlOutput = GetPageHeader($title, $titleHtml, 'read'); # <html><head>...</head><body>
 	$htmlOutput .= GetTemplate('maincontent.template'); # where "skip to main content" goes
 
 	my @topItems = DBGetTopItems(); # get top items from db
@@ -1872,7 +1873,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 		$itemListingWrapper = GetWindowTemplate(
 			'Top Approved Threads',
-			'<a href="/write.html">New Topic</a><br>',
+			'<a class=beginner href="/write.html">New Topic</a><br>', #todo templatify
 			$columnHeadings,
 			$itemListings,
 			$statusText
@@ -4078,11 +4079,11 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	}
 	#
 	# topitems page
-	elsif ($pageType eq 'top') {
+	elsif ($pageType eq 'read') {
 		my $topItemsPage = GetTopItemsPage();
-		PutHtmlFile("top.html", $topItemsPage);
+		PutHtmlFile("read.html", $topItemsPage);
 
-		if (GetConfig('home_page') eq 'top') {
+		if (GetConfig('home_page') eq 'read') {
 			PutHtmlFile("index.html", $topItemsPage);
 		}
 	}

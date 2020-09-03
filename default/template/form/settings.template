@@ -35,11 +35,6 @@
 								Sign message automatically when sending
 							</label>
 							<br>
-							<label for=chkWantToVote>
-								<input type=checkbox id=chkWantToVote name=chkWantToVote onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'want_to_vote'); }">
-								I want to vote, show me voting options
-							</label>
-							<br>
 							<label for=chkShowMeanies>
 								<input type=checkbox id=chkShowMeanies name=chkShowMeanies onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_meanies'); }">
 								Show everything, including <u>objectionable content</u>
@@ -72,7 +67,7 @@
 							<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
 						</p>
 						<p>
-							<span class=beginner>Flush anything not marked for keeping:<br></span>
+							<span class=beginner>Flush everything and clear board for new content:<br></span>
 
 							<label for=chkFlush>
 								<input type=checkbox id=chkFlush name=chkFlush>
@@ -82,7 +77,7 @@
 							<input type=submit name=btnFlush id=btnFlush value=Flush>
 						</p>
 						<p>
-							<span class=beginner>Overthrow current operator/top moderator:<br></span>
+							<span class=beginner>Remove current operator/top moderator:<br></span>
 
 							<label for=chkOverthrow>
 								<input type=checkbox id=chkOverthrow name=chkOverthrow>

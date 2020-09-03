@@ -85,7 +85,6 @@ function ShowAll (t) { // shows all elements, overriding settings
 function ShowAdvanced (force) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
-//handles class=voting based on 'want_to_vote' preference
 //handles class=tag-abuse based on 'show_meanies' preference
 //force parameter
 // 1 = does not re-do setTimeout (called this way from checkboxes)
@@ -95,12 +94,6 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 
 	if (window.localStorage && document.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
-
-		var displayVoter = 'none'; // no voting controls by default
-		if (GetPrefs('want_to_vote') == 1) {
-		    // check value of want_to_vote preference
-			displayVoter = 'initial'; // display
-		}
 
 		if (force || showVoterLastAction != displayVoter) {
 			var elemVoter = document.getElementsByClassName('voter');
@@ -292,7 +285,6 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
 			SetPrefs('show_meanies', 0);
-			SetPrefs('want_to_vote', 0);
 			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);
@@ -317,7 +309,6 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 // //            SetPrefs('show_admin', 0);
 // 		} else if (ab == 'operator') {
 //             SetPrefs('show_admin', 1);
-//             SetPrefs('want_to_vote', 1);
 //             SetPrefs('show_meanies', 1);
 		}
 
@@ -355,13 +346,6 @@ function SettingsOnload() { // onload function for preferences page
 	// below is code which sets the checked state of preference checkboxes
 	// based on preference state
 		var pane;
-
-		if (GetPrefs('want_to_vote') == 1) {
-			var cb = document.getElementById('chkWantToVote');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
 
 		if (GetPrefs('show_meanies') == 1) {
 			var cbM = document.getElementById('chkShowMeanies');

@@ -1550,7 +1550,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
-		DBAddPageTouch('top');
+		DBAddPageTouch('read');
 
 		if ($hasParent == 0) {
 			#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
@@ -1777,8 +1777,10 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			# }
 
 			# make 420x420 thumbnail
-			if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
+			if (!-e "$HTMLDIR/thumb/thumb_800_$fileHash.gif") {
+			# if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
+				# my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
 				my $convertCommandResult = `$convertCommand`;
@@ -1812,7 +1814,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		DBAddVoteRecord($fileHash, $addedTime, 'image');
 		# add image tag
 
-		DBAddPageTouch('top');
+		DBAddPageTouch('read');
 
 		DBAddPageTouch('tag', 'image');
 
