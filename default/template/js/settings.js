@@ -2,7 +2,6 @@
 
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
-var showVoterLastAction = '';
 var showMeaniesLastAction = '';
 var showAdminLastAction = '';
 
@@ -10,7 +9,7 @@ var timerShowAdvanced;
 
 function SetElementVisible (element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
 // also sets background color
-// used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
+// used for hiding/showing and highlighting beginner, advanced element classes on page.
 
     //alert ('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
 
@@ -52,7 +51,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 }
 
 function ShowAll (t) { // shows all elements, overriding settings
-// admin elements are excluded. only beginner, advanced, and voter class elements are shown
+// admin elements are excluded. only beginner, advanced class elements are shown
 
     if (document.getElementsByClassName) {
         var display;
@@ -65,10 +64,6 @@ function ShowAll (t) { // shows all elements, overriding settings
         elements = document.getElementsByClassName('beginner');
         for (var i = 0; i < elements.length; i++) {
             SetElementVisible(elements[i], display, '$colorHighlightBeginner', 0);
-        }
-        elements = document.getElementsByClassName('voter');
-        for (var i = 0; i < elements.length; i++) {
-            SetElementVisible(elements[i], display, 0, 0);
         }
 
         if (timerShowAdvanced) {
@@ -94,15 +89,6 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 
 	if (window.localStorage && document.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
-
-		if (force || showVoterLastAction != displayVoter) {
-			var elemVoter = document.getElementsByClassName('voter');
-
-			for (var i = 0; i < elemVoter.length; i++) {
-				SetElementVisible(elemVoter[i], displayVoter, 0, 0);
-			}
-			showVoterLastAction = displayVoter;
-		}
 
 		///////////
 
