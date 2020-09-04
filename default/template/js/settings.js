@@ -89,7 +89,6 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 
 	if (window.localStorage && document.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
-
 		///////////
 
 		var displayMeanies = 'none'; // no voting controls by default
@@ -185,6 +184,9 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 			}
 			timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
 		}
+
+		SettingsOnload();
+
 	} else {
 		//alert('DEBUG: ShowAdvanced: feature check FAILED! window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
 	}
@@ -319,7 +321,9 @@ function LoadCheckbox (c, prefKey) { // updates checkbox state to reflect settin
 	var checkboxState = GetPrefs(prefKey);
 	//alert('DEBUG: checkboxState = ' + checkboxState);
 
-	c.checked = (checkboxState ? 1 : 0);
+	if (c && c.checked != (checkboxState ? 1 : 0)) {
+		c.checked = (checkboxState ? 1 : 0);
+	}
 
 	return 1;
 }
@@ -333,12 +337,9 @@ function SettingsOnload() { // onload function for preferences page
 	// based on preference state
 		var pane;
 
-		if (GetPrefs('show_meanies') == 1) {
-			var cbM = document.getElementById('chkShowMeanies');
-			if (cbM) {
-				cbM.checked = 1;
-			}
-		}
+		LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
+		LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
+		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
 
 		if (GetPrefs('sign_by_default') == 1) {
 			var cbM = document.getElementById('chkSignByDefault');
@@ -353,12 +354,8 @@ function SettingsOnload() { // onload function for preferences page
 				cbM.checked = 1;
 			}
 		}
-
-		ShowAdvanced(0); // call ShowAdvanced
 	}
-
-	ShowAdvanced(1);
-}
+}//SettingsOnload
 
 ShowAdvanced(0); // #todo replace with body.onload ?
 
