@@ -100,3 +100,6 @@ In IE 5.5. item pages return a JavaScript error
 config/admin/accept_404_url_text
 	this is broken, because it doesn't filter all the regular requests
 	e.g. /stats.html?123412521544
+
+config/coin/accepted
+	must be in order of grep precedence, that is, aaa before aa (because aa is substring of aaa)
