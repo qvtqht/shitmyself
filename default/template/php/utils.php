@@ -739,3 +739,217 @@ function unsetcookie2 ($key) { // remove cookie in most compatible way
 	Header("Set-Cookie: $key=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/", false);
 }
 
+
+function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt file and calls indexer
+	$hash = ''; // hash of new comment's contents
+	$fileUrlPath = ''; // path file should be stored in based on $hash
+
+	WriteLog('ProcessNewComment(...)');
+
+	if (isset($comment) && $comment) {
+		WriteLog('ProcessNewComment: $comment exists');
+
+		// remember current working directory, we'll need it later
+		$pwd = getcwd();
+		WriteLog('$pwd = ' . $pwd);
+
+		// script directory is one level up from current directory,
+		// which we expect to be called "html"
+		$scriptDir = GetScriptDir();
+		WriteLog('$scriptDir = ' . $scriptDir);
+
+		// $txtDir is where the text files live, in html/txt
+		$txtDir = $pwd . '/txt/';
+		WriteLog('$txtDir = ' . $txtDir);
+
+		// $htmlDir is the same as current directory
+		$htmlDir = $pwd . '/';
+		WriteLog('$htmlDir = ' . $htmlDir);
+
+		// find hash of the comment text
+		// it will not be the same as sha1 of the file for some mysterious reason, #todo
+		// but we will use it for now.
+		$hash = sha1($comment);
+		WriteLog('$comment = ' . $comment);
+		WriteLog('$hash = ' . $hash);
+
+		// generate a temporary filename based on the temporary hash
+		$fileName = $txtDir . $hash . '.txt';
+		WriteLog('$fileName = ' . $fileName);
+
+		// standard signature separator
+		$signatureSeparator = "\n-- \n";
+
+		if (GetConfig('admin/http_auth/enable') && isset($_SERVER['PHP_AUTH_USER']) && GetConfig('admin/logging/record_http_auth_username')) {
+			WriteLog('Recording http auth username... $_SERVER[PHP_AUTH_USER]: ' . $_SERVER['PHP_AUTH_USER']);
+			// record user's http-auth username if we're doing that and it exists
+			if ($_SERVER['PHP_AUTH_USER']) {
+				$comment .= $signatureSeparator;
+				$signatureSeparator = "\n";
+
+				$comment .= 'Authorization: ' . $_SERVER['PHP_AUTH_USER'];
+			}
+		} else {
+			WriteLog('NOT recording http auth username...');
+		}
+
+		if (GetConfig('admin/logging/record_cookie') && isset($_COOKIE['cookie']) && $_COOKIE['cookie']) {
+			// if there's a cookie variable and cookie logging is enabled
+			if (index($comment, 'PGP SIGNED MESSAGE') == -1 || GetConfig('admin/logging/record_cookie_when_signed')) {
+				// don't add cookie if message appears signed. this is a temporary measure to mitigate duplicate messages
+				// because access.pl doesn't know how to save cookies yet. record_cookie_when_signed=0 by default
+
+				$comment .= $signatureSeparator;
+				$signatureSeparator = "\n";
+
+				$comment .= 'Cookie: ' . $_COOKIE['cookie'];
+			}
+		}
+
+		if (GetConfig('admin/logging/record_http_host') && $_SERVER['HTTP_HOST']) {
+			// record host if it's enabled
+			$comment .= $signatureSeparator;
+			$signatureSeparator = "\n";
+
+			$comment .= 'Host: ' . $_SERVER['HTTP_HOST'];
+		}
+
+
+		// save the file as ".tmp" and then rename
+		file_put_contents($fileName . '.tmp', $comment);
+		rename($fileName . '.tmp', $fileName);
+
+		WriteLog('ProcessNewComment: file_get_contents(' . $fileName . '):');
+		WriteLog(file_get_contents($fileName));
+
+		// now we can get the "proper" hash,
+		// which is for some reason different from sha1($comment), as noted above
+		$hash = GetFileHash($fileName);
+		WriteLog('ProcessNewComment: $hash = ' . $hash);
+
+		// hash-named files are stored under /ab/cd/ two-level directory prefix
+		{ // create prefix subdirectories under txt/
+			if (!file_exists($txtDir . substr($hash, 0, 2))) {
+				mkdir($txtDir . substr($hash, 0, 2));
+			}
+
+			if (!file_exists($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2))) {
+				mkdir($txtDir . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
+			}
+		}
+		{ // create prefix subdirectories under ./ (html/)
+			if (!file_exists('./' .substr($hash, 0, 2))) {
+				mkdir('./' . substr($hash, 0, 2));
+			}
+
+			if (!file_exists('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2))) {
+				mkdir('./' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2));
+			}
+		}
+
+		// path for new txt file
+		$filePath =
+			$txtDir .
+			substr($hash, 0, 2) .
+			'/' .
+			substr($hash, 2, 2) .
+			'/' .
+			$hash . '.txt'
+		;
+
+
+		// path for new html file
+		$fileHtmlPath = './' . GetHtmlFilename($hash);
+
+		// path for client's (browser's) path to html file
+		$fileUrlPath = '/' . GetHtmlFilename($hash);
+
+		// save new post to txt file
+		file_put_contents($filePath, $comment);
+		// this could probably just be a rename() #todo
+
+		// check if html file already exists. if it does, leave it alone
+		if (!file_exists($fileHtmlPath)) {
+			$commentHtmlTemplate = GetItemPlaceholderPage($comment);
+
+			// store file
+			WriteLog("file_put_contents($fileHtmlPath, $commentHtmlTemplate)");
+
+			file_put_contents($fileHtmlPath, $commentHtmlTemplate);
+		}
+
+		if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
+			$referer = $_SERVER['HTTP_REFERER'];
+
+			// #todo uncomment this once this script is working
+	//		header('Location: ' . $referer);
+		} else {
+			// #todo uncomment this once this script is working
+	//		header('Location: /write.html');
+		}
+
+		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
+	}
+
+	if (GetConfig('admin/php/post/update_item_on_post')) {
+		WriteLog('ProcessNewComment: admin/php/post/update_item_on_post is TRUE');
+
+		WriteLog("cd .. ; ./update.pl \"$filePath\"");
+		WriteLog(`cd .. ; ./update.pl "$filePath"`);
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+
+		if (isset($replyTo) && $replyTo) {
+			WriteLog("\$replyTo = $replyTo");
+			if (IsItem($replyTo)) {
+				WriteLog("cd .. ; ./pages.pl \"$replyTo\"");
+				WriteLog(`cd .. ; ./pages.pl "$replyTo"`);
+
+				if ($pwd) {
+					WriteLog("cd $pwd");
+					WriteLog(`cd $pwd`);
+				}
+			}
+		} else {
+			WriteLog("\$replyTo not found");
+		}
+	} else {
+		WriteLog('ProcessNewComment: admin/php/post/update_item_on_post is FALSE');
+	}
+
+	if (GetConfig('admin/php/post/update_all_on_post')) {
+		WriteLog('ProcessNewComment: admin/php/post/update_all_on_post is TRUE');
+
+		WriteLog("cd .. ; ./update.pl --all");
+		WriteLog(`cd .. ; ./update.pl --all`);
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+	} else {
+		WriteLog('ProcessNewComment: admin/php/post/update_all_on_post is FALSE');
+
+		if (GetConfig('admin/php/post/update_on_post')) {
+			WriteLog('ProcessNewComment: admin/php/post/update_on_post is TRUE');
+
+			WriteLog("cd .. ; ./update.pl");
+			WriteLog(`cd .. ; ./update.pl`);
+
+			if ($pwd) {
+				WriteLog("cd $pwd");
+				WriteLog(`cd $pwd`);
+			}
+		} else {
+			WriteLog('ProcessNewComment: admin/php/post/update_on_post is FALSE');
+		}
+	}
+
+	//return $fileUrlPath;
+	return $hash;
+} // ProcessNewComment
+
+
