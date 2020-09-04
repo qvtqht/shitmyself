@@ -1076,11 +1076,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
 						}
 
-						if (!$coinAccepted) {
-							$message =~ s/$reconLine/[coin not accepted]/g;
-						}
+					}#foreach my $coinPrefix (@acceptedCoinPrefix) {
 
-						}
+					if (!$coinAccepted) {
+						$message =~ s/$reconLine/[coin not accepted]/g;
+					}
+
 				}
 				#
 				# 			#DBAddVoteWeight('flush');
