@@ -333,6 +333,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 
 	if (!isset($html) || !$html) {
 		// don't know how to handle this request, default to 404
+		WriteLog('HandleNotFound: no $html');
 		if (file_exists('404.html')) {
 			$html = file_get_contents('404.html');
 			header("HTTP/1.0 404 Not Found");
