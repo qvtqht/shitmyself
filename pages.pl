@@ -3063,6 +3063,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $uploadPage = GetUploadPage();
 	PutHtmlFile("upload.html", $uploadPage);
 
+	# Search page
+	my $searchPage = GetSearchPage();
+	PutHtmlFile("search.html", $searchPage);
+
 	# Add Event page
 	my $eventAddPage = GetEventAddPage();
 	PutHtmlFile("event.html", $eventAddPage);
@@ -3329,6 +3333,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		my $uploadPhpTemplate = GetTemplate('php/upload.php');
 		PutFile($PHPDIR . '/upload.php', $uploadPhpTemplate);
 
+		my $searchPhpTemplate = GetTemplate('php/search.php');
+		PutFile($PHPDIR . '/search.php', $searchPhpTemplate);
+
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php');
 		PutFile($PHPDIR . '/cookie.php', $cookiePhpTemplate);
 
@@ -3424,6 +3431,14 @@ sub GetUploadWindow {
 	return $uploadWindow;
 }
 
+sub GetSearchWindow {
+	my $searchForm = GetTemplate('form/search.template');
+
+	my $searchWindow = GetWindowTemplate('Search', '', '', $searchForm, '');
+
+	return $searchWindow;
+}
+
 sub GetWriteForm { # returns write form (for composing text message)
 	my $writeForm = GetTemplate('form/write/write.template');
 
@@ -3488,6 +3503,26 @@ sub GetUploadPage { # returns html for upload page
 		$html = InjectJs($html, qw(settings avatar profile));
 	}
 
+	return $html;
+}
+
+sub GetSearchPage { # returns html for search page
+	my $html = '';
+	my $title = 'Search';
+
+	$html .= GetPageHeader($title, $title, 'search');
+
+	$html .= GetTemplate('maincontent.template');
+
+	$html .= GetSearchWindow();
+
+	$html .= GetPageFooter();
+	$html = InjectJs($html, qw(settings avatar profile));
+
+
+	if (GetConfig('admin/js/enable')) {
+		$html = AddAttributeToTag($html, 'body', 'onload', 'if (window.searchOnload) searchOnload(); if (document.search.q) { document.search.q.focus() }');
+	}
 	return $html;
 }
 
