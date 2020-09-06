@@ -98,7 +98,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 		}
 
 		if (force || showMeaniesLastAction != displayMeanies) {
-			var elemMeanies = document.getElementsByClassName('tag-abuse');
+			var elemMeanies = document.getElementsByClassName('item-abuse');
 
 			for (var i = 0; i < elemMeanies.length; i++) {
 				SetElementVisible(elemMeanies[i], displayMeanies, 0, 0);
