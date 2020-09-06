@@ -1,8 +1,18 @@
+check the status of ssi includes module
+	add ssi include for status bar
+
 What's Keeping Website From Being Used?
 =======================================
 Much confusion
 Where to find newest posts??
 Search
+	xSearch form
+	xGet search query
+	Fetch results
+	Display results
+		via access.log (delayed)
+		via php
+	Search results template page
 Rebuild times are long due to generating a page for each item
 	Good: Site is fast to come back up
 	Need: lazy-generate pages with PHP is enabled
@@ -33,6 +43,16 @@ Recognize URLs
 Recognize typical date formats
 
 
+queue
+=====
+create table
+DBQueueInsert
+DBQueueGet
+ProcessQueueItem(...)
+php post.php
+	insert into queue
+	display wait page
+	refresh to completed item page when done
 
 
 flush

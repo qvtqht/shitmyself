@@ -1,3 +1,10 @@
+client fingerprint
+	get datapoints
+		get hashes
+			depending on hash prefix, combine in different order
+				hash together again
+
+
 #publish tag
 with and without target server name/alias
 
