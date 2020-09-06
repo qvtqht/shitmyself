@@ -1144,11 +1144,12 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	# 	SqliteQuery2($queryAuthorItems, @queryParamsAuthorItems);
 	# }
 
+	#todo need to incremenet priority after doing this
 
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time, priority) VALUES ";
+		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time) VALUES ";
 	} else {
 		$query .= ',';
 	}
@@ -1181,9 +1182,9 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	#     0) + 1);
 
 
-	$query .= '(?, ?, ?, ?)';
-	push @queryParams, $pageName, $pageParam, $touchTime, $priority;
-}
+	$query .= '(?, ?, ?)';
+	push @queryParams, $pageName, $pageParam, $touchTime;
+} # DBAddPageTouch()
 
 sub DBGetVoteCounts { # Get total vote counts by tag value
 # Takes $orderBy as parameter, with vote_count being default;
