@@ -211,6 +211,27 @@ function DoUpgrade () {
 	}
 }
 
+function DoFlush () {
+	$pwd = getcwd();
+
+	WriteLog('$pwd = ' . $pwd);
+
+	$scriptDir = GetScriptDir();
+
+	WriteLog('$scriptDir = ' . $scriptDir);
+
+	if (file_exists($scriptDir . '/archive.pl')) {
+		WriteLog('archive.pl found, calling archive.pl');
+		WriteLog('cd "' . $scriptDir . '" ; perl ./archive.pl');
+
+		WriteLog(`cd "$scriptDir" ; perl ./archive.pl`);
+
+		WriteLog('cd "' . $pwd . '"');
+
+		WriteLog(`cd "$pwd"`);
+	}
+}
+
 function GetConfig ($configKey) { // get value for config value $configKey
 // config is stored in config/
 // if not found in config/ it looks in default/
