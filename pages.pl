@@ -4108,6 +4108,9 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 		my $votesPage = GetTagsPage('Votes', 'Votes', 'ORDER BY vote_value');
 		PutHtmlFile("votes.html", $votesPage);
+
+		my $tagsHorizontal = GetTagLinks();
+		PutHtmlFile('tags-horizontal.html', $tagsHorizontal);
 	}
 	#
 	# events page
