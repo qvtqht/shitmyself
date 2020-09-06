@@ -45,9 +45,9 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	# this needs to happen after txt and image above
 	print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html)\n");
 	rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
-
-	print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
-	rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
+	#
+	# print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
+	# rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
 
 	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
 	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"");  #todo make faster
@@ -57,6 +57,16 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 
 	print("mkdir($TXTDIR)\n");
 	mkdir("$TXTDIR");
+
+	#todo don't use absolute path
+	print("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
+	system("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
+	#
+	# print("gzip -9 $ARCHIVE_DATE_DIR.tar");
+	# system("gzip -9 $ARCHIVE_DATE_DIR.tar");
+
+	print("rm -rf $ARCHIVE_DATE_DIR");
+	system("rm -rf $ARCHIVE_DATE_DIR");
 
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
 }
