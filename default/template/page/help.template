@@ -2,9 +2,11 @@
 
 <p>You're looking at a public discussion forum.</p>
 
-<p>If you want to register or sign in, go to <a href="./profile.html" style="text-decoration-color: #cce99c; border-bottom: 3pt solid #cce99c">Profile</a>.</p>
+<p><a href="./profile.html">Profile</a>: If you want to register or sign in.</p>
 
-<p>If you want to use the moderation interface, go to <a href="./settings.html" style="text-decoration-color: #f4f707; border-bottom: 3pt solid #f4f707">Settings</a>.</p>
+<p><a href="./settings.html">Settings</a>: To adjust how it works.</p>
+
+<p><a href="./access.html">Accessibility Mode</a>: Make site easier to use.</p>
 
 <hr>
 
