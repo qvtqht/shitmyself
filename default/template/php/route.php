@@ -852,12 +852,15 @@ if (GetConfig('admin/php/route_enable')) {
 		}
 
 		if (GetConfig('admin/php/footer_stats') && file_exists('stats-footer.html')) {
-			// footer stats
-			$html = str_replace(
-				'</body>',
-				file_get_contents('stats-footer.html') . '</body>',
-				$html
-			);
+			if ($path == '/kbd.html') {
+			} else {
+				// footer stats
+				$html = str_replace(
+					'</body>',
+					file_get_contents('stats-footer.html') . '</body>',
+					$html
+				);
+			}
 
 		} // footer stats
 
