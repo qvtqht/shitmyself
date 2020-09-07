@@ -1,5 +1,6 @@
 // begin loading_begin.js
-var a383WaitToShow = 3000;
+
+var loadingIndicatorWaitToShow = 3000;
 
 function addLoadingIndicator (strMessage) { // adds loading indicator bar (to top of page, depending on style)
 	if (!strMessage) {
@@ -12,38 +13,38 @@ function addLoadingIndicator (strMessage) { // adds loading indicator bar (to to
 } // addLoadingIndicator()
 
 if (document.createElement) {
-	var a383d = new Date();
-	var a383start = a383d.getTime() * 1;
+	var d = new Date();
+	var loadingIndicatorStart = d.getTime() * 1;
 
-	var a383gt = unescape('%3E');
+	var gt = unescape('%3E');
 
-	var a383loadCounter = 0;
+	var loadingIndicatorloadCounter = 0;
 
-	var a383 = document.createElement('span');
-	if (a383) {
-		a383.setAttribute('id', 'a383');
-		a383.innerHTML = 'Loading...';
-		document.body.appendChild(a383);
+	var loadingIndicator = document.createElement('span');
+	if (loadingIndicator) {
+		loadingIndicator.setAttribute('id', 'loadingIndicator');
+		loadingIndicator.innerHTML = 'Loading...';
+		document.body.appendChild(loadingIndicator);
 
 		if (window.localStorage) {
-			var a383lastLoadTime = localStorage.getItem('last_load_time');
+			var loadingIndicatorLastLoadTime = localStorage.getItem('last_load_time');
 
-			if (a383lastLoadTime && (a383WaitToShow < a383lastLoadTime)) {
-				a383.style.display = 'block';
+			if (loadingIndicatorLastLoadTime && (loadingIndicatorWaitToShow < loadingIndicatorLastLoadTime)) {
+				loadingIndicator.style.display = 'block';
 			} else {
-				a383.style.display = 'none';
-				var a383showTimeout = setTimeout('a383.style.display = "block"; localStorage.setItem(\'last_load_time\', 5000);', 1500);
+				loadingIndicator.style.display = 'none';
+				var loadingIndicatorShowTimeout = setTimeout('loadingIndicator.style.display = "block"; localStorage.setItem(\'last_load_time\', 5000);', 1500);
 			}
 		} else {
 			// #todo cookie-based?
 		}
 
-		var a383LightModeLink = window.location.pathname;
-		if (a383LightModeLink == '/') {
-			a383LightModeLink = '/index.html';
+		var loadingIndicatorLightModeLink = window.location.pathname;
+		if (loadingIndicatorLightModeLink == '/') {
+			loadingIndicatorLightModeLink = '/index.html';
 		}
-		a383LightModeLink = a383LightModeLink + '?light=1';
-		var a383expandTimeout = setTimeout('a383.innerHTML = a383.innerHTML + \' For faster service, you can try <a href="' + a383LightModeLink + '"' + a383gt + 'light mode</a' + a383gt + '.\';', 3000);
+		loadingIndicatorLightModeLink = loadingIndicatorLightModeLink + '?light=1';
+		var loadingIndicatorExpandTimeout = setTimeout('loadingIndicator.innerHTML = loadingIndicator.innerHTML + \' <a href="' + loadingIndicatorLightModeLink + '"' + gt + 'Switch to light mode?</a' + gt + '.\';', 3000);
 	}
 }
 // end loading_begin.js
