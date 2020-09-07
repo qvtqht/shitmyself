@@ -3035,6 +3035,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	PutHtmlFile("test.html", GetTemplate('test.template'));
 	PutHtmlFile("kbd.html", GetTemplate('keyboard.template'));
+	PutHtmlFile("kbd_nn.html", GetTemplate('keyboard_netscape.template'));
 	PutHtmlFile("frame.html", GetTemplate('keyboard_frame.template'));
 
 	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));

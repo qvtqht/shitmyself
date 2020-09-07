@@ -37,11 +37,11 @@
         }
         function hi(letter) {
             var text = letter;
-            alert("'" + text + "'");
+            //alert('DEBUG: "' + text + '"');
 
             for (var i = 0; i < text.length; i++) {
-                alert(i);
-                if (!text.substr(i, 1).equals(' ')) {
+                //alert('DEBUG: i = ' + i);
+                if (text.substr(i, 1) != ' ') {
                     // ok
                 } else {
                     if (i == 0) {
@@ -53,14 +53,90 @@
                 }
             }
 
-            alert("'" + text + "'");
+            if (text == 'Enter') {
+                text = "\n";
+            }
+
+            //alert('DEBUG: "' + text + '"');
             parent.frames['main'].document.compose.comment.value += '' + text;
+
+            return false;
         }
+
+        // todo onmousedown and onmouseup should set and clear a timeout for key repeat?
     // -->
 </script>
 
 <form action=/">
-    <input type=button onclick=hi(this.value) value=" A ">
+
+<table bgcolor=beige cellpadding=4 cellspacing=0 border=0>
+<tr><td>
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value="` ">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 1">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 2">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 3">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 4">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 5">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 6">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 7">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 8">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 9">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" 0">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" -">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" =">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Backsp">
+    <br>
+</td></tr>
+<tr><td>
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Tab">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Q">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" W">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" E">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" R">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" T">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Y">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" U">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" I">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" O">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" P">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" [">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" ]">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" \">
+    <br>
+</td></tr>
+<tr><td>
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Caps">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" A">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" S">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" D">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" F">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" G">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" H">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" J">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" K">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" L">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" ;">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" '">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Enter">
+    <br>
+</td></tr>
+<tr><td>
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Shift">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Z">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" X">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" C">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" V">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" B">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" N">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" M">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" ,">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" .">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" /">
+    <input type=button onclick=hi(this.value) ondblclick=hi(this.value) value=" Shift">
+    <br>
+</td></tr>
+</table>
+
 </form>
 
 <!-- / keyboard_netscape.template -->
