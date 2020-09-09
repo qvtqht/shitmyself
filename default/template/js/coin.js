@@ -1,11 +1,17 @@
 // coin.js
 
-var script = document.createElement('script');
-script.src = '/sha512.js';
-script.async = false; // This is required for synchronous execution
-document.head.appendChild(script);
+if (document.createElement) {
+	var script = document.createElement('script');
+	script.src = '/sha512.js';
+	script.async = false; // This is required for synchronous execution
+	document.head.appendChild(script);
+}
 
 function makeCoin(t) {
+	if (!window.hex_sha512) {
+		return '';
+	}
+
 	if (t) {
 		t.value = 'Minting...';
 	}
@@ -50,8 +56,8 @@ function makeCoin(t) {
 
 	if (done == 1) {
 		if (t) {
-			t.value = 'Done. ' + i + ' iterations.';
-			t.disabled = true;
+			t.value = 'Done. (' + i + ')';
+			//t.disabled = true;
 			return coin;
 		}
 	} else {
@@ -60,6 +66,8 @@ function makeCoin(t) {
 			return '';
 		}
 	}
-}
+
+	return '';
+} // makeCoin()
 
 // / coin.js
