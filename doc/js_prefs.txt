@@ -31,8 +31,5 @@ display notice when page has changed
 show_admin
 display administrtive/operator controls
 
-want_to_vote (implemented client-side only)
-display voting buttons
-
 show_meanies (not implemented)
 display content marked "#mean"

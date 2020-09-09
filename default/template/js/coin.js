@@ -1,5 +1,10 @@
 // coin.js
 
+var script = document.createElement('script');
+script.src = '/sha512.js';
+script.async = false; // This is required for synchronous execution
+document.head.appendChild(script);
+
 function makeCoin(t) {
 	if (t) {
 		t.value = 'Minting...';

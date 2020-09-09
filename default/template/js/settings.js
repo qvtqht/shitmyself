@@ -2,7 +2,6 @@
 
 var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
-var showVoterLastAction = '';
 var showMeaniesLastAction = '';
 var showAdminLastAction = '';
 
@@ -10,7 +9,7 @@ var timerShowAdvanced;
 
 function SetElementVisible (element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
 // also sets background color
-// used for hiding/showing and highlighting beginner, advanced, and voter element classes on page.
+// used for hiding/showing and highlighting beginner, advanced element classes on page.
 
     //alert ('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
 
@@ -52,7 +51,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 }
 
 function ShowAll (t) { // shows all elements, overriding settings
-// admin elements are excluded. only beginner, advanced, and voter class elements are shown
+// admin elements are excluded. only beginner, advanced class elements are shown
 
     if (document.getElementsByClassName) {
         var display;
@@ -65,10 +64,6 @@ function ShowAll (t) { // shows all elements, overriding settings
         elements = document.getElementsByClassName('beginner');
         for (var i = 0; i < elements.length; i++) {
             SetElementVisible(elements[i], display, '$colorHighlightBeginner', 0);
-        }
-        elements = document.getElementsByClassName('voter');
-        for (var i = 0; i < elements.length; i++) {
-            SetElementVisible(elements[i], display, 0, 0);
         }
 
         if (timerShowAdvanced) {
@@ -85,7 +80,6 @@ function ShowAll (t) { // shows all elements, overriding settings
 function ShowAdvanced (force) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
-//handles class=voting based on 'want_to_vote' preference
 //handles class=tag-abuse based on 'show_meanies' preference
 //force parameter
 // 1 = does not re-do setTimeout (called this way from checkboxes)
@@ -95,22 +89,6 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 
 	if (window.localStorage && document.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
-
-		var displayVoter = 'none'; // no voting controls by default
-		if (GetPrefs('want_to_vote') == 1) {
-		    // check value of want_to_vote preference
-			displayVoter = 'initial'; // display
-		}
-
-		if (force || showVoterLastAction != displayVoter) {
-			var elemVoter = document.getElementsByClassName('voter');
-
-			for (var i = 0; i < elemVoter.length; i++) {
-				SetElementVisible(elemVoter[i], displayVoter, 0, 0);
-			}
-			showVoterLastAction = displayVoter;
-		}
-
 		///////////
 
 		var displayMeanies = 'none'; // no voting controls by default
@@ -120,7 +98,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 		}
 
 		if (force || showMeaniesLastAction != displayMeanies) {
-			var elemMeanies = document.getElementsByClassName('tag-abuse');
+			var elemMeanies = document.getElementsByClassName('item-abuse');
 
 			for (var i = 0; i < elemMeanies.length; i++) {
 				SetElementVisible(elemMeanies[i], displayMeanies, 0, 0);
@@ -206,6 +184,9 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 			}
 			timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
 		}
+
+		SettingsOnload();
+
 	} else {
 		//alert('DEBUG: ShowAdvanced: feature check FAILED! window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
 	}
@@ -292,7 +273,6 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
 			SetPrefs('show_meanies', 0);
-			SetPrefs('want_to_vote', 0);
 			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);
@@ -317,7 +297,6 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 // //            SetPrefs('show_admin', 0);
 // 		} else if (ab == 'operator') {
 //             SetPrefs('show_admin', 1);
-//             SetPrefs('want_to_vote', 1);
 //             SetPrefs('show_meanies', 1);
 		}
 
@@ -342,7 +321,9 @@ function LoadCheckbox (c, prefKey) { // updates checkbox state to reflect settin
 	var checkboxState = GetPrefs(prefKey);
 	//alert('DEBUG: checkboxState = ' + checkboxState);
 
-	c.checked = (checkboxState ? 1 : 0);
+	if (c && c.checked != (checkboxState ? 1 : 0)) {
+		c.checked = (checkboxState ? 1 : 0);
+	}
 
 	return 1;
 }
@@ -356,19 +337,9 @@ function SettingsOnload() { // onload function for preferences page
 	// based on preference state
 		var pane;
 
-		if (GetPrefs('want_to_vote') == 1) {
-			var cb = document.getElementById('chkWantToVote');
-			if (cb) {
-				cb.checked = 1;
-			}
-		}
-
-		if (GetPrefs('show_meanies') == 1) {
-			var cbM = document.getElementById('chkShowMeanies');
-			if (cbM) {
-				cbM.checked = 1;
-			}
-		}
+		LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
+		LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
+		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
 
 		if (GetPrefs('sign_by_default') == 1) {
 			var cbM = document.getElementById('chkSignByDefault');
@@ -383,12 +354,8 @@ function SettingsOnload() { // onload function for preferences page
 				cbM.checked = 1;
 			}
 		}
-
-		ShowAdvanced(0); // call ShowAdvanced
 	}
-
-	ShowAdvanced(1);
-}
+}//SettingsOnload
 
 ShowAdvanced(0); // #todo replace with body.onload ?
 

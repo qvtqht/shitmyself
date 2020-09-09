@@ -1,3 +1,118 @@
+check the status of ssi includes module
+	add ssi include for status bar
+
+What's Keeping Website From Being Used?
+=======================================
+Much confusion
+Where to find newest posts??
+Search
+	xSearch form
+	xGet search query
+	Fetch results
+	Display results
+		via access.log (delayed)
+		via php
+	Search results template page
+Rebuild times are long due to generating a page for each item
+	Good: Site is fast to come back up
+	Need: lazy-generate pages with PHP is enabled
+		xItem
+		xTag
+		xAuthor
+		Other
+	Need: Avoid generating pages for items with a parent
+		Perhaps: Remove permalinks from reply items
+	Need: "Site is rebuilding right now" message?
+User can't create account from Write or Reply page
+	Need: Checkbox to create account in the process of posting
+Data export is currently only possible individually (zip files are not generated)
+	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
+	Need: Generate zip files of forum data:
+		By thread (with all dependencies like authors, votes, etc.)
+		By date (with all deps)
+		By author (with all deps)
+
+Features would help me
+======================
+Offline outbox
+Offline web app with all content
+Recognize URLs
+	scrape
+	screenshot
+	present
+Recognize typical date formats
+
+
+queue
+=====
+create table
+DBQueueInsert
+DBQueueGet
+ProcessQueueItem(...)
+php post.php
+	insert into queue
+	display wait page
+	refresh to completed item page when done
+
+
+flush
+	if #approve or #keep
+		keep item and all its children
+	otherwise
+		archive
+
+#setresourcepassword
+	hashes password to htpasswd standard
+	uploads hashed password
+	server adds to htpasswd (if should be allowed)
+
+add 404 --> new item to route.php
+
+when only mouse click and no scrollbar, no way to move down page
+	todo
+		button to move to end of section
+		potentially javascript scrollbars?
+
+
+write form
+...
+
+[keyboard]
+
+dropdown
+  system
+  dvorak
+  russian
+
+a s d f keyboard expando
+
+foreach table cell
+ if letter = a
+   change to b
+   (translitkeypress())
+
+===
+
+light mode
+	checkboxes for each option
+	when light mode page is opened
+		light mode is enabled, but not saved
+		"enable light mode" button
+	checkboxes for
+		remove clock
+		replace emoji
+		replace links with buttons
+	strip js+css+htmlcomments
+	
+
+if light mode default
+	welcome page
+		welcome to so and sos 
+		please choose
+			pretty mode
+			lightweight mode
+===
+
 config/admin/force_profile is broken
 
 top menu should be refreshed based on settings
@@ -23,40 +138,7 @@ on profile page
 tables should regrow if they are missing
 	currently ./build.pl is required after ./clean
 
-Features would help me
-======================
-Offline outbox
-Offline web app with all content
-Recognize URLs
-	scrape
-	screenshot
-	present
-Recognize typical date formats
 
-
-What's Keeping Website From Being Used?
-=======================================
-Much confusion
-Where to find newest posts??
-Search
-Rebuild times are long due to generating a page for each item
-	Good: Site is fast to come back up
-	Need: lazy-generate pages with PHP is enabled
-		xItem
-		xTag
-		xAuthor
-		Other
-	Need: Avoid generating pages for items with a parent
-		Perhaps: Remove permalinks from reply items
-	Need: "Site is rebuilding right now" message?
-User can't create account from Write or Reply page
-	Need: Checkbox to create account in the process of posting
-Data export is currently only possible individually (zip files are not generated)
-	Need: Generate zip files for each thread, probably on the fly with PHP, if possible
-	Need: Generate zip files of forum data:
-		By thread (with all dependencies like authors, votes, etc.)
-		By date (with all deps)
-		By author (with all deps)
 
 
 /my_bookmarks.php
@@ -671,8 +753,8 @@ Unbreak
 	Voting
 
 Profile refactor
-	Cookie-auth should work for non-JS browsers
-	Factor out nuJS code into separate template
+	xCookie-auth should work for non-JS browsers
+	xFactor out nuJS code into separate template
 	Set cookie via server after private key is set locally
 
 Space-wrap long strings in topics list
@@ -1105,8 +1187,6 @@ Current Top UI priorities
 		More friendly table-like listing of authors
 			Action counts with sort
 
-Does vote still need timestamp?
-
 Connect users
 	Using >> replies for user registration posts
 	And/or usernames??
@@ -1124,8 +1204,6 @@ Colorize item hashes
 	Possibly make "short" hashes 12 chars (6+6 for fg/bg color0
 
 [propose edit] button
-
-When >> token is removed from reply box /and/ message is client-signed, the >> isn't replaced, and reply doesn't get attached to parent
 
 Re-enable hashtag links
 
@@ -1154,10 +1232,6 @@ whenever a new pubkey is posted
 	messages that have "begin signed" header
 		and are not attached to an existing pubkey
 			should be re-checked
-
-claim_admin token
-	if older than 30 days and/or approved by admin
-		make admin
 
 publish rss for notification apps
 
@@ -1345,15 +1419,13 @@ How to make things easier???
 
 Somehow handle cleanup of old .html files
 
-Fix Tags page so that correct counts are displayed +
+Fix Tags page so that correct counts are displayed ++
 
 Add roles directory
     Add roles/admin and roles/moderator
         Add support for having multiple public keys in here as text file
 
 Add client-side handling of HTTP 431 messages when submitting something new
-
-Function to add file to index and update affected pages
 
 Untagged page = all untagged posts
  - make it easier to vote on this one
@@ -1362,14 +1434,10 @@ cookie-based prefs
  - stylesheet
  - hide non-essential ui elements
 
-Maybe try Perl PGP modules? +
-
 No pubkey and/or bad sig should result in big red warning on page/listing +
 
 Front-end signature checks/indicators in input boxes +
 
-
-js fallback for saving via "more options" link on write-small.template
 
 
 Hide voting, weight-setting, and other messages from home page
@@ -1380,8 +1448,6 @@ When private key is pasted into [restore] textarea,
       restore if it validates
 
 Ensure caches are deleted when a vote occurs
-
-Merge vote and reply forms
 
 Add a message that appears the first time someone is posting something, like on HN
 

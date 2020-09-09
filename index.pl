@@ -679,11 +679,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		# title:
 		if (GetConfig('admin/token/title')) {
-		# title: token is enabled
+			# #title token is enabled
 
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @setTitleToLines = ($message =~ m/^(title: )(.+)$/mig);
+			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
 			# m = multi-line
 			# s = multi-line
 			# g = all instances
@@ -692,21 +692,25 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
 			if (@setTitleToLines) { # means we found at least one title: token;
-				WriteLog('title token found for ' . $fileHash);
+				WriteLog('#title token found for ' . $fileHash);
 				WriteLog('$message = ' . $message);
 
-				#my $lineCount = @setTitleToLines / 2;
+				#my $lineCount = @setTitleToLines / 3;
 				while (@setTitleToLines) {
 					# loop through all found title: token lines
 					my $setTitleToToken = shift @setTitleToLines;
+					my $titleSpace = shift @setTitleToLines;
 					my $titleGiven = shift @setTitleToLines;
 
 					chomp $setTitleToToken;
+					chomp $titleSpace;
 					chomp $titleGiven;
 					$titleGiven = trim($titleGiven);
 
 					my $reconLine;
-					$reconLine = $setTitleToToken . $titleGiven;
+					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
+
+					WriteLog('title $reconLine = ' . $reconLine);
 
 					if ($titleGiven) {
 						chomp $titleGiven;
@@ -732,7 +736,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
 						}
 					}
-					$message =~ s/$reconLine/[Title: $titleGiven]/g;
+					# $message =~ s/$reconLine/[title: $titleGiven]/g; #todo this is bad, should be a replace, not a regex
+					$message = str_replace($reconLine, $titleGiven, $message);
 				}
 			}
 		} # title: token
@@ -740,162 +745,175 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		#look for #config and #resetconfig
 		if (GetConfig('admin/token/config') && $message) {
 			if (
-					IsAdmin($gpgKey) #admin can always config
-				||
-					GetConfig('admin/anyone_can_config') # anyone can config
-				||
-					(
-						# signed can config
-						GetConfig('admin/signed_can_config')
+				IsAdmin($gpgKey) #admin can always config
+					||
+				GetConfig('admin/anyone_can_config') # anyone can config
+					||
+				(
+					# signed can config
+					GetConfig('admin/signed_can_config')
 						&&
-						$isSigned
-					)
-				||
-					(
-						# cookied can config
-						GetConfig('admin/cookied_can_config')
+					$isSigned
+				)
+					||
+				(
+					# cookied can config
+					GetConfig('admin/cookied_can_config')
 						&&
 						$hasCookie
-					)
+				)
 			) {
 				# preliminary conditions met
 
-				my @configLines = ($message =~ m/^#(config) ([a-z0-9\/_.]+) (.+?)$/mg);
+				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W)(.+?)$/mg);
 				WriteLog('@configLines = ' . scalar(@configLines));
 
-				my @resetConfigLines = ($message =~ m/^#(resetconfig) ([a-z0-9\/_.]+)/mg);
+				my @resetConfigLines = ($message =~ m/(resetconfig)(\W)([a-z0-9\/_]+)/mg);
 				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
 				push @configLines, @resetConfigLines;
 
-				my @setConfigLines = ($message =~ m/^#(setconfig) ([a-z0-9\/_.]+)/mg);
+				my @setConfigLines = ($message =~ m/(setconfig)\W([a-z0-9\/_.]+)(\W)(.+?)/mg);
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 				push @configLines, @setConfigLines;
 
 				WriteLog('@configLines = ' . scalar(@configLines));
 
 				if (@configLines) {
-					#my $lineCount = @configLines / 3;
+					#my $lineCount = @configLines / 5;
 
 					while (@configLines) {
 						my $configAction = shift @configLines;
+						my $space1 = shift @configLines;
 						my $configKey = shift @configLines;
+						my $space2 = '';
 						my $configValue;
-						if ($configAction eq 'config' || $configAction eq 'config') {
+
+						if ($configAction eq 'config' || $configAction eq 'setconfig') {
+							$space2 = shift @configLines;
 							$configValue = shift @configLines;
 						}
 						else {
 							$configValue = 'reset';
 						}
+						$configValue = trim($configValue);
 
-						my $reconLine;
-						if ($configAction eq 'config' || $configAction eq 'setconfig') {
-							$reconLine = "#$configAction $configKey $configValue";
-						}
-						else {
-							$reconLine = "#$configAction $configKey";
-						}
+						if ($configAction && $configKey && $configValue) {
 
-						if (ConfigKeyValid($configKey)) {
-							WriteLog(
-								'ConfigKeyValid() passed! ' .
-									$reconLine .
-									'; IsAdmin() = ' . IsAdmin($gpgKey) .
-									'; isSigned = ' . $isSigned .
-									'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
-									'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
-									'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
-							);
-
-							my $canConfig = 0;
-							if (IsAdmin($gpgKey)) {
-								$canConfig = 1;
+							my $reconLine;
+							if ($configAction eq 'config' || $configAction eq 'setconfig') {
+								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
 							}
-							if (substr(lc($configKey), 0, 5) ne 'admin') {
-								if (GetConfig('admin/signed_can_config')) {
-									if ($isSigned) {
-										$canConfig = 1;
-									}
-								}
-								if (GetConfig('admin/cookied_can_config')) {
-									if ($hasCookie) {
-										$canConfig = 1;
-									}
-								}
-								if (GetConfig('admin/anyone_can_config')) {
-									$canConfig = 1;
-								}
-							}
-
-							if ($canConfig)	{
-								# checks passed, we're going to update/reset a config entry
-								DBAddVoteRecord($fileHash, $addedTime, 'config');
-
-								if ($configAction eq 'resetconfig') {
-									DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-									$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
-								}
-								else {
-									DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-									$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
-								}
-
-								$detokenedMessage =~ s/$reconLine//g;
-
-								if ($configKey eq 'html/theme') {
-									# unlink cache/avatar.plain
-								}
+							elsif ($configAction eq 'resetconfig') {
+								$reconLine = "$configAction$space1$configKey";
 							}
 							else {
-								$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not operator.]/g;
-								$detokenedMessage =~ s/$reconLine//g;
+								WriteLog('IndexTextFile: warning: $configAction fall-through when selecting $reconLine');
+								$reconLine = '';
 							}
-						}
-						else {
-							$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
+							WriteLog('IndexTextFile: #config: $reconLine = ' . $reconLine);
+
+							if (ConfigKeyValid($configKey) && $reconLine) {
+								WriteLog(
+									'ConfigKeyValid() passed! ' .
+										$reconLine .
+										'; IsAdmin() = ' . IsAdmin($gpgKey) .
+										'; isSigned = ' . $isSigned .
+										'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
+										'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
+										'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
+								);
+
+								my $canConfig = 0;
+								if (IsAdmin($gpgKey)) {
+									$canConfig = 1;
+								}
+								if (substr(lc($configKey), 0, 5) ne 'admin') {
+									if (GetConfig('admin/signed_can_config')) {
+										if ($isSigned) {
+											$canConfig = 1;
+										}
+									}
+									if (GetConfig('admin/cookied_can_config')) {
+										if ($hasCookie) {
+											$canConfig = 1;
+										}
+									}
+									if (GetConfig('admin/anyone_can_config')) {
+										$canConfig = 1;
+									}
+								}
+
+								if ($canConfig)	{
+									# checks passed, we're going to update/reset a config entry
+									DBAddVoteRecord($fileHash, $addedTime, 'config');
+
+									if ($configAction eq 'resetconfig') {
+										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
+										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
+									}
+									else {
+										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
+										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
+									}
+
+									$detokenedMessage =~ s/$reconLine//g;
+
+									if ($configKey eq 'html/theme') {
+										# unlink cache/avatar.plain
+									}
+								} # if ($canConfig)
+								else {
+									$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not operator.]/g;
+									$detokenedMessage =~ s/$reconLine//g;
+								}
+							} # if (ConfigKeyValid($configKey))
+							else {
+								#$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
+								#$detokenedMessage =~ s/$reconLine//g;
+							}
 						}
 					} # while
 				}
 			}
 		}
-
-		#look for vouch
-		if (GetConfig('admin/token/vouch') && $message) {
-			# look for vouch, which adds a voting vouch for a user
-			# vouch/F82FCD75AAEF7CC8/20
-
-			if (IsAdmin($gpgKey) || $isSigned) {
-				# todo allow non-admin vouch from vouched
-				my @weightLines = ($message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg);
-
-				if (@weightLines) {
-					my $lineCount = @weightLines / 2;
-
-					if ($isSigned) {
-						while (@weightLines) {
-							my $voterId = shift @weightLines;
-							my $voterWt = shift @weightLines;
-							#my $voterAvatar = GetAvatar($voterId);
-							#bug calling GetAvatar before the index is generated results in an avatar without alias
-
-							my $reconLine = "vouch/$voterId/$voterWt";
-
-							$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
-
-                            # add record to vote weight table
-							DBAddVoteWeight($voterId, $voterWt, $fileHash);
-							DBAddPageTouch('author', $voterId);
-							DBAddPageTouch('scores');
-						}
-
-                        # tag item as having a vouch action
-						DBAddVoteRecord($fileHash, $addedTime, 'vouch');
-						DBAddPageTouch('tag', 'vouch');
-					}
-				}
-			}
-		}
+		#
+		# #look for vouch
+		# if (GetConfig('admin/token/vouch') && $message) {
+		# 	# look for vouch, which adds a voting vouch for a user
+		# 	# vouch/F82FCD75AAEF7CC8/20
+		#
+		# 	if (IsAdmin($gpgKey) || $isSigned) {
+		# 		# todo allow non-admin vouch from vouched
+		# 		my @weightLines = ($message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg);
+		#
+		# 		if (@weightLines) {
+		# 			my $lineCount = @weightLines / 2;
+		#
+		# 			if ($isSigned) {
+		# 				while (@weightLines) {
+		# 					my $voterId = shift @weightLines;
+		# 					my $voterWt = shift @weightLines;
+		# 					#my $voterAvatar = GetAvatar($voterId);
+		# 					#bug calling GetAvatar before the index is generated results in an avatar without alias
+		#
+		# 					my $reconLine = "vouch/$voterId/$voterWt";
+		#
+		# 					$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
+		# 					$detokenedMessage =~ s/$reconLine//g;
+		#
+		#                     # add record to vote weight table
+		# 					DBAddVoteWeight($voterId, $voterWt, $fileHash);
+		# 					DBAddPageTouch('author', $voterId);
+		# 					DBAddPageTouch('scores');
+		# 				}
+		#
+		#                 # tag item as having a vouch action
+		# 				DBAddVoteRecord($fileHash, $addedTime, 'vouch');
+		# 				DBAddPageTouch('tag', 'vouch');
+		# 			}
+		# 		}
+		# 	}
+		# }
 
 		if (GetConfig('admin/token/addedtime') && $message) {
 			# look for addedtime, which adds an added time for an item
@@ -1001,56 +1019,78 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			if (@coinLines) {
 				WriteLog(". coin token found!");
 				#my $lineCount = @coinLines / 3;
-			#
-			# 	if ($isSigned) {
-			# 		WriteLog("... isSigned");
-			# 		if (IsServer($gpgKey)) {
-			# 			WriteLog("... isServer");
-						while (@coinLines) {
-			 				WriteLog("... \@coinLines");
-			 				my $authorKey = shift @coinLines;
-			 				my $mintedAt = shift @coinLines;
-			 				my $checksum = shift @coinLines;
+				#
+				# 	if ($isSigned) {
+				# 		WriteLog("... isSigned");
+				# 		if (IsServer($gpgKey)) {
+				# 			WriteLog("... isServer");
+				while (@coinLines) {
+					WriteLog("... \@coinLines");
+					my $authorKey = shift @coinLines;
+					my $mintedAt = shift @coinLines;
+					my $checksum = shift @coinLines;
 
-							WriteLog("... $authorKey, $mintedAt, $checksum");
+					WriteLog("... $authorKey, $mintedAt, $checksum");
 
-			 				my $reconLine = "$authorKey $mintedAt $checksum";
+					my $reconLine = "$authorKey $mintedAt $checksum";
 
-			 				#$message .= sha512_hex($reconLine);
+					#$message .= sha512_hex($reconLine);
 
-			 				my $hash = sha512_hex($reconLine);
+					my $hash = sha512_hex($reconLine);
 
-			 				if (
-			 					substr($hash, 0, 4) eq '1337'
-			 						&&
-								(
-									$authorKey eq $gpgKey
-										||
-									$authorKey eq $hasCookie
-								)
-			 				) {
-								$message =~ s/$reconLine/[coin]/g;
+					my @acceptedCoinPrefix = split("\n", GetConfig('coin/accepted'));
+					push @acceptedCoinPrefix, GetConfig('coin/prefix');
 
-								DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
+					my $coinAccepted = 0;
 
-								#DBAddItemAttribute('
-								#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
-							} else {
-								$message =~ s/$reconLine/[coin not accepted at this server]/g;
-							}
+					foreach my $coinPrefix (@acceptedCoinPrefix) {
+						$coinPrefix = trim($coinPrefix);
+						if (!$coinPrefix) {
+							next;
+						}
 
-			 				WriteLog("... $reconLine");
+						my $coinPrefixLength = length($coinPrefix);
+						if (
+							substr($hash, 0, $coinPrefixLength) eq $coinPrefix
+								&&
+							(
+								$authorKey eq $gpgKey
+									||
+								$authorKey eq $hasCookie
+							)
+						) {
+							$message =~ s/$reconLine/[coin: $coinPrefix]/g;
 
-			 				$detokenedMessage =~ s/$reconLine//g;
-			 			}
-			#
-			# 			#DBAddVoteWeight('flush');
-			#
-			# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
-			#
-			# 			DBAddPageTouch('tag', 'device');
-			# 		}
-			# 	}
+							DBAddVoteRecord($fileHash, $addedTime, 'hascoin');
+
+							DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
+
+							WriteLog("... $reconLine");
+
+							$detokenedMessage =~ s/$reconLine//g;
+
+							$coinAccepted = 1;
+
+							last;
+							#DBAddItemAttribute('
+							#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
+						}
+
+					}#foreach my $coinPrefix (@acceptedCoinPrefix) {
+
+					if (!$coinAccepted) {
+						$message =~ s/$reconLine/[coin not accepted]/g;
+					}
+
+				}
+				#
+				# 			#DBAddVoteWeight('flush');
+				#
+				# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
+				#
+				# 			DBAddPageTouch('tag', 'device');
+				# 		}
+				# 	}
 			}
 		}
 
@@ -1530,11 +1570,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
-		DBAddPageTouch('top');
+		DBAddPageTouch('read');
 
 		if ($hasParent == 0) {
-#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
-#		} else {
+			#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
+			#		} else {
 			DBAddVoteRecord($fileHash, $addedTime, 'topic');
 		}
 
@@ -1561,9 +1601,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		DBAddPageTouch('stats');
-		
+
 		DBAddPageTouch('events');
-											 
+
 		DBAddPageTouch('rss');
 
 		DBAddPageTouch('index');
@@ -1684,16 +1724,16 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 
 	if (
 		-e $file &&
-		(
-			substr(lc($file), length($file) -4, 4) eq ".jpg" ||
-			substr(lc($file), length($file) -4, 4) eq ".gif" ||
-			substr(lc($file), length($file) -4, 4) eq ".png" ||
-			substr(lc($file), length($file) -4, 4) eq ".bmp" ||
-			substr(lc($file), length($file) -4, 4) eq ".svg" ||
-			substr(lc($file), length($file) -5, 5) eq ".jfif" ||
-			substr(lc($file), length($file) -5, 5) eq ".webp"
-			#todo config/admin/upload/allow_files
-		)
+			(
+				substr(lc($file), length($file) -4, 4) eq ".jpg" ||
+					substr(lc($file), length($file) -4, 4) eq ".gif" ||
+					substr(lc($file), length($file) -4, 4) eq ".png" ||
+					substr(lc($file), length($file) -4, 4) eq ".bmp" ||
+					substr(lc($file), length($file) -4, 4) eq ".svg" ||
+					substr(lc($file), length($file) -5, 5) eq ".jfif" ||
+					substr(lc($file), length($file) -5, 5) eq ".webp"
+				#todo config/admin/upload/allow_files
+			)
 	) {
 		my $fileHash = GetFileHash($file);
 
@@ -1757,8 +1797,10 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			# }
 
 			# make 420x420 thumbnail
-			if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
+			if (!-e "$HTMLDIR/thumb/thumb_800_$fileHash.gif") {
+			# if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
+				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
+				# my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
 				my $convertCommandResult = `$convertCommand`;
@@ -1792,7 +1834,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		DBAddVoteRecord($fileHash, $addedTime, 'image');
 		# add image tag
 
-		DBAddPageTouch('top');
+		DBAddPageTouch('read');
 
 		DBAddPageTouch('tag', 'image');
 
@@ -1859,26 +1901,26 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 
 	WriteIndexedConfig();
 
-    if (GetConfig('admin/image/enable')) {
-        my @imageFiles = split("\n", `find $HTMLDIR/image`);
+	if (GetConfig('admin/image/enable')) {
+		my @imageFiles = split("\n", `find $HTMLDIR/image`);
 
-        my $imageFilesCount = scalar(@imageFiles);
-        my $currentImageFile = 0;
+		my $imageFilesCount = scalar(@imageFiles);
+		my $currentImageFile = 0;
 
-        WriteLog('MakeIndex: $imageFilesCount = ' . $imageFilesCount);
+		WriteLog('MakeIndex: $imageFilesCount = ' . $imageFilesCount);
 
-        foreach my $imageFile (@imageFiles) {
-            $currentImageFile++;
+		foreach my $imageFile (@imageFiles) {
+			$currentImageFile++;
 
-            my $percentImageFiles = $currentImageFile / $imageFilesCount * 100;
+			my $percentImageFiles = $currentImageFile / $imageFilesCount * 100;
 
-            WriteMessage("*** MakeIndex: $currentImageFile/$imageFilesCount ($percentImageFiles %) $imageFile");
+			WriteMessage("*** MakeIndex: $currentImageFile/$imageFilesCount ($percentImageFiles %) $imageFile");
 
-            IndexImageFile($imageFile);
-        }
+			IndexImageFile($imageFile);
+		}
 
-        IndexImageFile('flush');
-    } # admin/image/enable
+		IndexImageFile('flush');
+	} # admin/image/enable
 }
 
 sub IndexFile {

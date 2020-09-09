@@ -7,7 +7,7 @@
 <form action=/post.html>
 	<label for=comment>
 		<b></b><big>What were you looking for?</big></b><br>
-		<input type=text size=42 id=comment name=comment value="I was looking for kittens...">
+		<input type=text size=42 id=comment name=comment value="I was looking for mittens...">
 	</label>
 	<input type=submit value=Send onclick="this.value='Wait...'; return true;">
 </form>

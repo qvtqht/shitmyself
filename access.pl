@@ -271,7 +271,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		my $errorTrap = 0;
 
 		if (substr($date, 0, 1) ne '[') {
-			LogError('Date Format Wrong: ' . $line);
+			LogError('ProcessAccessLog: warning: Date Format Wrong: ' . $line);
 			next;
 		}
 

@@ -894,7 +894,12 @@ sub ConfigKeyValid { #checks whether a config key is valid
 	# and exists in default/
 	my $configName = shift;
 
-	WriteLog('ConfigKeyValid($configName)');
+	if (!$configName) {
+		WriteLog('ConfigKeyValid: warning: $configName parameter missing');
+		return 0;
+	}
+
+	WriteLog("ConfigKeyValid($configName)");
 
 	if ($configName =~ /^[a-z0-9_\/]{1,64}$/) {
 		WriteLog("ConfigKeyValid: warning: sanity check failed!");
@@ -1194,40 +1199,58 @@ sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused
 
 }
 
-sub str_replace { # $old, $new, $string  (copies php's str_replace)
-	#	return $string;
-	my $old = shift;
-	my $new = shift;
-	my $string = shift;
+# sub str_replace { # $old, $new, $string  (copies php's str_replace)
+# 	#	return $string;
+# 	my $old = shift;
+# 	my $new = shift;
+# 	my $string = shift;
+#
+# 	if (!$old || !$string) {
+# 		return 'str_replace failed due to one of the parameters missing!'; #todo make some kind of gesture
+# 	}
+#
+# 	if (index($new, $old)) {
+# 		WriteLog('str_replace: $new contains $old, this won\'t do');
+# 		return $string;
+# 	}
+#
+# 	my $i;
+# 	while (($i = index($string, $old)) != -1) {
+# 		substr($string, $i, length($old)) = $new;
+# 	}
+#
+#
+# 	#
+# 	#	WriteLog('str_replace("' . $string . '", "' . $old . '", "' . $new . '")');
+# 	#
+# 	#	my $i = index($string, $old);
+# 	#	if ($i != -1) {
+# 	#		if ($i > 0) {
+# 	#			$string = substr($string, 0, $i) . $new . substr($string, $i + length($old));
+# 	#		} else {
+# 	#			$string = $new . substr($string, length($old));
+# 	#		}
+# 	#		$string = str_replace($string, $old, $new, $recursionLevel);
+# 	#	}
+#
+# 	return $string;
+# }
 
-	if (!$old || !$string) {
-		return 'str_replace failed due to one of the parameters missing!'; #todo make some kind of gesture
+#props http://www.bin-co.com/perl/scripts/str_replace.php
+sub str_replace {
+	my $replace_this = shift;
+	my $with_this  = shift;
+	my $string   = shift;
+
+	my $length = length($string);
+	my $target = length($replace_this);
+
+	for(my $i=0; $i<$length - $target + 1; $i++) {
+		if(substr($string,$i,$target) eq $replace_this) {
+			$string = substr($string,0,$i) . $with_this . substr($string,$i+$target);
+			return $string; #Comment this if you what a global replace
+		}
 	}
-
-	if (index($new, $old)) {
-		WriteLog('str_replace: $new contains $old, this won\'t do');
-		return $string;
-	}
-
-	my $i;
-	while (($i = index($string, $old)) != -1) {
-		substr($string, $i, length($old)) = $new;
-	}
-
-
-	#
-	#	WriteLog('str_replace("' . $string . '", "' . $old . '", "' . $new . '")');
-	#
-	#	my $i = index($string, $old);
-	#	if ($i != -1) {
-	#		if ($i > 0) {
-	#			$string = substr($string, 0, $i) . $new . substr($string, $i + length($old));
-	#		} else {
-	#			$string = $new . substr($string, length($old));
-	#		}
-	#		$string = str_replace($string, $old, $new, $recursionLevel);
-	#	}
-
 	return $string;
 }
 
@@ -1878,7 +1901,7 @@ sub GpgParse {
 	}
 
 	if ($pubKeyFlag) {
-		if ($gpgStderrOutput =~ /\"([a-zA-Z0-9 ]+)\"/) {
+		if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9]+)\"/) {
 			$returnValues{'alias'} = $1;
 		} else {
 			$returnValues{'alias'} = '?????';
@@ -2045,7 +2068,20 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	chomp $text;
 
 	if ($text eq '.') {
-		print ".";
+		state @chars;
+		if (!@chars) {
+			#@chars = qw(, . - ' `); # may generate warning
+			@chars = (',', '.', '-', "'", '`'); # may generate warning
+		}
+
+		#my @chars=('a'..'f','0'..'9');
+		print $chars[rand @chars];
+		# my $randomString;
+		# foreach (1..40) {
+		# 	$randomString.=$chars[rand @chars];
+		# }
+		# return $randomString;
+
 		return;
 	}
 

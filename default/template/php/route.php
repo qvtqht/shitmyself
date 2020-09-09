@@ -333,6 +333,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 
 	if (!isset($html) || !$html) {
 		// don't know how to handle this request, default to 404
+		WriteLog('HandleNotFound: no $html');
 		if (file_exists('404.html')) {
 			$html = file_get_contents('404.html');
 			header("HTTP/1.0 404 Not Found");
@@ -342,13 +343,13 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 	if ((!isset($html) || !$html) && file_exists('404.html')) {
 		// something strange happened, and $html is still blank
 		// try to get 404.html into it
-		WriteLog('HandleNotFound: Fallback which should not happen');
+		WriteLog('HandleNotFound: warning: Fallback 1 which should not happen');
 		$html = file_get_contents('404.html');
 	}
 
 	if (!isset($html) || !$html) {
 		// evidently, 404.html didn't work, just use some hard-coded html
-		WriteLog('HandleNotFound: Fallback which should not happen');
+		WriteLog('HandleNotFound: warning: Fallback 2 which should not happen');
 		$html = '<html><body>404</body></html>';
 	}
 
@@ -850,7 +851,21 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = SetHtmlClock($html);
 		}
 
+		if (GetConfig('admin/php/footer_stats') && file_exists('stats-footer.html')) {
+			if ($path == '/kbd.html') {
+			} else {
+				// footer stats
+				$html = str_replace(
+					'</body>',
+					file_get_contents('stats-footer.html') . '</body>',
+					$html
+				);
+			}
+
+		} // footer stats
+
 		if ($lightMode) {
+			// light mode
 			WriteLog('route.php: $lightMode is true!');
 
 			$html = StripComments($html);
@@ -893,15 +908,8 @@ if (GetConfig('admin/php/route_enable')) {
 				'><strong><big>** Light Mode is Currently Turned Off **</big></strong><',
 				$html
 			);
-		}
+		} // light mode
 
-		if (file_exists('stats-footer.html')) {
-			$html = str_replace(
-				'</body>',
-				file_get_contents('stats-footer.html') . '</body>',
-				$html
-			);
-		}
 
 		////////////////////////////
 		print $html; // final output

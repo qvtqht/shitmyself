@@ -54,8 +54,8 @@ sub GenerateDialogPage { # generates page with dialog
 			$windowContents = GetTemplate('404.template');
 
 			# todo choose random item from list/looking_for
-			my $lookingFor = 'kittens';
-			$windowContents =~ s/looking for kittens/looking for $lookingFor/;
+			my $lookingFor = 'mittens';
+			$windowContents =~ s/looking for mittens/looking for $lookingFor/;
 
 			my $pageTemplate;
 			$pageTemplate = '';
@@ -662,25 +662,6 @@ sub GetItemPage {
 
 	$txtIndex .= $htmlStart;
 
-	{
-	#my $itemInfoTemplate = GetTemplate('item_info.template');
-		my $itemInfoTemplate;
-
-		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
-		$itemAttributes = trim($itemAttributes);
-
-		my $trTr = '</td></tr><tr><td>';
-		$itemAttributes =~ s/\n/$trTr/gi;
-		my $tdTd = '</td><td>';
-		$itemAttributes =~ s/\|/$tdTd/gi;
-		$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
-
-		my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
-		$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
-
-		$txtIndex .= $itemAttributesWindow;
-	}
-
 	$txtIndex .= GetTemplate('maincontent.template');
 
 	$file{'display_full_hash'} = 1;
@@ -874,6 +855,26 @@ sub GetItemPage {
 		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
 
 		$txtIndex .= $replyForm;
+	}
+
+	{
+		#my $itemInfoTemplate = GetTemplate('item_info.template');
+		my $itemInfoTemplate;
+
+		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
+		$itemAttributes = trim($itemAttributes);
+
+		{ # arrange into table
+			my $trTr = '</td></tr><tr><td>';
+			$itemAttributes =~ s/\n/$trTr/gi;
+			my $tdTd = '</td><td>';
+			$itemAttributes =~ s/\|/$tdTd/gi;
+			$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
+
+			my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
+			$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
+			$txtIndex .= $itemAttributesWindow;
+		}
 	}
 
 	# end page with footer
@@ -1340,7 +1341,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (GetConfig('admin/image/enable') && $itemType eq 'image') {
 			my $imageContainer = GetTemplate('item/container/image.template');
 
-			my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
+			my $imageUrl = "/thumb/thumb_800_$fileHash.gif"; #todo hardcoding no
+			# my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
 			my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
 			my $imageAlt = $itemTitle;
 
@@ -1779,7 +1781,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	my $title = 'Topics';
 	my $titleHtml = 'Topics';
 
-	$htmlOutput = GetPageHeader($title, $titleHtml, 'top'); # <html><head>...</head><body>
+	$htmlOutput = GetPageHeader($title, $titleHtml, 'read'); # <html><head>...</head><body>
 	$htmlOutput .= GetTemplate('maincontent.template'); # where "skip to main content" goes
 
 	my @topItems = DBGetTopItems(); # get top items from db
@@ -1871,7 +1873,7 @@ sub GetTopItemsPage { # returns page with top items listing
 
 		$itemListingWrapper = GetWindowTemplate(
 			'Top Approved Threads',
-			'<a href="/write.html">New Topic</a><br>',
+			'<a class=beginner href="/write.html">New Topic</a><br>', #todo templatify
 			$columnHeadings,
 			$itemListings,
 			$statusText
@@ -2077,6 +2079,15 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+		}
+
+		if ($script eq 'coin') {
+			# for voting.js we need to fill in some theme colors
+			my $coinPrefix = GetConfig('coin/prefix');;
+			my $coinCycleLimit = GetConfig('coin/cycle_limit');
+
+			$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$coinPrefix';/g;
+			$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $coinCycleLimit;/g;
 		}
 
 		if ($script eq 'profile') {
@@ -3024,6 +3035,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	PutHtmlFile("test.html", GetTemplate('test.template'));
 	PutHtmlFile("kbd.html", GetTemplate('keyboard.template'));
+	PutHtmlFile("kbd_nn.html", GetTemplate('keyboard_netscape.template'));
 	PutHtmlFile("frame.html", GetTemplate('keyboard_frame.template'));
 
 	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
@@ -3052,24 +3064,15 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $uploadPage = GetUploadPage();
 	PutHtmlFile("upload.html", $uploadPage);
 
+	# Search page
+	my $searchPage = GetSearchPage();
+	PutHtmlFile("search.html", $searchPage);
+
 	# Add Event page
 	my $eventAddPage = GetEventAddPage();
 	PutHtmlFile("event.html", $eventAddPage);
 
-	# Stats page
-	my $statsPage = GetStatsPage();
-	PutHtmlFile("stats.html", $statsPage);
-
-
-	my $statsFooter = GetWindowTemplate(
-		'Stats',
-		'',
-		'',
-		GetStatsTable('stats-horizontal.template'),
-		''
-	);
-	PutHtmlFile("stats-footer.html", $statsFooter);
-
+	PutStatsPages();
 	#
 	# { # clock test page
 	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
@@ -3331,6 +3334,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		my $uploadPhpTemplate = GetTemplate('php/upload.php');
 		PutFile($PHPDIR . '/upload.php', $uploadPhpTemplate);
 
+		my $searchPhpTemplate = GetTemplate('php/search.php');
+		PutFile($PHPDIR . '/search.php', $searchPhpTemplate);
+
 		my $cookiePhpTemplate = GetTemplate('php/cookie.php');
 		PutFile($PHPDIR . '/cookie.php', $cookiePhpTemplate);
 
@@ -3426,6 +3432,14 @@ sub GetUploadWindow {
 	return $uploadWindow;
 }
 
+sub GetSearchWindow {
+	my $searchForm = GetTemplate('form/search.template');
+
+	my $searchWindow = GetWindowTemplate('Search', '', '', $searchForm, '');
+
+	return $searchWindow;
+}
+
 sub GetWriteForm { # returns write form (for composing text message)
 	my $writeForm = GetTemplate('form/write/write.template');
 
@@ -3493,6 +3507,26 @@ sub GetUploadPage { # returns html for upload page
 	return $html;
 }
 
+sub GetSearchPage { # returns html for search page
+	my $html = '';
+	my $title = 'Search';
+
+	$html .= GetPageHeader($title, $title, 'search');
+
+	$html .= GetTemplate('maincontent.template');
+
+	$html .= GetSearchWindow();
+
+	$html .= GetPageFooter();
+	$html = InjectJs($html, qw(settings avatar profile));
+
+
+	if (GetConfig('admin/js/enable')) {
+		$html = AddAttributeToTag($html, 'body', 'onload', 'if (window.searchOnload) searchOnload(); if (document.search.q) { document.search.q.focus() }');
+	}
+	return $html;
+}
+
 sub GetWritePage { # returns html for write page
 	# $txtIndex stores html page output
 	my $txtIndex = "";
@@ -3529,7 +3563,8 @@ sub GetWritePage { # returns html for write page
 			push @js, 'write_php';
 		}
 		if (GetConfig('admin/token/coin')) {
-			push @js, 'coin', 'sha512';
+			push @js, 'coin';
+			# push @js, 'coin', 'sha512';
 		}
 		if (GetConfig('admin/js/translit')) {
 			push @js, 'translit';
@@ -3962,6 +3997,20 @@ sub GetItemPageFromHash {
 	}
 }
 
+sub PutStatsPages {
+	my $statsPage = GetStatsPage();
+	PutHtmlFile("stats.html", $statsPage);
+
+	my $statsFooter = GetWindowTemplate(
+		'Stats',
+		'',
+		'',
+		GetStatsTable('stats-horizontal.template'),
+		''
+	);
+	PutHtmlFile("stats-footer.html", $statsFooter);
+}
+
 sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it into $HTMLDIR directory; $pageType, $pageParam
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
@@ -4060,6 +4109,9 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 		my $votesPage = GetTagsPage('Votes', 'Votes', 'ORDER BY vote_value');
 		PutHtmlFile("votes.html", $votesPage);
+
+		my $tagsHorizontal = GetTagLinks();
+		PutHtmlFile('tags-horizontal.html', $tagsHorizontal);
 	}
 	#
 	# events page
@@ -4075,28 +4127,18 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	}
 	#
 	# topitems page
-	elsif ($pageType eq 'top') {
+	elsif ($pageType eq 'read') {
 		my $topItemsPage = GetTopItemsPage();
-		PutHtmlFile("top.html", $topItemsPage);
+		PutHtmlFile("read.html", $topItemsPage);
 
-		if (GetConfig('home_page') eq 'top') {
+		if (GetConfig('home_page') eq 'read') {
 			PutHtmlFile("index.html", $topItemsPage);
 		}
 	}
 	#
 	# stats page
 	elsif ($pageType eq 'stats') {
-		my $statsPage = GetStatsPage();
-		PutHtmlFile("stats.html", $statsPage);
-
-		my $statsFooter = GetWindowTemplate(
-			'<small>Stats</small>',
-			'',
-			'',
-			GetStatsTable('stats-horizontal.template'),
-			''
-		);
-		PutHtmlFile("stats-footer.html", $statsFooter);
+		PutStatsPages();
 	}
 	#
 	# index pages (queue)

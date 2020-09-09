@@ -34,3 +34,6 @@ $time = time();
 my $finishedUpgradeLogCommand = "echo 'upgrade finished at $time' >> $upgradeLogFilename";
 print (`$finishedUpgradeLogCommand`);
 
+my $indexUpgradeLogCommand = 'time ./index.pl html/txt/upgrade_$time.txt';
+print(`$indexUpgradeLogCommand`);
+

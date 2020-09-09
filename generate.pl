@@ -282,7 +282,7 @@ if (GetConfig('tag_cloud_page')) {
 #
 # #my $topItemsPage = GetTopItemsPage();
 # my $topItemsPage = GetTopItemsPage();
-# PutHtmlFile('top.html', $topItemsPage);
+# PutHtmlFile('read.html', $topItemsPage);
 #
 @allTagsList = sort @allTagsList;
 
@@ -309,8 +309,8 @@ if (GetConfig('tag_cloud_page')) {
 #
 # 	if (-e $HTMLDIR.'/'.GetConfig('home_page')) {
 # 		PutHtmlFile('index.html', GetFile($HTMLDIR . '/' . GetConfig('home_page')));
-# 	} elsif (-e $HTMLDIR.'/top.html') {
-# 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/top.html'));
+# 	} elsif (-e $HTMLDIR.'/read.html') {
+# 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/read.html'));
 # 	} elsif (-e $HTMLDIR.'/write.html') {
 # 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/write.html'));
 # 	} else {
@@ -319,7 +319,7 @@ if (GetConfig('tag_cloud_page')) {
 # '<html><body><h1>Placeholder</h1>
 # <p>There was a problem writing homepage. Please contact your administrator for resolution.</p>
 # <p>Try one of these links in the mean time:</p>
-# <p><a href="/top.html">Top Posts</a></p>
+# <p><a href="/read.html">Top Posts</a></p>
 # <p><a href="/write.html">Writing Something</a></p>
 # <p><a href="/stats.html">Check the Server Status</a></p>';
 #

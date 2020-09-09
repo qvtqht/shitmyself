@@ -9,14 +9,7 @@
 
 		<tr class=beginner>
 			<td colspan=2>
-				<p>This page belongs to the author listed below.</p>
-				<p>If you know them, use the Vouch button.</p>
-			</td>
-		</tr>
-
-		<tr class=menubar>
-			<td colspan=2>
-				<a href="/write.html?vouch=$fingerprint">Vouch</a>
+				<p>This page about author listed below.</p>
 			</td>
 		</tr>
 
@@ -25,7 +18,7 @@
 		<tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
 		<tr class=advanced><td>score:</td><td>$authorScore</td></tr>
 		<tr><td>items:</td><td>$itemCount</td></tr>
-		<tr><td>description:</td><td>$authorDescription</td></tr>
+		<tr class=advanced><td>description:</td><td>$authorDescription</td></tr>
 		<tr class=advanced><td>gravity:</td><td>$authorWeight</td></tr>
 		<tr><td>last seen:</td><td>$authorLastSeen</td></tr>
 		<tr class=advanced><td>registration:</td><td><b><tt>$publicKeyHash</tt></b></td></tr>

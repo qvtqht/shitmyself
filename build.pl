@@ -54,10 +54,10 @@ require './index.pl';
 #}
 #
 
-{ # clear and rebuild the sqlite db
-	BuildMessage "SqliteUnlinkDB()...";
-	SqliteUnlinkDb();
-
+{ # build the sqlite db if not available
+	# BuildMessage "SqliteUnlinkDB()...";
+	# SqliteUnlinkDb();
+	#
 	BuildMessage "SqliteConnect()...";
 	SqliteConnect();
 
@@ -142,18 +142,7 @@ if (!GetConfig('admin/secret')) {
 UpdateUpdateTime();
 # Stats page
 
-my $statsPage = GetStatsPage();
-PutHtmlFile("stats.html", $statsPage);
-
-my $statsFooter = GetWindowTemplate(
-	'Stats',
-	'',
-	'',
-	GetStatsTable('stats-horizontal.template'),
-	''
-);
-PutHtmlFile("stats-footer.html", $statsFooter);
-
+PutStatsPages();
 
 if (GetConfig('admin/build/update_after')) {
 	BuildMessage("system('perl update.pl --all')...");
