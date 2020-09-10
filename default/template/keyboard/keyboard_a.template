@@ -8,6 +8,9 @@
 <body>
 <style type="text/css">
     <!--
+        a {
+            padding: 5pt;
+        }
     -->
 </style>
 <script>
@@ -65,7 +68,6 @@
 		var frmKbd = document.compose;
 		if (frmKbd) {
 			var kbdText = frmKbd.kbdText;
-			alert(2);
 			if (kbdText) {
 				alert(3);
 				if (text == 'Back') {
@@ -90,7 +92,7 @@
 
 <form action="/post.html" name="compose">
 
-<table bgcolor=beige cellpadding=4 cellspacing=0 border=0>
+<table cellpadding=4 cellspacing=0 border=0>
 
 <tr><td>
     <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">`</a>

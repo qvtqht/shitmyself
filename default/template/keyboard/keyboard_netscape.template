@@ -87,9 +87,7 @@
             var frmKbd = document.compose;
             if (frmKbd) {
                 var kbdText = frmKbd.kbdText;
-                alert(2);
                 if (kbdText) {
-                    alert(3);
                     if (text == 'Back') {
                         // backspace
                         if (kbdText.value.length) {
@@ -113,74 +111,74 @@
 <form action="/post.html" name="compose">
 
 <table bgcolor=beige cellpadding=4 cellspacing=0 border=0>
-<tr><td>
+<tr><td align=center>
     <input name=comment type=text size=32></input>
     <input type=submit value=Send></input>
     <input type=reset value=Reset></input>
 </td></tr>
-<tr><td>
-    <input type=submit onclick="return false" ondblclick="return false" value="`">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="1">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="2">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="3">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="4">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="5">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="6">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="7">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="8">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="9">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="0">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="-">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="=">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Back">
+<tr><td align=center>
+    <input type=submit onclick="return false" ondblclick="return false" value=" `">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 1">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 2">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 3">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 4">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 5">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 6">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 7">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 8">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 9">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 0">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" -">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" =">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Back">
     <br>
 </td></tr>
-<tr><td>
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Tag">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Q">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="W">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="E">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="R">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="T">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Y">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="U">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="I">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="O">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="P">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="[">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="]">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="\ ">
+<tr><td align=center>
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Tag">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Q">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" W">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" E">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" R">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" T">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Y">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" U">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" I">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" O">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" P">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" [">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" ]">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" \ ">
     <br>
 </td></tr>
-<tr><td>
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Copy">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="A">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="S">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="D">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="F">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="G">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="H">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="J">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="K">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="L">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=";">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="'">
+<tr><td align=center>
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Copy">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" A">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" S">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" D">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" F">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" G">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" H">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" J">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" K">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" L">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" ;">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" '">
     <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Enter">
     <br>
 </td></tr>
-<tr><td>
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Space ">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Z">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="X">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="C">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="V">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="B">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="N">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="M">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=",">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=".">
-    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="/">
+<tr><td align=center>
     <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Space ">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Z">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" X">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" C">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" V">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" B">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" N">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" M">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" ,">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" .">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" /">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Space ">
     <br>
 </td></tr>
 </table>
