@@ -43,8 +43,8 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	rename("$IMAGEDIR", "$ARCHIVE_DATE_DIR/image");
 
 	# this needs to happen after txt and image above
-	print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html)\n");
-	rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
+	#print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html)\n");
+	#rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
 	#
 	# print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
 	# rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
@@ -67,6 +67,8 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 
 	print("rm -rf $ARCHIVE_DATE_DIR");
 	system("rm -rf $ARCHIVE_DATE_DIR");
+
+	#system('./clean.sh; ./build.pl');
 
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
 }
