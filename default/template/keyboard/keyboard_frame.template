@@ -4,7 +4,7 @@
 </head>
 <frameset border=0 rows="*,190">
 <frame src="write.html" name=main>
-<frame src="kbd_nn.html" name=kbd>
+<frame src="kbd_a.html" name=kbd>
 </frameset>
 <noframes><a href="/write.html">write.html</a></noframes>
 </html>

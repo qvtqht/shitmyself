@@ -1,0 +1,191 @@
+<html xmlns="http://www.w3.org/1999/html">
+<!-- keyboard_netscape.template -->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+<style type="text/css">
+    <!--
+        td, input {
+            font-family: monospace;
+            font-size: medium;
+        }
+    -->
+</style>
+<script>
+    <!--
+        function tbl1(e) {
+            if (e.target.nodeName == 'TD') {
+                var txtComment = parent.frames['main'].document.compose.comment;
+                if (txtComment) {
+                    var newLetter = e.target.innerHTML;
+                    if (newLetter == '&nbsp;') {
+                        newLetter = ' ';
+                    }
+                    if (newLetter == 'Enter') {
+                        newLetter = "\n";
+                    }
+                    if (newLetter == 'Back') {
+                        txtComment.value = txtComment.value.substring(0, txtComment.value.length - 1);
+                    } else {
+                        txtComment.value = txtComment.value + '' + newLetter;
+                    }
+                }
+            }
+        }
+        function hi(letter) {
+            var text = letter;
+            //alert('DEBUG: "' + text + '"');
+
+            for (var i = 0; i < text.length; i++) {
+                //alert('DEBUG: i = ' + i);
+                if (text.substr(i, 1) != ' ') {
+                    // ok
+                } else {
+                    if (i == 0) {
+                        text = text.substr(i + 1);
+                    } else {
+                        text = text.substr(0, i) + '' + text.substr(i + 1);
+                    }
+                    i = i - 1;
+                }
+            }
+
+            if (text == 'Enter') {
+                text = "\n";
+            }
+
+            if (text == 'Space') {
+                text = " ";
+            }
+            if (text == 'Tag') {
+                text = "#";
+            }
+
+            var parentFrames = parent.frames;
+            if (parentFrames) {
+                var parentFramesMain = parent.frames['main'];
+                if (parentFramesMain) {
+                    var documentCompose = parentFramesMain.document.compose;
+                    if (documentCompose) {
+                        var txtComment = documentCompose.comment;
+                        if (txtComment) {
+                            if (text == 'Back') {
+								// backspace
+								if (txtComment.value.length) {
+                                    txtComment.value = txtComment.value.substr(0, txtComment.value.length - 1);
+                                }
+                            } else {
+                                txtComment.value += '' + text;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var frmKbd = document.compose;
+            if (frmKbd) {
+                var kbdText = frmKbd.kbdText;
+                alert(2);
+                if (kbdText) {
+                    alert(3);
+                    if (text == 'Back') {
+                        // backspace
+                        if (kbdText.value.length) {
+                            kbdText.value = kbdText.value.substr(0, kbdText.value.length - 1);
+                        }
+                    } else {
+                        kbdText.value += '' + text;
+                    }
+                }
+            }
+
+            //alert('DEBUG: "' + text + '"');
+
+            return false;
+        }
+
+        // todo onmousedown and onmouseup should set and clear a timeout for key repeat?
+    // -->
+</script>
+
+<form action="/post.html" name="compose">
+
+<table bgcolor=beige cellpadding=4 cellspacing=0 border=0>
+<tr><td>
+    <input name=comment type=text size=32></input>
+    <input type=submit value=Send></input>
+    <input type=reset value=Reset></input>
+</td></tr>
+<tr><td>
+    <input type=submit onclick="return false" ondblclick="return false" value="`">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="1">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="2">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="3">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="4">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="5">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="6">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="7">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="8">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="9">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="0">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="-">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="=">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Back">
+    <br>
+</td></tr>
+<tr><td>
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Tag">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Q">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="W">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="E">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="R">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="T">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Y">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="U">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="I">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="O">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="P">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="[">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="]">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="\ ">
+    <br>
+</td></tr>
+<tr><td>
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Copy">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="A">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="S">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="D">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="F">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="G">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="H">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="J">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="K">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="L">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=";">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="'">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Enter">
+    <br>
+</td></tr>
+<tr><td>
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Space ">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="Z">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="X">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="C">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="V">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="B">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="N">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="M">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=",">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=".">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value="/">
+    <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" Space ">
+    <br>
+</td></tr>
+</table>
+
+</form>
+
+<!-- / keyboard_netscape.template -->
+</body></html>

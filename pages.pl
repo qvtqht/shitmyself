@@ -3065,9 +3065,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	WriteIndexPages(); #todo factor this out.
 
 	PutHtmlFile("test.html", GetTemplate('test.template'));
-	PutHtmlFile("kbd.html", GetTemplate('keyboard.template'));
-	PutHtmlFile("kbd_nn.html", GetTemplate('keyboard_netscape.template'));
-	PutHtmlFile("frame.html", GetTemplate('keyboard_frame.template'));
+	PutHtmlFile("kbd.html", GetTemplate('keyboard/keyboard.template'));
+	PutHtmlFile("kbd_nn.html", GetTemplate('keyboard/keyboard_netscape.template'));
+	PutHtmlFile("kbd_a.html", GetTemplate('keyboard/keyboard_a.template'));
+	PutHtmlFile("frame.html", GetTemplate('keyboard/keyboard_frame.template'));
 
 	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
 

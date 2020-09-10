@@ -1,0 +1,165 @@
+<html xmlns="http://www.w3.org/1999/html">
+<!-- keyboard_a.template -->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>keyboard</title>
+</head>
+
+<body>
+<style type="text/css">
+    <!--
+    -->
+</style>
+<script>
+	<!--
+	function hi(letter) {
+		var text = letter;
+		//alert('DEBUG: "' + text + '"');
+
+		for (var i = 0; i < text.length; i++) {
+			//alert('DEBUG: i = ' + i);
+			if (text.substr(i, 1) != ' ') {
+				// ok
+			} else {
+				if (i == 0) {
+					text = text.substr(i + 1);
+				} else {
+					text = text.substr(0, i) + '' + text.substr(i + 1);
+				}
+				i = i - 1;
+			}
+		}
+
+		if (text == 'Enter') {
+			text = "\n";
+		}
+
+		if (text == 'Space') {
+			text = " ";
+		}
+		if (text == 'Tag') {
+			text = "#";
+		}
+
+		var parentFrames = parent.frames;
+		if (parentFrames) {
+			var parentFramesMain = parent.frames['main'];
+			if (parentFramesMain) {
+				var documentCompose = parentFramesMain.document.compose;
+				if (documentCompose) {
+					var txtComment = documentCompose.comment;
+					if (txtComment) {
+						if (text == 'Back') {
+							// backspace
+							if (txtComment.value.length) {
+								txtComment.value = txtComment.value.substr(0, txtComment.value.length - 1);
+							}
+						} else {
+							txtComment.value += '' + text;
+						}
+					}
+				}
+			}
+		}
+
+		var frmKbd = document.compose;
+		if (frmKbd) {
+			var kbdText = frmKbd.kbdText;
+			alert(2);
+			if (kbdText) {
+				alert(3);
+				if (text == 'Back') {
+					// backspace
+					if (kbdText.value.length) {
+						kbdText.value = kbdText.value.substr(0, kbdText.value.length - 1);
+					}
+				} else {
+					kbdText.value += '' + text;
+				}
+			}
+		}
+
+		//alert('DEBUG: "' + text + '"');
+
+		return false;
+	}
+
+	// todo onmousedown and onmouseup should set and clear a timeout for key repeat?
+	// -->
+</script>
+
+<form action="/post.html" name="compose">
+
+<table bgcolor=beige cellpadding=4 cellspacing=0 border=0>
+
+<tr><td>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">`</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">1</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">2</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">3</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">4</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">5</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">6</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">7</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">8</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">9</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">0</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">-</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">=</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Back</a>
+    <br>
+</td></tr>
+<tr><td>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Tag</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Q</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">W</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">E</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">R</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">T</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Y</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">U</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">I</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">O</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">P</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">[</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">]</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">\ </a>
+    <br>
+</td></tr>
+<tr><td>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Copy</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">A</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">S</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">D</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">F</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">G</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">H</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">J</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">K</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">L</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">;</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">'</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Enter</a>
+    <br>
+</td></tr>
+<tr><td>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Space </a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Z</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">X</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">C</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">V</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">B</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">N</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">M</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">,</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">.</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">/</a>
+    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);"> Space </a>
+    <br>
+</td></tr>
+</table>
+
+</form>
+
+<!-- / keyboard_a.template -->
+</body></html>
