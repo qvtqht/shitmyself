@@ -1014,10 +1014,14 @@ sub DBDeletePageTouch { # deletes page_touch entry ;  $pageName, $pageParam
 }
 
 sub DBDeleteItemReferences { # delete all references to item from tables
+	WriteLog('DBDeleteItemReferences() ...');
+
 	my $hash = shift;
 	if (!IsSha1($hash)) {
 		return;
 	}
+
+	WriteLog('DBDeleteItemReferences(' . $hash . ')');
 
 	#todo queue all pages in item_page ;
 
