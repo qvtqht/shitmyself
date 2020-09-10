@@ -50,18 +50,22 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 	return 1;
 }
 
-function ShowAll (t) { // shows all elements, overriding settings
+function ShowAll (t, container) { // shows all elements, overriding settings
 // admin elements are excluded. only beginner, advanced class elements are shown
 
-    if (document.getElementsByClassName) {
+	if (!container) {
+		container = document;
+	}
+
+    if (container.getElementsByClassName) {
         var display;
         display = 'initial';
 
-        var elements = document.getElementsByClassName('advanced');
+        var elements = container.getElementsByClassName('advanced');
         for (var i = 0; i < elements.length; i++) {
             SetElementVisible(elements[i], display, '$colorHighlightAdvanced', 0);
         }
-        elements = document.getElementsByClassName('beginner');
+        elements = container.getElementsByClassName('beginner');
         for (var i = 0; i < elements.length; i++) {
             SetElementVisible(elements[i], display, '$colorHighlightBeginner', 0);
         }
@@ -77,7 +81,7 @@ function ShowAll (t) { // shows all elements, overriding settings
     return true;
 }
 
-function ShowAdvanced (force) { // show or hide controls based on preferences
+function ShowAdvanced (force, container) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
 //handles class=tag-abuse based on 'show_meanies' preference
@@ -87,7 +91,11 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 
 	//alert('DEBUG: ShowAdvanced(' + force + ')');
 
-	if (window.localStorage && document.getElementsByClassName) {
+	if (!container) {
+		container = document;
+	}
+
+	if (window.localStorage && container.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
 		///////////
 
@@ -98,7 +106,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 		}
 
 		if (force || showMeaniesLastAction != displayMeanies) {
-			var elemMeanies = document.getElementsByClassName('item-abuse');
+			var elemMeanies = container.getElementsByClassName('item-abuse');
 
 			for (var i = 0; i < elemMeanies.length; i++) {
 				SetElementVisible(elemMeanies[i], displayMeanies, 0, 0);
@@ -114,7 +122,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 		}
 
 		if (force || showAdminLastAction != displayAdmin) {
-			var elemAdmin = document.getElementsByClassName('admin');
+			var elemAdmin = container.getElementsByClassName('admin');
 
 			for (var i = 0; i < elemAdmin.length; i++) {
 				SetElementVisible(elemAdmin[i], displayAdmin, 0, 0);
@@ -133,7 +141,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 
 		if (force || showAdvancedLastAction != (displayValue + bgColor)) {
 			// thank you stackoverflow
-			var divsToHide = document.getElementsByClassName("advanced"); //divsToHide is an array #todo nn3 compat
+			var divsToHide = container.getElementsByClassName("advanced"); //divsToHide is an array #todo nn3 compat
 			for (var i = 0; i < divsToHide.length; i++) {
 				//divsToHide[i].style.visibility = "hidden"; // or
 				SetElementVisible(divsToHide[i], displayValue, bgColor, 0);
@@ -156,7 +164,7 @@ function ShowAdvanced (force) { // show or hide controls based on preferences
 		}
 
 		if (force || showBeginnerLastAction != displayValue + bgColor) {
-			var divsToShow = document.getElementsByClassName('beginner');//#todo nn3 compat
+			var divsToShow = container.getElementsByClassName('beginner');//#todo nn3 compat
 
 			for (var i = 0; i < divsToShow.length; i++) {
 				SetElementVisible(divsToShow[i], displayValue, bgColor, 0);
