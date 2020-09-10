@@ -1231,7 +1231,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$itemTemplate,
 				'a href="/etc.html"',
 				'onclick',
-				"if (window.ShowAll) { this.removeAttribute('onclick'); return ShowAll(this); } else { return true; }"
+				"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement); } else { return true; }"
 			);
 		}
 
