@@ -197,10 +197,11 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 		$scriptTemplate = GetTemplate("js/$script.js");
 
 		if (!$scriptTemplate) {
-			WriteLog("InjectJs: WARNING: Missing script contents for $script");
-			if (GetConfig('admin/debug')) {
-				die('InjectJs: Missing script contents');
-			}
+			WriteLog("InjectJs: warning: Missing script contents for $script");
+ 			if (GetConfig('admin/debug')) {
+// 				die('InjectJs: Missing script contents');
+				$scriptTemplate = "alert('InjectJs warning: Missing template $script.js');";
+ 			}
 		}
 
 		if ($script == 'voting') {
