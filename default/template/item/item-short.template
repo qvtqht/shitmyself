@@ -15,9 +15,12 @@
 			<td>
 				<a href="$permalinkHtml">$addedTime</a>;
 				$authorLink;
-				<span class=advanced><a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;</span>
-				<a href="$permalinkHtml#reply" onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount)</a>;
-				$itemFlagButton
+				<span class=advanced>
+					<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;
+					<a href="$permalinkHtml#reply" onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount)</a>;
+					$itemFlagButton
+				</span>
+				<a href="/etc.html">More</a>
 			</td>
 		</tr>
 	</table>
