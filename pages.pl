@@ -2127,11 +2127,13 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 
 		#if ($script eq 'settings' || $script eq 'loading_begin') {
-		if ($script eq 'settings') {
+		if ($script eq 'settings' || $script eq 'timestamp') {
 			# for settings.js we also need to fill in some theme colors
+			my $colorHighlightAlert = GetThemeColor('highlight_alert');
 			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
 			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
 
+			$scriptTemplate =~ s/\$colorHighlightAlert/$colorHighlightAlert/g;
 			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
 			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
 		}
