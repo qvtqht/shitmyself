@@ -852,7 +852,8 @@ if (GetConfig('admin/php/route_enable')) {
 		}
 
 		if (GetConfig('admin/php/footer_stats') && file_exists('stats-footer.html')) {
-			if ($path == '/kbd.html') {
+			// footer stats
+			if ($path == '/kbd.html' || $path == '/kbd_nn.html' || $path == '/kbd_a.html') {
 			} else {
 				// footer stats
 				$html = str_replace(
