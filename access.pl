@@ -89,6 +89,7 @@ sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 
 	return;
 }
+#HELLO, WORLD!
 
 sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
 	WriteLog('GenerateFilenameFromTime()');
