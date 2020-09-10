@@ -253,6 +253,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
 		$gpgTimestamp = $gpgResults{'signTimestamp'} || '';        # signature timestamp
 
+		if (!$isSigned && !$message) {
+			$message = GetFile($file);
+		}
+
 		if ($gpgKey) {
 			chomp $gpgKey;
 		} else {
@@ -442,7 +446,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $reconLine = "Cookie: $cookieValue";
 
-					$detokenedMessage =~ s/$reconLine//;
+					$detokenedMessage =~ s/$reconLine/[Cookie: $hasCookie]/;
 
 					DBAddAuthor($cookieValue);
 
