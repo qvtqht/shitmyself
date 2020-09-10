@@ -1841,6 +1841,7 @@ sub GpgParse {
 	# $filePath = path to file containing the text
 	#
 	# $returnValues{'isSigned'} = whether the message has a valid signature: 0 or 1 for valid signature
+	# $returnValues{'signTimestamp'} = timestamp of gpg signature, if any
 	# $returnValues{'text'} = original text
 	# $returnValues{'message'} = message text without framing
 	# $returnValues{'key'} = fingerprint of signer
@@ -1889,15 +1890,22 @@ sub GpgParse {
 		$gpgCommand .= ">$cachePathMessage/$fileHash.txt ";
 		$gpgCommand .= "2>$cachePathStderr/$fileHash.txt ";
 
-		WriteLog("GpgParse: $gpgCommand");
+		WriteLog('GpgParse: $gpgCommand = ' . $gpgCommand);
 
 		system($gpgCommand);
 	}
 
-	my $gpgStderrOutput = GetFile("$cachePathStderr/$fileHash.txt");
+	my $gpgStderrOutput = GetCache("gpg_stderr/$fileHash.txt");
+
+	WriteLog('GpgParse: $gpgStderrOutput: ' . "\n" . $gpgStderrOutput);
+
 	if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
 		$returnValues{'isSigned'} = 1;
 		$returnValues{'key'} = $1;
+	}
+	if ($gpgStderrOutput =~ /Signature made (.+)/) {
+		# my $gpgDateEpoch = #todo convert to epoch time
+		$returnValues{'signTimestamp'} = $1;
 	}
 
 	if ($pubKeyFlag) {
