@@ -2233,7 +2233,7 @@ sub ServerSign { # Signs a given file with the server's key
 	}
 }
 
-sub FormatDate {
+sub FormatDate { # $epoch ; formats date depending on how long ago it was
 	my $epoch = shift;
 
 	my $time = GetTime();
@@ -2243,10 +2243,13 @@ sub FormatDate {
 	my $formattedDate = '';
 
 	if ($difference < 86400) {
+	# less than a day, return 24-hour time
 		$formattedDate = strftime '%H:%M', localtime $epoch;
 	} elsif ($difference < 86400 * 30) {
+	# less than a month, return short date
 		$formattedDate = strftime '%m/%d', localtime $epoch;
 	} else {
+	# more than a month, return long date
 		$formattedDate = strftime '%a, %d %b %Y', localtime $epoch;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 	}
