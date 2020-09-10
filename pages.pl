@@ -865,6 +865,7 @@ sub GetItemPage {
 		$itemAttributes = trim($itemAttributes);
 
 		{ # arrange into table
+			# #todo turn it into a loop and turn plain epoch timestamps into timestamp elements
 			my $trTr = '</td></tr><tr><td>';
 			$itemAttributes =~ s/\n/$trTr/gi;
 			my $tdTd = '</td><td>';
