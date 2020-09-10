@@ -894,16 +894,29 @@ sub GetItemPage {
 	return $txtIndex;
 } # GetItemPage()
 
-sub GetHtmlLink { 
-#todo this doesn't work with orgnaize off
+sub GetItemHtmlLink { # $hash, [link caption], [#anchor]
 	my $hash = shift;
 
 	if ($hash) {
 		#todo templatize this
-		return '<a href="/' . GetHtmlFilename($hash) . '">' . substr($hash, 0, 8) . '..</a>';
+		my $linkCaption = shift;
+		if (!$linkCaption) {
+			$linkCaption = substr($hash, 0, 8) . '..';
+		}
+
+		my $hashAnchor = shift;
+		if ($hashAnchor) {
+			if (substr($hashAnchor, 0, 1) ne '#') {
+				$hashAnchor = '#' . $hashAnchor;
+			}
+		} else {
+			$hashAnchor = '';
+		}
+
+		return '<a href="/' . GetHtmlFilename($hash) . $hashAnchor . '">' . $linkCaption . '</a>';
 	} else {
 	}
-} # GetHtmlLink()
+} # GetItemHtmlLink()
 
 sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
 	my $fileHash = shift; # item's file hash
@@ -1179,7 +1192,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 
 		# if any references to other items, replace with link to item
-		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+		$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
 		#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
 
 		if ($itemHash) {
@@ -1191,7 +1204,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
-#		$message =~ s/([a-f0-9]{40})/GetHtmlLink($1)/eg;
+#		$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
 #		$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
 
 		# if format_avatars flag is set, replace author keys with avatars
@@ -2415,7 +2428,7 @@ sub GetAuthorInfoBox {
 	my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
 	my $publicKeyHashHtml = '';
 	if (defined($publicKeyHash) && IsSha1($publicKeyHash)) {
-		$publicKeyHashHtml = GetHtmlLink($publicKeyHash);
+		$publicKeyHashHtml = GetItemHtmlLink($publicKeyHash);
 	} else {
 		$publicKeyHashHtml = '*';
 	}
