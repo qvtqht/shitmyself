@@ -3590,7 +3590,7 @@ sub GetWritePage { # returns html for write page
 
 	if (GetConfig('admin/js/enable')) {
 
-		my @js = qw(settings avatar write profile utils);
+		my @js = qw(settings avatar write profile utils timestamp);
 		if (GetConfig('admin/php/enable')) {
 			push @js, 'write_php';
 		}

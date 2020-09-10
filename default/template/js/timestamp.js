@@ -13,8 +13,8 @@ function ShowTimestamps() { // finds any class=timestamp, updates its displayed 
 			} else {
 				te[i].setAttribute('title', te[i].innerHTML);
 			}
-			if (!isNaN(te[i].title)) {
-				var secs = 0 - (curTime - te[i].title);
+			if (!isNaN(te[i].getAttribute('epoch'))) {
+				var secs = 0 - (curTime - te[i].getAttribute('epoch'));
 				if (te[i].innerHTML != LongAgo(secs)) {
 					te[i].innerHTML = LongAgo(secs);
 					if ((secs * -1) < 60) {

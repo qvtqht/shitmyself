@@ -2281,7 +2281,7 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 	} else {
 		WriteLog('GetTimestampElement: $epoch = false');
 
-		$timestampElement = GetTemplate('timestamp2.template');
+		$timestampElement = GetTemplate('timestamp3.template');
 
 		my $timeDate = $time;
 
@@ -2293,8 +2293,8 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 		#		my $timeDate = strftime '%c', localtime $time;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 
-		$timestampElement =~ s/\$timestamp/$time/;
-		$timestampElement =~ s/\$timeDate/$timeDate/;
+		$timestampElement =~ s/\$timestamp/$time/g;
+		$timestampElement =~ s/\$timeDate/$timeDate/g;
 	}
 
 	chomp $timestampElement;
