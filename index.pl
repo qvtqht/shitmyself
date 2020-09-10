@@ -227,6 +227,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	my $hasParent = 0;		# has 1 or more parent items?
 
+	my $gpgTimestamp = 0;
+
 	my @allowedActions;		# contains actions allowed to signer of message
 
 	#	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
@@ -249,6 +251,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		$message = $gpgResults{'message'};   # message which will be displayed once tokens are processed
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
 		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
+		$gpgTimestamp = $gpgResults{'signTimestamp'} || '';        # signature timestamp
 
 		if ($gpgKey) {
 			chomp $gpgKey;
@@ -257,6 +260,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
+		WriteLog('IndexTextFile: $gpgTimestamp = ' . ($gpgTimestamp ? $gpgTimestamp : '--'));
 
 		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
 		$fileHash = GetFileHash($file);                # hash provided by git for the file
@@ -1559,6 +1563,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if ($isSigned) {
 			# If message is signed, use the signer's key
 			DBAddItem($file, $itemName, $gpgKey, $fileHash, 'txt', $verifyError);
+
+			if ($gpgTimestamp) {
+				my $gpgTimestampEpoch = `date -d "$gpgTimestamp" +%s`;
+
+				DBAddItemAttribute($fileHash, 'gpg_timestamp', $gpgTimestampEpoch);
+			}
 		} else {
 			if ($hasCookie) {
 				# Otherwise, if there is a cookie, use the cookie
