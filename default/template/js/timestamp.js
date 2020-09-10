@@ -14,8 +14,16 @@ function ShowTimestamps() { // finds any class=timestamp, updates its displayed 
 				te[i].setAttribute('title', te[i].innerHTML);
 			}
 			if (!isNaN(te[i].title)) {
-				if (te[i].innerHTML != LongAgo(0 - (curTime - te[i].title))) {
-					te[i].innerHTML = LongAgo(0 - (curTime - te[i].title));
+				var secs = 0 - (curTime - te[i].title);
+				if (te[i].innerHTML != LongAgo(secs)) {
+					te[i].innerHTML = LongAgo(secs);
+					if ((secs * -1) < 60) {
+						te[i].style.backgroundColor = '$colorHighlightAlert';
+					} else if ((secs * -1) < 600) {
+						te[i].style.backgroundColor = '$colorHighlightBeginner';
+					} else {
+						te[i].style.backgroundColor = '';
+					}
 					changeLogged++;
 				}
 			}
