@@ -1604,11 +1604,39 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	return $html;
 }
 
+sub WriteMenuList { # writes config/list/menu based on site configuration
+	my @menu;
+
+	push @menu, 'read';
+	push @menu, 'write';
+
+	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
+		# one of these is required for profile to work
+		push @menu, 'profile';
+	}
+
+	###
+
+	my $menuList = join("\n", @menu);
+
+	PutConfig('list/menu', $menuList);
+	# PutConfig('list/menu_advanced', $menuList);
+
+	GetConfig('list/menu', 'uncache');
+	# GetConfig('list/menu_advanced', 'uncache');
+}
+
 sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns html menu based on referenced list
 # $listName is reference to a list in config/list, e.g. config/list/menu
 # $separator is what is inserted between menu items
 
 	WriteLog('GetMenuFromList: begin');
+
+	state $wroteMenu;
+	if (!$wroteMenu) {
+		WriteMenuList();
+		$wroteMenu = 1;
+	}
 
 	my $listName = shift;
 	chomp $listName;
