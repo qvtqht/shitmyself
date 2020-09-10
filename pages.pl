@@ -3512,6 +3512,7 @@ sub GetWriteForm { # returns write form (for composing text message)
 		if (GetConfig('admin/js/translit')) {
 			$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
 		}
+		#$writeForm = AddAttributeToTag($writeForm, 'a href="/frame.html"', 'onclick', 'if (window.showKeyboard) { return showKeyboard(); }');
 	}
 
 
@@ -4034,7 +4035,7 @@ sub PutStatsPages {
 	PutHtmlFile("stats.html", $statsPage);
 
 	my $statsFooter = GetWindowTemplate(
-		'Stats',
+		'Site Statistics*',
 		'',
 		'',
 		GetStatsTable('stats-horizontal.template'),
