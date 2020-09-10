@@ -1,3 +1,13 @@
+instead of pre-creating all the tables
+	have a static variable in each function which regulates
+		one-time check for table's existence and create if necessary?
+			may still affect performance
+				or just handle no-table error?
+
+when user registers, encrypt welcome message for them
+	echo test | gpg --trust-model always -a -e -r ABCDEF01234567890 > welcome_ABCDEF01234567890.txt
+
+
 client fingerprint
 	get datapoints
 		get hashes
