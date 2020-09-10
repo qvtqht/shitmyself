@@ -1,3 +1,6 @@
+for js/debug, add comment to end of each line like so:
+	// filename.js : 123
+
 check the status of ssi includes module
 	add ssi include for status bar
 
@@ -103,11 +106,11 @@ light mode
 		replace emoji
 		replace links with buttons
 	strip js+css+htmlcomments
-	
+
 
 if light mode default
 	welcome page
-		welcome to so and sos 
+		welcome to so and sos
 		please choose
 			pretty mode
 			lightweight mode
@@ -753,8 +756,8 @@ Unbreak
 	Voting
 
 Profile refactor
-	xCookie-auth should work for non-JS browsers
-	xFactor out nuJS code into separate template
+	Cookie-auth should work for non-JS browsers
+	Factor out nuJS code into separate template
 	Set cookie via server after private key is set locally
 
 Space-wrap long strings in topics list
@@ -1187,6 +1190,8 @@ Current Top UI priorities
 		More friendly table-like listing of authors
 			Action counts with sort
 
+Does vote still need timestamp?
+
 Connect users
 	Using >> replies for user registration posts
 	And/or usernames??
@@ -1204,6 +1209,8 @@ Colorize item hashes
 	Possibly make "short" hashes 12 chars (6+6 for fg/bg color0
 
 [propose edit] button
+
+When >> token is removed from reply box /and/ message is client-signed, the >> isn't replaced, and reply doesn't get attached to parent
 
 Re-enable hashtag links
 
@@ -1232,6 +1239,10 @@ whenever a new pubkey is posted
 	messages that have "begin signed" header
 		and are not attached to an existing pubkey
 			should be re-checked
+
+claim_admin token
+	if older than 30 days and/or approved by admin
+		make admin
 
 publish rss for notification apps
 
@@ -1419,13 +1430,15 @@ How to make things easier???
 
 Somehow handle cleanup of old .html files
 
-Fix Tags page so that correct counts are displayed ++
+Fix Tags page so that correct counts are displayed +
 
 Add roles directory
     Add roles/admin and roles/moderator
         Add support for having multiple public keys in here as text file
 
 Add client-side handling of HTTP 431 messages when submitting something new
+
+Function to add file to index and update affected pages
 
 Untagged page = all untagged posts
  - make it easier to vote on this one
@@ -1434,10 +1447,14 @@ cookie-based prefs
  - stylesheet
  - hide non-essential ui elements
 
+Maybe try Perl PGP modules? +
+
 No pubkey and/or bad sig should result in big red warning on page/listing +
 
 Front-end signature checks/indicators in input boxes +
 
+
+js fallback for saving via "more options" link on write-small.template
 
 
 Hide voting, weight-setting, and other messages from home page
@@ -1448,6 +1465,8 @@ When private key is pasted into [restore] textarea,
       restore if it validates
 
 Ensure caches are deleted when a vote occurs
+
+Merge vote and reply forms
 
 Add a message that appears the first time someone is posting something, like on HN
 
