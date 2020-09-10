@@ -216,27 +216,53 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		// lookup lists, each char in keysEn
 		// corresponds to the same position in keysRu
 
+		// these shortened lookup lists exclude some letters
+		// the letter x (cyrillic version) for some reason presents a problem
+		// in perl's unicode processing.
+		// other letters have been removed just because
 		var keysEn =
 			"`-=" +
 			"~_+" +
-			"qwertyuiop[]\\" +
-			"QWERTYUIOP{}|" +
-			"asdfghjkl" +
-			"ASDFGHJKL" +
-			"zxcvbnm" +
-			"ZXCVBNM"
+			"qwrtyuip[]\\" +
+			"QWRTYUIP{}|" +
+			"sdfghjkl" +
+			"SDFGHJKL" +
+			"zcvbnm" +
+			"ZCVBNM"
 		;
 
 		var keysRu =
 			"щьъ" +
 			"Щ-=" +
-			"яшертыуиопюжэ" +
-			"ЯШЕРТЫУИОПЮЖЭ" +
-			"асдфгчйкл" +
-			"АСДФГЧЙКЛ" +
-			"зхцвбнм" +
-			"ЗХЦВБНМ"
+			"яшртыуипюжэ" +
+			"ЯШРТЫУИПЮЖЭ" +
+			"сдфгчйкл" +
+			"СДФГЧЙКЛ" +
+			"зцвбнм" +
+			"ЗЦВБНМ"
 		;
+
+		// var keysEn =
+		// 	"`-=" +
+		// 	"~_+" +
+		// 	"qwertyuiop[]\\" +
+		// 	"QWERTYUIOP{}|" +
+		// 	"asdfghjkl" +
+		// 	"ASDFGHJKL" +
+		// 	"zxcvbnm" +
+		// 	"ZXCVBNM"
+		// ;
+		//
+		// var keysRu =
+		// 	"щьъ" +
+		// 	"Щ-=" +
+		// 	"яшертыуиопюжэ" +
+		// 	"ЯШЕРТЫУИОПЮЖЭ" +
+		// 	"асдфгчйкл" +
+		// 	"АСДФГЧЙКЛ" +
+		// 	"зхцвбнм" +
+		// 	"ЗХЦВБНМ"
+		// ;
 
 		if (keysEn.length != keysRu.length) {
 			//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
