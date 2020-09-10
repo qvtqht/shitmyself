@@ -24,7 +24,7 @@
 
 <h2>Reply</h2>
 
-<p>Example: <code>>>0123456789abcdef</code></p>
+<p>Example: <code>&gt;&gt;0123456789abcdef</code></p>
 
 <p>On a line by itself, this will reference the message which has that identifier.)</p>
 
