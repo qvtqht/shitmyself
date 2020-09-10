@@ -62,9 +62,17 @@ function writeOnload() { // onload handler for write page
 						if (spanWriteAdvanced) {
 							var btnMakeCoin = document.createElement('input');
 							btnMakeCoin.setAttribute('type', 'button');
-							btnMakeCoin.setAttribute('value', 'Make a coin');
-							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); } return false;");
+							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
+							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
 							spanWriteAdvanced.appendChild(btnMakeCoin);
+
+							var br = document.createElement('br');
+							spanWriteAdvanced.appendChild(br);
+
+							var lblMakeCoin = document.createElement('span');
+							lblMakeCoin.setAttribute('class', 'beginner');
+							lblMakeCoin.innerHTML = 'Proof of work coin helps prevent spam.';
+							spanWriteAdvanced.appendChild(lblMakeCoin);
 						}
 
 					}
