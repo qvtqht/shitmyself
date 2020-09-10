@@ -875,7 +875,7 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 				# the same value will remain for current instance
 				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
 				PutConfig($configName, $configValue);
-			#}
+			#} #todo this will save much file io if disabled
 
 			return $configValue;
 		} else {
