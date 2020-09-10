@@ -64,6 +64,7 @@ function RunTest() {
 	//alert('DEBUG: Calling window.setTimeout("setTimeoutReturn()", 10);');
     window.setTimeout('setTimeoutReturn()', 500);
 
+	//#todo remove this probably
 	if (navigator.userAgent.indexOf('MSIE 6.') != -1 || navigator.userAgent.indexOf('MSIE 5.5') != -1) {
 	    //alert('DEBUG: Skipping navigator.javaEnabled, MSIE 6./5.5');
 	    document.frmTest.txtStringFromCharCode.value = 'skipped';
