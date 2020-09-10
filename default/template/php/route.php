@@ -516,7 +516,9 @@ if (GetConfig('admin/php/route_enable')) {
 						{
 							WriteLog('Flush requested');
 
-							RedirectWithResponse('/settings.html', 'Flush requested, but not yet implemented.');
+							DoFlush();
+
+							RedirectWithResponse('/settings.html', 'Previous content has been archived.');
 						}
 
 						if (
