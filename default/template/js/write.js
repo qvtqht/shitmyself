@@ -62,8 +62,8 @@ function writeOnload() { // onload handler for write page
 						if (spanWriteAdvanced) {
 							var btnMakeCoin = document.createElement('input');
 							btnMakeCoin.setAttribute('type', 'button');
-							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
-							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
+							btnMakeCoin.setAttribute('value', 'Make a coin');
+							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); } return false;");
 							spanWriteAdvanced.appendChild(btnMakeCoin);
 						}
 
