@@ -47,8 +47,8 @@ Advertising, Spam, and Censorship Resistant
 
 Friendly, Compatible, Accessible
 	Compatible with historic browsers to allow time-period-accurate installations.
-    Tested thoroughly by many devices, configurations, platforms, browsers, users.
-    Tested for accessibilty by vision, mobility, and connectivity impaired users.
+	Tested thoroughly by many devices, configurations, platforms, browsers, users.
+	Tested for accessibilty by vision, mobility, and connectivity impaired users.
 	Tested with Mosaic, Netscape, IE, Opera, iOS, Android, Lynx, w3m, and more.
 	Text-art is accomodated with a monospace font and preserving whitespace layout.
 	Supports all web servers which can write standard access.log format.
