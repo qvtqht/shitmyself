@@ -33,8 +33,9 @@ Transparent
 	Voting logs are transparent, auditable, and trustable (Kevin Bacon)
 	Meta-moderation is possible by voting on the votes, and so on.
 	Best content (and friends) for each user can be found with vote comparison.
-	Ballot stuffing and other abuse easily detectable with data analysis.
-	Validation chain prevents deletion without a trace.
+	Ballot stuffing and other abuse is detectable with data analysis.
+	Validation chain prevents tampering with item posting timestamps.
+	Items can be deleted by operator, but trace remains in timestamp log.
 
 User-empowering
 	User "account", aka the private key, remains in user's possession and control.
