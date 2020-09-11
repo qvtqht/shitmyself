@@ -351,7 +351,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# }
 
 			# store it in index, since that's what we're doing here
-			DBAddItemAttribute($fileHash, 'add_timestamp', $newAddedTime);
+			DBAddItemAttribute($fileHash, 'chain_timestamp', $newAddedTime);
 
 			$addedTimeIsNew = 1;
 		}
@@ -1791,7 +1791,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			}
 
 			# store it in index, since that's what we're doing here
-			DBAddItemAttribute($fileHash, 'add_timestamp', $newAddedTime);
+			DBAddItemAttribute($fileHash, 'chain_timestamp', $newAddedTime);
 
 			$addedTimeIsNew = 1;
 		}

@@ -116,8 +116,8 @@ sub SqliteMakeTables { # creates sqlite schema
 			file_hash,
 			value AS add_timestamp
 		FROM item_attribute_latest
-		WHERE attribute = 'add_timestamp'
-	");
+		WHERE attribute = 'chain_timestamp'
+	"); #todo maybe include add_timestamp as secondary option?
 
 	# item_title
 	SqliteQuery("
