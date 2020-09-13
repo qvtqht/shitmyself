@@ -2361,6 +2361,46 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
         return 1;
     }
 
+    # if the file is present in deleted.log, get rid of it and its page, return
+    if ($fileHash && -e 'log/archived.log' && GetFile('log/archived.log') =~ $fileHash) {
+        # write to log
+        WriteLog("... $fileHash exists in archived.log, archiving $file");
+
+		{
+			# unlink the file itself
+			if (-e $file) {
+				my $archiveDir = './archive';
+				my $newFilename = $archiveDir . '/' . TrimPath($file);
+				my $suffixCounter = '';
+				while (-e $newFilename . $suffixCounter) {
+					if (!$suffixCounter) {
+						$suffixCounter = 1;
+					} else {
+						$suffixCounter++;
+					}
+				}
+				rename($file, $newFilename);
+				#unlink($file);
+			}
+
+			WriteLog('$fileHash = ' . $fileHash);
+
+			my $htmlFilename = GetHtmlFilename($fileHash);
+
+			if ($htmlFilename) {
+				$htmlFilename = $HTMLDIR . '/' . $htmlFilename;
+
+				if (-e $htmlFilename) {
+					unlink($htmlFilename);
+				}
+			}
+
+
+        }
+
+        return 1;
+    }
+
     return 0;
 } # IsFileDeleted()
 
