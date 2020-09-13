@@ -518,6 +518,7 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('Flush requested');
 
 							DoFlush();
+							DoUpdate();
 
 							RedirectWithResponse('/settings.html', 'Previous content has been archived.');
 						}
