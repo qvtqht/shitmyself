@@ -1631,6 +1631,12 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 	push @menu, 'read';
 	push @menu, 'write';
 
+	#upload
+	if (GetConfig('admin/php/enable') && GetConfig('admin/image/enable')) {
+		push @menu, 'upload';
+	}
+
+	#profile
 	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
 		# one of these is required for profile to work
 		push @menu, 'profile';
