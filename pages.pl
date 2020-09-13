@@ -3063,7 +3063,7 @@ sub GetLighttpdConfig {
 	}
 	
 	return $conf;
-}
+} # GetLighttpdConfig()
 
 sub MakeJsTestPages {
 	my $jsTestPage = GetTemplate('js/test.js');
