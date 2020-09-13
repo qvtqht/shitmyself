@@ -33,23 +33,21 @@ foreach ($default as $d) {
 	if (strpos($d, 'template') === false) {
 		$d = str_replace('../default/', '', $d);
 
-		print $d;
-		print ' ';
-
 //		print (isset($configLookup[$d]) ? $configLookup[$d] : '');
 
 		if (isset($configLookup[$d])) {
-			print ('<b>*</b>');
+			//print ('<b>+</b>');
 			if ($configValue[$d] == $defaultValue[$d]) {
-				print 'default';
+				//print 'default';
 			} else {
-				print '<b>changed</b>';
+				print "config ";
+				print $d;
+				print ' ';
+				print htmlspecialchars(trim($configValue[$d]));
+				print "<br>";
 			}
-		} else {
-			print "<font color=red>*</font>";
 		}
 
-		print "<br>";
 	}
 }
 
