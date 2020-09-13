@@ -8,9 +8,7 @@
 <body>
 <style type="text/css">
     <!--
-        a {
-            padding: 5pt;
-        }
+
     -->
 </style>
 <script>
@@ -95,68 +93,68 @@
 <table cellpadding=4 cellspacing=0 border=0>
 
 <tr><td>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">`</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">1</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">2</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">3</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">4</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">5</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">6</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">7</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">8</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">9</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">0</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">-</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">=</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Back</a>
+    <a href="/post.html" onclick="return hi('`');" ondblclick="return hi('`');">`</a>
+    <a href="/post.html" onclick="return hi('1');" ondblclick="return hi('1');">1</a>
+    <a href="/post.html" onclick="return hi('2');" ondblclick="return hi('2');">2</a>
+    <a href="/post.html" onclick="return hi('3');" ondblclick="return hi('3');">3</a>
+    <a href="/post.html" onclick="return hi('4');" ondblclick="return hi('4');">4</a>
+    <a href="/post.html" onclick="return hi('5');" ondblclick="return hi('5');">5</a>
+    <a href="/post.html" onclick="return hi('6');" ondblclick="return hi('6');">6</a>
+    <a href="/post.html" onclick="return hi('7');" ondblclick="return hi('7');">7</a>
+    <a href="/post.html" onclick="return hi('8');" ondblclick="return hi('8');">8</a>
+    <a href="/post.html" onclick="return hi('9');" ondblclick="return hi('9');">9</a>
+    <a href="/post.html" onclick="return hi('0');" ondblclick="return hi('0');">0</a>
+    <a href="/post.html" onclick="return hi('-');" ondblclick="return hi('-');">-</a>
+    <a href="/post.html" onclick="return hi('=');" ondblclick="return hi('=');">=</a>
+    <a href="/post.html" onclick="return hi('Back');" ondblclick="return hi('Back');">Back</a>
     <br>
 </td></tr>
 <tr><td>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Tag</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Q</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">W</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">E</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">R</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">T</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Y</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">U</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">I</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">O</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">P</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">[</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">]</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">\ </a>
+    <a href="/post.html" onclick="return hi('Tag');" ondblclick="return hi('Tag');">Tag</a>
+    <a href="/post.html" onclick="return hi('Q');" ondblclick="return hi('Q');">Q</a>
+    <a href="/post.html" onclick="return hi('W');" ondblclick="return hi('W');">W</a>
+    <a href="/post.html" onclick="return hi('E');" ondblclick="return hi('E');">E</a>
+    <a href="/post.html" onclick="return hi('R');" ondblclick="return hi('R');">R</a>
+    <a href="/post.html" onclick="return hi('T');" ondblclick="return hi('T');">T</a>
+    <a href="/post.html" onclick="return hi('Y');" ondblclick="return hi('Y');">Y</a>
+    <a href="/post.html" onclick="return hi('U');" ondblclick="return hi('U');">U</a>
+    <a href="/post.html" onclick="return hi('I');" ondblclick="return hi('I');">I</a>
+    <a href="/post.html" onclick="return hi('O');" ondblclick="return hi('O');">O</a>
+    <a href="/post.html" onclick="return hi('P');" ondblclick="return hi('P');">P</a>
+    <a href="/post.html" onclick="return hi('[');" ondblclick="return hi('[');">[</a>
+    <a href="/post.html" onclick="return hi(']');" ondblclick="return hi(']');">]</a>
+    <a href="/post.html" onclick="return hi('\ ');" ondblclick="return hi('\ ');">\ </a>
     <br>
 </td></tr>
 <tr><td>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Copy</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">A</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">S</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">D</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">F</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">G</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">H</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">J</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">K</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">L</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">;</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">'</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Enter</a>
+    <a href="/post.html" onclick="return hi('Copy');" ondblclick="return hi('Copy');">Copy</a>
+    <a href="/post.html" onclick="return hi('A');" ondblclick="return hi('A');">A</a>
+    <a href="/post.html" onclick="return hi('S');" ondblclick="return hi('S');">S</a>
+    <a href="/post.html" onclick="return hi('D');" ondblclick="return hi('D');">D</a>
+    <a href="/post.html" onclick="return hi('F');" ondblclick="return hi('F');">F</a>
+    <a href="/post.html" onclick="return hi('G');" ondblclick="return hi('G');">G</a>
+    <a href="/post.html" onclick="return hi('H');" ondblclick="return hi('H');">H</a>
+    <a href="/post.html" onclick="return hi('J');" ondblclick="return hi('J');">J</a>
+    <a href="/post.html" onclick="return hi('K');" ondblclick="return hi('K');">K</a>
+    <a href="/post.html" onclick="return hi('L');" ondblclick="return hi('L');">L</a>
+    <a href="/post.html" onclick="return hi(';');" ondblclick="return hi(';');">;</a>
+    <a href="/post.html" onclick="return hi('\'');" ondblclick="return hi('\'');">'</a>
+    <a href="/post.html" onclick="return hi('Enter');" ondblclick="return hi('Enter');">Enter</a>
     <br>
 </td></tr>
 <tr><td>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Space </a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">Z</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">X</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">C</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">V</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">B</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">N</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">M</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">,</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">.</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);">/</a>
-    <a href="/post.html" onclick="return hi(this.innerHTML);" ondblclick="return hi(this.innerHTML);"> Space </a>
+    <a href="/post.html" onclick="return hi('Space');" ondblclick="return hi('Space');">Space</a>
+    <a href="/post.html" onclick="return hi('Z');" ondblclick="return hi('Z');">Z</a>
+    <a href="/post.html" onclick="return hi('X');" ondblclick="return hi('X');">X</a>
+    <a href="/post.html" onclick="return hi('C');" ondblclick="return hi('C');">C</a>
+    <a href="/post.html" onclick="return hi('V');" ondblclick="return hi('V');">V</a>
+    <a href="/post.html" onclick="return hi('B');" ondblclick="return hi('B');">B</a>
+    <a href="/post.html" onclick="return hi('N');" ondblclick="return hi('N');">N</a>
+    <a href="/post.html" onclick="return hi('M');" ondblclick="return hi('M');">M</a>
+    <a href="/post.html" onclick="return hi(',');" ondblclick="return hi(',');">,</a>
+    <a href="/post.html" onclick="return hi('.');" ondblclick="return hi('.');">.</a>
+    <a href="/post.html" onclick="return hi('/');" ondblclick="return hi('/');">/</a>
+    <a href="/post.html" onclick="return hi('Space');" ondblclick="return hi('Space');">Space</a>
     <br>
 </td></tr>
 </table>
