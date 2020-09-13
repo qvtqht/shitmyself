@@ -3461,6 +3461,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 			}
 		}
 
+		if (GetConfig('admin/ssi/enable')) {
+			my $ssiConf = GetTemplate('htaccess/htaccess_ssi.template');
+
+			$HtaccessTemplate .= "\n" . $ssiConf;
+		}
+
 		PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
 	}
 
