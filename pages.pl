@@ -4316,23 +4316,25 @@ if ($arg1) {
 		MakePage('author', $arg1, 1);
 	}
 	elsif (substr($arg1, 0, 1) eq '#') {
+		#todo sanity checks here
 		print ("recognized hash tag $arg1\n");
 		MakePage('tag', substr($arg1, 1));
 	}
-	elsif ($arg1 eq '--summary') {
+	elsif ($arg1 eq '--summary' || $arg1 eq '-s') {
 		print ("recognized --summary\n");
 		MakeSummaryPages();
 	}
-	elsif ($arg1 eq '--index') {
+	elsif ($arg1 eq '--index' || $arg1 eq '-i') {
 		print ("recognized --index\n");
 		WriteIndexPages();
 	}
 	else {
 		print ("Available arguments:\n");
-		print ("--summary for all summary pages\n");
-		print ("--index for all index pages\n");
+		print ("--summary or -s for all summary pages\n");
+		print ("--index or -i for all index pages\n");
 		print ("item id for one item's page\n");
 		print ("author fingerprint for one item's page\n");
+		print ("#tag for one tag's page\n");
 	}
 }
 
