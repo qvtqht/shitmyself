@@ -1179,8 +1179,15 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		#if (index($message, "<br>\n--\n<br>\n") > -1) {
 		if (
-		    GetConfig('html/hide_dashdash_signatures') && index($message, "<br>\n-- <br>\n") > -1
+		    GetConfig('html/hide_dashdash_signatures')
+		    	&&
+			(
+				index($message, "<br>\n-- <br>\n") > -1
+					||
+				index($message, "<p>\n-- <br>\n") > -1
+			)
 		) {
+			$message =~ s/(.+)<p>\n-- <br>\n(.+)/$1<span class=advanced><p>\n-- <br>\n$2<\/span>/sm;
 			$message =~ s/(.+)<br>\n-- <br>\n(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/sm;
 			#$message = 'hi';
 			
