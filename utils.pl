@@ -791,7 +791,13 @@ sub GetFile { # Gets the contents of file $fileName
 	my $length = shift || 209715200;
 	# default to reading a max of 2MB of the file. #scaling
 
-	if (-e $fileName && !-d $fileName && open (my $file, "<", $fileName)) {
+	if (
+		-e $fileName # file exists
+			&&
+		!-d $fileName # not a directory
+			&&
+		open (my $file, "<", $fileName) # opens successfully
+	) {
 		my $return;
 
 		read ($file, $return, $length);
