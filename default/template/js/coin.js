@@ -1,6 +1,6 @@
 // coin.js
 
-if (document.createElement) {
+if (document.createElement && document.head) {
 	var script = document.createElement('script');
 	script.src = '/sha512.js';
 	script.async = false; // This is required for synchronous execution
