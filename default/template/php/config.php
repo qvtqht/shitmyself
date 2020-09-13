@@ -1,6 +1,16 @@
 <?php
 /* php/config.php */
 
+
+function index ($string, $needle) { // emulates perl's index(), returning -1 instead of false
+	$strpos = strpos($string, $needle);
+	if ($strpos === false) {
+		return -1;
+	} else {
+		return $strpos;
+	}
+}
+
 echo(time());
 
 echo "<br><hr><br>";
