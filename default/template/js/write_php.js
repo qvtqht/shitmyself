@@ -14,7 +14,6 @@ function commentOnChange(t, formId) {
 //
 // works down to netscape 3.04, but not 2.02
 //
-// also shows/hides warning message, lblWriteLengthWarning
 // this part requires getElementById()
 
     //alert('DEBUG: commentOnChange() begin');
@@ -63,19 +62,6 @@ function commentOnChange(t, formId) {
 //		if (form) {
 //			form.method = strFormMode;
 //		}
-	}
-
-	if (document.getElementById) {
-//		var form = document.getElementById(formId);
-//		if (form && form.setAttribute) {
-//    		form.setAttribute('method', strFormMode);
-//		}
-
-		var warning = document.getElementById('lblWriteLengthWarning');
-		if (warning) {
-			warning.innerHTML = strInnerHtml;
-			warning.style.display = strWarnDisplay;
-		}
 	}
 }
 
