@@ -220,16 +220,26 @@ function DoFlush () {
 
 	WriteLog('$scriptDir = ' . $scriptDir);
 
-	if (file_exists($scriptDir . '/archive.pl')) {
-		WriteLog('archive.pl found, calling archive.pl');
-		WriteLog('cd "' . $scriptDir . '" ; perl ./archive.pl');
+	if (file_exists($scriptDir . '/query/flush_no_keep.sh')) {
+		WriteLog('query/flush_no_keep.sh found, calling query/flush_no_keep.sh');
+		WriteLog('cd "' . $scriptDir . '" ; query/flush_no_keep.sh');
 
-		WriteLog(`cd "$scriptDir" ; perl ./archive.pl`);
+		WriteLog(`cd "$scriptDir" ; query/flush_no_keep.sh`);
 
 		WriteLog('cd "' . $pwd . '"');
 
 		WriteLog(`cd "$pwd"`);
 	}
+// 	if (file_exists($scriptDir . '/archive.pl')) {
+// 		WriteLog('archive.pl found, calling archive.pl');
+// 		WriteLog('cd "' . $scriptDir . '" ; perl ./archive.pl');
+//
+// 		WriteLog(`cd "$scriptDir" ; perl ./archive.pl`);
+//
+// 		WriteLog('cd "' . $pwd . '"');
+//
+// 		WriteLog(`cd "$pwd"`);
+// 	}
 }
 
 function GetConfig ($configKey) { // get value for config value $configKey
