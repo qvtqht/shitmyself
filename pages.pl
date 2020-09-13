@@ -404,7 +404,7 @@ sub GetEventsPage { # returns html for events page
 		my $eventTitle =  $event->{'event_title'};
 		my $eventTime = $event->{'event_time'};
 		my $eventDuration = $event->{'event_duration'};
-		my $eventItemLink = GetHtmlLink($eventItemHash);
+		my $eventItemLink = GetItemHtmlLink($eventItemHash);
 		my $eventItemAuthor = $event->{'author_key'};
 
 		if (!$eventTitle) {
@@ -2432,6 +2432,7 @@ sub GetAuthorInfoBox {
 	} else {
 		$publicKeyHashHtml = '*';
 	}
+	my $authorMessageLink = GetItemHtmlLink($publicKeyHash, 'write public message', '#reply');
 
 	if (IsServer($authorKey)) {
 		if ($authorDescription) {
@@ -2485,6 +2486,11 @@ sub GetAuthorInfoBox {
 		$authorInfoTemplate =~ s/\$publicKeyHash/$publicKeyHashHtml/g;
 	} else {
 		$authorInfoTemplate =~ s/\$publicKeyHash/*/g;
+	}
+	if ($authorMessageLink) {
+		$authorInfoTemplate =~ s/\$authorMessageLink/$authorMessageLink/g;
+	} else {
+		$authorInfoTemplate =~ s/\$authorMessageLink/*/g;
 	}
 
 	##### friends list begin #####
