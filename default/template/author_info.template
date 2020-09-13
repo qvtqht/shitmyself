@@ -22,6 +22,7 @@
 		<tr class=advanced><td>gravity:</td><td>$authorWeight</td></tr>
 		<tr><td>last seen:</td><td>$authorLastSeen</td></tr>
 		<tr class=advanced><td>registration:</td><td><b><tt>$publicKeyHash</tt></b></td></tr>
+		<tr><td>message:</td><td><b><tt>$authorMessageLink</tt></b></td></tr>
 		<tr><td>friends:</td><td>$authorFriends</td></tr>
 	</table>
 </font>
