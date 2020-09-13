@@ -48,14 +48,13 @@
 
 						<span id=spanWriteAdvanced class=advanced></span>
 
-						<br>
-
-						<a href="/frame.html" target=_top>Show keyboard</a><span class=advanced> | <a href="/kbd.html" target=kbd>Android</a> | <a href="/kbd_nn.html" target=kbd>Netscape</a></span>
-
-						<span>
-							<p id=lblWriteLengthWarning class=warning style="display: none">
-							</p>
-						</span>
+						<p>
+							<a href="/frame.html" target=_top>Show keyboard</a><span class=advanced>
+							|
+							<a href="/kbd.html" target=kbd>Android</a>
+							|
+							<a href="/kbd_nn.html" target=kbd>Netscape</a></span>
+						</p>
 					</fieldset>
 				</td>
 			</tr>
