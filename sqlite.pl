@@ -2199,7 +2199,7 @@ sub DBGetAuthorPublicKeyHash { # Returns the hash/identifier of the file contain
 	} else {
 		return "";
 	}
-}
+} # DBGetAuthorPublicKeyHash()
 
 sub DBGetAuthorWeight { # returns author's weight from vote_weight table
 # Determined by vouch/ tokens  
