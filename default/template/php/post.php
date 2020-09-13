@@ -143,7 +143,7 @@ if (isset($comment) && $comment) {
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
 		RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
-	} elseif (strtolower($comment) == 'stop') {
+	} elseif (strtolower($comment) == 'stop' && GetConfig('admin/token/stop')) {
 		$stopTime = time();
 		$stopTimeConfig = GetConfig('admin/stop');
 		if ($stopTimeConfig > $stopTime) {
