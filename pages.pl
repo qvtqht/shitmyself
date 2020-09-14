@@ -1649,7 +1649,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 	PutConfig('list/menu', $menuList);
 	# PutConfig('list/menu_advanced', $menuList);
 
-	GetConfig('list/menu', 'uncache');
+	GetConfig('list/menu', 'unmemo');
 	# GetConfig('list/menu_advanced', 'uncache');
 }
 

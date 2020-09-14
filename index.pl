@@ -1707,6 +1707,8 @@ sub WriteIndexedConfig { # writes config indexed in database into config/
 			PutConfig($configKey, $configValue);
 		}
 	}
+
+	GetConfig('unmemo');
 }
 
 sub MakeIndex { # indexes all available text files, and outputs any config found

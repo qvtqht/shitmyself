@@ -825,14 +825,18 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 	#
 	state %configLookup;
 
+	if ($configName && $configName eq 'unmemo') {
+		undef %configLookup;
+	}
+
 	my $token = shift;
 	if ($token) {
 		chomp $token;
 	}
 
-	if ($token && $token eq 'uncache') {
-		WriteLog('GetConfig: uncache requested, complying');
-		# uncache token to remove cached (memoized) value
+	if ($token && $token eq 'unmemo') {
+		WriteLog('GetConfig: unmemo requested, complying');
+		# unmemo token to remove memoized value
 		if (exists($configLookup{$configName})) {
 			delete($configLookup{$configName});
 		}
@@ -1123,7 +1127,7 @@ sub PutConfig { # writes config value to config storage
 
 	my $putFileResult = PutFile("config/$configName", $configValue);
 
-	GetConfig($configName, 'uncache');
+	GetConfig($configName, 'unmemo');
 
 	return $putFileResult;
 }
