@@ -207,8 +207,8 @@ sub SqliteMakeTables { # creates sqlite schema
 	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
 
 	# queue
-	SqliteQuery2("CREATE TABLE queue(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
-	SqliteQuery2("CREATE UNIQUE INDEX queue_touch_unique ON queue(action, param);");
+	SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
+	SqliteQuery2("CREATE UNIQUE INDEX task_touch_unique ON task(action, param);");
 	#
 	# action      param           touch_time     priority
 	# make_page   author/abc
