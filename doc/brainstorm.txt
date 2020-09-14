@@ -621,7 +621,7 @@ List file type
 	Each item is separate and part of the list
 
 select * from author_flat where file_hash in
-(select distinct file_hash from vote where vote_value = 'vouch' and signed_by = 'D17F2F5762A4573D')
+(select distinct file_hash from vote where vote_value = 'vouch' and author_key = 'D17F2F5762A4573D')
 --vouch tree beginnings
 
 insec auth
