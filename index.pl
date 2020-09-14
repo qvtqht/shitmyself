@@ -611,6 +611,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						DBAddPageTouch('tag', $hashTag);
 
 						$detokenedMessage =~ s/#$hashTag//g;
+						#todo does this need to be /i?
+						#todo how to determine capitalization if it varies across different posts?
 					}
 				}
 			}
