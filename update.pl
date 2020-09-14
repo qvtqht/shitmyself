@@ -599,7 +599,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 	WriteLog($newLastFlow);
 	PutConfig('admin/update/last', $newLastFlow);
 
-	unlink('cron.lock');
+	PutFile('cron.lock', '0');
 
 	WriteLog("======update.pl DONE! ======");
 	WriteLog("Items/files processed: $filesProcessed");
@@ -647,7 +647,7 @@ elsif ($arg1) {
 			}
 		}
 
-		unlink('cron.lock');
+		PutFile('cron.lock', '0');
 	} # if (-e $arg1 && length($arg1) > 5)
 	else {
 		print('File ' . $arg1 . ' DOES NOT EXIST' . "\n");
@@ -656,7 +656,7 @@ elsif ($arg1) {
 } # elsif ($arg1)
 
 if (-e 'cron.lock') {
-	unlink('cron.lock');
+	PutFile('cron.lock', '0');
 }
 
 1;
