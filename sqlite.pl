@@ -163,8 +163,8 @@ sub SqliteMakeTables { # creates sqlite schema
 #	SqliteQuery2("CREATE UNIQUE INDEX tag_unique ON tag(vote_value);");
 
 	# vote
-	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, signed_by, ballot_hash);");
-	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, signed_by);");
+	SqliteQuery2("CREATE TABLE vote(id INTEGER PRIMARY KEY AUTOINCREMENT, file_hash, ballot_time, vote_value, author_key, ballot_hash);");
+	SqliteQuery2("CREATE UNIQUE INDEX vote_unique ON vote (file_hash, ballot_time, vote_value, author_key);");
 
 	# item_page
 	SqliteQuery2("CREATE TABLE item_page(item_hash, page_name, page_param);");
@@ -254,16 +254,16 @@ sub SqliteMakeTables { # creates sqlite schema
 				vote.file_hash,
 				vote.ballot_time,
 				vote.vote_value,
-				vote.signed_by,
+				vote.author_key,
 				SUM(IFNULL(vote_weight.vote_weight, 1)) vote_weight
 			FROM
 				vote
-				LEFT JOIN vote_weight ON (vote.signed_by = vote_weight.key)
+				LEFT JOIN vote_weight ON (vote.author_key = vote_weight.key)
 			GROUP BY
 				vote.file_hash,
 				vote.ballot_time,
 				vote.vote_value,
-				vote.signed_by
+				vote.author_key
 	");
 
 	SqliteQuery2("
@@ -398,6 +398,8 @@ sub SqliteMakeTables { # creates sqlite schema
 		GROUP BY
 			author.key, author_alias.alias, author_alias.file_hash
 	");
+
+	#my $results = `sqlite3 "$SqliteDbName" ".schema" | sha1sum > config/sqlite3_schema_version`;
 }
 
 sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns result as array reference
@@ -476,10 +478,10 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 #	my @queryParams = ();
 #
 #	if ($fileHash) {
-#		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed WHERE file_hash = ?;";
+#		$query = "SELECT file_hash, ballot_time, vote_value, author_key, vote_weight FROM vote_weighed WHERE file_hash = ?;";
 #		@queryParams = ($fileHash);
 #	} else {
-#		$query = "SELECT file_hash, ballot_time, vote_value, signed_by, vote_weight FROM vote_weighed;";
+#		$query = "SELECT file_hash, ballot_time, vote_value, author_key, vote_weight FROM vote_weighed;";
 #	}
 #
 #	my $result = SqliteQuery2($query, @queryParams);
@@ -505,7 +507,7 @@ sub DBGetVotesForItem { # Returns all votes (weighed) for item
 			file_hash,
 			ballot_time,
 			vote_value,
-			signed_by,
+			author_key,
 			vote_weight
 		FROM vote_weighed
 		WHERE file_hash = ?
@@ -572,7 +574,7 @@ sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged a
 			vote
 			LEFT JOIN item_flat ON (vote.file_hash = item_flat.file_hash)
 		WHERE
-			signed_by = ?
+			vote.author_key = ?
 			AND vote_value = 'friend'
 			AND ',' || item_flat.tags_list || ',' LIKE '%,pubkey,%'
 		;
@@ -1754,7 +1756,7 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHa
 	}
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, signed_by, ballot_hash) VALUES ";
+		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, author_key, ballot_hash) VALUES ";
 	} else {
 		$query .= ",";
 	}

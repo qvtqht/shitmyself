@@ -17,7 +17,7 @@ function ShowTimestamps() { // finds any class=timestamp, updates its displayed 
 				var secs = 0 - (curTime - te[i].getAttribute('epoch'));
 				if (te[i].innerHTML != LongAgo(secs)) {
 					te[i].innerHTML = LongAgo(secs);
-					if ((secs * -1) < 60) {
+					if ((secs * -1) < 3600) {
 						te[i].style.backgroundColor = '$colorHighlightAlert';
 					} else if ((secs * -1) < 600) {
 						te[i].style.backgroundColor = '$colorHighlightBeginner';
