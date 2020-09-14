@@ -1391,10 +1391,10 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	if (!$authorKey) {
 		$authorKey = '';
 	}
-
-	if ($authorKey) {
-		DBAddItemParent($fileHash, DBGetAuthorPublicKeyHash($authorKey));
-	}
+#
+#	if ($authorKey) {
+#		DBAddItemParent($fileHash, DBGetAuthorPublicKeyHash($authorKey));
+#	}
 
 	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError);");
 
