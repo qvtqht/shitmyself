@@ -504,8 +504,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					}
 				}
 			}
-
-			$hasParent = 1;
 		}
 
 		# look for hash tags aka hashtags hash tag hashtag
@@ -523,7 +521,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
 						#todo
 
+						WriteLog('$hashTag = ' . $hashTag);
+
 						if ($hasParent) {
+							WriteLog('$hasParent');
+
 							# if the vote value is 'remove', perform appropriate operations
 							if ($hashTag eq 'remove') {
 								WriteLog('Found request to remove file');
