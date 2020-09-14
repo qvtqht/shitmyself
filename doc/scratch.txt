@@ -1,4 +1,24 @@
-	var cookie = function( name, value, days ){
+	author who voted
+approve
+on item
+
+
+new features like 'Message to all' and 'Buddy'
+
+the idea behind e-hubs is to provide a platform that is owned and operated by the users. This is basically a service that is provided 100% by the users and not an external company which is usually run by the core constituency of the service. On the other hand, e-hubs are more focused on collecting information on what is going on in the user's niche.
+
+social network with distributed ownership and operation
+
+A credit card that is funded by users rather than banks, with a cap on monthly spending.
+
+
+This startup aims to help people around the world donate their excess stuff to the needy. The startup helps people donate excess stuff to those in need by finding charities that accept donations.
+
+
+
+
+
+var cookie = function( name, value, days ){
 		// if value is undefined, get the cookie value
 		if( value === undefined ){
 			var cookiestring = "; " + w.document.cookie;

@@ -121,9 +121,6 @@ collapse/expand images
 
 views with/without images and content
 
-proof of work to improve author weight
-	hash own fingerprint + number =~ m/b00b135/
-
 improve handling of list/* as lists (arrays?)
 
 an entire thread from facebook, reddit, or twitter, can be imported

@@ -773,10 +773,6 @@ Add timestamp to session cookie
 	To allow time limit for cookie validity
 		This will also require rewriting the cookie now and then
 
-Bug: When vouch/ is used, the first time the item is added
-	a duplicate entry in vote_weight is added
-		This is cleared during next rebuild
-
 Bug: There's a duplicate <a name=maincontent> on home page
 
 Problem
