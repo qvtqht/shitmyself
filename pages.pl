@@ -2919,6 +2919,12 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	#my $itemCount = DBGetItemCount("item_type = 'text'");
 	my $itemCount = DBGetItemCount();
 
+	if (GetConfig('admin/html/index_pages_limit')) {
+		if ($itemCount > GetConfig('admin/html/index_pages_limit')) {
+			$itemCount = GetConfig('admin/html/index_pages_limit');
+		}
+	}
+
 	my $overlapPage = GetConfig('overlap_page');
 	#in order to keep both the "last" and the "first" page the same length
 	#and avoid having mostly-empty pages with only a few items
