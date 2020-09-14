@@ -484,22 +484,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 						DBAddItemParent($fileHash, $parentHash);
 						DBAddVoteRecord($fileHash, $addedTime, 'reply');
-					}
 
-					my $reconLine = ">>$parentHash";
+						my $reconLine = ">>$parentHash";
 
-					$message =~ s/$reconLine/$reconLine/;
+						$message =~ s/$reconLine/$reconLine/;
 
-					#$message =~ s/$reconLine/[In response to message $parentHash]/;
-					# replace with itself, no change needed
-					#todo eventually we will want some kind of more friendly display of replied-to content
+						#$message =~ s/$reconLine/[In response to message $parentHash]/;
+						# replace with itself, no change needed
+						#todo eventually we will want some kind of more friendly display of replied-to content
 
-					$detokenedMessage =~ s/$reconLine//;
+						$detokenedMessage =~ s/$reconLine//;
 
-					DBAddPageTouch('item', $parentHash);
+						DBAddPageTouch('item', $parentHash);
 
-					if (GetConfig('admin/index/make_primary_pages')) {
-						MakePage('item', $parentHash, 1);
+						if (GetConfig('admin/index/make_primary_pages')) {
+							MakePage('item', $parentHash, 1);
+						}
+						$hasParent = 1;
 					}
 				}
 			}
