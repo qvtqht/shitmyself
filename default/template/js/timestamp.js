@@ -19,8 +19,6 @@ function ShowTimestamps() { // finds any class=timestamp, updates its displayed 
 					te[i].innerHTML = LongAgo(secs);
 					if ((secs * -1) < 3600) {
 						te[i].style.backgroundColor = '$colorHighlightAlert';
-					} else if ((secs * -1) < 600) {
-						te[i].style.backgroundColor = '$colorHighlightBeginner';
 					} else {
 						te[i].style.backgroundColor = '';
 					}
