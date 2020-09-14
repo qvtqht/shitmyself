@@ -609,9 +609,21 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 								DBAddVoteRecord('flush');
 							}
-						} else { # no parent, !$hasParent
-							#todo add sanity checks here
-							DBAddVoteRecord($fileHash, $addedTime, $hashTag);
+						}
+						else { # no parent, !$hasParent
+							WriteLog('$hasParent is FALSE');
+
+							if ($isSigned) {
+								# include author's key if message is signed
+								DBAddVoteRecord($fileHash, $addedTime, $hashTag, $gpgKey, $fileHash);
+							}
+							else {
+								if ($hasCookie) {
+									DBAddVoteRecord($fileHash, $addedTime, $hashTag, $hasCookie, $fileHash);
+								} else {
+									DBAddVoteRecord($fileHash, $addedTime, $hashTag, '', $fileHash);
+								}
+							}
 
 							DBAddVoteRecord('flush');
 						}
