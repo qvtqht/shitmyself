@@ -825,7 +825,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									'ConfigKeyValid() passed! ' .
 										$reconLine .
 										'; IsAdmin() = ' . IsAdmin($gpgKey) .
-										'; isSigned = ' . $isSigned .
+										'; isSigned = ' . ($isSigned ? $isSigned : '(no)') .
 										'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
 										'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
 										'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
