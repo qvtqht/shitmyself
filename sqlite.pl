@@ -60,9 +60,6 @@ sub SqliteMakeTables { # creates sqlite schema
 		file_hash
 	)");
 
-	# vote_weight
-	SqliteQuery2("CREATE TABLE vote_weight(key, vote_weight, file_hash)");
-
 	# item
 	SqliteQuery2("CREATE TABLE item(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -249,24 +246,6 @@ sub SqliteMakeTables { # creates sqlite schema
 	");
 
 	SqliteQuery2("
-		CREATE VIEW vote_weighed AS
-			SELECT
-				vote.file_hash,
-				vote.ballot_time,
-				vote.vote_value,
-				vote.author_key,
-				SUM(IFNULL(vote_weight.vote_weight, 1)) vote_weight
-			FROM
-				vote
-				LEFT JOIN vote_weight ON (vote.author_key = vote_weight.key)
-			GROUP BY
-				vote.file_hash,
-				vote.ballot_time,
-				vote.vote_value,
-				vote.author_key
-	");
-
-	SqliteQuery2("
 		CREATE VIEW
 			item_score
 		AS
@@ -348,19 +327,6 @@ sub SqliteMakeTables { # creates sqlite schema
 
 	SqliteQuery2("
 		CREATE VIEW
-			author_weight
-		AS
-		SELECT
-			vote_weight.key AS key,
-			SUM(vote_weight.vote_weight) AS vote_weight
-		FROM
-			vote_weight
-		GROUP BY
-			vote_weight.key
-	");
-
-	SqliteQuery2("
-		CREATE VIEW
 			author_score
 		AS
 			SELECT
@@ -379,7 +345,6 @@ sub SqliteMakeTables { # creates sqlite schema
 		AS 
 		SELECT 
 			author.key AS author_key, 
-			author_weight.vote_weight AS author_weight,
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
@@ -387,8 +352,6 @@ sub SqliteMakeTables { # creates sqlite schema
 			author_alias.file_hash AS file_hash
 		FROM
 			author 
-			LEFT JOIN author_weight
-				ON (author.key = author_weight.key)
 			LEFT JOIN author_alias
 				ON (author.key = author_alias.key)
 			LEFT JOIN author_score
@@ -478,10 +441,10 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 #	my @queryParams = ();
 #
 #	if ($fileHash) {
-#		$query = "SELECT file_hash, ballot_time, vote_value, author_key, vote_weight FROM vote_weighed WHERE file_hash = ?;";
+#		$query = "SELECT file_hash, ballot_time, vote_value, author_key FROM vote_weighed WHERE file_hash = ?;";
 #		@queryParams = ($fileHash);
 #	} else {
-#		$query = "SELECT file_hash, ballot_time, vote_value, author_key, vote_weight FROM vote_weighed;";
+#		$query = "SELECT file_hash, ballot_time, vote_value, author_key FROM vote_weighed;";
 #	}
 #
 #	my $result = SqliteQuery2($query, @queryParams);
@@ -507,9 +470,8 @@ sub DBGetVotesForItem { # Returns all votes (weighed) for item
 			file_hash,
 			ballot_time,
 			vote_value,
-			author_key,
-			vote_weight
-		FROM vote_weighed
+			author_key
+		FROM vote
 		WHERE file_hash = ?
 	";
 	@queryParams = ($fileHash);
@@ -761,7 +723,7 @@ sub SqliteEscape { # Escapes supplied text for use in sqlite query
 #}
 
 # sub DBGetAuthor {
-# 	my $query = "SELECT author_key, author_alias, vote_weight FROM author_flat";
+# 	my $query = "SELECT author_key, author_alias FROM author_flat";
 #
 # 	my $authorInfo = SqliteQuery2($query);
 #
@@ -1030,7 +992,7 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo item_page should have all the child items for replies
 
 	#file_hash
-	my @tables = qw(author_alias config item item_attribute vote vote_weight);
+	my @tables = qw(author_alias config item item_attribute vote);
 
 	foreach (@tables) {
 		my $query = "DELETE FROM $_ WHERE file_hash = '$hash'";
@@ -1460,48 +1422,6 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	if ($verifyError) {
 		DBAddItemAttribute($fileHash, 'verify_error', '1');
 	}
-}
-
-sub DBAddVoteWeight { # Adds a vote weight record for a user, based on vouch/ token 
-	state $query;
-	state @queryParams;
-
-	my $key = shift;
-
-	if ($key eq 'flush') {
-		WriteLog("DBAddVoteWeight(flush)");
-
-		if ($query) {
-			$query .= ';';
-
-			SqliteQuery2($query, @queryParams);
-
-			$query = '';
-			@queryParams = ();
-		}
-
-		return;
-	}
-
-	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
-		DBAddVoteWeight('flush');
-		$query = '';
-		@queryParams = ();
-	}
-
-	my $weight = shift;
-	my $fileHash = shift;
-
-	WriteLog('DBAddVoteWeight(' . $key . ', ' . $weight . ', ' . $fileHash . ')');
-
-	if (!$query) {
-		$query = "INSERT OR REPLACE INTO vote_weight(key, vote_weight, file_hash) VALUES ";
-	} else {
-		$query .= ',';
-	}
-
-	$query .= '(?, ?, ?)';
-	push @queryParams, $key, $weight, $fileHash;
 }
 
 sub DBAddEventRecord { # add event record to database; $itemHash, $eventTime, $eventDuration, $signedBy
@@ -2203,38 +2123,6 @@ sub DBGetAuthorPublicKeyHash { # Returns the hash/identifier of the file contain
 	}
 } # DBGetAuthorPublicKeyHash()
 
-sub DBGetAuthorWeight { # returns author's weight from vote_weight table
-# Determined by vouch/ tokens  
-	my $key = shift;
-	chomp ($key);
-
-	if (!IsFingerprint($key)) {
-		WriteLog('Problem! DBGetAuthorWeight called with invalid parameter! returning');
-		return;
-	}
-
-	state %weightCache;
-	if (exists($weightCache{$key})) {
-		return $weightCache{$key};
-	}
-
-	$key = SqliteEscape($key);
-
-	if ($key) { #todo fix non-param sql
-		my $query = "SELECT SUM(vote_weight) FROM vote_weight WHERE key = '$key'";
-		$weightCache{$key} = SqliteGetValue($query);
-
-		if (!defined($weightCache{$key}) || $weightCache{$key} < 1) {
-			$weightCache{$key} = 1;
-		}
-
-		return $weightCache{$key};
-	} else {
-		return "";
-	}
-}
-
-
 sub DBGetItemFields { # Returns fields we typically need to request from item_flat table
 	my $itemFields =
 		"item_flat.file_path file_path,
@@ -2258,7 +2146,6 @@ sub DBGetTopAuthors { # Returns top-scoring authors from the database
 			author_key,
 			author_alias,
 			author_score,
-			author_weight,
 			last_seen,
 			item_count
 		FROM author_flat
@@ -2352,15 +2239,15 @@ sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash 
 	my $query = "
 		SELECT
 			vote_value,
-			SUM(IFNULL(vote_weight,1)) AS vote_weight_sum
+			COUNT(vote_value) AS vote_count
 		FROM
-			vote_weighed
+			vote
 		WHERE
 			file_hash = ?
 		GROUP BY
 			vote_value
 		ORDER BY
-			vote_weight_sum DESC;
+			vote_count DESC;
 	";
 
 	my @queryParams;

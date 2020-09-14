@@ -2367,7 +2367,6 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorKey = $author{'author_key'};
 		my $authorAlias = $author{'author_alias'};
 		my $authorScore = $author{'author_score'};
-		my $authorWeight = $author{'author_weight'} || 1;
 		my $authorLastSeen = $author{'last_seen'};
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey) || $authorKey;
@@ -2391,7 +2390,6 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
-		$authorItemTemplate =~ s/\$authorWeight/$authorWeight/g;
 		$authorItemTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 		$authorItemTemplate =~ s/\$authorItemCount/$authorItemCount/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
@@ -2435,7 +2433,6 @@ sub GetAuthorInfoBox {
 	my $authorScore = DBGetAuthorScore($authorKey) || 0;
 	my $itemCount = DBGetAuthorItemCount($authorKey);
 	my $authorDescription = '';
-	my $authorWeight = DBGetAuthorWeight($authorKey);
 	my $authorLastSeen = DBGetAuthorLastSeen($authorKey) || 0;
 
 	my $publicKeyHash = DBGetAuthorPublicKeyHash($authorKey);
@@ -2491,7 +2488,6 @@ sub GetAuthorInfoBox {
 	$authorInfoTemplate =~ s/\$importance/$authorImportance/;
 	$authorInfoTemplate =~ s/\$authorScore/$authorScore/;
 	$authorInfoTemplate =~ s/\$itemCount/$itemCount/;
-	$authorInfoTemplate =~ s/\$authorWeight/$authorWeight/;
 	$authorInfoTemplate =~ s/\$authorDescription/$authorDescription/;
 	$authorInfoTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 	$authorInfoTemplate =~ s/\$profileVoteButtons/$profileVoteButtons/g;

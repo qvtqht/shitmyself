@@ -7,33 +7,14 @@ use POSIX qw(strftime);
 use Cwd qw(cwd);
 #use Encode qw( encode_utf8 );
 
-# We'll use pwd for for the install root dir
-#my $SCRIPTDIR = `pwd`;
-
-my $SCRIPTDIR = cwd();
-my $HTMLDIR = $SCRIPTDIR . '/html';
-my $TXTDIR = $HTMLDIR . '/txt';
+my $SCRIPTDIR = cwd(); # where the perl scripts live
+my $HTMLDIR = $SCRIPTDIR . '/html'; # web root
+my $TXTDIR = $HTMLDIR . '/txt'; # text files root
 
 require './utils.pl';
 require './sqlite.pl';
 
 WriteLog( "Using $SCRIPTDIR as install root...\n");
-
-#sub MakeTagIndex {
-#	print "MakeTagIndex()\n";
-#
-#	my $tagsWeight = GetConfig("tags_weight");
-#
-#	if (defined($tagsWeight) && $tagsWeight) {
-#		my @tagsToAdd = split("\n", $tagsWeight);
-#
-#		foreach (@tagsToAdd) {
-#			my ($voteValue, $weight) = split('\|', $_);
-#
-#			DbAddVoteWeight($voteValue, $weight);
-#		}
-#	}
-#}
 
 sub MakeAddedIndex { # reads from log/added.log and puts it into added_time table
 	WriteLog("MakeAddedIndex()\n");
@@ -145,7 +126,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddVoteRecord('flush');
 		DBAddEventRecord('flush');
 		DBAddItemParent('flush');
-		DBAddVoteWeight('flush');
 		DBAddPageTouch('flush');
 		DBAddConfigValue('flush');
 		DBAddItemAttribute('flush');
@@ -783,7 +763,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					# cookied can config
 					GetConfig('admin/cookied_can_config')
 						&&
-						$hasCookie
+					$hasCookie
 				)
 			) {
 				# preliminary conditions met
@@ -899,44 +879,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			}
 		}
-		#
-		# #look for vouch
-		# if (GetConfig('admin/token/vouch') && $message) {
-		# 	# look for vouch, which adds a voting vouch for a user
-		# 	# vouch/F82FCD75AAEF7CC8/20
-		#
-		# 	if (IsAdmin($gpgKey) || $isSigned) {
-		# 		# todo allow non-admin vouch from vouched
-		# 		my @weightLines = ($message =~ m/^vouch\/([0-9A-F]{16})\/([0-9]+)/mg);
-		#
-		# 		if (@weightLines) {
-		# 			my $lineCount = @weightLines / 2;
-		#
-		# 			if ($isSigned) {
-		# 				while (@weightLines) {
-		# 					my $voterId = shift @weightLines;
-		# 					my $voterWt = shift @weightLines;
-		# 					#my $voterAvatar = GetAvatar($voterId);
-		# 					#bug calling GetAvatar before the index is generated results in an avatar without alias
-		#
-		# 					my $reconLine = "vouch/$voterId/$voterWt";
-		#
-		# 					$message =~ s/$reconLine/[User $voterId has been vouched for with a weight of $voterWt.]/g;
-		# 					$detokenedMessage =~ s/$reconLine//g;
-		#
-		#                     # add record to vote weight table
-		# 					DBAddVoteWeight($voterId, $voterWt, $fileHash);
-		# 					DBAddPageTouch('author', $voterId);
-		# 					DBAddPageTouch('scores');
-		# 				}
-		#
-		#                 # tag item as having a vouch action
-		# 				DBAddVoteRecord($fileHash, $addedTime, 'vouch');
-		# 				DBAddPageTouch('tag', 'vouch');
-		# 			}
-		# 		}
-		# 	}
-		# }
 
 		if (GetConfig('admin/token/addedtime') && $message) {
 			# look for addedtime, which adds an added time for an item
@@ -1024,8 +966,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							DBAddItemAttribute($fileHash, 'added_by', $itemAddedBy);
 						}
 
-						#DBAddVoteWeight('flush');
-
 						DBAddVoteRecord($fileHash, $addedTime, 'device');
 
 						DBAddPageTouch('tag', 'device');
@@ -1107,8 +1047,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				}
 				#
-				# 			#DBAddVoteWeight('flush');
-				#
 				# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
 				#
 				# 			DBAddPageTouch('tag', 'device');
@@ -1149,8 +1087,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 							DBAddItemParent($fileHash, $itemHash);
 						}
-
-						#DBAddVoteWeight('flush');
 
 						DBAddVoteRecord($fileHash, $addedTime, 'sha');
 
@@ -1376,144 +1312,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					DBAddPageTouch('events');
 				}
 			}
-		}
-
-		# # look for vote tokens
-		# if (GetConfig('admin/token/vote') && $message) {
-		# 	# here we look for two formats, prefixed with vote/ and addvote/
-		# 	# experimental compatibility
-		#
-		# 	my @voteLines = ($message =~ m/^(vote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg);
-		# 	#                                prefix  /file hash      /time     /tag      /csrf
-		#
-		# 	#vote/d5145c4716ebe71cf64accd7d874ffa9eea6de9b/1542320741/informative/573defc376ff80e5181cadcfd2d4196c
-		#
-		# 	my @addVoteLines = ($message =~ m/^(addvote)\/([0-9a-f]{40})\/([0-9]+)\/([a-zé -]+)\/([0-9a-f]{32})/mg);
-		# 	#                                    prefix   /file hash      /time     /tag      /csrf
-		#
-		# 	# join the two arrays of matches together
-		# 	push @voteLines, @addVoteLines;
-		#
-		# 	if (@voteLines) {
-		# 		my $lineCount = @voteLines / 5;
-		# 		#todo assert no remainder
-		#
-		# 		#				if ($isSigned) {
-		# 		#					$message = "$gpgKey is adding $lineCount votes:\n" . $message;
-		# 		#				} else {
-		# 		#					$message = "A mysterious stranger is adding $lineCount votes:\n" . $message;
-		# 		#				}
-		#
-		# 		while (@voteLines) {
-		# 			# read parameters from the array
-		#
-		# 			my $tokenPrefix = shift @voteLines;
-		# 			my $voteFileHash = shift @voteLines;
-		# 			my $voteBallotTime = shift @voteLines;
-		# 			my $voteValue = shift @voteLines;
-		# 			my $voteCsrf = shift @voteLines;
-		# 			#shift @voteLines;
-		#
-		# 			# add a record to the vote table
-		# 			if ($isSigned) {
-		# 				# include author's key if message is signed
-		# 				DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $gpgKey);
-		# 			}
-		# 			else {
-		# 				if ($hasCookie) {
-		# 					DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue, $hasCookie);
-		# 				}
-		# 				else {
-		# 					DBAddVoteRecord($voteFileHash, $voteBallotTime, $voteValue);
-		# 				}
-		# 			}
-		#
-		# 			# add a 'hasvote' tag to item being voted on
-		# 			DBAddVoteRecord($voteFileHash, $addedTime, 'hasvote');
-		#
-		# 			# set voted-on item as parent of current item
-		# 			DBAddItemParent($fileHash, $voteFileHash);
-		#
-		# 			# replace token in message with a (slightly) more descriptive string
-		# 			my $reconLine = "$tokenPrefix/$voteFileHash/$voteBallotTime/$voteValue/$voteCsrf";
-		# 			$message =~ s/$reconLine/>>$voteFileHash\n[$voteValue]/g;
-		#
-		# 			# remove token from $detokenedMessage
-		# 			$detokenedMessage =~ s/$reconLine//g;
-		#
-		# 			# give this item 'vote' tag, to indicate it contains vote(s)
-		# 			DBAddVoteRecord($fileHash, $addedTime, 'vote');
-		#
-		# 			# add page_touch records so that appropriate pages are refreshed
-		# 			DBAddPageTouch('item', $voteFileHash); # item
-		# 			DBAddPageTouch('tag', 'vote');         # page of items with 'vote' tag
-		# 			DBAddPageTouch('tag', 'hasvote');      # page of items with 'hasvote' tag
-		# 			DBAddPageTouch('tag', $voteValue);     # the listing page of the tag itself
-		#
-		# 			# if the vote value is 'remove', perform appropriate operations
-		# 			if ($voteValue eq 'remove') {
-		# 				WriteLog('Found request to remove file');
-		#
-		# 				# find the author of the item in question.
-		# 				# this will help us determine whether the request can be fulfilled
-		# 				my $voteItemAuthor = DBGetItemAuthor($voteFileHash) || '';
-		#
-		# 				# at this time only signed requests to remove are honored
-		# 				if (
-		# 					$gpgKey # is signed
-		# 						&&
-		# 						(
-		# 							IsAdmin($gpgKey)                 # signed by admin
-		# 								||                           # OR
-		# 								($gpgKey eq $voteItemAuthor) # signed by same as author
-		# 						)
-		# 				) {
-		# 					WriteLog('Found seemingly valid request to remove file');
-		#
-		# 					AppendFile('log/deleted.log', $voteFileHash);
-		#
-		# 					DBDeleteItemReferences($voteFileHash);
-		#
-		# 					my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($voteFileHash);
-		# 					if (-e $htmlFilename) {
-		# 						WriteLog($htmlFilename . ' exists, calling unlink()');
-		# 						unlink($htmlFilename);
-		# 					}
-		# 					else {
-		# 						WriteLog($htmlFilename . ' does NOT exist, very strange');
-		# 					}
-		#
-		# 					if (-e $file) {
-		# 						#todo unlink the file represented by $voteFileHash, not $file
-		#
-		# 						if (!GetConfig('admin/logging/record_remove_action')) {
-		# 							# this removes the remove call itself
-		# 							WriteLog($file . ' exists, calling unlink()');
-		# 							unlink($file);
-		# 						}
-		#
-		# 						my $votedFileHashPath = GetPathFromHash($voteFileHash);
-		# 						if (-e $votedFileHashPath) {
-		# 							WriteLog("removing $votedFileHashPath");
-		# 							unlink($votedFileHashPath);
-		# 						}
-		#
-		# 					}
-		# 					else {
-		# 						WriteLog($file . ' does NOT exist, very strange');
-		# 					}
-		#
-		# 					#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
-		# 				}
-		# 				else {
-		# 					WriteLog('Request to remove file was not found to be valid');
-		# 				}
-		# 			}
-		# 		}
-		#
-		# 		$hasParent = 1;
-		# 	}
-		# }
+		} # event token
 
 		# if $alias is set, means this is a pubkey
 		if ($alias) {
