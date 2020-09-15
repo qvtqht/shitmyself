@@ -378,11 +378,25 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 		# WriteLog($query);
 
 		if ($dbh) {
-			my $sth = $dbh->prepare($query);
+			my $aref;
+			my $sth;
+
+#			try {
+#
+#			} catch {
+#				WriteMessage('SqliteQuery2: warning: error');
+#				WriteMessage('SqliteQuery2: query: ' . $query);
+#
+#				WriteLog('SqliteQuery2: warning: error');
+#				WriteLog('SqliteQuery2: query: ' . $query);
+#
+#				return;
+#			};
+
+			$sth = $dbh->prepare($query);
 			$sth->execute(@_);
 
-			my $aref = $sth->fetchall_arrayref();
-
+			$aref = $sth->fetchall_arrayref();
 			$sth->finish();
 
 			return $aref;
