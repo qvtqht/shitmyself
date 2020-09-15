@@ -4095,7 +4095,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		$priority = 0;
 	}
 
-	$priority = 1 // #override temp #todo #hack #bug
+	WriteLog('MakePage: lazy_page_generation: ' . GetConfig('admin/pages/lazy_page_generation') . '; $priority: ' . $priority);
 
 	#todo sanity checks
 
@@ -4109,14 +4109,13 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $targetPath = "top/$tagName.html";
 
 		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+			WriteLog('MakePage: tag: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
 			return;
 		}
 
 		WriteLog("pages.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
-
 		my $tagPage = GetReadPage('tag', $tagName);
-
 		PutHtmlFile($targetPath, $tagPage);
 	}
 	#
@@ -4126,16 +4125,15 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $targetPath = "author/$authorKey/index.html";
 
 		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+			WriteLog('MakePage: author: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
 			return;
 		}
 
 		my $authorPage = GetReadPage('author', $authorKey);
-
 		if (!-e "$HTMLDIR/author/$authorKey") {
 			mkdir ("$HTMLDIR/author/$authorKey");
 		}
-
 		PutHtmlFile($targetPath, $authorPage);
 	}
 	#
@@ -4149,6 +4147,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $targetPath = GetHtmlFilename($fileHash);
 
 		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+			WriteLog('MakePage: item: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
 			return;
 		}
