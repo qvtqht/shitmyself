@@ -1310,6 +1310,7 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 
 sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 # Usually this is when item references parent item, by being a reply or a vote, etc.
+#todo replace with item_attribute
 	state $query;
 	state @queryParams;
 
