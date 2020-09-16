@@ -1478,13 +1478,6 @@ Entertaining stats page
    number of vote records
    busiest days?
 
-Read profile from user submission
-   Decide on syntax
-   Receive submission
-   Replace into /author/abc/profile.html
-   Update added_timestamp
-      How? It's in added.log
-
 Add "via [sitename]" to pulled and pushed items
 
 Sometimes generated keys have the header/comment field
