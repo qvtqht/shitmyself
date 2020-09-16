@@ -366,11 +366,12 @@ sub SqliteMakeTables { # creates sqlite schema
 }
 
 sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns result as array reference
-
 	# WriteLog('SqliteQuery2() begin');
 
 	my $query = shift;
 	chomp $query;
+
+	my @queryParams = @_;
 
 	# WriteLog('SqliteQuery2: $query = ' . $query);
 
@@ -394,7 +395,7 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 #			};
 
 			$sth = $dbh->prepare($query);
-			$sth->execute(@_);
+			$sth->execute(@queryParams);
 
 			$aref = $sth->fetchall_arrayref();
 			$sth->finish();
