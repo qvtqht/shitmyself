@@ -28,7 +28,7 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 			# my @addedRecord = split("\n", GetFile("log/added.log"));
 
 			foreach(@addedRecord) {
-				my ($fileHash, $addedTime) = split('\|', $_);
+				my ($fileHash, $addedTime, $proofHash) = split('\|', $_);
 
 				DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
 			}
@@ -542,6 +542,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 											WriteLog($htmlFilename . ' does NOT exist, very strange');
 										}
 
+										my $itemParentPath = GetPathFromHash($itemParent);
+										if (-e $itemParentPath) {
+											WriteLog("removing $itemParentPath");
+											unlink($itemParentPath);
+										}
+
 										if (-e $file) {
 											#todo unlink the file represented by $voteFileHash, not $file
 
@@ -549,12 +555,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 												# this removes the remove call itself
 												WriteLog($file . ' exists, calling unlink()');
 												unlink($file);
-											}
-
-											my $itemParentPath = GetPathFromHash($itemParent);
-											if (-e $itemParentPath) {
-												WriteLog("removing $itemParentPath");
-												unlink($itemParentPath);
 											}
 										}
 										else {
