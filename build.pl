@@ -86,7 +86,6 @@ BuildMessage "Looking for files...";
 
 BuildMessage "MakeAddedIndex()...";
 MakeAddedIndex();
-MakeAddedIndex();
 
 BuildMessage "WriteConfigFromDatabase()...";
 WriteConfigFromDatabase();
