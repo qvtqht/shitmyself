@@ -3092,6 +3092,37 @@ sub MakeJsTestPages {
 	PutHtmlFile("jstest2.html", $jsTest2);
 }
 
+sub MakeSimplePage { # given page name, makes page
+	my $pageName = shift;
+	if (!$pageName) {
+		return;
+	}
+	chomp $pageName;
+	if (!$pageName =~ m/^[a-z]+$/) {
+		return;
+	}
+
+	my $html = '';
+
+	$html .= GetPageHeader(ucfirst($pageName), ucfirst($pageName), $pageName);
+	$html .= GetTemplate('maincontent.template');
+
+	my $pageContent = GetTemplate("page/$pageName.template");
+	my $contentWindow = GetWindowTemplate(
+		ucfirst($pageName),
+		'', #menubar
+		'', #columns
+		$pageContent,
+		'' # statusbar
+	);
+	$html .= $contentWindow;
+	$html .= GetPageFooter();
+	$html = InjectJs($html, qw(avatar settings profile));
+
+	PutHtmlFile("$pageName.html", $html);
+}
+
+
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages StaticPages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 # js files, 
