@@ -3287,31 +3287,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutHtmlFile('index.html', $welcomePage);
 	}
 
-	{
-		# Help page
-		my $tfmPage = GetPageHeader("Help", "Help", 'help');
-
-		$tfmPage .= GetTemplate('maincontent.template');
-
-		my $tfmPageContent = GetTemplate('page/help.template');
-
-		my $tfmPageWindow = GetWindowTemplate(
-			'Help',
-			'', #menubar
-			'', #columns
-			$tfmPageContent,
-			''
-		);
-
-		$tfmPage .= $tfmPageWindow;
-
-		$tfmPage .= GetPageFooter();
-
-		$tfmPage = InjectJs($tfmPage, qw(avatar settings profile));
-
-		PutHtmlFile("help.html", $tfmPage);
-
-	}
+	MakeSimplePage('help'); # help.html
 
 	{
 		# Advanced Manual page
