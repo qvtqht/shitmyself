@@ -1641,6 +1641,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 		# one of these is required for profile to work
 		push @menu, 'profile';
 	}
+	push @menu, 'help';
 
 	###
 
