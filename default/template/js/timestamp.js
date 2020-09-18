@@ -7,11 +7,14 @@ function ShowTimestamps() { // finds any class=timestamp, updates its displayed 
 		
 		var changeLogged = 0;
 	
-		var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
+		// find elements with class=timestamp
+		var te = document.getElementsByClassName("timestamp"); // #todo nn3 compat for loop
 		for (var i = 0; i < te.length; i++) {
 			if (!isNaN(te[i].getAttribute('epoch'))) {
-				var secs = 0 - (curTime - te[i].getAttribute('epoch'));
+				// element also has an attribute called 'epoch', and it is a number
+				var secs = 0 - (curTime - te[i].getAttribute('epoch')); // number of seconds since epoch number
 				if (te[i].innerHTML != LongAgo(secs)) {
+					// element's content does not already equal what it should equal
 					te[i].innerHTML = LongAgo(secs);
 					if ((secs * -1) < 3600) {
 						te[i].style.backgroundColor = '$colorHighlightAlert';
@@ -88,6 +91,6 @@ function LongAgo(seconds) { // returns string with time units
 	return 'just now!';
 }
 
-ShowTimestamps();
+ShowTimestamps(); // #todo this should probably be called from onload somehow
 
 // == end timestamp.js
