@@ -9,10 +9,6 @@ function ShowTimestamps() { // finds any class=timestamp, updates its displayed 
 	
 		var te = document.getElementsByClassName("timestamp");//#todo nn3 compat for loop
 		for (var i = 0; i < te.length; i++) {
-			if (te[i].title) { // use title attribute to store timestamp number
-			} else {
-				te[i].setAttribute('title', te[i].innerHTML);
-			}
 			if (!isNaN(te[i].getAttribute('epoch'))) {
 				var secs = 0 - (curTime - te[i].getAttribute('epoch'));
 				if (te[i].innerHTML != LongAgo(secs)) {
