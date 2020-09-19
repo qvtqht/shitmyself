@@ -366,14 +366,15 @@ sub SqliteMakeTables { # creates sqlite schema
 }
 
 sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns result as array reference
-	# WriteLog('SqliteQuery2() begin');
+	WriteLog('SqliteQuery2() begin');
 
 	my $query = shift;
 	chomp $query;
 
 	my @queryParams = @_;
 
-	# WriteLog('SqliteQuery2: $query = ' . $query);
+	WriteLog('SqliteQuery2: $query = ' . $query);
+	WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
 
 	if ($query) {
 		# WriteLog($query);
