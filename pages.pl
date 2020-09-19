@@ -3120,6 +3120,10 @@ sub MakeSimplePage { # given page name, makes page
 	$html = InjectJs($html, qw(avatar settings profile));
 
 	PutHtmlFile("$pageName.html", $html);
+
+	if ($pageName eq 'welcome') {
+		PutHtmlFile("index.html", $html);
+	}
 }
 
 
@@ -3238,106 +3242,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 	$okPage = InjectJs($okPage, qw(settings));
 	PutHtmlFile("action/event.html", $okPage);
-		
-	{
-		# Manual page
-		my $tfmPage = GetPageHeader("Manual", "Manual", 'manual');
 
-		$tfmPage .= GetTemplate('maincontent.template');
-
-		my $tfmPageContent = GetTemplate('page/manual.template');
-#		$tfmPageContent .= '<p>' . GetTemplate('netnow3.template') . '</p>';
-
-		my $tfmPageWindow = GetWindowTemplate(
-			'Manual',
-			'', #menubar
-			'', #columns
-			$tfmPageContent,
-			'Ready'
-		);
-
-		$tfmPage .= $tfmPageWindow;
-
-		$tfmPage .= GetPageFooter();
-
-		$tfmPage = InjectJs($tfmPage, qw(settings avatar profile));
-
-		PutHtmlFile("manual.html", $tfmPage);
-
-	}
-
-	{
-		# Welcome page
-
-		my $title = 'Welcome';
-
-		my $welcomePage = GetPageHeader($title, $title, 'welcome');
-
-		$welcomePage .= GetTemplate('maincontent.template');
-
-		my $welcomePageContent = GetTemplate('page/welcome.template');
-
-		$welcomePage .= GetWindowTemplate('Welcome', '', '', $welcomePageContent, '');
-
-		$welcomePage .= GetPageFooter();
-
-		$welcomePage = InjectJs($welcomePage, qw(avatar settings profile));
-
-		PutHtmlFile('welcome.html', $welcomePage);
-		PutHtmlFile('index.html', $welcomePage);
-	}
-
+	MakeSimplePage('manual'); # manual.html
 	MakeSimplePage('help'); # help.html
-
-	{
-		# Advanced Manual page
-		my $tfmPage = GetPageHeader("Advanced Manual", "Advanced Manual", 'manual_advanced');
-
-		$tfmPage .= GetTemplate('maincontent.template');
-
-		my $tfmPageContent = GetTemplate('page/manual_advanced.template');
-
-		my $tfmPageWindow = GetWindowTemplate(
-			'Advanced Manual',
-			'', #menubar
-			'', #columns
-			$tfmPageContent,
-			'Ready'
-		);
-
-		$tfmPage .= $tfmPageWindow;
-
-		$tfmPage .= GetPageFooter();
-
-		$tfmPage = InjectJs($tfmPage, qw(settings avatar));
-
-		PutHtmlFile("manual_advanced.html", $tfmPage);
-	}
-
-	{
-		# Tokens Reference page
-		my $tokensPage = GetPageHeader("Tokens Reference", "Tokens Reference", 'manual_tokens');
-
-		$tokensPage .= GetTemplate('maincontent.template');
-
-		my $tokensPageContent = GetTemplate('page/manual_tokens.template');
-
-		my $tokensPageWindow = GetWindowTemplate(
-			'Tokens Reference',
-			'', #menubar
-			'', #columns
-			$tokensPageContent,
-			''
-		);
-
-		$tokensPage .= $tokensPageWindow;
-
-		$tokensPage .= GetPageFooter();
-
-		$tokensPage = InjectJs($tokensPage, qw(settings avatar));
-
-		PutHtmlFile("manual_tokens.html", $tokensPage);
-	}
+	MakeSimplePage('welcome'); # welcome.html
+	MakeSimplePage('manual_advanced'); # manual_advanced.html
+	MakeSimplePage('manual_tokens'); # manual_tokens.html
 
 	# Blank page
 	PutHtmlFile("blank.html", "");
