@@ -735,7 +735,8 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 				$avatar = '';
 			}
 		} else {
-			$avatar =~ s/\$alias/$alias/g;
+			my $aliasHtmlEscaped = encode_entities2($alias);
+			$avatar =~ s/\$alias/$aliasHtmlEscaped/g;
 		}
 	} else {
 		$avatar = "";
