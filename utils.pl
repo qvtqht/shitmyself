@@ -1920,8 +1920,10 @@ sub GpgParse {
 	}
 
 	if ($pubKeyFlag) {
-		if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9]+)\"/) {
-			$returnValues{'alias'} = $1;
+		if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>@.]+)\"/) {
+			my $aliasReturned = $1;
+			$aliasReturned =~ s/\<.+\>//;
+			$returnValues{'alias'} = $aliasReturned;
 		} else {
 			$returnValues{'alias'} = '?????';
 		}
