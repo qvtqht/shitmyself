@@ -1,3 +1,6 @@
+directory listings
+	instead of 404 page, there should be index.html in each directory showing its contents
+
 for js/debug, add comment to end of each line like so:
 	// filename.js : 123
 
@@ -315,14 +318,6 @@ make clean.sh safer
 "paste a lot of text" form
 	method=post
 	"warning: this method is less reliable, but allows more text"
-
-route.php
-	if (page has a priority in page_touch) {
-		remake page before serving
-	}
-
-timestamp title/tooltip/alt should be a human-readable timestamp
-	perhaps same as clock_format??
 
 profile page
 	without js

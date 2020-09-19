@@ -1,3 +1,8 @@
+Бот-модератор на русском языке для администраторов групп.
+Функционал: репутация, звания, мьют, бан, предупреждения, возможность установить свои правила и  приветствие,
+и ещё много других функций. Постоянно обновляющийся и абсолютно бесплатный.
+
+
 instead of pre-creating all the tables
 	have a static variable in each function which regulates
 		one-time check for table's existence and create if necessary?
