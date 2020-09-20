@@ -2366,7 +2366,9 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorItemTemplate = GetTemplate('author_listing.template');
 		#todo don't need to do this every time
 #
-		$authorLastSeen = GetTimestampElement($authorLastSeen);
+		if ($authorLastSeen) {
+			$authorLastSeen = GetTimestampElement($authorLastSeen);
+		}
 #		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 #
 		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
