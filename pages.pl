@@ -894,6 +894,50 @@ sub GetItemPage {
 	return $txtIndex;
 } # GetItemPage()
 
+sub GetReplyForm { # $replyTo ; returns reply form for specified item
+	my $replyTo = shift;
+	chomp $replyTo;
+
+	if (!$replyTo || !IsItem($replyTo)) {
+		return '';
+	}
+	my $replyTag = GetTemplate('replytag.template');
+	my $replyForm = GetTemplate('form/write/reply.template');
+
+	$replyTag =~ s/\$parentPost/$replyTo/g;
+	$replyForm =~ s/\$replyTo/$replyTo/g;
+
+	# at the top of reply.template, there is a placeholder for the voting buttons
+	my $voteButtons = GetItemVoteButtons($replyTo);
+	$replyForm =~ s/\$votesSummary/$voteButtons/g;
+
+	if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
+		$replyForm =~ s/\/post\.html/\/post.php/g;
+	}
+
+	if (GetConfig('admin/js/enable')) {
+		$replyForm = AddAttributeToTag(
+			$replyForm,
+			'<input type=submit',
+			'onclick',
+			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
+		);
+
+		if (GetConfig('admin/js/translit')) {
+			# add onkeydown event which calls translitKey if feature is enabled
+			# translit substitutes typed characters with a different character set
+			$replyForm = AddAttributeToTag(
+				$replyForm,
+				'textarea',
+				'onkeydown',
+				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
+			);
+		}
+	}
+
+	return $replyForm;
+} # GetReplyForm();
+
 sub GetItemHtmlLink { # $hash, [link caption], [#anchor]
 	my $hash = shift;
 
