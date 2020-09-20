@@ -1248,7 +1248,7 @@ sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused
 # }
 
 #props http://www.bin-co.com/perl/scripts/str_replace.php
-sub str_replace {
+sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_replace() from php
 	my $replace_this = shift;
 	my $with_this  = shift;
 	my $string   = shift;
@@ -1256,10 +1256,9 @@ sub str_replace {
 	my $length = length($string);
 	my $target = length($replace_this);
 
-	for(my $i=0; $i<$length - $target + 1; $i++) {
-		if(substr($string,$i,$target) eq $replace_this) {
-			$string = substr($string,0,$i) . $with_this . substr($string,$i+$target);
-			return $string; #Comment this if you what a global replace
+	for (my $i = 0; $i < $length - $target + 1; $i++) {
+		if (substr($string, $i, $target) eq $replace_this) {
+			$string = substr ($string, 0, $i) . $with_this . substr($string, $i + $target);
 		}
 	}
 	return $string;
