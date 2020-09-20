@@ -790,70 +790,7 @@ sub GetItemPage {
 
 	if (GetConfig('replies')) {
 		# add reply form bottom of page
-
-		my $replyForm;
-		my $replyTag = GetTemplate('replytag.template');
-		my $replyFooter;
-		my $replyTo;
-		my $prefillText;
-		my $fileContents;
-
-		$fileContents = GetFile($file{'file_path'});
-
-		$replyForm = GetTemplate('form/write/reply.template');
-		$replyFooter = '';
-
-		#		$replyFooter = "&gt;&gt;" . $file{'file_hash'} . "\n\n";
-		#
-		# if ($file{'author_key'}) {
-		# 	$replyTo = $file{'author_key'};
-		# } else {
-		# 	$replyTo = $file{'file_hash'};
-		# }
-		#todo $replyTo should be $file{'author_key'} only if item is pubkey
-
-		$replyTo = $file{'file_hash'};
-
-		if (GetConfig('admin/js/enable')) {
-			$replyForm =~ s/(\<input type=submit )/$1 onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"/i;
-		}
-
-		$prefillText = "";
-
-		if (!$prefillText) {
-			$prefillText = "";
-		}
-
-		$replyTag =~ s/\$parentPost/$file{'file_hash'}/g;
-		# $replyForm =~ s/\$extraFields/$replyTag/g;
-		$replyForm =~ s/\$replyFooter/$replyFooter/g;
-		$replyForm =~ s/\$replyTo/$replyTo/g;
-		# $replyForm =~ s/\$prefillText/$prefillText/g;
-
-
-		# at the top of reply.template, there is a placeholder for the voting buttons
-		# this will put them there
-		my $votesSummary = GetItemVoteButtons($file{'file_hash'});
-		$replyForm =~ s/\$votesSummary/$votesSummary/g;
-
-		if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
-			# my $postHtml = '\/post\.html';
-			$replyForm =~ s/\/post\.html/\/post.php/g;
-		}
-
-		if (GetConfig('admin/js/enable') && GetConfig('admin/js/translit')) {
-			# add onkeydown event which calls translitKey if feature is enabled
-			# translit substitutes typed characters with a different character set
-			$replyForm = AddAttributeToTag(
-				$replyForm,
-				'textarea',
-				'onkeydown',
-				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
-			);
-		}
-
-		#$replyForm = str_replace('<textarea', '<textArea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $replyForm);
-
+		my $replyForm = GetReplyForm($file{'file_hash'}));
 		$txtIndex .= $replyForm;
 	}
 
