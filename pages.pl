@@ -3178,8 +3178,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 
 	# Profile page
-	my $identityPage2 = GetIdentityPage2();
-	PutHtmlFile("profile.html", $identityPage2);
+	my $profilePage = GetProfilePage();
+	PutHtmlFile("profile.html", $profilePage);
 
 	# Settings page
 	my $settingsPage = GetSettingsPage();
@@ -3607,7 +3607,7 @@ sub GetEventAddPage { # get html for /event.html
 	return $txtIndex;
 }
 
-sub GetIdentityPage2 { # cookie-based identity #todo rename function
+sub GetProfilePage { # returns profile page (allows sign in/out)
 	my $txtIndex = "";
 
 	my $title = "Profile";
@@ -3640,7 +3640,7 @@ sub GetIdentityPage2 { # cookie-based identity #todo rename function
 	$txtIndex .= GetPageFooter();
 
 	if (GetConfig('admin/js/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(settings utils profile));
+		$txtIndex = InjectJs($txtIndex, qw(settings utils profile timestamp));
 
 		# these two lines are different, regex is hard sometimes
 		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
