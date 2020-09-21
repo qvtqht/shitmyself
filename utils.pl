@@ -2421,14 +2421,11 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
 sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog('GetItemEasyFind()');
 
-
 	my $itemHash = shift;
 	if (!$itemHash) {
 		return;
 	}
-
 	chomp $itemHash;
-
 	if (!IsItem($itemHash)) {
 		return;
 	}
@@ -2436,7 +2433,6 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog("GetItemEasyFind($itemHash)");
 
 	my @easyFindArray;
-
 	while ($itemHash) {
 		my $fragment = substr($itemHash, 0, 5);
 		if ($fragment =~ m/[a-f]/) {
