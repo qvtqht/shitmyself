@@ -558,21 +558,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
-		# look for 'upgrade_now' token
-		if (GetConfig('admin/token/upgrade_now') && $message) {
-			if (IsAdmin($gpgKey)) {
-				if (trim($message) eq 'upgrade_now') {
-					my $time = GetTime();
-
-					my $upgradeNow = system('perl ./upgrade.pl');
-
-					PutFile($TXTDIR . '/upgrade_' . $time . '.txt', $upgradeNow);
-
-					AppendFile('log/deleted.log', $fileHash);
-				}
-			}
-		}
-
 		if (GetConfig('admin/token/my_name_is')) {
 			# "my name is" token
 			if ($hasCookie) {
