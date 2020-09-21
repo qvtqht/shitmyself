@@ -1326,6 +1326,74 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					}
 				}
 			} # admin/dev_mode
+
+			if (!$hasToken{'example'}) {
+				#example
+				if ($hasToken{'remove'}) {
+					#remove
+					if ($hasParent && scalar(@itemParents)) {
+						WriteLog('IndexTextFile: Found #remove token, and item has parents');
+						foreach my $itemParent (@itemParents) {
+							# find the author of the item in question.
+							# this will help us determine whether the request can be fulfilled
+							my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
+							WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($gpgKey) . '; $gpgKey = ' . $gpgKey . '; $parentItemAuthor = ' . $parentItemAuthor);
+
+							# at this time only signed requests to remove are honored
+							if (
+								$gpgKey # is signed
+									&&
+									(
+										IsAdmin($gpgKey)                   # signed by admin
+											||                             # OR
+										($gpgKey eq $parentItemAuthor) 	   # signed by same as author
+									)
+							) {
+								WriteLog('IndexTextFile: #remove: Found seemingly valid request to remove');
+
+								AppendFile('log/deleted.log', $itemParent);
+								DBDeleteItemReferences($itemParent);
+
+								my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
+								if (-e $htmlFilename) {
+									WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' exists, calling unlink()');
+									unlink($htmlFilename);
+								}
+								else {
+									WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' does NOT exist, very strange');
+								}
+
+								my $itemParentPath = GetPathFromHash($itemParent);
+								if (-e $itemParentPath) {
+									# this only works if organize_files is on and file was put into its path
+									# otherwise it will be removed at another time
+									WriteLog("removing $itemParentPath");
+									unlink($itemParentPath);
+								}
+
+								if (-e $file) {
+									#todo unlink the file represented by $voteFileHash, not $file
+									if (!GetConfig('admin/logging/record_remove_action')) {
+										# this removes the remove call itself
+										if (!$detokenedMessage) {
+											WriteLog($file . ' exists, calling unlink()');
+											unlink($file);
+										}
+									}
+								}
+								else {
+									WriteLog($file . ' does NOT exist, very strange');
+								}
+
+								#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
+							} # has permission to remove
+							else {
+								WriteLog('Request to remove file was not found to be valid');
+							}
+						} # foreach my $itemParent (@itemParents)
+					} # has parents
+				} # #remove
+			} # not #example
 		}
 
 		if ($message) {
