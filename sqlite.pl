@@ -914,7 +914,7 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 	return $results;
 }
 
-sub DBAddItemPage { # adds an entry to item_page table
+sub DBAddItemPage { # $itemHash, $pageType, $pageParam ; adds an entry to item_page table
 # should perhaps be called DBAddItemPageReference
 # purpose of table is to track which items are on which pages
 
