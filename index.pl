@@ -780,6 +780,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									# checks passed, we're going to update/reset a config entry
 									DBAddVoteRecord($fileHash, $addedTime, 'config');
 
+									$reconLine = quotemeta($reconLine);
+
 									if ($configAction eq 'resetconfig') {
 										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
 										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
