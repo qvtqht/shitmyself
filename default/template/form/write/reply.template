@@ -19,7 +19,7 @@
 						style="min-width: 360px; height: 80px;"
 						id=comment
 						name=comment
-					>$replyFooter</textarea><br>
+					></textarea><br>
 					<input type=submit value="Send Reply">
 					<span id=replySignedContainer></span>
 					<input type=hidden name=replyto id=replyto value="$replyTo">
