@@ -14,6 +14,7 @@ I wanted accessibility for vision impaired, no-JS, slow connections,
 older devices which cannot be upgraded, average library, school, or homeless shelter computer.
 I also wanted it to be Tor-friendly, which has similar limitations.
 
+===
 
 Do you think people still use browsers like Mosaic, Netscape, Internet Explorer?
 
@@ -27,7 +28,7 @@ I also think it is an issue of there being nothing out there to browse with them
 
 Each browser has its own feel, and I find many of them pleasant to use, much more than many of today's browsers.
 
-
+===
 
 Support Lynx browser? Support Links, w3m, or other text-mode browsers?
 

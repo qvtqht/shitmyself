@@ -1,3 +1,23 @@
+can add bbcode, html, markdown, etc support as modules
+
+
+reddit import thread
+	import each comment with
+		>> parent id
+		reddit_author: token
+	combine with
+		reddit confirm username feature
+	then in profile
+		"confirmed reddit username:"
+	avatar should have
+		checkmark
+
+confirm username on X
+	define X confirmation url e.g. http://www.x.com/user/X
+	url should somehow include the string provided to you
+	(figure it out)
+
+
 Бот-модератор на русском языке для администраторов групп.
 Функционал: репутация, звания, мьют, бан, предупреждения, возможность установить свои правила и  приветствие,
 и ещё много других функций. Постоянно обновляющийся и абсолютно бесплатный.

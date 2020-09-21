@@ -1,4 +1,5 @@
 Why does lazy-loading of images suck? Let me count the ways...
+
 Lazy-loading sucks for anyone whose connection is not stable or always on.
 
 It also sucks for offlining content you want to read later and archiving.

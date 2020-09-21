@@ -1,2 +1,6 @@
+# This describes how to remove a particular (typically large) file from the git history to save space.
+
+# Warning: causes a rewrite of git history, which has consequences
+
 #git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch contrib/msie401sp2.exe' --prune-empty --tag-name-filter cat -- --all
 

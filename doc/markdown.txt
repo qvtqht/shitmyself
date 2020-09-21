@@ -1,7 +1,9 @@
 Why Markdown support is a low priority for this project
+
 (or If I had a nickel for every time Markdown fucked something up unexpectedly)
 
-My experience with Markdown is that it often causes unexpected content reformatting in ways the author did not intend. Example scenarios include:
+My experience with Markdown is that it often causes unexpected content
+reformatting in ways the author did not intend. Example scenarios include:
 
 * Links to URLs ending with ) symbol
 * Text-art which includes \ symbol

@@ -6,3 +6,5 @@ Provide accessibility for any still available web browser or client.
 
 Build in less than a minute,
 	including downloading only standard packages from debian and fedora
+
+Portability

@@ -2,14 +2,17 @@ How I do local dev on this thing:
 
 ===
 
-I develop on Fedora LXDE. I've had success running it as a VM on a Mac for an isolated dev enviro.
+I develop on GNU/POSIX environment.
 
-Onto it, I have installed the following packages:
+I've had success running it as a VM on a Mac for an isolated dev enviro.
 
-perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi
-(also in README)
+Recently, I have used the following distros:
 
-I have also installed IntelliJ IDEA Community Edition, with most of the install options disabled, except for Git and GitHub support.
+Fedora LXDE
+Linux Mint XFCE
+
+I have also installed IntelliJ IDEA Community Edition, with most of the install
+options disabled, except for Git and GitHub support.
 I let it install the Perl support plugin (many thanks to Alexandr Evstigneev).
 
 I have found it wise to exclude html/ config/ log/ cache/ from my project.

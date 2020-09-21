@@ -1,0 +1,24 @@
+current deploy process
+======================
+here is how i deploy new code after testing it locally on dev
+
+0. add any new files in default/ to repo
+git add -v default/
+
+1. do some commits
+git commit [...]
+
+2. push to github
+git push [...]
+
+3. git pull on server
+git pull [...]
+
+4. clean currently built environment (downtime)
+time ./clean.sh
+
+5. build new version (site is usable after this)
+time ./build.pl
+
+6. re-import data
+time ./update.pl --all

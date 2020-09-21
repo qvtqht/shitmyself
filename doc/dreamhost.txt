@@ -1,4 +1,5 @@
 How I create a new install on a dreamhost shared hosting server.
+================================================================
 
 I added the domain and username. Let's say they are:
 
@@ -17,23 +18,24 @@ cd hike
 ./clean.sh ; ./build.pl
 
 The build succeeded, so that's good.
-
 Now on with the connecting it to the webserver.
 
 cd ~
 rm -rf ~/geekissues.net
 
-This removes the existing directory for the website. Going to geekissues.net now produces a 404.
+This removes the existing directory for the website.
+Going to geekissues.net now produces a 404 or placeholder page.
 
 ln -s hike/html geekissues.net
 
-This creates a soft-link to hike/html/ called geekissues.net, which is where the webserver is looking for the webroot.
-
+This creates a soft-link to hike/html/ called geekissues.net, which is where
+the webserver is looking for the webroot.
 Loading geekissues.net now produces the home page.
 
 We're not done yet, now to connect the access log.
-
-I'll do this the other way: Instead of removing the original and creating a softlink, I will remove hike/log/access.log and replace it with a softlink to ~/logs/geekissues.net/http/access.log
+I'll do this the other way: Instead of removing the original and creating a softlink,
+I will remove hike/log/access.log and replace it with a softlink to
+~/logs/geekissues.net/http/access.log
 
 There are two settings I changed from their defaults:
 

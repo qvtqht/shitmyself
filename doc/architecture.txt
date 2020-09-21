@@ -1,5 +1,5 @@
-             Architecture Overview (Perl)
-             ============ ========
+Architecture Overview (Perl)
+============ ========
 
   _____
  (;;;;(o)  access.log
