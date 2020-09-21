@@ -2759,8 +2759,8 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		$pageTitle = 'Index';
 	}
 
-	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
-	$html .= $htmlStart;
+	#header
+	$html .= GetPageHeader($pageTitle, $pageTitle, 'item_list');
 
 	# no pagination links at the top now that we have tag buttons
 	#
@@ -2778,38 +2778,31 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	my $itemList = ''; # the "filling" part of the page, with all the items templated
 	my $itemComma = ''; # separator between items
 
-	foreach my $row (@files) {
+	foreach my $row (@files) { # loop through each file
 		my $file = $row->{'file_path'};
 
-		if ($file && -e $file) {
+		if ($file && -e $file) { # file exists
 			my $itemHash = $row->{'file_hash'};
 
-			WriteLog('DBAddItemPage (2)');
-			#DBAddItemPage('index', $currentPageNumber, $itemHash);
+			DBAddItemPage('index', $currentPageNumber, $itemHash);
 
 			my $gpgKey = $row->{'author_key'};
-
 			my $isSigned;
 			if ($gpgKey) {
 				$isSigned = 1;
 			} else {
 				$isSigned = 0;
 			}
-
-			my $alias;
-
+			my $alias = '';
 			my $isAdmin = 0;
 
 			my $message;
-			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
-			WriteLog('$messageCacheName (3) = ' . $messageCacheName);
-			if (-e $messageCacheName) {
-				$message = GetFile($messageCacheName);
+			if (CacheExists("message/$itemHash")) {
+				$message = GetCache("message/$itemHash");
 			} else {
 				$message = GetFile($file);
 			}
 
-			# $row->{'show_quick_vote'} = 1;
 			$row->{'vote_buttons'} = 1;
 			$row->{'show_vote_summary'} = 1;
 			$row->{'display_full_hash'} = 0;
@@ -2822,7 +2815,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 			if ($itemComma eq '') {
 				$itemComma = '<hr>';
-				#				$itemComma = '<p>';
+				# $itemComma = '<p>';
 			}
 		}
 	}
@@ -2830,24 +2823,16 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	$html .= $itemList;
 	$html .= '<p>';
 
-	#	$txtIndex .= GetTemplate('voteframe.template');
-
 	if (defined($currentPageNumber)) {
 		$html .= GetPageLinks($currentPageNumber);
 	}
 
-	if (GetConfig('admin/js/enable')) {
-		# Add javascript warning to the bottom of the page
-		$html .= GetTemplate("jswarning.template");
-	}
-
 	# Close html
 	$html .= GetPageFooter();
-
 	$html = InjectJs($html, qw(settings avatar voting profile timestamp));
 
 	return $html;
-}
+} # GetIndexPage()
 
 sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (used for both top and footer menus)
 	my $address = shift;
