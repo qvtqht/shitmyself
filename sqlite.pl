@@ -952,6 +952,10 @@ sub DBAddItemPage { # adds an entry to item_page table
 	my $pageType = shift;
 	my $pageParam = shift;
 
+	if (!$pageType) {
+		WriteLog('DBAddItemPage: warning: called without $pageType');
+		return;
+	}
 	if (!$pageParam) {
 		$pageParam = '';
 	}
