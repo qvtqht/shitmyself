@@ -1301,36 +1301,22 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# dev mode helps developer by automatically
 				# adding messages tagged #todo, #brainstorm, and #bug
 				# to their respective files under doc/*.txt
-				if ($hasToken{'todo'}) {
-					if ($message) {
-						my $todoContents = GetFile('doc/todo.txt');
-						if (index($todoContents, $message) == -1) {
-							AppendFile('doc/todo.txt', "\n\n===\n\n" . $message);
-						}
-					}
-				}
-				if ($hasToken{'brainstorm'}) {
-					if ($message) {
-						my $todoContents = GetFile('doc/brainstorm.txt');
-						if (index($todoContents, $message) == -1) {
-							AppendFile('doc/brainstorm.txt', "\n\n===\n\n" . $message);
-						}
-					}
-				}
-				if ($hasToken{'bug'}) {
-					if ($message) {
-						my $todoContents = GetFile('doc/bug.txt');
-						if (index($todoContents, $message) == -1) {
-							AppendFile('doc/bug.txt', "\n\n===\n\n" . $message);
+
+				foreach my $devTokenName (qw(todo brainstorm bug)) {
+					if ($hasToken{$devTokenName}) {
+						if ($message) {
+							my $todoContents = GetFile("doc/$devTokenName.txt");
+							if (!$todoContents || index($todoContents, $message) == -1) {
+								AppendFile("doc/$todoContents.txt", "\n\n===\n\n" . $message);
+							}
 						}
 					}
 				}
 			} # admin/dev_mode
 
-			if (!$hasToken{'example'}) {
-				#example
-				if ($hasToken{'remove'}) {
-					#remove
+			if (!$hasToken{'example'}) { #example token negates most other tokens.
+
+				if ($hasToken{'remove'}) { #remove
 					if ($hasParent && scalar(@itemParents)) {
 						WriteLog('IndexTextFile: Found #remove token, and item has parents');
 						foreach my $itemParent (@itemParents) {
