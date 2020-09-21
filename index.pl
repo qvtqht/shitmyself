@@ -698,7 +698,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			) {
 				# preliminary conditions met
 
-				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W)(.+?)$/mg);
+				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W?)(.+)$/mg);
 				WriteLog('@configLines = ' . scalar(@configLines));
 
 				my @resetConfigLines = ($message =~ m/(resetconfig)(\W)([a-z0-9\/_]+)/mg);
