@@ -1294,9 +1294,38 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 
 				DBAddVoteRecord($fileHash, $addedTime, 'hastext');
-
 				DBAddPageTouch('tag', 'hastext');
-			}
+			} # has a $detokenedMessage
+
+			if (GetConfig('admin/dev_mode')) {
+				# dev mode helps developer by automatically
+				# adding messages tagged #todo, #brainstorm, and #bug
+				# to their respective files under doc/*.txt
+				if ($hasToken{'todo'}) {
+					if ($message) {
+						my $todoContents = GetFile('doc/todo.txt');
+						if (index($todoContents, $message) == -1) {
+							AppendFile('doc/todo.txt', "\n\n===\n\n" . $message);
+						}
+					}
+				}
+				if ($hasToken{'brainstorm'}) {
+					if ($message) {
+						my $todoContents = GetFile('doc/brainstorm.txt');
+						if (index($todoContents, $message) == -1) {
+							AppendFile('doc/brainstorm.txt', "\n\n===\n\n" . $message);
+						}
+					}
+				}
+				if ($hasToken{'bug'}) {
+					if ($message) {
+						my $todoContents = GetFile('doc/bug.txt');
+						if (index($todoContents, $message) == -1) {
+							AppendFile('doc/bug.txt', "\n\n===\n\n" . $message);
+						}
+					}
+				}
+			} # admin/dev_mode
 		}
 
 		if ($message) {
