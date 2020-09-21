@@ -4005,12 +4005,11 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
 			WriteLog('MakePage: tag: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
-			return;
+		} else {
+			WriteLog("MakePage: tag: $tagName");
+			my $tagPage = GetReadPage('tag', $tagName);
+			PutHtmlFile($targetPath, $tagPage);
 		}
-
-		WriteLog("pages.pl \$pageType = $pageType; \$pageParam = \$tagName = $pageParam");
-		my $tagPage = GetReadPage('tag', $tagName);
-		PutHtmlFile($targetPath, $tagPage);
 	}
 	#
 	# author page, get author's id from $pageParam
@@ -4021,14 +4020,14 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
 			WriteLog('MakePage: author: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
-			return;
+		} else {
+			WriteLog('MakePage: author: ' . $authorKey);
+			my $authorPage = GetReadPage('author', $authorKey);
+			if (!-e "$HTMLDIR/author/$authorKey") {
+				mkdir ("$HTMLDIR/author/$authorKey");
+			}
+			PutHtmlFile($targetPath, $authorPage);
 		}
-
-		my $authorPage = GetReadPage('author', $authorKey);
-		if (!-e "$HTMLDIR/author/$authorKey") {
-			mkdir ("$HTMLDIR/author/$authorKey");
-		}
-		PutHtmlFile($targetPath, $authorPage);
 	}
 	#
 	# if $pageType eq item, generate that item's page
