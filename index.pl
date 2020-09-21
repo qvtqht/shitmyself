@@ -211,6 +211,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	my @allowedActions;		# contains actions allowed to signer of message
 
+	my %hasToken; # contains all the tokens found in message for secondary rules
+
 	#	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
 	#todo add support for .md (markdown) files
 
