@@ -790,7 +790,7 @@ sub GetItemPage {
 
 	if (GetConfig('replies')) {
 		# add reply form bottom of page
-		my $replyForm = GetReplyForm($file{'file_hash'}));
+		my $replyForm = GetReplyForm($file{'file_hash'});
 		$txtIndex .= $replyForm;
 	}
 
@@ -1053,6 +1053,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# item_title = title
 	# tags_list = comma-separated list of tags the item has
 	# is_textart = set <tt><code> tags for the message itself
+
 	# show_easyfind = show/hide easyfind words
 	# item_type = 'txt' or 'image'
 	# vote_return_to = page to redirect user to after voting, either item hash or url
@@ -1479,6 +1480,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 
 sub GetPageFooter { # returns html for page footer
+	WriteLog('GetPageFooter()');
+
 	my $txtFooter = GetTemplate('htmlend.template');
 
 	my $disclaimer = GetString('disclaimer');
