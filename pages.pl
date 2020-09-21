@@ -2752,7 +2752,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	my $html = ""; # html output
 
-	my $pageTitle = GetConfig('home_title');
+	my $pageTitle = 'Index, page ' . $currentPageNumber;
 
 	my $htmlStart = GetPageHeader($pageTitle, $pageTitle, 'item_list');
 	$html .= $htmlStart;
