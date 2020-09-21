@@ -4213,7 +4213,7 @@ if ($arg1) {
 	elsif (substr($arg1, 0, 1) eq '#') {
 		#todo sanity checks here
 		print ("recognized hash tag $arg1\n");
-		MakePage('tag', substr($arg1, 1));
+		MakePage('tag', substr($arg1, 1), 1);
 	}
 	elsif ($arg1 eq '--summary' || $arg1 eq '-s') {
 		print ("recognized --summary\n");
