@@ -1268,31 +1268,29 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			if ($detokenedMessage eq '') {
 				# add #notext label/tag
 				DBAddVoteRecord($fileHash, $addedTime, 'notext');
-
-				DBAddPageTouch('tag', 'notext');
 			} else {
-				my $firstEol = index($detokenedMessage, "\n");
-
-				my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
-
-				# if ($firstEol == -1) {
-				# 	if (length($detokenedMessage) > 1) {
-				# 		$firstEol = length($detokenedMessage);
-				# 	}
-				# }
-
-				if ($firstEol >= 0) {
-					my $title = '';
-
-					if ($firstEol <= $titleLengthCutoff) {
-						$title = substr($detokenedMessage, 0, $firstEol);
-					} else {
-						$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
+				{ #title
+					my $firstEol = index($detokenedMessage, "\n");
+					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
+					if ($firstEol == -1) {
+						if (length($detokenedMessage) > 1) {
+							$firstEol = length($detokenedMessage);
+						}
 					}
+					# if ($firstEol > $titleLengthCutoff) {
+					# 	$firstEol = $titleLengthCutoff;
+					# }
+					if ($firstEol > 0) {
+						my $title = '';
+						if ($firstEol <= $titleLengthCutoff) {
+							$title = substr($detokenedMessage, 0, $firstEol);
+						} else {
+							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
+						}
 
-					DBAddItemAttribute($fileHash, 'title', $title, $addedTime);
-
-					DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+						DBAddItemAttribute($fileHash, 'title', $title, $addedTime);
+						DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+					}
 				}
 
 				DBAddVoteRecord($fileHash, $addedTime, 'hastext');
