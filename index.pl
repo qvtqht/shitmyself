@@ -338,11 +338,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			$addedTimeIsNew = 1;
 		}
 
-		# if there is no admin set, and config/admin/admin_imprint is true
-		# and if this item is a public key
-		# go ahead and make this user admin
-		# and announce it via a new .txt file
-		if (!GetAdminKey() && GetConfig('admin/admin_imprint') && $gpgKey && $alias) {
+		# admin_imprint
+		if ($gpgKey && $alias && !GetAdminKey() && GetConfig('admin/admin_imprint')) {
+			# if there is no admin set, and config/admin/admin_imprint is true
+			# and if this item is a public key
+			# go ahead and make this user admin
+			# and announce it via a new .txt file
+
 			PutFile('./admin.key', $txt);
 
 			my $newAdminMessage = $TXTDIR . '/' . GetTime() . '_newadmin.txt';
@@ -424,19 +426,16 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				while (@cookieLines) {
 					my $cookieValue = shift @cookieLines;
 
-					$hasCookie = $cookieValue; #only the last cookie is counted
-
+					$hasCookie = $cookieValue; #only the last cookie is used below
 					my $reconLine = "Cookie: $cookieValue";
-
 					$detokenedMessage =~ s/$reconLine/[Cookie: $hasCookie]/;
 
 					DBAddAuthor($cookieValue);
-
 					DBAddPageTouch('author', $cookieValue);
-
 					DBAddPageTouch('scores');
-
 					DBAddPageTouch('stats');
+
+					$hasToken{'cookie'} = 1;
 				}
 			}
 		}
@@ -463,20 +462,18 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					if (IsSha1($parentHash)) {
 						push @itemParents, $parentHash;
-
 						DBAddItemParent($fileHash, $parentHash);
 						DBAddVoteRecord($fileHash, $addedTime, 'reply');
+						$hasToken{'reply'} = 1;
 
 						my $reconLine = ">>$parentHash";
+						#$message =~ s/$reconLine/$reconLine/;
 
-						$message =~ s/$reconLine/$reconLine/;
-
-						#$message =~ s/$reconLine/[In response to message $parentHash]/;
+						#$message =~ s/$reconLine/[In response to: $parentHash]/;
 						# replace with itself, no change needed
 						#todo eventually we will want some kind of more friendly display of replied-to content
 
 						$detokenedMessage =~ s/$reconLine//;
-
 						DBAddPageTouch('item', $parentHash);
 
 						if (GetConfig('admin/index/make_primary_pages')) {
@@ -498,6 +495,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				while (@hashTags) {
 					my $hashTag = shift @hashTags;
+					$hashTag = trim($hashTag);
 
 					if ($hashTag) {
 						#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
@@ -505,70 +503,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 						WriteLog('$hashTag = ' . $hashTag);
 
+						$hasToken{$hashTag} = 1;
+
 						if ($hasParent) {
 							WriteLog('$hasParent');
-
-							# if the vote value is 'remove', perform appropriate operations
-							if ($hashTag eq 'remove') {
-								WriteLog('Found request to remove file');
-
-								foreach my $itemParent (@itemParents) {
-									# find the author of the item in question.
-									# this will help us determine whether the request can be fulfilled
-									my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
-
-									WriteLog('hashtag: #remove, IsAdmin = ' . IsAdmin($gpgKey) . '; $gpgKey = ' . $gpgKey . '; $parentItemAuthor = ' . $parentItemAuthor);
-
-									# at this time only signed requests to remove are honored
-									if (
-										$gpgKey # is signed
-											&&
-											(
-												IsAdmin($gpgKey)                   # signed by admin
-													||                             # OR
-												($gpgKey eq $parentItemAuthor) 	   # signed by same as author
-											)
-									) {
-										WriteLog('Found seemingly valid request to remove file (hashtag)');
-
-										AppendFile('log/deleted.log', $itemParent);
-
-										DBDeleteItemReferences($itemParent);
-
-										my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
-										if (-e $htmlFilename) {
-											WriteLog($htmlFilename . ' exists, calling unlink()');
-											unlink($htmlFilename);
-										}
-										else {
-											WriteLog($htmlFilename . ' does NOT exist, very strange');
-										}
-
-										my $itemParentPath = GetPathFromHash($itemParent);
-										if (-e $itemParentPath) {
-											WriteLog("removing $itemParentPath");
-											unlink($itemParentPath);
-										}
-
-										if (-e $file) {
-											#todo unlink the file represented by $voteFileHash, not $file
-
-											if (!GetConfig('admin/logging/record_remove_action')) {
-												# this removes the remove call itself
-												WriteLog($file . ' exists, calling unlink()');
-												unlink($file);
-											}
-										}
-										else {
-											WriteLog($file . ' does NOT exist, very strange');
-										}
-
-										#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
-									} else {
-										WriteLog('Request to remove file was not found to be valid');
-									}
-								}
-							}
 
 							if (scalar(@itemParents)) {
 								foreach my $itemParentHash (@itemParents) {
@@ -592,7 +530,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								DBAddVoteRecord('flush');
 							}
 						}
-						else { # no parent, !$hasParent
+						else { # no parent, !($hasParent)
 							WriteLog('$hasParent is FALSE');
 
 							if ($isSigned) {
@@ -656,6 +594,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						$reconLine = $myNameIsToken . $nameGiven;
 
 						if ($nameGiven && $hasCookie) {
+							$hasToken{'myNameIs'} = 1;
 
 							# remove alias caches
 							UnlinkCache('avatar/' . $hasCookie);
@@ -720,6 +659,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					WriteLog('title $reconLine = ' . $reconLine);
 
 					if ($titleGiven) {
+						$hasToken{'title'} = 1;
+
 						chomp $titleGiven;
 						if ($hasParent) {
 							# has parent(s), so add title to each parent
@@ -1318,8 +1259,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		} # event token
 
-		# if $alias is set, means this is a pubkey
-		if ($alias) {
+		if ($alias) { # if $alias is set, means this is a pubkey
 			DBAddVoteRecord($fileHash, $addedTime, 'pubkey');
 			# add the "pubkey" tag
 
@@ -1334,10 +1274,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			UnlinkCache('avatar/' . $themeName . $gpgKey);
 			UnlinkCache('avatar.color/' . $themeName . $gpgKey);
 			UnlinkCache('pavatar/' . $themeName . $gpgKey);
-		} else {
+		} else { # not a pubkey
 			$detokenedMessage = trim($detokenedMessage);
+			# there may be whitespace remaining after all the tokens have been removed
 
 			if ($detokenedMessage eq '') {
+				# add #notext label/tag
 				DBAddVoteRecord($fileHash, $addedTime, 'notext');
 
 				DBAddPageTouch('tag', 'notext');
