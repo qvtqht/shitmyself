@@ -2784,7 +2784,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 		if ($file && -e $file) { # file exists
 			my $itemHash = $row->{'file_hash'};
 
-			DBAddItemPage('index', $currentPageNumber, $itemHash);
+			DBAddItemPage($itemHash, 'index', $currentPageNumber);
 
 			my $gpgKey = $row->{'author_key'};
 			my $isSigned;
