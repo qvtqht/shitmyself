@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+# pages.pl
+# to do with html page generation
+
 use strict;
 use warnings;
 
@@ -2033,12 +2036,18 @@ sub GetStatsPage { # returns html for stats page
 
 sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
 # works by uncommenting any lines which begin with //alert('DEBUG:
+	state $debugType;
+	if (!$debugType) {
+		$debugType = GetConfig('admin/js/debug');
+	}
+
 	my $scriptTemplate = shift;
 
-	$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-
-	#todo add option to do this instead
-	#$scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/g;
+	if ($debugType eq 'console.log') {
+		$scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/gi;
+	} else {
+		$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/gi;
+	}
 
 	return $scriptTemplate;
 }
