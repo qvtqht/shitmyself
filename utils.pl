@@ -1999,11 +1999,19 @@ sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-b
 	}
 
 	$text = HtmlEscape($text);
+
+	# these have been moved to format for textart
 	#	$text =~ s/\n /<br>&nbsp;/g;
 	#	$text =~ s/^ /&nbsp;/g;
 	#	$text =~ s/  / &nbsp;/g;
-	$text =~ s/\R\R/<p>/g;
-	$text =~ s/\R/<br>/g;
+
+	$text =~ s/\n\n/<p>/g;
+	$text =~ s/\n/<br>/g;
+
+	# this is more flexible than \n but may cause problems with unicode
+	# for example, it recognizes second half of russian "x" as \R
+	# $text =~ s/\R\R/<p>/g;
+	# $text =~ s/\R/<br>/g;
 
 	if (GetConfig('admin/html/allow_tag/code')) {
 		$text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>$1<\/code>/msgi;
