@@ -90,3 +90,6 @@ div.txt {
 noscript {
 	color: c08000;
 }
+hr {
+	display: none;
+}
