@@ -1310,7 +1310,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						if ($message) {
 							my $todoContents = GetFile("doc/$devTokenName.txt");
 							if (!$todoContents || index($todoContents, $message) == -1) {
-								AppendFile("doc/$todoContents.txt", "\n\n===\n\n" . $message);
+								AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
 							}
 						}
 					}
