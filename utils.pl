@@ -2418,6 +2418,19 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
     return 0;
 } # IsFileDeleted()
 
+sub file_exists { # $file ; port of php file_exists()
+	my $file = shift;
+	if (!$file) {
+		return 0;
+	}
+	if (-e $file && -f $file && !-d $file) {
+		return 1;
+	} else {
+		return 0;
+	}
+	return 0; #unreachable code
+}
+
 sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog('GetItemEasyFind()');
 
