@@ -63,7 +63,7 @@ function writeOnload() { // onload handler for write page
 							var btnMakeCoin = document.createElement('input');
 							btnMakeCoin.setAttribute('type', 'button');
 							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
-							btnMakeCoin.setAttribute('onclick', "if (window.makeCoin) { document.compose.comment.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
+							btnMakeCoin.setAttribute('onclick',	"var dcc = document.compose.comment; if (dcc && window.makeCoin) { dcc.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
 							spanWriteAdvanced.appendChild(btnMakeCoin);
 
 							var br = document.createElement('br');
