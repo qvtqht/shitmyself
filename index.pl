@@ -16,8 +16,8 @@ require './sqlite.pl';
 
 WriteLog( "Using $SCRIPTDIR as install root...\n");
 
-sub MakeAddedIndex { # reads from log/added.log and puts it into added_time table
-	WriteLog("MakeAddedIndex()\n");
+sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attribute table
+	WriteLog("MakeAddedTimeIndex()\n");
 
 	if (GetConfig('admin/read_added_log')) {
 		# my $addedLog = GetFile('log/added.log');
@@ -27,16 +27,26 @@ sub MakeAddedIndex { # reads from log/added.log and puts it into added_time tabl
 			my @addedRecord = split("\n", $addedLog);
 			# my @addedRecord = split("\n", GetFile("log/added.log"));
 
-			foreach(@addedRecord) {
-				my ($fileHash, $addedTime, $proofHash) = split('\|', $_);
+			my $previousLine = '';
+			foreach my $currentLine (@addedRecord) {
+				my ($fileHash, $addedTime, $proofHash) = split('\|', $currentLine);
 
-				DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
+				my $expectedHash = md5_hex($previousLine . '|' . $fileHash . '|' . $addedTime);
+
+				if ($expectedHash ne $proofHash) {
+					WriteLog('MakeAddedTimeIndex: warning: proof hash mismatch. abandoning chain import');
+					return;
+				}
+
+				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
+
+				$previousLine = $currentLine;
 			}
 
 			DBAddItemAttribute('flush');
 		}
 	}
-}
+} # MakeAddedTimeIndex()
 
 #
 #sub IndexToken {
@@ -1785,7 +1795,7 @@ if ($arg1) {
 	if ($arg1 eq '--chain') {
 		print "index.pl: --chain\n";
 
-		MakeAddedIndex();
+		MakeAddedTimeIndex();
 	}
 
 	if (-e $arg1) {
