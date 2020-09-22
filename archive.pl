@@ -50,7 +50,7 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	# rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
 
 	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
-	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"");  #todo make faster
+	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\""); #fast enough
 
 	print("mkdir($HTMLDIR)\n");
 	mkdir("$HTMLDIR");
@@ -59,6 +59,7 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	mkdir("$TXTDIR");
 
 	#todo don't use absolute path
+	# how to trim path?
 	print("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
 	system("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
 	#
