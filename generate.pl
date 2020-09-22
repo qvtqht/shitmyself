@@ -119,65 +119,12 @@ print `time ./update.pl --all`;
 # PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
 #
 #
-# # this should create a page for each item
-# {
-# 	my %queryParams = ();
-# 	my @files = DBGetItemList(\%queryParams);
-#
-# 	WriteLog("DBGetItemList() returned " . scalar(@files) . " items");
-#
-# 	my $fileList = "";
-#
-# 	my $fileInterval = 3600;
-#
-# 	my $filesCount = scalar(@files);
-# 	my $currentFile = 0;
-#
-# 	foreach my $file(@files) {
-# 		my $fileHash = $file->{'file_hash'};
-#
-# 		if (!$fileHash) {
-# 			WriteLog("Problem! No \$fileHash in \$file");
-# 			next;
-# 		}
-#
-# 		if (-e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
-# 			WriteLog("generate.pl: $fileHash exists in deleted.log, skipping");
-#
-# 			next;
-# 		}
-#
-# 		$currentFile++;
-#
-# 		my $percent = $currentFile / $filesCount * 100;
-#
-# 		WriteMessage("*** GetItemPage: $currentFile/$filesCount ($percent %) " . $file->{'file_hash'});
-#
-# 		my $fileIndex = GetItemPage($file);
-#
-# 		#my $targetPath = substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
-# 		my $targetPath = GetHtmlFilename($fileHash);
-#
-# 		WriteLog("Writing HTML file for item");
-# 		WriteLog("\$targetPath = $targetPath");
-#
-# 		if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
-# 			mkdir($HTMLDIR . '/' . substr($fileHash, 0, 2));
-# 		}
-#
-# 		PutHtmlFile($targetPath, $fileIndex);
-#
-# 		PutCache("file/$fileHash", GetTime());
-# 	}
-#
-# 	PutFile("$HTMLDIR/rss.txt", $fileList);
-# }
+
 #
 # if (0) {
 # 	# generate commits pages
 # 	my $versionPageCount = 5;
 #
-# 	#todo only do this for versions mentioned in changelogs
 # 	my $commits = `git log -n $versionPageCount | grep ^commit`;
 #
 # 	WriteLog('$commits = git log -n $versionPageCount | grep ^commit');
