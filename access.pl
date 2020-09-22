@@ -307,8 +307,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		#my $dateIso = "$dateYear-$dateMonth-$dateDay";
 		my ($timeHour, $timeMinute, $timeSecond) = split(':', $time);
 
-		# remove the quotes around the request field
-		$req = substr($req, 1);
+		$req = substr($req, 1); # remove the quote preceding the request field
 		chop($gmt);
 		chop($proto);
 
@@ -318,6 +317,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		# default/admin/logging/record_access_log_hash
 		if (GetConfig('admin/logging/record_access_log_hash')) {
 			#todo
+		}
+
+		if ($req eq 'HEAD') {
+			# ignore HEAD requests
+			next;
 		}
 
 		# ALLOW_DEOP, default deop string
