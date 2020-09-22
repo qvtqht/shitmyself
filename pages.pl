@@ -804,15 +804,34 @@ sub GetItemPage {
 		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
 		$itemAttributes = trim($itemAttributes);
 
-		{ # arrange into table
-			# #todo turn it into a loop and turn plain epoch timestamps into timestamp elements
-			my $trTr = '</td></tr><tr><td>';
-			$itemAttributes =~ s/\n/$trTr/gi;
-			my $tdTd = '</td><td>';
-			$itemAttributes =~ s/\|/$tdTd/gi;
-			$itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
+		my $itemAttributesTable = '';
+		{ # arrange into table nicely
+			foreach my $itemAttribute (split("\n", $itemAttributes)) {
+				if ($itemAttribute) {
+					my ($iaName, $iaValue) = split('\|', $itemAttribute);
+					if ($iaName =~ m/_timestamp/) {
+						$iaValue = $iaValue . ' (' . GetTimestampElement($iaValue) . ')';
+					}
+					if ($iaName eq 'author_key') {
+						$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
+					}
 
-			my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributes, '');
+					$itemAttributesTable .= '<tr><td>';
+					$itemAttributesTable .= $iaName;
+					$itemAttributesTable .= '</td><td>';
+					$itemAttributesTable .= $iaValue;
+					$itemAttributesTable .= '</td></tr>';
+				}
+			}
+
+			# # #todo turn it into a loop and turn plain epoch timestamps into timestamp elements
+			# my $trTr = '</td></tr><tr><td>';
+			# $itemAttributes =~ s/\n/$trTr/gi;
+			# my $tdTd = '</td><td>';
+			# $itemAttributes =~ s/\|/$tdTd/gi;
+			# $itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
+
+			my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributesTable, '');
 			$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
 			$txtIndex .= $itemAttributesWindow;
 		}
@@ -858,7 +877,7 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 	if (GetConfig('admin/js/enable')) {
 		$replyForm = AddAttributeToTag(
 			$replyForm,
-			'<input type=submit',
+			'input type=submit',
 			'onclick',
 			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
 		);
@@ -1481,7 +1500,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	}
 } #GetItemTemplate
 
-
 sub GetPageFooter { # returns html for page footer
 	WriteLog('GetPageFooter()');
 
@@ -2039,9 +2057,13 @@ sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
 	state $debugType;
 	if (!$debugType) {
 		$debugType = GetConfig('admin/js/debug');
+		chomp $debugType;
+		$debugType = trim($debugType);
 	}
 
 	my $scriptTemplate = shift;
+
+	WriteLog('EnableJsDebug: $debugType = ' . $debugType);
 
 	if ($debugType eq 'console.log') {
 		$scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/gi;
