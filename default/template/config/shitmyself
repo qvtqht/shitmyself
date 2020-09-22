@@ -1,13 +1,13 @@
-setconfig/admin/php/update_on_post=1
-setconfig/admin/php/rewrite=all
-setconfig/admin/token/my_name_is=1
-setconfig/admin/token/title=1
-setconfig/admin/admin_imprint=1
-setconfig/admin/js/loading=1
-setconfig/admin/js/translit=1
-setconfig/admin/js/fresh=1
-setconfig/admin/image/enable=1
-setconfig/home_title=s * i * * y s e * f . c o m ( . h t m l )
-setconfig/html/clock=1
-setconfig/html/clock_format=epoch
-setconfig/html/relativize_urls=0
+config admin/php/post/update_on_post 1
+config admin/php/rewrite all
+config admin/token/my_name_is 1
+config admin/token/title 1
+config admin/admin_imprint 1
+config admin/js/loading 1
+config admin/js/translit 1
+config admin/js/fresh 1
+config admin/image/enable 1
+config home_title s * i * * y s e * f . c o m ( . h t m l )
+config html/clock 1
+config html/clock_format epoch
+config html/relativize_urls 0
