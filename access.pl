@@ -663,17 +663,18 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	# Close the log file handle
 	WriteLog('ProcessAccessLog: close(LOGFILE)');
 	close(LOGFILE);
-	
-	#Clean up the access log tracker
-	my $newPrevLines = "";
-	
-	foreach (keys %prevLines) { #todo make this actually work
-		if ($prevLines{$_} > 0) {
-			$newPrevLines .= $_;
-			$newPrevLines .= "\n";
+
+	{	# Clean up the access log tracker (processed.log)
+		WriteLog('ProcessAccessLog: Remove unused hashes from log/processed.log');
+		my $newPrevLines = "";
+		foreach my $prevLineKey (keys %prevLines) {
+			if ($prevLines{$prevLineKey}) {
+				$newPrevLines .= $prevLineKey;
+				$newPrevLines .= "\n";
+			}
 		}
+		PutFile("log/processed.log", $newPrevLines);
 	}
-	PutFile("log/processed.log", $newPrevLines);
 
 	return $newItemCount;
 } # ProcessAccessLog()
