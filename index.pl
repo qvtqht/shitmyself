@@ -517,55 +517,48 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						if ($hasParent) {
 							WriteLog('$hasParent');
 
-							if (scalar(@itemParents)) {
-								foreach my $itemParentHash (@itemParents) {
-
-									# add a record to the vote table
-									if ($isSigned) {
-										# include author's key if message is signed
-										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
-									}
-									else {
-										if ($hasCookie) {
-											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
-										} else {
-											DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
-										}
-									}
-
-									DBAddPageTouch('item', $itemParentHash);
+						if (scalar(@itemParents)) {
+							foreach my $itemParentHash (@itemParents) {
+								if ($isSigned) {
+									# include author's key if message is signed
+									DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
 								}
-
-								DBAddVoteRecord('flush');
+								else {
+									if ($hasCookie) {
+										# include author's key if message is cookied
+										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
+									} else {
+										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
+									}
+								}
+								DBAddPageTouch('item', $itemParentHash);
 							}
 						}
-						else { # no parent, !($hasParent)
-							WriteLog('$hasParent is FALSE');
+					} # if ($hasParent)
+					else { # no parent, !($hasParent)
+						WriteLog('$hasParent is FALSE');
 
-							if ($isSigned) {
-								# include author's key if message is signed
-								DBAddVoteRecord($fileHash, $addedTime, $hashTag, $gpgKey, $fileHash);
-							}
-							else {
-								if ($hasCookie) {
-									DBAddVoteRecord($fileHash, $addedTime, $hashTag, $hasCookie, $fileHash);
-								} else {
-									DBAddVoteRecord($fileHash, $addedTime, $hashTag, '', $fileHash);
-								}
-							}
-
-							DBAddVoteRecord('flush');
+						if ($isSigned) {
+							# include author's key if message is signed
+							DBAddVoteRecord($fileHash, $addedTime, $hashTag, $gpgKey, $fileHash);
 						}
-
-						DBAddPageTouch('tag', $hashTag);
-
-						$detokenedMessage =~ s/#$hashTag//g;
-						#todo does this need to be /i?
-						#todo how to determine capitalization if it varies across different posts?
+						else {
+							if ($hasCookie) {
+								DBAddVoteRecord($fileHash, $addedTime, $hashTag, $hasCookie, $fileHash);
+							} else {
+								DBAddVoteRecord($fileHash, $addedTime, $hashTag, '', $fileHash);
+							}
+						}
 					}
-				}
-			}
-		}
+
+					DBAddPageTouch('tag', $hashTag);
+
+					$detokenedMessage =~ s/#$hashTag//g;
+					#todo does this need to be /i?
+					#todo how to determine capitalization if it varies across different posts?
+				} # if ($hashTag)
+			} # while (@hashTags)
+		} # if (GetConfig('admin/token/hashtag') && $message)
 
 		if (GetConfig('admin/token/my_name_is')) {
 			# "my name is" token
