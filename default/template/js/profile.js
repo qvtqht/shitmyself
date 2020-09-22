@@ -1,24 +1,17 @@
 // begin profile.js
-//
-//if (window.localStorage && window.Promise) {
-//
-//}
 
 if (!window.openpgp && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading openpgp.js');
-
 	window.openPgpJsLoadBegin = 1;
 
 	var script = document.createElement('script');
 	script.src = '/openpgp.js';
 	script.async = false; // This is required for synchronous execution
 	document.head.appendChild(script);
-
 	//alert('DEBUG: finished loading openpgp.js; window.openpgp: ' + !!window.openpgp);
 } else {
 	//alert('DEBUG: not loading openpgp.js; window.openpgp: ' + !!window.openpgp + ' document.getElementById: ' + !!document.getElementById + ' window.localStorage: ' + !!window.localStorage + ' window.Promise: ' + !!window.Promise);
 }
-
 
 if (!(window.MakeKey) && document.head && document.head.appendChild && document.getElementById && window.localStorage) {
 	//alert('DEBUG: loading crypto2.js');
@@ -166,10 +159,10 @@ function sharePubKey (t) { // shares current user's public key via injected form
 		}
 	}
 
-/////
+///// alternative method 1
 //	window.open('/write.html#inspubkey', '_self');
 
-/////
+///// alternative method 2
 //	var iframe = document.createElement("iframe");
 //	iframe.src = '/write.html#inspubkey';
 //	iframe.name = "inspubkey"
@@ -209,13 +202,18 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 						pProfileLink = document.createElement('p');
 					}
 
-					aProfile = document.createElement('a');
+					// ATTENTION!
+					// THERE IS A GOTCHA HERE: THIS LINK MAY BE ADDED BY PHP
+					// IF SO, THEN THIS CODE WILL NOT EXECUTE!
 
+					// "Go to profile" link
+					var aProfile = document.createElement('a');
 					aProfile.setAttribute('href', '/author/' + getUserFp() + '/index.html');
 					aProfile.setAttribute('onclick', 'if (window.sharePubKey) { return sharePubKey(this); }');
 					aProfile.setAttribute('id', 'linkGoToProfile');
 					aProfile.innerHTML = 'Go to profile';
 
+					// Append both to fieldset
 					pProfileLink.appendChild(aProfile);
 					fieldset.appendChild(pProfileLink);
 
@@ -231,7 +229,15 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aSaveKeyAsTxt.setAttribute('id', 'linkSavePrivateKey');
 				aSaveKeyAsTxt.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { return SavePrivateKeyAsTxt(); }');
 				aSaveKeyAsTxt.innerHTML = 'Save as file';
+
+				// hint for [save as file] link
+				var hintSaveKeyAsTxt = document.createElement('span');
+				hintSaveKeyAsTxt.setAttribute('class', 'beginner');
+				hintSaveKeyAsTxt.innerHTML = '<br>Save key to use again later';
+
+				// insert [save as file] link into dom
 				pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
+				pSaveKeyAsTxt.appendChild(hintSaveKeyAsTxt);
 				fieldset.appendChild(pSaveKeyAsTxt);
 
 				// add [show private key] link
@@ -242,7 +248,14 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
 				aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
 				aShowPrivateKey.innerHTML = 'Show private key';
+
+				// hint for [show private key] link
+				var hintShowPrivateKey = document.createElement('span');
+				hintShowPrivateKey.setAttribute('class', 'beginner');
+				hintShowPrivateKey.innerHTML = '<br>Display as text you can copy';
+
 				pShowPrivateKey.appendChild(aShowPrivateKey);
+				pShowPrivateKey.appendChild(hintShowPrivateKey);
 				fieldset.appendChild(pShowPrivateKey);
 			} else {
 				//alert('DEBUG: AddPrivateKeyLinks: privateKey: false');
