@@ -1486,7 +1486,7 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 
 	WriteLog('AddToChainLog: $lastLineAddedLog = ' . $lastLineAddedLog);
 	WriteLog('AddToChainLog: $lastAndNewTogether = ' . $lastAndNewTogether);
-	WriteLog('AddToChainLog: md5(' . $lastAndNewTogether . ') = $$checksum  = ' . $checksum);
+	WriteLog('AddToChainLog: md5(' . $lastAndNewTogether . ') = $checksum  = ' . $checksum);
 
 	my $newLineAddedLog = $logLine . '|' . $checksum;
 
@@ -1581,7 +1581,6 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			)
 	) {
 		my $fileHash = GetFileHash($file);
-
 		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
 
 		$addedTime = DBGetAddedTime($fileHash);
