@@ -1305,12 +1305,15 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# adding messages tagged #todo, #brainstorm, and #bug
 				# to their respective files under doc/*.txt
 
-				foreach my $devTokenName (qw(todo brainstorm bug)) {
-					if ($hasToken{$devTokenName}) {
-						if ($message) {
-							my $todoContents = GetFile("doc/$devTokenName.txt");
-							if (!$todoContents || index($todoContents, $message) == -1) {
-								AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
+				if (!$hasToken{'changelog'} || index($message, 'Software Updated to Version' != -1)) {
+					# exclude changelog messages
+					foreach my $devTokenName (qw(todo brainstorm bug)) {
+						if ($hasToken{$devTokenName}) {
+							if ($message) {
+								my $todoContents = GetFile("doc/$devTokenName.txt");
+								if (!$todoContents || index($todoContents, $message) == -1) {
+									AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
+								}
 							}
 						}
 					}
