@@ -1050,3 +1050,29 @@ duration between page and next page load can be tracked
 
 Maintain a constant ~80% approval rate, with bottom 20% of items automatically flushed
 
+
+===
+
+#meta #brainstorm
+
+Thanks for the feedback! Votes cast by those with less than 125 reputation are recorded, but do not change the publicly displayed post score.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
