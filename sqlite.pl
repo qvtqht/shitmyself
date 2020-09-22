@@ -1824,7 +1824,15 @@ sub DBGetAddedTime { # return added time for item specified
 		die('DBGetAddedTime() this should never happen');
 	} #todo ideally this should verify it's a proper hash too
 
-	my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
+	my $query = "
+		SELECT
+			MAX(value) AS add_timestamp
+		FROM item_attribute
+		WHERE
+			file_hash = '$fileHash' AND
+			attribute IN ('chain_timestamp', 'gpg_timestamp', 'coin_timestamp')
+	";
+	# my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
 
 	WriteLog($query);
 
