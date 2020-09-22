@@ -93,13 +93,13 @@ function getUserFp () { // retrieve stored user fingerprint from LocalStorage
 		if (fingerprint) {
 			return fingerprint;
 		}
-	}
+	} else {
+		// fallback to cookie mode
+		var fingerprint = GetCookie('cookie');
 
-	// fallback to cookie mode
-	var fingerprint = GetCookie('cookie');
-
-	if (fingerprint) {
-		return fingerprint;
+		if (fingerprint) {
+			return fingerprint;
+		}
 	}
 
 	// nothing found, we looked everywhere
