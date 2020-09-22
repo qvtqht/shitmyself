@@ -574,9 +574,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							# (
 							GetConfig('admin/logging/record_timestamps')
 								||
-								GetConfig('admin/logging/record_clients')
+							GetConfig('admin/logging/record_clients')
 								||
-								GetConfig('admin/logging/record_sha512')
+							GetConfig('admin/logging/record_sha512')
+								||
+							GetConfig('admin/logging/record_access_log_hash')
 							# )
 						) {
 							# if any of the logging options are turned on, proceed
@@ -584,25 +586,32 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							my $addedFilename = $TXTDIR . '/log/added_' . $fileHash . '.log.txt';
 							my $addedMessage = '';
 
+							# default/admin/logging/record_access_log_hash
+							if (GetConfig('admin/logging/record_access_log_hash')) {
+								my $accessLogHash = sha1_hex($line);
+								$addedMessage .= "AccessLogHash: $accessLogHash\n";
+							}
+
 							if (GetConfig('admin/logging/record_timestamps') && $recordTimestamp) {
-								$addedMessage .= "addedtime/$fileHash/$addedTime\n";
+								$addedMessage .= "AddedTime: $addedTime\n";
 							}
 
 							if (GetConfig('admin/logging/record_clients') && $recordFingerprint) {
 								my $clientFingerprint = md5_hex($hostname . $userAgent);
-								$addedMessage .= "addedby/$fileHash/$clientFingerprint\n";
+								$addedMessage .= "AddedBy: $clientFingerprint\n";
 							}
 
 							if (GetConfig('admin/logging/record_sha512')) {
-								my $fileSha512 = sha512_hex($message); #todo fix wide character error here
-
-								$addedMessage .= "sha512/$fileHash/$fileSha512\n";
+								my $fileSha512 = sha512_hex($message);
+								$addedMessage .= "SHA512: $fileSha512\n";
 							}
 
 							if ($addedMessage) {
+								$addedMessage = '>>' . $fileHash . "\n\n" . $addedMessage;
+
 								PutFile($addedFilename, $addedMessage);
 
-								WriteLog('$addedMessage = ' . $addedMessage);
+								WriteLog('ProcessAccessLog: $addedMessage = ' . $addedMessage);
 
 								if (GetServerKey()) {
 									ServerSign($addedFilename);
