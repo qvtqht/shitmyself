@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 
-# This file parses the access logs
-# It posts messages to $TXTDIR
+# access.pl
+# Parses access.log
+# Posts new messages to $TXTDIR
+my $arg1 = shift;
 
 use strict;
 use warnings FATAL => 'all';
@@ -17,43 +19,29 @@ use Digest::SHA qw(sha512_hex);
 use POSIX qw( mktime );
 use Cwd qw(cwd);
 use Date::Parse;
-
+#use POSIX::strptime qw( strptime );
 
 my $SCRIPTDIR = cwd();
 my $HTMLDIR = $SCRIPTDIR . '/html';
 my $TXTDIR = $HTMLDIR . '/txt';
 my $IMAGEDIR = $HTMLDIR . '/txt';
 
-
-#use POSIX::strptime qw( strptime );
-
 ## CONFIG AND SANITY CHECKS ##
-
 if (!-e './utils.pl') {
 	die ("Sanity check failed, can't find ./utils.pl in $SCRIPTDIR");
 }
 require './utils.pl';
 require './index.pl';
 
-# Logfile for default site domain
-# In Apache, use CustomLog, e.g.:
-#         CustomLog /foo/bar/log/access.log combined
-
-
 ##################
 
 # Prefixes we will look for in access log to find comments
 # and their corresponding drop folders
-# Wherever there is a post.html and board.nfo exists
-
-
-#my @submitReceivers = `find $HTMLDIR | grep post.html`; #todo this is a hack
+# Wherever there is a post.html exists
 my @submitReceivers;
-
 push @submitReceivers, '/post.php';
 push @submitReceivers, '/post.html';
 push @submitReceivers, '/stats.html';
-
 foreach (@submitReceivers) {
 	s/$/\?comment=/;
 	chomp;
@@ -64,7 +52,6 @@ foreach (@submitReceivers) {
 sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 # $host
 # $ownAlias = whether it belongs to this instance
-
 	my $host = shift;
 	chomp ($host);
 
@@ -89,7 +76,6 @@ sub AddHost { # $host, $ownAlias ; add host to config/system/my_hosts
 
 	return;
 }
-#HELLO, WORLD!
 
 sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
 	WriteLog('GenerateFilenameFromTime()');
@@ -314,11 +300,6 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		# END PARSING OF ACCESS LINE
 		############################
 
-		# default/admin/logging/record_access_log_hash
-		if (GetConfig('admin/logging/record_access_log_hash')) {
-			#todo
-		}
-
 		if ($req eq 'HEAD') {
 			# ignore HEAD requests
 			next;
@@ -417,36 +398,20 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 				# If there is a message...
 				if ($message) {
-					#todo the message= currently needs to come first, it doesn't have to be this way
+					# message= currently needs to come first
+					# it doesn't have to be this way, but it currently is
+					# because it is simpler to code
 					my @messageItems = split('&', $message);
 
 					if (scalar(@messageItems) > 1) {
 						$message = shift @messageItems;
 					}
 
-					# Unpack from URL encoding, probably exploitable :(
+					# Unpack from URL encoding
 					$message =~ s/\+/ /g;
 					$message = uri_decode($message);
 					$message = decode_entities($message);
 					#$message = trim($message);
-
-					##
-					#					my $replyUrlToken = ( $message=~ m/replyto=(0-9a-f){40}/ );
-					#					my $newReplyToken = '';
-					##
-					#					if ($replyUrlToken) {
-					#						my $newReplyToken = $replyUrlToken;
-					#						$newReplyToken =~ s/replyto=/>>/;
-					#						$message =~ s/$replyUrlToken/$newReplyToken/g;
-					#					}
-
-
-					#todo bugs below, since only stuff below -- should be reformatted
-
-					#					$message =~ s/\&(.+)=on/\n-- \n$1/g;
-					#					$message =~ s/=on\&/\n&/g;
-					#					$message =~ s/\&/\n&/g;
-					#is this dangerous?
 
 					foreach my $urlParam (@messageItems) {
 						my ($paramName, $paramValue) = split('=', $urlParam);
@@ -467,25 +432,19 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							}
 						}
 
-						if ($paramName && $paramName eq 'a') {
-							if ($paramValue && $paramValue eq 'anon') {
-
-							}
-						}
-
-						if ($paramName eq 'rectime') {
+						elsif ($paramName eq 'rectime') {
 							if ($paramValue eq 'on') {
 								$recordTimestamp = 1;
 							}
 						}
 
-						if ($paramName eq 'recfing') {
+						elsif ($paramName eq 'recfing') {
 							if ($paramValue eq 'on') {
 								$recordFingerprint = 1;
 							}
 						}
 
-						if ($paramName eq 'debug') {
+						elsif ($paramName eq 'debug') {
 							if ($paramValue eq 'on') {
 								$recordDebugInfo = 1;
 								WriteLog('$recordDebugInfo = 1');
@@ -506,12 +465,6 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					# We will use this as a fallback, in case the user has removed
 					# the >> line
 
-
-					#					# If we're parsing a vhost log, add the site name to the message
-					#					if ($vhostParse && $site) {
-					#						$message .= "\n" . $site;
-					#					}
-					#					#todo remove this unnecessary part
 
 					# Generate filename from date and time
 					my $filename;
@@ -665,201 +618,35 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 			}
 		}
 
-		#todo review this block
-		my $rssPrefix = "/rss.txt?";
-		if (substr($file, 0, length($rssPrefix)) eq $rssPrefix) {
-			WriteLog("Found RSS line!");
+		{
+			# if rss.txt is requested, look for me= and you= parameters
+			# add these parameters to the list of known hosts
+			my $rssPrefix = "/rss.txt?";
+			if (substr($file, 0, length($rssPrefix)) eq $rssPrefix) {
+				WriteLog("Found RSS line!");
 
-			my $paramString = (substr($file, length($rssPrefix)));
+				my $paramString = (substr($file, length($rssPrefix)));
 
-			my @params = split('&', $paramString);
+				my @params = split('&', $paramString);
 
-			foreach my $param (@params) {
-				my ($paramKey, $paramValue) = split('=', $param);
-				$paramKey = uri_decode($paramKey);
-				$paramValue = uri_decode($paramValue);
+				foreach my $param (@params) {
+					my ($paramKey, $paramValue) = split('=', $param);
+					$paramKey = uri_decode($paramKey);
+					$paramValue = uri_decode($paramValue);
 
-				if ($paramKey eq 'you') {
-					AddHost($paramValue, 1);
-				}
-				if ($paramKey eq 'me') {
-					AddHost($paramValue, 0);
-				}
-			}
-		}
-
-		my $eventAction = '/action/event.html?';
-		if (substr($file, 0, length($eventAction)) eq $eventAction) {
-			#			http://localhost:2784/post.html
-			#		x		?event_name=event_name
-			#		x		&brc_ave=9:55
-			#		x		&brc_street=Q
-			#		x		&event_location=location
-			#		x		&month=11
-			#		x		&day=11
-			#		x		&year=2025
-			#		x		&hour=11
-			#		x		&minute=15
-			#		x		&am_pm=1
-			#		x		&event_details=11%3A11%3A11
-
-			WriteLog("/action/event.html");
-
-			my $eventQuery = substr($file, index($file, '?') + 1);
-
-			my @eventAtoms = split('&', $eventQuery);
-
-			my %ep = (); # %eventParams
-
-			foreach my $param (@eventAtoms) {
-				my ($key, $value) = split('=', $param);
-
-				$value =~ s/\+/ /g;
-				$value = uri_decode($value);
-				$value = decode_entities($value);
-
-				$ep{$key} = $value;
-			}
-
-			my $newFile = '';
-
-			if (exists($ep{'event_name'})) {
-				#todo validate/sanitize
-				$newFile .= $ep{'event_name'};
-				$newFile .= "\n\n";
-			}
-
-			if (exists($ep{'brc_ave'}) && exists($ep{'brc_street'})) {
-				#todo validate/sanitize
-				if ($ep{'brc_ave'} || $ep{'brc_street'}) {
-					$newFile .= 'brc/' . $ep{'brc_ave'} . '/' . $ep{'brc_street'} . "\n\n";
-				}
-			}
-
-			if (exists($ep{'event_location'})) {
-				if (trim($ep{'event_location'}) ne '') {
-					$newFile .= 'Location: ' . uri_decode($ep{'event_location'});
-					$newFile .= "\n\n";
-				}
-			}
-
-			my %addedDates = (); # used to keep track of timestamps added to prevent duplicates
-
-			if (exists($ep{'month'}) && exists($ep{'day'}) && exists($ep{'year'})) {
-				my $eventDateString;
-
-				if ($ep{'month'} < 10) {
-					$ep{'month'} = '0' . $ep{'month'};
-				}
-
-				if ($ep{'day'} < 10) {
-					$ep{'day'} = '0' . $ep{'day'};
-				}
-
-				if (exists($ep{'hour'}) && exists($ep{'minute'})) {
-					if (exists($ep{'am_pm'}) && $ep{'am_pm'}) {
-						$ep{'hour'} += 12;
+					if ($paramKey eq 'you') {
+						AddHost($paramValue, 1);
 					}
-
-					if ($ep{'hour'} < 10) {
-						$ep{'hour'} = '0' . $ep{'hour'};
-					}
-
-					if ($ep{'minute'} < 10) {
-						$ep{'minute'} = '0' . $ep{'minute'};
-					}
-
-					$eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'} . ' ' . $ep{'hour'} . ':' . $ep{'minute'};
-				}
-				else {
-					$eventDateString = $ep{'year'} . '-' . $ep{'month'} . '-' . $ep{'day'};
-				}
-
-				my $eventDate = ParseDate($eventDateString);
-				#				my $eventDate = $eventDateString;
-
-				if (!$addedDates{$eventDate}) {
-					if ($eventDate ne 'NaN') {
-						$addedDates{$eventDate} = 1;
-
-						$newFile .= 'event/' . $eventDate . '/1';
-						$newFile .= "\n\n";
-
-						#todo actually calculate the date and duration
+					if ($paramKey eq 'me') {
+						AddHost($paramValue, 0);
 					}
 				}
 			}
-
-			if (exists($ep{'date_epoch'})) {
-				my $eventDateEpoch = $ep{'date_epoch'};
-
-				if ($eventDateEpoch) {
-
-					if (!$addedDates{$eventDateEpoch}) {
-						$addedDates{$eventDateEpoch} = 1;
-
-						#todo more sanity
-						$newFile .= 'event/' . $eventDateEpoch . '/2';
-						$newFile .= "\n\n";
-					}
-				}
-			}
-
-			if (exists($ep{'date_yyyy'})) {
-				my $eventDateStringFromYyyy = $ep{'date_yyyy'};
-
-				if ($eventDateStringFromYyyy) {
-					my $eventDateStringEpoch = ParseDate($eventDateStringFromYyyy);
-					if ($eventDateStringEpoch) {
-						WriteLog('$eventDateStringEpoch = ' . $eventDateStringEpoch);
-
-						if ($eventDateStringEpoch) {
-							if (!$addedDates{$eventDateStringEpoch}) {
-								$addedDates{$eventDateStringEpoch} = 1;
-
-								$newFile .= 'event/' . $eventDateStringEpoch . '/3';
-								$newFile .= "\n\n";
-							}
-						}
-					}
-					else {
-						$newFile .= "Date: $eventDateStringFromYyyy";
-						$newFile .= "\n\n";
-					}
-				}
-			}
-
-			if (exists($ep{'event_details'})) {
-				my $eventDescription = $ep{'event_details'};
-
-				$newFile .= $eventDescription;
-				$newFile .= "\n\n";
-			}
-
-			#todo finish the other params
-
-			if ($newFile) {
-				#$newFile .= "\n\n(Anonymously submitted without a signature.)";
-
-				$newFile = trim($newFile);
-				$newFile =~ s/\n\n\n/\n\n/g;
-				#todo this shouldn't be necessary, clean up the \n\n above
-
-				my $filename;
-				$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
-
-				PutFile($TXTDIR . '/' . $filename, $newFile);
-				#
-				#				if (GetConfig('admin/server_key_id')) {
-				#					ServerSign($TXTDIR . '/' . $filename);
-				#				}
-			}
-		}
-
-		WriteMessage($lineCounter);
+		} # rss.txt
 	}
 
 	# Close the log file handle
+	WriteLog('ProcessAccessLog: close(LOGFILE)');
 	close(LOGFILE);
 	
 	#Clean up the access log tracker
@@ -876,6 +663,14 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	return $newItemCount;
 } # ProcessAccessLog()
 
-
+if ($arg1) {
+	chomp $arg1;
+	if (-e $arg1) {
+		print("Recognized existing file $arg1\n");
+		ProcessAccessLog($arg1);
+	} else {
+		print("Argument not understood.");
+	}
+}
 
 1;
