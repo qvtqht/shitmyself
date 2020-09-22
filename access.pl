@@ -324,23 +324,30 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 			next;
 		}
 
-		# ALLOW_DEOP, default deop string
 		if (GetConfig('admin/allow_deop') == 1) {
-			my $deopString = GetConfig('admin/deop_string');
+			if ($file =~ m/chkOverthrow/) {
+				my $overthrowInterval = GetConfig('admin/overthrow_interval');
+				if (!$overthrowInterval) {
+					$overthrowInterval = 1;
+				}
 
-			if ($deopString) {
-				my $filteredFile = $file;
-				$filteredFile =~ s/[^elit]//g;
-				chomp $filteredFile;
+				if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
+					WriteLog('ProcessAccessLog: Overthrow conditions met');
 
-				if ($filteredFile eq $deopString) {
-					WriteLog("Deop request found, removing admin.key");
-					unlink('admin.key');
-					next;
+					PutConfig('admin/admin_last_action', 0);
+
+					if (file_exists('admin.key')) {
+						unlink('admin.key');
+						WriteLog('ProcessAccessLog: Overthrow successful');
+						next;
+					} else {
+						WriteLog('ProcessAccessLog: Overthrow already in effect: admin.key missing');
+					}
+				} else {
+					WriteLog('ProcessAccessLog: Overthrow conditions not met, overthrow unsuccessful');
 				}
 			}
-		}
-
+		} # admin/allow_deop
 
 		## TEXT SUBMISSION PROCESSING BEGINS HERE ##
 		############################################
