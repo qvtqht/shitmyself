@@ -1,5 +1,5 @@
 <!-- event_add.template -->
-<form method="get" name=addevent action="/action/event.html">
+<form method="GET" name=addevent action="/post.html">
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
