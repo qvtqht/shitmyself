@@ -279,13 +279,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (!$alias) {
 			$alias = '';
 		}
-		WriteLog("IndexTextFile: \$alias = $alias");
+		WriteLog('IndexTextFile: $alias = ' . $alias);
 
 		if ($gpgKey) {
-			WriteLog("\$gpgKey = $gpgKey");
-		}
-		else {
-			WriteLog("\$gpgKey = false");
+			WriteLog('IndexTextFile: $gpgKey = ' . $gpgKey);
+		} else {
+			WriteLog('IndexTextFile: $gpgKey is false');
 		}
 
 		my $detokenedMessage = $message;
