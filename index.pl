@@ -496,26 +496,27 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		# look for hash tags aka hashtags hash tag hashtag
 		if (GetConfig('admin/token/hashtag') && $message) {
-			WriteLog("... check for hashtags");
+			WriteLog("IndexTextFile: check for hashtags...");
 			my @hashTags = ($message =~ m/\#([a-zA-Z0-9]+)/mg);
 
 			if (@hashTags) {
-				WriteLog("... hashtag(s) found");
+				WriteLog("IndexTextFile: hashtag(s) found");
+			}
 
-				while (@hashTags) {
-					my $hashTag = shift @hashTags;
-					$hashTag = trim($hashTag);
+			while (@hashTags) {
+				my $hashTag = shift @hashTags;
+				$hashTag = trim($hashTag);
 
-					if ($hashTag) {
-						#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
-						#todo
+				if ($hashTag) {
+					#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
+					#todo
 
-						WriteLog('$hashTag = ' . $hashTag);
+					WriteLog('IndexTextFile: $hashTag = ' . $hashTag);
 
-						$hasToken{$hashTag} = 1;
+					$hasToken{$hashTag} = 1;
 
-						if ($hasParent) {
-							WriteLog('$hasParent');
+					if ($hasParent) {
+						WriteLog('$hasParent');
 
 						if (scalar(@itemParents)) {
 							foreach my $itemParentHash (@itemParents) {
