@@ -370,10 +370,18 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		}
 
 		my $addTo404Log = 0;
-		WriteLog("Check admin/accept_404_url_text...");
 		if (GetConfig('admin/accept_404_url_text')) {
+			WriteLog("ProcessAccessLog: admin/accept_404_url_text...");
 			#If the request was met with a 404
-			if ($status eq '404' || (GetConfig('admin/lighttpd/enable') && !-e ('html' . $file))) {
+			my $fileWithoutParams = $file;
+
+			if (index($fileWithoutParams, '?') > 0 && index($fileWithoutParams, '?') != -1) { # for clarity
+				# there is a question mark in the request
+				# and it is not the first character
+				$fileWithoutParams = substr($fileWithoutParams, 0, index($fileWithoutParams, '?'));
+			}
+
+			if ($status eq '404' || (GetConfig('admin/lighttpd/enable') && !-e ('html' . $fileWithoutParams))) {
 				# this workaround is for lighttpd,
 				# which returns 200 instead of 404 when handler
 				# is specified because it's stupid
