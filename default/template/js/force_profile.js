@@ -2,7 +2,6 @@
 
 // when this file is included, it will force the user to the profile page
 // if they are not registered
-// #todo account for cookies?
 
 if (window.getUserFp) {
 	if (!getUserFp()) {
