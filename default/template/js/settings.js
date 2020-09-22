@@ -325,7 +325,7 @@ function LoadCheckbox (c, prefKey) { // updates checkbox state to reflect settin
 // c = checkbox
 // prefKey = key of preference value
 //
-	//alert('DEBUG: LoadCheckbox(' + ths + ',' + prefKey);
+	//alert('DEBUG: LoadCheckbox(' + c + ',' + prefKey);
 	var checkboxState = GetPrefs(prefKey);
 	//alert('DEBUG: checkboxState = ' + checkboxState);
 
