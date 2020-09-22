@@ -450,6 +450,12 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								WriteLog('$recordDebugInfo = 1');
 							}
 						}
+
+						else {
+							if ($paramName && $paramValue) {
+								$message .= "\n" . $paramName . '=' . $paramValue . "\n";
+							}
+						}
 					}
 
 
