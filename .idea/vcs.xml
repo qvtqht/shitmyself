@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/contrib/eschalot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/contrib/mime_extensions" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/contrib/minGPT" vcs="Git" />
   </component>
 </project>
