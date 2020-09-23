@@ -1524,6 +1524,21 @@ sub GetPageFooter { # returns html for page footer
 		$txtFooter = InjectJs2($txtFooter, 'after', '</html>', qw(back_to_top_button));
 	}
 
+	if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/footer_stats')) {
+		#footer stats inserted by ssi
+		WriteLog('GetPageFooter: ssi footer conditions met!');
+		# footer stats
+		$txtFooter = str_replace(
+			'</body>',
+			GetTemplate('stats_footer_ssi.template') . '</body>',
+			$txtFooter
+		);
+	} # ssi footer stats
+	else {
+		WriteLog('GetPageFooter: ssi footer conditions NOT met!');
+	}
+
+
 	return $txtFooter;
 }
 
