@@ -1142,18 +1142,6 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 		$query .= ',';
 	}
 
-	#todo this is kind of a hack, shouldn't be here in the db layer
-	my $priority = 1;
-	if (
-		GetConfig('admin/pages/lazy_page_generation') &&
-		($pageName eq 'item') ||
-		($pageName eq 'index')
-	) {
-		# deprioritize item pages
-		# this is not the bes tplace for it #todo
-		$priority = 0;
-	}
-
 	#todo
 	# https://stackoverflow.com/a/34939386/128947
 	# insert or replace into poet (_id,Name, count) values (
