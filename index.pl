@@ -219,18 +219,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	my $gpgTimestamp = 0;
 
-	my @allowedActions;		# contains actions allowed to signer of message
-
-	my %hasToken; # contains all the tokens found in message for secondary rules
-
-	#	if (substr(lc($file), length($file) -4, 4) eq ".txt" || substr(lc($file), length($file) -3, 3) eq ".md") {
-	#todo add support for .md (markdown) files
-
-	#	if (substr(lc($file), length($file) -4, 4) eq ".jpg") {
-	#		my $itemName = 'image...';
-	#		my $fileHash = GetFileHash($file);
-	#		DBAddItem($file, $itemName, '',      $fileHash, 'jpg');
-	#	} #aug29
+	my %hasToken; # tokens found in message for secondary parsing
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
 		my %gpgResults = GpgParse($file);
@@ -266,16 +255,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		# $message .= "\n-- \n" . $fileMeta;
 
-		if (IsServer($gpgKey)) {
-			#todo
-			push @allowedActions, 'addedtime';
-			push @allowedActions, 'addedby';
-		}
-		if (IsAdmin($gpgKey)) { #todo
-			#push @allowedactions vouch
-			#push @allowedactions config
-		}
-
 		if (!$alias) {
 			$alias = '';
 		}
@@ -300,30 +279,28 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		# debug output
-		WriteLog('... $file = ' . $file . ', $fileHash = ' . $fileHash);
+		WriteLog('IndexTextFile: $file = ' . $file . ', $fileHash = ' . $fileHash);
 
 		# if the file is present in deleted.log, get rid of it and its page, return
 		if (IsFileDeleted($file, $fileHash)) {
-			WriteLog('... IsFileDeleted() returned true, returning');
+			WriteLog('IndexTextFile: IsFileDeleted() returned true, returning');
 
 			return;
 		}
 
 		# debug output
-		WriteLog("... " . $fileHash);
+		WriteLog('IndexTextFile: ' . $fileHash);
 		if ($addedTime) {
-			WriteLog("... \$addedTime = $addedTime");
+			WriteLog('IndexTextFile: $addedTime = ' . $addedTime);
 		}
 		else {
-			WriteLog("... \$addedTime is not set");
+			WriteLog('IndexTextFile: $addedTime is not set');
 		}
 
 		if (!$addedTime) {
-			# This file was not added through access.pl, and has
-			# not been indexed before, so it should get an added_time
-			# record. This is what we'll do here. It will be picked
-			# up and put into the database on the next cycle
-			# unless we add provisions for that here #todo
+			# This file has not been indexed before,
+			# so it should get an added_time record.
+			# This is what we'll do here.
 
 			if (GetConfig('admin/logging/write_chain_log')) {
 				AddToChainLog($fileHash);
@@ -333,7 +310,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			# current time
 			my $newAddedTime = GetTime();
-			$addedTime = $newAddedTime; #todo is this right? confirm
+			$addedTime = $newAddedTime;
 
 			# if (GetConfig('admin/logging/write_added_log')) {
 			# 	# add new line to added.log
@@ -389,7 +366,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# sanity check for gpgkey having any whitespace in it before using it in a glob for unlinking cache items
 				WriteLog('IndexTextFile: proceeding to unlink avatar caches for ' . $gpgKey);
 
-				#todo this is kind of dangerous
+				#todo make this less "dangerous"
 				unlink(glob("cache/*/avatar/*/$gpgKey"));
 				unlink(glob("cache/*/avatar.plain/*/$gpgKey"));
 			} else {
@@ -476,11 +453,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						$hasToken{'reply'} = 1;
 
 						my $reconLine = ">>$parentHash";
-						#$message =~ s/$reconLine/$reconLine/;
-
-						#$message =~ s/$reconLine/[In response to: $parentHash]/;
-						# replace with itself, no change needed
-						#todo eventually we will want some kind of more friendly display of replied-to content
 
 						$detokenedMessage =~ s/$reconLine//;
 						DBAddPageTouch('item', $parentHash);
@@ -508,9 +480,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				$hashTag = trim($hashTag);
 
 				if ($hashTag) {
-					#my $hashTagLinkTemplate = GetTemplate('hashtaglink.template');
-					#todo
-
 					WriteLog('IndexTextFile: $hashTag = ' . $hashTag);
 
 					$hasToken{$hashTag} = 1;
@@ -555,8 +524,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					DBAddPageTouch('tag', $hashTag);
 
 					$detokenedMessage =~ s/#$hashTag//g;
-					#todo does this need to be /i?
-					#todo how to determine capitalization if it varies across different posts?
 				} # if ($hashTag)
 			} # while (@hashTags)
 		} # if (GetConfig('admin/token/hashtag') && $message)
@@ -1045,7 +1012,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		#
 		#			if (@latLongLines) {
 		#				my $lineCount = @latLongLines / 2;
-		#				#todo assert no remainder
 		#
 		#				WriteLog("... DBAddLatLong \$lineCount = $lineCount");
 		#
@@ -1079,7 +1045,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			if (@burningManLines) {
 				my $lineCount = @burningManLines / 3;
-				#todo assert no remainder
 
 				while (@burningManLines) {
 					my $aveHours = shift @burningManLines;
@@ -1136,7 +1101,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			if (@latlongLines) {
 				my $lineCount = @latlongLines / 2;
-				#todo assert no remainder
 
 				while (@latlongLines) {
 					my $latValue = shift @latlongLines;
@@ -1153,7 +1117,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $reconLine = "latlong/$latValue,$longValue";
 
-					$message =~ s/$reconLine/[Location: $latValue,$longValue]/g; #todo flesh out message
+					$message =~ s/$reconLine/[Location: $latValue,$longValue]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
@@ -1174,7 +1138,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			if (@eventLines) {
 				my $lineCount = @eventLines / 2;
-				#todo assert no remainder
 
 				WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
 
@@ -1236,7 +1199,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $dateText = "$year/$month/$day_of_month $hours:$minutes:$seconds";
 
-					$message =~ s/$reconLine/[Event: $dateText for $eventDurationText]/g; #todo flesh out message
+					$message =~ s/$reconLine/[Event: $dateText for $eventDurationText]/g;
 
 					$detokenedMessage =~ s/$reconLine//g;
 
@@ -1321,7 +1284,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			} # admin/dev_mode
 
 			if (!$hasToken{'example'}) { #example token negates most other tokens.
-
 				if ($hasToken{'remove'}) { #remove
 					if ($hasParent && scalar(@itemParents)) {
 						WriteLog('IndexTextFile: Found #remove token, and item has parents');
@@ -1359,7 +1321,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								if (-e $itemParentPath) {
 									# this only works if organize_files is on and file was put into its path
 									# otherwise it will be removed at another time
-									WriteLog("removing $itemParentPath");
+									WriteLog('IndexTextFile: removing $itemParentPath = ' . $itemParentPath);
 									unlink($itemParentPath);
 								}
 
@@ -1368,33 +1330,33 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									if (!GetConfig('admin/logging/record_remove_action')) {
 										# this removes the remove call itself
 										if (!$detokenedMessage) {
-											WriteLog($file . ' exists, calling unlink()');
+											WriteLog('IndexTextFile: ' . $file . ' exists, calling unlink()');
 											unlink($file);
 										}
 									}
 								}
 								else {
-									WriteLog($file . ' does NOT exist, very strange');
+									WriteLog('IndexTextFile: ' . $file . ' does NOT exist, very strange');
 								}
 
 								#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
 							} # has permission to remove
 							else {
-								WriteLog('Request to remove file was not found to be valid');
+								WriteLog('IndexTextFile: Request to remove file was not found to be valid');
 							}
 						} # foreach my $itemParent (@itemParents)
 					} # has parents
 				} # #remove
 			} # not #example
-		}
+		} # not pubkey
 
 		if ($message) {
 			# cache the processed message text
 			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$fileHash";
-			WriteLog("\n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
+			WriteLog("IndexTextFile: \n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
 		} else {
-			WriteLog('... I was going to save $messageCacheName, but $message is blank!');
+			WriteLog('IndexTextFile: I was going to save $messageCacheName, but $message is blank!');
 		}
 
 		# below we call DBAddItem, which accepts an author key
@@ -1411,7 +1373,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			if ($hasCookie) {
 				# Otherwise, if there is a cookie, use the cookie
 				DBAddItem($file, $itemName, $hasCookie, $fileHash, 'txt', $verifyError);
-				#todo #bug here $hasCookie is the wrong variable here, i think. should be cookie value
 			} else {
 				# Otherwise add with an empty author key
 				DBAddItem($file, $itemName, '', $fileHash, 'txt', $verifyError);
