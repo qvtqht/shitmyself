@@ -163,5 +163,8 @@ if (GetConfig('admin/lighttpd/enable')) {
 	system('screen -S lighttpd -d -m perl ./lighttpd.pl');
 }
 
+if (GetConfig('admin/ssi/enable') && GetConfig('admin/php/enable')) {
+	BuildMessage('Warning: ssi/enable and php/enable are both true');
+}
 
 1;
