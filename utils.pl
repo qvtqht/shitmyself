@@ -1781,6 +1781,14 @@ sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a f
 	return $string;
 }
 
+sub htmlspecialchars { # encodes supplied string for html output
+	my $text = shift;
+
+	$text = encode_entities2($text);
+
+	return $text;
+}
+
 sub HtmlEscape { # encodes supplied string for html output
 	my $text = shift;
 
