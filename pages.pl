@@ -75,7 +75,7 @@ sub GenerateDialogPage { # generates page with dialog
 			return $pageTemplate;
 		}
 		if ($pageName eq '401') {
-			$pageTitle = '401 Access Denied';
+			$pageTitle = '401 Welcome to Access Denied';
 
 			$windowContents = GetTemplate('401.template');
 
