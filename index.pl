@@ -1206,7 +1206,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				if (!$hasToken{'changelog'} || index($message, 'Software Updated to Version') == -1) {
 					# exclude changelog messages
-					foreach my $devTokenName (qw(todo brainstorm bug)) {
+
+					#todo instead of hard-coded list use tagset
+					foreach my $devTokenName (qw(todo brainstorm bug scratch known meta)) {
 						if ($hasToken{$devTokenName}) {
 							if ($message) {
 								my $todoContents = GetFile("doc/$devTokenName.txt");
