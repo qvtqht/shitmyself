@@ -1,0 +1,7 @@
+<!-- long_message.template -->
+<noscript>
+	<p>
+		If you are submitting a long text, <a href="/write_post.html">please click here</a>.
+	</p>
+</noscript>
+<!-- / long_message.template -->

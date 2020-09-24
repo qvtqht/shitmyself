@@ -14,13 +14,6 @@
 					<fieldset>
 						<span id=writeintro></span>
 
-						<noscript>
-							<p>
-								If you are submitting a long text, <a href="/write_post.html">please click here</a>.
-								<!-- #todo: this link only works with php enabled -->
-							</p>
-						</noscript>
-
 						<label for="comment" class=beginner>Share with Everyone:<br></label>
 
 						<textarea

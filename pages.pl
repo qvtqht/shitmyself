@@ -3459,6 +3459,11 @@ sub GetWriteForm { # returns write form (for composing text message)
 	my $writeForm = GetTemplate('form/write/write.template');
 
 	if (GetConfig('admin/php/enable')) {
+		my $writeLongMessage = GetTemplate('form/write/long_message.template');
+		if ($writeLongMessage) {
+			my $targetElement = '<span id=writeintro>';
+			$writeForm = str_replace($targetElement, $targetElement . $writeLongMessage, $writeForm);
+		}
 
 		## changing the form target is no longer necessary thanks to mod_rewrite
 		## this code may have to be reused later when we want to adapt to an environment
