@@ -130,9 +130,9 @@ function SignVote (t, token) { // signs a vote from referenced vote button
 				// #todo make it go away after a few seconds and/or on click
 				window.duplicateVoteTries ? window.duplicateVoteTries++ : window.duplicateVoteTries = 1;
 				if (3 <= window.duplicateVoteTries) {
-					displayNotification('Hey! What do you think you\'re doing?', t);
+					//displayNotification('Hey! What do you think you\'re doing?', t);
 				} else {
-					displayNotification('Already added that tag to that item', t);
+					//displayNotification('Already added that tag to that item', t);
 				}
 			} else {
 				//alert('DEBUG: window.displayNotification() was missing');
