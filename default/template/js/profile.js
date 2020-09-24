@@ -257,7 +257,8 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				pShowPrivateKey.appendChild(aShowPrivateKey);
 				pShowPrivateKey.appendChild(hintShowPrivateKey);
 				fieldset.appendChild(pShowPrivateKey);
-			} else {
+			} // privateKey is true
+			else {
 				//alert('DEBUG: AddPrivateKeyLinks: privateKey: false');
 
 				// add horizontal rule
@@ -290,8 +291,13 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				pLoadKeyFromTxt.appendChild(labelLoadFromFile);
 
 				fieldset.appendChild(pLoadKeyFromTxt);
+			} // privateKey is FALSE
+
+			if (window.ShowAdvanced) {
+				ShowAdvanced(1);
 			}
-		} else {
+		} // if (fieldset && document.createElement)
+		else {
 			//alert('DEBUG: AddPrivateKeyLinks: checks FAILED');
 		}
 	}
