@@ -1,12 +1,12 @@
 <html>
 <head>
-    <title>Keyboard Frame</title>
+    <title>Keyboard Frame3</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<!-- keyboard_frame1.template -->
+<!-- keyboard_frame3.template -->
 <frameset border=0 rows="*,190">
 <frame src="write.html" name=main>
-<frame src="keyboard.html" name=kbd>
+<frame src="keyboard_netscape.html" name=kbd>
 </frameset>
 <noframes><a href="/write.html">write.html</a></noframes>
 </html>
