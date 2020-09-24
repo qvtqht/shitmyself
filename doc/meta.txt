@@ -1,0 +1,180 @@
+
+
+===
+
+#meta #rants
+
+Here's what i think about html standards
+
+shitting on the standards is a tradition iin web development that's existed for almost as long ass the the web itsef
+
+since the very beginning, web developrs shit on the browsers by writing shit which wouldn't work on them but would only work on their favorite browsers and the browser makers shit on them right back by again shitting on the standards and introducing their own fucking standars which made the web developers' lives hell.
+
+so why the fuck should i as a web developer give a piss about what w3c thinks or what chrome devs think, who don't give two fucks about me, as i have discovered via the responses to all my fucking bug reports, or what other web devs think, who haven't seen a browser besides fucking firefox and chrome and don't know their history and just repeat whatevr stupid fucking drivel google convinces them to believe either directly or through their fucking puppets w3c and mozilla foundation.
+
+
+
+addtext=Meditate...
+
+
+
+===
+
+Server Message:
+
+There was no admin, and BE6730AEF1A02A70 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600838544
+
+
+===
+
+IE2 tests did not go amazing.
+
+a) it does not support cookies
+b) perhaps light mode should be default?
+c) A lot of artifacts from js dislayed on page
+
+#meta #todo #bug
+-- 
+Authorization: admin
+
+
+===
+
+#brainstorm #meta 
+
+javascript can set a "pre-render" cookie 
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load 
+
+this would avoid the jump after pageload which currently happens 
+
+-- 
+Authorization: admin
+Cookie: 95C0CEF4E22CE77B
+
+
+===
+
+#brainstorm #meta 
+
+javascript can set a "pre-render" cookie 
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load 
+
+this would avoid the jump after pageload which currently happens 
+
+addtext=Send+Now
+
+
+
+===
+
+Server Message:
+
+There was no admin, and 95C0CEF4E22CE77B came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600793207
+
+
+===
+
+Server Message:
+
+There was no admin, and 7F07E42BA26D4063 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600838935
+
+
+===
+
+Server Message:
+
+There was no admin, and 8C935F2C822180D3 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600806361
+
+
+===
+
+Server Message:
+
+There was no admin, and 95C0CEF4E22CE77B came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600794975
+
+
+===
+
+#meta #rants
+
+Here's what i think about html standards
+
+shitting on the standards is a tradition iin web development that's existed for almost as long ass the the web itsef
+
+since the very beginning, web developrs shit on the browsers by writing shit which wouldn't work on them but would only work on their favorite browsers and the browser makers shit on them right back by again shitting on the standards and introducing their own fucking standars which made the web developers' lives hell.
+
+so why the fuck should i as a web developer give a piss about what w3c thinks or what chrome devs think, who don't give two fucks about me, as i have discovered via the responses to all my fucking bug reports, or what other web devs think, who haven't seen a browser besides fucking firefox and chrome and don't know their history and just repeat whatevr stupid fucking drivel google convinces them to believe either directly or through their fucking puppets w3c and mozilla foundation.
+
+
+
+-- 
+Authorization: admin
+Cookie: 714AB4A90591CCA0
+
+
+===
+
+#meta
+
+>>ab106acf3f19872d9e7335bb2a70ac9808f9f24a
+-- 
+Authorization: admin
+Cookie: BE6730AEF1A02A70
+
+
+===
+
+IE2 tests did not go amazing.
+
+a) it does not support cookies
+b) perhaps light mode should be default?
+c) A lot of artifacts from js dislayed on page
+
+#meta #todo #bug
+addtext=Send+Now
+
+
+
+===
+
+Server Message:
+
+There was no admin, and 400773E73A825CA6 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600920213

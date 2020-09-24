@@ -1,3 +1,34 @@
+BROWSER SUPPORT NOTES
+=====================
+
+General advice if early browsers like Mosaic, IE2, NN1 etc. are your priority:
+	Mosaic and IE2 are fussy about headers
+		Disable php and ssi for more basic headers
+		Consider setting light mode default
+	They also don't like very large pages
+		Disable javascript to reduce file size
+	They don't understand Unicode or weird characters
+		Enable ascii_only mode
+
+In Opera 12.x, registration fails
+	This is due to OpenPGP.js throwing an error
+		Fix 1: polyfill getRandomValues()
+		Fix 2: handle exeptions thrown by openpgp with fallback
+
+Crashes sometimes experienced
+	Mosaic
+	IE4
+	Opera 3
+
+In IE 5.5. item pages return a JavaScript error
+	Seems to be related to either whitespace or comments
+	Exact cause unknown
+	Workarounds
+		Press OK on the javascript error message, rest of the site works
+		Disable JS on browser
+		Use Light Mode to strip JS
+
+
 What "Basics" means
 ===================
 Load every page
@@ -8,30 +39,30 @@ Update button on Stats page
 
 What the symbols mean
 =====================
-[x] Working
+[1] Working
 [ ] Untested
-[o] Not working, not expected to work
-[-] Not working, fix possible
+[0] Not working, not expected to work
+[?] Not working, fix possible
 [~] Works partially
 
 Opera 12.14
 ===========
-[x] Basics
-[x] Cookie auth
-[x] JS voting buttons
-[x] JS modular UI
+[1] Basics
+[1] Cookie auth
+[1] JS voting buttons
+[1] JS modular UI
 [-] OpenPGP and signing
-[x] JS clock
+[1] JS clock
 [ ] JS fresh.js
 
 Netscape 4.80
 =============
-[x] Basics
-[x] Cookie auth
+[1] Basics
+[1] Cookie auth
 [ ] JS voting buttons
 [ ] JS modular UI
 [ ] OpenPGP and signing
-[x] JS clock
+[1] JS clock
 [ ] JS fresh.js
 
 SeaMonkey 2.49.5

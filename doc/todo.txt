@@ -1,3 +1,12 @@
+let user save/export/import cookie secret key
+
+add option to rotate/trim access.log
+	on by default for lighttpd/local
+	off by default for other
+
+$$ returns current process id
+	make lock file based on this
+
 directory listings
 	instead of 404 page, there should be index.html in each directory showing its contents
 

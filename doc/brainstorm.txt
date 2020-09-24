@@ -1,3 +1,28 @@
+
+#brainstorm display pgp wordlist for key
+
+javascript can set a "pre-render" cookie
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load
+
+this would avoid the jump after pageload which currently happens
+
+#brainstorm #meta
+
+javascript can set a "pre-render" cookie
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load
+
+this would avoid the jump after pageload which currently happens
+
+auto-detect #textart by comparing ratio of alphanumeric to non-an chars
+
+Warning: You are on the side of majority. Perhaps it is time to pause and reflect?
+
+README can easily be executable installation script :D
+
+display pgp wordlist for key
+
 can add bbcode, html, markdown, etc support as modules
 
 
@@ -1056,23 +1081,4 @@ Maintain a constant ~80% approval rate, with bottom 20% of items automatically f
 #meta #brainstorm
 
 Thanks for the feedback! Votes cast by those with less than 125 reputation are recorded, but do not change the publicly displayed post score.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,43 +1,38 @@
 Known Issues
 ============
+Just a basic prototype, not optimized to scale, and still a work in progress
+
+Sometimes new entries stop being picked up from access.log and/or written to the access log by web server
+	The solution is to rm or trim the access log and restart the web server
+	The cause is still unknown to me, probably file is too big
 
 Timestamp in the page footer (when inserted by php) is, for some reason, not updated on the first ShowTimestamps(), but is on the second
 	As a result, the "x units ago" text is not displayed for the first 5-15 seconds after page load
-
-For titles and self-assigned names, they take precedence unpredictably, but usually in order of posting.
-	Your best bet is to flag and remove the old value
-	This affects the following tokens:
-		title: (FIXED, latest title now takes precedence. items can be removed or overridden predictably)
-		my name is
 
 For the "my name is" token
 	Must be the first item published by cookied author in order for the avatar to appear
 		Workaround: rm cache/avatar*
 
-In Opera 12.x, registration fails
-	This is due to OpenPGP.js throwing an error
-		Fix 1: polyfill getRandomValues()
-		Fix 2: handle exeptions thrown by openpgp with fallback
-
 Browsers which do not support Unicode display gibberish when faced with non-Ascii characters
     This can be remediated in the future by down-converting to one particular encoding based on which non-ascii characters are used
         e.g. if there are Cyrillic Unicode characters present, down-convert into koi8-r or
 
-When rebuilding site, the config settings are re-applied one by one as the items are indexed
-    This means, for example, theme values set with "#config html/theme" will change, and you may see different themes applied on some pages
+When rebuilding site, user-submitted config settings are re-applied one by one as the items are indexed
+    This means, for example, theme values set with "#config html/theme"
+    	will change, and you may see different themes applied on some pages
     Partially remediated by loading items containing "#config" ahead of everything else except pubkeys
 
 Content returned via PHP shims has different headers
-    there is no etag or time-created (FIXED, ETag generation added)
     gzip is not used, so filesize is bigger
 
-Voting on author keys does not work, even though the buttons on the authors list page try.
+Voting on author fingerprints does not work, even though the buttons on the authors list page try.
 	Removed buttons
 
 Lighttpd directory listings cause JS error in NN3
 	Partially remediated by forbidding directory listings, showing 404 page instead
 
-Cookie-based id is not applied to many actions
+Cookie-based id is not applied to many actions #todo
+	Fix to come
 
 Cookie-based auth and localstorage+OpenPGP-based auth are not perfectly synced up
     In particular if LocalStorage is used, then JS is disabled and logged out
@@ -48,61 +43,26 @@ to be duplicated when competing processes write different files.
     post.php (which adds files immediately when server receives request) supports adding both headers
     access.pl (which adds files by reading them from the web server's access.log) only supports Host:, but not Cookie:
         The solution is to probably hash the file without its signature and use that as an id, or just the primary id
+    Update: This is partially fixed with the "-- " footer separator. However, some issues remain.
 
-I don't know how to package libs correctly so that they are part of the repo, but do not conflict with the installed system libs.
-	I think it has something to do with some kind of binary attachments that come with the .pm files
-	and/or version conflicts
-
-config/admin/server_key_id
-	The key specified here must have been generated with the same version of GPG as in use.
-		Otherwise, GPG2 will revert to default key
+Sever-signed confirmation mesages is completely broken at this time
 
 Public key upload doesn't update html profile page
 	Sometimes
 	for unknown reasons
 	Workaround: clean-build
 
-Remember to clean-build after updating default/
-	Because it is copied to config/ when accessed
-	clean-build will clear config/template/ and config/string/
-	This can cause accidental deletion of configuration
-	#todo rename to html.epoch and default.epoch or something
-	Remove the zip files to save space
-		How to check if needed? Total space?
-
 Long messages without JS may cause URI too long error
 	With JS, the form is automatically switched to POST
-	There needs to be a warning and another page
-	Maybe the default page should have a one-liner textbox
+	The Write page contains a warning and a link to POST-based form.
 
-Crashes experienced
-	Mosaic
-	IE4
-	Opera 3
-
-
-just a basic prototype, not optimized to scale, and still a work in progress
-
-all 40-character-long hex-looking strings are assumed to be existing items
-	linked in the html-ized posts, even if they do not exist
-
-voter id should (debatable) be generated once per page, but is currently generated once per item.
-
-when an encrypted message has multiple recipients, only the first is used.
-
-server_key_id is tricky, must be 16 chars all caps
-
-In IE 5.5. item pages return a JavaScript error
-	Seems to be related to either whitespace or comments
-	Exact cause unknown
-	Workarounds
-		Press OK on the javascript error message, rest of the site works
-		Disable JS on browser
-		Use Light Mode to strip JS
-
-config/admin/accept_404_url_text
-	this is broken, because it doesn't filter all the regular requests
-	e.g. /stats.html?123412521544
+All 40-character-long hex-looking strings are assumed to be existing items
+	Linked in the html-ized posts, even if they do not exist
 
 config/coin/accepted
-	must be in order of grep precedence, that is, aaa before aa (because aa is substring of aaa)
+	Must be in "reverse substring precedence"
+	That is, aaa before aa (because aa is substring of aaa)
+
+Browser Issues
+==============
+See browsers.txt

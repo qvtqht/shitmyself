@@ -1,3 +1,26 @@
+
+                     ,
+                  ,.`;,
+                ,`._.-`.
+              ,`-,.-,.-`_,.';
+           ,``: SHITMYSELF`.`,
+          ',`;`-.=-==- -=-'`,'
+            `--`,,,_.'`'``-`
+
+
+s H i T M y s e L f
+...................
+......______.......
+.....*|....|.......
+......|___.|.......
+.....(......)......
+.....,|```.|,......
+....|./....\.|.....
+.....`------`......
+...................
+s H i T M y s e L f
+
+
 	author who voted
 approve
 on item
@@ -477,3 +500,2013 @@ Email support x
 
 
 config/html/menu_bottom
+
+
+===
+
+#scratch #scrap
+
+
+<!DOCTYPE html><script>var __pbpa = true;</script><script>var translated_warning_string = 'Warning: Never enter your Tumblr password unless \u201chttps://www.tumblr.com/login\u201d\x0ais the address in your web browser.\x0a\x0aYou should also see a green \u201cTumblr, Inc.\u201d identification in the address bar.\x0a\x0aSpammers and other bad guys use fake forms to steal passwords.\x0a\x0aTumblr will never ask you to log in from a user\u2019s blog.\x0a\x0aAre you absolutely sure you want to continue?';</script><script type="text/javascript" language="javascript" src="https://assets.tumblr.com/assets/scripts/pre_tumblelog.js?_v=b9f848c06fcba7eaf305d4a7cb7a1b98"></script><html>
+<!---------------------------------------------------------------------------
+
+                      ,,
+                     ,GG,
+                     GIIG
+                    Gl''lG
+                   ;G'  'G;
+                   GP    YG
+                  oQ'    'Qo                 -Grid ᴛʜᴇᴍᴇ ʙʏ
+   *TGGGGGGGGGGGGQQQ,    ,QQQGGGGGGGGGGGGP*   ɴʏᴄᴛᴏᴛʜᴇᴍᴇs.ᴛᴜᴍʙʟʀ.ᴄᴏᴍ
+      *TGo,        '*    *'        ,oGP*
+         *TGo,    ɴʏᴄᴛ□ᴛʜᴇᴍᴇs   ,oGP*        -ᴘʟᴇᴀsᴇ ʀᴇғᴇʀ ᴛᴏ ᴏʀɪɢɪɴᴀʟ
+            *TGio,,        ,,oiGP*            ᴘᴏsᴛ ʟɪɴᴋ ғᴏʀ ʀᴜʟᴇs ᴀɴᴅ ᴍɪsᴄ
+              ;GGT'        'TGG:
+              GG'     ii     'GG             -ᴅᴏ ɴᴏᴛ ʀᴇᴍᴏᴠᴇ ᴀɴʏ ᴏғ ᴛʜᴇ
+             GG'     ,GG,     'GG             ᴄᴏᴅᴇ ᴄʀᴇᴅɪᴛ ᴏʀ ᴍᴏᴠᴇ ɪᴛ ᴛᴏ
+            GG*     oGGGGo.    *GG            ᴀ ᴘᴀɢᴇ.
+           oG*   oGG*    *GGo.  *Go
+          ;GG;oGG*          *GGo;GG;
+         ,GGGT*                *TGGG,
+         ""'                      '""
+
+---------------------------------------------------------------------------->
+
+    <!-- hover title 2/2 -->
+    <style>figure{margin:0}.tmblr-iframe{position:absolute}.tmblr-iframe.hide{display:none}.tmblr-iframe--amp-cta-button{visibility:hidden;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);z-index:100}.tmblr-iframe--amp-cta-button.tmblr-iframe--loaded{visibility:visible;animation:iframe-app-cta-transition .2s ease-out}</style><link href="style-my-tooltips.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script><script type="text/javascript" src="https://static.tumblr.com/7qjmkr5/IUmmdsy41/jquery.style-my-tooltips.js"></script><script>(function($){$(document).ready(function(){$("[title]").style_my_tooltips();});})(jQuery);</script>
+
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# blog: http://ogp.me/ns/blog#">
+
+    <!-- website necessities -->
+<link rel="shortcut icon" href="https://31.media.tumblr.com/c04229219013491dcc2bd07f6de1fea1/tumblr_inline_nf0g661qgl1rg1lxe.png"/>
+
+<link rel="alternate" type="application/rss+xml" href="https://nyctothemes.tumblr.com/rss"/>
+<title>&lt;/nʏcᴛoᴛʜemes&gt;</title>
+<meta name="description" content="Melanie, &lsquo;97, girl/she, INTJ"/>
+
+<!-------------------------------- IMAGES ---------------------------------->
+    <meta name="image:Default Audio Pic" content="https://static.tumblr.com/u5vz4xb/AW1nhiug8/delete_png.png"/>
+    <meta name="image:Background" content="https://static.tumblr.com/u5vz4xb/96ao5hpgw/asset_01.png"/>
+    <meta name="image:Custom Cursor" content="https://static.tumblr.com/u5vz4xb/e6Dnhiuf0/cursor1.png"/>
+    <meta name="image:Custom Cursor Links" content="https://static.tumblr.com/u5vz4xb/NMNnhiufk/cursor2.png"/>
+    <meta name="image:Favicon" content="http://media.tumblr.com/tumblr_lu2db46ekH1qfoi4t.png"/>
+
+<!-------------------------------- COLORS ---------------------------------->
+    <!-- Full Body -->
+    <meta name="color:Background" content="#191b20"/>
+    <meta name="color:Background Border" content="#17191d"/>
+    <meta name="color:Scroll BG" content="#191b20"/>
+    <meta name="color:Scroll thumb" content="#5b5cb2"/>
+    <!-- Sidebar -->
+    <meta name="color:Sidebar BG" content="#f2f1f1"/>
+    <meta name="color:Sidebar Links BG" content="#1d2025"/>
+    <meta name="color:Sidebar Links Symbol" content="#777686"/>
+    <meta name="color:Sidebar Links Hover BG" content="#5b5cb2"/>
+    <meta name="color:Sidebar Links Hover Symbol" content="#ffffff"/>
+    <meta name="color:Description BG" content="#1d2025"/>
+    <meta name="color:Description Corner" content="#5b5cb2"/>
+    <meta name="color:Description Corner Symbol" content="#ffffff"/>
+    <meta name="color:Description Text" content="#777686"/>
+    <meta name="color:Description Bold" content="#97939d"/>
+    <meta name="color:Description Links" content="#897dc6"/>
+    <meta name="color:Description Links Hover" content="#ffffff"/>
+    <meta name="color:Description Scrollbar" content="#5b5cb2"/>
+    <!-- Posts -->
+    <meta name="color:Posts BG" content="#e0e0e0"/>
+    <meta name="color:Posts 2nd BG" content="#d0cfd2"/>
+    <meta name="color:Posts Title" content="#6a699d"/>
+    <meta name="color:Posts Text" content="#909197"/>
+    <meta name="color:Posts Bold" content="#757886"/>
+    <meta name="color:Posts Italic" content="#909197"/>
+    <meta name="color:Posts Code" content="#aaaaaa"/>
+    <meta name="color:Posts Code BG" content="#d1d1d1"/>
+    <meta name="color:Posts Links" content="#5b5cb2"/>
+    <meta name="color:Posts Links Hover" content="#1d2025"/>
+    <meta name="color:Posts Blockquote" content="#5b5cb2"/>
+    <meta name="color:Audio Player" content="#597dae"/>
+    <!-- Post Endings -->
+    <meta name="color:Postending Square BG" content="#1d2025"/>
+    <meta name="color:Postending Square Symbol" content="#777686"/>
+    <meta name="color:Postending Square Hover BG" content="#5b5cb2"/>
+    <meta name="color:Postending Square Hover Symbol" content="#ffffff"/>
+    <meta name="color:Postending Square Liked" content="#5b5cb2"/>
+    <meta name="color:Postending Text Text" content="#777686"/>
+    <meta name="color:Postending Text BG" content="#1d2025"/>
+    <meta name="color:Postending Text Links" content="#897dc6"/>
+    <meta name="color:Postending Text Links Hover" content="#ffffff"/>
+    <!-- Permalink -->
+    <meta name="color:Permalink Text" content="#5b5cb2"/>
+    <meta name="color:Permalink Links" content="#777686"/>
+    <meta name="color:Permalink Links Hover" content="#ffffff"/>
+    <meta name="color:Permalink Blockquote" content="#1d2025"/>
+    <meta name="color:Permalink Scroll Thumb" content="#5b5cb2"/>
+    <!-- Misc. -->
+    <meta name="color:Link Hover BG" content="#1d2025"/>
+    <meta name="color:Link Hover Text" content="#7f7686"/>
+    <meta name="color:Selection BG" content="#c6c6c6"/>
+    <meta name="color:Selection Text" content="#000000"/>
+    <meta name="color:Selection Links" content="#7f7686"/>
+
+<!------------------------------- OPTIONS ---------------------------------->
+    <meta name="if:Hiatus" content="1"/>
+    <meta name="if:Working on a theme" content="0"/>
+    <meta name="if:Questions" content="1"/>
+
+    <meta name="if:Monochrome Photos" content="0"/>
+    <meta name="if:Fade Photos" content="0"/>
+    <meta name="if:2nd Chat Post Format" content="1"/>
+    <meta name="if:Postending Circles for Indexpage" content="1"/>
+    <meta name="if:Custom Cursor" content="0"/>
+    <meta name="if:Custom Favicon" content="1"/>
+    <meta name="if:Dark Audio Player" content="1"/>
+    <meta name="if:Credit on the Right" content="1"/>
+
+<!-------------------------------- TEXTS ----------------------------------->
+    <meta name="text:Updates" content=""/>
+    <meta name="text:Currently" content=""/>
+    <meta name="text:Ask Verb" content="asked" />
+
+    <!-- symbol font (like the credit) -->
+    <script src="https://use.fontawesome.com/a71f6a22b2.js"></script>
+    <!-- custom font 1/3 -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700|Orbitron:500,900,700' rel='stylesheet' type='text/css'>
+<link rel="alternate" href="android-app://com.tumblr/tumblr/x-callback-url/blog?blogName=nyctothemes%26postID=187721414767" /><link rel="alternate" href="ios-app://305343404/tumblr/x-callback-url/blog?blogName=nyctothemes&postID=187721414767" /><link rel="alternate" type="application/json+oembed" href="https://www.tumblr.com/oembed/1.0?url=https://nyctothemes.tumblr.com/post/187721414767/kingdomheartsnyctophiliac" title="kingdomheartsnyctophiliac:
+&ldquo; kingdomheartsnyctophiliac:
+&ldquo;oh my god i forgot i made a stylish extension that widens the IM box and reply box cause they&rsquo;re SO narrow. Should I publish it for others???
+&rdquo;
+Here it is! Fuck uploading it to a legitimate..."/><script src="https://assets.tumblr.com/assets/scripts/tumblelog_post_message_queue.js?_v=a8fadfa499d8cb7c3f8eefdf0b1adfdd"></script><link rel="stylesheet" type="text/css" href="https://assets.tumblr.com/fonts/arquitecta/stylesheet.css?v=3"><meta name="keywords" content="other peoples themes,themes by other people,oh fuck this is cuuuute,this is so pretty,GORGEOUS" /><!-- BEGIN TUMBLR FACEBOOK OPENGRAPH TAGS --><!-- If you'd like to specify your own Open Graph tags, define the og:url and og:title tags in your theme's HTML. --><!-- Read more: http://ogp.me/ --><meta property="fb:app_id" content="48119224995" /><meta property="og:title" content="NYCTOTHEMES" /><meta property="og:url" content="https://nyctothemes.tumblr.com/?og=1" /><meta property="og:description" content="Melanie, &lsquo;97, girl/she, INTJ" /><meta property="og:type" content="tumblr-feed:tumblelog" /><meta property="og:image" content="https://64.media.tumblr.com/avatar_62043ca7c018_128.pnj" /><meta property="al:ios:url" content="tumblr://x-callback-url/blog?blogName=nyctothemes" /><meta property="al:ios:app_name" content="Tumblr" /><meta property="al:ios:app_store_id" content="305343404" /><meta property="al:android:url" content="tumblr://x-callback-url/blog?blogName=nyctothemes" /><meta property="al:android:app_name" content="Tumblr" /><meta property="al:android:package" content="com.tumblr" /><!-- END TUMBLR FACEBOOK OPENGRAPH TAGS --><!-- TWITTER TAGS --><meta charset="utf-8"><meta name="twitter:site" content="tumblr" /><meta name="twitter:card" content="summary" /><meta name="twitter:description" content="nyctothemes" /><meta name="twitter:title" content="nyctothemes" /><meta name="twitter:app:name:iphone" content="Tumblr" /><meta name="twitter:app:name:ipad" content="Tumblr" /><meta name="twitter:app:name:googleplay" content="Tumblr" /><meta name="twitter:app:id:iphone" content="305343404" /><meta name="twitter:app:id:ipad" content="305343404" /><meta name="twitter:app:id:googleplay" content="com.tumblr" /><meta name="twitter:app:url:iphone" content="tumblr://x-callback-url/blog?blogName=nyctothemes&amp;referrer=twitter-cards" /><meta name="twitter:app:url:ipad" content="tumblr://x-callback-url/blog?blogName=nyctothemes&amp;referrer=twitter-cards" /><meta name="twitter:app:url:googleplay" content="tumblr://x-callback-url/blog?blogName=nyctothemes&amp;referrer=twitter-cards" /><!-- GOOGLE CAROUSEL --><script type="application/ld+json">
+	{"@type":"ItemList","url":"https:\/\/nyctothemes.tumblr.com","itemListElement":[{"@type":"ListItem","position":1,"url":"https:\/\/nyctothemes.tumblr.com\/post\/629924103631126528\/wordbite-page-03-honey-minimal-about-page"},{"@type":"ListItem","position":2,"url":"https:\/\/nyctothemes.tumblr.com\/post\/626039838621220864\/glenthemes-character-page-06-raison-d%C3%AAtre-by"},{"@type":"ListItem","position":3,"url":"https:\/\/nyctothemes.tumblr.com\/post\/615040927935905792\/espoirthemes-new-horizons-theme-preview"},{"@type":"ListItem","position":4,"url":"https:\/\/nyctothemes.tumblr.com\/post\/611265451688968192\/nonspace-theme-07-mirage-preview-all-in"},{"@type":"ListItem","position":5,"url":"https:\/\/nyctothemes.tumblr.com\/post\/189565089207\/sovbin-theme-003-version-2-by-sovbin"},{"@type":"ListItem","position":6,"url":"https:\/\/nyctothemes.tumblr.com\/post\/189411736297\/glenthemes-about-page-15-sunlit-memories-by"},{"@type":"ListItem","position":7,"url":"https:\/\/nyctothemes.tumblr.com\/post\/188249884637\/espoirthemes-i-may-or-may-not-be-turning-my"},{"@type":"ListItem","position":8,"url":"https:\/\/nyctothemes.tumblr.com\/post\/188171007857\/glenthemes-music-player-06-by-glenthemes-a"},{"@type":"ListItem","position":9,"url":"https:\/\/nyctothemes.tumblr.com\/post\/188079245187\/mangolias-jack-theme-halloween-inspired"},{"@type":"ListItem","position":10,"url":"https:\/\/nyctothemes.tumblr.com\/post\/187721414767\/kingdomheartsnyctophiliac"}],"@context":"http:\/\/schema.org"}</script><link rel="canonical" href="https://nyctothemes.tumblr.com" /></head>
+
+    <!-- custom font 2/3 -->
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Open+Sans:400,700:latin', 'Orbitron:500,900,700:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })(); </script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    if ($('h1:contains("Not Found")').text()) {
+        $(".caption").hide();
+        $(".notfound").show();
+    }
+});
+</script>
+
+    <!-- hover title 2/2 -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script type="text/javascript" src="http://static.tumblr.7qjmkr5/IUmmdsy41/jquery.style-my-tooltips.js"></script>
+<script>(function($){$(document).ready(function(){$("[title]").style_my_tooltips();});})(jQuery);</script>
+
+    <!-- sidebar tab switching -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+    jQuery(document).ready(function() {
+	// Standard
+	jQuery('.sidebar.standard #sidelinks a').on('click', function(e)  {
+		var currentAttrValue = jQuery(this).attr('href');
+
+		// Show/Hide Tabs
+		jQuery('.sidebar ' + currentAttrValue).show().siblings().hide();
+
+		// Change/remove current tab to active
+		jQuery(this).parent('a').addClass('active').siblings().removeClass('active');
+
+		e.preventDefault();
+	});
+});
+    </script>
+
+<style type="text/css">
+
+    /* custom font 3/3 */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Orbitron:500,900,700);
+
+
+/* ------------------------------ DECORATION  ---------------------------- */
+
+    /* body */
+body {
+    color:#909197;
+    background:#191b20 url('https://static.tumblr.com/u5vz4xb/96ao5hpgw/asset_01.png') fixed center;
+    font:normal normal normal 10px/15px 'Open Sans', sans-serif;
+    letter-spacing:.5px;
+    text-align:justify;}
+
+/* ------------------------- CREDIT; DON'T REMOVE ------------------------- */
+
+#credit {
+    z-index:99999; position:fixed;
+    bottom:10px;
+
+    right:10px;
+    width:20px; height:20px;
+    font-size:20px; font-weight:bold;
+    color:;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    transition: all 0.3s linear;}
+#credit:hover {color:;}
+
+/* ------------------------------ MINOR STUFF ---------------------------- */
+
+.tmblr-iframe {
+    opacity:0.8 !important;
+    z-index:9999 !important;
+    -webkit-filter: invert(13%) hue-rotate(236deg) brightness(100%) saturate(100%) !important;
+    -moz-filter: invert(13%) hue-rotate(236deg) brightness(100%) saturate(100%) !important;
+    -ms-filter: invert(13%) hue-rotate(236deg) brightness(100%) saturate(100%) !important;
+    -o-filter: invert(13%) hue-rotate(236deg) brightness(100%) saturate(100%) !important;
+    filter: invert(13%) hue-rotate(236deg) brightness(100%) saturate(100%) !important;}
+
+    /* hover text */
+#s-m-t-tooltip {
+    z-index: 99999; display: block;
+    margin-left: 15px; margin-top: 5px;
+    max-width:180px;
+    border:4px solid #1d2025;
+    border-width:5px 4px 5px 5px;
+    padding: 0px 1px 1px 7px;
+    font:normal normal 500 7px/11px 'Orbitron', calibri;
+    color: #7f7686;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    text-align:center;
+    box-shadow:2px 0px 0px #5b5cb2 inset, 0px 0px 0px 5px #17191d;
+    background: #1d2025;}
+
+    /* scrollbar */
+::-webkit-scrollbar {
+    height:14px; width:14px;
+    background: #191b20;}
+::-webkit-scrollbar-thumb {
+    background: #5b5cb2;
+    border:4px solid #17191d;}
+
+    /* drag n' click selection */
+::selection {
+    background: #5b5cb2;
+    color: #e0e0e0;}
+::-moz-selection {
+    background: #5b5cb2;
+    color: #e0e0e0;}
+a::selection {
+    background: #5b5cb2;
+    color: #ffffff;}
+a::-moz-selection {
+    background: #5b5cb2;
+    color: #ffffff;}
+
+/* ----------------------------- FONT STUFF ------------------------------ */
+
+    /* main font decorations */
+.posts p:last-child {
+    margin-bottom:0px;}
+.posts p:first-child {
+    margin-top:0px;}
+b, strong {color:#757886;}
+i, em {color:#909197;}
+
+    /* links */
+a:link, a:active, a:visited{
+    text-decoration:none;
+    color:#5b5cb2;
+    -webkit-transition: all 0.35s linear;
+    -moz-transition: all 0.35s linear;
+    transition: all 0.35s linear;}
+a:hover {
+    color:#1d2025;}
+a i, i a, a em, em a, a b, b a, a strong, strong a {
+    color:#5b5cb2 !important;
+    -webkit-transition: all 0.35s linear;
+    -moz-transition: all 0.35s linear;
+    transition: all 0.35s linear;}
+a i:hover, i a:hover, a em:hover, em a:hover, a b:hover, b a:hover, a strong:hover, strong a:hover {
+    color:#1d2025 !important;}
+
+pre {
+    padding: 6px 9px;
+    color:#8d9298;
+    font-size:10px; max-width:100%;
+    font-family:consolas;
+    text-align:left;
+    letter-spacing:0px;
+    background:#cdd2d8;
+    border-left: 7px solid #5b5cb2;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;}
+pre b, pre strong {color:#999999;}
+code {
+    color:#8d9298;
+    font-size:10px;
+    font-family:consolas;
+    background:#cdd2d8;
+    padding:1px 2px;}
+small {font-family:calibri; font-size:10px;}
+
+h1 small, h2 small {
+    font: normal normal 500 13px/13px 'Orbitron', sans-serif;}
+
+    /* text and link post titles */
+h1 {font: normal normal 900 18px/18px 'Orbitron', sans-serif;
+    color:#6a699d;
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing:2px;}
+    /* quote and ask post titles */
+h2 {font: normal normal 500 16px/17px 'Orbitron', sans-serif;
+    color:#757886;
+    text-align:center;
+    letter-spacing:1px;}
+
+h3 {font:normal normal 700 17px/17px 'Orbitron', sans-serif;
+    letter-spacing:.5px; text-align:center;
+    margin-top: 20px;
+    border-top:20px solid #e0e0e0;
+    background-color: #d0cfd2;
+    padding:10px; margin:10px 0px;}
+
+.contents {
+    padding:0px 20px;}
+
+/* -------------------------------- SIDEBAR ------------------------------ */
+
+    /* side window */
+.sidebar {
+    position:fixed; z-index:1;
+    left:0px; top:0px;
+    width:170px; height:100%;
+    padding:0px 50px;
+    text-align:center;
+    /*background: #f2f1f1;*/}
+.sidebar a {
+    color:#897dc6;}
+.sidebar a:hover {
+    color:#ffffff;}
+
+    /* sidebar links */
+#sidelinks {
+    position:fixed; z-index:2;
+    top:50%; margin-top:-248px;
+    left:50%; margin-left:-467px;}
+#sidelinks a {
+    font-size:17px;
+    text-shadow:0px 0px 1px rgba(0,0,0,0.1);
+    display:block;
+    width:50px; height:50px;
+    text-align:center;
+    color: #777686;
+    background:#1d2025;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+#sidelinks a:hover {
+    font-size:21px;
+    text-shadow:0px 0px 1px rgba(0,0,0,0);
+    color: #ffffff;
+    background:#5b5cb2;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;}
+#sidelinks a:nth-of-type(1) {margin-top:0px; margin-left:0px;}
+#sidelinks a:nth-of-type(2) {margin-top:-50px; margin-left:55px;}
+#sidelinks a:nth-of-type(3) {margin-top:-50px; margin-left:110px;}
+#sidelinks a:nth-of-type(4) {margin-top:5px; margin-left:0px;}
+#sidelinks a:nth-of-type(5) {margin-top:-50px; margin-left:55px;}
+#sidelinks a:nth-of-type(6) {margin-top:-50px; margin-left:110px;}
+#sidelinks a:nth-of-type(7) {margin-top:5px; margin-left:0px;}
+#sidelinks a:nth-of-type(8) {margin-top:-50px; margin-left:55px;}
+#sidelinks a:nth-of-type(9) {margin-top:-50px; margin-left:110px;}
+
+l { position:relative; top:50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);}
+
+.desc-container {
+    position:fixed; z-index:2;
+    top:50%; margin-top:-28px;
+    left:50%; margin-left:-467px;
+    width:150px; height:150px;
+    padding:5px; text-align:justify;
+    background:#1d2025;
+    color:#777686;
+    overflow:auto;}
+
+    /* description */
+.description {display:none;}
+.description.active {display:block;}
+
+.description-container b {color:#97939d;}
+.description-container::-webkit-scrollbar {
+    height:3px; width:3px;
+    background: transparent;}
+.description-container::-webkit-scrollbar-thumb {
+    background: #5b5cb2;
+    border:none;}
+#corner {
+    float:left;
+    position:relative;
+    margin-bottom:0px; margin-right:2px;
+    width:50px; height:50px;
+    top:-5px; left:-5px;
+    border:5px solid #17191d;
+    border-width:0px 5px 5px 0px;
+    text-align:center;
+    font-size:21px;
+    background:#5b5cb2;
+    color:#ffffff;}
+#facts {
+    font: normal normal 500 7px/15px 'Orbitron', sans-serif;
+    text-transform:uppercase;
+    height:55px; padding-right:5px;
+    letter-spacing:2px; text-align:right;}
+
+#tab2 {text-align:right;}
+#updates {
+    text-align:left;
+    margin:-1px 0px 2px 0px; padding:0px;
+    list-style-type:none;
+    font: normal normal 500 7px/15px 'Orbitron', sans-serif;
+    text-transform:uppercase;}
+#updates li {margin:0px; display:inline-block; padding:0px;}
+#updates li::before {
+    content:""; opacity:0.8;
+    margin:0px 6px 1px 2px;
+    display:inline-block;
+    height:2px; width:4px;
+    border-radius:50%;
+    background:#897dc6;}
+.description .fa-lg {
+    position:relative;
+    top:9px; float:right;}
+#on {color:#5b5cb2;}
+#off {color:#777686; opacity:0.5;}
+
+    /* page navigation */
+#pagination {
+    font: normal normal 500 7px/15px 'Orbitron', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    position:fixed; z-index:2;
+    top:50%; margin-top:192px;
+    left:50%; margin-left:-467px;
+    background:#1d2025;
+    color:#777686;
+    width:160px; height:19px;
+    padding-top:4px;
+    border-bottom:5px solid #17191d;
+    text-align:center;}
+.pactive {
+    display:inline-block !important;
+    font:normal normal normal 10px/15px 'Open Sans', sans-serif;
+    color:#777686;}
+#pagination a .pactive {
+    color:#897dc6;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    transition: all 0.3s linear;}
+#pagination a .pactive:hover {
+    color:#ffffff;}
+
+    /* search */
+.search {
+    padding:0px;
+    position:fixed; z-index:2;
+    top:50%; margin-top:220px;
+    left:50%; margin-left:-467px;
+    width:160px; height:22px;
+    color:#777686;
+    background:#1d2025;}
+.search .query {
+    border: none; outline:none;
+    float: left;
+    width:120px; height:22px;
+    padding:0px 5px 0px 6px;
+    color:#777686;
+    background:#1d2025;
+    font: normal normal 500 7px/12px 'Orbitron', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:2px;}
+.search #glass {
+    display:block; float: right;
+    font-family:'FontAwesome';
+    width:27px; height:22px;
+    padding:4px 0px 6px 0px;
+    color: #ffffff;
+    background:#5b5cb2;
+    border:none; outline:none;
+    border-left:5px solid #17191d;}
+
+/* ------------------------------- POSTS --------------------------------- */
+
+    /* posts position */
+#entries {
+    margin-top:97px;
+    margin-left:50%;
+    text-align:justify;}
+    /* posts themselves */
+.posts {
+    margin:0 0 115px -82px;
+    overflow:hidden;
+    width: 500px;
+    text-align:justify;
+    padding:22px;
+    box-shadow:0px 1px 0px #17191d;
+    background: #e0e0e0 url('');}
+.notfound {display:none;}
+
+#hiatus {
+    margin:0 0 115px -82px;
+    font: normal normal 700 18px/20px 'Orbitron', sans-serif;
+    text-align:center;
+    letter-spacing:1px;
+    color: #777686;
+    width:500px; padding:22px;
+    background:#1d2025;}
+#hiatus b {font-weight:900; text-transform:uppercase;
+    letter-spacing:2px;}
+
+/* ----------------------------- POST TYPES ------------------------------ */
+
+    /* text post */
+blockquote {
+    padding:0px;
+    padding-left:7px;
+    margin:-3px 0 -1px 6px;
+    border-left:2px solid #5b5cb2;}
+hr {display: block;
+    margin: 30px 80px;
+    border:1px solid #5b5cb2;}
+
+    /* bullet lists */
+ol {margin-left:-8px;
+    list-style-type:decimal;}
+ul {margin-left:-20px;
+    list-style-type:none;}
+ul li::before {
+    content:"";
+    margin:0px 10px 2px 0px;
+    display:inline-block;
+    height:4px; width:4px;
+    border-radius:50%;
+    background:#5b5cb2;}
+li {margin-bottom:3px;}
+
+    /* text-images */
+.posts img {
+    vertical-align:middle;
+    max-width:100%;}
+    /* the credit below images that are from other people */
+.tmblr-full {margin:0;}
+.tmblr-attribution {
+    opacity:.8;
+    margin-top:0px;
+    font-family:Calibri;
+    font-size:8px; line-height:8px;
+    text-transform:uppercase;
+    letter-spacing:1px;}
+.tmblr-attribution::after {content: " >";}
+
+    /* link posts */
+.link-posts a {
+    background: #5b5cb2;
+    display:inline-block;
+    width: 480px;
+    padding:10px;
+    color:#e0e0e0;}
+.link-posts a:hover {
+    background: #1d2025}
+.link-posts l { position:relative; top:0%;
+    -webkit-transform: translateY(0%);
+    -ms-transform: translateY(0%);
+    transform: translateY(0%);}
+
+    /* ask posts */
+.ask-posts {
+    display:block; line-height:16px;
+    min-height:30px; width:481px;
+    padding: 10px 10px 8px 10px;
+    background: #d0cfd2;}
+.ask-posts img {
+    float:left;
+    position:relative;
+    display:inline-block;
+    top:-10px; left:-10px;
+    margin:0px 3px -10px 0px;
+    max-width:50px;
+    border:5px solid #e0e0e0;
+    border-width:0px 5px 5px 0px;}
+.ask-posts h2 {
+    font-size:14px; line-height:15px;
+    text-transform:uppercase;
+    text-align:left; margin:0px 0px 2px 0px;}
+
+    /* quote posts */
+.quote-posts {
+    text-align:left}
+.quote {
+    margin-top:-10px;
+    width:430px;
+    display:inline-block;}
+.quote-posts #corner {
+    top:0px; left:0px;
+    margin:-15px 10px 0px 0px;
+    border:none}
+
+    /* chat posts */
+.chat {margin:0px; padding:0px; line-height:14px;}
+.chat li {text-align:left;}
+.chat li::before {display:none;}
+
+
+
+.chat li {
+    padding:5px 8px;
+    margin-bottom:4px;
+    background: #d0cfd2;}
+
+
+    /* photo posts */
+.posts img, .posts .html_photoset, .posts #audio-pic {
+
+
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration:0.5s;
+    -o-transition-duration:0.5s;
+    transition-duration:0.5s;}
+.posts:hover img, .posts:hover .html_photoset, .posts:hover #audio-pic {
+    opacity:1;
+    -webkit-filter: grayscale(0%);
+    -moz-filter: grayscale(0%);
+    -ms-filter: grayscale(0%);
+    -o-filter: grayscale(0%);
+    filter: grayscale(0%);
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration:0.5s;
+    -o-transition-duration:0.5s;
+    transition-duration:0.5s;}
+
+    /* photoset focused image background */
+.tmblr-lightbox {
+    background-color:transparent !important;}
+.vignette {
+    z-index:99998! important;
+    opacity:.75 !important;
+    background-color:#191b20 !important;
+    background-image:none !important;}
+.tmblr-lightbox .lightbox-image {
+    z-index:99999! important;
+    border-radius:0px !important;
+    background:#191b20 !important;
+    box-shadow:0px 0px 0px 30px #191b20 !important;}
+.tmblr-lightbox .lightbox-caption {
+    z-index:99999! important;
+    font-family:consolas !important;
+    font-size:10px !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+    color: #6a699d !important;
+    text-shadow: 0 4px 30px #191b20 !important;}
+
+    /* video posts */
+#youtube_iframe, .tumblr_video_container {
+    margin-bottom:5px; max-width:100%;}
+.caption iframe, .caption #youtube_iframe, .caption .tumblr_video_container {
+    margin:5px 0px; max-width:100%;}
+
+    /* audio posts */
+#audio-pic {
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:2px;
+    width:135px; height:135px;
+    background: url('https://static.tumblr.com/u5vz4xb/AW1nhiug8/delete_png.png');
+    background-size:cover;}
+#info-container {
+    display:inline-block;
+    vertical-align:middle;
+    text-align:left;
+    font-size:8px; line-height:15px;
+    width:355px;
+    text-transform:uppercase;
+    letter-spacing:1px;}
+#info-container li {
+    display:block;
+    padding:4px 7px;
+    margin:0px; margin-top:4px;
+    background:#d0cfd2;}
+.posts .audio_player {
+    max-width:355px; max-height:27px;
+    margin:0px;
+    background:#597dae;
+
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    transition: all 0.2s linear;}
+.posts:hover .audio_player {
+    }
+.tumblr_audio_player {
+    width:355px; opacity:.66;}
+
+/* ----------------------------- POSTS INFO ------------------------------ */
+
+    /* if circles */
+#postinfo {
+    position:absolute;
+    margin-top:27px; margin-left:-22px;
+    text-align:center; width:544px;}
+    /* individual circles */
+#postinfo a {
+    display:block;
+    width:50px; height:50px;
+    text-decoration:none;
+    text-align:center; font-size:17px;
+    text-shadow:0px 0px 1px rgba(0,0,0,0.1);
+    color:#777686;
+    background:#1d2025;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    box-shadow:0px 0px 0px 5px #17191d;}
+#postinfo a:hover {
+    font-size:21px;
+    text-shadow:0px 0px 1px rgba(0,0,0,0);
+    color:#ffffff;
+    background:#5b5cb2;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;}
+#postinfo a:nth-of-type(1) {margin-top:0px; margin-left:0px;}
+#postinfo a:nth-of-type(2) {margin-top:-50px; margin-left:55px;}
+#postinfo a:nth-of-type(3) {margin-top:-50px; margin-left:110px;}
+#postinfo a:nth-of-type(4) {margin-top:-50px; margin-left:165px;}
+#postinfo a:nth-of-type(5) {margin-top:-50px; margin-left:220px;}
+#postinfo a:nth-of-type(6) {margin-top:-50px; margin-left:275px;}
+#postinfo a:nth-of-type(7) {margin-top:-50px; margin-left:325px;}
+
+    /* circles like button */
+#postinfo a #like {
+    width:50px; height:50px;
+    overflow:hidden; display:inline-block;
+    box-shadow:0px 0px 0px 5px #17191d;}
+#postinfo .like_button {
+    width:50px; height:50px;
+    overflow:hidden;}
+#postinfo .like_button iframe {
+    position:relative;
+    top:-55px; left:-5px;
+    display:block;
+    opacity:0; z-index:99;}
+#postinfo .like_button::before {
+    content:"\f08a";
+    display:block;
+    width:50px; height:50px;
+    line-height:55px;
+    text-align:center; font-size:17px;
+    font-family:'FontAwesome';
+    color:#777686;
+    background:#1d2025;
+    text-shadow:0px 0px 1px rgba(0,0,0,0.1);
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+#postinfo .like_button:hover::before {
+    font-size:21px;
+    text-shadow:0px 0px 1px rgba(0,0,0,0);
+    color:#ffffff;
+    background:#5b5cb2;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;}
+#postinfo .like_button.liked::before {
+    content:"\f004";
+    color:#5b5cb2;}
+#postinfo .like_button.liked:hover::before {
+    color:#ffffff;}
+
+    /* if no circles */
+#postending {
+    border:5px solid #17191d;
+    border-width:5px 0px;
+    padding:10px; width:524px;
+    margin:15px 0px -22px -22px;
+    background: #1d2025;
+    font: normal normal 500 7px/14px 'Orbitron', sans-serif;
+    text-align:center; text-transform:uppercase;
+    letter-spacing:2px;
+    color: #777686;}
+#postending a {
+    color:#897dc6;}
+#postending a:hover {
+    color:#ffffff;}
+
+/* ---------------------------- PERMALINK -------------------------------- */
+
+    /* permalink position */
+#permalink {
+    background:; /* if you want the post-notes to have a non-transparent bg */
+    margin:-115px 0px 0px -82px;
+    width: 500px; padding: 20px;}
+
+    /* post notes container */
+.notes {
+    max-height:600px;
+    overflow: auto;
+    text-align:center;
+    line-height:0px; font-size:0px;
+    color:transparent;
+    letter-spacing:0px;}
+.notes a {
+    font:normal normal 500 7px/15px 'Orbitron', calibri;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-weight:bold;
+    color:#777686;}
+.notes a:hover {
+    color:#ffffff;}
+.notes blockquote {
+    font: normal normal 500 7px/15px 'Orbitron', sans-serif !important;
+    margin:3px 0px; border:none;
+    padding:1px 10px 0px 10px;
+    background:#1d2025;
+    display:inline-block;}
+.notes .answer_content {
+    font: normal normal 500 7px/15px 'Orbitron', sans-serif !important;
+    margin:3px 0px; border:none;
+    letter-spacing:2px;
+    font-weight:bold;
+    text-transform:uppercase;
+    padding:1px 10px 0px 10px;
+    color:#777686;
+    background:#1d2025;
+    display:inline-block;}
+.notes img {display:none;}
+.notes li {margin-left:-10px;}
+
+    /* replaced regular sentences with fa symbols */
+.notes .like span a::after, .notes .reblog .tumblelog::after, .notes .reblog blockquote::before, .notes .reblog blockquote::after, .notes .answer_content::before, .notes .answer_content::after {
+    font-weight:normal;
+    vertical-align:middle;
+    content:"";
+    font-family:'FontAwesome';
+    display:inline-block; margin:0px 5px;
+    font-size:10px;
+    color:#5b5cb2;}
+.notes .like span a::after {content:"\f08a"; font-weight:bold;}
+.notes .reblog .tumblelog::after {content: "\f079";}
+.notes .reblog blockquote::before, .notes .answer_content::before {content: "\f10d";}
+.notes .reblog blockquote::after, .notes .answer_content::after {content: "\f10e";}
+
+    /* permalink scrollbar */
+#permalink ::-webkit-scrollbar {
+    height:5px; width:5px;
+    background: transparent;}
+#permalink ::-webkit-scrollbar-thumb:vertical {
+    background: #5b5cb2;
+    border:none;}
+
+</style>
+<body>
+
+<!-------------------------------- CURSOR ---------------------------------->
+
+<style type="text/css"> body {cursor: crosshair;} a, a:hover{cursor: crosshair;}
+</style>
+    <!-- Custom cursors don't show up on empty spaces, but this fixes that -->
+<div style="position:fixed; background:rgba(0,0,0,0); top:0px; left:0px; width:100%; height:100%; z-index: -99999999999999;"></div>
+
+<!-------------------------- CREDIT; DON'T REMOVE ------------------------
+<a href="http://nyctothemes.tumblr.com/" title="© nyctothemes" id="credit">
+    <l class="fa fa-th"></l>
+</a>-->
+
+<!-------------------------------- SIDEBAR --------------------------------->
+
+    <!-- sidebar -->
+<div class="sidebar standard">
+
+    <!-- sidebar links -->
+    <div id="sidelinks">
+        <a href="/" title="Index">
+            <l class="fa fa-refresh" aria-hidden="true"></l></a>
+        <a href="#tab2" title="Updates">
+            <l class="fa fa-sun-o" aria-hidden="true"></l></a>
+        <a href="/themes" title="Themes">
+            <l class="fa fa-star-o" aria-hidden="true"></l></a>
+        <a href="#tab1" title="Desc" class="active">
+            <l class="fa fa-user-o" aria-hidden="true"></l></a>
+        <a href="/faq" title="Faq">
+            <l class="fa fa-question" aria-hidden="true"></l></a>
+        <a href="/help" title="Ask">
+            <l class="fa fa-envelope-o" aria-hidden="true"></l></a>
+        <a href="/tags" title="Tags">
+            <l class="fa fa-bookmark-o" aria-hidden="true"></l></a>
+        <a href="/archive" title="Archive">
+            <l class="fa fa-calendar-o" aria-hidden="true"></l></a>
+        <a href="/ref-links" title="References">
+            <l class="fa fa-thumbs-o-up" aria-hidden="true"></l></a>
+    </div>
+
+    <!-- description -->
+<div class="desc-container">
+    <div class="description active" id="tab1">
+        <div id="corner"><l class="fa fa-user-o" aria-hidden="true"></l></div>
+        <div id="facts">Melanie<br>
+            She/Her<br>
+            1997, INTJ<br></div>
+            <div style="font: normal normal 500 7px/15px 'Orbitron', sans-serif; text-transform:uppercase; text-align:center; letter-spacing:1px"><script language="JavaScript">
+var ref = (''+document.referrer+'');
+var w_h = window.screen.width + " x " + window.screen.height;
+document.write('<script src="http://s1.freehostedscripts.net/ocounter.php?site=ID4701295&e1=Online&e2=Online&r=' + ref + '&m=0&wh=' + w_h + '"><\/script>');
+</script>; <script language="JavaScript" src="http://s1.freehostedscripts.net/ocount.php?site=ID2825815&name=Visits"></script></div>
+        Thanks for checking out my themes! They're mostly KH or other fandom themed, but I hope you find what you're looking for! :)</div>
+
+    <!-- updates -->
+    <div class="description" id="tab2">
+        <div id="corner"><l class="fa fa-sun-o" aria-hidden="true"></l></div>
+        <div id="facts">PS CS5<br>
+            Chrome<br>
+            1000x700<br></div>
+    <ul id="updates"><li>Updated <a href="/post/115163055682/">Command Deck</a></li><li>Updated <a href="/post/111548649242/">KH Start Menu</a></li><li>Posted <a href="/post/148273646287/">Sheikah Theme</a></li></ul>
+    On a hiatus:
+        <l class="fa fa-toggle-on fa-lg" id="on"></l>
+
+    <br>
+    Working on new theme:
+
+        <l class="fa fa-toggle-off fa-lg" id="off"></l>
+    <br>
+    Ask box open:
+
+        <l class="fa fa-toggle-off fa-lg" id="off"></l><br></div>
+</div>
+
+    <!-- Page navigation -->
+<div id="pagination">
+    <div class="pactive"><i class="fa fa-backward" aria-hidden="true"></i></div>
+
+    <b>1</b>
+
+
+
+
+
+        <a href="/page/2">2</a>
+
+
+
+
+        <a href="/page/3">3</a>
+
+
+
+
+        <a href="/page/4">4</a>
+
+
+
+
+        <a href="/page/5">5</a>
+
+
+        <a href="/page/2"><div class="pactive"><i class="fa fa-forward" aria-hidden="true"></i></div></a>
+
+
+</div>
+
+    <!-- search -->
+<form action="/search" method="get" class="search">
+<input type="text" name="q" class="query" value="" placeholder="&nbsp;Search..." />
+<input type="submit" value="&#xf002;" id="glass" /></form>
+</div>
+
+<!--------------------------------- POSTS ---------------------------------->
+<div id="entries">
+
+ <div id="hiatus"><b>This blog is currently on hiatus.</b><br><br>
+No themes are currently in the works and I am not answering coding help. I'm so sorry but thank you for your support!</div>
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+    <center>
+    <a href="https://64.media.tumblr.com/a4428c50b22ca461d0c9f24d65d9ce3b/e450d7cf2886a345-17/s1280x1920/ade22ba5b438e181d5f82deefc8d83987dc24b03.png"><img src="https://64.media.tumblr.com/a4428c50b22ca461d0c9f24d65d9ce3b/e450d7cf2886a345-17/s500x750/975b90194c89172d6eb8d2cd368e6e99378609f4.png" class="photo-posts"/></a>
+    </center>
+    <br><div class="caption"><p><a href="https://wordbite.tumblr.com/post/629717037679247360/page-03-honey-minimal-about-page-with-links" class="tumblr_blog">wordbite</a>:</p><blockquote><p><b>page 03&nbsp;<b>&mdash;&nbsp;</b>honey</b></p><p><i>minimal about page with links &amp; askbox</i></p><p><a href="https://wordbite.tumblr.com/honey">preview</a> + <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fpastebin.com%2F6ARzMQRD&amp;t=NmVlY2I5YjQ3N2RkYThlNGFlYjZiMDc1MjJkNzYxOTE2YzdhYmNjMixvcTZHM2FjRw%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F629924103631126528%2Fwordbite-page-03-honey-minimal-about-page&amp;m=0&amp;ts=1600822339">download</a></p><p>features:</p><ul><li>semi-responsive</li><li>you can have as long of an about</li><li>and as many links as you desire</li><li>hover tumblr controls</li></ul><p><a href="https://wordbite.tumblr.com/ask">let me know if you find any bugs!</a></p></blockquote></div>
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/629924103631126528/wordbite-page-03-honey-minimal-about-page" title="Sep.21.20">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/629924103631126528/wordbite-page-03-honey-minimal-about-page" title="70 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://wordbite.tumblr.com/post/629717037679247360/page-03-honey-minimal-about-page-with-links" title="Source: wordbite">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://theme-hunter.tumblr.com/post/629924051640598528/wordbite-page-03-honey-minimal-about-page" title="Via: theme-hunter">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/629924103631126528/wordbite-page-03-honey-minimal-about-page" title="# other peoples themes, this is so pretty, ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/629924103631126528/oq6G3acG" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="629924103631126528" data-blog-name="nyctothemes" id="like_button_629924103631126528"><iframe id="like_iframe_629924103631126528" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=629924103631126528&amp;color=black&amp;rk=oq6G3acG&amp;root_id=629717037679247360" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_629924103631126528"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+
+
+    <center>
+    <div id="photoset_626039838621220864" class="html_photoset">    <iframe
+                id="photoset_iframe_626039838621220864" name="photoset_iframe_626039838621220864"
+                class="photoset" scrolling="no" frameborder="0"
+                height="429" width="500" style="border:0px; background-color:transparent; overflow:hidden;" src="/post/626039838621220864/photoset_iframe/nyctothemes/tumblr_qeoupgDYiB1ubolzr/500/false"
+            ></iframe></div>
+    </center>
+    <br><div class="caption"><p><a href="https://glenthemes.tumblr.com/post/625874233748324352/character-page-06-raison-d%C3%AAtre-by-glenthemes" class="tumblr_blog">glenthemes</a>:</p><blockquote><blockquote><p><b>Character Page [06]:&nbsp;Raison D'&ecirc;tre</b> by <a href="https://glenthemes.tumblr.com">glenthemes</a></p></blockquote><p><b>Raison D'&ecirc;tre</b>&nbsp;&mdash; (n.) reason for being; purpose/justification for one&rsquo;s existence. A multi-character page based on the <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fwww.platinumgames.com%2Fofficial-blog%2Farticle%2F9624&amp;t=MGRkYTk3MDA0YzNjZjI4MjQ0YjQ2MTZjOTY3MGUwMDI3ZDIxOWY4OCx5ZmRkTzYyNw%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F626039838621220864%2Fglenthemes-character-page-06-raison-d%25C3%25AAtre-by&amp;m=0&amp;ts=1600822339">HUD screen of <b>NieR:Automata.</b></a>&nbsp;(UI Designer:&nbsp;Hisayoshi Kijima)&nbsp;&#127813;</p><p>&#9658; <a href="https://glenthpvs.tumblr.com/raison-detre">PREVIEW</a> | <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fpastebin.com%2FBDUaGNzU&amp;t=YzhmMjU4YmIyNzlkYWM1MmIzZjE2ODBhZDYxZTY3YjJhMTcyNjI2OCx5ZmRkTzYyNw%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F626039838621220864%2Fglenthemes-character-page-06-raison-d%25C3%25AAtre-by&amp;m=0&amp;ts=1600822339">CODE</a> | <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F19vZjf0CquloTNQsSLG5vSGAi1oOH8VkEP5i5YQrTnhA%2Fedit%3Fusp%3Dsharing&amp;t=YzEyOWM3MGY3ZDgzODk3ZDg3MzA1NjczYzRjNTMxMDUwNTU3YjI2Nyx5ZmRkTzYyNw%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F626039838621220864%2Fglenthemes-character-page-06-raison-d%25C3%25AAtre-by&amp;m=0&amp;ts=1600822339">GUIDE</a> | <a href="https://glenthemes.tumblr.com/raison-detre-crd">CREDITS</a></p><p>Main Features:</p><ul><li><b>character list:</b> unlimited no. of characters</li><li><b>character image:</b> supports &#10003; full-sized images,&nbsp;&#10003; transparent renders</li><li><b>character text:</b> name title | bullet point rows | main text | auto scrollbar</li></ul><p>Other Features:</p><ul><li><b>screen shadow:</b> skeuomorphic side edges</li><li><b>background:</b> the <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fcdn.discordapp.com%2Fattachments%2F641265267032195082%2F739511774696702073%2F651834e8-5d49-4dbe-ba7e-bd39e3cef51d.jpg&amp;t=NjkyZDM3MDQ5MTlmMjI5NWFiYWUwMzg5NWY1ZjcwYjI1ZGViZDU5Nyx5ZmRkTzYyNw%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F626039838621220864%2Fglenthemes-character-page-06-raison-d%25C3%25AAtre-by&amp;m=0&amp;ts=1600822339">original HUD background</a>,&nbsp;recreated in CSS</li><li><b>misc:</b> 70+ customization options [sizes, spacing, colors]</li></ul><figure data-orig-width="600" data-orig-height="46" class="tmblr-full"><img src="https://64.media.tumblr.com/c6697ac78b020e8c061ec1c2bb3842bf/0667f10b6f282537-98/s500x750/4e9617590460477bbac14428877192b6c5d2caf8.gifv" alt="image" data-orig-width="600" data-orig-height="46" width="500" height="38" /></figure></blockquote></div>
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/626039838621220864/glenthemes-character-page-06-raison-d%C3%AAtre-by" title="Aug.10.20">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/626039838621220864/glenthemes-character-page-06-raison-d%C3%AAtre-by" title="657 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://glenthemes.tumblr.com/post/625874233748324352/character-page-06-raison-d%C3%AAtre-by-glenthemes" title="Source: glenthemes">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://theme-hunter.tumblr.com/post/626035373612613633/glenthemes-character-page-06-raison-d%C3%AAtre-by" title="Via: theme-hunter">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/626039838621220864/glenthemes-character-page-06-raison-d%C3%AAtre-by" title="# GORGEOUS, other peoples themes, ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/626039838621220864/yfddO627" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="626039838621220864" data-blog-name="nyctothemes" id="like_button_626039838621220864"><iframe id="like_iframe_626039838621220864" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=626039838621220864&amp;color=black&amp;rk=yfddO627&amp;root_id=625874233748324352" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_626039838621220864"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+    <center>
+    <a href="https://64.media.tumblr.com/43271be683224b232f47871c5a91281a/dcc06efba9af8faa-dd/s1280x1920/0206f063257fa99e96470bc63b31792b880b2c6f.png"><img src="https://64.media.tumblr.com/43271be683224b232f47871c5a91281a/dcc06efba9af8faa-dd/s500x750/9cfdc2195f0d8dd656ca505a0100c89947546b5b.png" class="photo-posts"/></a>
+    </center>
+    <br><div class="caption"><p><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fegg.design%2Fpost%2F615039195718795264%2Fnew-horizons-theme-preview-installation-guide&amp;t=ZGE1MjllYmYzMzI1MTIwMzk2M2JlOWVkMTY5ZjcyNjZlNDkxOWY4ZixzaGJ6bUdHRA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F615040927935905792%2Fespoirthemes-new-horizons-theme-preview&amp;m=0&amp;ts=1600822339" class="tumblr_blog">espoirthemes</a>:</p><blockquote><h2>New Horizons Theme</h2><p><a href="https://eggdocs.tumblr.com/theme/docs/new-horizons">preview + installation guide&nbsp;</a>&nbsp;</p><p>An Animal Crossing theme.</p><p>This is a pretty simple theme based on the UI of New Horizons. It&rsquo;s not as customizable as some of my other themes because of this, but the installation guide gives some tips on how to customize this theme more.&nbsp;</p><p><b>Features:&nbsp;</b></p><ul><li>Optional search bar</li><li>Optional transparent posts, border radius, and border size</li><li>Custom colors</li><li>Responsive</li><li>Like and Reblog buttons</li></ul><p>
+
+I&rsquo;ll add more to the guide as needed, so please let me know if you have any questions about this theme!</p></blockquote></div>
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/615040927935905792/espoirthemes-new-horizons-theme-preview" title="Apr.10.20">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/615040927935905792/espoirthemes-new-horizons-theme-preview" title="1,355 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+    <!-- reblogged from -->
+
+        <a href="https://egg.design/post/615039195718795264/new-horizons-theme-preview-installation-guide" title="Via: eggdesign">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/615040927935905792/espoirthemes-new-horizons-theme-preview" title="# CUUTEEE, i knew it could be done :&rsquo;), ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/615040927935905792/shbzmGGD" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="615040927935905792" data-blog-name="nyctothemes" id="like_button_615040927935905792"><iframe id="like_iframe_615040927935905792" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=615040927935905792&amp;color=black&amp;rk=shbzmGGD&amp;root_id=615039195718795264" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_615040927935905792"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+
+
+    <center>
+    <div id="photoset_611265451688968192" class="html_photoset">    <iframe
+                id="photoset_iframe_611265451688968192" name="photoset_iframe_611265451688968192"
+                class="photoset" scrolling="no" frameborder="0"
+                height="571" width="500" style="border:0px; background-color:transparent; overflow:hidden;" src="/post/611265451688968192/photoset_iframe/nyctothemes/tumblr_q6d5wluf0q1wgrv2y/500/false"
+            ></iframe></div>
+    </center>
+    <br><div class="caption"><p><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fnonspace.io%2Fpost%2F611136023916937216%2Ftheme-07-mirage-preview-all-in-one-theme&amp;t=NTQwNjc1NWJiZTI0NjIxZWRlZjAyZTFlYWU5MjYyNjQyMmU4NDRkYixmM0tLZ0pyWA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F611265451688968192%2Fnonspace-theme-07-mirage-preview-all-in&amp;m=0&amp;ts=1600822339" class="tumblr_blog">nonspace</a>:</p><blockquote><h2><b>THEME #07 MIRAGE</b> [<a href="https://mirage-preview.tumblr.com">Preview</a>] </h2><p><b>All in one theme.&nbsp; </b><i>Made for writers and roleplayers. Includes about, character, faq, custom ask and custom submit tabs.<br /></i></p><h2>&#8627; [<a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fgithub.com%2Fnnspce%2Fmirage%2Fblob%2Fmaster%2Fmirage-main.html&amp;t=YTRhM2U5Y2VjOGMzYWFlZDZlNjk2Yzk3MzRkNTY4MjExY2U4YmM1MyxmM0tLZ0pyWA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F611265451688968192%2Fnonspace-theme-07-mirage-preview-all-in&amp;m=0&amp;ts=1600822339">GITHUB</a>] | [<strike>THEME GARDEN</strike>] (soon)<br /></h2><p><b>Features:</b></p><ul><li>Full height sidebar with image</li><li>3 Social links &amp; 4 extra custom links</li><li>About, FAQ, character page, ask &amp; submit tabs<br /></li><li>Updates</li><li>Accent &amp; highlight colors</li><li>Rounded corners &amp; shadows (optional)<br /></li><li>Custom list icon</li><li>Custom Google Fonts, font size, weight, line height<br /></li><li>Post width selection: 300, 400, 500, 540 &amp; 700px</li><li>Responsive</li></ul><p><b>Credits:</b></p><ul><li><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Ffontawesome.com%2Ficons&amp;t=M2NjMmMyNmI0OTA1NWY1MTdkOTJiMDliYWIyNjlhZmM1YzNiZjM2OSx4d0tIRjI0Tw%3D%3D&amp;b=t%3AfViGTUlwIPKvIPa0WwFNfA&amp;p=https%3A%2F%2Fnonspace.io%2Fpost%2F176514275484%2Ftheme-03-soda-pop-fiction-preview-character&amp;m=1">Font Awesome Icons</a></li><li><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Funsplash.com%2F&amp;t=YzcwMDE4NTA0NjlkMTk1MWY4M2NjNmM2ZmQzMjRjNjE5ZmY3ZTYwMSxCSXFvUHlVRQ%3D%3D&amp;b=t%3AfViGTUlwIPKvIPa0WwFNfA&amp;p=https%3A%2F%2Fnonspace.io%2Fpost%2F188907838034%2Fnonspace-page-theme-03-v-30-caffeine&amp;m=1">Unsplash Stock Images</a></li><li>Layout inspired by <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fdribbble.com%2Fshots%2F6235860-eCommerce-Analytics-pt-2&amp;t=Mjk1MmEwZjkzMGExMDEzMGNiMDBhNTZhZGI4NTRhZDFjZGViYjQxZSxmM0tLZ0pyWA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F611265451688968192%2Fnonspace-theme-07-mirage-preview-all-in&amp;m=0&amp;ts=1600822339">eCommerce dashboard Dribble</a><br /></li></ul><p>Edit and customise to your liking. <b>Don&rsquo;t repost/redistribute and/or claim as your own. Do not use as a base code. Leave the credit, thank you.</b></p><p>As
+ always, explanations are in the code. I&rsquo;ll be updating them
+ from time to time. If you are having issues, take a look at this themes
+ <a href="https://nonspace.tumblr.com/tagged/theme%20help:%20mirage">FAQ</a>, or my general <a href="http://nonspace.tumblr.com/help/support">FAQ</a>. Not finding anything? Shoot me a <a href="http://nonspace.tumblr.com/info/contact">message</a>. Please report any bugs to me.</p></blockquote></div>
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/611265451688968192/nonspace-theme-07-mirage-preview-all-in" title="Feb.28.20">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/611265451688968192/nonspace-theme-07-mirage-preview-all-in" title="675 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://nonspace.tumblr.com/post/611136023916937216/theme-07-mirage-preview-all-in-one-theme" title="Source: nonspace">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://magnusthemes.tumblr.com/post/611263166872174592/nonspace-theme-07-mirage-preview-all-in" title="Via: magnusthemes">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/611265451688968192/nonspace-theme-07-mirage-preview-all-in" title="# gorgeous, other people&#039;s themes, other peoples themes, ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/611265451688968192/f3KKgJrX" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="611265451688968192" data-blog-name="nyctothemes" id="like_button_611265451688968192"><iframe id="like_iframe_611265451688968192" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=611265451688968192&amp;color=black&amp;rk=f3KKgJrX&amp;root_id=611136023916937216" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_611265451688968192"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+    <center>
+    <a href="https://64.media.tumblr.com/fc2f039a09a8f1352af8e8a2e5e1704e/f4bae19880ac4bbd-28/s1280x1920/b2811714919ebc83345b852731eb312ab4e894be.png"><img src="https://64.media.tumblr.com/fc2f039a09a8f1352af8e8a2e5e1704e/f4bae19880ac4bbd-28/s500x750/a016a75120760c02d2ba8dbb26c36ba2639c9c96.png" class="photo-posts"/></a>
+    </center>
+    <br><div class="caption"><p><a href="https://sovbin.tumblr.com/post/189478796775/theme-003-version-2-by-sovbin-preview-code" class="tumblr_blog">sovbin</a>:</p><blockquote><h1><b><span style="color:#bda390">&#9473;&nbsp; theme 003. version 2&nbsp;</span></b>by <a href="https://sovbin.tumblr.com/">sovbin</a></h1><p><small><b><a href="https://sovbinpreview.tumblr.com/theme003v2">preview</a> &nbsp;<b><span style="color:#bda390">&amp;</span></b>&nbsp; <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fpastebin.com%2F8RsAbsSP&amp;t=OTNiOTRjNzY3MTc3NzZlODA1YTUwZDlkMDE4MzkzMWFkNGQ0ZDM2NSxwdlZFWjJFaA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F189565089207%2Fsovbin-theme-003-version-2-by-sovbin&amp;m=0&amp;ts=1600822339">code</a> &nbsp;<i>(</i>&nbsp; pastebin <i>)</i> </b><br /></small></p><blockquote><blockquote><p><small><b><span style="color:#bda390">FEATURES :</span></b>&nbsp; two images <i>(</i>&nbsp; both 130px X 70px <i>)</i> ; three boxes for your text; 380px posts; reblog button; three custom links;</small></p></blockquote></blockquote><p><small><b><span style="color:#bda390">please reblog or like this post if you are using; if you have any questions just ask </span></b></small></p><blockquote><blockquote><p><small><b><span style="color:#bda390">CREDITS :</span></b>&nbsp; spotify player from <a href="http://laurenbudorick.tumblr.com">laurenbudorick</a>; fonts from <a href="http://ddkinzart.tumblr.com">ddkinzart</a> <b><span style="color:#bda390">&amp;</span></b> <a href="http://hobioks.tumblr.com">hobioks</a>; icons from <a href="https://t.umblr.com/redirect?z=http%3A%2F%2Ffontawesome.com%2Ficons%3Ffrom%3Dio&amp;t=YjJhYWZkNDFkZGQ5MGNlN2Q0YmFiZTdjMjIzMWM1NjUzODE5ZTBlYixwdlZFWjJFaA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F189565089207%2Fsovbin-theme-003-version-2-by-sovbin&amp;m=0&amp;ts=1600822339">fontawesome</a>;</small></p></blockquote></blockquote><p><small><b><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fko-fi.com%2Fsovbin&amp;t=NjVjZmI5ZjhkMjU3OGVmOWNmMWEyZGM2ZTUzNzk2ZGEwODQwNzM1MixwdlZFWjJFaA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F189565089207%2Fsovbin-theme-003-version-2-by-sovbin&amp;m=0&amp;ts=1600822339">SUPPORT ME ON KO-FI <span style="color:#bda390">&#9825;</span></a></b></small></p></blockquote></div>
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/189565089207/sovbin-theme-003-version-2-by-sovbin" title="Dec.08.19">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/189565089207/sovbin-theme-003-version-2-by-sovbin" title="910 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://sovbin.tumblr.com/post/189478796775/theme-003-version-2-by-sovbin-preview-code" title="Source: sovbin">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://theme-hunter.tumblr.com/post/189565041187/sovbin-theme-003-version-2-by-sovbin" title="Via: theme-hunter">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/189565089207/sovbin-theme-003-version-2-by-sovbin" title="# other peoples themes, this is so gorgeous, so is the post caption too lmao, ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/189565089207/pvVEZ2Eh" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="189565089207" data-blog-name="nyctothemes" id="like_button_189565089207"><iframe id="like_iframe_189565089207" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=189565089207&amp;color=black&amp;rk=pvVEZ2Eh&amp;root_id=189478796775" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_189565089207"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+    <center>
+    <a href="https://64.media.tumblr.com/340f3e31c783f2b896161c460d590966/dce88cb60f44febb-1e/s1280x1920/3e39c6cdcfaba06dc89cee0e2bd80ee876478fd5.png"><img src="https://64.media.tumblr.com/340f3e31c783f2b896161c460d590966/dce88cb60f44febb-1e/s500x750/e378ea29b6dc347ab61c05cfe4e39d79de9f0399.png" class="photo-posts"/></a>
+    </center>
+    <br><div class="caption"><p><a href="https://glenthemes.tumblr.com/post/189396263564/about-page-15-sunlit-memories-by-glenthemes-an" class="tumblr_blog">glenthemes</a>:</p><blockquote><blockquote><p><b>About Page [15]: Sunlit Memories</b> by <a href="https://glenthemes.tumblr.com">glenthemes</a></p></blockquote><p>An about page based on Stardew Valley; went for a nostalgic and autumny vibe. All buttons and boxes made from CSS; sizes and colors can be modified. &#127809;&#127810;&#9749;
+
+</p><p>&#9658; <a href="http://glenthpvs.tumblr.com/sunlit-memories">PREVIEW</a> | <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fpastebin.com%2Fmbh9MUKj&amp;t=YTFmMTg1YTJjZTI4MTZkYjQ5OTYxYTU2YTljNjM4MmY5NTdmZTc0NixpeTJaOXN2NQ%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F189411736297%2Fglenthemes-about-page-15-sunlit-memories-by&amp;m=0&amp;ts=1600822339">CODE</a> | <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1t39N5h5aeC3ifhL1aJ32wrQHuxDsyUhM83YwXbDZhP4%2Fedit%3Fusp%3Dsharing&amp;t=ODA2MDc0ZjA3N2U5N2Y2N2ZhNzBmOTEyODNiODBlYzI2OTg3MzkyOSxpeTJaOXN2NQ%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F189411736297%2Fglenthemes-about-page-15-sunlit-memories-by&amp;m=0&amp;ts=1600822339">GUIDE</a> | <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1ekhPWEoijea2XllkMzS-Dc7gK70tqa5GPbAM1h24k3w%2Fedit%3Fusp%3Dsharing&amp;t=Yzg4OTVjMjYxZDViMzRhNGQ0Y2ExYWRiNzQzODE1ODc4YjM3OGQwNCxpeTJaOXN2NQ%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F189411736297%2Fglenthemes-about-page-15-sunlit-memories-by&amp;m=0&amp;ts=1600822339">CREDITS</a></p><p>Features:</p><ul><li><b>default nav links:</b> home, ask, archive</li><li><b>title box:</b> small image, title</li><li><b>biography box:</b>&nbsp;custom bullet icon, divider, adjustable height</li><li><b>sidebar image:</b>&nbsp;square (can customize size)</li><li><b>music box:</b> &#10003; autoplay support, 1 song only, short title, long title on hover</li><li><b>custom links:</b> as many as you want, icon images</li><li><b>energy bar:</b> adjustable fill color &amp; fill percentage</li><li><b>status tab:</b> icon image + text</li></ul><p>
+
+Be sure to follow the <b><a href="http://glenthemes.tumblr.com/terms">terms of use</a></b> and like/reblog if you&rsquo;re using this page! Please <a href="http://glenthemes.tumblr.com/support">contact me</a> if you have any questions/problems with the coding and I&rsquo;ll try to help you as much as I can! &hearts;
+
+</p></blockquote></div>
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/189411736297/glenthemes-about-page-15-sunlit-memories-by" title="Dec.01.19">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/189411736297/glenthemes-about-page-15-sunlit-memories-by" title="1,779 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://glenthemes.tumblr.com/post/189396263564/about-page-15-sunlit-memories-by-glenthemes-an" title="Source: glenthemes">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://egg.design/post/189411675657/glenthemes-about-page-15-sunlit-memories-by" title="Via: eggdesign">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/189411736297/iy2Z9sv5" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="189411736297" data-blog-name="nyctothemes" id="like_button_189411736297"><iframe id="like_iframe_189411736297" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=189411736297&amp;color=black&amp;rk=iy2Z9sv5&amp;root_id=189396263564" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_189411736297"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+    <center>
+    <a href="https://64.media.tumblr.com/381db5f562b827d88b98f2b218dbdb5f/tumblr_pz55ggGKZx1u8yrhso1_1280.png"><img src="https://64.media.tumblr.com/381db5f562b827d88b98f2b218dbdb5f/tumblr_pz55ggGKZx1u8yrhso1_500.png" class="photo-posts"/></a>
+    </center>
+    <br><div class="caption"><p><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fegg.design%2Fpost%2F188249521662%2Fi-may-or-may-not-be-turning-my-revamped-base-code&amp;t=ZTZkMjAwODJlMDA1N2I3YzE1MjJhM2FhYWM0NGYwNDU2M2QzZWNjOCxzbEV4azJWSw%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F188249884637%2Fespoirthemes-i-may-or-may-not-be-turning-my&amp;m=0&amp;ts=1600822339" class="tumblr_blog">espoirthemes</a>:</p><blockquote><p>I may or may not be turning my revamped base code into a crash course of my classes that I teach.&nbsp;</p><p>It&rsquo;s going to explain/feature how to toggle between a grid and single column layout, toggle between a header and sidebar layout, and help explain the basics of HTML and CSS.</p><p>I noticed a lot of base codes don&rsquo;t go into a full explanation of HTML and CSS syntax ( at least the ones I used didn&rsquo;t). I think it&rsquo;s totally fine to have base codes for people who are already a little familiar with the languages, but I wanted to make one for people who have 0 experience and are not sure where to start. I think it&rsquo;s really important to understand syntax before you really get into theme making.&nbsp;</p><p>Not learning the syntax first was a big mistake when I first started, because it caused a lot of bad coding habits that I didn&rsquo;t catch until I learned more about HTML and CSS.&nbsp;</p><p>I&rsquo;m almost done with this, and I will release it as soon as I&rsquo;m done writing all of the instructions!</p></blockquote></div>
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/188249884637/espoirthemes-i-may-or-may-not-be-turning-my" title="Oct.10.19">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/188249884637/espoirthemes-i-may-or-may-not-be-turning-my" title="37 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+    <!-- reblogged from -->
+
+        <a href="https://egg.design/post/188249521662/i-may-or-may-not-be-turning-my-revamped-base-code" title="Via: eggdesign">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/188249884637/slExk2VK" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="188249884637" data-blog-name="nyctothemes" id="like_button_188249884637"><iframe id="like_iframe_188249884637" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=188249884637&amp;color=black&amp;rk=slExk2VK&amp;root_id=188249521662" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_188249884637"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+
+
+    <center>
+    <div id="photoset_188171007857" class="html_photoset">    <iframe
+                id="photoset_iframe_188171007857" name="photoset_iframe_188171007857"
+                class="photoset" scrolling="no" frameborder="0"
+                height="147" width="500" style="border:0px; background-color:transparent; overflow:hidden;" src="/post/188171007857/photoset_iframe/nyctothemes/tumblr_pynv03jxjb1ubolzr/500/false"
+            ></iframe></div>
+    </center>
+    <br><div class="caption"><p><a href="https://glenthemes.tumblr.com/post/188050020124/music-player-06-by-glenthemes-a-minimalistic" class="tumblr_blog">glenthemes</a>:</p><blockquote><blockquote><p><b>Music Player #06</b> by <a href="https://glenthemes.tumblr.com">glenthemes</a></p></blockquote><p>A minimalistic music player with a spinning vinyl [<a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fvinyl_2168480&amp;t=MWY5NTNlNWFmZmY1YjIxOWI5M2UzYjk1NmVmMDZjMjRjZTFkMGJhNCxySUl6TGhwaA%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F188171007857%2Fglenthemes-music-player-06-by-glenthemes-a&amp;m=0&amp;ts=1600822339">cr.</a>] Speed can be adjusted. Serves as an alternative option to players like Billy, SCMPlayer, Wikplayer, etc.</p><p><a href="http://glenthpvs.tumblr.com/player06">&#9658; Preview + Codes + Customization</a></p></blockquote></div>
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/188171007857/glenthemes-music-player-06-by-glenthemes-a" title="Oct.06.19">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/188171007857/glenthemes-music-player-06-by-glenthemes-a" title="764 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://glenthemes.tumblr.com/post/188050020124/music-player-06-by-glenthemes-a-minimalistic" title="Source: glenthemes">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://theme-hunter.tumblr.com/post/188162173489/glenthemes-music-player-06-by-glenthemes-a" title="Via: theme-hunter">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/188171007857/rIIzLhph" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="188171007857" data-blog-name="nyctothemes" id="like_button_188171007857"><iframe id="like_iframe_188171007857" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=188171007857&amp;color=black&amp;rk=rIIzLhph&amp;root_id=188050020124" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_188171007857"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+    <center>
+    <a href="https://64.media.tumblr.com/058f3dd89c2617c4735c8bf60b964c31/tumblr_py920f48ur1r5o015o1_r1_1280.png"><img src="https://64.media.tumblr.com/058f3dd89c2617c4735c8bf60b964c31/tumblr_py920f48ur1r5o015o1_r1_500.png" class="photo-posts"/></a>
+    </center>
+    <br><div class="caption"><p><a href="https://mangolias.tumblr.com/post/187899983023/jack-theme-halloween-inspired-theme-preview" class="tumblr_blog">mangolias</a>:</p><blockquote><p><b>Jack Theme</b></p><blockquote><p>
+Halloween inspired theme</p></blockquote><p><b><a href="https://mangolias.tumblr.com/jack">
+Preview</a></b> / <b><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fpastebin.com%2FEx6Nd6b0&amp;t=OTkwZGRjZjk4MmNlNWRjYWQwMjMyMWE1NThkMTUyMzk2MDI2NjE4MixTblpSeTJTdg%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F188079245187%2Fmangolias-jack-theme-halloween-inspired&amp;m=0&amp;ts=1600822339">Download</a></b> (Pastebin)</p><p>
+Features</p><ul><li>
+Decorations on top of posts</li><li>
+Decoration on avatar</li><li>
+You can use any picture as decoration (png format with transparent background is recommended)</li><li>
+The decorations I&rsquo;m using you can find <b><i><a href="https://mangolias.tumblr.com/tagged/resources">here</a></i></b></li><li>
+3 custom links</li><li>
+Show avatar</li><li>
+Full photosets or show only 1st photo</li></ul><p>
+Credits</p><ul><li><a href="https://t.umblr.com/redirect?z=https%3A%2F%2Fgithub.com%2FPixelUnion%2FExtended-Tumblr-Photoset&amp;t=NzdjNmYyMzQ1ZWQ3OWQ2OTQzN2RmZDVmZmE0YTNhZTM4Yjk3NjhiMixTblpSeTJTdg%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F188079245187%2Fmangolias-jack-theme-halloween-inspired&amp;m=0&amp;ts=1600822339">
+Pxu photosets</a> by pixel union</li><li>
+Responsive videos by <a>@nouvae</a>&#8203;&nbsp;</li><li>Icons by <a href="https://t.umblr.com/redirect?z=https%3A%2F%2Ffeathericons.com&amp;t=MWNkNDMwYjA3NjQ4Mjg5ZDM3MTZhYjEyZGM5NGQzNDc0YTVhYWI3NCxTblpSeTJTdg%3D%3D&amp;b=t%3AmjftpNBsWymWVybFOQRqvQ&amp;p=https%3A%2F%2Fnyctothemes.tumblr.com%2Fpost%2F188079245187%2Fmangolias-jack-theme-halloween-inspired&amp;m=0&amp;ts=1600822339">feathericons</a></li></ul><p>
+Notes</p><ul><li>
+Hi everyone! This is my entry for <a href="https://codingcabin.tumblr.com/awards">Coding Cabin&rsquo;s</a> <a href="https://codingcabin.tumblr.com/post/187415368782/thriller-themes-creepy-codes-challenge-coding">Thriller Themes &amp; Creepy Codes Challenge</a>. Hope you like it!</li><li>
+If you have any questions or for any other issue, send me a message <i><b><a href="https://mangolias.tumblr.com/ask">here</a></b></i> and please like or reblog</li></ul></blockquote></div>
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/188079245187/mangolias-jack-theme-halloween-inspired" title="Oct.02.19">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/188079245187/mangolias-jack-theme-halloween-inspired" title="687 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+        <a href="https://mangolias.tumblr.com/" title="Source: mangolias">
+            <l class="fa fa-copyright" aria-hidden="true"></l></a>
+
+    <!-- reblogged from -->
+
+        <a href="https://theme-hunter.tumblr.com/post/188079205040/mangolias-jack-theme-halloween-inspired-theme" title="Via: theme-hunter">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/188079245187/mangolias-jack-theme-halloween-inspired" title="# themes by other people, oh fuck this is cuuuute, ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/188079245187/SnZRy2Sv" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="188079245187" data-blog-name="nyctothemes" id="like_button_188079245187"><iframe id="like_iframe_188079245187" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=188079245187&amp;color=black&amp;rk=SnZRy2Sv&amp;root_id=187899983023" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_188079245187"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+
+<div class="posts">
+
+    <!-- text posts -->
+
+
+    <div class="caption"><p><a href="https://kingdomheartsnyctophiliac.tumblr.com/post/187721392190/kingdomheartsnyctophiliac-oh-my-god-i-forgot-i" class="tumblr_blog">kingdomheartsnyctophiliac</a>:</p><blockquote><p><a href="https://kingdomheartsnyctophiliac.tumblr.com/post/187720983785/oh-my-god-i-forgot-i-made-a-stylish-extension-that" class="tumblr_blog" target="_blank">kingdomheartsnyctophiliac</a>:</p><blockquote><p>oh my god i forgot i made a stylish extension that widens the IM box and reply box cause they&rsquo;re SO narrow. Should I publish it for others???</p></blockquote><figure class="tmblr-full" data-orig-height="617" data-orig-width="719"><img src="https://64.media.tumblr.com/1d5f06a93e0080445c60f62291d8817f/9b8d396e8c0904f6-55/s500x750/c37b4767676d316136908983c458a9acc9604155.png" data-orig-height="617" data-orig-width="719" width="500" height="429" alt="image" /></figure><p>Here it is! Fuck uploading it to a legitimate stylus/stylish sharer, they just require so much information it&rsquo;s a drag. Paste this into any tumblr stylish you have already, or paste it into a new one!</p> <p><a href="https://kingdomheartsnyctophiliac.tumblr.com/post/187721392190/kingdomheartsnyctophiliac-oh-my-god-i-forgot-i" class="tmblr-truncated-link read_more">Keep reading</a></p></blockquote></div>
+    <div class="notfound"><p>All static preview pages have been moved <a href="http://nyctopreview.tumblr.com/" title="nyctopreview">HERE</a>. Thank you for checking this theme out! :)</p></div>
+
+
+    <!-- link posts -->
+
+
+    <!-- ask posts -->
+
+
+    <!-- code for custom anon image -->
+<script type="text/javascript">
+// Loop trough each image element and replace the src if the src matches
+    $("img").each(function(i, elem){
+// If src of img element matches a certain URL then src is new url
+        if ($(this).attr("src") == "https://assets.tumblr.com/images/anonymous_avatar_64.gif"){
+        $(this).attr("src", "https://static.tumblr.com/u5vz4xb/9r2o5jb66/asset_02.png");
+        }
+    });
+</script>
+
+    <!-- quote posts -->
+
+
+    <!-- chat posts -->
+
+
+    <!-- photo posts -->
+
+
+
+
+    <!-- video post -->
+
+
+    <!-- audio posts -->
+
+
+<!------------------------------ POST ENDING ------------------------------->
+
+
+
+          <!------------- If Circles for Index Page ------------->
+
+
+<div id="postinfo">
+
+    <!-- date posted -->
+
+    <a href="https://nyctothemes.tumblr.com/post/187721414767/kingdomheartsnyctophiliac" title="Sep.14.19">
+            <l class="fa fa-clock-o" aria-hidden="true"></l></a>
+
+    <!-- notes counter -->
+
+        <a href="https://nyctothemes.tumblr.com/post/187721414767/kingdomheartsnyctophiliac" title="66 notes">
+            <l class="fa fa-pencil" aria-hidden="true"></l></a>
+
+    <!-- original poster -->
+
+    <!-- reblogged from -->
+
+        <a href="https://kingdomheartsnyctophiliac.tumblr.com/post/187721392190/kingdomheartsnyctophiliac-oh-my-god-i-forgot-i" title="Via: kingdomheartsnyctophiliac">
+            <l class="fa fa-at" aria-hidden="true"></l></a>
+
+    <!-- tags -->
+
+        <a href="https://nyctothemes.tumblr.com/post/187721414767/kingdomheartsnyctophiliac" title="# im so sorry im inactive, but take this please, stylish, stylus, ">
+            <l class="fa fa-slack" aria-hidden="true"></l></a>
+
+    <!-- reblog and like -->
+        <a href="https://www.tumblr.com/reblog/187721414767/8aI1ngQb" title="Reblog">
+            <l class="fa fa-retweet" aria-hidden="true"></l></a>
+        <a href="" id="like" title="like"><div class="like_button" data-post-id="187721414767" data-blog-name="nyctothemes" id="like_button_187721414767"><iframe id="like_iframe_187721414767" src="https://assets.tumblr.com/assets/html/like_iframe.html?_v=66c22ab5319d742bca5762b8d18f9d06#name=nyctothemes&amp;post_id=187721414767&amp;color=black&amp;rk=8aI1ngQb&amp;root_id=187720983785" scrolling="no" width="60" height="60" frameborder="0" class="like_toggle" allowTransparency="true" name="like_iframe_187721414767"></iframe></div></a>
+
+</div>
+
+
+
+          <!------------- If NO Circles for Index Page ------------->
+
+
+</div> <!-- ending div tag for "posts" -->
+
+
+
+<!------------------------------- PERMALINK -------------------------------->
+
+
+
+</div> <!-- ending div tag for "entries" -->
+
+
+<iframe scrolling="no" width="1" height="1" frameborder="0" style="background-color:transparent; overflow:hidden; position:absolute; top:0; left:0; z-index:9999;" id="ga_target"></iframe><script type="text/javascript">
+    (function(){
+        var analytics_frame = document.getElementById('ga_target');
+        var analytics_iframe_loaded;
+        var user_logged_in;
+        var blog_is_nsfw = 'No';
+
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+        eventer(messageEvent,function(e) {
+            var message = (e.data && e.data.split) ? e.data.split(';') : '';
+            switch (message[0]) {
+                case 'analytics_iframe_loaded':
+                    analytics_iframe_loaded = true;
+                    postCSMessage();
+                    postGAMessage();
+                    break;
+                case 'user_logged_in':
+                    user_logged_in = message[1];
+                    postGAMessage();
+                    break;
+            }
+        }, false);
+
+        analytics_frame.src = "https://assets.tumblr.com/analytics.html?_v=9f5febfd57a8a649c598d888f2d9e062#" +
+                              "https://nyctothemes.tumblr.com";
+        function postGAMessage() {
+            if (analytics_iframe_loaded && user_logged_in) {
+                var is_ajax = false;
+                analytics_frame.contentWindow.postMessage(['tick_google_analytics', is_ajax, user_logged_in, blog_is_nsfw, '/?route=%2F'].join(';'), analytics_frame.src.split('/analytics.html')[0]);
+            }
+        }
+        function postCSMessage() {
+            COMSCORE = true;
+            analytics_frame.contentWindow.postMessage('enable_comscore;' + window.location, analytics_frame.src.split('/analytics.html')[0]);
+        }
+    })();
+</script><script type="text/javascript" nonce="DlzDAkr8doK6slmi92RS9FCXc">!function(s){s.src='https://px.srvcs.tumblr.com/impixu?T=1600822339&J=eyJ0eXBlIjoidXJsIiwidXJsIjoiaHR0cDovL255Y3RvdGhlbWVzLnR1bWJsci5jb20vIiwicmVxdHlwZSI6MCwicm91dGUiOiIvIn0=&U=CAEMJBPDNP&K=6a6ffdb0f2168082769fa45645af3b28670eca749b1ec6ce5c9da0347dcbf030&R='.replace(/&R=[^&$]*/,'').concat('&R='+escape(document.referrer)).slice(0,2000).replace(/%.?.?$/,'');}(new Image());</script><noscript><img style="position:absolute;z-index:-3334;top:0px;left:0px;visibility:hidden;" src="https://px.srvcs.tumblr.com/impixu?T=1600822339&J=eyJ0eXBlIjoidXJsIiwidXJsIjoiaHR0cDovL255Y3RvdGhlbWVzLnR1bWJsci5jb20vIiwicmVxdHlwZSI6MCwicm91dGUiOiIvIiwibm9zY3JpcHQiOjF9&U=CAEMJBPDNP&K=f79cca55a148cfb07d1dacb660be8c169f39464130b75570761bcdf37ce66fcd&R="></noscript><script type="text/javascript" nonce="DlzDAkr8doK6slmi92RS9FCXc">!function(s){s.src='https://px.srvcs.tumblr.com/impixu?T=1600822339&J=eyJ0eXBlIjoicG9zdCIsInVybCI6Imh0dHA6Ly9ueWN0b3RoZW1lcy50dW1ibHIuY29tLyIsInJlcXR5cGUiOjAsInJvdXRlIjoiLyIsInBvc3RzIjpbeyJyb290X2Jsb2dpZCI6Mzc5MjMyODcxLCJyb290X3Bvc3RpZCI6IjYyOTcxNzAzNzY3OTI0NzM2MCIsInBvc3RpZCI6IjYyOTkyNDEwMzYzMTEyNjUyOCIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjoyNDU1NzYxOTgsInJvb3RfcG9zdGlkIjoiNjI1ODc0MjMzNzQ4MzI0MzUyIiwicG9zdGlkIjoiNjI2MDM5ODM4NjIxMjIwODY0IiwiYmxvZ2lkIjoyMDAzNjA2MjgsInNvdXJjZSI6MzN9LHsicm9vdF9ibG9naWQiOjIxOTE0MzI3MSwicm9vdF9wb3N0aWQiOiI2MTUwMzkxOTU3MTg3OTUyNjQiLCJwb3N0aWQiOiI2MTUwNDA5Mjc5MzU5MDU3OTIiLCJibG9naWQiOjIwMDM2MDYyOCwic291cmNlIjozM30seyJyb290X2Jsb2dpZCI6Mzc1MDI1MTQ5LCJyb290X3Bvc3RpZCI6IjYxMTEzNjAyMzkxNjkzNzIxNiIsInBvc3RpZCI6IjYxMTI2NTQ1MTY4ODk2ODE5MiIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjozNTA0ODk1MDAsInJvb3RfcG9zdGlkIjoiMTg5NDc4Nzk2Nzc1IiwicG9zdGlkIjoiMTg5NTY1MDg5MjA3IiwiYmxvZ2lkIjoyMDAzNjA2MjgsInNvdXJjZSI6MzN9LHsicm9vdF9ibG9naWQiOjI0NTU3NjE5OCwicm9vdF9wb3N0aWQiOiIxODkzOTYyNjM1NjQiLCJwb3N0aWQiOiIxODk0MTE3MzYyOTciLCJibG9naWQiOjIwMDM2MDYyOCwic291cmNlIjozM30seyJyb290X2Jsb2dpZCI6IjIxOTE0MzI3MSIsInJvb3RfcG9zdGlkIjoiMTg4MjQ5NTIxNjYyIiwicG9zdGlkIjoiMTg4MjQ5ODg0NjM3IiwiYmxvZ2lkIjoyMDAzNjA2MjgsInNvdXJjZSI6MzN9LHsicm9vdF9ibG9naWQiOiIyNDU1NzYxOTgiLCJyb290X3Bvc3RpZCI6IjE4ODA1MDAyMDEyNCIsInBvc3RpZCI6IjE4ODE3MTAwNzg1NyIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjoiMzIyMjAxMzciLCJyb290X3Bvc3RpZCI6IjE4Nzg5OTk4MzAyMyIsInBvc3RpZCI6IjE4ODA3OTI0NTE4NyIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjoiOTM4ODA2NTUiLCJyb290X3Bvc3RpZCI6IjE4NzcyMDk4Mzc4NSIsInBvc3RpZCI6IjE4NzcyMTQxNDc2NyIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfV19&U=FPJDNFFNLF&K=84576187de4a2ea65ae87a13ba4da04b91e11997d74ed21d925a99d473f17549&R='.replace(/&R=[^&$]*/,'').concat('&R='+escape(document.referrer)).slice(0,2000).replace(/%.?.?$/,'');}(new Image());</script><noscript><img style="position:absolute;z-index:-3334;top:0px;left:0px;visibility:hidden;" src="https://px.srvcs.tumblr.com/impixu?T=1600822339&J=eyJ0eXBlIjoicG9zdCIsInVybCI6Imh0dHA6Ly9ueWN0b3RoZW1lcy50dW1ibHIuY29tLyIsInJlcXR5cGUiOjAsInJvdXRlIjoiLyIsInBvc3RzIjpbeyJyb290X2Jsb2dpZCI6Mzc5MjMyODcxLCJyb290X3Bvc3RpZCI6IjYyOTcxNzAzNzY3OTI0NzM2MCIsInBvc3RpZCI6IjYyOTkyNDEwMzYzMTEyNjUyOCIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjoyNDU1NzYxOTgsInJvb3RfcG9zdGlkIjoiNjI1ODc0MjMzNzQ4MzI0MzUyIiwicG9zdGlkIjoiNjI2MDM5ODM4NjIxMjIwODY0IiwiYmxvZ2lkIjoyMDAzNjA2MjgsInNvdXJjZSI6MzN9LHsicm9vdF9ibG9naWQiOjIxOTE0MzI3MSwicm9vdF9wb3N0aWQiOiI2MTUwMzkxOTU3MTg3OTUyNjQiLCJwb3N0aWQiOiI2MTUwNDA5Mjc5MzU5MDU3OTIiLCJibG9naWQiOjIwMDM2MDYyOCwic291cmNlIjozM30seyJyb290X2Jsb2dpZCI6Mzc1MDI1MTQ5LCJyb290X3Bvc3RpZCI6IjYxMTEzNjAyMzkxNjkzNzIxNiIsInBvc3RpZCI6IjYxMTI2NTQ1MTY4ODk2ODE5MiIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjozNTA0ODk1MDAsInJvb3RfcG9zdGlkIjoiMTg5NDc4Nzk2Nzc1IiwicG9zdGlkIjoiMTg5NTY1MDg5MjA3IiwiYmxvZ2lkIjoyMDAzNjA2MjgsInNvdXJjZSI6MzN9LHsicm9vdF9ibG9naWQiOjI0NTU3NjE5OCwicm9vdF9wb3N0aWQiOiIxODkzOTYyNjM1NjQiLCJwb3N0aWQiOiIxODk0MTE3MzYyOTciLCJibG9naWQiOjIwMDM2MDYyOCwic291cmNlIjozM30seyJyb290X2Jsb2dpZCI6IjIxOTE0MzI3MSIsInJvb3RfcG9zdGlkIjoiMTg4MjQ5NTIxNjYyIiwicG9zdGlkIjoiMTg4MjQ5ODg0NjM3IiwiYmxvZ2lkIjoyMDAzNjA2MjgsInNvdXJjZSI6MzN9LHsicm9vdF9ibG9naWQiOiIyNDU1NzYxOTgiLCJyb290X3Bvc3RpZCI6IjE4ODA1MDAyMDEyNCIsInBvc3RpZCI6IjE4ODE3MTAwNzg1NyIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjoiMzIyMjAxMzciLCJyb290X3Bvc3RpZCI6IjE4Nzg5OTk4MzAyMyIsInBvc3RpZCI6IjE4ODA3OTI0NTE4NyIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfSx7InJvb3RfYmxvZ2lkIjoiOTM4ODA2NTUiLCJyb290X3Bvc3RpZCI6IjE4NzcyMDk4Mzc4NSIsInBvc3RpZCI6IjE4NzcyMTQxNDc2NyIsImJsb2dpZCI6MjAwMzYwNjI4LCJzb3VyY2UiOjMzfV0sIm5vc2NyaXB0IjoxfQ==&U=FPJDNFFNLF&K=41164a63824ed2adc3e17198ba913b14722f04ed4130786c4e3f8ffbf1f3b638&R="></noscript><noscript id="bootloader" data-bootstrap="{&quot;Components&quot;:{&quot;PostActivity&quot;:[],&quot;NotificationPoller&quot;:{&quot;messaging_keys&quot;:[],&quot;token&quot;:&quot;c86f8a500596474a7ef5034081f694bd&quot;,&quot;inbox_unread&quot;:0},&quot;DesktopDashboardLogo&quot;:{&quot;animations&quot;:[[&quot;https:\/\/assets.tumblr.com\/images\/logo\/hover-animations\/1.png?_v=161861acded461bb6e995593a3bae835&quot;,&quot;https:\/\/assets.tumblr.com\/images\/logo\/hover-animations\/1@2x.png?_v=496a774637302a598c851381d00009b0&quot;]]},&quot;TumblelogIframe&quot;:{&quot;unified&quot;:true,&quot;variant&quot;:null,&quot;isCompact&quot;:true,&quot;tumblelogBundleSrc&quot;:&quot;https:\/\/assets.tumblr.com\/client\/prod\/standalone\/tumblelog\/index.build.js?_v=de04ebc7a4a63db35081cfb75e016ba6&quot;,&quot;tumblelogName&quot;:&quot;nyctothemes&quot;,&quot;isLoggedIn&quot;:false,&quot;isFriend&quot;:false,&quot;formKey&quot;:&quot;&quot;,&quot;canSubscribe&quot;:false,&quot;isSubscribed&quot;:false,&quot;tumblelogTitle&quot;:&quot;NYCTOTHEMES&quot;,&quot;tumblelogAvatar&quot;:&quot;https:\/\/64.media.tumblr.com\/avatar_62043ca7c018_64.pnj&quot;,&quot;tumblelogHost&quot;:&quot;https:\/\/nyctothemes.tumblr.com&quot;,&quot;isOptica&quot;:false,&quot;isCustomTheme&quot;:true,&quot;themeHeaderImage&quot;:&quot;https:\/\/static.tumblr.com\/1e65b36b4545f59ffb51c52ba6de4227\/u5vz4xb\/wZQo5mx74\/tumblr_static_tumblr_static_lcavga2av400gks444sc80wk_focused_v3.gif&quot;,&quot;themeBackgroundColor&quot;:&quot;#191b20&quot;,&quot;themeTitleColor&quot;:&quot;#C4C4C4&quot;,&quot;themeAccentColor&quot;:&quot;#5b5cb2&quot;,&quot;brag&quot;:true,&quot;adsEnabled&quot;:false,&quot;canShowAd&quot;:true,&quot;isPremium&quot;:false,&quot;showLrecAds&quot;:false,&quot;showStickyLrecBackfill&quot;:false,&quot;showGeminiAds&quot;:false,&quot;geminiSectionCodeDesktop&quot;:&quot;a10bca9c-0c5d-4a02-ab13-14ab8513d81d&quot;,&quot;geminiSectionCodeMobile&quot;:&quot;ced63809-b609-4aca-96a0-abc099acba6b&quot;,&quot;currentPageType&quot;:&quot;blog&quot;,&quot;currentPage&quot;:1,&quot;searchQuery&quot;:&quot;&quot;,&quot;tag&quot;:&quot;&quot;,&quot;query&quot;:&quot;&quot;,&quot;chrono&quot;:false,&quot;postId&quot;:&quot;&quot;,&quot;src&quot;:&quot;https:\/\/nyctothemes.tumblr.com\/&quot;,&quot;postUrl&quot;:&quot;&quot;,&quot;isBlocked&quot;:null,&quot;isAdmin&quot;:false,&quot;lookupButtonUrl&quot;:&quot;&quot;,&quot;showSpamButton&quot;:false,&quot;showRootPostButton&quot;:false,&quot;rootPostUrl&quot;:&quot;&quot;,&quot;showRadarPostButton&quot;:false,&quot;radarKeys&quot;:&quot;&quot;,&quot;isUniblocked&quot;:false,&quot;isNsfw&quot;:false,&quot;isAdult&quot;:false,&quot;isSpam&quot;:false,&quot;isPrimaryBlog&quot;:false,&quot;canEdit&quot;:false,&quot;canReblogSelf&quot;:false,&quot;showLikeButton&quot;:false,&quot;showReblogButton&quot;:false,&quot;reblogUrl&quot;:&quot;&quot;,&quot;showFanMailButton&quot;:false,&quot;showMessagingButton&quot;:false,&quot;loginCheckIframeSrc&quot;:&quot;https:\/\/assets.tumblr.com\/assets\/html\/iframe\/login_check.html?_v=3de94a184d600617102ddd5b48fb36e9&quot;,&quot;appInstallUrls&quot;:{&quot;android&quot;:&quot;https:\/\/play.google.com\/store\/apps\/details?id=com.tumblr\u0026referrer=utm_source%3Dtumblr%26utm_medium%3Diframe%26utm_campaign%3Dtumblr_new_iframe&quot;,&quot;ios&quot;:&quot;https:\/\/apps.apple.com\/app\/apple-store\/id305343404?pt=212308\u0026ct=tumblr_new_iframe\u0026mt=8&quot;},&quot;appOpenReferrer&quot;:&quot;tumblr_new_iframe&quot;,&quot;isShowSearch&quot;:true,&quot;supplyLogging&quot;:[],&quot;secondsSinceLastActivity&quot;:-1}},&quot;Flags&quot;:{&quot;features&quot;:&quot;eyJmaWx0ZXJfbnNmdyI6dHJ1ZSwibW9iaWxlX3dlYl9nYXRlIjp0cnVlLCJzYWZlX21vZGUiOnRydWUsInNhZmVfbW9kZV9lbmFibGVkIjp0cnVlLCJrZXljb21tYW5kX2F1dG9fcGFnaW5hdGUiOnRydWUsImxvZ2dlZF9vdXRfc2VhcmNoIjp0cnVlLCJrcmFrZW5fd2ViX2xvZ2dpbmdfbGlicmFyeSI6dHJ1ZSwibGl2ZXBob3Rvc193ZWIiOnRydWUsInVzZXJfdGFnX2ZpbHRlcmluZyI6dHJ1ZSwicHJvamVjdF94X2FwcGVhbCI6dHJ1ZSwicHJvamVjdF94X3dlYl9zZW5zaXRpdmVfY292ZXJzIjp0cnVlLCJzYWZlX21vZGVfb3duX3Bvc3QiOnRydWUsIm1vYmlsZV93ZWJfcGhvdG9zZXRzIjp0cnVlLCJoaWRlX2RlZmF1bHRfaGVhZGVyc19ibG9nX2NhcmRzIjp0cnVlLCJub3RpZmljYXRpb25fcmVwbHlfbGlua190b19ub3RlcyI6dHJ1ZSwidHlwaW5nX2luZGljYXRvcl93cml0ZSI6dHJ1ZSwiZ2Rwcl9ndWNlX2lzX3JlcXVpcmVkIjp0cnVlLCJ0dW1ibHJfdmlkZW9fc3BvbnNvcmVkX2RheSI6dHJ1ZSwiY2FwdGNoYTp1c2VfcmVjYXB0Y2hhMiI6dHJ1ZSwibGl0dGxlX3Npc3RlciI6dHJ1ZSwibG9nX2xhZHkiOnRydWUsInJlZHBvcF9wb3N0X2Zvcm1fbW9iaWxlX2NyZWF0ZSI6dHJ1ZSwiZ2Rwcl9xdWFudGNhc3RfY21wIjp0cnVlLCJkYXJsYV9hZF9mZWVkYmFjayI6dHJ1ZSwic3RhdHVzX2luZGljYXRvciI6dHJ1ZSwiY29udmVyc2F0aW9uYWxfbm90aWZpY2F0aW9ucyI6dHJ1ZSwiZGlzYWJsZV95YWhvb19iX2Nvb2tpZSI6dHJ1ZSwibGl2ZXBob3RvcyI6dHJ1ZX0=&quot;},&quot;Context&quot;:{&quot;name&quot;:&quot;default&quot;,&quot;time&quot;:1600822339000,&quot;userinfo&quot;:{&quot;primary&quot;:&quot;&quot;,&quot;name&quot;:&quot;&quot;,&quot;channels&quot;:[]},&quot;hosts&quot;:{&quot;assets_host&quot;:&quot;https:\/\/assets.tumblr.com&quot;,&quot;secure_assets_host&quot;:&quot;https:\/\/assets.tumblr.com&quot;,&quot;www_host&quot;:&quot;https:\/\/www.tumblr.com&quot;,&quot;secure_www_host&quot;:&quot;https:\/\/www.tumblr.com&quot;,&quot;embed_host&quot;:&quot;https:\/\/embed.tumblr.com&quot;,&quot;safe_host&quot;:&quot;https:\/\/safe.txmblr.com&quot;,&quot;platform_host&quot;:&quot;https:\/\/platform.tumblr.com&quot;},&quot;language&quot;:&quot;en_US&quot;,&quot;language_simple&quot;:&quot;en&quot;,&quot;assets&quot;:&quot;https:\/\/assets.tumblr.com\/client\/prod\/&quot;},&quot;Translations&quot;:{&quot;%1$sReport %2$s&#039;s post?%3$sIf it violates our community guidelines, we&#039;ll remove it.%4$s&quot;:&quot;%1$sReport %2$s&#039;s reblog?%3$sIf it violates our community guidelines, we&#039;ll remove it.%4$s&quot;,&quot;%1$sReport %2$s&#039;s reply?%3$sIf it violates our community guidelines, we&#039;ll remove it.%4$s&quot;:&quot;%1$sReport %2$s&#039;s reblog?%3$sIf it violates our community guidelines, we&#039;ll remove it.%4$s&quot;}}"></noscript><script src="https://assets.tumblr.com/client/prod/standalone/tumblelog/index.build.js?_v=de04ebc7a4a63db35081cfb75e016ba6"></script></body>
+</html>
+
