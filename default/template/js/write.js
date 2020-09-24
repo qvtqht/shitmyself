@@ -1,6 +1,6 @@
 // == begin write.js
 
-function writeOnload() { // onload handler for write page
+function writeOnload () { // onload handler for write page
 	//alert('DEBUG: writeOnload() begin');
 
 	if (document.getElementById) {
@@ -62,7 +62,7 @@ function writeOnload() { // onload handler for write page
 						if (spanWriteAdvanced) {
 							var btnMakeCoin = document.createElement('input');
 							btnMakeCoin.setAttribute('type', 'button');
-							btnMakeCoin.setAttribute('value', 'Make a coin, sign, and send');
+							btnMakeCoin.setAttribute('value', 'Make coin, sign, and send');
 							btnMakeCoin.setAttribute('onclick',	"var dcc = document.compose.comment; if (dcc && window.makeCoin) { dcc.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
 							spanWriteAdvanced.appendChild(btnMakeCoin);
 
