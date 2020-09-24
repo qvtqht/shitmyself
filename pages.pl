@@ -989,9 +989,9 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 					'a',
 					'onclick',
 					trim("
-						if (window.signVote) {
+						if (window.SignVote) {
 							var gt = unescape('%3E');
-							return signVote(this, gt+gt+'\$fileHash\\n#\$voteValue');
+							return SignVote(this, gt+gt+'\$fileHash\\n#\$voteValue');
 						}
 					")
 				);

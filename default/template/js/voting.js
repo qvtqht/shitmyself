@@ -95,28 +95,28 @@ function IncrementTagLink (t) { // increments number of votes in tag button
 
 	if (t.innerHTML) {
 		// update count in vote link
-		//alert('DEBUG: signVote: t.innerHTML');
+		//alert('DEBUG: SignVote: t.innerHTML');
 		var ih = t.innerHTML;
 		if (ih.indexOf('(') == -1) {
-			//alert('DEBUG: signVote: ( not found');
+			//alert('DEBUG: SignVote: ( not found');
 			t.innerHTML = ih + '(1)';
 		} else {
-			//alert('DEBUG: signVote: ( found');
+			//alert('DEBUG: SignVote: ( found');
 
 			var numVal = ih.substring(ih.indexOf('(') + 1, ih.indexOf(')'));
 			var newVal = parseInt(numVal) + 1;
 			var hashTag = ih.substring(0, ih.indexOf('('));
 			t.innerHTML = hashTag + '(' + newVal + ')';
 		}
-		//alert('DEBUG: signVote: finished with t.innerHTML');
+		//alert('DEBUG: SignVote: finished with t.innerHTML');
 	}
 }
 
-function signVote (t, token) { // signs a vote from referenced vote button
+function SignVote (t, token) { // signs a vote from referenced vote button
 // t = reference to calling button's 'this'
 // token = full voting token, in the format (gt)(gt)fileHash\n#tag
 // where (gt) is a greater-than sign, omitted here
-	//alert('DEBUG: signVote(' + t + ',' + token +')');
+	//alert('DEBUG: SignVote(' + t + ',' + token +')');
 
 	if (document.getElementById && window.getPrivateKey) {
 	// basic dumb feature check #todo make smarter feature check ;
@@ -145,7 +145,7 @@ function signVote (t, token) { // signs a vote from referenced vote button
 		IncrementTagLink(t);
 
 		var privkey = getPrivateKey();
-		//alert('DEBUG: signVote: privkey: ' + !!privkey);
+		//alert('DEBUG: SignVote: privkey: ' + !!privkey);
 
 		if (!privkey) {
 			//alert('DEBUG: !privkey');
