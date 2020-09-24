@@ -49,11 +49,10 @@
 						<span id=spanWriteAdvanced class=advanced></span>
 
 						<p>
-							<a href="/frame.html" target=_top>Show keyboard</a><span class=advanced>
-							|
-							<a href="/kbd.html" target=kbd>Android</a>
-							|
-							<a href="/kbd_nn.html" target=kbd>Netscape</a></span>
+							Accessibility Options:<br>
+							<a href="/frame.html" target=_top>Keyboard 1</a><br>
+							<a href="/frame2.html" target=_top>Keyboard 2</a><br>
+							<a href="/frame3.html" target=_top>Keyboard 3</a><br>
 						</p>
 					</fieldset>
 				</td>

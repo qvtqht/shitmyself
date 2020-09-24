@@ -856,13 +856,14 @@ if (GetConfig('admin/php/route_enable')) {
 		}
 
 		if (GetConfig('admin/php/footer_stats') && file_exists('stats-footer.html')) {
-			// footer stats
-			if ($path == '/kbd.html' || $path == '/kbd_nn.html' || $path == '/kbd_a.html') {
+			# footer stats
+			if ($path == '/keyboard.html' || $path == '/keyboard_netscape.html' || $path == '/keyboard_android.html') {
+				# no footer for the keyboard pages, because they are displayed in a thin frame at bottom of page
 			} else {
 				// footer stats
 				$html = str_replace(
 					'</body>',
-					file_get_contents('stats-footer.html') . '</body>',
+					'<br>' . file_get_contents('stats-footer.html') . '</body>',
 					$html
 				);
 			}
