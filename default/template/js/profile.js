@@ -233,10 +233,11 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				// hint for [save as file] link
 				var hintSaveKeyAsTxt = document.createElement('span');
 				hintSaveKeyAsTxt.setAttribute('class', 'beginner');
-				hintSaveKeyAsTxt.innerHTML = '<br>Save key to use again later';
+				hintSaveKeyAsTxt.innerHTML = 'Save key to use again later';
 
 				// insert [save as file] link into dom
 				pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
+				pShowPrivateKey.appendChild(document.createElement('br'));
 				pSaveKeyAsTxt.appendChild(hintSaveKeyAsTxt);
 				fieldset.appendChild(pSaveKeyAsTxt);
 
@@ -252,9 +253,10 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				// hint for [show private key] link
 				var hintShowPrivateKey = document.createElement('span');
 				hintShowPrivateKey.setAttribute('class', 'beginner');
-				hintShowPrivateKey.innerHTML = '<br>Display as text you can copy';
+				hintShowPrivateKey.innerHTML = 'Display as text you can copy';
 
 				pShowPrivateKey.appendChild(aShowPrivateKey);
+				pShowPrivateKey.appendChild(document.createElement('br'));
 				pShowPrivateKey.appendChild(hintShowPrivateKey);
 				fieldset.appendChild(pShowPrivateKey);
 			} // privateKey is true
