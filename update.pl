@@ -659,4 +659,6 @@ if (-e 'cron.lock') {
 	PutFile('cron.lock', '0');
 }
 
+WriteMessage("Done!\n\n");
+
 1;
