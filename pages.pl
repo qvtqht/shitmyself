@@ -815,6 +815,9 @@ sub GetItemPage {
 					if ($iaName eq 'author_key') {
 						$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
 					}
+					if ($iaName eq 'title') {
+						$iaValue = HtmlEscape($iaValue);;
+					}
 
 					$itemAttributesTable .= '<tr><td>';
 					$itemAttributesTable .= $iaName;
