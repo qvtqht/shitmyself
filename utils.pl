@@ -2113,7 +2113,7 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	state $lastText;
 
 	if ($text eq '.') {
-		$lastText = text;
+		$lastText = $text;
 
 		state @chars;
 		if (!@chars) {
@@ -2140,7 +2140,7 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	}
 	print "$timestamp $text\n";
 
-	$lastText = text;
+	$lastText = $text;
 }
 
 my $lastVersion = GetConfig('current_version');
