@@ -15,22 +15,22 @@ function HideLoadingIndicator() {
 	//document.title = dd + ' ' + window.openPgpJsLoadBegin + ' ' + !!window.openpgp;
 
 	var loadingIndicatorEnd = dd.getTime() * 1;
-	var loadingIndicatorDuration = loadingIndicatorEnd*1 - loadingIndicatorStart*1;
+	var loadingIndicatorDuration = (loadingIndicatorEnd * 1) - (loadingIndicatorStart * 1);
 	var loadingIndicatorDurationAvg = ((loadingIndicatorDuration * 1) + (loadingIndicatorLastLoadTime * 1)) / 2;
 
 	if (window.localStorage) {
-		localStorage.setItem('last_load_time', loadingIndicatorDurationAvg );
+		localStorage.setItem('last_load_time', loadingIndicatorDurationAvg);
 	}
 
-	loadingIndicator.innerHTML = 'Finished! You meditated for ' + (Math.floor(loadingIndicatorDuration / 1000)) + 's.';
+	loadingIndicator.innerHTML = 'Finished! You meditated for ' + (Math.floor(loadingIndicatorDuration / 1000)) + ' seconds';
 	loadingIndicator.style.backgroundColor = '#00ff00';
 
 	var loadingIndicatorHideTimeout = loadingIndicatorDuration / 5;
-	if (5000 < loadingIndicatorHideTimeout) {
-		loadingIndicatorHideTimeout = 5000;
+	if (20000 < loadingIndicatorHideTimeout) {
+		loadingIndicatorHideTimeout = 20000;
 	}
-	if (loadingIndicatorHideTimeout < 500) {
-		loadingIndicatorHideTimeout = 0;
+	if (loadingIndicatorHideTimeout < 5000) {
+		loadingIndicatorHideTimeout = 5000;
 	}
 
 	setTimeout('if (loadingIndicator) { loadingIndicator.style.display = "none"; }', loadingIndicatorHideTimeout * 1.6);
@@ -47,7 +47,8 @@ function WaitForOpenPgp() {
 	}
 }
 
-if (window.loadingIndicator) { // #todo this could go into body.onload. but we are already injecting that event somewhere else.
+if (window.loadingIndicator) {
+	// #todo this should go into body.onload. but we are already injecting that event somewhere else.
 	if (window.openPgpJsLoadBegin && !!window.openpgp) {
 		loadingIndicator.innerHTML = 'Finished loading page. Loading library...';
 		setTimeout('WaitForOpenPgp()', 500);
