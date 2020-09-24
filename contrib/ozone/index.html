@@ -1,0 +1,504 @@
+
+<html>
+
+<head>
+
+<title>OZONE: Fullerene Pips</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+
+<style>
+
+	@viewport {
+
+	  width: device-width ;
+
+	  zoom: 1.0 ;
+
+	}
+
+	@-ms-viewport {
+
+  		width: device-width ;
+
+	}
+
+	body {
+
+		background: black, url(/perspective/ozone44bkg.gif);
+
+		font-family: Verdana, san-serif;
+
+		font-size:1em;
+
+		overflow:hidden;
+
+		color:#c90;
+
+	}
+
+	a { color:#84101D;text-decoration:none; }
+
+	
+
+	#logoDiv { position:absolute;top:5%; width:570px; text-align:center;color:#c90;z-index:20;font-size:.7em; }
+
+	/*
+
+	#flareImage { position:absolute;top:5%; left:12.5%; width:900px;height:655px;z-index:10;opacity:.2;filter: saturate(16) hue-rotate(180deg) invert(75%); }
+
+	*/
+
+	.pip {	position:absolute;left:0;top:0;width:6px;height:6px;background:#c90;z-index:100;  }
+
+	.axis {	position:absolute;left:0;top:0;width:1px;height:1px;background:#000;z-index:50 ; }
+
+	.sphere {
+
+		border-radius: 100%;
+
+		box-shadow:  1px 1px 6px #000;
+
+    }
+
+	@media screen and (max-width: 320px) {
+
+	  /* comes into effect for screens less than or equal to 320 pixels */
+
+	  #logoDiv {
+
+         -webkit-transform: rotateZ(-45deg) scale(0.7);
+
+         -ms-transform: rotateZ(-45deg) scale(0.7);
+
+         transform: rotateZ(-45deg) scale(0.7);
+
+		 top:25%;
+
+		 font-size:.5em;
+
+		  /*
+
+         -webkit-transform: scale(0.5);
+
+         -ms-transform: scale(0.5);
+
+         transform: scale(0.5);
+
+		  */
+
+	  }
+
+	}
+
+	.formStyle { background:transparent;color:#84101D;border:0; }
+
+</style>
+
+
+
+	<!-- box-shadow: 0px 0px 4px #ff0; -->
+
+
+
+<script LANGUAGE="JavaScript">
+
+	// <!-- 
+
+
+
+	Ypos1 = window.innerHeight/2;
+
+	Xpos1 = window.innerWidth/2;
+
+	rtLeft = 1; 
+
+	upDown = 1; 
+
+	Ypos1a = window.innerHeight/2;
+
+	Xpos1a = window.innerWidth/2;
+
+	
+
+	targetXs = 0;
+
+	
+
+	step = .01333;
+
+	step = .00733;
+
+	currStep = 0;
+
+	count = 0;
+
+	
+
+	whichFormula = 1;
+
+	
+
+	numPips = 99;
+
+	
+
+	movement = 0;
+
+
+
+	function doPips() {
+
+
+
+		document.getElementById("logoDiv").style.left =((window.innerWidth-570)/2)+"px";
+
+		
+
+	//	document.getElementById("flareImage").style.left =((window.innerWidth-900)/2)+"px";
+
+	//	document.getElementById("flareImage").style.width = (window.innerWidth)*.75+"px";
+
+	//	document.getElementById("flareImage").style.height = (window.innerHeight)*.85+"px";
+
+		
+
+		
+
+		// Where is the center of the swarm?
+
+			Ypos1 = window.innerHeight/2;
+
+			Xpos1 = window.innerWidth/2;
+
+			/*
+
+			if(!movement && 1+1==3){
+
+				Ypos1a = window.innerHeight/2;
+
+				Xpos1a = window.innerWidth/2;
+
+				movement = true;
+
+			}
+
+			if(movement && 1+1==3){
+
+				diffX = (Xpos1a-Xpos1)/990;
+
+				Xpos1 += diffX;
+
+				diffY = (Ypos1a-Ypos1)/990;
+
+				Ypos1 += diffY;
+
+			} 
+
+			*/
+
+			Ypos = Ypos1;
+
+			Xpos = Xpos1;
+
+			document.getElementById("axis").style.top  = Ypos;
+
+			document.getElementById("axis").style.left = Xpos;
+
+		// End Where?
+
+		
+
+		doFormula(whichFormula);	
+
+		
+
+		count++;
+
+		document.getElementById("counter").value = count;
+
+		document.getElementById("xposser").value = Xpos1a;
+
+		document.getElementById("yposser").value = Ypos1a;
+
+		if(count-movement>100)movement=false;
+
+		currStep += step;
+
+		setTimeout("doPips()", 1) ;
+
+	}
+
+
+
+	function doFormula(num){
+
+		yBase = window.innerHeight/1.5 ;
+
+		if(num==1){
+
+			xBase = window.innerWidth/1.5; 
+
+			// Now the Fullerene Pips
+
+			for ( j=0; j<numPips; j++ ) {
+
+				targetY = 
+
+					Ypos +
+
+					yBase *
+
+						Math.cos((20*Math.sin(currStep/(30+j)))+j*70) *
+
+						( Math.sin( 10+currStep / ( 10+j )) ) * 
+
+						Math.cos((currStep + j*55)/10  + (Ypos1a/window.innerWidth));
+
+				targetX =
+
+					Xpos +
+
+					xBase *
+
+						Math.sin((20*Math.sin(currStep/20))+j*18) *
+
+						( Math.sin( 10+currStep / (10+j) ) ) * 
+
+						Math.cos((currStep + j*55)/10 + (Xpos1a/window.innerWidth));
+
+				document.getElementById("l"+j).style.top = targetY;
+
+				document.getElementById("l"+j).style.left =  targetX;
+
+			}
+
+			// End Pips	
+
+		}
+
+		if(num==2){
+
+			yBase = window.innerHeight/2.25 ;
+
+			xBase = window.innerWidth/3; 
+
+			for ( j=0; j<numPips; j++ ) {
+
+				document.getElementById("l"+j).style.top = 
+
+						Ypos 
+
+						+ yBase 
+
+						* Math.cos(j/33 + currStep*0.333)
+
+						* Math.sin(j/33 + currStep + j + (Ypos1a/window.innerHeight))
+
+						;
+
+
+
+				document.getElementById("l"+j).style.left =
+
+						Xpos 
+
+						+ xBase 
+
+						* Math.sin(j/3.14 + currStep)
+
+						* Math.sin(j/66 + currStep + j + (Xpos1a/window.innerWidth))
+
+						;
+
+			}
+
+		}
+
+		if(num==3){
+
+			xBase = window.innerWidth/3.3; 
+
+			yBase = window.innerHeight/2.2 ;
+
+			for ( j=0; j<numPips; j++ ) {
+
+				document.getElementById("l"+j).style.top = 
+
+						Ypos 
+
+						+ yBase 
+
+						* Math.cos(j/5.8 + currStep*0.333)
+
+						;
+
+
+
+				document.getElementById("l"+j).style.left =
+
+						Xpos 
+
+						+ xBase 
+
+						* Math.sin(j/3.14 + currStep)
+
+						;
+
+			}
+
+		}
+
+		if(num==4){
+
+			step = .01;
+
+			// Now the Fullerene Pips
+
+			xBase = window.innerWidth/5;
+
+			for ( j=0; j<numPips; j++ ) {
+
+				targetY = 
+
+					Ypos + yBase 
+
+						* Math.cos((20*Math.sin(currStep/(30+j)))+j*70)
+
+				//		* ( Math.sin( 10+currStep / ( 10+j )) ) 
+
+				//		* Math.cos((currStep + j*55)/10  + (Ypos1a/window.innerWidth))
+
+				;
+
+				targetX =
+
+					Xpos + xBase 
+
+					* Math.sin((20*Math.sin(currStep/20))+j*18) 
+
+				//	* ( Math.sin( 10+currStep / (10+j) ) ) 
+
+				//	* Math.cos((currStep + j*55)/10 + (Xpos1a/window.innerWidth));
+
+				targetX = xBase-(4*j)+numPips*4;
+
+				document.getElementById("l"+j).style.top = targetY;
+
+				document.getElementById("l"+j).style.left =  targetX;
+
+			}
+
+			// End Pips	
+
+		}
+
+	}
+
+
+
+	
+
+	window.onload = function(){ 
+
+		doPips();
+
+	}
+
+	document.onmousemove = function (e) {
+
+		Xpos1a = e.clientX;
+
+		Ypos1a = e.clientY;
+
+		movement = count;	
+
+	}
+
+	document.ontouchstart = function (e) {
+
+		Xpos1a2 = e.clientX;
+
+		Ypos1a2 = e.clientY;
+
+		document.getElementById("xposser").value = Xpos1a2;
+
+		document.getElementById("yposser").value = Ypos1a2;
+
+		movement = count;	
+
+	}
+
+	// -->
+
+</script>
+
+
+
+</head>
+
+
+
+<body background="/perspective/ozone44bkg.gif"
+
+bgcolor="#000000" text="#84101D">
+
+
+
+
+
+<div id="logoDiv">
+
+	
+
+	<a href="/ourWalls"><img src="/floating/transparentOzone2.png" 
+
+	border=0 height=135 width=570></A><br>
+
+	<b>Entire contents copyright &copy;1994-2018 by <A 
+
+	HREF="mailto:doc@bugtown.com" style="color:#c90;"
+
+	>Doctor Thaddeus Ozone</a>.</b><br>
+
+	<b style="letter-spacing:2;">
+
+		<a href="#" onclick="whichFormula=1;">formula1</a> | 
+
+		<a href="#" onclick="Javascript:whichFormula=2;">formula2</a> |
+
+		<a href="#" onclick="Javascript:whichFormula=3;">formula3</a><!-- |
+
+		<a href="#" onclick="Javascript:whichFormula=4;">formula4</a>-->
+
+	</b>
+
+	
+
+</div>
+
+<!--<img src="/floating/flare.png" height="655" width="900" border="0" id="flareImage" />-->
+
+	<div style="position:absolute;top:-300px;left:2px;z-index:1;">
+
+		<a href="/">#</a>
+
+		<input type=text class="formStyle" id="counter" value="0"><br>
+
+		<input type=text class="formStyle" id="xposser" value="0"><br>
+
+		<input type=text class="formStyle" id="yposser" value="0"><br>
+
+	</div>
+
+	<div class="axis sphere" id="axis"></div><div class="pip sphere" id="l0"></div><div class="pip sphere" id="l1"></div><div class="pip sphere" id="l2"></div><div class="pip sphere" id="l3"></div><div class="pip sphere" id="l4"></div><div class="pip sphere" id="l5"></div><div class="pip sphere" id="l6"></div><div class="pip sphere" id="l7"></div><div class="pip sphere" id="l8"></div><div class="pip sphere" id="l9"></div><div class="pip sphere" id="l10"></div><div class="pip sphere" id="l11"></div><div class="pip sphere" id="l12"></div><div class="pip sphere" id="l13"></div><div class="pip sphere" id="l14"></div><div class="pip sphere" id="l15"></div><div class="pip sphere" id="l16"></div><div class="pip sphere" id="l17"></div><div class="pip sphere" id="l18"></div><div class="pip sphere" id="l19"></div><div class="pip sphere" id="l20"></div><div class="pip sphere" id="l21"></div><div class="pip sphere" id="l22"></div><div class="pip sphere" id="l23"></div><div class="pip sphere" id="l24"></div><div class="pip sphere" id="l25"></div><div class="pip sphere" id="l26"></div><div class="pip sphere" id="l27"></div><div class="pip sphere" id="l28"></div><div class="pip sphere" id="l29"></div><div class="pip sphere" id="l30"></div><div class="pip sphere" id="l31"></div><div class="pip sphere" id="l32"></div><div class="pip sphere" id="l33"></div><div class="pip sphere" id="l34"></div><div class="pip sphere" id="l35"></div><div class="pip sphere" id="l36"></div><div class="pip sphere" id="l37"></div><div class="pip sphere" id="l38"></div><div class="pip sphere" id="l39"></div><div class="pip sphere" id="l40"></div><div class="pip sphere" id="l41"></div><div class="pip sphere" id="l42"></div><div class="pip sphere" id="l43"></div><div class="pip sphere" id="l44"></div><div class="pip sphere" id="l45"></div><div class="pip sphere" id="l46"></div><div class="pip sphere" id="l47"></div><div class="pip sphere" id="l48"></div><div class="pip sphere" id="l49"></div><div class="pip sphere" id="l50"></div><div class="pip sphere" id="l51"></div><div class="pip sphere" id="l52"></div><div class="pip sphere" id="l53"></div><div class="pip sphere" id="l54"></div><div class="pip sphere" id="l55"></div><div class="pip sphere" id="l56"></div><div class="pip sphere" id="l57"></div><div class="pip sphere" id="l58"></div><div class="pip sphere" id="l59"></div><div class="pip sphere" id="l60"></div><div class="pip sphere" id="l61"></div><div class="pip sphere" id="l62"></div><div class="pip sphere" id="l63"></div><div class="pip sphere" id="l64"></div><div class="pip sphere" id="l65"></div><div class="pip sphere" id="l66"></div><div class="pip sphere" id="l67"></div><div class="pip sphere" id="l68"></div><div class="pip sphere" id="l69"></div><div class="pip sphere" id="l70"></div><div class="pip sphere" id="l71"></div><div class="pip sphere" id="l72"></div><div class="pip sphere" id="l73"></div><div class="pip sphere" id="l74"></div><div class="pip sphere" id="l75"></div><div class="pip sphere" id="l76"></div><div class="pip sphere" id="l77"></div><div class="pip sphere" id="l78"></div><div class="pip sphere" id="l79"></div><div class="pip sphere" id="l80"></div><div class="pip sphere" id="l81"></div><div class="pip sphere" id="l82"></div><div class="pip sphere" id="l83"></div><div class="pip sphere" id="l84"></div><div class="pip sphere" id="l85"></div><div class="pip sphere" id="l86"></div><div class="pip sphere" id="l87"></div><div class="pip sphere" id="l88"></div><div class="pip sphere" id="l89"></div><div class="pip sphere" id="l90"></div><div class="pip sphere" id="l91"></div><div class="pip sphere" id="l92"></div><div class="pip sphere" id="l93"></div><div class="pip sphere" id="l94"></div><div class="pip sphere" id="l95"></div><div class="pip sphere" id="l96"></div><div class="pip sphere" id="l97"></div><div class="pip sphere" id="l98"></div>
+
+
+
+</body>
+
+</html>
+
+
