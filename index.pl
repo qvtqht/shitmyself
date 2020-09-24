@@ -1214,6 +1214,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								my $todoContents = GetFile("doc/$devTokenName.txt");
 								if (!$todoContents || index($todoContents, $message) == -1) {
 									AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
+									last; # one is ennough
 								}
 							}
 						}
