@@ -32,8 +32,6 @@ if (window.getUserFp) {
 
 			sp.appendChild(lblSignAs);
 
-			// #todo clean up
-
 			////
 			//	the [button] way, allowing formatting inside button
 			//	if using color avatars, requiring button element instead of submit, would look like this:
