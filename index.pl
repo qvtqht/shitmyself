@@ -28,6 +28,8 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 			# my @addedRecord = split("\n", GetFile("log/added.log"));
 
 			my $previousLine = '';
+			my $sequenceNumber = 0;
+
 			foreach my $currentLine (@addedRecord) {
 				my ($fileHash, $addedTime, $proofHash) = split('\|', $currentLine);
 
@@ -39,6 +41,11 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 				}
 
 				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
+				DBAddItemAttribute($fileHash, 'chain_sequence', $sequenceNumber);
+
+				WriteLog('MakeAddedTimeIndex: $sequenceNumber = ' . $sequenceNumber);
+
+				$sequenceNumber = $sequenceNumber + 1;
 
 				$previousLine = $currentLine;
 			}
