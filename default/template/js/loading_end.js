@@ -22,7 +22,7 @@ function HideLoadingIndicator() {
 		localStorage.setItem('last_load_time', loadingIndicatorDurationAvg);
 	}
 
-	loadingIndicator.innerHTML = 'Finished! You meditated for ' + (Math.floor(loadingIndicatorDuration / 1000)) + ' seconds';
+	loadingIndicator.innerHTML = 'Finished! You meditated for ' + (Math.floor(loadingIndicatorDuration / 10) / 100) + ' seconds';
 	loadingIndicator.style.backgroundColor = '#00ff00';
 
 	var loadingIndicatorHideTimeout = loadingIndicatorDuration / 5;
