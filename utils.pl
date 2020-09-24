@@ -2109,7 +2109,11 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	my $text = shift;
 	chomp $text;
 
+	state $lastText;
+
 	if ($text eq '.') {
+		$lastText = text;
+
 		state @chars;
 		if (!@chars) {
 			#@chars = qw(, . - ' `); # may generate warning
@@ -2127,11 +2131,15 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 		return;
 	}
 
+	WriteLog($text);
 	my $timestamp = GetTime();
 
-	print "\n$timestamp $text";
+	if ($lastText eq '.') {
+		print "\n";
+	}
+	print "$timestamp $text\n";
 
-	WriteLog($text);
+	$lastText = text;
 }
 
 my $lastVersion = GetConfig('current_version');
