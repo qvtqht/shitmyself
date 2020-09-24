@@ -575,8 +575,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
 						}
 					}
-					# $message =~ s/$reconLine/[title: $titleGiven]/g; #todo this is bad, should be a replace, not a regex
-					$message = str_replace($reconLine, $titleGiven, $message);
+
+					$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
 				}
 			}
 		} # title: token
