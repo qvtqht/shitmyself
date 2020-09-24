@@ -1,10 +1,11 @@
-<title>401 Access Denied</title>
+<title>Welcome to Authorization Required</title>
 
-<h1>Welcome to Area 401</h1>
+<h1>Welcome to Authorization Required</h1>
 
-<p>You must be trying to log in.</p>
+<p>It looks like you may be trying to log in?</p>
 
 <p>This is the place for the administrator to explain how to gain access to this resource.</p>
 
 <p>If you don't see any additional information, please contact the being who invited you here.</p>
 
+<!-- 401.template -->
