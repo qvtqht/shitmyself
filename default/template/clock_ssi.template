@@ -1,1 +1,5 @@
-<!--#config timefmt="%s" --><!--#echo var="DATE_LOCAL" -->
+<!--#config timefmt="%s" -->
+<!--#echo var="DATE_LOCAL" -->
+<!--#if expr="0 == 1" -->
+$currentTime
+<!--#endif -->
