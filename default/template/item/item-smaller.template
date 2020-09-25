@@ -1,8 +1,13 @@
 <!-- item-smaller.template -->
 <div style="border-color: $borderColor" class=reply>
-$itemTitleTemplate
-<span>$itemText</span>
-<span class=advanced><b><a href="$permalinkHtml">$itemName</a></b></span> $authorLink $itemFlagButton
-<replies></replies>
+	$itemTitleTemplate
+	<span>$itemText</span>
+	<span class=advanced>
+		<b><a href="$permalinkHtml">$itemName</a></b>
+	</span>
+	$authorLink
+	$itemFlagButton
+	<a href="/etc.html">More</a>
+	<replies></replies>
 </div>
 <!-- / item-smaller.template -->

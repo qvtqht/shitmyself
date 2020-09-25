@@ -9,6 +9,7 @@
 				$authorLink;
 				<span class=advanced><a href="$permalinkHtml#reply"><b>reply</b></a>;
 				<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>; $itemFlagButton</span>
+				<a href="/etc.html">More</a>
 			</p>
 
 			<replies></replies>
