@@ -121,7 +121,7 @@
 </td</tr
 -->
 <tr><td align=center>
-    <input type=submit onclick="return false" ondblclick="return false" value=" `">
+    <input type=submit onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" `">
     <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 1">
     <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 2">
     <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 3">
