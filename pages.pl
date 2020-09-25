@@ -3686,49 +3686,65 @@ sub GetEventAddPage { # get html for /event.html
 
 sub GetProfilePage { # returns profile page (allows sign in/out)
 	my $txtIndex = "";
-
 	my $title = "Profile";
 	my $titleHtml = "Profile";
 
-	$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
+		$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
+		$txtIndex .= GetTemplate('maincontent.template');
 
-	my $profileWindowContents = GetTemplate('form/profile.template');
-	
-	if (GetConfig('admin/gpg/use_gpg2')) {
-		my $gpg2Choices = GetTemplate('gpg2.choices.template');
-		$profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
+		my $profileWindowContents = GetTemplate('form/profile.template');
+
+		if (GetConfig('admin/gpg/use_gpg2')) {
+			my $gpg2Choices = GetTemplate('gpg2.choices.template');
+			$profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
+		} else {
+			$profileWindowContents =~ s/\$gpg2Algochoices//;
+		}
+
+		my $profileWindow = GetWindowTemplate(
+			'Profile',
+			'',
+	#		'<a class=advanced href="/gpg.html">Signatures</a>',
+			'',
+			$profileWindowContents,
+			''
+		);
+		$txtIndex .= $profileWindow;
+		$txtIndex .= GetPageFooter();
+
+		if (GetConfig('admin/js/enable')) {
+			$txtIndex = InjectJs($txtIndex, qw(settings utils profile timestamp));
+
+			# these two lines are different, regex is hard sometimes
+			$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
+			$txtIndex =~ s/<body>/<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }">/;
+		} else {
+			# js is disabled
+		}
 	} else {
-		$profileWindowContents =~ s/\$gpg2Algochoices//;
+		$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
+		$txtIndex .= GetTemplate('maincontent.template');
+
+		my $profileWindowContents = GetTemplate('form/profile_no.template');
+		my $profileWindow = GetWindowTemplate(
+			'Profile',
+			'',
+			#		'<a class=advanced href="/gpg.html">Signatures</a>',
+			'',
+			$profileWindowContents,
+			''
+		);
+
+		$txtIndex .= $profileWindow;
+		$txtIndex .= GetPageFooter();
 	}
 
-	my $profileWindow = GetWindowTemplate(
-		'Profile',
-		'',
-#		'<a class=advanced href="/gpg.html">Signatures</a>',
-		'',
-		$profileWindowContents,
-		''
-	);
-
-	$txtIndex .= $profileWindow;
-
-	$txtIndex .= GetPageFooter();
-
-	if (GetConfig('admin/js/enable')) {
-		$txtIndex = InjectJs($txtIndex, qw(settings utils profile timestamp));
-
-		# these two lines are different, regex is hard sometimes
-		$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
-		$txtIndex =~ s/<body>/<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }">/;
-	} else {
-		# js is disabled
-	}
-
-	#
-#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
-#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
+	# this is an alternative way of including the scripts, replaced by javascript-based way
+	# ProfileOnLoad has the alternative way, but this way works too, and may have some unknown benefits
+	#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
+	#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
 }
