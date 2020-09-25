@@ -37,6 +37,15 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 
 				if ($expectedHash ne $proofHash) {
 					WriteLog('MakeAddedTimeIndex: warning: proof hash mismatch. abandoning chain import');
+
+					my $curTime = GetTime();
+					my $moveChain = `mv html/chain.log html/chain.log.$curTime ; head -n $sequenceNumber html/chain.log.$curTime > html/chain_new.log; mv html/chain_new.log html/chain.log`;
+
+					my $moveChainMessage = 'Chain break detected. Timestamps for items may reset. #meta #warning ' . $curTime;
+					PutFile('html/txt/chain_break_' . $curTime . '.txt');
+
+					MakeAddedTimeIndex();
+
 					return;
 				}
 
