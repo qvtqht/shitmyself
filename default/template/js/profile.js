@@ -222,7 +222,7 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 					fieldset.appendChild(hrDivider);
 				}
 
-				// add [save as file] link
+				// [save as file]
 				var pSaveKeyAsTxt = document.createElement('p');
 				var aSaveKeyAsTxt = document.createElement('a');
 				aSaveKeyAsTxt.setAttribute('href', '#');
@@ -230,18 +230,19 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aSaveKeyAsTxt.setAttribute('onclick', 'if (window.SavePrivateKeyAsTxt) { return SavePrivateKeyAsTxt(); }');
 				aSaveKeyAsTxt.innerHTML = 'Save as file';
 
-				// hint for [save as file] link
+				// hint for [save as file]
 				var hintSaveKeyAsTxt = document.createElement('span');
 				hintSaveKeyAsTxt.setAttribute('class', 'beginner');
 				hintSaveKeyAsTxt.innerHTML = 'Save key to use again later';
 
 				// insert [save as file] link into dom
 				pSaveKeyAsTxt.appendChild(aSaveKeyAsTxt);
-				pShowPrivateKey.appendChild(document.createElement('br'));
+				var brSaveKeyAs = document.createElement('br');
+				pSaveKeyAsTxt.appendChild(brSaveKeyAs);
 				pSaveKeyAsTxt.appendChild(hintSaveKeyAsTxt);
 				fieldset.appendChild(pSaveKeyAsTxt);
 
-				// add [show private key] link
+				// [show private key]
 				var pShowPrivateKey = document.createElement('p');
 				var aShowPrivateKey = document.createElement('a');
 				aShowPrivateKey.setAttribute('class', 'advanced');
@@ -249,14 +250,15 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
 				aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
 				aShowPrivateKey.innerHTML = 'Show private key';
-
-				// hint for [show private key] link
+				
+				// hint for [show private key]
 				var hintShowPrivateKey = document.createElement('span');
 				hintShowPrivateKey.setAttribute('class', 'beginner');
 				hintShowPrivateKey.innerHTML = 'Display as text you can copy';
 
 				pShowPrivateKey.appendChild(aShowPrivateKey);
-				pShowPrivateKey.appendChild(document.createElement('br'));
+				brElement = document.createElement('br');
+				pShowPrivateKey.appendChild(brElement);
 				pShowPrivateKey.appendChild(hintShowPrivateKey);
 				fieldset.appendChild(pShowPrivateKey);
 			} // privateKey is true
@@ -276,21 +278,36 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				labelLoadFromFile.setAttribute('for', 'fileLoadKeyFromText');
 				labelLoadFromFile.innerHTML = 'Load from file:';
 
-				// line break after label
+				// br after label
 				var brLoadFromFile = document.createElement('br');
 				labelLoadFromFile.appendChild(brLoadFromFile);
 
-				// "load from file" button itself
+				// [load from file] file selector
 				var fileLoadKeyFromText = document.createElement('input');
 				fileLoadKeyFromText.setAttribute('type', 'file');
 				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
-				fileLoadKeyFromText.setAttribute('onchange', 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }');
-				//fileLoadKeyFromText.setAttribute('style', 'display: none');
+				fileLoadKeyFromText.setAttribute(
+					'onchange',
+					 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }'
+				 );
 				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
+				// fileLoadKeyFromText.setAttribute('style', 'display: none');
+				// i tried hiding file selector and using a button instead.
+				// it looked nicer, but sometimes didn't work as expected
+
+				// hint for [load from file]
+				var hintLoadFromFile = document.createElement('span');
+				hintLoadFromFile.setAttribute('class', 'beginner');
+				hintLoadFromFile.innerHTML = 'Use this if have saved key';
+
 
 				// pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
 				labelLoadFromFile.appendChild(fileLoadKeyFromText);
+				var brLoadFromFile2 = document.createElement('br');
 				pLoadKeyFromTxt.appendChild(labelLoadFromFile);
+				pLoadKeyFromTxt.appendChild(brLoadFromFile2);
+				pLoadKeyFromTxt.appendChild(hintLoadFromFile);
+
 
 				fieldset.appendChild(pLoadKeyFromTxt);
 			} // privateKey is FALSE
