@@ -46,8 +46,8 @@
 							<p>
 								Input Options: <noscript>(require JavaScript.)</noscript>
 								<br>
-								<a href="/frame2.html" target=_top>Keyboard for most<br>
-								<a href="/frame.html" target=_top>Keyboard for Android<br>
+								<a href="/frame.html" target=_top>Keyboard<br>
+								<a href="/frame2.html" target=_top>Keyboard for Android/iOS<br>
 								<a href="/frame3.html" target=_top>Keyboard for Netscape<br>
 							</p>
 						</span>

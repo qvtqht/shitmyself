@@ -3584,6 +3584,16 @@ sub GetWritePage { # returns html for write page
 	$txtIndex .= GetPageFooter();
 
 	if (GetConfig('admin/js/enable')) {
+		# $txtIndex = str_replace(
+		# 	'<span id=spanInputOptions></span>',
+		# 	'<span id=spanInputOptions>
+		# 		<noscript>More input options available with JavaScript</noscript>
+		# 	</span>',
+		# 	$txtIndex
+		# );
+		# I decided against this approach
+		# Because displaying the links with appendChild()
+		# would exclude many browsers who would otherwise support keyboard
 
 		my @js = qw(settings avatar write profile utils timestamp);
 		if (GetConfig('admin/php/enable')) {
@@ -3600,7 +3610,7 @@ sub GetWritePage { # returns html for write page
 		$txtIndex = InjectJs($txtIndex, @js);
 	}
 
-	# add call to writeOnload to page
+	# add call to writeOnload() to page
 	if (GetConfig('admin/js/enable')) {
 		# this is not an accidental duplicate, there's a difference at the end of the line
 		# $txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }" /;
