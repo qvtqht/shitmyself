@@ -1775,12 +1775,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 		$introText = trim(GetString('page_intro/default'));
 	}
 
-	# this is for the css pattern that's displayed in the background of the top menu
-	my $headerBackgroundPattern = GetTemplate($patternName);
-	WriteLog("$headerBackgroundPattern");
-	$styleSheet =~ s/\$headerBackgroundPattern/$headerBackgroundPattern/g;
-	WriteLog($styleSheet);
-
 	my $clock = '';
 	if (GetConfig('html/clock')) {
 		$clock = GetTemplate('clock.template');
