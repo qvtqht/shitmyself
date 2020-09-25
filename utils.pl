@@ -62,17 +62,18 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 		"$HTMLDIR",
 		"$HTMLDIR/txt",
 		"$HTMLDIR/image",
-		"$HTMLDIR/thumb",
-		"cache",
+		"$HTMLDIR/thumb", #thumbnails
+		"cache", #ephemeral data
 		"$HTMLDIR/author",
 		"$HTMLDIR/action",
-		"$HTMLDIR/top",
+		"$HTMLDIR/top", #top items for tags
 		"config",
 		"config/admin",
 		"config/admin/php",
 		"config/admin/php/post",
-		"$HTMLDIR/upload",
-		"$HTMLDIR/error"
+		"$HTMLDIR/upload", #uploaded files go here
+		"$HTMLDIR/error", #error pages
+		"once" #used for registering things which should only happen once e.g. scraping
 	);
 
 	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion();
