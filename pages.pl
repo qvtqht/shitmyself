@@ -2779,7 +2779,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			}
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr size=7>';
+				$itemComma = '<br><hr size=7>';
 			} else {
 				$itemTemplate = $itemComma . $itemTemplate;
 			}
@@ -2873,7 +2873,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 			$itemList = $itemList . $itemComma . $itemTemplate;
 
 			if ($itemComma eq '') {
-				$itemComma = '<hr>';
+				$itemComma = '<hr><br>';
 				# $itemComma = '<p>';
 			}
 		}
@@ -2947,7 +2947,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	if (!$pageLimit) {
 		$pageLimit = 250;
 	}
-	#my $PAGE_THRESHOLD = 5;
+	#my $pageThreshold = 5; #todo
 
 	#my $whereClause = "','||tags_list||',' LIKE '%,approve,%'";
 
