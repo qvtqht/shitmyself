@@ -1256,12 +1256,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (GetConfig('admin/js/enable')) {
 			$itemTemplate = AddAttributeToTag(
 				$itemTemplate,
-				'a href="/etc.html"',
+				'a href="/etc.html"', #todo this should link to item itself
 				'onclick',
 				"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement); } else { return true; }"
 			);
 		}
-
 
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
@@ -1747,6 +1746,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	if (!$pageType) {
 		$pageType = 'default';
 	}
+
+	WriteLog("GetPageHeader($title, $titleHtml, $pageType)");
 
 	if (defined($title) && defined($titleHtml)) {
 		chomp $title;
