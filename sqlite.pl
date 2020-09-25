@@ -362,8 +362,11 @@ sub SqliteMakeTables { # creates sqlite schema
 			author.key, author_alias.alias, author_alias.file_hash
 	");
 
-	#my $results = `sqlite3 "$SqliteDbName" ".schema" | sha1sum > config/sqlite3_schema_version`;
-}
+	my $schemaHash = `sqlite3 "$SqliteDbName" ".schema" | sha1sum | awk '{print \$1}' > config/sqlite3_schema_hash`;
+	#this can be used as cache "version"
+	#only problem is first time it changes, now cache must be regenerated #todo
+	#so need to keep track of the previous one and recursively call again or copy into new location
+} # SqliteMakeTables()
 
 sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns result as array reference
 	WriteLog('SqliteQuery2() begin');
