@@ -1777,20 +1777,32 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	my $clock = '';
 	if (GetConfig('html/clock')) {
-		$clock = GetTemplate('clock.template');
+		WriteLog('GetPageHeader: html/clock is enabled');
 
-		my $currentTime = GetClockFormattedTime();
-#
-#		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
-#			$currentTime = GetTemplate('clock_ssi.template');
-#		}
-#		
+		my $currentTime = GetClockFormattedTime();;
+
+		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
+			# ssi-enhanced clock
+			# currently not compatible with javascript clock
+			WriteLog('GetPageHeader: ssi is enabled');
+			$clock = GetTemplate('clock_ssi.template');
+			$clock =~ s/\$currentTime/$currentTime/g;
+		}
+		else {
+			# default clock
+			$clock = GetTemplate('clock.template');
+			$clock =~ s/\$currentTime/$currentTime/;
+		}
+		#
 #		$currentTime = trim($currentTime);
-
-		$clock =~ s/\$currentTime/$currentTime/;
 	} else {
+		# the plus sign is to fill in the table cell
+		# othrwise netscape will not paint its background color
+		# and there will be a hole in the table
 		$clock = '+';
 	}
+
+	WriteLog('GetPageHeader: $clock = ' . $clock);
 
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
@@ -1823,6 +1835,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
+	$topMenuTemplate =~ s/\$clock/$clock/g;
 
 	$htmlStart =~ s/\$topMenu/$topMenuTemplate/g;
 
@@ -1830,7 +1843,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
 
-	$htmlStart =~ s/\$clock/$clock/g;
 	$htmlStart =~ s/\$introText/$introText/g;
 
 	if (GetConfig('logo/enabled')) {
