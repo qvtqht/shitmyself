@@ -487,10 +487,14 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						if ($nameGiven && $hasCookie) {
 							$hasToken{'myNameIs'} = 1;
 
-							# remove alias caches
-							UnlinkCache('avatar/' . $hasCookie);
-							UnlinkCache('avatar.color/' . $hasCookie);
-							UnlinkCache('pavatar/' . $hasCookie);
+							# # remove alias caches
+							# UnlinkCache('avatar/' . $hasCookie);
+							# UnlinkCache('avatar.color/' . $hasCookie);
+							# UnlinkCache('pavatar/' . $hasCookie);
+							#todo make this less "dangerous"
+							unlink(glob("cache/*/avatar/*/$gpgKey"));
+							unlink(glob("cache/*/avatar.plain/*/$gpgKey"));
+
 
 							# add alias
 							DBAddKeyAlias($hasCookie, $nameGiven, $fileHash);
