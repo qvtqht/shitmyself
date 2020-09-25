@@ -129,6 +129,10 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 sub ProcessTextFile { # $file ; add new text file to index
 	my $file = shift;
 
+	if ($file eq 'flush') {
+		IndexTextFile('flush');
+	}
+
 	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
 	if ($file ne $relativePath) {
 		$file = $relativePath;
@@ -458,7 +462,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 				}
 			}
 
-			IndexTextFile('flush');
+			ProcessTextFile('flush');
 
 			WriteIndexedConfig();
 
