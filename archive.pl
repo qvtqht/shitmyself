@@ -71,7 +71,10 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 
 	#system('./clean.sh; ./build.pl');
 
+	print("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
+
+	print("Done.\n");
 }
 
 1;
