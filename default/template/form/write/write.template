@@ -41,12 +41,16 @@
 
 						<span id=spanWriteAdvanced class=advanced></span>
 
-						<p>
-							Accessibility Options:<br>
-							<a href="/frame.html" target=_top>Keyboard 1</a><br>
-							<a href="/frame2.html" target=_top>Keyboard 2</a><br>
-							<a href="/frame3.html" target=_top>Keyboard 3</a><br>
-						</p>
+						<span id=spanInputOptions>
+
+							<p>
+								Input Options: <noscript>(require JavaScript.)</noscript>
+								<br>
+								<a href="/frame2.html" target=_top>Keyboard for most<br>
+								<a href="/frame.html" target=_top>Keyboard for Android<br>
+								<a href="/frame3.html" target=_top>Keyboard for Netscape<br>
+							</p>
+						</span>
 					</fieldset>
 				</td>
 			</tr>
