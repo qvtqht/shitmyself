@@ -111,11 +111,15 @@
 <form action="/post.html" name="compose">
 
 <table bgcolor=beige cellpadding=4 cellspacing=0 border=0>
-<tr><td align=center>
-    <input name=comment type=text size=32></input>
-    <input type=submit value=Send></input>
-    <input type=reset value=Reset></input>
-</td></tr>
+<!-- 
+#todo with some backend magic, this keyboard can also work without js
+<tr<td align=center
+    
+    <input name=comment type=text size=32</input
+    <input type=submit value=Send</input
+    <input type=reset value=Reset</input
+</td</tr
+-->
 <tr><td align=center>
     <input type=submit onclick="return false" ondblclick="return false" value=" `">
     <input type=button onclick="return hi(this.value)" ondblclick="return hi(this.value)" value=" 1">
