@@ -567,6 +567,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								DBAddPageTouch('item', $itemParent);
 
 								if (GetConfig('admin/index/make_primary_pages')) {
+									#todo this may not be the right place for this?
 									MakePage('item', $itemParent, 1);
 								}
 							}
