@@ -63,6 +63,9 @@ config/coin/accepted
 	Must be in "reverse substring precedence"
 	That is, aaa before aa (because aa is substring of aaa)
 
+Logging out does not clear client-side settings
+	These settings include list of items user has voted on
+
 Browser Issues
 ==============
 See browsers.txt

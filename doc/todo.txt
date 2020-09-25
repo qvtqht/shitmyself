@@ -1,3 +1,22 @@
+replies which are #notext
+	should be displayed as small things with just the tag/token
+
+reddit account tagging
+	1) "i claim this reddit account http://
+	2) >>1 #redditclaim
+		look for parent's hash on reddit page
+			if present save it in ./once/
+			server-signed "#approve"
+		else
+			message that it failed, and don't try again until this message is removed
+			still save it in ./once/
+			#denied
+	if you want a do-over, you have to remove the once somehow
+	reddit url should be normalized to reduce spam options
+		remove any extraneous shit
+		make it to //www.reddit.com/
+		lowercase the whole thing
+
 let user save/export/import cookie secret key
 
 add option to rotate/trim access.log
@@ -1554,3 +1573,22 @@ PHP handler for event.html
 		add clock in settings?
 
 Generate version page for each version mentioned in changelog
+
+
+===
+
+#todo replies which are #notext should be displayed as small things with just the tag/token
+
+>>dd0901e40bdeb9cd6db3c81dd3cfd81d6832a50a
+timestamp=1601009222
+
+
+
+===
+
+#todo replies which are #notext should be displayed as small things with just the tag/token
+
+>>dd0901e40bdeb9cd6db3c81dd3cfd81d6832a50a
+-- 
+Authorization: admin
+Cookie: EB8132749B4913F4

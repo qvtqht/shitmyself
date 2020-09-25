@@ -1,4 +1,3 @@
-
 #brainstorm display pgp wordlist for key
 
 javascript can set a "pre-render" cookie
