@@ -777,48 +777,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			$hasParent = 1;
 		}
 
-		# look for addedby, which adds an added time for an item token
-		# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
-		if (GetConfig('admin/token/addedby') && $message) {
-			my @addedByLines = ($message =~ m/^addedby\/([0-9a-f]{40})\/([0-9a-f]{32})/mg);
-
-			if (@addedByLines) {
-				WriteLog(". addedby token found!");
-				my $lineCount = @addedByLines / 2;
-
-				if ($isSigned) {
-					WriteLog("... isSigned");
-					if (IsServer($gpgKey)) {
-						WriteLog("... isServer");
-						while (@addedByLines) {
-							WriteLog("... \@addedByLines");
-							my $itemHash = shift @addedByLines;
-							my $itemAddedBy = shift @addedByLines;
-
-							WriteLog("... $itemHash, $itemAddedBy");
-
-							my $reconLine = "addedby/$itemHash/$itemAddedBy";
-
-							WriteLog("... $reconLine");
-
-							$message =~ s/$reconLine/[Item $itemHash was added by $itemAddedBy.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
-
-							DBAddItemParent($fileHash, $itemHash);
-
-							DBAddItemAttribute($fileHash, 'added_by', $itemAddedBy);
-						}
-
-						DBAddVoteRecord($fileHash, $addedTime, 'device');
-
-						DBAddPageTouch('tag', 'device');
-					}
-				}
-			}
-		} #addedby token
-
-		# look for addedby, which adds an added time for an item token
-		# addedby/766053fcfb4e835c4dc2770e34fd8f644f276305/2d451ec533d4fd448b15443af729a1c6
+		# look for coins #coin #hascoin
 		if (GetConfig('admin/token/coin') && $message) {
 			my @coinLines = ($message =~ m/^([0-9A-F]{16}) ([0-9]{10}) (0\.[0-9]+)/mg);
 
@@ -899,259 +858,102 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 
-		# look for sha512 tokens, which adds a sha512 hash for an item token
-		# sha512/766053fcfb4e835c4dc2770e34fd8f644f276305/07a1fdc887e71547178dc45b115eac83bc86c4a4a34f8fc468dc3bda0738a47a49bd27a3428b28a0419a5bd2bf926f1ac43964c7614e1cce9438265c008c4cd3
-		if (GetConfig('admin/token/sha512') && $message) {
-			my @sha512Lines = ($message =~ m/^sha512\/([0-9a-f]{40})\/([0-9a-f]{128})/mg);
-
-			if (@sha512Lines) {
-				WriteLog(". sha512 token found!");
-				my $lineCount = @sha512Lines / 2;
-
-				if ($isSigned) {
-					WriteLog("... isSigned");
-					if (IsServer($gpgKey)) {
-						WriteLog("... isServer");
-						while (@sha512Lines) {
-							WriteLog("... \@sha512Lines");
-							my $itemHash = shift @sha512Lines;
-							my $itemSha512 = shift @sha512Lines;
-
-							WriteLog("... $itemHash, $itemSha512");
-
-							my $reconLine = "sha512/$itemHash/$itemSha512";
-
-							WriteLog("... $reconLine");
-
-							my $itemSha512Shortened = substr($itemSha512, 0, 16) . '...';
-
-							$message =~ s/$reconLine/[Item $itemHash was added with SHA512 hash.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
-
-							DBAddItemParent($fileHash, $itemHash);
-						}
-
-						DBAddVoteRecord($fileHash, $addedTime, 'sha');
-
-						DBAddPageTouch('tag', 'sha');
-					}
-				}
-			}
-		}
-		#
-		#		# look for latlong tokens
-		#		# 40.6905529,-73.9406216
-		#		# -40.6905529,73.9406216
-		#		# 40,-73
-		#		# -73,40
-		#		# 40/-73
-		#
-		#		if ($message) {
-		#			# get any matching token lines
-		#			my @latLongLines = ( $message =~ m/^latlong\/(-?[0-9]+\.?[0-9]+?)[\/,](-?[0-9]+\.?[0-9]+?)/mg );
-		#			#
-		#
-		#			if (@latLongLines) {
-		#				my $lineCount = @latLongLines / 2;
-		#
-		#				WriteLog("... DBAddLatLong \$lineCount = $lineCount");
-		#
-		#				while (@latLongLines) {
-		#					my $lat = shift @latLongLines;
-		#					my $long = shift @latLongLines;
-		#
-		#					if ($isSigned) {
-		#						DBAddLatLongRecord($fileHash, $lat, $long, $gpgKey);
-		#					} else {
-		#						DBAddLatLongRecord($fileHash, $lat, $long);
-		#					}
-		#				}
-		#			}
-		#		}
-
-		# point/x,y
-		# line/x1,y1/x2,y2
-		# area/x1,y1/x2,y2
-		# used for map
-		# map definition includes boundaries and included points
-		#
-		if ($message) {
-		}
-
-
 		# brc/2:00/AA
 		# brc/([2-10]:[00-59])/([0A-Z]{1-2})
-		if (GetConfig('admin/token/brc') && GetConfig('brc/enable') && $message) {
-			my @burningManLines = ($message =~ m/^brc\/([0-9]{1,2}):([0-9]{0,2})\/([0A-Z]{1,2})/mg);
-
-			if (@burningManLines) {
-				my $lineCount = @burningManLines / 3;
-
-				while (@burningManLines) {
-					my $aveHours = shift @burningManLines;
-					my $aveMinutes = shift @burningManLines;
-					my $streetLetter = shift @burningManLines;
-
-					if ($aveHours < 2 || $aveHours > 10) {
-						next;
-					}
-
-					if ($aveHours == 10 && $aveMinutes > 0) {
-						next;
-					}
-
-					if ($aveMinutes > 60) {
-						next;
-					}
-
-					my $reconLine = "brc/$aveHours:$aveMinutes/$streetLetter";
-
-					my $streetLetterFormatted = '';
-					if ($streetLetter eq '0') {
-						$streetLetterFormatted = 'Esplanade';
-					}
-					else {
-						$streetLetterFormatted = $streetLetter;
-					}
-
-					$message =~ s/$reconLine/[BRC Location: $aveHours:$aveMinutes at $streetLetter]/g;
-
-					$detokenedMessage =~ s/$reconLine//g;
-
-					if ($isSigned) {
-						DBAddBrcRecord($fileHash, $aveHours, $aveMinutes, $streetLetter, $gpgKey);
-					}
-					else {
-						DBAddBrcRecord($fileHash, $aveHours, $aveMinutes, $streetLetter);
-					}
-
-					DBAddVoteRecord($fileHash, $addedTime, 'brc');
-
-					DBAddPageTouch('tag', 'brc');
-				}
-			}
-		}
-
 
 		# look for location (latlong) tokens
 		# latlong/44.1234567,-44.433435454
-		if (GetConfig('admin/token/latlong') && $message) {
-			# get any matching token lines
-			my @latlongLines = ($message =~ m/^latlong\/(\-?[0-9]{1,2}\.[0-9]{0,9}),(\-?[0-9]{1,2}\.[0-9]{0,9})/mg);
-			#                                   prefix   /lat     /long
 
-			if (@latlongLines) {
-				my $lineCount = @latlongLines / 2;
+		# sha512:
 
-				while (@latlongLines) {
-					my $latValue = shift @latlongLines;
-					my $longValue = shift @latlongLines;
+		# addedby:
 
-					WriteLog("About to DBAddLocationRecord() ... $latValue, $longValue");
+		# latlong:
 
-					if ($isSigned) {
-						DBAddLocationRecord($fileHash, $latValue, $longValue, $gpgKey);
-					}
-					else {
-						DBAddLocationRecord($fileHash, $latValue, $longValue);
-					}
+		# event:
 
-					my $reconLine = "latlong/$latValue,$longValue";
-
-					$message =~ s/$reconLine/[Location: $latValue,$longValue]/g;
-
-					$detokenedMessage =~ s/$reconLine//g;
-
-					DBAddVoteRecord($fileHash, $addedTime, 'location');
-
-					DBAddPageTouch('tag', 'location');
-				}
-			}
-		}
-
-
-		# look for event tokens
-		# event/1551234567/3600
-		if (GetConfig('admin/token/event') && $message) {
-			# get any matching token lines
-			my @eventLines = ($message =~ m/^event\/([0-9]+)\/([0-9]+)/mg);
-			#                                 prefix/time     /duration
-
-			if (@eventLines) {
-				my $lineCount = @eventLines / 2;
-
-				WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
-
-				while (@eventLines) {
-					my $eventTime = shift @eventLines;
-					my $eventDuration = shift @eventLines;
-
-					if ($isSigned) {
-						DBAddEventRecord($fileHash, $eventTime, $eventDuration, $gpgKey);
-					}
-					else {
-						DBAddEventRecord($fileHash, $eventTime, $eventDuration);
-					}
-
-					my $reconLine = "event/$eventTime/$eventDuration";
-
-					#$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
-
-					my ($seconds, $minutes, $hours, $day_of_month, $month, $year, $wday, $yday, $isdst) = localtime($eventTime);
-					$year = $year + 1900;
-					$month = $month + 1;
-
-					my $eventDurationText = $eventDuration;
-					if ($eventDurationText >= 60) {
-						$eventDurationText = $eventDurationText / 60;
-						if ($eventDurationText >= 60) {
-							$eventDurationText = $eventDurationText / 60;
-							if ($eventDurationText >= 24) {
-								$eventDurationText = $eventDurationText / 24;
-								$eventDurationText = $eventDurationText . " days";
-							}
-							else {
-								$eventDurationText = $eventDurationText . " hours";
-							}
-						}
-						else {
-							$eventDurationText = $eventDurationText . " minutes";
-						}
-					}
-					else {
-						$eventDurationText = $eventDurationText . " seconds";
-					}
-
-					if ($month < 10) {
-						$month = '0' . $month;
-					}
-					if ($day_of_month < 10) {
-						$day_of_month = '0' . $day_of_month;
-					}
-					if ($hours < 10) {
-						$hours = '0' . $hours;
-					}
-					if ($minutes < 10) {
-						$minutes = '0' . $minutes;
-					}
-					if ($seconds < 10) {
-						$seconds = '0' . $seconds;
-					}
-
-					my $dateText = "$year/$month/$day_of_month $hours:$minutes:$seconds";
-
-					$message =~ s/$reconLine/[Event: $dateText for $eventDurationText]/g;
-
-					$detokenedMessage =~ s/$reconLine//g;
-
-					DBAddVoteRecord($fileHash, $addedTime, 'event');
-
-					DBAddPageTouch('tag', 'event');
-
-					DBAddPageTouch('events');
-				}
-			}
-		} # event token
+		# # look for event tokens
+		# # event/1551234567/3600
+		# if (GetConfig('admin/token/event') && $message) {
+		# 	# get any matching token lines
+		# 	my @eventLines = ($message =~ m/^event\/([0-9]+)\/([0-9]+)/mg);
+		# 	#                                 prefix/time     /duration
+		#
+		# 	if (@eventLines) {
+		# 		my $lineCount = @eventLines / 2;
+		#
+		# 		WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
+		#
+		# 		while (@eventLines) {
+		# 			my $eventTime = shift @eventLines;
+		# 			my $eventDuration = shift @eventLines;
+		#
+		# 			if ($isSigned) {
+		# 				DBAddEventRecord($fileHash, $eventTime, $eventDuration, $gpgKey);
+		# 			}
+		# 			else {
+		# 				DBAddEventRecord($fileHash, $eventTime, $eventDuration);
+		# 			}
+		#
+		# 			my $reconLine = "event/$eventTime/$eventDuration";
+		#
+		# 			#$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
+		#
+		# 			my ($seconds, $minutes, $hours, $day_of_month, $month, $year, $wday, $yday, $isdst) = localtime($eventTime);
+		# 			$year = $year + 1900;
+		# 			$month = $month + 1;
+		#
+		# 			my $eventDurationText = $eventDuration;
+		# 			if ($eventDurationText >= 60) {
+		# 				$eventDurationText = $eventDurationText / 60;
+		# 				if ($eventDurationText >= 60) {
+		# 					$eventDurationText = $eventDurationText / 60;
+		# 					if ($eventDurationText >= 24) {
+		# 						$eventDurationText = $eventDurationText / 24;
+		# 						$eventDurationText = $eventDurationText . " days";
+		# 					}
+		# 					else {
+		# 						$eventDurationText = $eventDurationText . " hours";
+		# 					}
+		# 				}
+		# 				else {
+		# 					$eventDurationText = $eventDurationText . " minutes";
+		# 				}
+		# 			}
+		# 			else {
+		# 				$eventDurationText = $eventDurationText . " seconds";
+		# 			}
+		#
+		# 			if ($month < 10) {
+		# 				$month = '0' . $month;
+		# 			}
+		# 			if ($day_of_month < 10) {
+		# 				$day_of_month = '0' . $day_of_month;
+		# 			}
+		# 			if ($hours < 10) {
+		# 				$hours = '0' . $hours;
+		# 			}
+		# 			if ($minutes < 10) {
+		# 				$minutes = '0' . $minutes;
+		# 			}
+		# 			if ($seconds < 10) {
+		# 				$seconds = '0' . $seconds;
+		# 			}
+		#
+		# 			my $dateText = "$year/$month/$day_of_month $hours:$minutes:$seconds";
+		#
+		# 			$message =~ s/$reconLine/[Event: $dateText for $eventDurationText]/g;
+		#
+		# 			$detokenedMessage =~ s/$reconLine//g;
+		#
+		# 			DBAddVoteRecord($fileHash, $addedTime, 'event');
+		#
+		# 			DBAddPageTouch('tag', 'event');
+		#
+		# 			DBAddPageTouch('events');
+		# 		}
+		# 	}
+		# } # event token
 
 		if ($alias) { # if $alias is set, means this is a pubkey
 			DBAddVoteRecord($fileHash, $addedTime, 'pubkey');
@@ -1324,43 +1126,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		DBAddPageTouch('read');
-
-		if ($hasParent == 0) {
-			#			DBAddVoteRecord($fileHash, $addedTime, 'hasparent');
-			#		} else {
-			DBAddVoteRecord($fileHash, $addedTime, 'topic');
-		}
-
 		DBAddPageTouch('item', $fileHash);
-
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			$isAdmin = 1;
-
 			DBAddVoteRecord($fileHash, $addedTime, 'admin');
-
 			DBAddPageTouch('tag', 'admin');
 		}
-
 		if ($isSigned) {
-			DBAddKeyAlias('flush');
-
 			DBAddPageTouch('author', $gpgKey);
-
 			DBAddPageTouch('scores');
 		} elsif ($hasCookie) {
 			DBAddPageTouch('author', $hasCookie);
-
 			DBAddPageTouch('scores');
 		}
-
 		DBAddPageTouch('stats');
-
 		DBAddPageTouch('events');
-
 		DBAddPageTouch('rss');
-
 		DBAddPageTouch('index');
-
 		DBAddPageTouch('flush');
 	}
 } # IndexTextFile
