@@ -105,4 +105,14 @@ function displayNotification (strMessage, thisButton) { // adds loading indicato
 	}
 } // displayNotification()
 
+function newA (href, target, innerHTML, parent) { // makes new a element and appends to parent
+	var newLink = document.createElement('a');
+	if (href) { newLink.setAttribute('href', href); }
+	if (target) { newLink.setAttribute('target', target); }
+	if (innerHTML) { innernewLink.setAttribute('innerHTML', innerHTML); }
+	parent.appendChild(newLink);
+	return newLink;
+}
+
+
 // == end utils.js
