@@ -38,7 +38,8 @@ function writeOnload () { // onload handler for write page
 						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a GTbuttonLT
 						spanSignAs.appendChild(btnSignAs);
 
-					} else { // this is for the sign yes/no checkbox
+					}
+					else { // this is for the sign yes/no checkbox
 						var lblSignAs = document.createElement('label');
 						lblSignAs.setAttribute('for', 'chkSignAs');
 
@@ -63,7 +64,7 @@ function writeOnload () { // onload handler for write page
 							var btnMakeCoin = document.createElement('input');
 							btnMakeCoin.setAttribute('type', 'button');
 							btnMakeCoin.setAttribute('value', 'Make coin, sign, and send');
-							btnMakeCoin.setAttribute('onclick',	"var dcc = document.compose.comment; if (dcc && window.makeCoin) { dcc.value += '\\n\\n' + makeCoin(this); signMessage(); writeSubmit(); } return false;");
+							btnMakeCoin.setAttribute('onclick',	"if (window.makeCoin) { return makeCoin(this); } else { return true; }");
 							spanWriteAdvanced.appendChild(btnMakeCoin);
 
 							var br = document.createElement('br');
@@ -74,10 +75,9 @@ function writeOnload () { // onload handler for write page
 							lblMakeCoin.innerHTML = 'Proof of work coin helps prevent spam.';
 							spanWriteAdvanced.appendChild(lblMakeCoin);
 						}
-
-					}
-				}
-			}
+					} // window.makeCoin
+				} // window.getAvatar
+			} // document.getElementById('spanSignAs')
 //
 //			if (document.getElementById('addtext')) {
 //				document.getElementById('addtext').value = 'Sign Message and Send';
