@@ -245,7 +245,8 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 				// [show private key]
 				var pShowPrivateKey = document.createElement('p');
 				var aShowPrivateKey = document.createElement('a');
-				aShowPrivateKey.setAttribute('class', 'advanced');
+				pShowPrivateKey.setAttribute('class', 'advanced');
+				
 				aShowPrivateKey.setAttribute('href', '#');
 				aShowPrivateKey.setAttribute('id', 'linkShowPrivateKey');
 				aShowPrivateKey.setAttribute('onclick', 'if (window.ShowPrivateKey) { return ShowPrivateKey(); }');
