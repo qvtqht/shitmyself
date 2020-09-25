@@ -1,6 +1,6 @@
 <!-- write.template -->
 
-<form action="/post.html" method=GET id=compose class=submit name=compose>
+<form action="/post.html" method=GET id=compose class=submit name=compose target=_top>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
