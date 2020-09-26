@@ -40,7 +40,6 @@ function MakeKey () { //makes key using default settings
 
 		//alert('DEBUG: SimpleBenchmark() returns ' + SimpleBenchmark());
 
-		// defaults for testing #todo
 		var bits = 512;
 		var username = 'Anonymous';
 
