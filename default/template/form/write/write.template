@@ -39,7 +39,7 @@
 							<span id=spanSignAs class=advanced></span>
 						</p>
 
-						<span id=spanWriteAdvanced class=advanced></span>
+						<span id=spanWriteAdvanced class=advanced></span id=spanWriteAdvanced>
 
 						<span id=spanInputOptions>
 
@@ -50,7 +50,9 @@
 								<a href="/frame2.html" target=_top>Keyboard for Android/iOS<br>
 								<a href="/frame3.html" target=_top>Keyboard for Netscape<br>
 							</p>
-						</span>
+						</span id=spanInputOptions>
+
+						<p align=right><a href="/etc.html">More</a></p>
 					</fieldset>
 				</td>
 			</tr>
