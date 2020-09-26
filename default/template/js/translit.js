@@ -1,140 +1,11 @@
 // begin translit.js -- substitutes typed characters with different character set
 
-function translateKeyEvent(key, altState, toLayout) {
-}
-
-function dvorakKey(e, t) { // replaces pressed qwerty key with dvorak key
-	var gt = unescape('%3E');
-
-// called via textarea or input's onkeydown event
-// e is event object passed by onkeydown event
-// t is the text field's "this"
-
-	//alert('DEBUG: dvorakKey() begins');
-
-	var nl; // new letter
-
-	var key; // pressed key
-
-	if (e.key) {
-	// for browsers which return event.key
-		//alert('DEBUG: translitKey: e.key is TRUE, and equal to ' + e.key);
-		key = e.key;
-	} else if (e.keyCode) {
-		// older browsers only return event.keyCode
-		alert('DEBUG: dvorakKey: e.key is FALSE');
-
-		// magic, not sure if this actually works
-		// what browsers is this for?
-		key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
-	}
-	//alert('DEBUG: key: ' + key);
-
-
-	// alt+d will toggle dvorak mode
-	if (e.altKey || e.ctrlKey || e.metaKey) {
-		if (e.key == 'd' || e.key == 'D') {
-			if (window.translitKeyState == 1) {
-				// 2 is off
-				window.translitKeyState = 2;
-				t.style.borderTop = '3pt solid gray';
-			} else {
-				window.translitKeyState = 1;
-				t.style.borderTop = '3pt solid green';
-			}
-
-			// we're doing it, we're overriding the user's keypress
-			if (e.preventDefault) {
-				e.preventDefault();
-			}
-
-			return false;
-		} else {
-			if (e.ctrlKey || e.metaKey) {
-				return true;
-			}
-		}
-	}
-	// end toggle handler
-
-	// check for toggle status.
-	// 2 is off
-	if (!window.translitKeyState) {
-		window.translitKeyState = 2;
-	}
-	if (window.translitKeyState == 2) {
-		return true;
-	}
-
-	if (e.altKey) {
-		// alt key combinations
-		return true;
-	} else {
-		// lookup lists, each char in keysEn
-		// corresponds to the same position in keysRu
-
-		var keysEn = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
-		var keysRu = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
-
-		if (keysEn.length != keysRu.length) {
-			//alert('DEBUG: dvorakKey: Warning: length mismatch keysEn and keysRu');
-		}
-
-		if (e.key) {
-			// if e.key, then try to find it in the lookup list
-			for (var i = 0; i < keysEn.length; i++) {
-				if (e.key == keysEn.substr(i, 1)) {
-					//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
-					nl = keysRu.substr(i, 1);
-
-					break;
-				}
-			}
-		}
-	}
-
-	if (!nl) {
-	// new letter was never changed from empty state,
-	// which is not part of the possible outputs,
-	// so we do not need to replace the input.
-		return true;
-	}
-
-	// we're doing it, we're overriding the user's keypress
-	if (e.preventDefault) {
-		e.preventDefault();
-	}
-
-	//alert('DEBUG: e.preventDefault() was called');
-
-	var txt = t;
-
-// this block of code may still come in handy.
-// it finds the textbox by element id instead of using the one passed into the function
-//    if (!txt) {
-//        if (document.getElementById) {
-//            var txt = document.getElementById('txtTranslit');
-//        } else {
-//            if (document.forms) {
-//                var form = document.forms['frmTest'];
-//                if (form) {
-//                    txt = form.txtTranslit;
-//                }
-//            }
-//        }
-//    }
-
-	if (txt) {
-	// append the text to the textbox
-	// dont bother with looking for pointer location or selection
-		txt.value = txt.value + nl;
-		//replaceSelectedText(txt, nl);
-	} else {
-		//alert('DEBUG: no text field');
-	}
-
-	return false;
-}
+// translitKeyState
+// 0 = off (touched)
+// 1 = russian phonetic optimized
+// 2 = off/passthrough (touched)
+// 3 = russian phonetic
+// 4 = dvorak
 
 function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 // called via textarea or input's onkeydown event
@@ -167,7 +38,20 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 
 	// alt+` will toggle translit mode
 	if (e.altKey || e.ctrlKey || e.metaKey) {
+		if (e.key == 'd' || e.key == 'D') {
+			// ctrl+d for dvorak
+			if (window.translitKeyState == 4) {
+				// 2 is off
+				window.translitKeyState = 2;
+				t.style.borderTop = '3pt solid gray';
+			} else {
+				window.translitKeyState = 4;
+				t.style.borderTop = '3pt solid green';
+			}
+		}
+		
 		if (e.key == '`' || e.key == 'r' || e.key == 'R') {
+			// ctrl+r or ctrl+` for russian
 			if (window.translitKeyState == 1) {
 				// 2 is off
 				window.translitKeyState = 2;
@@ -189,6 +73,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			}
 		}
 	}
+
 	// end toggle handler
 
 	// check for toggle status.
@@ -200,86 +85,119 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		return true;
 	}
 
-	if (e.altKey) {
-		// alt key combinations
+	if (translitKeyState == 1) {
+		if (e.altKey) {
+			// alt key combinations
 
-		if (e.key == 'e') {
-			nl = "ё";
-		} else if (e.key == 'E') {
-			nl = 'Ё';
-		} else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
-			nl = e.key;
+			if (e.key == 'e') {
+				nl = "ё";
+			} else if (e.key == 'E') {
+				nl = 'Ё';
+			} else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
+				nl = e.key;
+			} else {
+				return true;
+			}
 		} else {
-			return true;
-		}
-	} else {
-		// lookup lists, each char in keysEn
-		// corresponds to the same position in keysRu
+			// lookup lists, each char in keysEn
+			// corresponds to the same position in keysRu
 
-		// these shortened lookup lists exclude some letters
-		// the letter x (cyrillic version) for some reason presents a problem
-		// in perl's unicode processing.
-		// other letters have been removed just because
-		var keysEn =
-			"`-=" +
-			"~_+" +
-			"qwrtyuip[]\\" +
-			"QWRTYUIP{}|" +
-			"sdfghjkl" +
-			"SDFGHJKL" +
-			"zcvbnm" +
-			"ZCVBNM"
-		;
+			// these shortened lookup lists use latin for some letters: eoax
+			// the original reason for creating this was a bug in perl:
+			// half of the letter x (cyrillic version) for some reason
+			// matches \R in perl's regex, which can cause issues #regexbugX
+			// so, removed letter x, and others along with it just because
+			var keysEn =
+				"`-=" +
+				"~_+" +
+				"qwrtyuip[]\\" +
+				"QWRTYUIP{}|" +
+				"sdfghjkl" +
+				"SDFGHJKL" +
+				"zcvbnm" +
+				"ZCVBNM"
+			;
 
-		var keysRu =
-			"щьъ" +
-			"Щ-=" +
-			"яшртыуипюжэ" +
-			"ЯШРТЫУИПЮЖЭ" +
-			"сдфгчйкл" +
-			"СДФГЧЙКЛ" +
-			"зцвбнм" +
-			"ЗЦВБНМ"
-		;
+			var keysRu =
+				"щьъ" +
+				"Щ-=" +
+				"яшpтыyипюжэ" +
+				"ЯШPТЫYИПЮЖЭ" +
+				"cдфгчйкл" +
+				"CДФГЧЙКЛ" +
+				"зцвбнм" +
+				"ЗЦВБНМ"
+			;
 
-		// var keysEn =
-		// 	"`-=" +
-		// 	"~_+" +
-		// 	"qwertyuiop[]\\" +
-		// 	"QWERTYUIOP{}|" +
-		// 	"asdfghjkl" +
-		// 	"ASDFGHJKL" +
-		// 	"zxcvbnm" +
-		// 	"ZXCVBNM"
-		// ;
-		//
-		// var keysRu =
-		// 	"щьъ" +
-		// 	"Щ-=" +
-		// 	"яшертыуиопюжэ" +
-		// 	"ЯШЕРТЫУИОПЮЖЭ" +
-		// 	"асдфгчйкл" +
-		// 	"АСДФГЧЙКЛ" +
-		// 	"зхцвбнм" +
-		// 	"ЗХЦВБНМ"
-		// ;
+	//		 //complete lookup list, including latin-cyrillic lookalike letters
+	//		 var keysEn =
+	//		 	"`-=" +
+	//		 	"~_+" +
+	//		 	"qwertyuiop[]\\" +
+	//		 	"QWERTYUIOP{}|" +
+	//		 	"asdfghjkl" +
+	//		 	"ASDFGHJKL" +
+	//		 	"zxcvbnm" +
+	//		 	"ZXCVBNM"
+	//		 ;
+	//
+	//		 var keysRu =
+	//		 	"щьъ" +
+	//		 	"Щ-=" +
+	//		 	"яшертыуиопюжэ" +
+	//		 	"ЯШЕРТЫУИОПЮЖЭ" +
+	//		 	"асдфгчйкл" +
+	//		 	"АСДФГЧЙКЛ" +
+	//		 	"зхцвбнм" +
+	//		 	"ЗХЦВБНМ"
+	//		 ;
 
-		if (keysEn.length != keysRu.length) {
-			//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
-		}
+			if (keysEn.length != keysRu.length) {
+				//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
+			}
 
-		if (e.key) {
-			// if e.key, then try to find it in the lookup list
-			for (var i = 0; i < keysEn.length; i++) {
-				if (e.key == keysEn.substr(i, 1)) {
-					//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
-					nl = keysRu.substr(i, 1);
+			if (e.key) {
+				// if e.key, then try to find it in the lookup list
+				for (var i = 0; i < keysEn.length; i++) {
+					if (e.key == keysEn.substr(i, 1)) {
+						//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
+						nl = keysRu.substr(i, 1);
 
-					break;
+						break;
+					}
 				}
 			}
 		}
-	}
+	} // if (translitKeyState == 1)
+
+	if (translitKeyState == 4) {
+		if (e.altKey) {
+			// alt key combinations
+			return true;
+		} else {
+			// lookup lists, each char in keysEn
+			// corresponds to the same position in keysRu
+
+			var keysEn = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
+			var keysRu = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
+
+			if (keysEn.length != keysRu.length) {
+				//alert('DEBUG: dvorakKey: Warning: length mismatch keysEn and keysRu');
+			}
+
+			if (e.key) {
+				// if e.key, then try to find it in the lookup list
+				for (var i = 0; i < keysEn.length; i++) {
+					if (e.key == keysEn.substr(i, 1)) {
+						//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
+						nl = keysRu.substr(i, 1);
+
+						break;
+					}
+				}
+			}
+		}
+	} // if (translitKeyState == 4)
 
 	if (!nl) {
 		// new letter was never changed from empty state,
