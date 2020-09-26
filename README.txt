@@ -216,7 +216,7 @@ Redhat, CentOS, Fedora, and other yum-based
 INSTALLATION FOR LOCAL TESTING
 ==============================
 $ cd ~
-$ git clone http://www.github.com/gulkily/shitmyself
+$ git clone ...
 $ cd ~/shitmyself
 $ ./install_os_packages
 $ ./build.pl
