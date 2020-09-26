@@ -413,12 +413,13 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 	}
 }
 
-sub EscapeShellChars { # escapes string for including in shell command
+sub EscapeShellChars { # escapes string for including as parameter in shell command
+	#todo this is still probably not safe and should be improved upon #security
 	my $string = shift;
 	chomp $string;
 
 	$string =~ s/([\"|\$`\\])/\\$1/g;
-	# " | $ ` \
+	# chars are: " | $ ` \
 
 	return $string;
 }
