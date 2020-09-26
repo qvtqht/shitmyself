@@ -528,7 +528,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		# title:
-		if (GetConfig('admin/token/title')) {
+		if ($message && GetConfig('admin/token/title')) {
 			# #title token is enabled
 
 			# looks for lines beginning with title: and text after
