@@ -376,11 +376,9 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 
 	my @queryParams = @_;
 
-	WriteLog('SqliteQuery2: $query = ' . $query);
-	WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
-
 	if ($query) {
-		# WriteLog($query);
+		WriteLog('SqliteQuery2: $query = ' . $query);
+		WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
 
 		if ($dbh) {
 			my $aref;
@@ -406,11 +404,12 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 
 			return $aref;
 		} else {
-			# WriteLog('SqliteQuery2: problem: no $dbh');
+			WriteLog('SqliteQuery2: warning: $dbh is missing');
 		}
 	}
 	else {
-		# WriteLog('SqliteQuery2: problem: no $query!');
+		WriteLog('SqliteQuery2: warning: $query is missing!');
+		return '';
 	}
 }
 
