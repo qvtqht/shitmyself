@@ -1783,12 +1783,12 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 			# ssi-enhanced clock
 			# currently not compatible with javascript clock
 			WriteLog('GetPageHeader: ssi is enabled');
-			$clock = GetTemplate('clock_ssi.template');
+			$clock = GetTemplate('widget/clock_ssi.template');
 			$clock =~ s/\$currentTime/$currentTime/g;
 		}
 		else {
 			# default clock
-			$clock = GetTemplate('clock.template');
+			$clock = GetTemplate('widget/clock.template');
 			$clock =~ s/\$currentTime/$currentTime/;
 		}
 		#
@@ -3213,7 +3213,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutStatsPages();
 	#
 	# { # clock test page
-	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('clock.template') . '</form>';
+	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('widget/clock.template') . '</form>';
 	# 	my $clockTestPage = '<html><body>';
 	# 	$clockTestPage .= $clockTest;
 	# 	$clockTestPage .= '</body></html>';
