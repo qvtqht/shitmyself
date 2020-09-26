@@ -82,7 +82,7 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 			unsetcookie2('checksum');
 			unsetcookie2('test');
 
-			RedirectWithResponse('/profile.html', 'Signed out due to checksum mismatch. Please notify operator.');
+			RedirectWithResponse('/profile.html', 'Checksum mismatch detected. Please notify operator.');
 		}
 
 		if ($responseSignedIn) {
