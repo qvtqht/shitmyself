@@ -1,5 +1,5 @@
-<!-- vote2button.template -->
+<!-- vote_button.template -->
 <a
 	href="/post.html?comment=%23$voteValue&replyto=$fileHash&returnto=$returnTo"
 	class="$class">$voteCaption</a>;
-<!-- / vote2button.template -->
+<!-- / vote_button.template -->

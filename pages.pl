@@ -928,16 +928,16 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 	my $fileHash = shift; # item's file hash
 	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
 	my $returnTo = shift; # (optional) what page to return to instead of current (for use by post.php)
-
 	WriteLog('GetItemVoteButtons(' . ($fileHash ? $fileHash : '-') . ', ' . ($tagSet ? $tagSet : '-') . ')');
 
-	#todo sanity checks
+	if (!IsItem($fileHash)) {
+		WriteLog('GetItemVoteButtons: warning: sanity check failed, returning');
+		return '';
+	}
 
 	my @quickVotesList; # this will hold all the tag buttons we want to display
-
 	my %voteTotals = DBGetItemVoteTotals($fileHash);
-
-	WriteLog('GetItemVoteButtons(' . scalar(%voteTotals) . ')');
+	WriteLog('GetItemVoteButtons: scalar(%voteTotals) = ' . scalar(%voteTotals));
 
 	if ($tagSet) {
 		# if $tagSet is specified, just use that list of tags
@@ -945,11 +945,15 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 		if ($quickVotesForTagSet) {
 			push @quickVotesList, split("\n", $quickVotesForTagSet);
 		}
-	}
+		else {
+			# no tagset?
+			WriteLog('GetItemVoteButtons: warning: tagset not found: ' . $tagSet);
+			return '';
+		}
+	} # $tagSet
 	else {
-		# otherwise it must be calculated
+		# need to look up item's default tagset
 		my $quickVotesForTags;
-
 		foreach my $voteTag (keys %voteTotals) {
 			$quickVotesForTags = GetConfig('tagset/' . $voteTag);
 			if ($quickVotesForTags) {
@@ -960,13 +964,14 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 		# all items will have a 'flag' button
 		push @quickVotesList, 'flag';
 
+		# remove duplicates
 		my %dedupe = map {$_, 1} @quickVotesList;
 		@quickVotesList = keys %dedupe;
 	}
 
 	my $styleSheet = GetStylesheet(); # for looking up which vote buttons need a class=
-	# if they're listed in the stylesheet, they have an additional style defined, so add a class= below
-	# the class name is tag-foo
+	# if they're listed in the stylesheet, add a class= below
+	# the class name is tag-foo, where foo is tag
 
 	my $tagButtons = '';
 	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
@@ -978,16 +983,12 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 		my $ballotTime = GetTime();
 
 		if ($fileHash && $ballotTime) {
-			my $mySecret = GetConfig('admin/secret');
-			my $checksum = md5_hex($fileHash . $ballotTime . $mySecret);
-
-			my $tagButton = GetTemplate('vote2button.template');
+			my $tagButton = GetTemplate('vote/vote_button.template');
 
 			if ($jsEnabled) {
 				$tagButton = AddAttributeToTag(
 					$tagButton,
-					'a',
-					'onclick',
+					'a', 'onclick',
 					trim("
 						if (window.SignVote) {
 							var gt = unescape('%3E');
@@ -996,8 +997,6 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 					")
 				);
 			}
-
-			my $quickTagCaption = GetString($quickTagValue);
 
 			if ($doVoteButtonStyles) {
 				# this is a hack, eventually should be replaced by config/tag_color #todo
@@ -1009,6 +1008,8 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 				}
 			}
 
+			my $quickTagCaption = GetString($quickTagValue);
+			WriteLog('GetItemVoteButtons: $$$ ' . $quickTagCaption . ' $ ' . $quickTagValue);
 			if ($voteTotals{$quickTagCaption}) {
 				# $voteTotals{$quickTagCaption} is the number of tags of this type item has
 
@@ -1016,26 +1017,23 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 				# $quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
 			}
 
-			# html/vote_buttons_only_assigned causes only assigned hashtags to display vote buttons
-			if (!GetConfig('html/vote_buttons_only_assigned') || $voteTotals{$quickTagCaption}) {
-				if ($returnTo) {
-					# set value for $returnTo placeholder
-					$tagButton =~ s/\$returnTo/$returnTo/g;
-				}
-				else {
-					# remove entire returnto= parameter
-					$tagButton =~ s/&returnto=\$returnTo//g;
-				}
-				$tagButton =~ s/\$fileHash/$fileHash/g;
-				$tagButton =~ s/\$ballotTime/$ballotTime/g;
-				$tagButton =~ s/\$voteValue/$quickTagValue/g;
-				$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
-				$tagButton =~ s/\$checksum/$checksum/g;
-
-				$tagButtons .= $tagButton;
+			if ($returnTo) {
+				# set value for $returnTo placeholder
+				$tagButton =~ s/\$returnTo/$returnTo/g;
 			}
-		}
-	}
+			else {
+				# remove entire returnto= parameter
+				$tagButton =~ s/&returnto=\$returnTo//g;
+			}
+
+			$tagButton =~ s/\$fileHash/$fileHash/g;
+			$tagButton =~ s/\$ballotTime/$ballotTime/g;
+			$tagButton =~ s/\$voteValue/$quickTagValue/g;
+			$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
+
+			$tagButtons .= $tagButton;
+		} # if ($fileHash && $ballotTime)
+	} # foreach my $quickTagValue (@quickVotesList)
 
 	WriteLog('GetItemVoteButtons returning: ' . $tagButtons);
 
@@ -1467,7 +1465,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 					$quickVotesButtons = GetItemVoteButtons($file{'file_hash'}); #todo refactor to take vote totals directly
 				}
 
-				my $quickVoteButtonGroup = GetTemplate('votequick2.template');
+				my $quickVoteButtonGroup = GetTemplate('vote/votequick2.template');
 				$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
 	
 				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteButtonGroup/;
