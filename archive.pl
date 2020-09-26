@@ -60,18 +60,18 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 
 	#todo don't use absolute path
 	# how to trim path?
-	print("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
+	print("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR\n");
 	system("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
 	#
 	# print("gzip -9 $ARCHIVE_DATE_DIR.tar");
 	# system("gzip -9 $ARCHIVE_DATE_DIR.tar");
 
-	print("rm -rf $ARCHIVE_DATE_DIR");
+	print("rm -rf $ARCHIVE_DATE_DIR\n");
 	system("rm -rf $ARCHIVE_DATE_DIR");
 
 	#system('./clean.sh; ./build.pl');
 
-	print("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
+	print("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt\n");
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
 
 	print("Done.\n");
