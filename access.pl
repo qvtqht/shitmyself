@@ -364,8 +364,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 			if ($status eq '404' || (GetConfig('admin/lighttpd/enable') && !-e ('html' . $fileWithoutParams))) {
 				# this workaround is for lighttpd,
-				# which returns 200 instead of 404 when handler
-				# is specified because it's stupid
+				# which returns 200 instead of 404 when handler is specified
 
 				if (!GetConfig('admin/accept_404_url_text_reduce_spam') || index(substr($file, 1), '/') == -1) {
 					# This check is to reduce spam from clients trying to access deleted pages
