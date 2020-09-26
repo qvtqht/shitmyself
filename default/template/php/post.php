@@ -170,44 +170,44 @@ if (isset($comment) && $comment) {
 			// to the profile page instead.
 			// #todo relative url support
 			// #todo better flow for registration -> profile page
+			// #todo sometimes $newFileHash doesn't exist
+			// #todo this is a very naive way to figure out user id
 
 			$finishTime = time() - $postPhpStartTime;
 
-
-			$profileId = preg_match(
-				'/[0-9A-F]{16}/',
-				file_get_contents(
-					GetHtmlFilename($newFileHash)
-				),
-				$matches
-			);
-			if ($profileId) {
-				$profileId = $matches[0];
-			} else {
-				$profileId = 0;
+			if (file_exists($newFileHash)) {
+				$profileId = preg_match(
+					'/[0-9A-F]{16}/',
+					file_get_contents(
+						GetHtmlFilename($newFileHash)
+					),
+					$matches
+				);
+				if ($profileId) {
+					$profileId = $matches[0];
+				} else {
+					$profileId = 0;
+				}
+				if ($profileId) {
+					$redirectUrl = '/author/' . $profileId . '/index.html';
+				} else {
+					$redirectUrl = $fileUrlPath;
+				}
+				if (file_exists('.' . $redirectUrl)) {
+					RedirectWithResponse(
+						$redirectUrl,
+						"Success! Profile created! <small>in $finishTime"." seconds</small>"
+					);
+				}
 			}
-			if ($profileId) {
-				//#todo add file exists check
-				$redirectUrl = '/author/' . $profileId . '/index.html';
-			} else {
-				//#todo add file exists check
-				$redirectUrl = $fileUrlPath;
-//			} else {
-				// profile.html
-			}
-
-			RedirectWithResponse($redirectUrl, "Success! Profile created! <small>in $finishTime"."s</small>");
-
-
-//		    $redirectUrl = '/profile.html?message=' . $messagePublicKeyPosted;
-//		    $redirectUrl = $fileUrlPath . '?message=' . $messagePublicKeyPosted;
-		}
+		} # strpos($comment, 'PUBLIC KEY BLOCK')
 
 		if ($replyTo && !$returnTo) {
 			$returnTo = $replyTo;
 		}
 
 		if ($returnTo) {
+			// $returnTo specifies page/item to return to instead of submitted item
 			$returnToHtmlPath = './' . GetHtmlFilename($returnTo); // path for parent html file
 
 			if (file_exists($returnToHtmlPath)) {
