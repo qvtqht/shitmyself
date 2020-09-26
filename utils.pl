@@ -1922,37 +1922,46 @@ sub GpgParse {
 
 	WriteLog('GpgParse: $gpgStderrOutput: ' . "\n" . $gpgStderrOutput);
 
-	if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
-		$returnValues{'isSigned'} = 1;
-		$returnValues{'key'} = $1;
-	}
-	if ($gpgStderrOutput =~ /Signature made (.+)/) {
-		# my $gpgDateEpoch = #todo convert to epoch time
-		$returnValues{'signTimestamp'} = $1;
-	}
-
-	if ($pubKeyFlag) {
-		# parse gpg's output as public key
-		if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>\@.()\\\/]+)\"/) {
-			# we found something which looks like a name
-			
-			my $aliasReturned = $1;
-			$aliasReturned =~ s/\<(.+\@.+?)\>//g;
-			# if it has something which looks like an email address, remove it
-
-			$returnValues{'alias'} = $aliasReturned;
-		} else {
-			$returnValues{'alias'} = '?????';
+	if ($gpgStderrOutput) {
+		if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
+			$returnValues{'isSigned'} = 1;
+			$returnValues{'key'} = $1;
+		}
+		if ($gpgStderrOutput =~ /Signature made (.+)/) {
+			# my $gpgDateEpoch = #todo convert to epoch time
+			$returnValues{'signTimestamp'} = $1;
 		}
 
-		my $message;
-		$message = GetTemplate('message/user_reg.template');
-		$message =~ s/\$name/$returnValues{'alias'}/g;
-		$message =~ s/\$fingerprint/$returnValues{'key'}/g;
-		$returnValues{'message'} = $message;
-	} else {
-		$returnValues{'message'} = GetFile("$cachePathMessage/$fileHash.txt");
-	}
+		if ($pubKeyFlag) {
+			# parse gpg's output as public key
+			if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>\@.()\\\/]+)\"/) {
+				# we found something which looks like a name
+				my $aliasReturned = $1;
+				$aliasReturned =~ s/\<(.+\@.+?)\>//g; # if has something which looks like an email, remove it
+
+				$returnValues{'alias'} = $aliasReturned;
+			} else {
+				$returnValues{'alias'} = '?????';
+			}
+
+			my $name = $returnValues{'alias'};
+			my $fingerprint = $returnValues{'key'};
+
+			my $message;
+			$message = GetTemplate('message/user_reg.template');
+			$message =~ s/\$name/$name/g;
+			$message =~ s/\$fingerprint/$fingerprint/g;
+			$returnValues{'message'} = $message;
+		} # $pubKeyFlag
+		else {
+			# not a pubkey, just take whatever pgp output for us
+			$returnValues{'message'} = GetFile("$cachePathMessage/$fileHash.txt");
+		}
+	} # $gpgStderrOutput
+	# else {
+	# 	# for some reason gpg didn't output anything, so just put the original message
+	# 	$returnValues{'message'} = GetFile("$cachePathMessage/$fileHash.txt");
+	# }
 	$returnValues{'text'} = GetFile($filePath);
 	$returnValues{'verifyError'} = 0;
 
