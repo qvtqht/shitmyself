@@ -3302,11 +3302,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("sha512.js", GetTemplate('js/sha512.js'));
 
 
-	# Write form javascript
-#	my $cryptoJsTemplate = GetTemplate('js/crypto.js');
-#	my $prefillUsername = GetConfig('prefill_username') || '';
-#	$cryptoJsTemplate =~ s/\$prefillUsername/$prefillUsername/g;
-
 	if (GetConfig('admin/php/enable')) {
 	#if php/enabled, then use post.php instead of post.html
 	#todo add rewrites for this
@@ -3937,6 +3932,7 @@ sub GetRssFile { # returns rss feed for current site
 }
 
 sub GetVersionPage { # returns html with version information for $version (git commit id)
+	#todo refactor to be a call to GetItemPage
 	my $version = shift;
 
 	if (!IsSha1($version)) {
