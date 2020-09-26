@@ -2037,6 +2037,7 @@ sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-b
 
 	# this is more flexible than \n but may cause problems with unicode
 	# for example, it recognizes second half of russian "x" as \R
+	# #regexbugX
 	# $text =~ s/\R\R/<p>/g;
 	# $text =~ s/\R/<br>/g;
 
@@ -2333,13 +2334,13 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 
 	my $timestampElement = '';
 	if ($epoch) {
-		$timestampElement = GetTemplate('timestamp.template');
+		$timestampElement = GetTemplate('widget/timestamp.template');
 
 		$timestampElement =~ s/\$timestamp/$time/;
 	} else {
 		WriteLog('GetTimestampElement: $epoch = false');
 
-		$timestampElement = GetTemplate('timestamp3.template');
+		$timestampElement = GetTemplate('widget/timestamp3.template');
 
 		my $timeDate = $time;
 
