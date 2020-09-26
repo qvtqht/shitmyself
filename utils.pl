@@ -563,13 +563,15 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		return $templateCache{$filename};
 	}
 
-	if (GetConfig('admin/debug') && !-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
+	if (!-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
 		# if template doesn't exist
 		# and we are in debug mode
 		# report the issue
-		WriteLog("GetTemplate: warning: template/$filename does not exist");
+		WriteLog("GetTemplate: warning: template $filename missing");
 
-		#die("GetTemplate: warning: template/$filename does not exist, exiting");
+		if (GetConfig('admin/dev_mode')) {
+			die("GetTemplate: warning: template $filename missing, exiting");
+		}
 	}
 
 	#information about theme
