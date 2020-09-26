@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
+use warnings;
 use Cwd qw(cwd);
 use File::Copy qw(copy);
 
@@ -58,8 +59,7 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	print("mkdir($TXTDIR)\n");
 	mkdir("$TXTDIR");
 
-	#todo don't use absolute path
-	# how to trim path?
+	#todo how to trim path? currently absolute path
 	print("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR\n");
 	system("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
 	#
