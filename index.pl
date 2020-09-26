@@ -1339,10 +1339,12 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			# 	WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
 			# }
 
+			my $fileShellEscaped = EscapeShellChars($file); #todo this is still a hack, should rename file if it has shell chars
+
 			# make 420x420 thumbnail
 			if (!-e "$HTMLDIR/thumb/thumb_800_$fileHash.gif") {
 			# if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
+				my $convertCommand = "convert \"$fileShellEscaped\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
 				# my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
@@ -1351,7 +1353,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			}
 			# make 42x42 thumbnail
 			if (!-e "$HTMLDIR/thumb/thumb_42_$fileHash.gif") {
-				my $convertCommand = "convert \"$file\" -thumbnail 42x42 -strip $HTMLDIR/thumb/thumb_42_$fileHash.gif";
+				my $convertCommand = "convert \"$fileShellEscaped\" -thumbnail 42x42 -strip $HTMLDIR/thumb/thumb_42_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
 				my $convertCommandResult = `$convertCommand`;
