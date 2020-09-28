@@ -54,9 +54,6 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 
 {
 	# make a list of some directories that need to exist
-
-	#todo de-uglify
-
 	my @dirsThatShouldExist = (
 		"log",
 		"$HTMLDIR",
@@ -209,7 +206,6 @@ sub GetCache { # get cache by cache key
 	# comes from cache/ directory, under current git commit
 	# this keeps cache version-specific
 
-	#todo sanity checks
 	my $cacheName = shift;
 	chomp($cacheName);
 
@@ -260,24 +256,24 @@ sub ParseDate { # takes $stringDate, returns epoch time
 #	}
 #}
 
-sub EnsureSubdirs { # ensures that subdirectories for a file exist
+sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	# takes file's path as argument
 
 	# todo more validation
 
-	# todo remove requirement of external module
 	my $fullPath = shift;
 	chomp $fullPath;
 
 	if (substr($fullPath, 0, 1) eq '/') {
-		#WriteLog('EnsureSubdirs: warning: $fullPath should not begin with a /;' . $fullPath);
+		WriteLog('EnsureSubdirs: warning: $fullPath should not begin with a / ' . $fullPath);
 	}
 
 	WriteLog("EnsureSubdirs($fullPath)");
 
+	# todo remove requirement of external module
 	my ( $file, $dirs ) = fileparse $fullPath;
 	if ( !$file ) {
-		return;
+		return; #todo what's going on here?
 		$fullPath = File::Spec->catfile($fullPath, $file);
 	}
 
@@ -339,25 +335,24 @@ sub CacheExists { # Check whether specified cache entry exists, return 1 (exists
 	}
 }
 
-sub GetGpgMajorVersion { # get the first number of the version which 'gpg --version' returns
-	# expecting 1 or 2
-
-	# todo sanity checks
-	state $gpgVersion;
-
-	if ($gpgVersion) {
-		return $gpgVersion;
-	}
-
-	$gpgVersion = `gpg --version`;
-	WriteLog('GetGpgMajorVersion: gpgVersion = ' . $gpgVersion);
-
-	$gpgVersion =~ s/\n.+//g;
-	$gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
-	$gpgVersion =~ s/[^0-9]//g;
-
-	return $gpgVersion;
-}
+# sub GetGpgMajorVersion { # get the first number of the version which 'gpg --version' returns
+# 	# expecting 1 or 2
+#
+# 	state $gpgVersion;
+#
+# 	if ($gpgVersion) {
+# 		return $gpgVersion;
+# 	}
+#
+# 	$gpgVersion = `gpg --version`;
+# 	WriteLog('GetGpgMajorVersion: gpgVersion = ' . $gpgVersion);
+#
+# 	$gpgVersion =~ s/\n.+//g;
+# 	$gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
+# 	$gpgVersion =~ s/[^0-9]//g;
+#
+# 	return $gpgVersion;
+# }
 
 sub GetMyVersion { # Get the currently checked out version (current commit's hash from git)
 	state $myVersion;
@@ -785,15 +780,14 @@ sub GetFile { # Gets the contents of file $fileName
 	my $fileName = shift;
 
 	if (!$fileName) {
-		#		WriteLog('attempting GetFile() without $fileName'); #todo WriteLog() is too much dependencies for here
 		if (-e 'config/admin/debug') {
-			die('attempting GetFile() without $fileName');
+			#die('attempting GetFile() without $fileName');
 		}
 		return;
 	}
 
 	my $length = shift || 209715200;
-	# default to reading a max of 2MB of the file. #scaling
+	# default to reading a max of 2MB of the file. #scaling #bug
 
 	if (
 		-e $fileName # file exists
@@ -988,29 +982,6 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 	return $htmlFilename;
 }
 
-sub GetDigitColor() { # returns a 2-char color that corresponds to a digit for coloring the clock's digits
-	# Not sure of purpose, might be useful
-
-	my $digit = shift;
-
-	if (!$digit) {
-		return;
-	}
-	if (length($digit) != 1) {
-		return;
-	}
-	#todo $digit must be ^[0-9]{1}$
-
-	my $digitColor = floor($digit / 10 * 255);
-	my $digitColorHex = sprintf("%X", $digitColor);
-
-	if (length($digitColorHex) < 2) {
-		$digitColorHex = '0' . $digitColorHex;
-	}
-
-	return $digitColor;
-}
-
 sub GetTime () { # Returns time in epoch format.
 	# Just returns time() for now, but allows for converting to 1900-epoch time
 	# instead of Unix epoch
@@ -1051,7 +1022,7 @@ sub GetClockFormattedTime() { # returns current time in appropriate format from 
 		my $seconds = strftime('%S', localtime $time);
 		#
 
-		my $milliseconds = '000'; #todo
+		my $milliseconds = '000';
 		# if (now.getMilliseconds) {
 		# 	milliseconds = now.getMilliseconds();
 		# } else if (Math.floor && Math.random) {
@@ -1213,43 +1184,6 @@ sub EpochToHuman2 { # not sure what this is supposed to do, and it's unused
 
 }
 
-# sub str_replace { # $old, $new, $string  (copies php's str_replace)
-# 	#	return $string;
-# 	my $old = shift;
-# 	my $new = shift;
-# 	my $string = shift;
-#
-# 	if (!$old || !$string) {
-# 		return 'str_replace failed due to one of the parameters missing!'; #todo make some kind of gesture
-# 	}
-#
-# 	if (index($new, $old)) {
-# 		WriteLog('str_replace: $new contains $old, this won\'t do');
-# 		return $string;
-# 	}
-#
-# 	my $i;
-# 	while (($i = index($string, $old)) != -1) {
-# 		substr($string, $i, length($old)) = $new;
-# 	}
-#
-#
-# 	#
-# 	#	WriteLog('str_replace("' . $string . '", "' . $old . '", "' . $new . '")');
-# 	#
-# 	#	my $i = index($string, $old);
-# 	#	if ($i != -1) {
-# 	#		if ($i > 0) {
-# 	#			$string = substr($string, 0, $i) . $new . substr($string, $i + length($old));
-# 	#		} else {
-# 	#			$string = $new . substr($string, length($old));
-# 	#		}
-# 	#		$string = str_replace($string, $old, $new, $recursionLevel);
-# 	#	}
-#
-# 	return $string;
-# }
-
 #props http://www.bin-co.com/perl/scripts/str_replace.php
 sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_replace() from php
 	# fourth $count parameter not implemented yet
@@ -1386,7 +1320,6 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	}
 
 	# remember what the filename provided is, so that we can use it later
-	# awkward #todo refactor
 	my $fileProvided = $file;
 	$file = "$HTMLDIR/$file";
 
@@ -2175,7 +2108,7 @@ if ($lastVersion ne $currVersion) {
 	#todo this should be a template;
 	my $changeLogMessage =
 		'Software Updated to Version ' . substr($currVersion, 0, 8) . '..' . "\n\n" .
-			'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
+		'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
 
 	if ($lastVersion) {
 		my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
