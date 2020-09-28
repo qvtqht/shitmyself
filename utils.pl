@@ -2271,7 +2271,10 @@ sub GetTimestampElement { # returns <span class=timestamp>$time</span>
 
 	WriteLog('GetTimestampElement("' . $time . '")');
 
-	#todo sanity check;
+	if (!$time =~ m/^[0-9]+$/) {
+		WriteLog('GetTimestampElement: warning: sanity check failed!');
+		return;
+	}
 
 	my $timestampElement = '';
 	if ($epoch) {
