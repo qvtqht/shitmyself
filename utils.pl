@@ -209,6 +209,14 @@ sub GetCache { # get cache by cache key
 	my $cacheName = shift;
 	chomp($cacheName);
 
+	if (!$cacheName =~ m/^[\/[a-z0-9A-Z_]$/i) {
+		# asnity check
+		WriteLog('GetCache: warning: sanity check failed');
+		return;
+	} else {
+		WriteLog('GetCache: sanity check passed!');
+	}
+
 	state $myVersion;
 	if (!$myVersion) {
 		$myVersion = GetMyCacheVersion();
