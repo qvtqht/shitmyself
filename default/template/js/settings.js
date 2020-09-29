@@ -75,11 +75,15 @@ function ShowAll (t, container) { // shows all elements, overriding settings
         }
 //        timerShowAdvanced = setTimeout('ShowAdvanced(1);', 10000);
 
+		if (t && t.getAttribute('onclick')) {
+			t.setAttribute('onclick', '');
+		}
+
         return false;
     }
 
     return true;
-}
+} // ShowAll()
 
 function ShowAdvanced (force, container) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
