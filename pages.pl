@@ -684,6 +684,9 @@ sub GetItemPage {
 	$file{'show_easyfind'} = 1;
 
 	# if this item has a child_count, we want to print all the child items below
+	# keywords: reply replies subitems child parent
+	# REPLIES
+	######################################
 	if ($file{'child_count'}) {
 		# get item's children (replies) and store in @itemReplies
 		my @itemReplies = DBGetItemReplies($file{'file_hash'});
@@ -711,7 +714,7 @@ sub GetItemPage {
 			DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
 
 			# use item-small template to display the reply items
-			$$replyItem{'template_name'} = 'item/item-small.template';
+			$$replyItem{'template_name'} = 'item/item-mini.template';
 
 			# if the child item contains a reply token for our parent item
 			# we want to remove it, to reduce redundant information on the page
@@ -735,13 +738,14 @@ sub GetItemPage {
 			if ($$replyItem{'child_count'}) {
 				my $subRepliesTemplate = ''; # will store the sub-replies html output
 
-				my $subReplyComma = ''; # separator for sub-replies
+				my $subReplyComma = ''; # separator for sub-replies, set to <hr on first use
 
 				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
 				foreach my $subReplyItem (@subReplies) {
 					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
 
-					$$subReplyItem{'template_name'} = 'item/item-small.template';
+					$$subReplyItem{'template_name'} = 'item/item-mini.template';
+					# $$subReplyItem{'template_name'} = 'item/item-small.template';
 					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
 					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
 
@@ -762,16 +766,19 @@ sub GetItemPage {
 
 					$subRepliesTemplate .= $subReplyTemplate;
 				}
+
+				# replace replies placeholder with generated html
 				$replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
 			}
 			else {
+				# there are no replies, so remove replies placeholder
 				$replyTemplate =~ s/<replies><\/replies>//;
 			}
 
 			if ($replyTemplate) {
 				if ($replyComma eq '') {
 					$replyComma = '<hr size=5>';
-					#					$replyComma = '<p>';
+					# $replyComma = '<p>';
 				}
 				else {
 					$replyTemplate = $replyComma . $replyTemplate;
@@ -785,7 +792,8 @@ sub GetItemPage {
 		}
 
 		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
-	}
+	} ###############
+	### REPLIES##########
 
 	if ($itemTemplate) {
 		$txtIndex .= $itemTemplate;
@@ -1256,7 +1264,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$itemTemplate,
 				'a href="/etc.html"', #todo this should link to item itself
 				'onclick',
-				"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement); } else { return true; }"
+				"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
 			);
 		}
 
@@ -3476,7 +3484,7 @@ sub GetWriteForm { # returns write form (for composing text message)
 				$writeForm,
 				'a href="/etc.html"', #todo this should link to item itself
 				'onclick',
-				"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement); } else { return true; }"
+				"if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement.parentElement); } else { return true; }"
 			);
 		}
 
