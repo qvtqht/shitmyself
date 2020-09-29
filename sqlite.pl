@@ -114,7 +114,7 @@ sub SqliteMakeTables { # creates sqlite schema
 			value AS add_timestamp
 		FROM item_attribute_latest
 		WHERE attribute = 'chain_timestamp'
-	"); #todo maybe include add_timestamp as secondary option?
+	");
 
 	# item_title
 	SqliteQuery("
@@ -615,7 +615,9 @@ sub DBGetLatestConfig { # Returns everything from config_latest view
 #}
 
 sub SqliteGetValue { # Returns the first column from the first row returned by sqlite $query
-#todo perhaps use SqliteQuery2() ?
+	#todo perhaps use SqliteQuery2() ?
+	#todo perhaps add params array?
+
 	my $query = shift;
 	chomp $query;
 
@@ -822,7 +824,6 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	}
 
 	#todo sanity checks
-	#todo technically, this should not override newer config
 
 	my $value = shift;
 	my $timestamp = shift;
@@ -887,7 +888,6 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 
 	WriteLog("DBGetTouchedPages($touchedPageLimit)");
 
-	# todo remove hardcoding
 	# sorted by most recent (touch_time DESC) so that most recently touched pages are updated first.
 	# this allows us to call a shallow update and still expect what we just did to be updated.
 	my $query = "
@@ -902,13 +902,6 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 		LIMIT ?;
 	";
 
-#	my $query = "
-#		SELECT page_name, page_param, touch_time
-#		FROM page_touch
-#		WHERE touch_time >= ?
-#		ORDER BY touch_time
-#	";
-#
 	my @params;
 	push @params, $touchedPageLimit;
 
@@ -1011,7 +1004,6 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	WriteLog('DBDeleteItemReferences(' . $hash . ')');
 
 	#todo queue all pages in item_page ;
-
 	#todo item_page should have all the child items for replies
 
 	#file_hash
