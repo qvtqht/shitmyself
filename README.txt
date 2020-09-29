@@ -666,28 +666,3 @@ config/admin/debug is special, delete file to 0
 
 
 
-GREETZ
-======
-#d...
-#GeekIssues
-AOL peeps
-UPS/UPSS
-Bash.org
-TMBO
-#xkcd
-/r/nyc
-Hacker News
-SA Forums
-Lobsters
-Wikipedia
-Facebook
-Instagram
-Digg
-Slashdot
-SoylentNews
-tribe.net
-Myspace
-
-MAD PROPS
-=========
-Fossil Forum
