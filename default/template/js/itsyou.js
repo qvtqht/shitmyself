@@ -5,7 +5,7 @@ if (window.localStorage && document.getElementById) {
 
 	if (window.location.pathname == '/author/' + myFp + '/' || window.location.pathname == '/author/' + myFp + '/index.html') {
 		var itsYou = document.getElementById('itsyou');
-		itsYou.innerHTML = 'This is you!';
+		itsYou.innerHTML = 'This is your profile!';
 	}
 } else {
 	//alert('DEBUG: need fallback for older browsers here');
