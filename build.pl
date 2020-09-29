@@ -84,8 +84,8 @@ if (!-e $IMAGEDIR) {
 
 BuildMessage "Looking for files...";
 
-BuildMessage "MakeAddedTimeIndex()...";
-MakeAddedTimeIndex();
+BuildMessage "MakeChainIndex()...";
+MakeChainIndex();
 
 BuildMessage "WriteConfigFromDatabase()...";
 WriteConfigFromDatabase();

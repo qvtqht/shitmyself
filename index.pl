@@ -16,8 +16,8 @@ require './sqlite.pl';
 
 WriteLog( "Using $SCRIPTDIR as install root...\n");
 
-sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attribute table
-	WriteLog("MakeAddedTimeIndex()\n");
+sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute table
+	WriteLog("MakeChainIndex()\n");
 
 	if (GetConfig('admin/read_added_log')) {
 		# my $addedLog = GetFile('log/added.log');
@@ -36,7 +36,7 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 				my $expectedHash = md5_hex($previousLine . '|' . $fileHash . '|' . $addedTime);
 
 				if ($expectedHash ne $proofHash) {
-					WriteLog('MakeAddedTimeIndex: warning: proof hash mismatch. abandoning chain import');
+					WriteLog('MakeChainIndex: warning: proof hash mismatch. abandoning chain import');
 
 					my $curTime = GetTime();
 					my $moveChain = `mv html/chain.log html/chain.log.$curTime ; head -n $sequenceNumber html/chain.log.$curTime > html/chain_new.log; mv html/chain_new.log html/chain.log`;
@@ -44,7 +44,7 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 					my $moveChainMessage = 'Chain break detected. Timestamps for items may reset. #meta #warning ' . $curTime;
 					PutFile('html/txt/chain_break_' . $curTime . '.txt');
 
-					MakeAddedTimeIndex();
+					MakeChainIndex();
 
 					return;
 				}
@@ -52,7 +52,7 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
 				DBAddItemAttribute($fileHash, 'chain_sequence', $sequenceNumber);
 
-				WriteLog('MakeAddedTimeIndex: $sequenceNumber = ' . $sequenceNumber);
+				WriteLog('MakeChainIndex: $sequenceNumber = ' . $sequenceNumber);
 
 				$sequenceNumber = $sequenceNumber + 1;
 
@@ -62,7 +62,7 @@ sub MakeAddedTimeIndex { # reads from log/chain.log and puts it into item_attrib
 			DBAddItemAttribute('flush');
 		}
 	}
-} # MakeAddedTimeIndex()
+} # MakeChainIndex()
 
 sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
@@ -1554,7 +1554,7 @@ if ($arg1) {
 	if ($arg1 eq '--chain') {
 		print "index.pl: --chain\n";
 
-		MakeAddedTimeIndex();
+		MakeChainIndex();
 	}
 
 	if (-e $arg1) {
