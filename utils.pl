@@ -218,14 +218,14 @@ sub ParseDate { # takes $stringDate, returns epoch time
 
 sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	# takes file's path as argument
-
-	# todo more validation
-
 	my $fullPath = shift;
 	chomp $fullPath;
 
 	if (substr($fullPath, 0, 1) eq '/') {
 		WriteLog('EnsureSubdirs: warning: $fullPath should not begin with a / ' . $fullPath);
+	}
+	if (index($fullPath, '..')) {
+		WriteLog('EnsureSubdirs: warning: $fullPath contains ..');
 	}
 
 	WriteLog("EnsureSubdirs($fullPath)");
@@ -238,13 +238,11 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	}
 
 	if ( !-d $dirs && !-e $dirs ) {
-		make_path $dirs or WriteLog("Failed to create path: $dirs");
+		make_path $dirs or WriteLog("EnsureSubdirs: Failed to create path: $dirs");
 	}
-}
+} # EnsureSubdirs()
 
-sub PutCache { # stores value in cache; $cacheName, $content
-
-	#todo sanity checks and error handling
+sub PutCache { # $cacheName, $content; stores value in cache
 	my $cacheName = shift;
 	chomp($cacheName);
 
@@ -327,40 +325,6 @@ sub GetMyVersion { # Get the currently checked out version (current commit's has
 	$myVersion = `git rev-parse HEAD`;
 	chomp($myVersion);
 	return $myVersion;
-}
-
-sub WriteConfigFromDatabase { # Writes contents of 'config' table in database to config/ directory (unfinished)
-	#	print("1");
-	#	my $query = "SELECT * FROM config_latest";
-	#
-	#	my $configSet = SqliteQuery2($query);
-	#
-	#	my @configSetArray = @{$configSet};
-	#
-	#	while (@configSetArray) {
-	#		my $configLineRef = shift @configSetArray;
-	#		my @configLine = @{$configLineRef};
-	#		WriteLog(Data::Dumper->Dump(@configLine));
-	##
-	##		my $configKey = shift @configSetArray;
-	##		my $configValue = shift @configSetArray;
-	##		my $configTimestamp = shift @configSetArray;
-	#
-	##		PutConfig($configKey, $configValue);
-	#	}
-	#
-	#	#print(Data::Dumper->Dump($configSet));
-	##
-	##	for my $config (@{$configSet}) {
-	##		WriteLog(Data::Dumper->Dump($config));
-	##	}
-	#	#die();
-	#
-	#	#todo finish this
-	#
-	#	#get
-	#
-	#	#write to config/
 }
 
 sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from config/string/en/
@@ -710,14 +674,12 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 	}
 
 	return $avatar;
-}
+} # GetAvatar()
 
-sub GetAlias { # Returns alias for a GPG key
+sub GetAlias { # $gpgKey ; Returns alias for a GPG key
 	my $gpgKey = shift;
 	chomp $gpgKey;
-
 	WriteLog("GetAlias($gpgKey)");
-
 	my $alias = DBGetAuthorAlias($gpgKey);
 
 	if ($alias && length($alias) > 24) {
@@ -728,13 +690,12 @@ sub GetAlias { # Returns alias for a GPG key
 		$alias =~ s|<.+?>||g;
 		trim($alias);
 		chomp $alias;
-
 		return $alias;
 	} else {
 		return $gpgKey;
 		#		return 'unregistered';
 	}
-}
+} # GetAlias()
 
 sub GetFileExtension { # $fileName ; returns file extension, naively
 	my $fileName = shift;
@@ -1064,7 +1025,7 @@ sub ResetConfig { # Resets $configName to default by removing the config/* file
 	}
 }
 
-sub PutConfig { # writes config value to config storage
+sub PutConfig { # $configName, $configValue ; writes config value to config storage
 	# $configName = config name/key (file path)
 	# $configValue = value to write for key
 	# Uses PutFile()
@@ -1604,13 +1565,19 @@ sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwis
 	}
 }
 
-sub IsAdmin { # returns 1 if parameter equals GetAdminKey() or GetServerKey(), otherwise 0
+sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
 	# will probably be redesigned in the future
 	my $key = shift;
 
 	if (!IsFingerprint($key)) {
+		WriteLog('IsAdmin: warning: $key failed sanity check, returning 0');
 		return 0;
 	}
+	#
+	# state @adminUsers;
+	# if (!@adminUsers) {
+	# 	@adminUsers = ();
+	# }
 
 	#	my $adminKey = GetAdminKey();
 	#
