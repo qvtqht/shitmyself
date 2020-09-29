@@ -67,37 +67,57 @@ function freshCallback() { // callback for requesting HEAD for current page
 					if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
 						// no new change change
 					} else {
-						window.lastEtag = eTag;
-
-						var ariaAlert;
-						ariaAlert = document.getElementById('ariaAlert');
-						if (!ariaAlert) {
-							ariaAlert = document.createElement('p');
-							ariaAlert.setAttribute('role', 'alert');
-							ariaAlert.setAttribute('id', 'ariaAlert');
-							ariaAlert.innerHTML = 'Page has changed. ';
-
-							var a = document.createElement('a');
-							a.setAttribute('href', '#');
-							a.setAttribute('onclick', 'location.reload()');
-							a.innerHTML = 'Reload';
-							ariaAlert.appendChild(a);
-
-							//document.body.appendChild(ariaAlert);
-							document.body.insertBefore(ariaAlert, document.body.firstChild);
-							//window.newPageContent =
-							//FetchNewPageContent(window.mypath + '?' + new Date().getTime());
+						if (window.freshUserWantsReload) {
+							// user wants reload
+							location.reload();
 						} else {
-							ariaAlert.innerHTML = ariaAlert.innerHTML + '+';
-						}
+							// user doesn't want reload, just show notification
+							window.lastEtag = eTag;
 
-						if (document.title.substring(0,2) != '! ') {
-							document.title = '! ' + document.title;
-						}
+							var ariaAlert;
+							ariaAlert = document.getElementById('ariaAlert');
+							if (!ariaAlert) {
+								ariaAlert = document.createElement('p');
+								ariaAlert.setAttribute('role', 'alert');
+								ariaAlert.setAttribute('id', 'ariaAlert');
+								ariaAlert.innerHTML = 'Page has changed. ';
 
-						if (window.freshTimeoutId) {
-							clearTimeout(window.freshTimeoutId);
-						}
+								var a = document.createElement('a');
+								a.setAttribute('href', '#');
+								a.setAttribute('onclick', 'location.reload()');
+								a.innerHTML = 'Reload';
+								ariaAlert.appendChild(a);
+
+								//document.body.appendChild(ariaAlert);
+								document.body.insertBefore(ariaAlert, document.body.firstChild);
+								//window.newPageContent =
+								//FetchNewPageContent(window.mypath + '?' + new Date().getTime());
+							} else {
+								//ariaAlert.innerHTML = ariaAlert.innerHTML + '+';
+								var d = new Date();
+								var n = d.getTime();
+								n = Math.ceil(n / 1000);
+
+								var space = document.createElement('span');
+								space.innerHTML = ' ';
+								ariaAlert.appendChild(space);
+
+								var newTs = document.createElement('span');
+								newTs.setAttribute('class', 'timestamp');
+								newTs.setAttribute('epoch', n);
+								newTs.innerHTML = 'just now!';
+								ariaAlert.appendChild(newTs);
+							}
+
+							if (document.title.substring(0,2) != '! ') {
+								document.title = '! ' + document.title;
+							}
+
+							if (window.freshTimeoutId) {
+								// #todo does this work?
+								clearTimeout(window.freshTimeoutId);
+							}
+						} // NOT window.freshUserWantsReload
 					} // lastEtag also didn't match
 				} // eTag != window.myOwnETag
 				else {
