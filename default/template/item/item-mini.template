@@ -1,0 +1,23 @@
+<!-- item-mini.template -->
+<a name=$itemAnchor>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr>
+			<td>
+				<a href="$permalinkHtml" onclick="return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement)">$addedTime</a>;
+				<span class=advanced>
+					$authorLink;
+					<a href="$permalinkHtml#reply"><b>reply</b></a>;
+					<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;
+					$itemFlagButton
+				</span>
+			</td>
+		</tr>
+		<tr class=advanced>
+			<td>
+				<p>$itemText</p>
+				<replies></replies>
+			</td>
+		</tr>
+	</table>
+</a>
+<!-- / item-mini.template -->
