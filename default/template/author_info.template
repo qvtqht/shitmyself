@@ -13,7 +13,7 @@
 			</td>
 		</tr>
 
-		<tr><td>relation:</td><td><b><span id=itsyou>*</span></b></td></tr>
+		<tr><td>notes:</td><td><b><span id=itsyou>*</span></b></td></tr>
 		<tr><td>handle:</td><td>$avatar</td></tr>
 		<tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
 		<tr class=advanced><td>score:</td><td>$authorScore</td></tr>
