@@ -2229,34 +2229,34 @@ sub GetTimestampWidget { # $time ; returns timestamp widget
 	return $widget;
 } # GetTimestampWidget()
 
-	return $timestampElement;
-}
-
-sub DeleteFile { #delete file with specified file hash (incomplete) 
+sub DeleteFile { # $fileHash ; delete file with specified file hash (incomplete)
 	my $fileHash = shift;
-
 	if ($fileHash) {
 	}
-}
+} # DeleteFile()
 
 sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log and removes it if found
 # only one or the other is required
     my $file = shift;
+	WriteLog("IsFileDeleted($file)");
 
     if ($file && !-e $file) {
-        return 1;
+		# file already doesn't exist
+		WriteLog('IsFileDeleted: file already gone, returning 1');
+		return 1;
     }
 
     my $fileHash = shift;
-
     if (!$fileHash) {
+		WriteLog('IsFileDeleted: $fileHash not specified, calling GetFileHash()');
     	$fileHash = GetFileHash($file);
     }
+	WriteLog("IsFileDeleted($file, $fileHash)");
 
     # if the file is present in deleted.log, get rid of it and its page, return
     if ($fileHash && -e 'log/deleted.log' && GetFile('log/deleted.log') =~ $fileHash) {
         # write to log
-        WriteLog("... $fileHash exists in deleted.log, removing $file");
+        WriteLog("IsFileDeleted: $fileHash exists in deleted.log, removing $file");
 
 		{
 			# unlink the file itself
