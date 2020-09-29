@@ -9,19 +9,13 @@ function writeOnload () { // onload handler for write page
         var pubKey = '';
         if (window.getPublicKey) {
         	//alert('DEBUG: window.getPublicKey exists');
-
         	pubKey = getPublicKey();
         }
-
         var privKey = '';
         if (window.getPrivateKey) {
             //alert('DEBUG: window.getPrivateKey exists');
-
             privKey = getPrivateKey();
         }
-
-        //alert('DEBUG: privKey = ' + !!privKey);
-        //alert('DEBUG: pubKey = ' + !!pubKey);
 
         if (privKey) {
             //alert('DEBUG: privKey was true, adding options...');
@@ -78,6 +72,15 @@ function writeOnload () { // onload handler for write page
 					} // window.makeCoin
 				} // window.getAvatar
 			} // document.getElementById('spanSignAs')
+
+			var pMoreLink = document.getElementById('pMoreLink');
+			if (pMoreLink) {
+				var aMore = document.createElement('a');
+				aMore.setAttribute('href', '#');
+				aMore.setAttribute('onclick', 'if (window.ShowAll) { ShowAll(this, this.parentElement); }');
+				aMore.innerHTML = 'More';
+				pMoreLink.appendChild(aMore);
+			}
 //
 //			if (document.getElementById('addtext')) {
 //				document.getElementById('addtext').value = 'Sign Message and Send';
@@ -86,40 +89,21 @@ function writeOnload () { // onload handler for write page
         }
 
         if (pubKey) {
-            //alert('DEBUG: pubKey was true, adding options...');
-
-//            if (window.PubKeyPing) {
-//            	PubKeyPing();
-//            }
-//
-//            var spanInsPubKey = document.getElementById('spanInsPubKey')
-//			if (spanInsPubKey) {
-//	            var gt = unescape('%3E');
-//			    spanInsPubKey.innerHTML = '<span class=beginner' + gt + '<br' + gt + 'Re-upload your public </span' + gt + '<a href="/write.html?#inspubkey"' + gt + 'Profile</a' + gt + ';';
-//			}
+            //alert('DEBUG: pubKey was true, calling PubKeyPing()');
+            if (window.PubKeyPing) {
+            	PubKeyPing();
+            }
         }
 
         if (window.location.hash) {
             //alert('DEBUG: window.location.hash = ' + window.location.hash);
-
             if (window.location.hash == '#inspubkey') {
                 //alert('DEBUG: #inspubkey found');
-
 				if (pubKey) {
 					//alert('DEBUG: pubKey is true, inserting it into comment');
-
-					var comment = document.getElementById('comment');
-
+					var comment = document.getElementById('comment'); // #todo no-gebi compat
 					if (comment) {
 						comment.value = pubKey;
-					}
-
-					var compose = document.getElementById('compose');
-
-					if (compose) {
-						if (compose.submit) {
-							compose.submit();
-						}
 					}
                 } else {
                     //alert('DEBUG: pubKey was false, this is unexpected. Giving up.');
@@ -129,10 +113,6 @@ function writeOnload () { // onload handler for write page
     } else {
         //alert('DEBUG: writeOnload: document.getElementById was FALSE');
     }
-
-	if (window.signMessage) {
-
-	}
 }
 
 function writeSubmit (t) { // called when user submits write form

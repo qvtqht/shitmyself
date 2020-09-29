@@ -39,26 +39,8 @@
 							<span id=spanSignAs class=advanced></span>
 						</p>
 
-						<span id=spanWriteAdvanced class=advanced></span id=spanWriteAdvanced>
-
-						<span id=spanInputOptions>
-							<p>
-								Input Options: <noscript>(requires JavaScript.)</noscript><br>
-								<a href="/frame.html" target=_top>Keyboard</a><br>
-								<a href="/frame2.html" target=_top>Keyboard for Android/iOS</a><br>
-								<a href="/frame3.html" target=_top>Keyboard for Netscape</a><br>
-							</p>
-						</span id=spanInputOptions>
-
-						<span id=spanInputTranslit>
-							<p>
-								Translit: <noscript>(requires JavaScript.)</noscript><br>
-								Russian: Ctrl+R, Alt+R, or Meta+R<br>
-								Dvorak: Ctrl+D, Alt+D, or Meta+D<br>
-							</p>
-						</span id=spanInputTranslit>
-
-						<p align=right><a href="/etc.html">More</a></p>
+						$writeJs
+						
 					</fieldset>
 				</td>
 			</tr>

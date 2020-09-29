@@ -3471,6 +3471,17 @@ sub GetSearchWindow {
 
 sub GetWriteForm { # returns write form (for composing text message)
 	my $writeForm = GetTemplate('form/write/write.template');
+	WriteLog('GetWriteForm()');
+
+	if (GetConfig('admin/js/enable')) {
+		WriteLog('GetWriteForm: js is on, adding write_js.template');
+		my $writeJs = GetTemplate('form/write/write_js.template');
+		$writeForm =~ s/\$writeJs/$writeJs/g;
+	}
+	else {
+		WriteLog('GetWriteForm: js is off, removing $writeJs');
+		$writeForm =~ s/\$writeJs//g;
+	}
 
 	if (GetConfig('admin/php/enable')) {
 		my $writeLongMessage = GetTemplate('form/write/long_message.template');
@@ -3572,8 +3583,8 @@ sub GetSearchPage { # returns html for search page
 }
 
 sub GetWritePage { # returns html for write page
-	# $txtIndex stores html page output
-	my $txtIndex = "";
+	# $writePageHtml stores html page output
+	my $writePageHtml = "";
 
 	my $title = "Write";
 	my $titleHtml = "Write";
@@ -3584,29 +3595,27 @@ sub GetWritePage { # returns html for write page
 		$itemLimit = 9000;
 	}
 
-	$txtIndex = GetPageHeader($title, $titleHtml, 'write');
-
-	$txtIndex .= GetTemplate('maincontent.template');
+	$writePageHtml = GetPageHeader($title, $titleHtml, 'write');
+	$writePageHtml .= GetTemplate('maincontent.template');
 
 	my $writeForm = GetWriteForm();
-	$txtIndex .= $writeForm;
+	$writePageHtml .= $writeForm;
 
 	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 		my $itemCounts = GetTemplate('form/itemcount.template');
-
 		$itemCounts =~ s/\$itemCount/$itemCount/g;
 		$itemCounts =~ s/\$itemLimit/$itemLimit/g;
 	}
 
-	$txtIndex .= GetPageFooter();
+	$writePageHtml .= GetPageFooter();
 
 	if (GetConfig('admin/js/enable')) {
-		# $txtIndex = str_replace(
+		# $writePageHtml = str_replace(
 		# 	'<span id=spanInputOptions></span>',
 		# 	'<span id=spanInputOptions>
 		# 		<noscript>More input options available with JavaScript</noscript>
 		# 	</span>',
-		# 	$txtIndex
+		# 	$writePageHtml
 		# );
 		# I decided against this approach
 		# Because displaying the links with appendChild()
@@ -3624,23 +3633,20 @@ sub GetWritePage { # returns html for write page
 			push @js, 'translit';
 		}
 
-		$txtIndex = InjectJs($txtIndex, @js);
+		$writePageHtml = InjectJs($writePageHtml, @js);
 	}
 
-	# add call to writeOnload() to page
 	if (GetConfig('admin/js/enable')) {
-		# this is not an accidental duplicate, there's a difference at the end of the line
-		# $txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }" /;
-		# $txtIndex =~ s/<body>/<body onload="if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }">/;
-
-		$txtIndex = AddAttributeToTag($txtIndex, 'body', 'onload', 'if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }');
-
-		# this is not an accidental duplicate, there's a difference at the end of the line
-		# $txtIndex =~ s/<body /<body onload="if (window.writeOnload) writeOnload();" /;
-		# $txtIndex =~ s/<body>/<body onload="if (window.writeOnload) writeOnload();">/;
+		# add call to writeOnload() to page
+		$writePageHtml = AddAttributeToTag(
+			$writePageHtml,
+			'body',
+			'onload',
+			'if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }'
+		);
 	}
 
-	return $txtIndex;
+	return $writePageHtml;
 }
 
 
