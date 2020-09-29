@@ -784,6 +784,20 @@ sub GetAlias { # Returns alias for a GPG key
 	}
 }
 
+sub GetFileExtension { # $fileName ; returns file extension, naively
+	my $fileName = shift;
+
+	if ($fileName) {
+		if ($fileName =~ m/.+\/.+\.(.+)/) {
+			return $1;
+		} else {
+			return '';
+		}
+	} else {
+		return '';
+	}
+} # GetFileExtension()
+
 sub GetFile { # Gets the contents of file $fileName
 	my $fileName = shift;
 
