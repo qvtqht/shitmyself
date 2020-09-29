@@ -450,8 +450,8 @@ sub GetEventsPage { # returns html for events page
 
 		my $eventItem = GetTemplate('event/event_item2.template');
 
-		$eventTime = GetTimestampElement($eventTime);
-		$eventTimeUntil = GetTimestampElement($eventTimeUntil);
+		$eventTime = GetTimestampWidget($eventTime);
+		$eventTimeUntil = GetTimestampWidget($eventTimeUntil);
 
 		$eventItem =~ s/\$eventTitle/$eventTitle/;
 		$eventItem =~ s/\$eventTime/$eventTime/;
@@ -818,7 +818,7 @@ sub GetItemPage {
 				if ($itemAttribute) {
 					my ($iaName, $iaValue) = split('\|', $itemAttribute);
 					if ($iaName =~ m/_timestamp/) {
-						$iaValue = $iaValue . ' (' . GetTimestampElement($iaValue) . ')';
+						$iaValue = $iaValue . ' (' . GetTimestampWidget($iaValue) . ')';
 					}
 					if ($iaName eq 'author_key') {
 						$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
@@ -1316,7 +1316,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $borderColor = '#' . substr($fileHash, 0, 6); # item's border color
 
 		my $addedTime = DBGetAddedTime($fileHash); #todo optimize
-		$addedTime = GetTimestampElement($addedTime);
+		$addedTime = GetTimestampWidget($addedTime);
 
 		my $itemTitle = $file{'item_title'};
 
@@ -1938,7 +1938,7 @@ sub GetTopItemsPage { # returns page with top items listing
 				$authorAvatar = '';
 			}
 
-			$itemLastTouch = GetTimestampElement($itemLastTouch);
+			$itemLastTouch = GetTimestampWidget($itemLastTouch);
 
 			# populate item template
 			$itemTemplate =~ s/\$link/$itemLink/g;
@@ -2008,7 +2008,7 @@ sub GetStatsTable {
 	my $versionShort = substr($versionFull, 0, 8);
 
 	my $lastUpdateTime = GetConfig('system/last_update_time');
-	$lastUpdateTime = GetTimestampElement($lastUpdateTime);
+	$lastUpdateTime = GetTimestampWidget($lastUpdateTime);
 
 	my $lastBuildTime = GetConfig('admin/build_end');
 	if (!defined($lastBuildTime) || !$lastBuildTime) {
@@ -2058,7 +2058,7 @@ sub GetStatsTable {
 	#todo optimize
 	#todo config/admin/upload/allow_files
 
-	$lastBuildTime = GetTimestampElement($lastBuildTime);
+	$lastBuildTime = GetTimestampWidget($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
 
 	$statsTable =~ s/\$versionFull/$versionFull/;
@@ -2435,7 +2435,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		#todo don't need to do this every time
 #
 		if ($authorLastSeen) {
-			$authorLastSeen = GetTimestampElement($authorLastSeen);
+			$authorLastSeen = GetTimestampWidget($authorLastSeen);
 		}
 #		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 #
@@ -2524,7 +2524,7 @@ sub GetAuthorInfoBox {
 
 	my $profileVoteButtons = GetItemVoteButtons($publicKeyHash, 'pubkey');
 
-	$authorLastSeen = GetTimestampElement($authorLastSeen);
+	$authorLastSeen = GetTimestampWidget($authorLastSeen);
 
 	if (!$authorDescription) {
 		$authorDescription = '*';

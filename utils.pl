@@ -2187,53 +2187,47 @@ sub FormatDate { # $epoch ; formats date depending on how long ago it was
 	return $formattedDate;
 }
 
-sub GetTimestampElement { # returns <span class=timestamp>$time</span>
+sub GetTimestampWidget { # $time ; returns timestamp widget
 	my $time = shift;
-
-	state $epoch;
-
 	if ($time) {
 		chomp $time;
 	} else {
 		$time = 0;
 	}
+	WriteLog('GetTimestampWidget("' . $time . '")');
 
+	state $epoch; # state of config
 	if (!defined($epoch)) {
 		$epoch = GetConfig('html/timestamp_epoch');
 	}
 
-	WriteLog('GetTimestampElement("' . $time . '")');
-
 	if (!$time =~ m/^[0-9]+$/) {
-		WriteLog('GetTimestampElement: warning: sanity check failed!');
+		WriteLog('GetTimestampWidget: warning: sanity check failed!');
 		return;
 	}
 
-	my $timestampElement = '';
+	my $widget = '';
 	if ($epoch) {
-		$timestampElement = GetTemplate('widget/timestamp.template');
-
-		$timestampElement =~ s/\$timestamp/$time/;
+		# epoch-formatted timestamp, simpler template
+		$widget = GetTemplate('widget/timestamp_epoch.template');
+		$widget =~ s/\$timestamp/$time/;
 	} else {
-		WriteLog('GetTimestampElement: $epoch = false');
-
-		$timestampElement = GetTemplate('widget/timestamp3.template');
-
+		WriteLog('GetTimestampWidget: $epoch = false');
+		$widget = GetTemplate('widget/timestamp.template');
 		my $timeDate = $time;
-
-		if ($time =~ m/^[0-9]+$/) {
-			WriteLog('GetTimestampElement: ($time =~ m/^[0-9]+$/) is true');
-			$timeDate = FormatDate($time);
-		}
-
-		#		my $timeDate = strftime '%c', localtime $time;
+		$timeDate = FormatDate($time);
+		# Alternative formats tried
+		# my $timeDate = strftime '%c', localtime $time;
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 
-		$timestampElement =~ s/\$timestamp/$time/g;
-		$timestampElement =~ s/\$timeDate/$timeDate/g;
+		# replace into template
+		$widget =~ s/\$timestamp/$time/g;
+		$widget =~ s/\$timeDate/$timeDate/g;
 	}
 
-	chomp $timestampElement;
+	chomp $widget;
+	return $widget;
+} # GetTimestampWidget()
 
 	return $timestampElement;
 }

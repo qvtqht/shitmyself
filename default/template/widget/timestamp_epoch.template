@@ -1,0 +1,3 @@
+<!-- timestamp_epoch.template -->
+<span class=timestamp>$timestamp</span>
+<!-- / timestamp_epoch.template -->
