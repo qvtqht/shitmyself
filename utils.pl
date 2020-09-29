@@ -98,66 +98,18 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 
 	my $text = shift;
 	if (!$text) {
-
 		$text = '(empty string)';
 	}
 	chomp $text;
 
-	# if (-e 'config/admin/benchmark') {
-	# 	state $lastText;
-	# 	state $lastTextBegin;
-	#
-	# 	if ($lastText && $lastTextBegin && (time() - $lastTextBegin) > 0) {
-	# 		my $query = "INSERT INTO debug_benchmark(text, time_begin, time_end) VALUES(?, ?, ?);";
-	# 		my @params;
-	# 		push @params, $text;
-	# 		push @params, $lastTextBegin;
-	# 		push @params, time();
-	#
-	# 		SqliteQuery2($query, @params);
-	# 	}
-	#
-	# 	$lastText = $text;
-	# 	$lastTextBegin = time();
-	# }
-
 	# Only if debug mode is enabled
-	if (-e 'config/admin/debug') {
+	state $debugOn;
+	if ($debugOn || -e 'config/admin/debug') {
 		my $timestamp = GetTime();
-
 		AppendFile("log/log.log", $timestamp . " " . $text);
-		#todo
-		# if (index(lc($text), 'warning') > -1) {
-		# 	#die($text);
-		# }
-
-		# 		if (-e 'config/admin/prev_build_duration') {
-		# 			state $prevBuildDuration;
-		# 			$prevBuildDuration = $prevBuildDuration || trim(GetFile('config/admin/prev_build_duration'));
-		# 			#bug here
-		#
-		# 			if ($prevBuildDuration) {
-		# 				state $buildBegin;
-		# 				$buildBegin = $buildBegin || trim(GetFile('config/admin/build_begin'));
-		#
-		# 				my $approximateProgress = (GetTime() - $buildBegin) / $prevBuildDuration * 100;
-		# #				print '(~' . $approximateProgress . '%) ' . $timestamp . " " . $text . "\n";
-		# 			} else {
-		# #				print $timestamp . " " . $text . "\n";
-		# 			}
-		# 		} else {
-		# #			print $timestamp . " " . $text . "\n";
-		# 		}
-
-		#if (index(lc($text), 'warning') > -1) {
-			#die($text);
-		#}
-
-		return 1;
+		$debugOn = 1;
 	}
-
-	return 0;
-}
+} # WriteLog()
 
 
 #sub GitPipe { # runs git with proper prefix, suffix, and post-command pipe
