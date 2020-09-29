@@ -50,5 +50,5 @@
 #voprosnik
 #approve
 
-#config home_page top/voprosnik.html
+#AddMenu top/voprosnik.html
 
