@@ -267,9 +267,7 @@ function getUsername () { // returns pgp username
 
 		// get the public key out of it
 		var pubKeyObj = privKeyObj.keys[0].toPublic();
-
 		var myUsername = pubKeyObj.users[0].userId.userid;
-
 		return myUsername;
 	}
 
@@ -285,10 +283,8 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 	//alert('DEBUG: signMessage() begin');
 
 	var privkey = getPrivateKey();
-
 	if (privkey) {
 	    // private key exists, can proceed
-
 		//alert('DEBUG: signMessage: privkey is true');
 
 		var textbox = document.getElementById('comment');
@@ -297,8 +293,9 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 		if (textbox && composeForm && window.openpgp) {
 			//alert('DEBUG: signMessage: textbox && composeForm is true');
 
-//			textbox.style.color = '#00ff00';
-//			textbox.style.backgroundColor = '#c0c000';
+			// this would change textbox appearance to indicate something happened
+			// textbox.style.color = '#00ff00';
+			// textbox.style.backgroundColor = '#c0c000';
 
 			var message = textbox.value;
 
@@ -310,25 +307,20 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 
 			if (message.trim().substring(0, 34) == ('-----BEGIN PGP SIGNED MESSAGE-----')) {
 				//alert('DEBUG: signMessage: message is already signed, returning');
-
 				return true;
 			}
 
 			if (message.trim().substring(0, 36) == ('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
 				//alert('DEBUG: signMessage: message contains public key, returning');
-
 				return true;
 			}
 
 			var replyTo = document.getElementById('replyto');
-
 			// look for a replyto field
 
 			if (replyTo) {
-			    // if replyto exists, prepend it contents to the message as a gtgt token
-
+			    // if replyto exists, prepend it contents to the message as a (gtgt) token
 				var replyToId = replyTo.value;
-
 				if (replyToId) {
 					var gt = unescape('%3E');
 					if (-1 < message.indexOf(gt + gt + replyToId)) {
@@ -339,12 +331,10 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 			}
 
 			var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
-//
-//			privateKey.decrypt('hello');
-//
-//			var privKeyObj = (await openpgp.key.readArmored(privkey)).keys[0];
-//			await privKeyObj.decrypt(passphrase);
-//
+			//
+			// privateKey.decrypt('hello');
+			// var privKeyObj = (await openpgp.key.readArmored(privkey)).keys[0];
+			// await privKeyObj.decrypt(passphrase);
 
             // set basic options for signing the message
 			options = {
@@ -354,25 +344,22 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 
             openpgp.config.show_version = false; // don't add openpgp version message to output
 			openpgp.config.show_comment = false; // don't add comment to output
-
 			openpgp.sign(options).then(function(signed) {
 			    // begin signing process
 
 			    // put the signed data into th textbox when it's done
 				textbox.value = signed.data;
-
 				// submit the form
 				composeForm.submit();
 			});
-
-			return false;
+			return false; // don't submit the form yet, will submit after signed
 		}
-
-		return true;
+		return true; // let the form submit
 	} else {
 		// this is an edge case
 		// user signed out in another window, but wants to sign in this one
 		// signing is no longer possible, so just submit to be on safe side
+		return true;
 	}
 
 	return true;
