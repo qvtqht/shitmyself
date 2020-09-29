@@ -11,7 +11,6 @@ sqlite3 -cmd ".headers off" -cmd ".timeout 500" cache/*/index.sqlite3 "
     WHERE
       ','||tags_list||',' LIKE '%,keep,%' OR
       ','||tags_list||',' LIKE '%,hascoin,%' OR
-      ','||tags_list||',' LIKE '%,approve,%' OR
       ','||tags_list||',' LIKE '%,admin,%' OR
       ','||tags_list||',' LIKE '%,pubkey,%'
     UNION
@@ -21,10 +20,40 @@ sqlite3 -cmd ".headers off" -cmd ".timeout 500" cache/*/index.sqlite3 "
       WHERE
         ','||tags_list||',' LIKE '%,keep,%' OR
         ','||tags_list||',' LIKE '%,hascoin,%' OR
-        ','||tags_list||',' LIKE '%,approve,%' OR
         ','||tags_list||',' LIKE '%,admin,%' OR
         ','||tags_list||',' LIKE '%,pubkey,%'
     )
+    UNION
+    SELECT item_hash AS file_hash FROM item_parent
+    WHERE parent_hash IN (
+      SELECT file_hash FROM item_flat
+      WHERE parent_hash IN (
+        SELECT file_hash FROM item_flat
+        WHERE
+          ','||tags_list||',' LIKE '%,keep,%' OR
+          ','||tags_list||',' LIKE '%,hascoin,%' OR
+          ','||tags_list||',' LIKE '%,admin,%' OR
+          ','||tags_list||',' LIKE '%,pubkey,%'
+      )
+    )
   )
 " >> log/archived.log
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
