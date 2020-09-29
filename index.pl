@@ -595,6 +595,71 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		} # title: token
 
+		# accessloghash: AccessLogHash
+		if ($message && GetConfig('admin/token/access_log_hash')) {
+			# #title token is enabled
+
+			# looks for lines beginning with title: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @lines = ($message =~ m/^(AccessLogHash)(\W+)(.+)$/mig); #todo format instead of .+
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@lines = ' . scalar(@lines));
+
+			if (@lines) { # means we found at least one line
+				WriteLog('#AccessLogHash token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@lines) {
+					# loop through all found title: token lines
+					my $token = shift @lines;
+					my $space = shift @lines;
+					my $value = shift @lines;
+
+					chomp $token;
+					chomp $space;
+					chomp $value;
+					$value = trim($value);
+
+					my $reconLine; # reconciliation
+					$reconLine = $token . $space . $value;
+
+					WriteLog('AccessLogHash $reconLine = ' . $reconLine);
+
+					if ($value) {
+						$hasToken{'AccessLogHash'} = 1;
+
+						chomp $value;
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
+							foreach my $itemParent (@itemParents) {
+								DBAddItemAttribute($itemParent, 'AccessLogHash', $value, $addedTime, $fileHash);
+								DBAddVoteRecord($itemParent, $addedTime, 'hasAccessLogHash');
+								DBAddPageTouch('item', $itemParent);
+
+								if (GetConfig('admin/index/make_primary_pages')) {
+									#todo this may not be the right place for this?
+									MakePage('item', $itemParent, 1);
+								}
+							}
+						} else {
+							# no parents, so set title to self
+							WriteLog('Item has no parent, ignoring');
+
+							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
+							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
+						}
+					}
+
+					$message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
+				}
+			}
+		} # AccessLogHash token
+
 		#look for #config and #resetconfig
 		if (GetConfig('admin/token/config') && $message) {
 			if (
@@ -628,6 +693,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				my @setConfigLines = ($message =~ m/(setconfig)\W([a-z0-9\/_.]+)(\W)(.+?)/mg);
 				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
 				push @configLines, @setConfigLines;
+				# setconfig is alias for previously used token name
 
 				WriteLog('@configLines = ' . scalar(@configLines));
 
