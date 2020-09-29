@@ -2378,7 +2378,7 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
 			# unlink the file itself
 			if (-e $file) {
 				my $archiveDir = './archive';
-				my $newFilename = $archiveDir . '/' . TrimPath($file);
+				my $newFilename = $archiveDir . '/' . TrimPath($file) . "." . GetFileExtension($file);
 				my $suffixCounter = '';
 				while (-e $newFilename . $suffixCounter) {
 					if (!$suffixCounter) {
