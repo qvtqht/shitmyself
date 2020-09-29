@@ -20,7 +20,7 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 
 				if (window.location.pathname == '/author/' + myFp + '/' || window.location.pathname == '/author/' + myFp + '/index.html') {
 					var itsYou = document.getElementById('itsyou');
-					itsYou.innerHTML = 'This is you!';
+					itsYou.innerHTML = 'This is your profile!';
 				}
 
 				if (window.GetPrefs) {
