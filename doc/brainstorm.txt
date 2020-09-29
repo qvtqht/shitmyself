@@ -1,3 +1,14 @@
+#flag
+	if user is admin
+	or
+	if user is moderator
+		also apply #hide tag
+#hide
+	hidden from most listings
+		except?
+			user profile
+			unfiltered feed
+		
 #brainstorm display pgp wordlist for key
 
 javascript can set a "pre-render" cookie
@@ -1080,4 +1091,30 @@ Maintain a constant ~80% approval rate, with bottom 20% of items automatically f
 #meta #brainstorm
 
 Thanks for the feedback! Votes cast by those with less than 125 reputation are recorded, but do not change the publicly displayed post score.
+
+
+
+===
+
+#brainstorm
+
+so maybe beginner mode has no more links at all
+
+intermediate has more links, but hidden by default
+
+advanced has everything shown with hints
+
+expert hides the hints
+
+operator separately toggled, beginner still has operator options
+
+operator shold enable by default if user is admin
+
+
+
+===
+
+#brainstorm
+
+Each time page changes, a small timestamp element could be added to the indicator.
 
