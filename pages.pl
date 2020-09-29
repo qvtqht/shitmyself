@@ -2494,7 +2494,7 @@ sub GetAuthorInfoBox {
 	} else {
 		$publicKeyHashHtml = '*';
 	}
-	my $authorMessageLink = GetItemHtmlLink($publicKeyHash, 'write public message', '#reply');
+	my $authorMessageLink = GetItemHtmlLink($publicKeyHash, 'Contact Them', '#reply');
 
 	if (IsServer($authorKey)) {
 		if ($authorDescription) {
