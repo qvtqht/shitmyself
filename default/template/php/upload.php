@@ -54,10 +54,11 @@ if (!empty($_FILES['uploaded_file'])) {
 			$fileHtmlPath = './' . GetHtmlFilename($hash); // path for new html file
 			$fileUrlPath = '/' . GetHtmlFilename($hash); // path for client's (browser's) path to html file
 
-			WriteLog('upload.pl: $hash = ' . $hash);
-			WriteLog('upload.pl: $fileHtmlPath = ' . $fileHtmlPath);
-			WriteLog('upload.pl: $fileUrlPath = ' . $fileUrlPath);
-			WriteLog('upload.pl: file_exists($fileHtmlPath) = ' . file_exists($fileHtmlPath));
+			WriteLog('upload.php: pwd() = ' . getcwd());
+			WriteLog('upload.php: $hash = ' . $hash);
+			WriteLog('upload.php: $fileHtmlPath = ' . $fileHtmlPath);
+			WriteLog('upload.php: $fileUrlPath = ' . $fileUrlPath);
+			WriteLog('upload.php: file_exists($fileHtmlPath) = ' . file_exists($fileHtmlPath));
 			
 			if (file_exists($fileHtmlPath) && $fileUrlPath) {
 				RedirectWithResponse($fileUrlPath, 'Success! Thank you for uploading this beautiful picture!');
