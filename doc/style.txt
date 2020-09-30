@@ -1,37 +1,49 @@
-When declaring a function, I try to put a space after its name.
+When declaring a function or subprocedure, I try to put a space after its name.
+	This makes it easy to find the definition when doing a global search.
+	Otherwise, please do not put a space after the subprocedure/function name.
+	I also put the argument names, if they're not in the function definition already.
+	After that, I follow with a very short description of the function.
+		Examples:
 
- This makes it easy to find when doing a global search.
-
- I also put the argument names, if they're not in the function definition already.
-
- After that, I follow with a very short description of the function.
-
- Examples:
-
- sub SomePerlFunction { # $firstArgument, $argumentTheSecond ; five-word description of function
-	WriteLog('SomePerlFunction() begins');
-
+sub SomePerlFunction { # $firstArgument, $argumentTheSecond ; function demonstrates code style in perl
  	my $firstArgument = shift;
 	my $argumentTheSecond = shift;
-
  	WriteLog("SomePerlFunction($firstArgument, $argumentTheSecond)");
-} # SomePerlFunction
 
- function SomePhpFunction ($firstArgument, $argumentTheSecond) { // this does the same thing but in php
+ 	print('Hello, World!');
+} # SomePerlFunction()
+
+
+function SomePhpFunction ($firstArgument, $argumentTheSecond) { // demonstrates code style in php
 	WriteLog("SomePhpFunction($firstArgument, $argumentTheSecond)");
-	// some stuff but in php
-} // SomePhpFunction
 
- function SomeJavaScriptFunction (firstArgument, argumentTheSecond) { // this is in javascripts
+	print('Hello, World!');
+} // SomePhpFunction()
+
+
+function SomeJavaScriptFunction (firstArgument, argumentTheSecond) { // demonstrates code style in javascript
 	//alert('DEBUG: SomeJavaScriptFunction('+firstArgument+', '+argumentTheSecond+')');
 	// see localdev.txt for information on how JavaScript debugging works
-} // SomeJavaScriptFunction
 
- All of this is tuned for global search, so that I can press Ctrl+Shift+F, type in "SomeFunction ", and immediately see this information.
+	document.write('Hello, World!');
+} // SomeJavaScriptFunction()
 
- The same function may be written in multiple languages, and I'll see all of them in one search.
 
- Of course, in order for this to work well, when *calling* a function, I must avoid putting a space after the function name.
+#someCssClass { // demonstrates code style in css
+	font-weight: bold;
+}
+
+
+def SomePythonFunction (firstArgument, argumentTheSecond): #{
+	WriteLog("SomePythonFunction(", firstArgument, argumentTheSecond, ")")#;
+
+	print("Hello, World!")#;
+#}
+
+
+This is tuned for global search, so that one can press Ctrl+Shift+F, type in "SomeFunction ", and immediately see this information.
+The same function may be written in multiple languages, and you'll see all of them in one search.
+Of course, in order for this to work well, when *calling* a function, I must avoid putting a space after the function name.
 
  Examples of calling a function:
 

@@ -66,6 +66,11 @@ config/coin/accepted
 Logging out does not clear client-side settings
 	These settings include list of items user has voted on
 
+There's a piece missing from the PGP-to-cookie auth transition
+	See #knownCookieAuth
+	Server needs to pass encrypted cookie checksum to client
+		and client needs to decrypt it and set it into the checksum cookie
+
 Browser Issues
 ==============
 See browsers.txt

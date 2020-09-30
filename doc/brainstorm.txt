@@ -1,3 +1,17 @@
+day checklist
+=============
+	check-in
+	new line of code
+	todo reviewed
+	contacted developer
+	
+
+"adopt style" functionality
+	attempts to copy color settings and such from another page
+	<body
+	any non-class-based styles
+	try to get other colors somehow
+
 #flag
 	if user is admin
 	or

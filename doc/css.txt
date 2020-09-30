@@ -1,0 +1,4 @@
+If you want to style tag buttons
+	Add .tag-whatever {} to the stylesheet
+	The class will automatically be added to the tags if present in stylesheet
+

@@ -1,3 +1,19 @@
 
 #bug in ie4, the mouse cursor blinks every time the clock is updated
    or maybe something else is causing it, but either way, not great...
+
+
+===
+
+#bug in ie4, the mouse cursor blinks every time the clock is updated
+   or maybe something else is causing it, but either way, not great...
+addtext=Meditate...
+
+
+
+===
+
+#bug in ie4, the mouse cursor blinks every time the clock is updated
+   or maybe something else is causing it, but either way, not great...
+-- 
+Authorization: admin

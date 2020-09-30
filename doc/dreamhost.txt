@@ -13,7 +13,7 @@ This is done in the Dreamhost control panel.
 I logged in, and did the following
 
 ssh gidotnet@geekissues.net
-git clone https://www.github.com/gulkily/hike
+git clone ...
 cd hike
 ./clean.sh ; ./build.pl
 

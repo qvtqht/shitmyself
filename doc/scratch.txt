@@ -1,4 +1,3 @@
-
                      ,
                   ,.`;,
                 ,`._.-`.
@@ -2524,3 +2523,87 @@ tes$a
 </style>
 asdfad<span id=bah>badfad</span id=bah>adfad
 <span id=blah>adsfad</span>
+
+
+
+
+sub GetDigitColor() { # returns a 2-char color that corresponds to a digit for coloring the clock's digits
+	# Not sure of purpose, might be useful
+
+	my $digit = shift;
+
+	if (!$digit) {
+		return;
+	}
+	if (length($digit) != 1) {
+		return;
+	}
+	#todo $digit must be ^[0-9]{1}$
+
+	my $digitColor = floor($digit / 10 * 255);
+	my $digitColorHex = sprintf("%X", $digitColor);
+
+	if (length($digitColorHex) < 2) {
+		$digitColorHex = '0' . $digitColorHex;
+	}
+
+	return $digitColor;
+}
+
+
+
+
+<form action="/search.php" name=search>
+    <input name=q id=q type=text size=40>
+    <input type=submit value=Search>
+</form>
+
+
+```
+ ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄               ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄
+▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌             ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌
+ ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀              ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌
+     ▐░▌     ▐░▌                       ▐░▌          ▐░▌       ▐░▌▐░▌
+     ▐░▌     ▐░█▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄▄▄ ▐░▌       ▐░▌▐░▌
+     ▐░▌     ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░▌
+     ▐░▌      ▀▀▀▀▀▀▀▀▀█░▌ ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀█░▌▐░█▄▄▄▄▄▄▄█░▌▐░▌
+     ▐░▌               ▐░▌                       ▐░▌▐░░░░░░░░░░░▌▐░▌
+     ▐░▌      ▄▄▄▄▄▄▄▄▄█░▌              ▄▄▄▄▄▄▄▄▄█░▌ ▀▀▀▀▀▀█░█▀▀ ▐░█▄▄▄▄▄▄▄▄▄
+     ▐░▌     ▐░░░░░░░░░░░▌             ▐░░░░░░░░░░░▌        ▐░▌  ▐░░░░░░░░░░░▌
+      ▀       ▀▀▀▀▀▀▀▀▀▀▀               ▀▀▀▀▀▀▀▀▀▀▀          ▀    ▀▀▀▀▀▀▀▀▀▀▀
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

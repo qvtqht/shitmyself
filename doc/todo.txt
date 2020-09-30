@@ -1,3 +1,22 @@
+Prefix all php (and js?) templates with:
+	die('removeme');
+	then remove the line when building from template
+
+de-couple
+	indexing of file into intial hash-filename pair
+		this can be put off until request if necessary
+	extensive indexing of file
+
+
+useful structural tags
+	>>item #addparent <hash>
+		add parent to item
+	>>item #reparent <hash>
+		remove all other parents and attach to <hash>
+	>>item #adopt <hash>
+		sets posting as belonging to posting author
+
+
 replies which are #notext
 	should be displayed as small things with just the tag/token
 
@@ -1592,3 +1611,14 @@ timestamp=1601009222
 -- 
 Authorization: admin
 Cookie: EB8132749B4913F4
+no more templates outside of a subdir in template/
+
+eventually html/ template subdir?
+
+
+===
+
+>>aa9e0f23260baa14f1bd613a5a23489eaaaf4678
+
+#todo reply form should set auto reload to true
+
