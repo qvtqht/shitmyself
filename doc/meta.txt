@@ -165,16 +165,3 @@ c) A lot of artifacts from js dislayed on page
 #meta #todo #bug
 addtext=Send+Now
 
-
-
-===
-
-Server Message:
-
-There was no admin, and 400773E73A825CA6 came passing through, so I made them admin.
-
-(This happens when config/admin/admin_imprint is true and there is no admin set.)
-
-#meta
-
-1600920213

@@ -36,7 +36,6 @@ function SomeJavaScriptFunction (firstArgument, argumentTheSecond) { // demonstr
 
 def SomePythonFunction (firstArgument, argumentTheSecond): #{
 	WriteLog("SomePythonFunction(", firstArgument, argumentTheSecond, ")")#;
-
 	print("Hello, World!")#;
 #}
 

@@ -4,8 +4,9 @@ Prefix all php (and js?) templates with:
 
 de-couple
 	indexing of file into intial hash-filename pair
-		this can be put off until request if necessary
+		this can happen fast
 	extensive indexing of file
+		this can be put off
 
 
 useful structural tags
@@ -15,10 +16,6 @@ useful structural tags
 		remove all other parents and attach to <hash>
 	>>item #adopt <hash>
 		sets posting as belonging to posting author
-
-
-replies which are #notext
-	should be displayed as small things with just the tag/token
 
 reddit account tagging
 	1) "i claim this reddit account http://
