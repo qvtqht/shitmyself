@@ -3460,17 +3460,18 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	WriteLog('MakeSummaryPages() END');
 }
 
-sub GetUploadWindow {
+sub GetUploadWindow { # upload window for upload page
 	my $uploadForm = GetTemplate('form/upload.template');
-
+	if (GetConfig('admin/js/enable')) {
+		# $uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "if (document.upload && document.upload.submit && document.upload.submit.value == 'Upload') { document.upload.submit.click(); }");
+		# this caused back button breaking
+		$uploadForm = AddAttributeToTag($uploadForm, 'input name=submit', 'onclick', "this.value='Meditate...';");
+	}
 	my $allowFiles = GetConfig('admin/image/allow_files');
-
 	$uploadForm =~ s/\$allowFiles/$allowFiles/gms;
-
 	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, '');
-
 	return $uploadWindow;
-}
+} # GetUploadWindow()
 
 sub GetSearchWindow {
 	my $searchForm = GetTemplate('form/search.template');
