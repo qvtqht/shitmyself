@@ -87,9 +87,6 @@ BuildMessage "Looking for files...";
 BuildMessage "MakeChainIndex()...";
 MakeChainIndex();
 
-BuildMessage "WriteConfigFromDatabase()...";
-WriteConfigFromDatabase();
-
 BuildMessage "DBAddPageTouch('summary')...";
 DBAddPageTouch('summary');
 
