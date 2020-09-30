@@ -1,4 +1,14 @@
-<form action="/search.php" name=search>
-    <input name=q id=q type=text size=40>
-    <input type=submit value=Search>
+<!-- search.template -->
+<p class=warning>
+    Your search will become public immediately.
+</p>
+<form action="/post.html" name=search class=advanced>
+    <p class=beginner>
+        Put some text and press button.
+    </p>
+    <p>
+        <input name=comment id=q type=text size=40>
+        <input type=submit value=Search>
+    </p>
 </form>
+<!-- / search.template -->
