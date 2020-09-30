@@ -232,25 +232,60 @@ function DoFlush () {
 // 	}
 }
 
-function GetConfig ($configKey) { // get value for config value $configKey
-// config is stored in config/
-// if not found in config/ it looks in default/
-// if it is in default/, it is copied to config/
-	//$configDir = '/home/ily/hike/config/'; // config is stored here
-	//$defaultDir = '/home/ily/hike/default/'; // defaults are stored here
+function PutConfig ($configKey, $configValue) { # writes config value to config storage
+	WriteLog("PutConfig($configKey, $configValue)");
+
+	$configDir = '../config'; // config is stored here
+
+	$putFileResult = PutFile("configDir/$configKey", $configValue);
+	GetConfig($configKey, 'unmemo');
+
+	return $putFileResult;
+}
+
+function GetConfig ($configKey, $token = 0) { // get value for config value $configKey
+	WriteLog("GetConfig($configKey, $token)");
+
+	// config is stored in config/
+	// if not found in config/ it looks in default/
+	// if it is in default/, it is copied to config/
+
+	// memoize
+	static $configLookup;
+	if (!isset($configLookup)) {
+		$configLookup = array();
+	}
+	if ($configName == 'unmemo') {
+		// memo reset
+		$configLookup = array();
+		return;
+	}
+
+
+	//#todo finish porting from perl
+	// 	if ($token && $token eq 'unmemo') {
+	// 		WriteLog('GetConfig: unmemo requested, complying');
+	// 		# unmemo token to remove memoized value
+	// 		if (exists($configLookup{$configName})) {
+	// 			delete($configLookup{$configName});
+	// 		}
+	// 	}
+	//
+	// 	if (exists($configLookup{$configName})) {
+	// 		WriteLog('GetConfig: $configLookup already contains value, returning that...');
+	// 		WriteLog('GetConfig: $configLookup{$configName} is ' . $configLookup{$configName});
+	//
+	// 		return $configLookup{$configName};
+	// 	}
 
 	$configDir = '../config'; // config is stored here
 	$defaultDir = '../default'; // defaults are stored here
-
 	$pwd = getcwd();
-
 	WriteLog('GetConfig('.$configKey.'); $pwd = "' . $pwd . '", $configDir = "' . $configDir . '", $defaultDir = "' . $defaultDir . '", pwd = "' . getcwd() . '"');
-
 	WriteLog('GetConfig: Checking in ' . $configDir . '/' . $configKey );
 
 	if (file_exists($configDir . '/' . $configKey)) {
 		WriteLog('GetConfig: found in config/');
-
 		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} elseif (file_exists($defaultDir . '/' . $configKey)) {
 		WriteLog('GetConfig: not found in config/, but found in default/');
@@ -262,16 +297,16 @@ function GetConfig ($configKey) { // get value for config value $configKey
 		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} else {
 		// otherwise return empty string
-		WriteLog('GetConfig: WARNING: else, fallthrough, for ' . $configKey);
+		WriteLog('GetConfig: warning: else, fallthrough, for ' . $configKey);
 		$configValue = '';
 	}
 
+	// store in memo
+	$configLookup[$configKey] = $configValue;
+
 	WriteLog('GetConfig: $configValue: ' . $configValue);
-
 	$configValue = trim($configValue); // remove trailing \n and any other whitespace
-
 	WriteLog('GetConfig: $configValue after trim: ' . $configValue);
-
 	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '") final answer');
 	// notify log of what we found
 
