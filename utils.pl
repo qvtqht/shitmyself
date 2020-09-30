@@ -1688,6 +1688,36 @@ sub IsSha1 { # returns 1 if parameter is in sha1 hash format, 0 otherwise
 	}
 }
 
+sub IsImageFile { # $file ; returns 1 if image file, 0 if not
+	my $file = shift;
+	if (!$file) {
+		return 0;
+	}
+	chomp $file;
+	if (!$file) {
+		return 0;
+	}
+
+	if (
+		-e $file
+			&&
+		(
+			substr(lc($file), length($file) -4, 4) eq ".jpg" ||
+			substr(lc($file), length($file) -4, 4) eq ".gif" ||
+			substr(lc($file), length($file) -4, 4) eq ".png" ||
+			substr(lc($file), length($file) -4, 4) eq ".bmp" ||
+			substr(lc($file), length($file) -4, 4) eq ".svg" ||
+			substr(lc($file), length($file) -5, 5) eq ".jfif" ||
+			substr(lc($file), length($file) -5, 5) eq ".webp"
+		)
+	) {
+		return 1;
+	} else {
+		return 0;
+	}
+	return 0;
+} # IsImageFile()
+
 sub IsItem { # $string ; returns 1 if parameter is in item hash format (40 or 8 lowercase hex chars), 0 otherwise
 	my $string = shift;
 
