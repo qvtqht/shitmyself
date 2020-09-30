@@ -310,6 +310,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				WriteLog('IndexTextFile: proceeding to unlink avatar caches for ' . $gpgKey);
 
 				#todo make this less "dangerous"
+				#todo use globally defined cache dir
 				unlink(glob("cache/*/avatar/*/$gpgKey"));
 				unlink(glob("cache/*/avatar.plain/*/$gpgKey"));
 			} else {
@@ -597,7 +598,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if ($message && GetConfig('admin/token/access_log_hash')) {
 			# #title token is enabled
 
-			# looks for lines beginning with title: and text after
+			# looks for lines beginning with AccessLogHash: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
 			my @lines = ($message =~ m/^(AccessLogHash)(\W+)(.+)$/mig); #todo format instead of .+
 			# m = multi-line
