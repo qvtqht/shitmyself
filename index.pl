@@ -1479,10 +1479,43 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	} # admin/image/enable
 }
 
-sub IndexFile {
-	# if textfile indextextfile
-	# if imagefile indeximagefile
-	# and so on
+sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on extension
+	my $file = shift;
+
+	if ($file eq 'flush') {
+		IndexImageFile('flush');
+		IndexTextFile('flush');
+		return;
+	}
+
+	chomp $file;
+	if (!$file || !-e $file || -d $file) {
+		WriteLog('IndexFile: warning: sanity check failed.');
+		return;
+	}
+
+	my $ext = lc(GetFileExtension($file));
+
+	if ($ext eq 'txt') {
+		WriteLog('IndexFile: calling IndexTextFile()');
+		return IndexTextFile($file);
+	}
+
+	if (
+		$ext eq 'png' ||
+		$ext eq 'gif' ||
+		$ext eq 'jpg' ||
+		$ext eq 'bmp' ||
+		$ext eq 'svg' ||
+		$ext eq 'webp' ||
+		$ext eq 'jfif'
+	) {
+		WriteLog('IndexFile: calling IndexImageFile()');
+		return IndexImageFile($file);
+	}
+
+	WriteLog('IndexFile: warning: fallthrough, no suitable handler found');
+	return;
 }
 
 my $arg1 = shift;
@@ -1501,13 +1534,10 @@ if ($arg1) {
 	}
 
 	if (-e $arg1) {
-		IndexTextFile($arg1);
-		IndexTextFile('flush');
-
-		#todo IndexFile instead
+		IndexFile($arg1);
+		IndexFile('flush');
 	}
 }
-
 
 #MakeTagIndex();
 1;
