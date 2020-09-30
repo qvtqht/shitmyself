@@ -1320,19 +1320,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
 	my $fileHash;            # git's hash of file blob, used as identifier
 
-	if (
-		-e $file &&
-			(
-				substr(lc($file), length($file) -4, 4) eq ".jpg" ||
-					substr(lc($file), length($file) -4, 4) eq ".gif" ||
-					substr(lc($file), length($file) -4, 4) eq ".png" ||
-					substr(lc($file), length($file) -4, 4) eq ".bmp" ||
-					substr(lc($file), length($file) -4, 4) eq ".svg" ||
-					substr(lc($file), length($file) -5, 5) eq ".jfif" ||
-					substr(lc($file), length($file) -5, 5) eq ".webp"
-				#todo config/admin/upload/allow_files
-			)
-	) {
+	if (IsImageFile($file)) {
 		my $fileHash = GetFileHash($file);
 		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
 
@@ -1346,7 +1334,6 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		if (IsFileDeleted($file, $fileHash)) {
 			# write to log
 			WriteLog('IndexImageFile: IsFileDeleted() returned true, returning');
-
 			return;
 		}
 
