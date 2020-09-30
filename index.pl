@@ -1400,26 +1400,17 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		}
 
 		DBAddItem($file, $itemName, '', $fileHash, 'image', 0);
-
 		DBAddItem('flush');
-
 		DBAddItemAttribute($fileHash, 'title', $itemName, $addedTime);
-
 		DBAddVoteRecord($fileHash, $addedTime, 'image');
 		# add image tag
 
 		DBAddPageTouch('read');
-
 		DBAddPageTouch('tag', 'image');
-
 		DBAddPageTouch('item', $fileHash);
-
 		DBAddPageTouch('stats');
-
 		DBAddPageTouch('rss');
-
 		DBAddPageTouch('index');
-
 		DBAddPageTouch('flush');
 	}
 } #IndexImageFile
@@ -1459,39 +1450,28 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteLog( "MakeIndex()...\n");
 
 	my @filesToInclude = split("\n", `find $TXTDIR -name \\\*.txt`);
-
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
-
 	foreach my $file (@filesToInclude) {
 		$currentFile++;
-
 		my $percent = $currentFile / $filesCount * 100;
-
 		WriteMessage("*** MakeIndex: $currentFile/$filesCount ($percent %) $file");
-
 		IndexTextFile($file);
 	}
-
 	IndexTextFile('flush');
 
 	WriteIndexedConfig();
 
 	if (GetConfig('admin/image/enable')) {
 		my @imageFiles = split("\n", `find $HTMLDIR/image`);
-
 		my $imageFilesCount = scalar(@imageFiles);
 		my $currentImageFile = 0;
-
 		WriteLog('MakeIndex: $imageFilesCount = ' . $imageFilesCount);
 
 		foreach my $imageFile (@imageFiles) {
 			$currentImageFile++;
-
 			my $percentImageFiles = $currentImageFile / $imageFilesCount * 100;
-
 			WriteMessage("*** MakeIndex: $currentImageFile/$imageFilesCount ($percentImageFiles %) $imageFile");
-
 			IndexImageFile($imageFile);
 		}
 
