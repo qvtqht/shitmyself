@@ -1234,6 +1234,11 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	my $fileHash = shift;
 	chomp $fileHash;
 
+	if (!$fileHash || !IsItem($fileHash)) {
+		WriteLog('AddToChainLog: warning: sanity check failed');
+		return;
+	}
+
 	my $logFilePath = "$HTMLDIR/chain.log"; #public
 
 	{
@@ -1244,11 +1249,17 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 		if ($findExistingResult) { #todo remove fork
 			# hash already exists in chain, return
 			# todo return timestamp
-			return;
+			my ($exHash, $exTime, $exChecksum) = split('|', $findExistingResult);
+
+			if ($exTime) {
+				return $exTime;
+			} else {
+				return 0;
+			}
 		}
 	}
 
-	# get components of new line: hash, timestam, and previous line
+	# get components of new line: hash, timestamp, and previous line
 	my $newAddedTime = GetTime();
 	my $logLine = $fileHash . '|' . $newAddedTime;
 	my $lastLineAddedLog = `tail -n 1 $logFilePath`; #todo remove fork
@@ -1270,19 +1281,19 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 		AppendFile($logFilePath, $newLineAddedLog);
 
 		# figure out how many existing entries for chain sequence value
-		my $chainSequence = (`wc -l html/chain.log | cut -d " " -f 1`) - 1;
-		if ($chainSequence < 0) {
-			WriteLog('AddToChainLog: warning: $chainSequence < 0');
-			$chainSequence = 0;
+		my $chainSequenceNumber = (`wc -l html/chain.log | cut -d " " -f 1`) - 1;
+		if ($chainSequenceNumber < 0) {
+			WriteLog('AddToChainLog: warning: $chainSequenceNumber < 0');
+			$chainSequenceNumber = 0;
 		}
 
 		# add to index database
 		DBAddItemAttribute($fileHash, 'chain_timestamp', $newAddedTime);
-		DBAddItemAttribute($fileHash, 'chain_sequence', $chainSequence);
+		DBAddItemAttribute($fileHash, 'chain_sequence', $chainSequenceNumber);
 		DBAddItemAttribute('flush'); #todo shouldn't be here
 	}
 
-	#todo return timestamp
+	return $newAddedTime;
 } # AddToChainLog()
 
 sub IndexImageFile { # $file ; indexes one image file into database
