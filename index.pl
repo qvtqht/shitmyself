@@ -38,14 +38,16 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 				if ($expectedHash ne $proofHash) {
 					WriteLog('MakeChainIndex: warning: proof hash mismatch. abandoning chain import');
 
+					# save the current chain.log and create new one
+					# new chain.log should go up to the point of the break
 					my $curTime = GetTime();
 					my $moveChain = `mv html/chain.log html/chain.log.$curTime ; head -n $sequenceNumber html/chain.log.$curTime > html/chain_new.log; mv html/chain_new.log html/chain.log`;
 
+					# make a record of what just happened
 					my $moveChainMessage = 'Chain break detected. Timestamps for items may reset. #meta #warning ' . $curTime;
 					PutFile('html/txt/chain_break_' . $curTime . '.txt');
 
-					MakeChainIndex();
-
+					MakeChainIndex(); # recurse
 					return;
 				}
 
@@ -55,7 +57,6 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 				WriteLog('MakeChainIndex: $sequenceNumber = ' . $sequenceNumber);
 
 				$sequenceNumber = $sequenceNumber + 1;
-
 				$previousLine = $currentLine;
 			}
 
@@ -262,9 +263,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# 	my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
 			# 	AppendFile('./log/added.log', $logLine);
 			# }
-
-			# store it in index, since that's what we're doing here
-			DBAddItemAttribute($fileHash, 'chain_timestamp', $newAddedTime);
 
 			$addedTimeIsNew = 1;
 		}
@@ -1226,24 +1224,32 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 } # IndexTextFile
 
 sub AddToChainLog { # $fileHash ; add line to log/chain.log
+	# line format is:
+	# file_hash|timestamp|checksum
+	# file_hash = hash of file, a-f0-9 40
+	# timestamp = epoch time in seconds, no decimal
+	# checksum  = hash of new line with previous line
+
 	my $fileHash = shift;
 	chomp $fileHash;
 
-	my $logFilePath = "$HTMLDIR/chain.log";
+	my $logFilePath = "$HTMLDIR/chain.log"; #public
 
-	my $findExistingCommand = "grep ^$fileHash $logFilePath";
-	my $findExistingResult = `$findExistingCommand`;
-
-	WriteLog("AddToChainLog: $findExistingCommand returned $findExistingResult");
-
-	if ($findExistingResult) { #todo remove fork
-		# hash already exists in chain, return
-		return;
+	{
+		#look for existin entry, exit if found
+		my $findExistingCommand = "grep ^$fileHash $logFilePath";
+		my $findExistingResult = `$findExistingCommand`;
+		WriteLog("AddToChainLog: $findExistingCommand returned $findExistingResult");
+		if ($findExistingResult) { #todo remove fork
+			# hash already exists in chain, return
+			# todo return timestamp
+			return;
+		}
 	}
 
+	# get components of new line: hash, timestam, and previous line
 	my $newAddedTime = GetTime();
 	my $logLine = $fileHash . '|' . $newAddedTime;
-
 	my $lastLineAddedLog = `tail -n 1 $logFilePath`; #todo remove fork
 	if (!$lastLineAddedLog) {
 		$lastLineAddedLog = '';
@@ -1251,20 +1257,32 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	chomp $lastLineAddedLog;
 	my $lastAndNewTogether = $lastLineAddedLog . '|' . $logLine;
 	my $checksum = md5_hex($lastAndNewTogether);
+	my $newLineAddedLog = $logLine . '|' . $checksum;
 
 	WriteLog('AddToChainLog: $lastLineAddedLog = ' . $lastLineAddedLog);
 	WriteLog('AddToChainLog: $lastAndNewTogether = ' . $lastAndNewTogether);
 	WriteLog('AddToChainLog: md5(' . $lastAndNewTogether . ') = $checksum  = ' . $checksum);
-
-	my $newLineAddedLog = $logLine . '|' . $checksum;
-
 	WriteLog('AddToChainLog: $newLineAddedLog = ' . $newLineAddedLog);
 
 	if (!$lastLineAddedLog || ($newLineAddedLog ne $lastLineAddedLog)) {
-		#todo replace hard-coded path with $LOGPATH
+		# write new line to file
 		AppendFile($logFilePath, $newLineAddedLog);
+
+		# figure out how many existing entries for chain sequence value
+		my $chainSequence = (`wc -l html/chain.log | cut -d " " -f 1`) - 1;
+		if ($chainSequence < 0) {
+			WriteLog('AddToChainLog: warning: $chainSequence < 0');
+			$chainSequence = 0;
+		}
+
+		# add to index database
+		DBAddItemAttribute($fileHash, 'chain_timestamp', $newAddedTime);
+		DBAddItemAttribute($fileHash, 'chain_sequence', $chainSequence);
+		DBAddItemAttribute('flush'); #todo shouldn't be here
 	}
-}
+
+	#todo return timestamp
+} # AddToChainLog()
 
 sub IndexImageFile { # $file ; indexes one image file into database
 	# Reads a given $file, gets its attributes, puts it into the index database
@@ -1333,10 +1351,6 @@ sub IndexImageFile { # $file ; indexes one image file into database
 			if (GetConfig('admin/logging/write_chain_log')) {
 				AddToChainLog($fileHash);
 			}
-
-			# store it in index, since that's what we're doing here
-			DBAddItemAttribute($fileHash, 'chain_timestamp', $newAddedTime);
-
 			$addedTimeIsNew = 1;
 		}
 
@@ -1501,8 +1515,8 @@ if ($arg1) {
 	}
 
 	if ($arg1 eq '--chain') {
+		# html/chain.log
 		print "index.pl: --chain\n";
-
 		MakeChainIndex();
 	}
 
