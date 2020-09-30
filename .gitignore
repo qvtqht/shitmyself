@@ -6,4 +6,5 @@ admin.key
 cron.lock
 server.key.secret
 html/*
+once/*
 _Deparsed_XSubs.pm
