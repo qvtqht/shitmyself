@@ -721,9 +721,17 @@ sub GetItemPage {
 			# to do this, we pass the remove_token parameter to GetItemTemplate() below
 			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
 
+			# after voting, return to the main thread page
 			$$replyItem{'vote_return_to'} = $file{'file_hash'};
 
+			# trim long text items
 			$$replyItem{'trim_long_text'} = 1;
+
+			if (index(','.$$replyItem{'tags_list'}.',', ','.'notext'.',') != -1) {
+				$$replyItem{'template_name'} = 'item/item-mini.template';
+			} else {
+				$$replyItem{'template_name'} = 'item/item-small.template';
+			}
 
 			# Get the reply template
 			my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
@@ -744,8 +752,11 @@ sub GetItemPage {
 				foreach my $subReplyItem (@subReplies) {
 					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
 
-					$$subReplyItem{'template_name'} = 'item/item-mini.template';
-					# $$subReplyItem{'template_name'} = 'item/item-small.template';
+					if (index(','.$$subReplyItem{'tags_list'}.',', ','.'notext'.',') != -1) {
+						$$subReplyItem{'template_name'} = 'item/item-mini.template';
+					} else {
+						$$subReplyItem{'template_name'} = 'item/item-small.template';
+					}
 					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
 					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
 
