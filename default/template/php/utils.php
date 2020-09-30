@@ -23,18 +23,16 @@ function GetScriptDir() { // returns base script directory.
 function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 // the debug log is stored as a static variable in this function
 // when a blank (false) argument is passed, returns entire log as html
-
-	static $logText;
-
+// $dontEscape means don't escape html entities
+	static $logText; # stores log
 	if (!$logText) {
+		# initialize
 		$logText = '';
 	}
-
 	if (!$text) {
+		# return entire log if text is blank
 		return $logText;
 	}
-
-    //#todo sanity check for $text being a string
     if ($dontEscape) {
 		$logText .= '<tt class=advanced>' . time() . ':' . $text . "<br></tt>\n";
     } else {
@@ -87,20 +85,14 @@ function GetMyCacheVersion () { // returns current cache version
 function GetMyVersion () { // returns current git commit id
 // it is cached in config/admin/my_version
 // otherwise it's looked up with: git rev-parse HEAD
-// todo add parameter to ignore memo and re-get version number
-
-	WriteLog('GetMyVersion: begin');
-
-	// store it here so that we don't have to look up every time
-	static $myVersion;
-
+	WriteLog('GetMyVersion()');
+	static $myVersion; // store version for future lookups here
 	if ($myVersion) {
 		WriteLog('GetMyVersion: return from static: ' . $myVersion);
 		return $myVersion;
 	}
 
 	$myVersion = GetConfig('admin/my_version');
-
 	if (!$myVersion) {
 		WriteLog('GetMyVersion: git rev-parse HEAD... ');
 		$myVersion = `git rev-parse HEAD`;
@@ -112,12 +104,10 @@ function GetMyVersion () { // returns current git commit id
 	}
 
 	$myVersion = trim($myVersion);
-
-	WriteLog('GetMyVersion: return from static: ' . $myVersion);
 	return $myVersion;
 }
 
-function index ($string, $needle) { // emulates perl's index(), returning -1 instead of false
+function index ($string, $needle) { // emulates perl's index(), returning -1 when not found
 	$strpos = strpos($string, $needle);
 	if ($strpos === false) {
 		return -1;
