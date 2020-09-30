@@ -34,7 +34,7 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 	if (isset($_COOKIE['test']) && $_COOKIE['test']) {
 		WriteLog('test cookie found');
 
-		if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { // #todo actual auth
+		if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { // #todo actual auth #knownCookieAuth
 			WriteLog('test cookie override!');
 
 			$cookie = $_COOKIE['test'];
