@@ -30,7 +30,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 
 	// depending on element type, we set different display style
 	// block, table-row, table-cell, or default of 'initial'
-	if (displayValue == 'initial' && (element.nodeName == 'P' || element.nodeName == 'H3' || element.nodeName == 'FIELDSET')) {
+	if (displayValue == 'initial' && (element.nodeName == 'P' || element.nodeName == 'H3' || element.nodeName == 'FIELDSET' || element.nodeName == 'HR')) {
 		element.style.display = 'block';
 	} else if (displayValue == 'initial' && element.nodeName == 'TR') {
 		element.style.display = 'table-row';
