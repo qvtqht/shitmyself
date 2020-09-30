@@ -702,6 +702,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						my $space2 = '';
 						my $configValue;
 
+						# allow theme aliasing
+						my $configKeyActual = $configKey;
+						if ($configKey eq 'theme') {
+							# alias theme to html/theme
+							$configKeyActual = 'html/theme';
+						}
+
 						if ($configAction eq 'config' || $configAction eq 'setconfig') {
 							$space2 = shift @configLines;
 							$configValue = shift @configLines;
@@ -711,14 +718,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 						$configValue = trim($configValue);
 
-						if ($configAction && $configKey && $configValue) {
-
+						if ($configAction && $configKey && $configKeyActual && $configValue) {
 							my $reconLine;
 							if ($configAction eq 'config' || $configAction eq 'setconfig') {
 								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
 							}
 							elsif ($configAction eq 'resetconfig') {
-								$reconLine = "$configAction$space1$configKey";
+								$reconLine = $configAction . $space1 . $configKey;
 							}
 							else {
 								WriteLog('IndexTextFile: warning: $configAction fall-through when selecting $reconLine');
@@ -741,7 +747,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								if (IsAdmin($gpgKey)) {
 									$canConfig = 1;
 								}
-								if (substr(lc($configKey), 0, 5) ne 'admin') {
+								if (substr(lc($configKeyActual), 0, 5) ne 'admin') {
 									if (GetConfig('admin/signed_can_config')) {
 										if ($isSigned) {
 											$canConfig = 1;
@@ -764,22 +770,24 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									$reconLine = quotemeta($reconLine);
 
 									if ($configAction eq 'resetconfig') {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 1, $fileHash);
-										$message =~ s/$reconLine/[Successful config reset: $configKey will be reset to default.]/g;
+										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 1, $fileHash);
+										$message =~ s/$reconLine/[Successful config reset: $configKeyActual will be reset to default.]/g;
 									}
 									else {
-										DBAddConfigValue($configKey, $configValue, $addedTime, 0, $fileHash);
-										$message =~ s/$reconLine/[Successful config change: $configKey = $configValue]/g;
+										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
+										$message =~ s/$reconLine/[Successful config change: $configKeyActual = $configValue]/g;
 									}
 
 									$detokenedMessage =~ s/$reconLine//g;
 
-									if ($configKey eq 'html/theme') {
+									if ($configKeyActual eq 'html/theme') {
 										# unlink cache/avatar.plain
+										# remove/rebuild all html
+										# todo
 									}
 								} # if ($canConfig)
 								else {
-									$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Not operator.]/g;
+									$message =~ s/$reconLine/[Attempted change to $configKeyActual ignored. Reason: Not operator.]/g;
 									$detokenedMessage =~ s/$reconLine//g;
 								}
 							} # if (ConfigKeyValid($configKey))
