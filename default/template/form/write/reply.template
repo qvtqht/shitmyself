@@ -14,8 +14,8 @@
 					<p><span class=advanced>$votesSummary<br></span>
 					<textarea
 						wrap=soft
-						rows=4
-						cols=60
+						rows=7
+						cols=32
 						style="min-width: 360px; height: 80px;"
 						id=comment
 						name=comment
