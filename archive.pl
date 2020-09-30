@@ -50,6 +50,9 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	# print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
 	# rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
 
+	print("rename($HTMLDIR/chain.log, $ARCHIVE_DATE_DIR/html/chain.log)\n");
+	rename("$HTMLDIR/chain.log", "$ARCHIVE_DATE_DIR/html/chain.log");
+
 	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
 	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\""); #fast enough
 
@@ -59,17 +62,20 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	print("mkdir($TXTDIR)\n");
 	mkdir("$TXTDIR");
 
-	#todo how to trim path? currently absolute path
-	print("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR\n");
-	system("tar -acf $ARCHIVE_DATE_DIR.tar.gz $ARCHIVE_DATE_DIR");
-	#
-	# print("gzip -9 $ARCHIVE_DATE_DIR.tar");
-	# system("gzip -9 $ARCHIVE_DATE_DIR.tar");
+
+	my $pwd = `pwd`; chomp $pwd;
+	my $archiveDirRelative = $ARCHIVE_DATE_DIR;
+	if (index($archiveDirRelative . '/', $pwd) == 0 && length($archiveDirRelative) > length($pwd)) {
+		$archiveDirRelative = substr($archiveDirRelative, length($pwd . '/'));
+	}
+
+	print("tar -acf $archiveDirRelative.tar.gz $archiveDirRelative\n");
+	system("tar -acf $archiveDirRelative.tar.gz $archiveDirRelative");
 
 	print("rm -rf $ARCHIVE_DATE_DIR\n");
 	system("rm -rf $ARCHIVE_DATE_DIR");
 
-	#system('./clean.sh; ./build.pl');
+	system('./clean.sh; ./build.pl');
 
 	print("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt\n");
 	system("echo \"Forum content was archived at $date\" > $TXTDIR/archived_$date\.txt");
