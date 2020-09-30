@@ -77,7 +77,10 @@ function writeOnload () { // onload handler for write page
 			if (pMoreLink) {
 				var aMore = document.createElement('a');
 				aMore.setAttribute('href', '#');
-				aMore.setAttribute('onclick', 'if (window.ShowAll) { ShowAll(this, this.parentElement); }');
+				aMore.setAttribute(
+					'onclick',
+					'if (window.ShowAll) { ShowAll(this, this.parentElement.parentElement); this.parentElement.remove(); }'
+				);
 				aMore.innerHTML = 'More';
 				pMoreLink.appendChild(aMore);
 			}
