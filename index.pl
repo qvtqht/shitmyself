@@ -1230,6 +1230,8 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	# file_hash = hash of file, a-f0-9 40
 	# timestamp = epoch time in seconds, no decimal
 	# checksum  = hash of new line with previous line
+	#
+	# if success, returns timestamp of item (epoch seconds)
 
 	my $fileHash = shift;
 	chomp $fileHash;
