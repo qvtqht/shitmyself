@@ -101,56 +101,27 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		} else {
 			// lookup lists, each char in keysEn
 			// corresponds to the same position in keysRu
-
-			// these shortened lookup lists use latin for some letters: eoax
-			// the original reason for creating this was a bug in perl:
-			// half of the letter x (cyrillic version) for some reason
-			// matches \R in perl's regex, which can cause issues #regexbugX
-			// so, removed letter x, and others along with it just because
 			var keysEn =
 				"`-=" +
 				"~_+" +
-				"qwrtyuip[]\\" +
-				"QWRTYUIP{}|" +
-				"sdfghjkl" +
-				"SDFGHJKL" +
-				"zcvbnm" +
-				"ZCVBNM"
+				"qwertyuiop[]\\" +
+				"QWERTYUIOP{}|" +
+				"asdfghjkl" +
+				"ASDFGHJKL" +
+				"zxcvbnm" +
+				"ZXCVBNM"
 			;
 
 			var keysRu =
 				"щьъ" +
 				"Щ-=" +
-				"яшpтыyипюжэ" +
-				"ЯШPТЫYИПЮЖЭ" +
-				"cдфгчйкл" +
-				"CДФГЧЙКЛ" +
-				"зцвбнм" +
-				"ЗЦВБНМ"
+				"яшертыуиопюжэ" +
+				"ЯШЕРТЫУИОПЮЖЭ" +
+				"асдфгчйкл" +
+				"АСДФГЧЙКЛ" +
+				"зхцвбнм" +
+				"ЗХЦВБНМ"
 			;
-
-	//		 //complete lookup list, including latin-cyrillic lookalike letters
-	//		 var keysEn =
-	//		 	"`-=" +
-	//		 	"~_+" +
-	//		 	"qwertyuiop[]\\" +
-	//		 	"QWERTYUIOP{}|" +
-	//		 	"asdfghjkl" +
-	//		 	"ASDFGHJKL" +
-	//		 	"zxcvbnm" +
-	//		 	"ZXCVBNM"
-	//		 ;
-	//
-	//		 var keysRu =
-	//		 	"щьъ" +
-	//		 	"Щ-=" +
-	//		 	"яшертыуиопюжэ" +
-	//		 	"ЯШЕРТЫУИОПЮЖЭ" +
-	//		 	"асдфгчйкл" +
-	//		 	"АСДФГЧЙКЛ" +
-	//		 	"зхцвбнм" +
-	//		 	"ЗХЦВБНМ"
-	//		 ;
 
 			if (keysEn.length != keysRu.length) {
 				//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
@@ -171,6 +142,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 	} // if (translitKeyState == 1)
 
 	if (translitKeyState == 4) {
+		// dvorak
 		if (e.altKey) {
 			// alt key combinations
 			return true;
@@ -178,26 +150,24 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			// lookup lists, each char in keysEn
 			// corresponds to the same position in keysRu
 
-			var keysEn = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
-			var keysRu = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
+			var keysQwerty = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
+			var keysDvorak = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
 
-			if (keysEn.length != keysRu.length) {
+			if (keysQwerty.length != keysDvorak.length) {
 				//alert('DEBUG: dvorakKey: Warning: length mismatch keysEn and keysRu');
 			}
 
 			if (e.key) {
 				// if e.key, then try to find it in the lookup list
-				for (var i = 0; i < keysEn.length; i++) {
-					if (e.key == keysEn.substr(i, 1)) {
-						//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
-						nl = keysRu.substr(i, 1);
-
+				for (var i = 0; i < keysQwerty.length; i++) {
+					if (e.key == keysQwerty.substr(i, 1)) {
+						nl = keysDvorak.substr(i, 1);
 						break;
 					}
 				}
 			}
 		}
-	} // if (translitKeyState == 4)
+	} // if (translitKeyState == 4) (dvorak)
 
 	if (!nl) {
 		// new letter was never changed from empty state,
@@ -212,27 +182,26 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 	}
 
 	//alert('DEBUG: e.preventDefault() was called');
-
 	var txt = t;
 
-// this block of code may still come in handy.
-// it finds the textbox by element id instead of using the one passed into the function
-//    if (!txt) {
-//        if (document.getElementById) {
-//            var txt = document.getElementById('txtTranslit');
-//        } else {
-//            if (document.forms) {
-//                var form = document.forms['frmTest'];
-//                if (form) {
-//                    txt = form.txtTranslit;
-//                }
-//            }
-//        }
-//    }
+	// this block of code may still come in handy.
+	// it finds the textbox by element id instead of using the one passed into the function
+	//    if (!txt) {
+	//        if (document.getElementById) {
+	//            var txt = document.getElementById('txtTranslit');
+	//        } else {
+	//            if (document.forms) {
+	//                var form = document.forms['frmTest'];
+	//                if (form) {
+	//                    txt = form.txtTranslit;
+	//                }
+	//            }
+	//        }
+	//    }
 
 	if (txt) {
-	// append the text to the textbox
-	// dont bother with looking for pointer location or selection
+		// append the text to the textbox
+		// dont bother with looking for pointer location or selection
 		txt.value = txt.value + nl;
 		//replaceSelectedText(txt, nl);
 	} else {
