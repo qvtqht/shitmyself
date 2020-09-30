@@ -1266,74 +1266,27 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	}
 }
 
-sub IndexImageFile { # indexes one image file into database, $file = path to file
+sub IndexImageFile { # $file ; indexes one image file into database
 	# Reads a given $file, gets its attributes, puts it into the index database
 	# If ($file eq 'flush), flushes any queued queries
 	# Also sets appropriate page_touch entries
 
 	my $file = shift;
 	chomp($file);
-
 	WriteLog("IndexImageFile($file)");
 
 	if ($file eq 'flush') {
 		WriteLog("IndexTextFile(flush)");
-
 		DBAddItemAttribute('flush');
 		DBAddItem('flush');
 		DBAddVoteRecord('flush');
 		DBAddPageTouch('flush');
-
 		return;
 	}
-
-	# # admin/organize_files
-	# # renames files to their hashes
-	# if (GetConfig('admin/organize_files')) {
-	# 	# don't touch server.key.txt or $TXTDIR directory or directories in general
-	# 	if ($file ne $TXTDIR.'/server.key.txt' && $file ne $TXTDIR && !-d $file) {
-	# #todo there's a bug here because of relative vs absolute paths, i think
-	# 		WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
-	#
-	# 		# Figure out what the file's path should be
-	# 		my $fileHashPath = GetFileHashPath($file);
-	#
-	# 		if ($fileHashPath) {
-	# 			# Does it match?
-	# 			if ($file eq $fileHashPath) {
-	# 				# No action needed
-	# 				WriteLog('IndexTextFile: hash path matches, no action needed');
-	# 			}
-	# 			# It doesn't match, fix it
-	# 			elsif ($file ne $fileHashPath) {
-	# 				WriteLog('IndexTextFile: hash path does not match, organize');
-	# 				WriteLog('Before: ' . $file);
-	# 				WriteLog('After: ' . $fileHashPath);
-	#
-	# 				if (-e $fileHashPath) {
-	# 					WriteLog("Warning: $fileHashPath already exists!");
-	# 				}
-	#
-	# 				rename ($file, $fileHashPath);
-	#
-	# 				# if new file exists
-	# 				if (-e $fileHashPath) {
-	# 					$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
-	# 				} else {
-	# 					WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
-	# 				}
-	# 			}
-	# 		}
-	# 	}
-	# 	else {
-	# 		WriteLog('IndexTextFile: organizing not needed');
-	# 	}
-	# }
 
 	my $addedTime;          # time added, epoch format
 	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
 	my $fileHash;            # git's hash of file blob, used as identifier
-
 
 	if (
 		-e $file &&
@@ -1360,7 +1313,7 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 		# if the file is present in deleted.log, get rid of it and its page, return
 		if (IsFileDeleted($file, $fileHash)) {
 			# write to log
-			WriteLog("... IsFileDeleted() returned true, returning");
+			WriteLog('IndexImageFile: IsFileDeleted() returned true, returning');
 
 			return;
 		}
@@ -1377,13 +1330,6 @@ sub IndexImageFile { # indexes one image file into database, $file = path to fil
 			# current time
 			my $newAddedTime = GetTime();
 			$addedTime = $newAddedTime; #todo is this right? confirm
-
-			# if (GetConfig('admin/logging/write_added_log')) {
-			# 	# add new line to added.log
-			# 	my $logLine = $fileHash . '|' . $newAddedTime;
-			# 	AppendFile('./log/added.log', $logLine);
-			# }
-
 			if (GetConfig('admin/logging/write_chain_log')) {
 				AddToChainLog($fileHash);
 			}
