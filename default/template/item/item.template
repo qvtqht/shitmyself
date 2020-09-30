@@ -2,21 +2,21 @@
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		$itemTitleTemplate
-
 		$quickVoteButtonGroup
-
 		<tr class=body>
 			<td class=content>
 				<p class="$itemClass">$itemText<br></p>
 			</td>
 		</tr>
-
 		<tr class=statusbar>
 			<td>
 				<a href="$permalinkHtml">$addedTime</a>;
 				$authorLink;
 				<span class=advanced>
-					<a href="$permalinkHtml#reply" onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount)</a>;
+					<a
+						href="$permalinkHtml#reply"
+						onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }"
+					>reply($replyCount)</a>;
 					<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;
 				</span>
 				$itemFlagButton
@@ -24,7 +24,5 @@
 		</tr>
 	</table>
 </font>
-
 <replies></replies>
-
 <!-- / item/item.template -->
