@@ -637,18 +637,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						if ($hasParent) {
 							# has parent(s), so add title to each parent
 							foreach my $itemParent (@itemParents) {
-								DBAddItemAttribute($itemParent, 'AccessLogHash', $value, $addedTime, $fileHash);
+								DBAddItemAttribute($itemParent, 'access_log_hash', $value, $addedTime, $fileHash);
 								DBAddVoteRecord($itemParent, $addedTime, 'hasAccessLogHash');
 								DBAddPageTouch('item', $itemParent);
-
-								if (GetConfig('admin/index/make_primary_pages')) {
-									#todo this may not be the right place for this?
-									MakePage('item', $itemParent, 1);
-								}
-							}
+							} # @itemParents
 						} else {
-							# no parents, so set title to self
-							WriteLog('Item has no parent, ignoring');
+							# no parents, ignore
+							WriteLog('IndexTextFile: AccessLogHash: Item has no parent, ignoring');
 
 							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
 							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
