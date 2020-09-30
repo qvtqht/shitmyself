@@ -700,14 +700,11 @@ sub DBGetItemParents {# Returns all item's parents
 sub DBGetItemReplies { # Returns replies for item (actually returns all child items)
 # $itemHash = item's hash/identifier
 # Sets up parameters and calls DBGetItemList
-
 	my $itemHash = shift;
-
-	if (!IsSha1($itemHash)) {
-		WriteLog('DBGetItemReplies called with invalid parameter! returning');
+	if (!IsItem($itemHash)) {
+		WriteLog('DBGetItemReplies: warning: sanity check failed, returning');
 		return '';
 	}
-
 	$itemHash = SqliteEscape($itemHash);
 
 	my %queryParams;
@@ -2238,15 +2235,14 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 
 sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash of [tag] -> count
 	my $fileHash = shift;
+	chomp $fileHash;
 
-	if (!IsSha1($fileHash)) {
-		WriteLog('DBGetItemVoteTotals called with invalid $fileHash! returning');
+	if (!IsItem($fileHash)) {
+		WriteLog('DBGetItemVoteTotals: warning: sanity check failed, returned');
 		return;
 	}
 	
-	WriteLog('DBGetItemVoteTotals('.$fileHash.')');
-
-	chomp $fileHash;
+	WriteLog("DBGetItemVoteTotals($fileHash)");
 
 	my $query = "
 		SELECT
