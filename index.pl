@@ -1344,19 +1344,22 @@ sub IndexImageFile { # $file ; indexes one image file into database
 			# up and put into the database on the next cycle
 			# unless we add provisions for that here #todo
 
-			WriteLog("... No added time found for " . $fileHash . " setting it to now.");
-
+			WriteLog("IndexImageFile: No added time found for $fileHash setting it to now.");
 			# current time
-			my $newAddedTime = GetTime();
-			$addedTime = $newAddedTime; #todo is this right? confirm
 			if (GetConfig('admin/logging/write_chain_log')) {
-				AddToChainLog($fileHash);
+				$addedTime = AddToChainLog($fileHash);
+			} else {
+				$addedTime = GetTime();
+			}
+			if (!$addedTime) {
+				# sanity check
+				WriteLog('IndexImageFile: warning: sanity check failed');
+				$addedTime = GetTime();
 			}
 			$addedTimeIsNew = 1;
 		}
 
 		DBAddPageTouch('rss');
-
 		my $itemName = TrimPath($file);
 
 		{
@@ -1369,7 +1372,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 			# 	WriteLog('IndexImageFile: convert result: ' . $convertCommandResult);
 			# }
 
-			my $fileShellEscaped = EscapeShellChars($file); #todo this is still a hack, should rename file if it has shell chars
+			my $fileShellEscaped = EscapeShellChars($file); #todo this is still a hack, should rename file if it has shell chars?
 
 			# make 420x420 thumbnail
 			if (!-e "$HTMLDIR/thumb/thumb_800_$fileHash.gif") {
@@ -1403,8 +1406,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		DBAddItem($file, $itemName, '', $fileHash, 'image', 0);
 		DBAddItem('flush');
 		DBAddItemAttribute($fileHash, 'title', $itemName, $addedTime);
-		DBAddVoteRecord($fileHash, $addedTime, 'image');
-		# add image tag
+		DBAddVoteRecord($fileHash, $addedTime, 'image'); # add image tag
 
 		DBAddPageTouch('read');
 		DBAddPageTouch('tag', 'image');
@@ -1414,7 +1416,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		DBAddPageTouch('index');
 		DBAddPageTouch('flush');
 	}
-} #IndexImageFile
+} # IndexImageFile()
 
 sub WriteIndexedConfig { # writes config indexed in database into config/
 	my @indexedConfig = DBGetLatestConfig();
