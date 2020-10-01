@@ -912,12 +912,8 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		;
 
 
-		// path for new html file
-		$fileHtmlPath = './' . GetHtmlFilename($hash);
-
-		// path for client's (browser's) path to html file
-		$fileUrlPath = '/' . GetHtmlFilename($hash);
-
+		$fileHtmlPath = './' . GetHtmlFilename($hash); // path for new html file
+		$fileUrlPath = '/' . GetHtmlFilename($hash); // client's (browser's) path to html file
 		// save new post to txt file
 		file_put_contents($filePath, $comment);
 		// this could probably just be a rename() #todo
