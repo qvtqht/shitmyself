@@ -24,7 +24,6 @@ if ($stopTimeConfig) {
 $redirectUrl = ''; // where we're going after this is all over
 
 function GetItemPlaceholderPage ($comment) { // generate temporary placeholder page for comment
-
 	// escape comment for output as html
 	$commentHtml =
 		nl2br(
@@ -67,14 +66,14 @@ function GetItemPlaceholderPage ($comment) { // generate temporary placeholder p
 	$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
 
 	// here we do gpg stuff, it's nothing for now
-	//$gpgStuff = GpgParse($filePath);##
-	//WriteLog('$gpgStuff: ' . print_r($gpgStuff, 1));##
-//	$commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
+	// $gpgStuff = GpgParse($filePath);##
+	// WriteLog('$gpgStuff: ' . print_r($gpgStuff, 1));##
+	// $commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
 
 	$pageTemplate = $commentHtmlTemplate;
 
 	return $pageTemplate;
-}
+} # GetItemPlaceholderPage()
 
 $fileUrlPath = '';
 $replyTo = '';
@@ -134,16 +133,15 @@ if ($_GET) {
 if (isset($comment) && $comment) {
 	if ($comment == 'Update') {
 		$updateStartTime = time();
-
 		DoUpdate();
 		$fileUrlPath = '';
-
 		$updateFinishTime = time();
-
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
 		RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
-	} elseif (strtolower($comment) == 'stop' && GetConfig('admin/token/stop')) {
+
+	}
+	elseif (strtolower($comment) == 'stop' && GetConfig('admin/token/stop')) {
 		$stopTime = time();
 		$stopTimeConfig = GetConfig('admin/stop');
 		if ($stopTimeConfig > $stopTime) {
@@ -154,7 +152,8 @@ if (isset($comment) && $comment) {
 		if ($stopTime > time()) {
 			print("Stop request received. Users without cookie won't be able to post for " . ($stopTime - time()) . ' seconds.');
 		}
-	} else {
+	}
+	else {
 		if ($replyTo && !preg_match('/\>\>' . $replyTo . '/', $comment)) {
 			// note that the regex does have a / at the end, it's after $replyTo
 			$comment .= "\n\n" . $replyToToken;
