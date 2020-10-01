@@ -6,10 +6,11 @@ Message board for hackers and friends which aims to please.
 PHILOSOPHY
 ==========
 Every device is a good device, worth using and taking good care of.
-Every browser is good enough, no browser or client should be turned away.
+Every browser is enough, no browser or client should be turned away.
 It is important to be polite. It is important to try to please.
-Do what user asks and wants. Don't ask user to do what they don't want.
-Try to make user comfortable. Do not bother user. As much as possible.
+Do what user asks, wants, or is in their best interest.
+Don't ask or demand user to do anything they don't want.
+Try to make user comfortable. Do not bother user with trivia.
 Tell the truth, the whole truth, and nothing but the truth.
 Whenever you find yourself on the side of majority, pause and reflect.
 You become responsible, forever, for what you have tamed.
