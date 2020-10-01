@@ -17,3 +17,38 @@ addtext=Meditate...
    or maybe something else is causing it, but either way, not great...
 -- 
 Authorization: admin
+
+
+===
+
+on netscape 4, the font sizes are inconsistent on index0 page
+
+on the plus side, unicode seems to be supported, at least for cyrillic!
+
+very nice
+
+#meta #bug #testing
+-- 
+Authorization: admin
+Cookie: 35BF609DF8BFF1E0
+
+
+===
+
+on netscape 4, the font sizes are inconsistent on index0 page
+
+on the plus side, unicode seems to be supported, at least for cyrillic!
+
+very nice
+
+#meta #bug #testing
+addtext=Meditate...
+
+
+
+===
+
+#bug when accessibility mode is enabled and then disabled, old pages are still in the previous mode sometimes
+
+#canwefixit #yeswecan
+
