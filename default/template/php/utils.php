@@ -808,31 +808,25 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 
 	if (isset($comment) && $comment) {
 		WriteLog('ProcessNewComment: $comment exists');
-
 		// remember current working directory, we'll need it later
 		$pwd = getcwd();
 		WriteLog('$pwd = ' . $pwd);
-
 		// script directory is one level up from current directory,
 		// which we expect to be called "html"
 		$scriptDir = GetScriptDir();
 		WriteLog('$scriptDir = ' . $scriptDir);
-
 		// $txtDir is where the text files live, in html/txt
 		$txtDir = $pwd . '/txt/';
 		WriteLog('$txtDir = ' . $txtDir);
-
 		// $htmlDir is the same as current directory
 		$htmlDir = $pwd . '/';
 		WriteLog('$htmlDir = ' . $htmlDir);
-
 		// find hash of the comment text
 		// it will not be the same as sha1 of the file for some mysterious reason, #todo
 		// but we will use it for now.
 		$hash = sha1($comment);
 		WriteLog('$comment = ' . $comment);
 		WriteLog('$hash = ' . $hash);
-
 		// generate a temporary filename based on the temporary hash
 		$fileName = $txtDir . $hash . '.txt';
 		WriteLog('$fileName = ' . $fileName);
