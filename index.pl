@@ -1151,11 +1151,14 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# adding messages tagged #todo, #brainstorm, and #bug
 				# to their respective files under doc/*.txt
 
-				if (!$hasToken{'changelog'} || index($message, 'Software Updated to Version') == -1) {
-					# exclude changelog messages
+				if ($hasToken{'meta'}) {
+					# only if already tagged #meta
+
+					#todo this can go under tagset/meta ?????
+					my @arrayOfMetaTokens = qw(todo brainstorm bug scratch known);
 
 					#todo instead of hard-coded list use tagset
-					foreach my $devTokenName (qw(todo brainstorm bug scratch known meta)) {
+					foreach my $devTokenName (@arrayOfMetaTokens) {
 						if ($hasToken{$devTokenName}) {
 							if ($message) {
 								my $todoContents = GetFile("doc/$devTokenName.txt");
