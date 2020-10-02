@@ -52,24 +52,25 @@ function writeOnload () { // onload handler for write page
 					}
 
 
-					if (window.makeCoin) {
+					if (window.solvePuzzle) {
 						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
 						if (spanWriteAdvanced) {
-							var btnMakeCoin = document.createElement('input');
-							btnMakeCoin.setAttribute('type', 'button');
-							btnMakeCoin.setAttribute('value', 'Make Coin & Send');
-							btnMakeCoin.setAttribute('onclick',	"if (window.makeCoin) { return makeCoin(this); } else { return true; }");
-							spanWriteAdvanced.appendChild(btnMakeCoin);
+							var btnSolvePuzzle = document.createElement('input');
+							btnSolvePuzzle.setAttribute('type', 'button');
+							btnSolvePuzzle.setAttribute('value', 'Solve Puzzle & Send');
+							btnSolvePuzzle.setAttribute('onclick',	"if (window.solvePuzzle) { return solvePuzzle(this); } else { return true; }");
+							spanWriteAdvanced.appendChild(btnSolvePuzzle);
 
 							var br = document.createElement('br');
 							spanWriteAdvanced.appendChild(br);
 
-							var lblMakeCoin = document.createElement('span');
-							lblMakeCoin.setAttribute('class', 'beginner');
-							lblMakeCoin.innerHTML = 'Proof of work coin helps prevent spam.<br>Coin generation may take time.<br>Message will be signed also.';
-							spanWriteAdvanced.appendChild(lblMakeCoin);
+							var lblSolvePuzzle = document.createElement('span');
+							lblSolvePuzzle.setAttribute('class', 'beginner');
+							var gt = unescape('%3E');
+							lblSolvePuzzle.innerHTML = 'Solving puzzle helps prove not spammer.<br' + gt + 'Solving puzzle may take time.<br' + gt + 'Puzzle solving means also signature.';
+							spanWriteAdvanced.appendChild(lblSolvePuzzle);
 						}
-					} // window.makeCoin
+					} // window.solvePuzzle
 				} // window.getAvatar
 			} // document.getElementById('spanSignAs')
 

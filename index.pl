@@ -919,23 +919,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			$hasParent = 1;
 		}
 
-		# look for coins #coin #hascoin
-		if (GetConfig('admin/token/coin') && $message) {
-			my @coinLines = ($message =~ m/^([0-9A-F]{16}) ([0-9]{10}) (0\.[0-9]+)/mg);
+		# look for solved puzzles #puzzle
+		if (GetConfig('admin/token/puzzle') && $message) {
+			my @puzzleLines = ($message =~ m/^([0-9A-F]{16}) ([0-9]{10}) (0\.[0-9]+)/mg);
 
-			if (@coinLines) {
-				WriteLog(". coin token found!");
-				#my $lineCount = @coinLines / 3;
+			if (@puzzleLines) {
+				WriteLog(". puzzle token found!"); #todo prefix
+				#my $lineCount = @puzzleLines / 3;
 				#
 				# 	if ($isSigned) {
 				# 		WriteLog("... isSigned");
 				# 		if (IsServer($gpgKey)) {
 				# 			WriteLog("... isServer");
-				while (@coinLines) {
-					WriteLog("... \@coinLines");
-					my $authorKey = shift @coinLines;
-					my $mintedAt = shift @coinLines;
-					my $checksum = shift @coinLines;
+				while (@puzzleLines) {
+					WriteLog("... \@puzzleLines");
+					my $authorKey = shift @puzzleLines;
+					my $mintedAt = shift @puzzleLines;
+					my $checksum = shift @puzzleLines;
 
 					WriteLog("... $authorKey, $mintedAt, $checksum");
 
@@ -945,20 +945,20 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $hash = sha512_hex($reconLine);
 
-					my @acceptedCoinPrefix = split("\n", GetConfig('coin/accepted'));
-					push @acceptedCoinPrefix, GetConfig('coin/prefix');
+					my @acceptedPuzzlePrefix = split("\n", GetConfig('puzzle/accepted'));
+					push @acceptedPuzzlePrefix, GetConfig('puzzle/prefix');
 
-					my $coinAccepted = 0;
+					my $puzzleAccepted = 0;
 
-					foreach my $coinPrefix (@acceptedCoinPrefix) {
-						$coinPrefix = trim($coinPrefix);
-						if (!$coinPrefix) {
+					foreach my $puzzlePrefix (@acceptedPuzzlePrefix) {
+						$puzzlePrefix = trim($puzzlePrefix);
+						if (!$puzzlePrefix) {
 							next;
 						}
 
-						my $coinPrefixLength = length($coinPrefix);
+						my $puzzlePrefixLength = length($puzzlePrefix);
 						if (
-							substr($hash, 0, $coinPrefixLength) eq $coinPrefix
+							substr($hash, 0, $puzzlePrefixLength) eq $puzzlePrefix
 								&&
 							(
 								$authorKey eq $gpgKey
@@ -966,27 +966,27 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								$authorKey eq $hasCookie
 							)
 						) {
-							$message =~ s/$reconLine/[coin: $coinPrefix]/g;
+							$message =~ s/$reconLine/[Solved]/g;
 
-							DBAddVoteRecord($fileHash, $addedTime, 'hascoin');
+							DBAddVoteRecord($fileHash, $addedTime, 'puzzle');
 
-							DBAddItemAttribute($fileHash, 'coin_timestamp', $mintedAt);
+							DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
 
 							WriteLog("... $reconLine");
 
 							$detokenedMessage =~ s/$reconLine//g;
 
-							$coinAccepted = 1;
+							$puzzleAccepted = 1;
 
 							last;
 							#DBAddItemAttribute('
-							#$message .= 'coin valid!'; #$reconLine . "\n" . $hash;
+							#$message .= 'puzzle valid!'; #$reconLine . "\n" . $hash;
 						}
 
-					}#foreach my $coinPrefix (@acceptedCoinPrefix) {
+					}#foreach my $puzzlePrefix (@acceptedPuzzlePrefix) {
 
-					if (!$coinAccepted) {
-						$message =~ s/$reconLine/[coin not accepted]/g;
+					if (!$puzzleAccepted) {
+						$message =~ s/$reconLine/[Puzzle?]/g;
 					}
 
 				}

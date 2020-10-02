@@ -1810,7 +1810,7 @@ sub DBGetAddedTime { # return added time for item specified
 		FROM item_attribute
 		WHERE
 			file_hash = '$fileHash' AND
-			attribute IN ('chain_timestamp', 'gpg_timestamp', 'coin_timestamp')
+			attribute IN ('chain_timestamp', 'gpg_timestamp', 'puzzle_timestamp')
 	";
 	# my $query = "SELECT add_timestamp FROM added_time WHERE file_hash = '$fileHash'";
 
@@ -2183,7 +2183,7 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 
 	$whereClause = "
 		WHERE 
-			(',' || tags_list || ',' LIKE '%,approve,%' OR ',' || tags_list || ',' LIKE '%,hascoin,%')
+			(',' || tags_list || ',' LIKE '%,approve,%' OR ',' || tags_list || ',' LIKE '%,puzzle,%')
 			AND (',' || tags_list || ',' NOT LIKE '%,flag,%')
 
 	"; #todo remove hardcoding here

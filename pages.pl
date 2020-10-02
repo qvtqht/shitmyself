@@ -2197,13 +2197,13 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
 		}
 
-		if ($script eq 'coin') {
+		if ($script eq 'puzzle') {
 			# for voting.js we need to fill in some theme colors
-			my $coinPrefix = GetConfig('coin/prefix');;
-			my $coinCycleLimit = GetConfig('coin/cycle_limit');
+			my $puzzlePrefix = GetConfig('puzzle/prefix');;
+			my $puzzleCycleLimit = GetConfig('puzzle/cycle_limit');
 
-			$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$coinPrefix';/g;
-			$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $coinCycleLimit;/g;
+			$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$puzzlePrefix';/g;
+			$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $puzzleCycleLimit;/g;
 		}
 
 		if ($script eq 'profile') {
@@ -3637,9 +3637,9 @@ sub GetWritePage { # returns html for write page
 		if (GetConfig('admin/php/enable')) {
 			push @js, 'write_php';
 		}
-		if (GetConfig('admin/token/coin')) {
-			push @js, 'coin';
-			# push @js, 'coin', 'sha512';
+		if (GetConfig('admin/token/puzzle')) {
+			push @js, 'puzzle';
+			# push @js, 'puzzle', 'sha512';
 		}
 		if (GetConfig('admin/js/translit')) {
 			push @js, 'translit';

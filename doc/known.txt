@@ -59,7 +59,7 @@ Long messages without JS may cause URI too long error
 All 40-character-long hex-looking strings are assumed to be existing items
 	Linked in the html-ized posts, even if they do not exist
 
-config/coin/accepted
+config/puzzle/accepted
 	Must be in "reverse substring precedence"
 	That is, aaa before aa (because aa is substring of aaa)
 

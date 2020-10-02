@@ -1,8 +1,8 @@
-// coin.js
+// puzzle.js
 
 if (document.createElement && document.head) {
 // include sha512.js library instead of embedding it in page
-// because it's big and cointains (gt) characters
+// because it's big and contains (gt) characters
 // and because it is large
 	var script = document.createElement('script');
 	script.src = '/sha512.js';
@@ -10,8 +10,8 @@ if (document.createElement && document.head) {
 	document.head.appendChild(script);
 }
 
-function doMakeCoin () { // makes coin
-// called from a timeout set by makeCoin()
+function doSolvePuzzle () { // solves puzzle
+// called from a timeout set by solvePuzzle()
 	var fp = '0000000000000000';
 	if (window.getUserFp) {
 		fp = getUserFp();
@@ -29,36 +29,32 @@ function doMakeCoin () { // makes coin
 	var lookingFor = '1337'; // required hash prefix
 	var lookingForLength = lookingFor.length;
 	var cycleLimit = 1000000; // give up after this many tries
-	var coin = ''; // finished coin
-	var hash = ''; // hash of coin
-
+	var puzzle = ''; // finished puzzle
+	var hash = ''; // hash of puzzle
+cycleLimit = 100; //#temp
 	while(!done) {
-		// look for a coin which fits criteria
-
+		// look for a puzzle which fits criteria
 		i = i + 1; // counter
-
 		r = Math.random() + '';
-		coin = fp + ' ' + epoch + ' ' + r;
-		hash = hex_sha512(coin);
-
+		puzzle = fp + ' ' + epoch + ' ' + r;
+		hash = hex_sha512(puzzle);
 		if (hash.substring(0, lookingForLength) == lookingFor) {
 			// match found
 			done = 1;
 		}
-
 		if (cycleLimit < i) {
 			// give up
 			done = 2;
 		}
-	}
+	} // while(!done) -- solving puzzle
 
 	// add to compose form, sign, and submit
-	var dcc = document.compose.comment;
-	if (dcc && window.makeCoin) {
+	var txtComment = document.compose.comment;
+	if (txtComment && window.solvePuzzle) {
 		if (done == 1) {
-			dcc.value += '\n\n' + coin
+			txtComment.value += '\n\n' + puzzle
 		} else {
-			dcc.value += '\n\n' + 'coin not minted';
+			txtComment.value += '\n\n' + 'puzzle not solved, even after ' + i + ' tries';
 		}
 	}
 	if (window.signMessage) {
@@ -67,12 +63,12 @@ function doMakeCoin () { // makes coin
 	if (window.writeSubmit) {
 		writeSubmit();
 	}
-} // doMakeCoin()
+} // doSolvePuzzle()
 
-function makeCoin (t) { // t = button pressed ; begins coin minting process and indicates to user
+function solvePuzzle (t) { // t = button pressed ; begins puzzle solving process and indicates to user
 // done with timeout to give button a chance to change caption before pegging cpu
 
-	if (!window.hex_sha512 || !window.doMakeCoin) {
+	if (!window.hex_sha512 || !window.doSolvePuzzle) {
 		// required function is missing
 		return true;
 	}
@@ -81,10 +77,10 @@ function makeCoin (t) { // t = button pressed ; begins coin minting process and 
 		t.value = 'Meditate...';
 	}
 
-	// set timeout to mint coin
-	var timeoutMakeCoin = setTimeout('doMakeCoin()', 50);
+	// set timeout to solve puzzle
+	var timeoutSolvePuzzle = setTimeout('doSolvePuzzle()', 50);
 
 	return false; // do not let the form submit
-} // makeCoin()
+} // solvePuzzle()
 
-// / coin.js
+// / puzzle.js
