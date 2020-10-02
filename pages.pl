@@ -3669,7 +3669,7 @@ sub GetWritePage { # returns html for write page
 	}
 
 	return $writePageHtml;
-}
+} # GetWritePage()
 
 
 sub GetEventAddPage { # get html for /event.html
@@ -3815,9 +3815,9 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $settingsTemplate = GetTemplate('form/settings.template');
 	$txtIndex .= $settingsTemplate;
 
-	# stats are displayed on settings page also
-	my $statsTable = GetStatsTable();
-	$txtIndex .= $statsTable;
+	# # stats are already displayed in footer
+	# my $statsTable = GetStatsTable();
+	# $txtIndex .= $statsTable;
 
 	$txtIndex .= GetPageFooter();
 
