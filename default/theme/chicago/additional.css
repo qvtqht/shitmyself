@@ -23,7 +23,7 @@ input[type=text], input[type=password], select, option, textarea {
     background-color: #f0f0d0;
 }
 .dialog {
-	box-shadow: 5pt 5pt 0 #405050;
+	box-shadow: 3pt 3pt 0 #405050;
 	border: $borderDialog;
 	background-color: $colorWindow;
 	font-family: tahoma, helvetica, arial, sans-serif;
