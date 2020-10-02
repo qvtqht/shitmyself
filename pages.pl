@@ -1674,6 +1674,8 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 }
 
 sub WriteMenuList { # writes config/list/menu based on site configuration
+	#todo this function is not obvious, overrides obvious list/menu
+
 	my @menu;
 
 	push @menu, 'read';
@@ -1785,7 +1787,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	state $logoText;
 	if (!defined($logoText)) {
-		$logoText = GetConfig('logo/logo_text');
+		$logoText = GetConfig('logo_text');
 		if (!$logoText) {
 			$logoText = '';
 		}
@@ -1871,10 +1873,10 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	$htmlStart =~ s/\$introText/$introText/g;
 
-	if (GetConfig('logo/enabled')) {
+	if (GetConfig('logo_enabled')) {
 		$htmlStart =~ s/\$logoText/$logoText/g;
 	} else {
-		$htmlStart =~ s/\$logoText/$logoText/g;
+		$htmlStart =~ s/\$logoText//g;
 	}
 
 	if (GetConfig('admin/js/enable') && GetConfig('admin/js/loading')) {
@@ -3482,13 +3484,11 @@ sub GetUploadWindow { # upload window for upload page
 	return $uploadWindow;
 } # GetUploadWindow()
 
-sub GetSearchWindow {
+sub GetSearchWindow { # search window for search page
 	my $searchForm = GetTemplate('form/search.template');
-
 	my $searchWindow = GetWindowTemplate('Search', '', '', $searchForm, '');
-
 	return $searchWindow;
-}
+} # GetSearchWindow()
 
 sub GetWriteForm { # returns write form (for composing text message)
 	my $writeForm = GetTemplate('form/write/write.template');
