@@ -2459,8 +2459,8 @@ sub GetScoreboardPage { #returns html for /authors.html
 		if ($authorLastSeen) {
 			$authorLastSeen = GetTimestampWidget($authorLastSeen);
 		}
-#		$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
-#
+		#$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
+
 		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
 		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
@@ -3560,7 +3560,7 @@ sub GetWriteForm { # returns write form (for composing text message)
 
 
 	return $writeForm;
-}
+} # GetWriteForm()
 
 sub GetUploadPage { # returns html for upload page
 	my $html = '';
