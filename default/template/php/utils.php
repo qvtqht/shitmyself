@@ -803,6 +803,7 @@ function unsetcookie2 ($key) { // remove cookie in most compatible way
 function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
 	$fileUrlPath = ''; // path file should be stored in based on $hash
+	$scriptDir = GetScriptDir();
 
 	WriteLog('ProcessNewComment(...)');
 
@@ -944,8 +945,8 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 	if (GetConfig('admin/php/post/update_item_on_post')) {
 		WriteLog('ProcessNewComment: admin/php/post/update_item_on_post is TRUE');
 
-		WriteLog("cd .. ; ./update.pl \"$filePath\"");
-		WriteLog(`cd .. ; ./update.pl "$filePath"`);
+		WriteLog("cd $scriptDir ; ./update.pl \"$filePath\"");
+		WriteLog(`cd $scriptDir ; ./update.pl "$filePath"`);
 
 		if ($pwd) {
 			WriteLog("cd $pwd");
@@ -955,8 +956,8 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		if (isset($replyTo) && $replyTo) {
 			WriteLog("\$replyTo = $replyTo");
 			if (IsItem($replyTo)) {
-				WriteLog("cd .. ; ./pages.pl \"$replyTo\"");
-				WriteLog(`cd .. ; ./pages.pl "$replyTo"`);
+				WriteLog("cd $scriptDir ; ./pages.pl \"$replyTo\"");
+				WriteLog(`cd $scriptDir ; ./pages.pl "$replyTo"`);
 
 				if ($pwd) {
 					WriteLog("cd $pwd");
@@ -973,8 +974,8 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 	if (GetConfig('admin/php/post/update_all_on_post')) {
 		WriteLog('ProcessNewComment: admin/php/post/update_all_on_post is TRUE');
 
-		WriteLog("cd .. ; ./update.pl --all");
-		WriteLog(`cd .. ; ./update.pl --all`);
+		WriteLog("cd $scriptDir ; ./update.pl --all");
+		WriteLog(`cd $scriptDir ; ./update.pl --all`);
 
 		if ($pwd) {
 			WriteLog("cd $pwd");
@@ -986,8 +987,8 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		if (GetConfig('admin/php/post/update_on_post')) {
 			WriteLog('ProcessNewComment: admin/php/post/update_on_post is TRUE');
 
-			WriteLog("cd .. ; ./update.pl");
-			WriteLog(`cd .. ; ./update.pl`);
+			WriteLog("cd $scriptDir ; ./update.pl");
+			WriteLog(`cd $scriptDir ; ./update.pl`);
 
 			if ($pwd) {
 				WriteLog("cd $pwd");
