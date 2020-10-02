@@ -2053,6 +2053,14 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 		return;
 	}
 
+	# just an idea
+	# doesn't seem to work well because the console freezes up if there's no \n coming
+	# if ($text =~ m/^[0-9]+$/) {
+	# 	$lastText = $text;
+	# 	print $text . " ";
+	# 	return;
+	# }
+
 	WriteLog($text);
 	my $timestamp = GetTime();
 
