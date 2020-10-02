@@ -31,7 +31,7 @@ function doSolvePuzzle () { // solves puzzle
 	var cycleLimit = 1000000; // give up after this many tries
 	var puzzle = ''; // finished puzzle
 	var hash = ''; // hash of puzzle
-cycleLimit = 100; //#temp
+
 	while(!done) {
 		// look for a puzzle which fits criteria
 		i = i + 1; // counter
