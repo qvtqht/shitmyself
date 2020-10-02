@@ -34,7 +34,7 @@ sub GetYes { # $message, $defaultYes ; print $message, and get Y response from t
 	return 0;
 }
 
-sub WriteMessage { # $message ; print a line to user
+sub WriteConfigureMessage { # $message ; print a line to user
 	my $message = shift;
 	chomp $message;
 
@@ -50,8 +50,8 @@ sub WriteMessage { # $message ; print a line to user
 ##################
 # USER CAN READ?
 
-WriteMessage('=====');
-WriteMessage('Hello!');
+WriteConfigureMessage('=====');
+WriteConfigureMessage('Hello!');
 
 my $canRead = GetYes('Can you read this text?');
 
@@ -78,7 +78,7 @@ if ($yumPath) {
 		my $yumCommand = 'sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick';
 		my $yumResult = `$yumCommand`;
 
-		WriteMessage($yumResult);
+		WriteConfigureMessage($yumResult);
 	}
 }
 if ($dnfPath) {
@@ -88,7 +88,7 @@ if ($dnfPath) {
 		my $dnfCommand = 'sudo dnf install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick';
 		my $dnfResult = `$dnfCommand`;
 
-		WriteMessage($dnfResult);
+		WriteConfigureMessage($dnfResult);
 	}
 }
 if ($aptPath) {
@@ -98,7 +98,7 @@ if ($aptPath) {
 		my $aptCommand = 'sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 ImageMagick';
 		my $aptResult = `$aptCommand`;
 
-		WriteMessage($aptResult);
+		WriteConfigureMessage($aptResult);
 	}
 }
 
@@ -115,7 +115,7 @@ my $enableLighttpd = GetYes('Enable lighttpd?');
 
 if ($enableLighttpd) {
 	`echo 1 > config/admin/lighttpd/enable`;
-	WriteMessage('Set config/admin/lighttpd/enable=1');
+	WriteConfigureMessage('Set config/admin/lighttpd/enable=1');
 }
 
 #####
