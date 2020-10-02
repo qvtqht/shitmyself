@@ -630,7 +630,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					my $reconLine; # reconciliation
 					$reconLine = $token . $space . $value;
 
-					WriteLog('AccessLogHash $reconLine = ' . $reconLine);
+					WriteLog('IndexTextFile: AccessLogHash $reconLine = ' . $reconLine);
 
 					if ($value) {
 						$hasToken{'AccessLogHash'} = 1;
@@ -652,7 +652,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 					}
 
-					$message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
+					$message =~ s/$reconLine/[AccessLogHash: $value]/;
+					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
 				}
 			}
 		} # AccessLogHash token
