@@ -755,7 +755,7 @@ if (GetConfig('admin/php/route_enable')) {
 						$serverResponseTemplate
 					);
 
-					if (!$lightMode == GetConfig('admin/php/server_response_attach_to_anchor')) {
+					if (!$lightMode && GetConfig('admin/php/server_response_attach_to_anchor')) {
 						// if server_response_attach_to_anchor, we will put the server message next to the anchor
 						// unless we are in light mode, because then we want the message at the top of the page
 
