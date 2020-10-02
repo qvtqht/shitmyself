@@ -1171,6 +1171,10 @@ sub ReplaceStrings {
 	return $content;
 }
 
+sub IsUrl { # add basic isurl()
+	return 1;
+} # IsUrl()
+
 sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds attr=value to html tag;
 	WriteLog('AddAttributeToTag() begin');
 
