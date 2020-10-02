@@ -200,13 +200,13 @@ my @allTagsList;
 WriteMessage("DBGetAllAppliedTags()...");
 my @tagsList = DBGetAllAppliedTags();
 
-WriteLog("DBGetAllAppliedTags returned " . scalar(@tagsList) . " items");
+WriteLog("DBGetAllAppliedTags() returned " . scalar(@tagsList) . " items");
 
 if (GetConfig('tag_cloud_page')) {
 	foreach my $tag1 (@tagsList) {
-		WriteLog("DBGetAllAppliedTags $tag1...");
+		WriteLog("DBGetAllAppliedTags: $tag1...");
 		foreach my $tag2 (@tagsList) {
-			WriteLog("DBGetAllAppliedTags $tag1 $tag2");
+			WriteLog("DBGetAllAppliedTags: $tag1 $tag2");
 			my @items = DBGetItemListByTagList($tag1, $tag2);
 
 			if (scalar(@items) >= 5) {
