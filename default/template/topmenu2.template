@@ -2,12 +2,15 @@
 <form action="" name="frmTopMenu">
 	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog width="95%">
 		<tr bgcolor=$colorTopMenuTitlebar class=titlebar style="border:0">
-			<td colspan=2><small>
-			<b>
-				<a tabindex=2 href="#maincontent" name=top><font color=$colorTopMenuTitlebarText>Skip to main content</font></a>;
-				<a href="$selfLink?light=1" tabindex=3><font color=$colorTopMenuTitlebarText>Accessibility mode</font></a>;
-			</b><br>
-			</small></td>
+			<td colspan=2>
+				$logoText
+				<small>
+				<b>
+					<a tabindex=2 href="#maincontent" name=top><font color=$colorTopMenuTitlebarText>Skip to main content</font></a>;
+					<a href="$selfLink?light=1" tabindex=3><font color=$colorTopMenuTitlebarText>Accessibility mode</font></a>;
+				</b><br>
+				</small>
+			</td>
 		</tr>
 		<tr bgcolor=$colorWindow class=menubar>
 			<td>
