@@ -847,6 +847,14 @@ sub GetItemPage {
 				}
 			}
 
+			{ # tags list for attributes list bolt-on
+				$itemAttributesTable .= '<tr><td>';
+				$itemAttributesTable .= 'tags_all';
+				$itemAttributesTable .= '</td><td>';
+				$itemAttributesTable .= $file{'tags_list'};
+				$itemAttributesTable .= '</td></tr>';
+			}
+
 			# # #todo turn it into a loop and turn plain epoch timestamps into timestamp elements
 			# my $trTr = '</td></tr><tr><td>';
 			# $itemAttributes =~ s/\n/$trTr/gi;
