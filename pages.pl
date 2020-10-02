@@ -3593,20 +3593,16 @@ sub GetSearchPage { # returns html for search page
 	my $title = 'Search';
 
 	$html .= GetPageHeader($title, $title, 'search');
-
 	$html .= GetTemplate('maincontent.template');
-
 	$html .= GetSearchWindow();
-
 	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(settings avatar profile));
-
 
 	if (GetConfig('admin/js/enable')) {
 		$html = AddAttributeToTag($html, 'body', 'onload', 'if (window.searchOnload) searchOnload(); if (document.search.q) { document.search.q.focus() }');
+		$html = InjectJs($html, qw(settings avatar profile puzzle));
 	}
 	return $html;
-}
+} # GetSearchPage()
 
 sub GetWritePage { # returns html for write page
 	# $writePageHtml stores html page output
