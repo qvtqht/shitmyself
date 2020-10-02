@@ -37,6 +37,8 @@
 							>
 
 							<span id=spanSignAs class=advanced></span>
+
+							<p id=spanWriteAdvanced class=advanced></p>
 						</p>
 
 						$writeJs
