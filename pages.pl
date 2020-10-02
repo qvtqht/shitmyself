@@ -3566,22 +3566,27 @@ sub GetUploadPage { # returns html for upload page
 	my $html = '';
 	my $title = 'Upload';
 
-	$html .= GetPageHeader($title, $title, 'upload');
-
-	$html .= GetTemplate('maincontent.template');
-
-	$html .= GetUploadWindow();
-
-	$html .= GetPageFooter();
-
 	if (GetConfig('admin/php/enable')) {
-		$html = InjectJs($html, qw(settings avatar profile));
+		$html .= GetPageHeader($title, $title, 'upload');
+		$html .= GetTemplate('maincontent.template');
+		$html .= GetUploadWindow();
+		$html .= GetPageFooter();
+
+		if (GetConfig('admin/js/enable')) {
+			$html = InjectJs($html, qw(settings avatar profile));
+		}
 	} else {
-		$html = InjectJs($html, qw(settings avatar profile));
+		$html .= GetPageHeader($title, $title, 'upload');
+		$html .= GetTemplate('maincontent.template');
+		$html .= GetWindowTemplate($title, '', '', '<p>Upload feature is not available. Apologies.</p>');
+		$html .= GetPageFooter();
+		if (GetConfig('admin/js/enable')) {
+			$html = InjectJs($html, qw(settings avatar profile));
+		}
 	}
 
 	return $html;
-}
+} # GetUploadPage()
 
 sub GetSearchPage { # returns html for search page
 	my $html = '';
