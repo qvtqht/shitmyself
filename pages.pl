@@ -33,7 +33,7 @@ require './utils.pl';
 require './sqlite.pl';
 
 
-sub GenerateDialogPage { # generates page with dialog
+sub GetDialogPage { # returns html page with dialog
 	# #todo:
 	# home
 	# write
@@ -798,6 +798,7 @@ sub GetItemPage {
 				$allReplies .= $replyTemplate;
 			}
 			else {
+
 				WriteLog('Warning: replyTemplate is missing for some reason!');
 			}
 		}
@@ -3241,7 +3242,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# }
 
 	{
-		my $fourOhFourPage = GenerateDialogPage('404'); #GetTemplate('404.template');
+		my $fourOhFourPage = GetDialogPage('404'); #GetTemplate('404.template');
 		if (GetConfig('html/clock')) {
 			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock fresh)); #todo this causes duplicate clock script
 		}
@@ -3250,7 +3251,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	}
 
 	{
-		my $accessDeniedPage = GenerateDialogPage('401'); #GetTemplate('401.template');
+		my $accessDeniedPage = GetDialogPage('401'); #GetTemplate('401.template');
 		PutHtmlFile("error/error-401.html", $accessDeniedPage);
 	}
 
