@@ -630,23 +630,11 @@ elsif ($arg1) {
 			}
 		}
 
-		if (
-			lc(substr($arg1, length($arg1) - 4, 4)) eq '.png' ||
-			lc(substr($arg1, length($arg1) - 4, 4)) eq '.gif' ||
-			lc(substr($arg1, length($arg1) - 4, 4)) eq '.jpg' ||
-			lc(substr($arg1, length($arg1) - 4, 4)) eq '.bmp' ||
-			lc(substr($arg1, length($arg1) - 4, 4)) eq '.svg' ||
-			lc(substr($arg1, length($arg1) - 5, 5)) eq '.webp' ||
-			lc(substr($arg1, length($arg1) - 5, 5)) eq '.jfif'
-			#todo config/admin/upload/allow_files
-		) { #$arg1 =~ m/\.txt$/
+		if (IsImageFile($arg1)) {
 			my $fileProcessed = ProcessImageFile($arg1);
-
 			if ($fileProcessed) {
 				IndexImageFile('flush');
-
 				MakeSummaryPages();
-
 				MakePage('item', $fileProcessed, 1);
 			}
 		}
