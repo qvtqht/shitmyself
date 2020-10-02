@@ -696,8 +696,12 @@ if (GetConfig('admin/php/route_enable')) {
 				$lightMode = $_COOKIE['light'] ? 1 : 0;
 			} else {
 				// use light mode default from config
-				$lightMode = GetConfig('admin/php/light_mode_default');
+				$lightMode = GetConfig('admin/php/light_mode_default') ? 1 : 0;
 			}
+		}
+
+		if (GetConfig('admin/php/light_mode_always_on')) {
+			$lightMode = 1;
 		}
 
 		if ($serverResponse) {
