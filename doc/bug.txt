@@ -49,6 +49,7 @@ addtext=Meditate...
 ===
 
 #bug when accessibility mode is enabled and then disabled, old pages are still in the previous mode sometimes
+#canwefixit #yeswecan #probablyinmostbrowsers
 
-#canwefixit #yeswecan
+
 

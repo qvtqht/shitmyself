@@ -44,17 +44,27 @@ This is tuned for global search, so that one can press Ctrl+Shift+F, type in "So
 The same function may be written in multiple languages, and you'll see all of them in one search.
 Of course, in order for this to work well, when *calling* a function, I must avoid putting a space after the function name.
 
- Examples of calling a function:
+Examples of calling a function:
 
- SomePerlFunction('foo', 'bar'); # perl
+SomePerlFunction('foo', 'bar'); # perl
 SomePhpFunction('foo', 'bar'); // php
 SomeJavaScriptFunction('foo', 'bar'); // javascript
 
- This also applies to writing debug messages. I avoid putting a space after the function name there, too.
+This also applies to writing debug messages. I avoid putting a space after the function name there, too.
 
- Examples, also seen above:
+Examples, also seen above:
 
- WriteLog("SomePerlFunction($firstArgument, $argumentTheSecond)");
+WriteLog("SomePerlFunction($firstArgument, $argumentTheSecond)");
 WriteLog("SomePhpFunction($firstArgument, $argumentTheSecond)");
 //alert('DEBUG: SomeJavaScriptFunction('+firstArgument+', '+argumentTheSecond+')');
 
+JavaScript and > symbols
+	There are several browsers which consider > symbol to be HTML comment closing tag
+		Mosaic
+		IE2
+	For this reason, > symbol in JS is to be avoided
+		I've come up with the following pretty short method
+			var gt = unescape('%3E');
+			var someTag = '<p' + gt;
+			var someHtmlString = '<p' + gt + 'hello, world</p' + gt;
+	It's kind of a pain in the ass, but also happens to discourage html strings in JS which is a plus

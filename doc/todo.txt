@@ -1,3 +1,7 @@
+PROBLEM: sometimes placeholder page is still not replaced
+
+PROBLEM: there is a sqlite query call every time a page is hit, even if it exists
+
 Prefix all php (and js?) templates with:
 	die('removeme');
 	then remove the line when building from template
@@ -8,14 +12,26 @@ de-couple
 	extensive indexing of file
 		this can be put off
 
-
 useful structural tags
 	>>item #addparent <hash>
 		add parent to item
 	>>item #reparent <hash>
 		remove all other parents and attach to <hash>
-	>>item #adopt <hash>
-		sets posting as belonging to posting author
+	>>item #adopt
+		sets posting as belonging to author
+	>>item #replace [hash]
+		if no hash, replace with self
+		otherwise replace with item with that hash
+			this would mean content is replaced on the page
+				with a notice
+
+reddit account tagging v2
+	1) create profile
+	2) post "verify <profile>" on reddit userpage
+	3) >>profile #reddit <username>
+	4) curl reddit profile url, look for confirmation
+		use ./once for caching 
+	5) add reddit_username attribute to profile
 
 reddit account tagging
 	1) "i claim this reddit account http://
@@ -1618,4 +1634,103 @@ eventually html/ template subdir?
 >>aa9e0f23260baa14f1bd613a5a23489eaaaf4678
 
 #todo reply form should set auto reload to true
+
+
+
+===
+
+>>de32fa865b8300c3bbba277e00c0fb1cef2cb226
+
+attention this message is public
+
+#todo #meta
+
+
+
+===
+
+>>4e706751c33940ed26cbf0cf1b588ca52e2795a3
+
+#todo maybe files should stop after the page queue builds up a certain number?
+
+or perhaps finally architect it all into one queue? #tEcHnIcAlDeBt
+
+
+
+===
+
+>>de32fa865b8300c3bbba277e00c0fb1cef2cb226
+
+attention this message is public
+
+#todo #meta
+
+
+
+===
+
+>>4e706751c33940ed26cbf0cf1b588ca52e2795a3
+
+#todo maybe files should stop after the page queue builds up a certain number?
+
+or perhaps finally architect it all into one queue? #tEcHnIcAlDeBt
+
+
+
+===
+
+>>9622924abf33f94ecefac9987492a48edc0227b8
+
+#todo
+
+
+
+===
+
+>>9622924abf33f94ecefac9987492a48edc0227b8
+
+#meta #bug #todo #test thanks
+
+
+
+===
+
+#todo #meta
+
+fun things to work on
+
+tag permissions ... so close!
+
+upload menu button: attach SpawnUploadForm()
+   which will create upload form, with file filed, click the field, and then perhaps even start upload?
+
+
+
+===
+
+profile page should be not cached?
+
+somehow needs to do a better job of getting rid of old logged in displayed status after logout
+
+maybe as simple as another setTimeout
+
+#meta #todo
+
+
+
+===
+
+bigg todo: #todo #meta
+
+make some kind of thingy to put all the setTimeouts together so that it's neater
+
+
+
+===
+
+>>7cdc85f2d5bbb327916b4edc101ed332a8c21c4a
+
+#todo #meta
+
+PRAGMA journal_mode=WAL;
 

@@ -1132,3 +1132,10 @@ operator shold enable by default if user is admin
 
 Each time page changes, a small timestamp element could be added to the indicator.
 
+===
+
+
+#meta does this mean that config foo = off should set it to 0 or false? =\
+
+edge case for now.
+
