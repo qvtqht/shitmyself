@@ -942,6 +942,36 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
 	}
 
+	if (GetConfig('admin/php/post/index_file_on_post')) {
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+
+		WriteLog("cd $scriptDir ; ./index.pl \"$filePath\"");
+		WriteLog(`cd $scriptDir ; ./index.pl "$filePath"`);
+
+		WriteLog("cd $scriptDir ; ./pages.pl \"$hash\"");
+		WriteLog(`cd $scriptDir ; ./pages.pl "$hash"`);
+
+		if (isset($replyTo) && $replyTo) {
+			WriteLog("\$replyTo = $replyTo");
+			if (IsItem($replyTo)) {
+				WriteLog("cd $scriptDir ; ./pages.pl \"$replyTo\"");
+				WriteLog(`cd $scriptDir ; ./pages.pl "$replyTo"`);
+			}
+		} else {
+			WriteLog("\$replyTo not found");
+		}
+
+		if ($pwd) {
+			WriteLog("cd $pwd");
+			WriteLog(`cd $pwd`);
+		}
+
+
+	} # index_file_on_post
+
 	if (GetConfig('admin/php/post/update_item_on_post')) {
 		WriteLog('ProcessNewComment: admin/php/post/update_item_on_post is TRUE');
 

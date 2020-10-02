@@ -4178,9 +4178,12 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
 				mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2)));
 			}
+			if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2))) {
+				mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)));
+			}
 
 			# get the page for this item and write it
-			WriteLog('my $filePage = GetItemPage($file = "' . $file . '")');
+			WriteLog('MakePage: my $filePage = GetItemPage($file = "' . $file . '")');
 			my $filePage = GetItemPage($file);
 			WriteLog('PutHtmlFile($targetPath = ' . $targetPath . ', $filePage = ' . $filePage . ')');
 			PutHtmlFile($targetPath, $filePage);
