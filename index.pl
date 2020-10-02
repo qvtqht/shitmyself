@@ -658,6 +658,67 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		} # AccessLogHash token
 
+
+		# accessloghash: AccessLogHash
+		if ($message && GetConfig('admin/token/sha512_hash')) {
+			# #title token is enabled
+
+			# looks for lines beginning with AccessLogHash: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @lines = ($message =~ m/^(SHA512)(\W+)(.+)$/mig); #todo format instead of .+
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@lines = ' . scalar(@lines));
+
+			if (@lines) { # means we found at least one line
+				WriteLog('#SHA512 token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@lines) {
+					# loop through all found title: token lines
+					my $token = shift @lines;
+					my $space = shift @lines;
+					my $value = shift @lines;
+
+					chomp $token;
+					chomp $space;
+					chomp $value;
+					$value = trim($value);
+
+					my $reconLine; # reconciliation
+					$reconLine = $token . $space . $value;
+
+					WriteLog('IndexTextFile: SHA512 $reconLine = ' . $reconLine);
+
+					if ($value) {
+						$hasToken{'SHA512'} = 1;
+
+						chomp $value;
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
+							foreach my $itemParent (@itemParents) {
+								DBAddItemAttribute($itemParent, 'sha512_hash', $value, $addedTime, $fileHash);
+								DBAddPageTouch('item', $itemParent);
+							} # @itemParents
+						} else {
+							# no parents, ignore
+							WriteLog('IndexTextFile: SHA512: Item has no parent, ignoring');
+
+							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
+							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
+						}
+					}
+
+					$message =~ s/$reconLine/[SHA512]/;
+					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
+				}
+			}
+		} # SHA512 token
+
 		#look for #config and #resetconfig
 		if (GetConfig('admin/token/config') && $message) {
 			if (
