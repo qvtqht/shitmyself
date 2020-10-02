@@ -37,7 +37,7 @@ function HideLoadingIndicator() {
 	// } else {
 	// 	if (loadingIndicator) { loadingIndicator.style.display = 'none' }
 	// }
-}
+} // HideLoadingIndicator()
 
 function WaitForOpenPgp() {
 	if (window.openPgpJsLoadBegin && !!window.openpgp) {
