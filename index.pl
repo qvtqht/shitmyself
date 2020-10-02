@@ -652,14 +652,15 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 					}
 
-					$message =~ s/$reconLine/[AccessLogHash: $value]/;
+					$message =~ s/$reconLine/[AccessLogHash]/;
+					$detokenedMessage =~ s/$reconLine//;
 					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
 				}
 			}
 		} # AccessLogHash token
 
 
-		# accessloghash: AccessLogHash
+		# SHA512: AccessLogHash
 		if ($message && GetConfig('admin/token/sha512_hash')) {
 			# #title token is enabled
 
@@ -707,14 +708,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						} else {
 							# no parents, ignore
 							WriteLog('IndexTextFile: SHA512: Item has no parent, ignoring');
-
-							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
-							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
 						}
 					}
 
 					$message =~ s/$reconLine/[SHA512]/;
-					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
+					$detokenedMessage =~ s/$reconLine//;
 				}
 			}
 		} # SHA512 token
