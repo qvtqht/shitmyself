@@ -206,9 +206,9 @@ sub SqliteMakeTables { # creates sqlite schema
 	SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, task_type, task_name, task_param, touch_time INTEGER, priority DEFAULT 1);");
 	SqliteQuery2("CREATE UNIQUE INDEX task_unique ON task(task_type, task_name, task_param);");
 
-	# queue
-	SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
-	SqliteQuery2("CREATE UNIQUE INDEX task_touch_unique ON task(action, param);");
+	# # task/queue
+	# SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
+	# SqliteQuery2("CREATE UNIQUE INDEX task_touch_unique ON task(action, param);");
 	#
 	# action      param           touch_time     priority
 	# make_page   author/abc
