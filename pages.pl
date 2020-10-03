@@ -4265,7 +4265,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 }
 
 sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGetTouchedPages();
-# DBGetTouchedPages() means select * from page_touch where priority > 0
+# DBGetTouchedPages() means select * from task where priority > 0
 
 	my $timeLimit = shift;
 	if (!$timeLimit) {
@@ -4285,7 +4285,7 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 	my $pagesProcessed = 0;
 
 	# get a list of pages that have been touched since the last git_flow
-	# this is from the page_touch table
+	# this is from the task table
 	my $touchedPages = DBGetTouchedPages($pagesLimit);
 
 	# de-reference array of touched pages

@@ -10,7 +10,7 @@
 # and this is largely successful
 #
 # happens in 3 steps:
-# 1. query/touch_all.sh, which sets page_touch.priority++
+# 1. query/touch_all.sh, which sets task.priority++
 # 2. calls update.pl --all, which builds all the touched pages
 # 3. some legacy stuff follows, which is not yet covered by MakePage()
 #

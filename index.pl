@@ -71,7 +71,7 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush'), flushes any queued queries
-# Also sets appropriate page_touch entries
+# Also sets appropriate task entries
 
 	my $file = shift;
 	chomp($file);
@@ -1367,7 +1367,7 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 sub IndexImageFile { # $file ; indexes one image file into database
 	# Reads a given $file, gets its attributes, puts it into the index database
 	# If ($file eq 'flush), flushes any queued queries
-	# Also sets appropriate page_touch entries
+	# Also sets appropriate task entries
 
 	my $file = shift;
 	chomp($file);

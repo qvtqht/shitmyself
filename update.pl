@@ -4,7 +4,7 @@
 #   find new items
 #   run IndexTextFile() on them
 #   re-generate affected pages
-#		via the page_touch table
+#		via the task table
 
 use strict;
 use warnings FATAL => 'all';
