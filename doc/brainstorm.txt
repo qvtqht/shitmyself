@@ -1110,6 +1110,7 @@ Thanks for the feedback! Votes cast by those with less than 125 reputation are r
 
 ===
 
+<<<<<<< Updated upstream
 #brainstorm
 
 so maybe beginner mode has no more links at all
@@ -1123,11 +1124,23 @@ expert hides the hints
 operator separately toggled, beginner still has operator options
 
 operator shold enable by default if user is admin
+=======
+#brainstorm #meta
+
+javascript can set a "pre-render" cookie
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load
+
+this would avoid the jump after pageload which currently happens
+
+[coin: 1337]
+>>>>>>> Stashed changes
 
 
 
 ===
 
+<<<<<<< Updated upstream
 #brainstorm
 
 Each time page changes, a small timestamp element could be added to the indicator.
@@ -1138,4 +1151,25 @@ Each time page changes, a small timestamp element could be added to the indicato
 #meta does this mean that config foo = off should set it to 0 or false? =\
 
 edge case for now.
+=======
+maybe urls could be /parent/child ?
+
+for limited cases
+
+#meta #brainstorm
+>>>>>>> Stashed changes
+
+
+
+===
+
+#brainstorm #meta
+
+javascript can set a "pre-render" cookie
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load
+
+this would avoid the jump after pageload which currently happens
+
+50209AFB8F0B3D1E 1600832020 0.15843680136994975
 
