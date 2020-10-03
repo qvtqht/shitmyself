@@ -202,13 +202,13 @@ sub SqliteMakeTables { # creates sqlite schema
 		);
 	");
 
-	# page_touch
-	SqliteQuery2("CREATE TABLE page_touch(id INTEGER PRIMARY KEY AUTOINCREMENT, page_name, page_param, touch_time INTEGER, priority DEFAULT 1);");
-	SqliteQuery2("CREATE UNIQUE INDEX page_touch_unique ON page_touch(page_name, page_param);");
+	# task
+	SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, task_type, task_name, task_param, touch_time INTEGER, priority DEFAULT 1);");
+	SqliteQuery2("CREATE UNIQUE INDEX task_unique ON task(task_type, task_name, task_param);");
 
-	# queue
-	SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
-	SqliteQuery2("CREATE UNIQUE INDEX task_touch_unique ON task(action, param);");
+	# # task/queue
+	# SqliteQuery2("CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, action, param, touch_time INTEGER, priority DEFAULT 1);");
+	# SqliteQuery2("CREATE UNIQUE INDEX task_touch_unique ON task(action, param);");
 	#
 	# action      param           touch_time     priority
 	# make_page   author/abc
@@ -878,7 +878,7 @@ sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 	push @queryParams, $key;
 }
 
-sub DBGetTouchedPages { # Returns items from page_touch table, used for prioritizing which pages need rebuild
+sub DBGetTouchedPages { # Returns items from task table, used for prioritizing which pages need rebuild
 # index, rss, scores, stats, tags, and top are returned first
 
 	my $touchedPageLimit = shift;
@@ -889,12 +889,12 @@ sub DBGetTouchedPages { # Returns items from page_touch table, used for prioriti
 	# this allows us to call a shallow update and still expect what we just did to be updated.
 	my $query = "
 		SELECT 
-			page_name,
-			page_param, 
+			task_name,
+			task_param,
 			touch_time, 
 			priority
-		FROM page_touch
-		WHERE priority > 0
+		FROM task
+		WHERE task_type = 'page' AND priority > 0
 		ORDER BY priority DESC, touch_time DESC
 		LIMIT ?;
 	";
@@ -965,11 +965,11 @@ sub DBAddItemPage { # $itemHash, $pageType, $pageParam ; adds an entry to item_p
 	push @queryParams, $itemHash, $pageType, $pageParam;
 }
 
-sub DBResetPageTouch { # Clears the page_touch table
+sub DBResetPageTouch { # Clears the task table
 # Called by clean-build, since it rebuilds the entire site
 	WriteMessage("DBResetPageTouch() begin");
 
-	my $query = "DELETE FROM page_touch WHERE 1";
+	my $query = "DELETE FROM task WHERE task_type = 'page'";
 	my @queryParams = ();
 
 	SqliteQuery2($query, @queryParams);
@@ -977,10 +977,10 @@ sub DBResetPageTouch { # Clears the page_touch table
 	WriteMessage("DBResetPageTouch() end");
 }
 
-sub DBDeletePageTouch { # deletes page_touch entry ;  $pageName, $pageParam
+sub DBDeletePageTouch { # $pageName, $pageParam
 #todo optimize
-	#my $query = 'DELETE FROM page_touch WHERE page_name = ? AND page_param = ?';
-	my $query = 'UPDATE page_touch SET priority = 0 WHERE page_name = ? AND page_param = ?';
+	#my $query = 'DELETE FROM task WHERE page_name = ? AND page_param = ?';
+	my $query = "UPDATE task SET priority = 0 WHERE task_type = 'page' AND task_name = ? AND task_param = ?";
 	
 	my $pageName = shift;
 	my $pageParam = shift;
@@ -1022,8 +1022,8 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo any successes deleting stuff should result in a refresh for the affected page
 }
 
-sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an entry to page_touch table
-# page_touch table is used for determining which pages need to be refreshed
+sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an entry to task table
+# task table is used for determining which pages need to be refreshed
 # is called from IndexTextFile() to schedule updates for pages affected by a newly indexed item
 # if $pageName eq 'flush' then all the in-function stored queries are flushed to database.
 	state $query;
@@ -1088,11 +1088,12 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 		# touch all of author's items too
 		#todo fix awkward time() concat
 		my $queryAuthorItems = "
-			UPDATE page_touch
+			UPDATE task
 			SET priority = (priority + 1), touch_time = " . time() . "
 			WHERE
-				page_name = 'item' AND
-				page_param IN (
+				task_type = 'page' AND
+				task_name = 'item' AND
+				task_param IN (
 					SELECT file_hash FROM item WHERE author_key = ?
 				)
 		";
@@ -1110,11 +1111,12 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	#
 	# 	# touch all of author's items too
 	# 	my $queryAuthorItems = "
-	# 		UPDATE page_touch
+	# 		UPDATE task
 	# 		SET priority = (priority + 1)
 	# 		WHERE
-	# 			page_name = 'item' AND
-	# 			page_param IN (
+	#			task_type = 'page' AND
+	# 			task_name = 'item' AND
+	# 			task_param IN (
 	# 				SELECT file_hash FROM item WHERE author_key = ?
 	# 			)
 	# 	";
@@ -1129,7 +1131,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	WriteLog("DBAddPageTouch($pageName, $pageParam)");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO page_touch(page_name, page_param, touch_time) VALUES ";
+		$query = "INSERT OR REPLACE INTO task(task_type, task_name, task_param, touch_time) VALUES ";
 	} else {
 		$query .= ',';
 	}
@@ -1150,7 +1152,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	#     0) + 1);
 
 
-	$query .= '(?, ?, ?)';
+	$query .= "('page', ?, ?, ?)";
 	push @queryParams, $pageName, $pageParam, $touchTime;
 } # DBAddPageTouch()
 
