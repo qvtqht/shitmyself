@@ -164,6 +164,7 @@ if (isset($comment) && $comment) {
 		$fileUrlPath = '/' . GetHtmlFilename($newFileHash);
 
 		if (!$redirectUrl && strpos($comment, 'PUBLIC KEY BLOCK')) {
+			WriteLog('post.php: strpos($comment, PUBLIC KEY BLOCK)');
 			// if user is submitting a public key, chances are
 			// they just registered, so lazily redirect them
 			// to the profile page instead.
@@ -174,7 +175,13 @@ if (isset($comment) && $comment) {
 
 			$finishTime = time() - $postPhpStartTime;
 
-			if (file_exists($newFileHash)) {
+			// #todo trigger index.pl?
+
+			WriteLog('post.php: $newFileHash = ' . $newFileHash);
+
+			if (file_exists(GetHtmlFilename($newFileHash))) {
+				WriteLog('file_exists(GetHtmlFilename($newFileHash))');
+
 				$profileId = preg_match(
 					'/[0-9A-F]{16}/',
 					file_get_contents(
@@ -182,11 +189,15 @@ if (isset($comment) && $comment) {
 					),
 					$matches
 				);
+
+				WriteLog('post.php: $profileId = ' . print_r($profileId, 1) . '; $matches = ' . print_r($matches, 1));
+
 				if ($profileId) {
 					$profileId = $matches[0];
 				} else {
 					$profileId = 0;
 				}
+				WriteLog('post.php: $profileId = ' . profileId);
 				if ($profileId) {
 					$redirectUrl = '/author/' . $profileId . '/index.html';
 				} else {
@@ -198,6 +209,10 @@ if (isset($comment) && $comment) {
 						"Success! Profile created! <small>in $finishTime"." seconds</small>"
 					);
 				}
+
+				WriteLog('post.php: ... continue after redirect? sadface');
+			} else {
+				WriteLog('file_exists(GetHtmlFilename($newFileHash)) FALSE');
 			}
 		} # strpos($comment, 'PUBLIC KEY BLOCK')
 
@@ -233,27 +248,35 @@ if (isset($comment) && $comment) {
 	}
 }
 
+#######################################
 $html = file_get_contents('post.html');
+#######################################
 
 if (isset($fileUrlPath) && $fileUrlPath) {
 	if (file_exists('../config/template/php/just_posted.template')) {
 		$postedMessage = file_get_contents('../config/template/php/just_posted.template');
-	} elseif (file_exists('../default/template/php/just_posted.template')) {
+	}
+	elseif (file_exists('../default/template/php/just_posted.template')) {
 		copy ('../default/template/php/just_posted.template', '../config/template/php/just_posted.template');
 		$postedMessage = file_get_contents('../default/template/php/just_posted.template');
-	} else {
-		$postedMessage = '<a href="' . $fileUrlPath . '">See what you just posted.</a><br><br>';
+	}
+	else {
+		$postedMessage = 'Look around and you may see it somewhere.';
 	}
 
-	$postedMessage = str_replace('$fileUrlPath', $fileUrlPath, $postedMessage); 
-	
+	$postedMessage = str_replace('$fileUrlPath', $fileUrlPath, $postedMessage);
+
 	$html = str_replace('<!-- submitted_text -->', $postedMessage, $html);
 }
 
 if (!$redirectUrl && $fileUrlPath) {
 	$finishTime = time() - $postPhpStartTime;
 
-	$itemPostedServerResponse = "Success! Item posted. <small class=advanced> in $finishTime"."s</small>";
+	if (!$redirectMessage) {
+		$redirectMessage = "Success! Item posted. <small class=advanced> in $finishTime"."s</small>";
+	}
+
+	$itemPostedServerResponse = $redirectMessage;
 	//$itemPostedServerResponse .= ' <a href=/write.html>Another</a>'; // has bugs, doesn't always work
 
 	RedirectWithResponse($fileUrlPath, $itemPostedServerResponse);
@@ -262,4 +285,5 @@ if (!$redirectUrl && $fileUrlPath) {
 if (GetConfig('admin/php/debug')) {
     $html = str_replace('</body>', WriteLog('') . '</body>', $html);
 }
+
 print($html);
