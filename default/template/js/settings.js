@@ -202,7 +202,10 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 	} else {
 		//alert('DEBUG: ShowAdvanced: feature check FAILED! window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
 	}
-}
+
+	//alert('debug: ShowAdvanced: returning false');
+	return false;
+} // ShowAdvanced()
 
 function GetPrefs (prefKey) { // get prefs value from localstorage
 	if (window.localStorage) {
@@ -225,7 +228,10 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 
 		return prefValue;
 	}
-}
+
+	//alert('debug: GetPrefs: returning false');
+	return false;
+} // GetPrefs()
 
 function SetPrefs (prefKey, prefValue) { // set prefs key prefKey to value prefValue
     //alert('DEBUG: SetPrefs(' + prefKey + ', ' + prefValue + ')');
@@ -367,7 +373,10 @@ function SettingsOnload() { // onload function for preferences page
 			}
 		}
 	}
-}//SettingsOnload
+
+	//alert('debug: SettingsOnload: returning false');
+	return false;
+} // SettingsOnload()
 
 ShowAdvanced(0); // #todo replace with body.onload ?
 
