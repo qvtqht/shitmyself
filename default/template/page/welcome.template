@@ -1,19 +1,14 @@
 <!-- welcome.template -->
-
 <p>Welcome to the welcome page. Thank you for stopping by.</p>
-
 <p>
-    Share something important:
+    Say hello:
     <form action="/post.html" method=get>
-        <input name=comment type=text size=40>
+        <input name=comment type=text size=40 value=hello>
         <br>
         <input type=submit value=Send>
     </form>
-</p> <!-- folds out write form if possible, otherwise write form is already visible -->
-
+</p>
 <p><a href="/top/approved.html">Read what's new</a>
-
 <p><a href="/manual.html">Manual</a></p>
-
 <!-- / welcome.template -->
 
