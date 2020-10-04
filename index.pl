@@ -314,16 +314,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			DBAddVoteRecord($fileHash, $addedTime, 'admin');
 
 			DBAddPageTouch('tag', 'admin');
-
 			DBAddPageTouch('scores');
-
 			DBAddPageTouch('stats');
 		}
 
 		if ($isSigned && $gpgKey) {
 			# it was signed and there's a gpg key
 			DBAddAuthor($gpgKey);
-
 			DBAddPageTouch('author', $gpgKey);
 
 			if (! ($gpgKey =~ m/\s/)) {
@@ -340,7 +337,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 
 			DBAddPageTouch('scores');
-
 			DBAddPageTouch('stats');
 		}
 
@@ -355,14 +351,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			DBAddKeyAlias('flush');
 
-			DBAddPageTouch('author', $gpgKey);
-
 			if (GetConfig('admin/index/make_primary_pages')) {
 				MakePage('author', $gpgKey);
 			}
 
+			DBAddPageTouch('author', $gpgKey);
 			DBAddPageTouch('scores');
-
 			DBAddPageTouch('stats');
 		}
 
@@ -600,7 +594,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					my $reconLine;
 					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
-
 					WriteLog('title $reconLine = ' . $reconLine);
 
 					if ($titleGiven) {
@@ -635,6 +628,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			}
 		} # title: token
+
 
 		# accessloghash: AccessLogHash
 		if ($message && GetConfig('admin/token/access_log_hash')) {
@@ -756,7 +750,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		} # SHA512 token
 
-		#look for #config and #resetconfig
+		#look for #config and #resetconfig #setconfig
 		if (GetConfig('admin/token/config') && $message) {
 			if (
 				IsAdmin($gpgKey) #admin can always config
