@@ -432,6 +432,26 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
+		# look for url
+		if (GetConfig('admin/token/url') && $message) {
+			# urls http:// https://
+			my @urls = ($message =~ m/^(http.+)$/mg);
+
+			if (@urls) {
+				while (@urls) {
+					my $url = shift @urls;
+
+					if (IsUrl($url)) {
+						$hasToken{'url'} = 1;
+						my $reconLine = $url;
+						$detokenedMessage =~ s/$reconLine//;
+
+						DBAddVoteRecord($fileHash, $addedTime, 'url');
+					}
+				}
+			}
+		} # url "token"
+
 		# look for hash tags aka hashtags hash tag hashtag
 		if (GetConfig('admin/token/hashtag') && $message) {
 			WriteLog("IndexTextFile: check for hashtags...");
