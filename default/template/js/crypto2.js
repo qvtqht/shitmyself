@@ -41,9 +41,9 @@ function MakeKey () { //makes key using default settings
 		//alert('DEBUG: SimpleBenchmark() returns ' + SimpleBenchmark());
 
 		var bits = 512;
-		var username = 'Anonymous';
+		var username = 'Example';
 
-		username = prompt('Choose your handle:', 'Anonymous');
+		username = prompt('Choose your handle:', username);
 
 		//alert('DEBUG: username: ' + username);
 
@@ -53,7 +53,7 @@ function MakeKey () { //makes key using default settings
 			//alert('DEBUG: username == null is false');
 
 			if (!username || !username.trim()) {
-				username = 'Anonymous';
+				username = 'Example';
 			}
 
 			//alert('DEBUG: username: ' + username);
