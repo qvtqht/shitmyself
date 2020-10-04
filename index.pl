@@ -780,7 +780,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 						$configValue = trim($configValue);
 
-						if ($configAction && $configKey && $configKeyActual && $configValue) {
+						if ($configAction && $configKey && $configKeyActual && $configValue != '') {
 							my $reconLine;
 							if ($configAction eq 'config' || $configAction eq 'setconfig') {
 								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
