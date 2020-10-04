@@ -827,7 +827,7 @@ if (GetConfig('admin/php/route_enable')) {
 			$fingerprint = ''; // will store our fingerprint
 
 			if (isset($cookie) && $cookie) {
-				$handle = 'Anonymous';
+				$handle = 'Example';
 				$fingerprint = $cookie;
 
 				// $html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
