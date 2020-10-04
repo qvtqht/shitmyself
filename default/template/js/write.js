@@ -57,7 +57,7 @@ function writeOnload () { // onload handler for write page
 						if (spanWriteAdvanced) {
 							var btnSolvePuzzle = document.createElement('input');
 							btnSolvePuzzle.setAttribute('type', 'button');
-							btnSolvePuzzle.setAttribute('value', 'Solve Puzzle & Send');
+							btnSolvePuzzle.setAttribute('value', 'Solve Puzzle');
 							btnSolvePuzzle.setAttribute('onclick',	"if (window.solvePuzzle) { return solvePuzzle(this); } else { return true; }");
 							spanWriteAdvanced.appendChild(btnSolvePuzzle);
 
@@ -67,7 +67,7 @@ function writeOnload () { // onload handler for write page
 							var lblSolvePuzzle = document.createElement('span');
 							lblSolvePuzzle.setAttribute('class', 'beginner');
 							var gt = unescape('%3E');
-							lblSolvePuzzle.innerHTML = 'Solving puzzle helps prove not spammer.<br' + gt + 'Solving puzzle may take time.<br' + gt + 'Puzzle solving means also signature.';
+							lblSolvePuzzle.innerHTML = 'Establish trust, takes time.';
 							spanWriteAdvanced.appendChild(lblSolvePuzzle);
 						}
 					} // window.solvePuzzle
