@@ -80,19 +80,13 @@ function freshCallback() { // callback for requesting HEAD for current page
 								ariaAlert = document.createElement('p');
 								ariaAlert.setAttribute('role', 'alert');
 								ariaAlert.setAttribute('id', 'ariaAlert');
-								ariaAlert.innerHTML = 'Page has changed. ';
-
-								var a = document.createElement('a');
-								a.setAttribute('href', '#');
-								a.setAttribute('onclick', 'location.reload()');
-								a.innerHTML = 'Reload';
-								ariaAlert.appendChild(a);
+								ariaAlert.innerHTML = 'Page updated ';
 
 								//document.body.appendChild(ariaAlert);
 								document.body.insertBefore(ariaAlert, document.body.firstChild);
 								//window.newPageContent =
 								//FetchNewPageContent(window.mypath + '?' + new Date().getTime());
-							} else {
+
 								//ariaAlert.innerHTML = ariaAlert.innerHTML + '+';
 								var d = new Date();
 								var n = d.getTime();
@@ -102,11 +96,41 @@ function freshCallback() { // callback for requesting HEAD for current page
 								space.innerHTML = ' ';
 								ariaAlert.appendChild(space);
 
+								var a = document.createElement('a');
+								a.setAttribute('id', 'freshAria');
+								a.setAttribute('href', '#');
+								a.setAttribute('onclick', 'location.reload()');
+								ariaAlert.appendChild(a);
+
 								var newTs = document.createElement('span');
 								newTs.setAttribute('class', 'timestamp');
 								newTs.setAttribute('epoch', n);
+								newTs.setAttribute('id', 'freshTimestamp');
 								newTs.innerHTML = 'just now!';
-								ariaAlert.appendChild(newTs);
+								a.appendChild(newTs);
+							} else {
+								if (0) { // change floatie time to new time
+									var d = new Date();
+									var n = d.getTime();
+									n = Math.ceil(n / 1000);
+
+									var newTs = document.getElementById('freshTimestamp');
+									newTs.setAttribute('epoch', n);
+									newTs.innerHTML = 'just now!';
+								} else { // add new floatie
+									var d = new Date();
+									var n = d.getTime();
+									n = Math.ceil(n / 1000);
+
+									var a = document.getElementById('freshAria');
+									space.innerHTML = ' ';
+									a.appendChild(space);
+									var newTs = document.createElement('span');
+									newTs.setAttribute('class', 'timestamp');
+									newTs.setAttribute('epoch', n);
+									a.appendChild(newTs);
+									newTs.innerHTML = 'just now!';
+								}
 							}
 
 							if (document.title.substring(0,2) != '! ') {
