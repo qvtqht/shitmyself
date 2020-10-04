@@ -780,7 +780,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 						$configValue = trim($configValue);
 
-						if ($configAction && $configKey && $configKeyActual && $configValue) {
+						if ($configAction && $configKey && $configKeyActual && $configValue != '') {
 							my $reconLine;
 							if ($configAction eq 'config' || $configAction eq 'setconfig') {
 								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
@@ -863,7 +863,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			}
 		}
 
-		if (GetConfig('admin/token/addedtime') && $message) {
+		if (0&&GetConfig('admin/token/addedtime') && $message) {
 			# look for addedtime, which adds an added time for an item
 			# #token
 			# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911

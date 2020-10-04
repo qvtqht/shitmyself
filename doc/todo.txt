@@ -1624,6 +1624,7 @@ timestamp=1601009222
 -- 
 Authorization: admin
 Cookie: EB8132749B4913F4
+<<<<<<< Updated upstream
 no more templates outside of a subdir in template/
 
 eventually html/ template subdir?
@@ -1675,10 +1676,13 @@ attention this message is public
 
 or perhaps finally architect it all into one queue? #tEcHnIcAlDeBt
 
+=======
+>>>>>>> Stashed changes
 
 
 ===
 
+<<<<<<< Updated upstream
 >>9622924abf33f94ecefac9987492a48edc0227b8
 
 #todo
@@ -1704,10 +1708,18 @@ tag permissions ... so close!
 upload menu button: attach SpawnUploadForm()
    which will create upload form, with file filed, click the field, and then perhaps even start upload?
 
+=======
+todo disable fresh.js if 4xx response #meta #todo
+
+>>8b63e10cf06028ff34a8e9e421fdc9d804bcc253
+-- 
+Host: shitmyself.com
+>>>>>>> Stashed changes
 
 
 ===
 
+<<<<<<< Updated upstream
 profile page should be not cached?
 
 somehow needs to do a better job of getting rid of old logged in displayed status after logout
@@ -1734,3 +1746,10 @@ make some kind of thingy to put all the setTimeouts together so that it's neater
 
 PRAGMA journal_mode=WAL;
 
+=======
+#meta #todo textart is jacked on bromite
+
+>>7c9731d0e87e24368d11da7941ba2b7dfb8d4944
+-- 
+Host: www.shitmyself.com
+>>>>>>> Stashed changes

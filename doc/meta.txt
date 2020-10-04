@@ -173,3 +173,222 @@ very nice
 
 #meta #bug #testing
 
+<<<<<<< Updated upstream
+=======
+1600920213
+
+
+===
+
+Server Message:
+
+There was no admin, and A5A6BF40D1B77686 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600051421
+
+
+===
+
+Server Message:
+
+There was no admin, and 50209AFB8F0B3D1E came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1600822255
+
+
+===
+
+>>4bef302d74fd8b953602a895e317f7273793944e
+
+nice changelog, seems to be working atm.
+
+#meta
+
+
+
+===
+
+#brainstorm #meta
+
+javascript can set a "pre-render" cookie
+
+what this would do is ask php to set certain elements like beginner and advanced to be display: none on page load
+
+this would avoid the jump after pageload which currently happens
+
+[coin: 1337]
+
+
+
+===
+
+#meta
+
+>>ad7c8a33326e47cda9e28ec18118af91d4a93cd5
+-- 
+Host: shitmyself.com
+
+
+===
+
+Server Message:
+
+There was no admin, and 2B498300771EAA3F came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601138219
+
+
+===
+
+>>7e78eda854dc683202aded730fac3d9ec999c806
+#meta
+
+
+
+===
+
+Server Message:
+
+There was no admin, and 9B792D7EBFFD80BC came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601139722
+
+
+===
+
+Server Message:
+
+There was no admin, and 8AC1209B419437D3 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601156136
+
+
+===
+
+Server Message:
+
+There was no admin, and 570C25FB446E20E8 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601156156
+
+
+===
+
+#meta
+
+>>799a2f913ba6bd44208e3db5ca29f15dae514630
+-- 
+Host: www.shitmyself.com
+
+
+===
+
+Server Message:
+
+There was no admin, and B45B8BCFF0C84334 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601205923
+
+
+===
+
+Server Message:
+
+There was no admin, and 1273BAA3B3B1CF9C came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601310964
+
+
+===
+
+todo disable fresh.js if 4xx response #meta #todo
+
+>>8b63e10cf06028ff34a8e9e421fdc9d804bcc253
+-- 
+Host: shitmyself.com
+
+
+===
+
+Server Message:
+
+There was no admin, and 8AC1209B419437D3 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601332081
+
+
+===
+
+Server Message:
+
+There was no admin, and 1F8F59DD3EC1CF45 came passing through, so I made them admin.
+
+(This happens when config/admin/admin_imprint is true and there is no admin set.)
+
+#meta
+
+1601332332
+
+
+===
+
+#meta
+
+>>86beec4f2957479b6f23760ed590542b4dd17677
+-- 
+Host: sm.chg.pw
+
+
+===
+
+#meta
+
+>>210bab0f0ce2988df5b89bdcc7a15f12137e1945
+-- 
+Host: sm.chg.pw
+
+
+===
+
+#meta
+
+>>8e28a656e3a31807291b17531531803fb5dc9859
+-- 
+Host: www.shitmyself.com
+>>>>>>> Stashed changes
