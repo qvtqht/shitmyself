@@ -57,7 +57,7 @@ function LongAgo(seconds) { // returns string with time units
 	return 'just now!';
 }
 
-function ShowTimestamps() { // finds any class=timestamp, updates its displayed time as needed
+function ShowTimestamps () { // finds any class=timestamp, updates its displayed time as needed
 	//alert('DEBUG: ShowTimestamps()');
 	if (document.getElementsByClassName) {
 		//alert('DEBUG: ShowTimestamps: document.getElementsByClassName feature check passed');
