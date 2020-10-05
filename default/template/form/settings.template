@@ -39,7 +39,14 @@
 								<input type=checkbox id=chkShowMeanies name=chkShowMeanies onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_meanies'); }">
 								Show everything, including <u>objectionable content</u>
 							</label>
-							<br>
+							<br class=admin>
+								Filter Level (does nothing atm):
+								<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99%</label>
+								<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9%</label>
+								<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99%</label>
+								<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099%</label>
+								<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099%</label>
+							</br>
 							<label for=chkShowAdmin>
 								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
 								Show operator controls
