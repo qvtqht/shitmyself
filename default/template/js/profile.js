@@ -103,7 +103,7 @@ function getUserFp () { // retrieve stored user fingerprint from LocalStorage
 	}
 
 	// nothing found, we looked everywhere
-	return null;
+	return '';
 }
 
 function sharePubKey (t) { // shares current user's public key via injected form and iframe
@@ -169,7 +169,7 @@ function sharePubKey (t) { // shares current user's public key via injected form
 //	iframe.style.display = 'none';
 //	document.body.appendChild(iframe);
 
-	//return 0;
+	return true;
 }
 
 function AddPrivateKeyLinks() { // adds save/load links to profile page if features are available
@@ -321,6 +321,8 @@ function AddPrivateKeyLinks() { // adds save/load links to profile page if featu
 			//alert('DEBUG: AddPrivateKeyLinks: checks FAILED');
 		}
 	}
+
+	return true;
 }
 
 function ShowPrivateKey() { // displays private key in textarea
@@ -379,6 +381,8 @@ function ShowPrivateKey() { // displays private key in textarea
 			return false;
 		}
 	}
+
+	return true;
 }
 
 function openFile (event) {
@@ -394,12 +398,16 @@ function openFile (event) {
 		eval('reader.onload = function() { var text = reader.result; LoadPrivateKeyFromTxt(text); }');
 		reader.readAsText(input.files[0]);
 	}
+
+	return true;
 }
 
 function LoadPrivateKeyFromTxt (text) {
 	if (window.setPrivateKeyFromTxt) {
 		setPrivateKeyFromTxt(text);
 	}
+
+	return true;
 }
 
 function StripToFilename (text) { // strips provided text to only filename-valid characters
@@ -484,6 +492,8 @@ function PubkeyCheckProfileExists(fp) { // PLACEHOLDER checks if profile exists
 		//alert('DEBUG: lastPubKeyPing: profile NOT FOUND');
 		return false;
 	}
+
+	return true;
 }
 
 function PubKeyPing () { // checks if user's public key is on server
@@ -528,6 +538,8 @@ function PubKeyPing () { // checks if user's public key is on server
 			//alert('DEBUG: PubKeyPing: window.getUserFp check FAILED');
 		}
 	}
+
+	return true;
 }
 
 function ProfileOnLoad() { // onload event for profile page
@@ -615,6 +627,8 @@ function ProfileOnLoad() { // onload event for profile page
 	} else {
 		//alert('DEBUG: ProfileOnLoad: document.getElementById check FAILED');
 	}
+
+	return true;
 }
 
 function SetCookie(cname, cvalue, exdays) { // set cookie

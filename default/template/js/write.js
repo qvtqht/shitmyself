@@ -117,6 +117,8 @@ function writeOnload () { // onload handler for write page
     } else {
         //alert('DEBUG: writeOnload: document.getElementById was FALSE');
     }
+
+    return true;
 }
 
 function writeSubmit (t) { // called when user submits write form

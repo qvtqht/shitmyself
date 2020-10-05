@@ -158,9 +158,11 @@ function freshCallback() { // callback for requesting HEAD for current page
 			}
 		} // if (eTag) // ETag header has value
 	} // status == 200
+
+	return true;
 } //freshCallback()
 
-function CheckIfFresh() {
+function CheckIfFresh () {
 	//document.title = 'CheckIfFresh: ' + new Date().getTime();
 
 	var xhr = null;
@@ -172,7 +174,6 @@ function CheckIfFresh() {
     		xhr = new ActiveXObject("Microsoft.XMLHTTP");
 		}
     }
-
 
 	if (xhr) {
 		var mypath = window.mypath;
@@ -191,7 +192,9 @@ function CheckIfFresh() {
 
 		freshClient.send();
 	}
-}
+
+	return true;
+} // CheckIfFresh()
 
 if (window.GetPrefs) {
 	var needNotify = GetPrefs('notify_on_change') || 0;
