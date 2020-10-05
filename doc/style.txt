@@ -68,3 +68,5 @@ JavaScript and > symbols
 			var someTag = '<p' + gt;
 			var someHtmlString = '<p' + gt + 'hello, world</p' + gt;
 	It's kind of a pain in the ass, but also happens to discourage html strings in JS which is a plus
+
+
