@@ -617,7 +617,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								}
 							}
 
-							DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
+							DBAddItemAttribute($fileHash, 'access_log_timestamp', $addedTime);
 						}
 
 						if (GetConfig('admin/access_log_call_index')) {
