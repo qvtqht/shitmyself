@@ -1,7 +1,5 @@
 // == begin clock/union.js
-
 var timeoutClock;
-
 function setClock() {
 	if (document.frmTopMenu) {
 		if (document.frmTopMenu.txtClock) {
@@ -48,14 +46,13 @@ function setClock() {
                 }
 
                 timeValue = hours + '' + minutes + '' + seconds + '' + milliseconds + '' + secondsR + '' + minutesR + '' + hoursR;
-
                 document.frmTopMenu.txtClock.value = timeValue;
             }
 		}
 	}
-
 	timeoutClock = window.setTimeout('setClock()', 50);
-}
+	return true;
+} // setClock()
 
 timeoutClock = window.setTimeout('setClock()', 50);
 
