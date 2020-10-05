@@ -200,7 +200,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			WriteLog("InjectJs: warning: Missing script contents for $script");
  			if (GetConfig('admin/debug')) {
 // 				die('InjectJs: Missing script contents');
-				$scriptTemplate = "alert('InjectJs warning: Missing template $script.js');";
+				$scriptTemplate = "alert('InjectJs: warning: Missing template $script.js');";
  			}
 		}
 
