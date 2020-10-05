@@ -20,8 +20,9 @@ function UploadedFileOnChange (t) { // t=this; called when file selector is chan
 		}
 
 		var submit = document.getElementById('submit');
-		if (submit) {
-			submit.setAttribute('value', 'CLICK TO UPLOAD');
+		if (submit && submit.style) {
+			//submit.setAttribute('value', 'Upload');
+			submit.style.border = "5pt solid orange";
 		}
 	}
 }
