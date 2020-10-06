@@ -37,3 +37,6 @@ print (`$finishedUpgradeLogCommand`);
 my $indexUpgradeLogCommand = 'time ./index.pl html/txt/upgrade_$time.txt';
 print(`$indexUpgradeLogCommand`);
 
+my $pagesSummaryCommand = 'time ./pages.pl --summary';
+print(`$pagesSummaryCommand`);
+
