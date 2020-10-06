@@ -43,15 +43,20 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	print("rename($IMAGEDIR, $ARCHIVE_DATE_DIR/image)\n");
 	rename("$IMAGEDIR", "$ARCHIVE_DATE_DIR/image");
 
-	# this needs to happen after txt and image above
-	#print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html)\n");
-	#rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
-	#
-	# print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
-	# rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
+	if (0) {
+		# this needs to happen after txt and image above
+		#print("rename($HTMLDIR, $ARCHIVE_DATE_DIR/html)\n");
+		#rename("$HTMLDIR", "$ARCHIVE_DATE_DIR/html");
+		#
+		# print("rename($LOGDIR, $ARCHIVE_DATE_DIR/log)\n");
+		# rename("$LOGDIR", "$ARCHIVE_DATE_DIR/log");
+	} else {
+		print("mkdir($ARCHIVE_DATE_DIR/html)\n");
+		mkdir("$ARCHIVE_DATE_DIR/html");
+	}
 
-	print("rename($HTMLDIR/chain.log, $ARCHIVE_DATE_DIR/html/chain.log)\n");
-	rename("$HTMLDIR/chain.log", "$ARCHIVE_DATE_DIR/html/chain.log");
+	print("copy($HTMLDIR/chain.log, $ARCHIVE_DATE_DIR/html/chain.log)\n");
+	copy("$HTMLDIR/chain.log", "$ARCHIVE_DATE_DIR/html/chain.log");
 
 	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
 	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\""); #fast enough
