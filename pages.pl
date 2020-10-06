@@ -1297,10 +1297,14 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			}
 		}
 
-
-		# if any references to other items, replace with link to item
-		$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
-		#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
+		if ($file{'expand_item_references'}) {
+			# >> \>\>
+			$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
+		} else {
+			# if any references to other items, replace with link to item
+			$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
+			#$message =~ s/([a-f0-9]{40})/DBGetItemTitle($1)/eg;
+		}
 
 		if ($itemHash) {
 			$message =~ s/\[\[([a-z]+)\]\]/GetItemVoteButtons($itemHash, $1)/ge;
