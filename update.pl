@@ -89,19 +89,25 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 		}
 
 		if ($fileHashPath && ($file ne $fileHashPath)) {
+			#there's a hash path and it is NOT the same as the file path
+
 			WriteLog('OrganizeFile: renaming ' . $file . ' to ' . $fileHashPath);
 
 			if (-e $fileHashPath) {
 				# new file already exists, rename only if not larger
-				WriteLog("Warning: $fileHashPath already exists!");
-
+				WriteLog("OrganizeFile: warning: $fileHashPath already exists!");
 				if (-s $fileHashPath > -s $file) {
+					WriteLog("OrganizeFile: warning: unlink($file)");
 					unlink ($file);
 				} else {
+					WriteLog("OrganizeFile: rename($file, $fileHashPath), because $file is larger than $fileHashPath");
 					rename ($file, $fileHashPath);
 				}
 			} else {
-				# new file does not exist, safe to rename
+				#
+				WriteLog("OrganizeFile: new file does not exist, safe to rename.");
+				WriteLog("OrganizeFile rename ($file, $fileHashPath);");
+
 				rename ($file, $fileHashPath);
 			}
 
@@ -128,23 +134,18 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 
 sub ProcessTextFile { # $file ; add new text file to index
 	my $file = shift;
-
 	if ($file eq 'flush') {
 		IndexTextFile('flush');
 	}
-
 	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
 	if ($file ne $relativePath) {
 		$file = $relativePath;
 	}
-
 	my $addedTime = GetTime2();
-
 	WriteLog('ProcessTextFile: $file = ' . $file . '; $addedTime = ' . $addedTime);
 
 	# get file's hash from git
 	my $fileHash = GetFileHash($file);
-	
 	if (!$fileHash) {
 		return 0;
 	}
@@ -153,14 +154,21 @@ sub ProcessTextFile { # $file ; add new text file to index
 
 	# if deletion of this file has been requested, skip
 	if (IsFileDeleted($file, $fileHash)) {
-		WriteLog("ProcessTextFile: IsFileDeleted() returned true, skipping");
+		WriteLog('ProcessTextFile: IsFileDeleted() returned true, skipping');
 		WriteLog('ProcessTextFile: return 0');
 
 		return 0;
 	}
 
 	if (GetConfig('admin/organize_files')) {
-		$file = OrganizeFile($file);
+		my $fileNew = OrganizeFile($file);
+		if ($fileNew eq $file) {
+			WriteLog('ProcessTextFile: $fileNew eq $file');
+		} else {
+			WriteLog('ProcessTextFile: changing $file to new value per OrganizeFile()');
+			$file = $fileNew;
+			WriteLog('ProcessTextFile: $file = ' . $file);
+		}
 	} else {
 		WriteLog("ProcessTextFile: organize_files is off, continuing");
 	}
@@ -174,7 +182,7 @@ sub ProcessTextFile { # $file ; add new text file to index
 		PutCache('indexed/' . $fileHash, '1');
 	} else {
 		# return 0 so that this file is not counted
-		WriteLog('ProcessTextFile: return 0');
+		WriteLog('ProcessTextFile: already indexed ' . $fileHash . ', return 0');
 		return 0;
 	}
 
