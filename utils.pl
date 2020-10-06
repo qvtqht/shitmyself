@@ -776,8 +776,14 @@ sub GetFile { # Gets the contents of file $fileName
 	#todo do something for a file which is missing
 }
 
-sub GetConfig { # $configName, $token ;  gets configuration value based for $key
-	# $token can be 'uncache', which removes it from %configLookup
+sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value based for $key
+	# $token eq 'uncache'
+	#    removes it from %configLookup
+	# $token eq 'override'
+	# 	instead of regular lookup, overrides value
+	#		overridden value is stored in local sub memo
+	#			this means all subsequent lookups now return $parameter
+	#
 
 	my $configName = shift;
 	chomp $configName;
@@ -806,6 +812,16 @@ sub GetConfig { # $configName, $token ;  gets configuration value based for $key
 		# unmemo token to remove memoized value
 		if (exists($configLookup{$configName})) {
 			delete($configLookup{$configName});
+		}
+	}
+
+	if ($token && $token eq 'override') {
+		my $parameter = shift;
+		if ($parameter) {
+			$configLookup{$configName} = $parameter;
+		} else {
+			WriteLog('GetConfig: warning: $token was override, but no parameter. sanity check failed.');
+			return '';
 		}
 	}
 
