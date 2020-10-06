@@ -1,3 +1,19 @@
+sqlite: set wal mode
+
+cron.lock : change from timestamp-based to timestamp + pid based
+	if timestamp is too old, change the pid
+	if pid doesn't match self, quit
+		check on every loop
+
+
+aliases based on item attributes
+	/123 == could be anything
+		chain order
+		partial title
+		etc
+		hashtag
+		
+
 PROBLEM: sometimes placeholder page is still not replaced
 
 PROBLEM: there is a sqlite query call every time a page is hit, even if it exists
@@ -1679,26 +1695,6 @@ attention this message is public
 
 or perhaps finally architect it all into one queue? #tEcHnIcAlDeBt
 
-=======
->>>>>>> Stashed changes
-
-
-===
-
-<<<<<<< Updated upstream
->>9622924abf33f94ecefac9987492a48edc0227b8
-
-#todo
-
-
-
-===
-
->>9622924abf33f94ecefac9987492a48edc0227b8
-
-#meta #bug #todo #test thanks
-
-
 
 ===
 
@@ -1755,7 +1751,6 @@ PRAGMA journal_mode=WAL;
 >>7c9731d0e87e24368d11da7941ba2b7dfb8d4944
 -- 
 Host: www.shitmyself.com
->>>>>>> Stashed changes
 
 
 ===
@@ -1763,8 +1758,11 @@ Host: www.shitmyself.com
 #todo #meta #brainstorm existing hashtags should not need hashtag symbol to be picked up
 
 
-
 ===
 
 #todo #meta echochamber for votes
 
+#todo #meta standardize on configKey vs configName
+-- 
+Cookie: 47000B9BF2D025BA
+Host: localhost:2784
