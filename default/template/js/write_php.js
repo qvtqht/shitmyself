@@ -2,7 +2,7 @@
 
 var intCommentOnChangeLastValue = 0;
 
-function commentOnChange(t, formId) {
+function commentOnChange (t, formId) {
 // changes form's method from get to post
 // if comment's length is more than 1024
 // and vice versa
@@ -63,6 +63,8 @@ function commentOnChange(t, formId) {
 //			form.method = strFormMode;
 //		}
 	}
+
+	return '';
 }
 
 // end write_php.js

@@ -25,12 +25,15 @@ useful structural tags
 			this would mean content is replaced on the page
 				with a notice
 
-reddit account tagging v2
+
+
+
+any account tagging v2
 	1) create profile
 	2) post "verify <profile>" on reddit userpage
-	3) >>profile #reddit <username>
+	3) >>profile verify https://... (index.pl)
 	4) curl reddit profile url, look for confirmation
-		use ./once for caching 
+		use ./once for caching (task?)
 	5) add reddit_username attribute to profile
 
 reddit account tagging

@@ -1,11 +1,13 @@
+Generally speaking, as of late, Template is something which still has $variables, while Widget is something already rendered?
+
+
 day checklist
 =============
-	check-in
-	new line of code
+	check-inx
+	new line of codex
 	todo reviewed
 	contacted developer
 	
-
 "adopt style" functionality
 	attempts to copy color settings and such from another page
 	<body

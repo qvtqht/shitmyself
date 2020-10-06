@@ -1,8 +1,9 @@
 <!-- form/upload.template ; file upload form -->
 <form enctype="multipart/form-data" action="/upload.php" method="POST" name=upload id=upload>
 	<p>Upload pictures here.</p>
-	<p><input name=uploaded_file type="file" id="uploaded_file"></p>
-	<p><input name=submit type="submit" value="Upload" id=submit></p>
+	<p><input name=uploaded_file type=file id=uploaded_file></p>
+	<p><input name=submit type=submit value=Upload id=submit></p>
+	<span id=spanImagePreview></span>
 	<p>Allowed files: $allowFiles</p>
 	<p>Only images supported, video support later</p>
 </form>

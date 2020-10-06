@@ -1,6 +1,6 @@
 // == begin avatar.js
 
-function setAva() { // sets avatar widgets (and italicizes Profile link)
+function setAva () { // sets avatar widgets (and italicizes Profile link)
 	//alert('DEBUG: setAva() begins');
 	
 	if (document.getElementById && String.fromCharCode) {
@@ -57,7 +57,9 @@ function setAva() { // sets avatar widgets (and italicizes Profile link)
 			}
 		}
 	}
-}
+
+	return true;
+} // setAva()
 if (window.localStorage && document.getElementById) {
 	setAva();
 }
@@ -73,6 +75,8 @@ function getAvatar () { // retrieve previously built avatar from localStorage (a
 	} else {
 		return 'Anonymous*';
 	}
-}
+
+	return false;
+} // getAvatar()
 
 // == end avatar.js

@@ -32,6 +32,50 @@ if (!empty($_FILES['uploaded_file'])) {
 			$pwd = getcwd();
 			WriteLog('$pwd = ' . $pwd);
 
+			$scriptDir = GetScriptDir();
+			WriteLog('$scriptDir = ' . $scriptDir);
+
+			if (GetConfig('admin/php/post/index_file_on_post') && $path) {
+				// #todo still BROKEN
+				if ($pwd) {
+					WriteLog("cd $pwd");
+					WriteLog(`cd $pwd`);
+				}
+
+				WriteLog("cd $scriptDir ; ./index.pl \"html/$path\"");
+				WriteLog(`cd $scriptDir ; ./index.pl "html/$path"`);
+
+				if ($pwd) {
+					WriteLog("cd $pwd");
+					WriteLog(`cd $pwd`);
+				}
+
+				$hash = GetFileHash("$path");
+
+				WriteLog("cd $scriptDir ; ./pages.pl \"$hash\"");
+				WriteLog(`cd $scriptDir ; ./pages.pl "$hash"`);
+
+				if (isset($replyTo) && $replyTo) {
+					WriteLog("\$replyTo = $replyTo");
+					if (IsItem($replyTo)) {
+						WriteLog("cd $scriptDir ; ./pages.pl \"$replyTo\"");
+						WriteLog(`cd $scriptDir ; ./pages.pl "$replyTo"`);
+					}
+				} else {
+					WriteLog("\$replyTo not found");
+				}
+
+				if ($pwd) {
+					WriteLog("cd $pwd");
+					WriteLog(`cd $pwd`);
+				}
+
+
+			} # index_file_on_post
+
+
+
+
 			if (GetConfig('admin/php/post/update_all_on_post')) {
 				WriteLog("cd .. ; ./update.pl --all");
 				WriteLog(`cd .. ; ./update.pl --all`);
@@ -64,7 +108,7 @@ if (!empty($_FILES['uploaded_file'])) {
 				RedirectWithResponse($fileUrlPath, 'Success! Thank you for uploading this beautiful picture!');
 			} else {
 				// good enough for now, eventually would be nice if it went to the actual item #todo
-				RedirectWithResponse('/index0.html', 'Image uploaded, and should appear shortly after it is processed.');
+				RedirectWithResponse('/index0.html', 'Thank you! If it does not appear right away, please meditate...');
 			}
 		}
 	}

@@ -117,6 +117,8 @@ function writeOnload () { // onload handler for write page
     } else {
         //alert('DEBUG: writeOnload: document.getElementById was FALSE');
     }
+
+    return true;
 }
 
 function writeSubmit (t) { // called when user submits write form
@@ -135,13 +137,17 @@ function writeSubmit (t) { // called when user submits write form
 
 			if (document.getElementById) {
 				if (document.getElementById('chkSignAs').checked) {
-					return signMessage();
-					// once the message is signed, callback will submit the form
+					if (window.signMessage) {
+						var signMessageResult = signMessage();
+						if (!signMessageResult) {
+							signMessageResult = 0;
+						}
+						// once the message is signed, callback will submit the form
+					}
 				} else {
 					return true;
 				}
 			}
-
 		} else {
 			//alert('DEBUG: no private key, basic submit');
 		}

@@ -672,6 +672,7 @@ sub GetItemPage {
 	# $file{'show_quick_vote'} = 1;
 	$file{'vote_buttons'} = 1;
 	$file{'format_avatars'} = 1;
+	$file{'reply_form'} = GetConfig('replies') ? 1 : 0;
 
 	if (!$file{'item_title'}) {
 		$file{'item_title'} = 'Untitled';
@@ -697,8 +698,14 @@ sub GetItemPage {
 		# this will contain the replies as html output
 		my $allReplies = '';
 
+		if (GetConfig('replies')) {
+			# add reply form below item
+			my $replyForm = GetReplyForm($file{'file_hash'});
+			$allReplies .= $replyForm;
+		}
+
 		# start with a horizontal rule to separate from above content
-		$allReplies = '<hr size=3>' . $allReplies;
+		$allReplies .= '<hr size=3>';
 
 		# this will store separator between items.
 		# first item doesn't need separator above it
@@ -804,17 +811,24 @@ sub GetItemPage {
 		}
 
 		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
-	} ###############
-	### REPLIES##########
+		$itemTemplate .= '<hr><br>';
+	}
+	else {
+		my $allReplies = '';
+		if (GetConfig('replies')) {
+			# add reply form below item
+			my $replyForm = GetReplyForm($file{'file_hash'});
+			$allReplies .= $replyForm;
+		}
+		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
+		$itemTemplate .= '<hr><br>';
+	}
+
+	###############
+	### /REPLIES##########
 
 	if ($itemTemplate) {
 		$txtIndex .= $itemTemplate;
-	}
-
-	if (GetConfig('replies')) {
-		# add reply form bottom of page
-		my $replyForm = GetReplyForm($file{'file_hash'});
-		$txtIndex .= $replyForm;
 	}
 
 	{
@@ -889,6 +903,7 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 	chomp $replyTo;
 
 	if (!$replyTo || !IsItem($replyTo)) {
+		WriteLog('GetReplyForm: warning: sanity check failed');
 		return '';
 	}
 	my $replyTag = GetTemplate('replytag.template');
@@ -923,6 +938,8 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
 			);
 		}
+
+		return $replyForm;
 	}
 
 	return $replyForm;
@@ -1300,7 +1317,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$authorLink = ''; #todo put it into GetItemTemplate() logic instead
 		}
 		$authorLink = trim($authorLink);
-
 		my $permalinkTxt = $file{'file_path'};
 
 		{
@@ -1440,13 +1456,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		$itemTemplate =~ s/\$addedTime/$addedTime/g;
 		$itemTemplate =~ s/\$replyLink/$replyLink/g;
 		$itemTemplate =~ s/\$itemAnchor/$itemAnchor/g;
-
-		if ($file{'show_easyfind'}) {
-			my $itemEasyFind = GetItemEasyFind($fileHash);
-			$itemTemplate =~ s/\$itemEasyFind/EasyFind: $itemEasyFind/g;
-		} else {
-			$itemTemplate =~ s/\$itemEasyFind//g;
-		}
 
 		if ($replyCount) {
 			$itemTemplate =~ s/\$replyCount/$replyCount/g;

@@ -21,7 +21,9 @@ function showBackToTop () { // show or hide "back to top" button depending on ve
         	window.showBackToTopLastAction = 0;
 		}
     }
-}
+
+    return true;
+} // showBackToTop()
 
 if (document.getElementById) { // enable window.onscroll if getElementById exists
     window.onscroll = window.showBackToTop;

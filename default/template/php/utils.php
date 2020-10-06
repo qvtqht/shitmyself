@@ -2,7 +2,7 @@
 
 //Header('Content-type: text/html');
 
-function GetScriptDir() { // returns base script directory.
+function GetScriptDir () { // returns base script directory.
 	$scriptDir = '$scriptDirPlaceholderForTemplating';
 	// this placeholder is populated by pages.pl when template is written
 

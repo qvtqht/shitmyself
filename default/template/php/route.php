@@ -200,7 +200,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			WriteLog("InjectJs: warning: Missing script contents for $script");
  			if (GetConfig('admin/debug')) {
 // 				die('InjectJs: Missing script contents');
-				$scriptTemplate = "alert('InjectJs warning: Missing template $script.js');";
+				$scriptTemplate = "alert('InjectJs: warning: Missing template $script.js');";
  			}
 		}
 
@@ -827,7 +827,10 @@ if (GetConfig('admin/php/route_enable')) {
 			$fingerprint = ''; // will store our fingerprint
 
 			if (isset($cookie) && $cookie) {
-				$handle = 'Example';
+				$handle = GetConfig('prefill_username');
+				if (!$handle) {
+					$handle = 'Guest';
+				}
 				$fingerprint = $cookie;
 
 				// $html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
