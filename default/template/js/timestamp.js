@@ -84,6 +84,11 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 					} else {
 						te[i].style.backgroundColor = '';
 					}
+					if ((secs * (-1)) < 86400) {
+						te[i].style.fontWeight = 'bold';
+					} else {
+						te[i].style.fontWeight = '';
+					}
 					changeLogged++;
 				}
 			}
