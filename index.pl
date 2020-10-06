@@ -1014,7 +1014,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								$authorKey eq $hasCookie
 							)
 						) {
-							$message =~ s/$reconLine/[Solved]/g;
+							$message =~ s/$reconLine/[Solved puzzle with this prefix: $puzzlePrefix]/g;
 
 							DBAddVoteRecord($fileHash, $addedTime, 'puzzle');
 
