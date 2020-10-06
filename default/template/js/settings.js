@@ -304,14 +304,14 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('beginner', 1);
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
-            SetPrefs('show_admin', 0);
+//            SetPrefs('show_admin', 0);
 		} else if (ab == 'expert') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 0);
 			SetPrefs('beginner', 0);
 			SetPrefs('beginner_highlight', 0);
 			SetPrefs('notify_on_change', 1);
-            SetPrefs('show_admin', 0);
+//            SetPrefs('show_admin', 0);
 // 		} else if (ab == 'minimal') {
 // 			SetPrefs('show_advanced', 0);
 // 			SetPrefs('advanced_highlight', 0);
