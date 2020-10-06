@@ -182,11 +182,8 @@ function DoUpdate () { // #todo #untested
 
 function DoUpgrade () {
 	$pwd = getcwd();
-
 	WriteLog('$pwd = ' . $pwd);
-
 	$scriptDir = GetScriptDir();
-
 	WriteLog('$scriptDir = ' . $scriptDir);
 
 	if (file_exists($scriptDir . '/upgrade.pl')) {
@@ -203,21 +200,15 @@ function DoUpgrade () {
 
 function DoFlush () {
 	$pwd = getcwd();
-
 	WriteLog('$pwd = ' . $pwd);
-
 	$scriptDir = GetScriptDir();
-
 	WriteLog('$scriptDir = ' . $scriptDir);
 
 	if (file_exists($scriptDir . '/query/flush_no_keep.sh')) {
 		WriteLog('query/flush_no_keep.sh found, calling query/flush_no_keep.sh');
 		WriteLog('cd "' . $scriptDir . '" ; query/flush_no_keep.sh');
-
 		WriteLog(`cd "$scriptDir" ; query/flush_no_keep.sh`);
-
 		WriteLog('cd "' . $pwd . '"');
-
 		WriteLog(`cd "$pwd"`);
 	}
 // 	if (file_exists($scriptDir . '/archive.pl')) {
@@ -250,17 +241,21 @@ function GetConfig ($configKey, $token = 0) { // get value for config value $con
 	// if not found in config/ it looks in default/
 	// if it is in default/, it is copied to config/
 
-	// memoize
-	static $configLookup;
-	if (!isset($configLookup)) {
-		$configLookup = array();
-	}
-	if ($configName == 'unmemo') {
-		// memo reset
-		$configLookup = array();
-		return;
-	}
-
+// 	// memoize #todo
+// 	static $configLookup;
+// 	if (!isset($configLookup)) {
+// 		$configLookup = array();
+// 	}
+// 	if ($configKey == 'unmemo') {
+// 		// memo reset
+// 		$configLookup = array();
+// 		return;
+// 	}
+// 	if ($token == 'unmemo') {
+// 		// memo reset
+// 		unset($configLookup[$configKey]);
+// 		return;
+// 	}
 
 	//#todo finish porting from perl
 	// 	if ($token && $token eq 'unmemo') {
@@ -281,6 +276,7 @@ function GetConfig ($configKey, $token = 0) { // get value for config value $con
 	$configDir = '../config'; // config is stored here
 	$defaultDir = '../default'; // defaults are stored here
 	$pwd = getcwd();
+
 	WriteLog('GetConfig('.$configKey.'); $pwd = "' . $pwd . '", $configDir = "' . $configDir . '", $defaultDir = "' . $defaultDir . '", pwd = "' . getcwd() . '"');
 	WriteLog('GetConfig: Checking in ' . $configDir . '/' . $configKey );
 
@@ -300,9 +296,9 @@ function GetConfig ($configKey, $token = 0) { // get value for config value $con
 		WriteLog('GetConfig: warning: else, fallthrough, for ' . $configKey);
 		$configValue = '';
 	}
-
-	// store in memo
-	$configLookup[$configKey] = $configValue;
+//
+// 	// store in memo
+// 	$configLookup[$configKey] = $configValue;
 
 	WriteLog('GetConfig: $configValue: ' . $configValue);
 	$configValue = trim($configValue); // remove trailing \n and any other whitespace
@@ -311,7 +307,7 @@ function GetConfig ($configKey, $token = 0) { // get value for config value $con
 	// notify log of what we found
 
 	return $configValue;
-}
+} // GetConfig()
 
 function GetTemplate ($templateKey) { // get template from config tree
 // looks in theme directory first, so config/theme/ > default/theme/ > config/ > default/
@@ -940,7 +936,7 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		}
 
 		WriteLog(' $fileUrlPath = ' . $fileUrlPath);
-	}
+	} # isset($comment) && $comment
 
 	if (GetConfig('admin/php/post/index_file_on_post')) {
 		if ($pwd) {
