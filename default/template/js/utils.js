@@ -19,6 +19,32 @@ function unescapeHTML(html) {
 }
 // end html escape hack
 
+function EventLoop () { // (currently unused) for calling things which need to happen on a regular basis
+// sets another timeout for itself when done
+// replaces several independent timeouts
+// #todo add accounting for different intervals?
+// #todo add secondary EventLoopRestore timer which ensures this one runs when needed
+	if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
+		ShowTimestamps();
+	}
+
+	if (window.eventLoopShowAdvanced && window.ShowAdvanced) {
+		ShowAdvanced();
+	}
+
+	if (window.eventLoopFresh && window.CheckIfFresh) {
+		CheckIfFresh();
+	}
+
+	if (window.eventLoopEnable) {
+		if (window.timeoutEventLoop) {
+			// #todo does this work?
+			clearTimeout(window.timeoutEventLoop);
+		}
+		window.timeoutEventLoop = setTimeout('EventLoop()', 15000);
+	}
+}
+
 function UrlExists(url) { // checks if url exists
 // todo use async
 // todo how to do pre-xhr browsers?
