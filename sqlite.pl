@@ -1709,7 +1709,7 @@ sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute no
 		$attribute = '';
 	}
 
-	my $query = "SELECT attribute, value FROM item_attribute WHERE file_hash = '$fileHash'";
+	my $query = "SELECT attribute, value FROM item_attribute_latest WHERE file_hash = '$fileHash'";
 	if ($attribute) {
 		$query .= " AND attribute = '$attribute'";
 	}
