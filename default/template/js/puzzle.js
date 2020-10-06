@@ -51,10 +51,20 @@ function doSolvePuzzle () { // solves puzzle
 	// add to compose form, sign, and submit
 	var txtComment = document.compose.comment;
 	if (txtComment && window.solvePuzzle) {
+		var puzzleResult = '';
 		if (done == 1) {
-			txtComment.value += '\n\n' + puzzle
+			puzzleResult = puzzle;
 		} else {
-			txtComment.value += '\n\n' + 'puzzle not solved, even after ' + i + ' tries';
+			puzzleResult = 'puzzle not solved, even after ' + i + ' tries';
+		}
+		if (txtComment.value.substr(txtComment.value.length - 2, 2) == "\n\n") {
+			txtComment.value += puzzleResult;
+		} else {
+			if (txtComment.value.substr(txtComment.value.length - 1, 1) == "\n") {
+				txtComment.value += "\n" + puzzleResult;
+			} else {
+				txtComment.value += "\n\n" + puzzleResult;
+			}
 		}
 	}
 	if (window.signMessage) {
