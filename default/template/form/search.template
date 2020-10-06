@@ -1,6 +1,6 @@
 <!-- search.template -->
 <p class=warning>
-    Your search will become public immediately.
+    <b>Your search will become public immediately.</b>
 </p>
 <form action="/post.html" name=search class=advanced>
     <p class=beginner>
@@ -8,7 +8,7 @@
     </p>
     <p>
         <input name=comment id=q type=text size=40>
-        <input type=submit value=Search>
+        <input type=submit name=tag value="#Search">
     </p>
 </form>
 <!-- / search.template -->
