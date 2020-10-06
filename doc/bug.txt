@@ -59,3 +59,65 @@ manual oage is now our of date #meta #bug
 -- 
 Host: www.shitmyself.com
 >>>>>>> Stashed changes
+
+
+===
+
+#meta #bug
+
+sorry about that, netscape.
+
+
+
+>>67e488486efc1830df7ebec4a12a4a63f6c10833
+timestamp=1601841263
+
+-- 
+Host: localhost:2784
+
+
+===
+
+#meta #bug
+
+sorry about that, netscape.
+
+
+
+>>67e488486efc1830df7ebec4a12a4a63f6c10833
+-- 
+Cookie: 1B326915D959F366
+Host: localhost:2784
+
+
+===
+
+#meta #bug netscape keyboard is broken on nn 2.01 with js enabled
+
+
+
+===
+
+#meta #bug
+
+>>5253d140799bc8f215257caba831d7fa44bc0747
+-- 
+Cookie: 4EA1957B064467C3
+Host: 10.0.2.2:2784
+
+
+===
+
+#meta #bug on opera 4.0 (js enabled) the reply links don't do anything
+-- 
+Cookie: E1D82AC8B0951B6D
+Host: 10.0.2.2:2784
+
+
+===
+
+#meta #bug on opera 4.0 (js enabled) the reply links don't do anything
+addtext=Meditate...
+
+-- 
+Host: 10.0.2.2:2784

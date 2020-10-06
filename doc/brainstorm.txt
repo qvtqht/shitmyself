@@ -1,3 +1,9 @@
+maxviewcount
+	then burn?
+	display on page how many views left
+	
+
+
 Generally speaking, as of late, Template is something which still has $variables, while Widget is something already rendered?
 
 
@@ -1174,4 +1180,39 @@ what this would do is ask php to set certain elements like beginner and advanced
 this would avoid the jump after pageload which currently happens
 
 50209AFB8F0B3D1E 1600832020 0.15843680136994975
+
+
+
+===
+
+#meta #brainstorm 401 page can give user a second chance to self-identify via freeform textbox or just a button press
+-- 
+Cookie: 4EA1957B064467C3
+Host: 10.0.2.2:2784
+
+
+===
+
+#meta #brainstorm 401 page can give user a second chance to self-identify via freeform textbox or just a button press
+addtext=Meditate...
+
+-- 
+Host: 10.0.2.2:2784
+
+
+===
+
+#brainstorm #meta
+.
+post-formatting mode:
+.
+resilient paragraphs
+.
+if there is a list format it like this
+.
+: item one
+.
+: item two
+.
+this will stand up to both instagram and markdown rejanking
 

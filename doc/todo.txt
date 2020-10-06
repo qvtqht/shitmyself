@@ -1,3 +1,14 @@
+.js files can fall behind in version
+	todo:self-check against etag somehow
+
+more testing with failed db connection
+	fallback solutions
+
+whenever txt is removed
+	remove cache
+	remove html
+		can probably just glob using item's hash ;)
+
 sqlite: set wal mode
 
 cron.lock : change from timestamp-based to timestamp + pid based
@@ -1766,3 +1777,51 @@ Host: www.shitmyself.com
 -- 
 Cookie: 47000B9BF2D025BA
 Host: localhost:2784
+
+
+===
+
+events, tags, authors all need fallback empty pages #meta #todo
+
+
+===
+
+#meta #todo strip metadata and write images into compatible format.
+already done for gif, but now need to replace original image and change its hash.
+
+
+===
+
+#meta #todo need even better keyboard which ie3 and nn2 can use.
+-- 
+Cookie: 39AB600C7BAA6F3D
+Host: 10.0.2.2:2784
+
+===
+
+#meta #todo need even better keyboard which ie3 and nn2 can use.
+addtext=Send+Now
+
+-- 
+Host: 10.0.2.2:2784
+
+
+===
+
+require profile mode is janky and locks out links and any non-cookie users
+
+#todo #meta
+
+
+===
+
+require profile mode is janky and locks out links and any non-cookie users
+
+#todo #meta
+
+===
+
+require profile mode is janky and locks out links and any non-cookie users
+
+#todo #meta
+
