@@ -2314,6 +2314,7 @@ sub FormatDate { # $epoch ; formats date depending on how long ago it was
 }
 
 sub GetTimestampWidget { # $time ; returns timestamp widget
+	#todo format on server-side for no-js clients
 	my $time = shift;
 	if ($time) {
 		chomp $time;
