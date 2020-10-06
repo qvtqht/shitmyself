@@ -8,6 +8,8 @@ var showAdminLastAction = '';
 var timerShowAdvanced;
 
 function SetElementVisible (element, displayValue, bgColor, borderStyle) { // sets element's visible status based on tag type
+// displayValue = 'none' or 'initial'
+// 	when 'initial', will try to substitute appropriate default for tag type
 // also sets background color
 // used for hiding/showing and highlighting beginner, advanced element classes on page.
 
