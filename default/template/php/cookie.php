@@ -30,7 +30,8 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 	RedirectWithResponse('/profile.html', 'Signed out. Thank you for visiting.');
 
 	WriteLog('all cookies unset');
-} else {
+} # btnSignOut handler
+else {
 	if (isset($_COOKIE['test']) && $_COOKIE['test']) {
 		WriteLog('test cookie found');
 
@@ -95,4 +96,13 @@ if (isset($_GET['btnSignOut']) && $_GET['btnSignOut']) {
 			header('Location: /profile.html?' . time());
 		}
 	}
-}
+} # not btnSignout
+//
+// if (
+// 	isset($_GET['theme'])
+// 		&&
+// 	($_GET['theme'] == 'chicago')
+// ) {
+// 	// test theme cookie
+// 	setcookie2('theme', 'chicago');
+// }
