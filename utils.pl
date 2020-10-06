@@ -1200,6 +1200,8 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 	my $with_this  = shift;
 	my $string   = shift;
 
+	WriteLog("str_replace($replace_this, $with_this, $string)");
+
 	my $length = length($string);
 	my $target = length($replace_this);
 
@@ -1209,6 +1211,9 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 			$i += length($with_this) - length($replace_this); # when new string contains old string
 		}
 	}
+
+	WriteLog("str_replace: $string");
+
 	return $string;
 }
 
