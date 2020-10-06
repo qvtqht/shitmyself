@@ -834,6 +834,18 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 
 	WriteLog("GetConfig: Looking for config value in config/$configName ...");
 
+	my $acceptableValues;
+	if ($configName eq 'html/clock_format') {
+		if (substr($configName, -5) ne '.list') {
+			my $configList = GetConfig("$configName.list");
+			if ($configList) {
+				$acceptableValues = $configList;
+			}
+		}
+	} else {
+		$acceptableValues = 0;
+	}
+
 	if (-d "config/$configName") {
 		WriteLog('GetConfig: warning: $configName was a directory, returning');
 		return;
@@ -852,7 +864,19 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 
 		$configLookup{$configValue} = $configValue;
 
-		return $configValue;
+		if ($acceptableValues) {
+			# there is a list of acceptable values
+			# check to see if value is in that list
+			# if not, return 0
+			if (index($configValue, $acceptableValues)) {
+				return $configValue;
+			} else {
+				WriteLog('GetConfig: warning: $configValue was not in $acceptableValues');
+				return 0; #todo should return default, perhaps via $param='default'
+			}
+		} else {
+			return $configValue;
+		}
 	} else {
 		WriteLog("GetConfig: -e config/$configName returned false, looking in defaults...");
 
