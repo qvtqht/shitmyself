@@ -40,9 +40,37 @@ function MakeKey () { //makes key using default settings
 
 		//alert('DEBUG: SimpleBenchmark() returns ' + SimpleBenchmark());
 
-		var bits = 512;
-		var username = 'Guest';
+		// it's a bit convoluted here at the moment
+		// bits refers to rsa bits
+		// BUT if it is not a number, it refers to the alternative algorithm
+		// this is used later to select it with an if statement
+		// algoSelectMode, in turn is used to select the value of bits
+		// it's ok to just leave it at 2048
+		// for dev purposes, it's ok to use 512 for faster keygen
+		// 512 is reasonably secure, meaning it would take more than an hour to break it
 
+		var bits = 2048; // decent default. reasonably fast, backwards compatible
+
+		var algoSelectMode = 0; // this is set from template when it's generated
+		// 0 means leave it alone at bits = 2048, which is the sanest default
+
+		if (algoSelectMode == '512') { // fast and breakable, good for testing and art projects
+			var bits = 512;
+		}
+		if (algoSelectMode == 'random') { // randomize decent crypto
+			var bitsOptions = [2048, 'curve25519', 'ed25519', 'p256', 'p384', 'p521', 'secp256k1'];
+			var bits = bitsOptions[Math.floor(Math.random() * bitsOptions.length)];
+		}
+		if (algoSelectMode == 'max') { // slow, more secure
+			var bits = 4096;
+			//var bits = bitsOptions[Math.floor(Math.random() * bitsOptions.length)];
+		}
+
+		// full options list:
+		// 512 1024 2048 4096
+		// 'curve25519' 'ed25519' 'p256' 'p384' 'p521' 'secp256k1'
+
+		var username = 'Guest';
 		username = prompt('Choose your handle:', username);
 
 		//alert('DEBUG: username: ' + username);
