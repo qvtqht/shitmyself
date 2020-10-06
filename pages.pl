@@ -682,7 +682,15 @@ sub GetItemPage {
 
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
-	$file{'show_easyfind'} = 1;
+	$file{'show_easyfind'} = 0;
+
+	if ($file{'show_easyfind'}) {
+		my $itemEasyFind = GetItemEasyFind($fileHash);
+		#$itemTemplate =~ s/\$itemEasyFind/EasyFind: $itemEasyFind/g;
+		$itemTemplate .= $itemEasyFind;
+	} else {
+		#$itemTemplate =~ s/\$itemEasyFind//g;
+	}
 
 	# if this item has a child_count, we want to print all the child items below
 	# keywords: reply replies subitems child parent
