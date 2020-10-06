@@ -290,7 +290,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		# admin_imprint
-		if ($gpgKey && $alias && !GetAdminKey() && GetConfig('admin/admin_imprint')) {
+		if ($gpgKey && $alias && !GetAdminKey() && GetConfig('admin/admin_imprint') && $alias eq 'Operator') {
 			# if there is no admin set, and config/admin/admin_imprint is true
 			# and if this item is a public key
 			# go ahead and make this user admin
