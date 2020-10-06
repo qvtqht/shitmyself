@@ -1753,3 +1753,15 @@ PRAGMA journal_mode=WAL;
 -- 
 Host: www.shitmyself.com
 >>>>>>> Stashed changes
+
+
+===
+
+#todo #meta #brainstorm existing hashtags should not need hashtag symbol to be picked up
+
+
+
+===
+
+#todo #meta echochamber for votes
+
