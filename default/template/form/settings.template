@@ -45,22 +45,7 @@
 					<p></p>
 
 					<fieldset class=admin>
-						<legend>Filter Level<br></legend>
-						<span class=beginner>(This doesn't do anything at the moment.)<br></span>
-						<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label>
-						<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label>
-						<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label>
-						<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label>
-						<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label>
-						<!-- As long as it's five nines, the decimal position doesn't matter -->
-						<br>
-						<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
-					</fieldset>
-
-					<p></p>
-
-					<fieldset class=admin>
-						<legend>Operator's Controls</legend>
+						<legend>Controls</legend>
 						<p>
 							<span class=beginner>
 								To activate, check box, then press button.<br>
@@ -96,6 +81,20 @@
 
 							<input type=submit name=btnOverthrow id=btnOverthrow value=Overthrow>
 						</p>
+					</fieldset>
+
+					<p></p>
+
+					<fieldset class=admin>
+						<legend>Content Filter<br></legend>
+						<span class=beginner>(This doesn't do anything at the moment.)<br></span>
+						<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
+						<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label><br>
+						<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label><br>
+						<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label><br>
+						<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label><br>
+						<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
+						<!-- As long as it's five nines, the decimal position doesn't matter -->
 					</fieldset>
 				</td>
 			</tr>
