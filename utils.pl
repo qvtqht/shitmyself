@@ -1439,6 +1439,11 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		$content =~ s/\<body>/<body $bodyAttr>/i;
 	}
 
+	#if (GetConfig('html/debug')) {
+		# this would make all one-liner html comments visible if it worked
+		#$content =~ s/\<\!--(.+)--\>/<p class=advanced>$1<\/p>/g;
+	#}
+
 	PutFile($file, $content);
 
 	if (index($content, '$') > -1) {
