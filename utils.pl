@@ -618,10 +618,35 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 	my $avatar = GetTemplate($avatarTemplate);
 	#todo strip all whtespace outside of html tags here to make it non-wrap
 
+	my $hasReddit = 0;
 	if ($gpgKey) {
-		my $alias = GetAlias($gpgKey);
+		WriteLog('GetAvatar: $gpgKey = ' . $gpgKey);
 
-		$alias = trim($alias);
+		my $authorPubKeyHash = DBGetAuthorPublicKeyHash($gpgKey) || '';
+		WriteLog('GetAvatar: $authorPubKeyHash = ' . $authorPubKeyHash);
+		my $authorItemAttributes = $authorPubKeyHash ? DBGetItemAttribute($authorPubKeyHash) : '' || '';
+		WriteLog('GetAvatar: $authorItemAttributes = ' . $authorItemAttributes);
+		
+		my $hasReddit = 0;
+		my $alias = '';
+		if (!$alias) {
+			$alias = GetAlias($gpgKey);
+			$alias = trim($alias);
+
+		}
+		if ($authorItemAttributes) {
+			foreach my $authorAttributeLine (split("\n", $authorItemAttributes)) {
+				my ($authorAttribute, $authorAttributeValue) = split('\|', $authorAttributeLine);
+				WriteLog('GetAvatar: $authorAttribute = ' . $authorAttribute);
+
+				if ($authorAttribute eq 'reddit_username') {
+					WriteLog('GetAvatar: found reddit_username!');
+
+					$hasReddit = $authorAttributeValue;
+					$alias .= '('.$hasReddit.')';
+				}
+			}
+		}
 
 		if (GetConfig('html/color_avatars')) {
 			my $color1 = substr($gpgKey, 0, 6);
@@ -658,6 +683,9 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 			}
 		} else {
 			my $aliasHtmlEscaped = encode_entities2($alias);
+			if ($hasReddit) {
+				$aliasHtmlEscaped = '<b><i>'.$aliasHtmlEscaped.'</i></b>';
+			}
 			$avatar =~ s/\$alias/$aliasHtmlEscaped/g;
 		}
 	} else {
@@ -666,6 +694,12 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 
 	my $colorUsername = GetThemeColor('username');
 	$avatar =~ s/\$colorUsername/$colorUsername/g;
+	#
+	# if ($hasReddit) {
+	# 	my $colorUsername = '#ff00ff';
+	# 	$avatar =~ s/\$colorUsername/$colorUsername/g;
+	# } else {
+	# }
 
 	$avatarCache{$gpgKey} = $avatar;
 
