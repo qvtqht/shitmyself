@@ -129,7 +129,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						} else {
 							rename ($file, $fileHashPath);
 						}
-					} else {
+					} # -e $fileHashPath
+					else {
 						# new file does not exist, safe to rename
 						rename ($file, $fileHashPath);
 					}
@@ -140,8 +141,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					} else {
 						WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
 					}
+				} # $file ne $fileHashPath
+				else {
+					WriteLog('IndexTextFile: it already matches, next!');
+					WriteLog('$file: ' . $file);
+					WriteLog('$fileHashPath: ' . $fileHashPath);
 				}
-			}
+			} # $fileHashPath
 		}
 		else {
 			WriteLog('IndexTextFile: organizing not needed');
