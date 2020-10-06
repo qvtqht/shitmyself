@@ -20,7 +20,7 @@
 					<a href="$permalinkHtml#reply" onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }">reply($replyCount)</a>;
 					$itemFlagButton
 				</span>
-				<a href="/etc.html">Expand</a>
+				<span class=expand></span>
 			</td>
 		</tr>
 	</table>

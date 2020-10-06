@@ -1104,6 +1104,58 @@ sub GetItemVotesSummary { # returns html with list of tags applied to item, and 
 	return $votesSummary;
 }
 
+sub str_repeat {
+	my $string = shift;
+	my $count = shift;
+	return $string x $count;
+}
+
+sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpandWidget
+	my $parentCount = shift; # how many levels of parents to go up
+	# for example, for <table><tr><td><a>here it would be 3 layers instead of 1
+	# accepts integers 1-10
+
+	my $url = shift;
+	# url to point the link to after the expand happens
+
+	if (!$parentCount || !$parentCount) {
+		WriteLog('GetWidgetExpand: warning: sanity check failed');
+		return '';
+	}
+
+	my $widgetTemplate = GetTemplate('widget/more_button.template');
+
+	if ($widgetTemplate) {
+		# <a href="/etc.html">More</a>
+		WriteLog('GetWidgetExpand: got template ok, going to fill it in');
+		$widgetTemplate =~ str_replace('/etc.html', $url, $widgetTemplate);
+
+		if (GetConfig('admin/js/enable')) {
+			my $jsTemplate = "if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement); } else { return true; }";
+			if ($parentCount < 10 && $parentCount > 1 && !($parentCount =~ /\\D/)) {
+				$jsTemplate = str_replace('.parentElement', str_repeat('.parentElement', $parentCount), $jsTemplate);
+			} else {
+				WriteLog('GetWidgetExpand: warning: $parentCount sanity check failed');
+				return '';
+			}
+
+			$widgetTemplate = AddAttributeToTag(
+				$widgetTemplate,
+				'a href="/etc.html"', #todo this should link to item itself
+				'onclick',
+				$jsTemplate
+			);
+		}
+
+		#$widgetTemplate = str_replace('/etc.html', $url, $widgetTemplate);
+	} else {
+		WriteLog('GetWidgetExpand: warning: widget/more_button template not found');
+		return '';
+	}
+
+	return $widgetTemplate;
+} # GetWidgetExpand() @16019xxxxx
+
 sub GetItemTemplate { # returns HTML for outputting one item
 	WriteLog("GetItemTemplate() begin");
 
@@ -1297,12 +1349,21 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		if (GetConfig('admin/js/enable')) {
-			$itemTemplate = AddAttributeToTag(
-				$itemTemplate,
-				'a href="/etc.html"', #todo this should link to item itself
-				'onclick',
-				"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
+			# <span class=expand></span>
+			$itemTemplate = str_replace(
+				'<span class=expand></span>',
+				'<span class=expand>' .
+					GetWidgetExpand(5, '$itemUrl') .
+					'</span>',
+				$itemTemplate
 			);
+
+			# $itemTemplate = AddAttributeToTag(
+			# 	$itemTemplate,
+			# 	'a href="/etc.html"', #todo this should link to item itself
+			# 	'onclick',
+			# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
+			# );
 		}
 
 		my $authorUrl; # author's profile url
