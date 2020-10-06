@@ -1417,12 +1417,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		my $replyCount = $file{'child_count'};
-
 		my $borderColor = '#' . substr($fileHash, 0, 6); # item's border color
-
-		my $addedTime = DBGetAddedTime($fileHash); #todo optimize
-		$addedTime = GetTimestampWidget($addedTime);
-
+		my $addedTime = GetTimestampWidget(DBGetAddedTime($fileHash)); #todo optimize
 		my $itemTitle = $file{'item_title'};
 
 		if ($file{'item_title'}) {
@@ -2253,6 +2249,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 
 		if ($script eq 'translit') {
 			if (!GetConfig('admin/js/translit')) {
+				WriteLog('InjectJs: warning: translit requested, but admin/js/translit is off');
 				next;
 			}
 		}
@@ -2303,7 +2300,10 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 
 		#if ($script eq 'settings' || $script eq 'loading_begin') {
-		if ($script eq 'settings' || $script eq 'timestamp') {
+		if (
+				$script eq 'settings' ||
+				$script eq 'timestamp'
+		) {
 			# for settings.js we also need to fill in some theme colors
 			my $colorHighlightAlert = GetThemeColor('highlight_alert');
 			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
@@ -4168,8 +4168,7 @@ sub GetItemPageFromHash {
 
 		return $filePage;
 	} else {
-		WriteLog("pages.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
-
+		WriteLog("pages.pl: \@files loop: warning: Asked to index file $fileHash, but it is not in the database! Returning.");
 		return '';
 	}
 }
@@ -4276,12 +4275,11 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			WriteLog('PutHtmlFile($targetPath = ' . $targetPath . ', $filePage = ' . $filePage . ')');
 			PutHtmlFile($targetPath, $filePage);
 		} else {
-			WriteLog("pages.pl: Asked to index file $fileHash, but it is not in the database! Quitting.");
+			WriteLog("pages.pl: item page: warning: Asked to index file $fileHash, but it is not in the database! Returning.");
 		}
-	}
-	#
-	# tags page
-	elsif ($pageType eq 'tags') {
+	} #item page
+
+	elsif ($pageType eq 'tags') { #tags page
 		my $tagsPage = GetTagsPage('Tags', 'Tags', '');
 		PutHtmlFile("tags.html", $tagsPage);
 
