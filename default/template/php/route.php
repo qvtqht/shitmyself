@@ -3,7 +3,6 @@
 // this fixes a crash bug in mosaic. it should not cause a problem anywhere else
 // <_<     >_>      o_O      -_-     ^_^
 header('Content-Type: text/html');
-
 include_once('utils.php');
 //
 //if (1/0) {
@@ -359,9 +358,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 
 if (GetConfig('admin/php/route_enable')) {
 // admin/php/route_enable is true
-
 	$redirectUrl = '';
-
 	if ($_GET) {
 		// there is a get request
 		WriteLog(print_r($_GET, 1));
@@ -375,7 +372,8 @@ if (GetConfig('admin/php/route_enable')) {
 			$pathFull = realpath('.'.$path);
 
 			if ($path == '/profile.html') {
-
+				// if profile, leave it alone
+				// otherwise, below is for forcing login
 			} else {
 				// if registration is required, redirect user to profile.html
 				if (GetConfig('admin/force_profile')) {
@@ -387,11 +385,11 @@ if (GetConfig('admin/php/route_enable')) {
 					}
 
 					if (!$clientHasCookie) {
-						RedirectWithResponse('/profile.html', 'This community requires a registration cookie.');
+						RedirectWithResponse('/profile.html', 'Please create profile to continue.');
+						#todo is it still printing the page? shouldn't.
 					}
 				}
 			}
-
 
 			$pathSelf = $_SERVER['PHP_SELF'];
 			$pathSelfReal = realpath('.'.$pathSelf);
@@ -499,43 +497,33 @@ if (GetConfig('admin/php/route_enable')) {
 						if (
 							isset($_GET['chkUpgrade']) &&
 							isset($_GET['btnUpgrade'])
-						)
-						{
+						) {
 							WriteLog('Upgrade requested');
-
 							//#todo check cookie for admin?
-
 							DoUpgrade();
-
-							RedirectWithResponse('/settings.html', 'Upgrade complete. Press Update to re-import content.');
+							RedirectWithResponse('/stats.html', 'Upgrade complete. Press Update to re-import content.');
 						}
 
 						if (
 							isset($_GET['chkFlush']) &&
 							isset($_GET['btnFlush'])
-						)
-						{
+						) {
 							WriteLog('Flush requested');
-
 							DoFlush();
 							DoUpdate();
-
 							RedirectWithResponse('/settings.html', 'Previous content has been archived.');
 						}
 
 						if (
 							isset($_GET['chkOverthrow']) &&
 							isset($_GET['btnOverthrow'])
-							)
-						{
+						) {
 							WriteLog('Overthrow requested');
-
 							if (GetConfig('admin/allow_deop')) {
 								$overthrowInterval = GetConfig('admin/overthrow_interval');
 								if (!$overthrowInterval) {
 									$overthrowInterval = 1;
 								}
-
 								if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
 
@@ -545,11 +533,9 @@ if (GetConfig('admin/php/route_enable')) {
 									if (file_exists('../admin.key')) {
 										unlink('../admin.key');
 										WriteLog('Overthrow successful');
-
 										RedirectWithResponse('/settings.html', 'Overthrow successful! Register to become operator.');
 									} else {
 										WriteLog('Overthrow already in effect: admin.key missing');
-
 										RedirectWithResponse('/settings.html', 'Overthrow already happened! Register to become operator.</a>');
 									}
 								} else {
