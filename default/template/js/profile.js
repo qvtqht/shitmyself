@@ -172,11 +172,11 @@ function sharePubKey (t) { // shares current user's public key via injected form
 	return true;
 }
 
-function AddPrivateKeyLinks() { // adds save/load links to profile page if features are available
+function AddPrivateKeyLinks () { // adds save/load links to profile page if features are available
 // #todo make it so that this can be called repeatedly and hide/show appropriate links
+// this will allow to avoid having to reload profile page on status change
 
 	//alert('DEBUG: AddPrivateKeyLinks() begin');
-
 	if (document.getElementById && window.getPrivateKey) {
 		var privateKey = getPrivateKey();
 		var fieldset = document.getElementById('fldRegistration');
@@ -567,15 +567,24 @@ function ProfileOnLoad() { // onload event for profile page
 
 				var pk = getPrivateKey();
 
-				// span used to indicate whether openpgp signing is available
-				lblSigningIndicator = document.getElementById('lblSigningIndicator');
-
 				if (pk) {
 					//alert('DEBUG: ProfileOnLoad: pk = GetPrivateKey() = ' + !!pk);
-
+					// span used to indicate whether openpgp signing is available
+					lblSigningIndicator = document.getElementById('lblSigningIndicator');
 					if (lblSigningIndicator) {
-						lblSigningIndicator.innerHTML = 'Yes';
+						// display value of "algorithm" which openpgp gives us
+						// #todo in reality, this only give us rsa/not-rsa, and formatted poorly
+						// there's the bit count and the actual algo for non-rsa which needs
+						// to be displayed more nicely here
+						var privKeyObj = openpgp.key.readArmored(pk);
+						var pubKeyObj = privKeyObj.keys[0].toPublic();
 
+						var myAlgo = pubKeyObj.primaryKey.algorithm.toString();
+						if (myAlgo) {
+							lblSigningIndicator.innerHTML = myAlgo;
+						} else {
+							lblSigningIndicator.innerHTML = 'Yes';
+						}
 						AddPrivateKeyLinks();
 					}
 
