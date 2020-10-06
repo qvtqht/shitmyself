@@ -690,6 +690,24 @@ if (GetConfig('admin/php/route_enable')) {
 			$lightMode = 1;
 		}
 
+		{
+			$themeMode = $_GET['theme']; // normalize the request
+			if ($themeMode != 'chicago') {
+				$themeMode = '';
+			}
+			if (isset($_COOKIE['theme'])) {
+				// if there is a cookie, change its value if it's necessary
+				if ($_COOKIE['theme'] != $themeMode) {
+					setcookie2('theme', $themeMode);
+					//$lightModeSetMessage = StoreServerResponse('Light mode has been set to ' . $lightMode);
+					//$redirectUrl = '';
+				}
+			} else {
+				// if there is no cookie set, set it
+				setcookie2('theme', $themeMode);
+			}
+		}
+
 		if ($serverResponse) {
 			WriteLog('$serverResponse set');
 		}
