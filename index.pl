@@ -5,6 +5,8 @@ use warnings FATAL => 'all';
 use utf8;
 use POSIX qw(strftime);
 use Cwd qw(cwd);
+use Digest::SHA qw(sha512_hex);
+
 #use Encode qw( encode_utf8 );
 
 my $SCRIPTDIR = cwd(); # where the perl scripts live
@@ -215,24 +217,26 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog('IndexTextFile: $gpgKey is false');
 		}
 
-		my %authorHasTag;
-		{
-			# look up author's tags
+		if (0) {
+			my %authorHasTag;
+			{
+				# look up author's tags
 
-			my @tagsAppliedToAuthor = DBGetAllAppliedTags(DBGetAuthorPublicKeyHash($gpgKey));
-			foreach my $tagAppliedToAuthor (@tagsAppliedToAuthor) {
-				$authorHasTag{$tagAppliedToAuthor} = 1;
-				my $tagsInTagSet = GetConfig('tagset/' . $tagAppliedToAuthor);
-				# if ($tagsInTagSet) {
-				# 	foreach my $tagInTagSet (split("\n", $tagsInTagSet)) {
-				# 		if ($tagInTagSet) {
-				# 			$authorHasTag{$tagInTagSet} = 1;
-				# 		}
-				# 	}
-				# }
+				my @tagsAppliedToAuthor = DBGetAllAppliedTags(DBGetAuthorPublicKeyHash($gpgKey));
+				foreach my $tagAppliedToAuthor (@tagsAppliedToAuthor) {
+					$authorHasTag{$tagAppliedToAuthor} = 1;
+					my $tagsInTagSet = GetConfig('tagset/' . $tagAppliedToAuthor);
+					# if ($tagsInTagSet) {
+					# 	foreach my $tagInTagSet (split("\n", $tagsInTagSet)) {
+					# 		if ($tagInTagSet) {
+					# 			$authorHasTag{$tagInTagSet} = 1;
+					# 		}
+					# 	}
+					# }
+				}
 			}
+			#DBAddItemAttribute($fileHash, 'x_author_tags', join(',', keys %authorHasTag));
 		}
-		#DBAddItemAttribute($fileHash, 'x_author_tags', join(',', keys %authorHasTag));
 
 		my $detokenedMessage = $message;
 		# this is used to store $message minus any tokens found
@@ -306,6 +310,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			# it was posted by admin
 			$isAdmin = 1;
+			#$authorHasTag{'admin'} = 1;
 
 			if (GetConfig('admin/admin_last_action') < $addedTime) {
 				PutConfig('admin/admin_last_action', $addedTime);
@@ -459,6 +464,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				my $hashTag = shift @hashTags;
 				$hashTag = trim($hashTag);
 
+				#if ($hashTag && ($authorHasTag{'admin'} || $authorHasTag{'hashtag'})) {
 				if ($hashTag) {
 					WriteLog('IndexTextFile: $hashTag = ' . $hashTag);
 
@@ -599,32 +605,37 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					if ($titleGiven) {
 						$hasToken{'title'} = 1;
 
-						chomp $titleGiven;
-						if ($hasParent) {
-							# has parent(s), so add title to each parent
-							foreach my $itemParent (@itemParents) {
-								DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
+						# if (($authorHasTag{'admin'} == 1 || $authorHasTag{'title'} == 1)) {
+						if (1) {
+							chomp $titleGiven;
+							if ($hasParent) {
+								# has parent(s), so add title to each parent
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
 
-								DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
 
-								DBAddPageTouch('item', $itemParent);
+									DBAddPageTouch('item', $itemParent);
 
-								if (GetConfig('admin/index/make_primary_pages')) {
-									#todo this may not be the right place for this?
-									MakePage('item', $itemParent, 1);
+									if (GetConfig('admin/index/make_primary_pages')) {
+										#todo this may not be the right place for this?
+										MakePage('item', $itemParent, 1);
+									}
 								}
+							} else {
+								# no parents, so set title to self
+
+								WriteLog('Item has no parent, adding title to itself');
+
+								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
 							}
+
+							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
 						} else {
-							# no parents, so set title to self
-
-							WriteLog('Item has no parent, adding title to itself');
-
-							DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
-							DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
+							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
 						}
 					}
-
-					$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
 				}
 			}
 		} # title: token
