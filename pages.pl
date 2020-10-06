@@ -603,8 +603,7 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 	return $txtIndex;
 } # GetTagsPage
 
-sub GetItemPage {
-	# returns html for individual item page. %file as parameter
+sub GetItemPage { # %file ; returns html for individual item page. %file as parameter
 	# %file {
 	#		file_hash = git's file hash
 	#		file_path = path where text file is stored
@@ -1288,23 +1287,14 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		#if (index($message, "<br>\n--\n<br>\n") > -1) {
-		if (
-		    GetConfig('html/hide_dashdash_signatures')
-		    	&&
-			(
-				index($message, "<br>\n-- <br>\n") > -1
-					||
-				index($message, "<p>\n-- <br>\n") > -1
-			)
-		) {
-			$message =~ s/(.+)<p>\n-- <br>\n(.+)/$1<span class=advanced><p>\n-- <br>\n$2<\/span>/sm;
-			$message =~ s/(.+)<br>\n-- <br>\n(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/sm;
-			#$message = 'hi';
-			
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
+		if (GetConfig('html/hide_dashdash_signatures')) {
+			if (index($message, "<br>-- <br>") != -1) {
+				$message =~ s/(.+)<br>-- <br>(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/smi;
+				# m = multi-line
+				# s = multi-line
+				# g = all instances
+				# i = case-insensitive
+			}
 		}
 
 
