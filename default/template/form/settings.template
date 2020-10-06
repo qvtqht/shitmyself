@@ -35,18 +35,6 @@
 								Sign message automatically when sending
 							</label>
 							<br>
-							<label for=chkShowMeanies>
-								<input type=checkbox id=chkShowMeanies name=chkShowMeanies onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_meanies'); }">
-								Show everything, including <u>objectionable content</u>
-							</label>
-							<br class=admin>
-								Filter Level (does nothing atm):
-								<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99%</label>
-								<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9%</label>
-								<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99%</label>
-								<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099%</label>
-								<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099%</label>
-							</br>
 							<label for=chkShowAdmin>
 								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
 								Show operator controls
@@ -57,7 +45,22 @@
 					<p></p>
 
 					<fieldset class=admin>
-						<legend>Admin</legend>
+						<legend>Filter Level<br></legend>
+						<span class=beginner>(This doesn't do anything at the moment.)<br></span>
+						<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label>
+						<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label>
+						<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label>
+						<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label>
+						<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label>
+						<!-- As long as it's five nines, the decimal position doesn't matter -->
+						<br>
+						<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
+					</fieldset>
+
+					<p></p>
+
+					<fieldset class=admin>
+						<legend>Operator's Controls</legend>
 						<p>
 							<span class=beginner>
 								To activate, check box, then press button.<br>
