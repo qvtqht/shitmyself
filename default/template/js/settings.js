@@ -71,6 +71,10 @@ function ShowAll (t, container) { // shows all elements, overriding settings
         for (var i = 0; i < elements.length; i++) {
             SetElementVisible(elements[i], display, '$colorHighlightBeginner', 0);
         }
+        elements = container.getElementsByClassName('expand');
+        for (var i = 0; i < elements.length; i++) {
+            SetElementVisible(elements[i], 'none', '', 0);
+        }
 
         if (timerShowAdvanced) {
             clearTimeout(timerShowAdvanced);
