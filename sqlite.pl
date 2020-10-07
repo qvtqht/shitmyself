@@ -16,12 +16,49 @@ my $SqliteDbName = './cache/' . GetMyCacheVersion() . '/index.sqlite3'; # path t
 my $dbh; # handle for sqlite interface
 
 sub SqliteConnect { # Establishes connection to sqlite db
-	$dbh = DBI->connect(
-		"dbi:SQLite:dbname=$SqliteDbName",
-		"",
-		"",
-		{ RaiseError => 1, AutoCommit => 1 },
-	) or die $DBI::errstr;
+	if (!
+		(
+			(
+				GetConfig('admin/debug')
+					&&
+				(
+					$dbh = DBI->connect(
+						"dbi:SQLite:dbname=$SqliteDbName",
+						"", #todo what is this?
+						"", #and this?
+						{
+							RaiseError => 1,
+							AutoCommit => 1
+						}
+					)
+				)
+			)
+				||
+			(
+				$dbh = DBI->connect(
+					"dbi:SQLite:dbname=$SqliteDbName",
+					"", #todo what is this?
+					"", #and this?
+					{
+						AutoCommit => 1
+					}
+				)
+			)
+		) # ! (not)
+	) { # if
+		WriteLog('SqliteConnect: warning: problem connecting to database: ' . $DBI::errstr);
+
+		state $retries;
+		if (!$retries) {
+			$retries = 1;
+		} else {
+			$retries = $retries + 1;
+		}
+
+		if ($retries < 5) {
+			return SqliteConnect();
+		}
+	}
 }
 SqliteConnect();
 
