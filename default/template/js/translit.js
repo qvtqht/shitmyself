@@ -153,6 +153,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		} else {
 			// lookup lists, each char in keysEn
 			// corresponds to the same position in keysRu
+			var gt = unescape('%3E');
 
 			var keysQwerty = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
 			var keysDvorak = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
