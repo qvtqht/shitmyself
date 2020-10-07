@@ -1147,6 +1147,7 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 		if (GetConfig('admin/js/enable')) {
 			my $jsTemplate = "if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement); } else { return true; }";
 			if ($parentCount < 10 && $parentCount > 1 && !($parentCount =~ /\\D/)) {
+				# adjust number of times it says ".parentElement"
 				$jsTemplate = str_replace('.parentElement', str_repeat('.parentElement', $parentCount), $jsTemplate);
 			} else {
 				WriteLog('GetWidgetExpand: warning: $parentCount sanity check failed');
@@ -1881,9 +1882,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $clock = '';
 	if (GetConfig('html/clock')) {
 		WriteLog('GetPageHeader: html/clock is enabled');
-
-		my $currentTime = GetClockFormattedTime();;
-
+		my $currentTime = GetClockFormattedTime();
 		if (GetConfig('admin/ssi/enable') && GetConfig('admin/ssi/clock_enhance')) {
 			# ssi-enhanced clock
 			# currently not compatible with javascript clock
@@ -1906,7 +1905,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	}
 
 	WriteLog('GetPageHeader: $clock = ' . $clock);
-
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
@@ -3745,7 +3743,7 @@ sub GetWritePage { # returns html for write page
 	}
 
 	if (GetConfig('admin/js/enable')) {
-		# add call to writeOnload() to page
+		# add call to WriteOnload() to page
 		$writePageHtml = AddAttributeToTag(
 			$writePageHtml,
 			'body',
@@ -3871,7 +3869,7 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 	#	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
-}
+} # GetProfilePage()
 
 sub GetAccessPage { # returns html for accessibility mode page, /access.html
 	my $html = '';
