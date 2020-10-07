@@ -13,9 +13,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 // t is the text field's "this"
 
 	//alert('DEBUG: translitKey() begins');
-
 	var nl; // new letter
-
 	var key; // pressed key
 
 	if (e.key) {
@@ -23,7 +21,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		//alert('DEBUG: translitKey: e.key is TRUE, and equal to ' + e.key);
 		key = e.key;
 	} else if (e.keyCode) {
-	// older browsers only return event.keyCode
+		// older browsers only return event.keyCode
 		//alert('DEBUG: translitKey: e.key is FALSE');
 
 		// magic, not sure if this actually works
@@ -34,7 +32,6 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		key = key.toString;
 	}
 	//alert('DEBUG: key: ' + key);
-
 
 	// alt+` will toggle translit mode
 	if (e.altKey || e.ctrlKey || e.metaKey) {
@@ -48,6 +45,13 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 				window.translitKeyState = 4;
 				t.style.borderTop = '3pt solid green';
 			}
+
+			// we're doing it, we're overriding the user's keypress
+			if (e.preventDefault) {
+				e.preventDefault();
+			}
+
+			return false;
 		}
 		
 		if (e.key == '`' || e.key == 'r' || e.key == 'R') {
@@ -154,7 +158,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			var keysDvorak = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
 
 			if (keysQwerty.length != keysDvorak.length) {
-				//alert('DEBUG: dvorakKey: Warning: length mismatch keysEn and keysRu');
+				//alert('debug: dvorakKey: Warning: length mismatch keysEn and keysRu');
 			}
 
 			if (e.key) {
