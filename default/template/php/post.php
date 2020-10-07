@@ -221,16 +221,20 @@ if (isset($comment) && $comment) {
 		}
 
 		if ($returnTo) {
+			WriteLog('post.php: $returnTo = ' . $returnTo);
 			// $returnTo specifies page/item to return to instead of submitted item
 			$returnToHtmlPath = './' . GetHtmlFilename($returnTo); // path for parent html file
 
 			if (file_exists($returnToHtmlPath)) {
 				// path for client's (browser's) path to html file
 				$returnToUrlPath = '/' . GetHtmlFilename($returnTo);
-
 				$newItemAnchor = substr($newFileHash, 0, 8);
-
 				$finishTime = time() - $postPhpStartTime;
+
+				if (GetConfig('admin/php/lazy_page_generation')) {
+					WriteLog('post.php: $returnTo and lazy_page_generation leads to unlink($returnToHtmlPath = ' . $returnToHtmlPath . ')');
+					unlink($returnToHtmlPath);
+				}
 
 				//$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
 
@@ -245,8 +249,8 @@ if (isset($comment) && $comment) {
 				//$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
 			}
 		}
-	}
-}
+	} # regular comment, not 'update' or 'stop'
+} # comment
 
 #######################################
 $html = file_get_contents('post.html');
