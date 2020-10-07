@@ -108,6 +108,16 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# Figure out what the file's path should be
 			my $fileHashPath = GetFileHashPath($file);
 
+			# turns out this is actually the opposite of what needs to happen
+			# but this code snippet may come in handy
+			# if (index($fileHashPath, $SCRIPTDIR) == 0) {
+			# 	WriteLog('IndexTextFile: hash path begins with $SCRIPTDIR, removing it');
+			# 	$fileHashPath = str_replace($SCRIPTDIR . '/', '', $fileHashPath);
+			# } # index($fileHashPath, $SCRIPTDIR) == 0
+			# else {
+			# 	WriteLog('IndexTextFile: hash path does NOT begin with $SCRIPTDIR, leaving it alone');
+			# }
+
 			if ($fileHashPath) {
 				# Does it match?
 				if ($file eq $fileHashPath) {
@@ -708,6 +718,128 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			}
 		} # AccessLogHash token
+
+
+		#verify token
+		if ($message && GetConfig('admin/token/verify')) {
+			# #verify token is enabled
+
+			# looks for lines beginning with AccessLogHash: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @lines = ($message =~ m/^(#?verify)(\W+)(.+)$/mig); #todo format instead of .+
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@lines = ' . scalar(@lines));
+
+			if (@lines) { # means we found at least one line
+				WriteLog('#verify token found in ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@lines) {
+					# loop through all found title: token lines
+					my $token = shift @lines;
+					my $space = shift @lines;
+					my $value = shift @lines;
+
+					chomp $token;
+					chomp $space;
+					chomp $value;
+					$value = trim($value);
+
+					my $reconLine; # reconciliation
+					$reconLine = $token . $space . $value;
+
+					WriteLog('IndexTextFile: #verify $reconLine = ' . $reconLine);
+					WriteLog('IndexTextFile: #verify $value = ' . $value);
+
+					if ($value =~ m|https://www.reddit.com/user/([0-9a-zA-Z\-_]+)/?|) {
+						$hasToken{'verify'} = 1;
+						my $redditUsername = $1;
+						my $valueHash = sha1_hex($value);
+						my $profileHtml = '';
+
+						if (-e "once/$valueHash") {
+							WriteLog('IndexTextFile: once exists');
+							$profileHtml = GetFile("once/$valueHash");
+						} else {
+							#todo #bug #security
+							my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value) .'.json"';
+							WriteLog('IndexTextFile: #verify once needed, doing curl');
+							WriteLog('IndexTextFile: #verify "'.$curlCommand.'"');
+							
+							PutFile("once/$valueHash", `$curlCommand`);
+							$profileHtml = GetFile("once/$valueHash");
+						}
+
+						WriteLog('IndexTextFile: #verify $value = ' . $value);
+
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
+							foreach my $itemParent (@itemParents) {
+								if (index($profileHtml, $itemParent) != -1) {
+									DBAddItemAttribute($itemParent, 'reddit_url', $value, $addedTime, $fileHash);
+									DBAddItemAttribute($itemParent, 'reddit_username', $redditUsername, $addedTime, $fileHash);
+									DBAddPageTouch('item', $itemParent);
+								}
+							} # @itemParents
+						} else {
+							# no parents, ignore
+							WriteLog('IndexTextFile: AccessLogHash: Item has no parent, ignoring');
+
+							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
+							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
+						}
+					} #reddit
+
+					if ($value =~ m|https://www.instagram.com/([0-9a-zA-Z._]+)/?|) {
+						$hasToken{'verify'} = 1;
+						my $instaUsername = $1;
+						my $valueHash = sha1_hex($value);
+						my $profileHtml = '';
+
+						if (-e "once/$valueHash") {
+							WriteLog('IndexTextFile: once exists');
+							$profileHtml = GetFile("once/$valueHash");
+						} else {
+							#todo #bug #security
+							my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value) . '"';
+							WriteLog('IndexTextFile: #verify once needed, doing curl');
+							WriteLog('IndexTextFile: #verify "'.$curlCommand.'"');
+
+							PutFile("once/$valueHash", `$curlCommand`);
+							$profileHtml = GetFile("once/$valueHash");
+						}
+
+						WriteLog('IndexTextFile: #verify $value = ' . $value);
+
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
+							foreach my $itemParent (@itemParents) {
+								if (index($profileHtml, $itemParent) != -1) {
+									DBAddItemAttribute($itemParent, 'insta_url', $value, $addedTime, $fileHash);
+									DBAddItemAttribute($itemParent, 'insta_username', $instaUsername, $addedTime, $fileHash);
+									DBAddPageTouch('item', $itemParent);
+								}
+							} # @itemParents
+						} else {
+							# no parents, ignore
+							WriteLog('IndexTextFile: AccessLogHash: Item has no parent, ignoring');
+
+							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
+							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
+						}
+					} #instagram
+
+					$message =~ str_replace($reconLine, '[Verified]', $message);
+					$detokenedMessage =~ str_replace($reconLine, '[Verified]', $detokenedMessage);
+					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
+				} # @lines
+			}
+		} # verify token
 
 
 		# SHA512: AccessLogHash
