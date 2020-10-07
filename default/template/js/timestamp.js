@@ -80,14 +80,14 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 					// element's content does not already equal what it should equal
 					te[i].innerHTML = longAgo;
 					if ((secs * (-1)) < 3600) {
-						te[i].style.backgroundColor = '$colorHighlightAlert';
-					} else {
-						te[i].style.backgroundColor = '';
-					}
-					if ((secs * (-1)) < 86400) {
 						te[i].style.fontWeight = 'bold';
 					} else {
 						te[i].style.fontWeight = '';
+					}
+					if ((secs * (-1)) < 86400) {
+						te[i].style.backgroundColor = '$colorHighlightAlert';
+					} else {
+						te[i].style.backgroundColor = '';
 					}
 					changeLogged++;
 				}
