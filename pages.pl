@@ -2804,12 +2804,14 @@ sub GetReadPage { # generates page with item listing based on parameters
 	#<span class="replies">last reply at [unixtime]</span>
 	#javascript foreach span class=replies { get time after "last reply at" and compare to "last visited" cookie
 
+	my $needUploadJs = 0;
 	if ($pageType eq 'tag') {
 		# add tag buttons with selected tag emphasized
 		$txtIndex .= GetTagLinks($pageParam);
 
 		if ($pageParam eq 'image') {
 			$txtIndex .= GetUploadWindow();
+			$needUploadJs = 1;
 		}
 	}
 
@@ -2902,7 +2904,11 @@ sub GetReadPage { # generates page with item listing based on parameters
 		# for author page, add itsyou.js, which will tell the user if the profile is theirs
 		$txtIndex = InjectJs($txtIndex, qw(itsyou settings timestamp voting utils profile));
 	} else {
-		$txtIndex = InjectJs($txtIndex, qw(settings voting timestamp utils profile));
+		if ($needUploadJs) {
+			$txtIndex = InjectJs($txtIndex, qw(settings voting timestamp utils profile upload));
+		} else {
+			$txtIndex = InjectJs($txtIndex, qw(settings voting timestamp utils profile));
+		}
 	}
 
 	return $txtIndex;
@@ -3555,6 +3561,7 @@ sub GetUploadWindow { # upload window for upload page
 	if (GetConfig('admin/js/enable')) {
 		# $uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "if (document.upload && document.upload.submit && document.upload.submit.value == 'Upload') { document.upload.submit.click(); }");
 		# this caused back button breaking
+		$uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "UploadedFileOnChange(this)");
 		$uploadForm = AddAttributeToTag($uploadForm, 'input name=submit', 'onclick', "this.value='Meditate...';");
 	}
 	my $allowFiles = GetConfig('admin/image/allow_files');
@@ -3652,7 +3659,7 @@ sub GetUploadPage { # returns html for upload page
 		$html .= GetPageFooter();
 
 		if (GetConfig('admin/js/enable')) {
-			$html = InjectJs($html, qw(settings avatar profile));
+			$html = InjectJs($html, qw(settings avatar profile upload));
 		}
 	} else {
 		$html .= GetPageHeader($title, $title, 'upload');
