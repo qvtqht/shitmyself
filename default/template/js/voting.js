@@ -41,7 +41,7 @@ function PingUrl (url) { // loads arbitrary url via image or xhr
         xmlhttp.onreadystatechange = window.PingUrlCallback;
 
         xmlhttp.open("HEAD", url, true);
-		xmlhttp.timeout = 5000;
+//		xmlhttp.timeout = 5000; //#xhr.timeout
         xmlhttp.send();
 
         return false;

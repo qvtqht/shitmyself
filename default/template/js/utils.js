@@ -55,7 +55,7 @@ function UrlExists(url) { // checks if url exists
 
 		var http = new XMLHttpRequest();
 		http.open('HEAD', url, false);
-		http.timeout = 5000;
+		//http.timeout = 5000; //#xhr.timeout
 		http.send();
 		var httpStatusReturned = http.status;
 

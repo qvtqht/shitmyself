@@ -186,7 +186,7 @@ function CheckIfFresh () {
 		freshClient = xhr;
 		//freshClient.open("HEAD", mypath + '?' + new Date().getTime(), true);
 		freshClient.open("HEAD", mypath, true);
-    	freshClient.timeout = 5000;
+    	//freshClient.timeout = 5000; //#xhr.timeout
 		freshClient.setRequestHeader('Cache-Control', 'no-cache');
 		freshClient.onreadystatechange = freshCallback;
 
