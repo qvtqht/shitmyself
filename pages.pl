@@ -187,6 +187,13 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings,
 	my $windowBody = shift;
 	my $windowStatus = shift;
 
+	# this is part of transitioning second argument to being id instead of menubar
+	my $windowId = '';
+	if ($windowMenubarContent) {
+		if ($windowMenubarContent eq 'dialogProfile') {
+			$windowId = 'dialogProfile';
+		}
+	}
 
 	# stores number of columns if they exist
 	# if no columns, remains at 0
