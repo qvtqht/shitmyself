@@ -52,5 +52,8 @@ rm -v log/log.log
 echo "mkdir -p html/txt"
 mkdir -p html/txt
 
-echo "killall lighttpd"
-killall lighttpd
+echo "uncomment next 2 lines to restart lighttpd process"
+echo "#todo turn this into a setting"
+
+# echo "killall lighttpd"
+# killall lighttpd
