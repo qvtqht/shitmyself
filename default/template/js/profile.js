@@ -543,7 +543,7 @@ function PubKeyPing () { // checks if user's public key is on server
 	return true;
 }
 
-function ProfileOnLoad() { // onload event for profile page
+function ProfileOnLoad () { // onload event for profile page
 	//alert('DEBUG: ProfileOnLoad() begin');
 
 	var lblSigningIndicator;

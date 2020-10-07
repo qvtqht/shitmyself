@@ -19,6 +19,26 @@ function unescapeHTML(html) {
 }
 // end html escape hack
 
+function OnLoadEverything() { // checks for each onLoad function and calls it
+// typically called from body.onload
+	if (window.SettingsOnLoad) {
+		SettingsOnLoad();
+	}
+	if (window.ProfileOnLoad) {
+		ProfileOnLoad();
+	}
+	if (window.WriteOnload) {
+		WriteOnload();
+	}
+	if (window.DraggingInit) {
+		DraggingInit();
+	}
+	if (document.compose.comment && document.compose.comment.focus) {
+		//#todo only if url ends with #reply
+		document.compose.comment.focus();
+	}
+}
+
 function EventLoop () { // (currently unused) for calling things which need to happen on a regular basis
 // sets another timeout for itself when done
 // replaces several independent timeouts

@@ -214,6 +214,7 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 } // ShowAdvanced()
 
 function GetPrefs (prefKey) { // get prefs value from localstorage
+	//alert('debug: GetPrefs(' + prefKey + ')');
 	if (window.localStorage) {
 		var currentPrefs = localStorage.getItem('prefs1');
 
@@ -353,12 +354,12 @@ function LoadCheckbox (c, prefKey) { // updates checkbox state to reflect settin
 }
 
 
-function SettingsOnload() { // onload function for preferences page
+function SettingsOnload () { // onload function for settings page
 	//alert('DEBUG: SettingsOnload() begin');
 
 	if (document.getElementById) {
-	// below is code which sets the checked state of preference checkboxes
-	// based on preference state
+	// below is code which sets the checked state of settings checkboxes
+	// based on settings state
 		var pane;
 
 		LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');

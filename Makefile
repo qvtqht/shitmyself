@@ -1,4 +1,7 @@
-localdev:
+clean:
+	./clean.sh
+	
+local:
 	./build.pl
 	echo 1 > config/admin/lighttpd/enable
 	./build.pl

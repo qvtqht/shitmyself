@@ -1,10 +1,10 @@
 // == begin write.js
 
-function writeOnload () { // onload handler for write page
-	//alert('DEBUG: writeOnload() begin');
+function WriteOnload () { // onload handler for write page
+	//alert('DEBUG: WriteOnload() begin');
 
 	if (document.getElementById) {
-	    //alert('DEBUG: writeOnload: document.getElementById is true');
+	    //alert('DEBUG: WriteOnload: document.getElementById is true');
 
         var pubKey = '';
         if (window.getPublicKey) {
@@ -115,7 +115,7 @@ function writeOnload () { // onload handler for write page
             }
         }
     } else {
-        //alert('DEBUG: writeOnload: document.getElementById was FALSE');
+        //alert('DEBUG: WriteOnload: document.getElementById was FALSE');
     }
 
     return true;
