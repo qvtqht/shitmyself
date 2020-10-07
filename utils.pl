@@ -643,10 +643,19 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 					WriteLog('GetAvatar: found reddit_username!');
 
 					$hasReddit = $authorAttributeValue;
-					$alias .= '('.$hasReddit.')';
-				}
-			}
-		}
+
+					if ($alias eq $hasReddit) {
+						if (!GetConfig('admin/html/ascii_only')) {
+							$alias .= '✔';
+						} else {
+							$alias .= '(verified)';
+						}
+					} else {
+						$alias .= '('.$hasReddit.')';
+					}
+				} # reddit_username
+			} # $authorAttributeLine
+		} # $authorItemAttributes
 
 		if (GetConfig('html/color_avatars')) {
 			my $color1 = substr($gpgKey, 0, 6);
