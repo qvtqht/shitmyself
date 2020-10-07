@@ -233,11 +233,21 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			WriteLog('InjectJs: warning: Inject script "' . $script . '" contains > character');
 		}
 
-		if (GetConfig('admin/js/debug')) {
+		static $debugType;
+		if (!isset($debugType)) {
+			$debugType = GetConfig('admin/js/debug');
+			$debugType = trim($debugType);
+		}
+
+		if ($debugType) {
 			#uncomment all javascript debug alert statements
 			#and replace them with confirm()'s which stop on no/cancel
 			#
-			$scriptTemplate = str_replace("//alert('DEBUG:", "if(!window.dbgoff)dbgoff=!confirm('DEBUG:", $scriptTemplate);
+			if ($debugType == 'console.log') {
+				$scriptTemplate = str_replace("//alert('DEBUG:", "console.log('", $scriptTemplate);
+			} else {
+				$scriptTemplate = str_replace("//alert('DEBUG:", "if(!window.dbgoff)dbgoff=!confirm('DEBUG:", $scriptTemplate);
+			}
 		}
 
 		// add to the snowball of javascript
