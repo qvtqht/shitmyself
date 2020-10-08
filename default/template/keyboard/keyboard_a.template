@@ -8,7 +8,10 @@
 <body>
 <style type="text/css">
     <!--
-
+        a {
+            font-family: monospace;
+            font-size: larger;
+        }
     -->
 </style>
 <script>
