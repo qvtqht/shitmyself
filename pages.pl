@@ -942,6 +942,11 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
 		);
 
+		if (GetConfig('admin/php/enable')) {
+			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onchange', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
+			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onkeyup', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
+		}
+
 		if (GetConfig('admin/js/translit')) {
 			# add onkeydown event which calls translitKey if feature is enabled
 			# translit substitutes typed characters with a different character set
