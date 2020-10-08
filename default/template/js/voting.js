@@ -176,7 +176,7 @@ function SignVote (t, token) { // signs a vote from referenced vote button
 
 
 		if (window.displayNotification) {
-			displayNotification('Success!', t);
+			//displayNotification('Success!', t);
 		} else {
 			//alert('DEBUG: window.displayNotification() was missing');
 		}
