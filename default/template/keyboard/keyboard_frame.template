@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <!-- keyboard_frame1.template -->
-<frameset border=0 rows="*,190">
+<frameset border=0 rows="*,135">
 <frame src="write.html" name=main>
 <frame src="keyboard_android.html" name=kbd>
 </frameset>
