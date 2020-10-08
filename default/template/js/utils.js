@@ -19,7 +19,7 @@ function unescapeHTML(html) {
 }
 // end html escape hack
 
-function OnLoadEverything() { // checks for each onLoad function and calls it
+function OnLoadEverything () { // checks for each onLoad function and calls it
 // typically called from body.onload
 	if (window.SettingsOnLoad) {
 		SettingsOnLoad();
@@ -33,7 +33,7 @@ function OnLoadEverything() { // checks for each onLoad function and calls it
 	if (window.DraggingInit) {
 		DraggingInit();
 	}
-	if (document.compose.comment && document.compose.comment.focus) {
+	if (document.compose && document.compose.comment && document.compose.comment.focus) {
 		//#todo only if url ends with #reply
 		document.compose.comment.focus();
 	}
