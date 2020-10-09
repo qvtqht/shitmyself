@@ -1237,3 +1237,31 @@ if there is a list format it like this
 .
 this will stand up to both instagram and markdown rejanking
 
+
+
+===
+
+>>51cc55aa4b0452ab1d5d33a6c5dd13eb06d3d9d6
+
+another new feature is dev_mode, which allows writing directly into the project docs from browser ui by using #meta tag along with #todo, #bug, or #brainstorm.
+
+this item will end up in todo, if i am not mistaken, because it is first in the list. i decided against writing to all three in this situation (for now)
+
+
+
+===
+
+#brainstorm #meta
+.
+post-formatting mode:
+.
+resilient paragraphs
+.
+if there is a list format it like this
+.
+: item one
+.
+: item two
+.
+this will stand up to both instagram and markdown rejanking
+
