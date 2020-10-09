@@ -3345,6 +3345,20 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $eventAddPage = GetEventAddPage();
 	PutHtmlFile("event.html", $eventAddPage);
 
+	# Add Event page
+	my $eventsPage = GetEventsPage();
+	PutHtmlFile("events.html", $eventsPage);
+
+	# Add Event page
+	my $authorsPage = GetScoreboardPage();
+	PutHtmlFile("authors.html", $authorsPage);
+
+	my $topItemsPage = GetTopItemsPage();
+	PutHtmlFile('read.html', $topItemsPage);
+
+	my $tagsPage = GetTagsPage('Tags', 'Tags', '');
+	PutHtmlFile("tags.html", $tagsPage);
+
 	PutStatsPages();
 	#
 	# { # clock test page
