@@ -2099,6 +2099,7 @@ sub GetStatsTable {
 	my $authorCount = DBGetAuthorCount();
 
 	my $adminId = GetAdminKey();
+	my $adminUsername = GetAlias(GetAdminKey());
 	my $adminLink = GetAuthorLink($adminId);
 
 	my $serverId = GetServerKey();
@@ -2120,7 +2121,12 @@ sub GetStatsTable {
 	my $statsTable = GetTemplate($templateName);
 
 	if ($adminId) {
-		$statsTable =~ s/\$admin/$adminLink/;
+		if ($adminUsername eq 'Operator' && $templateName eq 'stats-horizontal.template') {
+			# harmless hack
+			$statsTable =~ s/\<span class=beginner>Operator: <\/span>\$admin/$adminLink/;
+		} else {
+			$statsTable =~ s/\$admin/$adminLink/;
+		}
 	} else {
 		$statsTable =~ s/\$admin/(Not defined)/;
 	}
