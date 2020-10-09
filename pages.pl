@@ -2652,6 +2652,9 @@ sub GetAuthorInfoBox {
 		$publicKeyHash = '*';
 	}
 
+	if (IsAdmin($authorKey)) {
+		$authorInfoTemplate =~ s/<p>This page about author listed below.<\/p>/<p>Note: This user is system operator.<\/p>/;
+	}
 	$authorInfoTemplate =~ s/\$avatar/$authorAvatarHtml/;
 	$authorInfoTemplate =~ s/\$authorName/$authorAliasHtml/;
 	$authorInfoTemplate =~ s/\$fingerprint/$authorKey/g;
