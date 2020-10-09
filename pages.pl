@@ -2322,6 +2322,14 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptTemplate =~ s/\$colorHighlightAlert/$colorHighlightAlert/g;
 			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
 			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
+
+			my $colorRecentTimestamp = GetThemeColor('recent_timestamp');
+			if ($colorRecentTimestamp) {
+				$scriptTemplate =~ s/\$colorRecentTimestamp/$colorRecentTimestamp/g;
+			} else {
+				$colorRecentTimestamp = '#808000';
+				$scriptTemplate =~ s/\$colorRecentTimestamp/$colorRecentTimestamp/g;
+			}
 		}
 
 		if (index($scriptTemplate, '>') > -1) {
