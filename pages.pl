@@ -3464,6 +3464,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		#$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
 		$crypto2JsTemplate = EnableJsDebug($crypto2JsTemplate);
 	}
+	my $algoSelectMode = GetConfig('admin/gpg/algo_select_mode');
+	if ($algoSelectMode) {
+		if ($algoSelectMode eq '512' || $algoSelectMode eq 'random' || $algoSelectMode eq 'max') {
+			$crypto2JsTemplate = str_replace('var algoSelectMode = 0;', "var algoSelectMode = '$algoSelectMode'", $crypto2JsTemplate);
+		}
+	}
 	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
 
 	# Write avatar javascript
