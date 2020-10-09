@@ -306,7 +306,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		if (
 			$path == '/' ||
 			$path == '/index.html' ||
-			$path == '/top.html' ||
+			$path == '/read.html' ||
 			$path == '/write.html' ||
 			$path == '/upload.html' ||
 			$path == '/authors.html' ||
@@ -316,6 +316,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/tags.html' ||
 			$path == '/settings.html' ||
 			$path == '/help.html' ||
+			$path == '/search.html' ||
 			$path == '/manual.html'
 		) {
 			WriteLog('HandleNotFound: found a summary page');
