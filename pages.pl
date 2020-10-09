@@ -2628,7 +2628,7 @@ sub GetAuthorInfoBox {
 
 		my $descText = '<b>Admin.</b>';
 		my $adminContainer = GetTemplate('item/container/admin.template');
-		my $colorAdmin = GetThemeColor('admin') || '#800000';
+		my $colorAdmin = GetThemeColor('admin') || '#c00000';
 		$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
 		$adminContainer =~ s/\$message/$descText/g;
 
