@@ -3612,7 +3612,7 @@ sub GetUploadWindow { # upload window for upload page
 
 sub GetSearchWindow { # search window for search page
 	my $searchForm = GetTemplate('form/search.template');
-	my $searchWindow = GetWindowTemplate('Search', '', '', $searchForm, '');
+	my $searchWindow = GetWindowTemplate('Public Search', '', '', $searchForm, '');
 	return $searchWindow;
 } # GetSearchWindow()
 
