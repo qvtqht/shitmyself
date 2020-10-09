@@ -1,3 +1,24 @@
+> blockquote ?
+>> parent/reference
+>>> insert content ?
+
+
+
+SYNDICATION
+===========
+server to client into localstorage
+	host list
+	items
+
+
+
+when items are submitted key=value pairs from the request need to be turned into headers
+	or do they? maybe just accept them as tokens?
+	what about footer-header? does that need to be turned into = values?
+
+FamilyHub
+	family non-emergency canary
+
 maxviewcount
 	then burn?
 	display on page how many views left
