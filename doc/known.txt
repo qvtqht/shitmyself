@@ -71,6 +71,11 @@ There's a piece missing from the PGP-to-cookie auth transition
 	Server needs to pass encrypted cookie checksum to client
 		and client needs to decrypt it and set it into the checksum cookie
 
+trying to set xhr.timeout causes error in chrome
+	//#xhr.timeout
+
+Hashtags are stripped out of default title
+
 Browser Issues
 ==============
 See browsers.txt
