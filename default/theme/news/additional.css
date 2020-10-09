@@ -1,47 +1,42 @@
 /* begin theme/news/additional.css */
-body, .txt {
-	font: family: Tahoma, Verdana, Arial, sans-serif;
-	font-size: 10pt;
+body  { font-family:Verdana, Geneva, sans-serif; font-size:10pt; color:#828282; }
+td    { font-family:Verdana, Geneva, sans-serif; font-size:10pt; color:#828282; }
+input    { font-family:monospace; font-size:10pt; }
+
+input[type=\"submit\"] { font-family:Verdana, Geneva, sans-serif; }
+textarea { font-family:monospace; font-size:10pt; }
+a:link    { color:#000000; text-decoration:none; }
+a:visited { color:#828282; text-decoration:none; }
+
+@media only screen and (min-width : 300px) and (max-width : 389px) {
+  .txt { max-width: 270px; overflow: hidden }
 }
-fieldset {
-	border-color: $colorSecondary;
+@media only screen and (min-width : 390px) and (max-width : 509px) {
+  .txt { max-width: 350px; overflow: hidden }
 }
-link {
-	text-decoration: none;
+@media only screen and (min-width : 510px) and (max-width : 599px) {
+  .txt { max-width: 460px; overflow: hidden }
 }
-#txtClock {
-	border: 1pt inset $colorWindow;
+@media only screen and (min-width : 600px) and (max-width : 689px) {
+  .txt { max-width: 540px; overflow: hidden }
 }
-.statusbar td {
-    padding: 2pt;
+@media only screen and (min-width : 690px) and (max-width : 809px) {
+  .txt { max-width: 620px; overflow: hidden }
 }
-#serverResponse {
-/* responses from server */
-    background-color: $colorWindow;
-    color: $colorText;
-    padding: 5pt;
-    spacing: 5pt;
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    width: 50%;
-    border: 2pt $colorPrimary double;
+@media only screen and (min-width : 810px) and (max-width : 899px) {
+  .txt { max-width: 730px; overflow: hidden }
 }
-a:focus, a:active {
-    color: white !important;
-    background-color: teal !important;
+@media only screen and (min-width : 900px) and (max-width : 1079px) {
+  .txt { max-width: 810px; overflow: hidden }
 }
-input {
-	font-family: monospace;
-	font-size: 10pt;
+@media only screen and (min-width : 1080px) and (max-width : 1169px) {
+  .txt { max-width: 970px; overflow: hidden }
 }
-textarea {
-	font-family: monospace;
-	font-size:10pt;
+@media only screen and (min-width : 1170px) and (max-width : 1259px) {
+  .txt { max-width: 1050px; overflow: hidden }
 }
-input[type=text], input[type=password], select, option, textarea {
-	background-color: $colorInputBackground;
-	color: $colorInputText;
+@media only screen and (min-width : 1260px) and (max-width : 1349px) {
+  .txt { max-width: 1130px; overflow: hidden }
 }
 
 /* end theme/news/additional.css */
