@@ -712,7 +712,7 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 
 	if ($clockFormat == 'union') {
 		// union square clock format
-		$time = GetTime() - 3600*4; // hard-coded correction, should be timezone convert
+		$time = GetTime() - 3600 * 4; // hard-coded correction, should be timezone convert #todo
 
 		// #todo make it perl-equivalent with localtime($time)
 		$hours = strftime('%H', $time);
