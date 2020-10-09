@@ -795,6 +795,38 @@ function unsetcookie2 ($key) { // remove cookie in most compatible way
 	Header("Set-Cookie: $key=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/", false);
 }
 
+function IndexTextFile ($filePath) {
+	$scriptDir = GetScriptDir();
+	$pwd = getcwd();
+
+	WriteLog("cd $scriptDir ; ./index.pl \"$filePath\"");
+	WriteLog(`cd $scriptDir ; ./index.pl "$filePath"`);
+
+	if ($pwd) {
+		WriteLog("cd $pwd");
+		WriteLog(`cd $pwd`);
+	}
+//
+// 	WriteLog("cd $scriptDir ; ./pages.pl \"$hash\"");
+// 	WriteLog(`cd $scriptDir ; ./pages.pl "$hash"`);
+} // IndexTextFile()
+
+function MakePage ($pageName) {
+	#todo sanity checks
+	$scriptDir = GetScriptDir();
+	$pwd = getcwd();
+
+	WriteLog("cd $scriptDir ; ./pages.pl \"$pageName\"");
+	WriteLog(`cd $scriptDir ; ./pages.pl "$pageName"`);
+
+	if ($pwd) {
+		WriteLog("cd $pwd");
+		WriteLog(`cd $pwd`);
+	}
+//
+// 	WriteLog("cd $scriptDir ; ./pages.pl \"$hash\"");
+// 	WriteLog(`cd $scriptDir ; ./pages.pl "$hash"`);
+} // IndexNewFile()
 
 function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt file and calls indexer
 	$hash = ''; // hash of new comment's contents
