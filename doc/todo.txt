@@ -1,3 +1,26 @@
+write page:
+	if not logged in:
+		"other options may be available when you register or sign in"
+
+
+global timer should check if login state has changed and
+	immediately burn crrently open page if state changes
+
+upgrade etc process
+	user posts signed token
+	server validates
+		changes /index.html to status message
+		performs upgrade
+		build.pl
+
+admin imprint key
+	email version
+		user enters email which hashes
+		server sends one-time auth token to email
+
+#burnit token
+	note: you can't burn electrons
+
 .js files can fall behind in version
 	todo:self-check against etag somehow
 
@@ -1825,3 +1848,34 @@ require profile mode is janky and locks out links and any non-cookie users
 
 #todo #meta
 
+
+
+===
+
+#todo auto arrange windows one by one, adding height values, placing them one after the next, unless already in preferences #meta
+
+[Solved puzzle with this prefix: 1337]
+
+
+
+===
+
+>>51cc55aa4b0452ab1d5d33a6c5dd13eb06d3d9d6
+
+another new feature is dev_mode, which allows writing directly into the project docs from browser ui by using #meta tag along with #todo, #bug, or #brainstorm.
+
+this item will end up in todo, if i am not mistaken, because it is first in the list. i decided against writing to all three in this situation (for now)
+
+
+
+===
+
+require profile mode is janky and locks out links and any non-cookie users
+
+#todo #meta
+
+
+
+===
+
+#todo auto arrange windows one by one, adding height values, placing them one after the next, unless already in preferences #meta
