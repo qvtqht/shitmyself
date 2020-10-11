@@ -2764,6 +2764,98 @@ sub GetPasswordLine { # $username, $password ; returns line for .htpasswd file
 	chomp $password;
 
 	return $username.":".crypt($password,$username)."\n";
-}
+} # GetPasswordLine()
+
+sub OrganizeFile { # $file ; renames file based on hash of its contents
+	# returns new filename
+	# filename is obtained using GetFileHashPath()
+	
+	my $file = shift;
+	chomp $file;
+
+	if (!-e $file) {
+		#file does not exist.
+		WriteLog('OrganizeFile: warning: called on non-existing file: ' . $file);
+		return '';
+	}
+
+	if (!GetConfig('admin/organize_files')) {
+		WriteLog('OrganizeFile: warning: admin/organize_files was false, returning.');
+		return $file;
+	}
+
+	if ($file eq "$TXTDIR/server.key.txt" || $file eq $TXTDIR || -d $file) {
+		WriteLog('OrganizeFile: file does not meet criteria, ignoring.');
+		return $file;
+	}
+
+	# organize files aka rename to hash-based path
+	my $fileHashPath = GetFileHashPath($file);
+
+
+	# turns out this is actually the opposite of what needs to happen
+	# but this code snippet may come in handy
+	# if (index($fileHashPath, $SCRIPTDIR) == 0) {
+	# 	WriteLog('IndexTextFile: hash path begins with $SCRIPTDIR, removing it');
+	# 	$fileHashPath = str_replace($SCRIPTDIR . '/', '', $fileHashPath);
+	# } # index($fileHashPath, $SCRIPTDIR) == 0
+	# else {
+	# 	WriteLog('IndexTextFile: hash path does NOT begin with $SCRIPTDIR, leaving it alone');
+	# }
+
+
+	if ($fileHashPath) {
+		# Does it match?
+		if ($file eq $fileHashPath) {
+			# No action needed
+			WriteLog('OrganizeFile: hash path matches, no action needed');
+		}
+		# It doesn't match, fix it
+		elsif ($file ne $fileHashPath) {
+			WriteLog('OrganizeFile: hash path does not match, organize');
+			WriteLog('OrganizeFile: Before: ' . $file);
+			WriteLog('OrganizeFile: After: ' . $fileHashPath);
+
+			if (-e $fileHashPath) {
+				# new file already exists, rename only if not larger
+				WriteLog("OrganizeFile: warning: $fileHashPath already exists!");
+
+				if (-s $fileHashPath > -s $file) {
+					unlink ($file);
+				} else {
+					rename ($file, $fileHashPath);
+				}
+			} # -e $fileHashPath
+			else {
+				# new file does not exist, safe to rename
+				rename ($file, $fileHashPath);
+			}
+
+			# if new file exists
+			if (-e $fileHashPath) {
+				$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
+			} else {
+				WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
+			}
+		} # $file ne $fileHashPath
+		else {
+			WriteLog('IndexTextFile: it already matches, next!');
+			WriteLog('$file: ' . $file);
+			WriteLog('$fileHashPath: ' . $fileHashPath);
+		}
+	} # $fileHashPath
+
+	WriteLog("OrganizeFile: returning $file");
+	return $file;
+} # OrganizeFile()
+
+
+sub VerifyThirdPartyAccount {
+	my $fileHash = shift;
+	my $thirdPartyUrl = shift;
+} # verify token
+
+
+
 
 1;
