@@ -1716,7 +1716,6 @@ sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwis
 sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
 	# will probably be redesigned in the future
 	my $key = shift;
-
 	if (!IsFingerprint($key)) {
 		WriteLog('IsAdmin: warning: $key failed sanity check, returning 0');
 		return 0;
@@ -1733,9 +1732,20 @@ sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
 	if ($key eq GetAdminKey() || $key eq GetServerKey()) {
 		return 1; # is admin, return true;
 	} else {
-		return 0; # not admin, return false;
+		my $pubKeyHash = DBGetAuthorPublicKeyHash($key);
+		if ($pubKeyHash) {
+			my %pubKeyVoteTotals = DBGetItemVoteTotals($pubKeyHash);
+			if ($pubKeyVoteTotals{'admin'}) {
+				return 1;
+			} else {
+				return 0; # not admin, return false;
+			}
+		}
 	}
-}
+
+	WriteLog('IsAdmin: warning: fallthrough');
+	return 0;
+} # IsAdmin()
 
 sub GetServerKey { # Returns server's public key, 0 if there is none
 	state $serversKey;
