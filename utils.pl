@@ -1732,13 +1732,15 @@ sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
 	if ($key eq GetAdminKey() || $key eq GetServerKey()) {
 		return 1; # is admin, return true;
 	} else {
-		my $pubKeyHash = DBGetAuthorPublicKeyHash($key);
-		if ($pubKeyHash) {
-			my %pubKeyVoteTotals = DBGetItemVoteTotals($pubKeyHash);
-			if ($pubKeyVoteTotals{'admin'}) {
-				return 1;
-			} else {
-				return 0; # not admin, return false;
+		if (GetConfig('admin/allow_admin_permissions_tag_lookup')) {
+			my $pubKeyHash = DBGetAuthorPublicKeyHash($key);
+			if ($pubKeyHash) {
+				my %pubKeyVoteTotals = DBGetItemVoteTotals($pubKeyHash);
+				if ($pubKeyVoteTotals{'admin'}) {
+					return 1;
+				} else {
+					return 0; # not admin, return false;
+				}
 			}
 		}
 	}
