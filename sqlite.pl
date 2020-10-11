@@ -615,20 +615,21 @@ sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged a
 
 sub DBGetLatestConfig { # Returns everything from config_latest view
 # config_latest contains the latest set value for each key stored
-
 	my $query = "SELECT * FROM config_latest";
 	#todo write out the fields
 
-	my $sth = $dbh->prepare($query);
-	$sth->execute();
-
-	my @resultsArray = ();
-
-	while (my $row = $sth->fetchrow_hashref()) {
-		push @resultsArray, $row;
+	if ($dbh) {
+		my $sth = $dbh->prepare($query);
+		$sth->execute();
+		my @resultsArray = ();
+		while (my $row = $sth->fetchrow_hashref()) {
+			push @resultsArray, $row;
+		}
+		return @resultsArray;
+	} else {
+		WriteLog('DBGetLatestConfig: warning: $dbh was false');
+		return 0;
 	}
-
-	return @resultsArray;
 }
 
 
@@ -835,6 +836,11 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	state @queryParams;
 
 	my $key = shift;
+
+	if (!$key) {
+		WriteLog('DBAddConfigValue: warning: sanity check failed');
+		return '';
+	}
 
 	if ($key eq 'flush') {
 		WriteLog("DBAddConfigValue(flush)");
@@ -1840,7 +1846,8 @@ sub DBGetAddedTime { # return added time for item specified
 	}
 
 	if (!IsSha1($fileHash) || $fileHash ne SqliteEscape($fileHash)) {
-		die('DBGetAddedTime() this should never happen');
+		WriteLog('DBGetAddedTime: warning: important sanity check failed! this should never happen: !IsSha1($fileHash) || $fileHash ne SqliteEscape($fileHash)');
+		return '';
 	} #todo ideally this should verify it's a proper hash too
 
 	my $query = "
@@ -1855,17 +1862,21 @@ sub DBGetAddedTime { # return added time for item specified
 
 	WriteLog($query);
 
-	my $sth = $dbh->prepare($query);
-	$sth->execute();
+	if ($dbh) {
+		my $sth = $dbh->prepare($query);
+		$sth->execute();
 
-	my @aref = $sth->fetchrow_array();
+		my @aref = $sth->fetchrow_array();
 
-	$sth->finish();
+		$sth->finish();
 
-	my $resultUnHacked = $aref[0];
-	#todo do this properly
+		my $resultUnHacked = $aref[0];
+		#todo do this properly
 
-	return $resultUnHacked;
+		return $resultUnHacked;
+	} else {
+		WriteLog('DBGetAddedTime: warning: $dbh was missing, returning empty-handed');
+	}
 }
 
 # sub DBGetItemsForTag {
@@ -2274,6 +2285,11 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 
 sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash of [tag] -> count
 	my $fileHash = shift;
+	if (!$fileHash) {
+		WriteLog('DBGetItemVoteTotals: warning: $fileHash missing, returning');
+		return 0;
+	}
+
 	chomp $fileHash;
 
 	if (!IsItem($fileHash)) {

@@ -1209,6 +1209,15 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 	my $with_this  = shift;
 	my $string   = shift;
 
+	if (!defined($string) || !$string) {
+		WriteLog('str_replace: warning: $string not supplied');
+		return "";
+	}
+	if ($replace_this eq $with_this) {
+		WriteLog('str_replace: warning: $replace_this eq $with_this');
+		return $string;
+	}
+
 	WriteLog("str_replace($replace_this, $with_this, $string)");
 
 	my $length = length($string);
@@ -1221,7 +1230,7 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 		}
 	}
 
-	WriteLog("str_replace: $string");
+	WriteLog("str_replace: result: $string");
 
 	return $string;
 }
@@ -1753,24 +1762,22 @@ sub GetServerKey { # Returns server's public key, 0 if there is none
 		return 0;
 	}
 
+	WriteLog('GetServerKey: warning: fallthrough!');
 	return 0;
-}
+} # GetServerKey()
 
-sub GetAdminKey { # Returns admin's public key, 0 if there is none
-	state $adminsKey = 0;
-
+sub GetAdminKey { # Returns admin's public key, if there is none
+	# it's located in ./admin.key as armored public key
+	# should be called GetRootAdminKey()
+	state $adminsKey;
 	if ($adminsKey) {
 		return $adminsKey;
 	}
-
 	if (-e "$SCRIPTDIR/admin.key") {
-
 		my %adminsInfo = GpgParse("$SCRIPTDIR/admin.key");
-
 		if ($adminsInfo{'isSigned'}) {
 			if ($adminsInfo{'key'}) {
 				$adminsKey = $adminsInfo{'key'};
-
 				return $adminsKey;
 			} else {
 				return 0;
@@ -1781,27 +1788,22 @@ sub GetAdminKey { # Returns admin's public key, 0 if there is none
 	} else {
 		return 0;
 	}
-
 	return 0;
 }
 
 sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a file path
 	my $string = shift;
-
 	while (index($string, "/") >= 0) {
 		$string = substr($string, index($string, "/") + 1);
 	}
-
 	$string = substr($string, 0, index($string, ".") + 0);
-
 	return $string;
 }
 
-sub htmlspecialchars { # encodes supplied string for html output
+sub htmlspecialchars { # $text, encodes supplied string for html output
+	# port of php built-in
 	my $text = shift;
-
 	$text = encode_entities2($text);
-
 	return $text;
 }
 
