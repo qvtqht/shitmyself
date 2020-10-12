@@ -181,31 +181,31 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 			}
 			showBeginnerLastAction = displayValue + bgColor;
 		}
-
-		if (window.freshTimeoutId) {
-			// reset the page change notifier state
-			clearTimeout(window.freshTimeoutId);
-
-			if (GetPrefs('notify_on_change')) {
-				// check if page has changed, notify user if so
-				if (window.EventLoop) {
-					EventLoop();
-				}
-			}
-		}
+//
+//		if (window.freshTimeoutId) {
+//			// reset the page change notifier state
+//			clearTimeout(window.freshTimeoutId);
+//
+//			if (GetPrefs('notify_on_change')) {
+//				// check if page has changed, notify user if so
+//				if (window.EventLoop) {
+//					EventLoop();
+//				}
+//			}
+//		}
 
 		if (window.setAva) {
 			setAva(); // #todo caching similar to above
 		}
 
-		if (!force) {
-			if (timerShowAdvanced) {
-				clearTimeout(timerShowAdvanced);
-			}
-			timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
-		}
+		//if (!force) {
+			//if (timerShowAdvanced) {
+			//	clearTimeout(timerShowAdvanced);
+			//}
+			//timerShowAdvanced = setTimeout('ShowAdvanced()', 3000);
+		//}
 
-		SettingsOnload();
+		//SettingsOnload();
 
 	} else {
 		//alert('DEBUG: ShowAdvanced: feature check FAILED! window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
