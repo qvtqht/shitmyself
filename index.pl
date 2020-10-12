@@ -21,23 +21,20 @@ WriteLog( "Using $SCRIPTDIR as install root...\n");
 sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute table
 	WriteLog("MakeChainIndex()\n");
 
-	if (GetConfig('admin/read_added_log')) {
-		# my $addedLog = GetFile('log/added.log');
-		my $addedLog = GetFile('html/chain.log');
+	if (GetConfig('admin/read_chain_log')) {
+		my $chainLog = GetFile('html/chain.log');
 
-		if (defined($addedLog) && $addedLog) {
-			my @addedRecord = split("\n", $addedLog);
-			# my @addedRecord = split("\n", GetFile("log/added.log"));
+		if (defined($chainLog) && $chainLog) {
+			my @addedRecord = split("\n", $chainLog);
 
 			my $previousLine = '';
 			my $sequenceNumber = 0;
 
 			foreach my $currentLine (@addedRecord) {
 				WriteLog("MakeChainIndex: $currentLine");
-				WriteMessage("$sequenceNumber");
+				WriteMessage("Verifying Chain Log: $sequenceNumber");
 
 				my ($fileHash, $addedTime, $proofHash) = split('\|', $currentLine);
-
 				my $expectedHash = md5_hex($previousLine . '|' . $fileHash . '|' . $addedTime);
 
 				if ($expectedHash ne $proofHash) {
@@ -58,23 +55,20 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 
 				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
 				DBAddItemAttribute($fileHash, 'chain_sequence', $sequenceNumber);
-
 				WriteLog('MakeChainIndex: $sequenceNumber = ' . $sequenceNumber);
 
 				$sequenceNumber = $sequenceNumber + 1;
 				$previousLine = $currentLine;
-			}
-
+			} # foreach $currentLine (@addedRecord)
 			DBAddItemAttribute('flush');
-		}
-	}
+		} # $chainLog
+	} # GetConfig('admin/read_chain_log')
 } # MakeChainIndex()
 
 sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush'), flushes any queued queries
 # Also sets appropriate task entries
-
 	my $file = shift;
 	chomp($file);
 
@@ -1468,9 +1462,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddPageTouch('events');
 		DBAddPageTouch('rss');
 		DBAddPageTouch('index');
-		DBAddPageTouch('flush');
+		DBAddPageTouch('flush'); #todo shouldn't be here
 	}
-} # IndexTextFile
+} # IndexTextFile()
 
 sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	# line format is:
@@ -1565,7 +1559,6 @@ sub IndexImageFile { # $file ; indexes one image file into database
 	}
 
 	my $addedTime;          # time added, epoch format
-	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
 	my $fileHash;            # git's hash of file blob, used as identifier
 
 	if (IsImageFile($file)) {
@@ -1576,7 +1569,9 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		# get the file's added time.
 
 		# debug output
-		WriteLog('IndexImageFile: $file = ' . ($file?$file:'false') . '; $fileHash = ' . ($fileHash?$fileHash:'false') . '; $addedTime = ' . ($addedTime?$addedTime:'false'));
+		WriteLog('IndexImageFile: $file = ' . ($file?$file:'false'));
+		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash?$fileHash:'false'));
+		WriteLog('IndexImageFile: $addedTime = ' . ($addedTime?$addedTime:'false'));
 
 		# if the file is present in deleted.log, get rid of it and its page, return
 		if (IsFileDeleted($file, $fileHash)) {
@@ -1586,14 +1581,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		}
 
 		if (!$addedTime) {
-			# This file was not added through access.pl, and has
-			# not been indexed before, so it should get an added_time
-			# record. This is what we'll do here. It will be picked
-			# up and put into the database on the next cycle
-			# unless we add provisions for that here #todo
-
-			WriteLog("IndexImageFile: No added time found for $fileHash setting it to now.");
-			# current time
+			WriteLog('IndexImageFile: file missing $addedTime');
 			if (GetConfig('admin/logging/write_chain_log')) {
 				$addedTime = AddToChainLog($fileHash);
 			} else {
@@ -1601,13 +1589,11 @@ sub IndexImageFile { # $file ; indexes one image file into database
 			}
 			if (!$addedTime) {
 				# sanity check
-				WriteLog('IndexImageFile: warning: sanity check failed');
+				WriteLog('IndexImageFile: warning: sanity check failed for $addedTime');
 				$addedTime = GetTime();
 			}
-			$addedTimeIsNew = 1;
 		}
 
-		DBAddPageTouch('rss');
 		my $itemName = TrimPath($file);
 
 		{
