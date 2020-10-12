@@ -166,7 +166,21 @@ function freshCallback() { // callback for requesting HEAD for current page
 } //freshCallback()
 
 function CheckIfFresh () {
-	//document.title = 'CheckIfFresh: ' + new Date().getTime();
+	//alert('debug: CheckIfFresh: ' + new Date().getTime());
+
+	var freshCheckRecent = window.freshCheckRecent;
+	if (freshCheckRecent) {
+		//alert('debug: CheckIfFresh: freshCheckRecent = ' + freshCheckRecent);
+		var d = new Date();
+		var curTime = d.getTime();
+		if (curTime < freshCheckRecent + 3000) {
+			return true;
+		}
+	}
+	//alert('debug: CheckIfFresh: checkpoint passed');
+
+	var d = new Date();
+	window.freshCheckRecent = d.getTime();
 
 	var xhr = null;
 	if (window.XMLHttpRequest){
@@ -198,17 +212,17 @@ function CheckIfFresh () {
 
 	return true;
 } // CheckIfFresh()
-
-if (window.GetPrefs) {
-	var needNotify = (GetPrefs('notify_on_change') ? 1 : 0);
-	if (needNotify == 1) { // check value of notify_on_change preference
-		if (window.EventLoop) {
-			EventLoop();
-		} else {
-			CheckIfFresh();
-		}
-	}
-}
+//
+//if (window.GetPrefs) {
+//	var needNotify = (GetPrefs('notify_on_change') ? 1 : 0);
+//	if (needNotify == 1) { // check value of notify_on_change preference
+//		if (window.EventLoop) {
+//			EventLoop();
+//		} else {
+//			CheckIfFresh();
+//		}
+//	}
+//}
 
 //alert('DEBUG: fresh.js');
 
