@@ -121,6 +121,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	my $gpgTimestamp = 0;
 
 	my %hasToken; # tokens found in message for secondary parsing
+	my @tokensFound; # array of hashes, tokens found with arguments
+	my @itemParents;
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
 		my %gpgResults = GpgParse($file);
@@ -281,917 +283,407 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		my $itemName = TrimPath($file);
 
-		if (GetConfig('admin/token/cookie') && $message) {
-			#look for cookies
-			my @cookieLines = ($message =~ m/^Cookie:\s(.+)/mg);
-
-			if (@cookieLines) {
-				while (@cookieLines) {
-					my $cookieValue = shift @cookieLines;
-
-					$hasCookie = $cookieValue; #only the last cookie is used below
-					my $reconLine = "Cookie: $cookieValue";
-					$detokenedMessage =~ s/$reconLine/[Cookie: $hasCookie]/;
-
-					DBAddAuthor($cookieValue);
-					DBAddPageTouch('author', $cookieValue);
-					DBAddPageTouch('scores');
-					DBAddPageTouch('stats');
-
-					$hasToken{'cookie'} = 1;
+		{
+			###################################################
+			# TOKEN FIRST PASS PARSING BEGINS HERE
+			my @tokenDefs = (
+				{ # cookie of user who posted the message
+					'token'   => 'cookie',
+					'mask'    => '^(cookie)(\W+)([0-9A-F]{16})',
+					'mask_params'    => 'mgi',
+					'message' => '[Cookie]'
+				},
+				{ # allows cookied user to set own name
+					'token'   => 'my_name_is',
+					'mask'    => '^(my name is)(\W+)([A-Za-z0-9\'_\. ]+)\r?$',
+					'mask_params'    => 'mgi',
+					'message' => '[MyNameIs]'
+				},
+				{ # parent of item (to which item is replying)
+					'token'   => 'parent',
+					'mask'    => '^(\>\>)(\W?)([0-9a-f]{40})',
+					'mask_params' => 'mg',
+					'message' => '[Parent]'
+				},
+				{ # title of item, either self or parent. used for display when title is needed
+					'token'   => 'title',
+					'mask'    => '^(title)(\W+)(.+)$',
+					'mask_params'    => 'mg',
+					'apply_to_parent' => 1,
+					'message' => '[Title]'
+				},
+				{ # used for image alt tags #todo
+					'token'   => 'alt',
+					'mask'    => '^(alt)(\W+)(.+)$',
+					'mask_params'    => 'mg',
+					'apply_to_parent' => 1,
+					'message' => '[Alt]'
+				},
+				{ # hash of line from access.log where item came from (for parent item)
+					'token'   => 'access_log_hash',
+					'mask'    => '^(AccessLogHash)(\W+)(.+)$',
+					'mask_params'    => 'mgi',
+					'apply_to_parent' => 1,
+					'message' => '[AccessLogHash]'
+				},
+				{ # solved puzzle (user id, timestamp, random number between 0 and 1
+					# together they must hash to the prefix specified in config/puzzle/accept
+					# the default prefix (also accepted) is specified in config/puzzle/prefix
+					'token' => 'puzzle',
+					'mask' => '^()()([0-9A-F]{16} [0-9]{10} 0\.[0-9]+)',
+					'mask_params' => 'mg',
+					'message' => '[Puzzle]'
+				},
+				{ # anything beginning with http:// or https:// and up to the next space character (or eof)
+					'token' => 'url',
+					'mask' => '^()()(http.+)$',
+					'mask_params' => 'mg',
+					'message' => '[URL]'
+				},
+				{
+					# hashtags, currently restricted to latin alphanumeric and underscore
+					'token' => 'hashtag',
+					'mask'  => '(\#)()([a-zA-Z0-9_]+)',
+					'mask_params' => 'mgi',
+					'message' => '[HashTag]',
+					'apply_to_parent' => 1
+				},
+				{
+					# verify token, for third-party identification
+					# example: verify http://www.example.com/user/JohnSmith/
+					# must be child of pubkey item
+					'token' => 'verify',
+					'mask'  => '^(verify)(\W)(.+)$',
+					'mask_params' => 'mgi',
+					'message' => '[Verify]',
+					'apply_to_parent' => 1
+				},
+				{
+					# config token for setting configuration
+					# config/admin/anyone_can_config = allow anyone to config (for open-access boards)
+					# config/admin/signed_can_config = allow only signed users to config
+					# config/admin/cookied_can_config = allow any user (including cookies) to config
+					# otherwise, only admin user can config
+					# also, anything under config/admin/ is still restricted to admin user only
+					# admin user must have a pubkey
+					'token' => 'config',
+					'mask'  => '(config)(\W)(.+)$',
+					'mask_params' => 'mgi',
+					'message' => '[Config]',
+					'apply_to_parent' => 1
 				}
-			}
+			);
+
+			# parses standard issue tokens, definitions above
+			# stores into @tokensFound
+
+			foreach my $tokenDefRef (@tokenDefs) {
+				my %tokenDef = %$tokenDefRef;
+				my $tokenName = $tokenDef{'token'};
+				my $tokenMask = $tokenDef{'mask'};
+				my $tokenMaskParams = $tokenDef{'mask_params'};
+				my $tokenMessage = $tokenDef{'message'};
+
+				WriteLog('IndexTextFile: $tokenMask = ' . $tokenMask);
+
+				if (GetConfig("admin/token/$tokenName") && $detokenedMessage) {
+					# token is enabled, and there is still something left to parse
+					
+					my @tokenLines;
+
+					if ($tokenMaskParams eq 'mg') {
+						# #todo probably easier way to do this
+						@tokenLines = ($detokenedMessage =~ m/$tokenMask/mg);
+					} elsif ($tokenMaskParams eq 'mgi') {
+						@tokenLines = ($detokenedMessage =~ m/$tokenMask/mgi);
+					} elsif ($tokenMaskParams eq 'gi') {
+						@tokenLines = ($detokenedMessage =~ m/$tokenMask/gi);
+					}
+
+					WriteLog('IndexTextFile: found ' . scalar(@tokenLines));
+
+					while (@tokenLines) {
+						my $foundTokenName = shift @tokenLines;
+						my $foundTokenSpacer = shift @tokenLines;
+						my $foundTokenParam = shift @tokenLines;
+
+						$foundTokenParam = trim($foundTokenParam);
+
+						my $reconLine = $foundTokenName . $foundTokenSpacer . $foundTokenParam;
+						WriteLog('IndexTextFile: token/' . $tokenName . ' : ' . $reconLine);
+
+						my %newTokenFound;
+						$newTokenFound{'token'} = $tokenName;
+						$newTokenFound{'param'} = $foundTokenParam;
+						$newTokenFound{'recon'} = $reconLine;
+						$newTokenFound{'message'} = $tokenMessage;
+						push(@tokensFound, \%newTokenFound);
+					}
+				} # GetConfig("admin/token/$tokenName") && $detokenedMessage
+			} # @tokenDefs
+
+			# TOKEN FIRST PASS PARSING ENDS HERE
+			###################################################
 		}
-
-		my @itemParents;
-
-		if (GetConfig('admin/token/quote')) {
-			# > token
-			my @quoteLines = ($message =~ m/^\>([0-9a-f]{40})/mg);
-
-			if (@quoteLines) {
-				# wrap it in blockquote or something
-			}
-		}
-
-		# look for quoted message ids
-		if (GetConfig('admin/token/reply') && $message) {
-			# >> token
-			my @replyLines = ($message =~ m/^\>\>([0-9a-f]{40})/mg);
-
-			if (@replyLines) {
-				while (@replyLines) {
-					my $parentHash = shift @replyLines;
-
-					if (IsSha1($parentHash)) {
-						push @itemParents, $parentHash;
-						DBAddItemParent($fileHash, $parentHash);
-						DBAddVoteRecord($fileHash, $addedTime, 'reply');
-						$hasToken{'reply'} = 1;
-
-						my $reconLine = ">>$parentHash";
-
-						$detokenedMessage =~ s/$reconLine//;
-						DBAddPageTouch('item', $parentHash);
-
-						if (GetConfig('admin/index/make_primary_pages')) {
-							MakePage('item', $parentHash, 1);
-						}
-						$hasParent = 1;
-					}
-				}
-			}
-		}
-
-		# look for url
-		if (GetConfig('admin/token/url') && $message) {
-			# urls http:// https://
-			my @urls = ($message =~ m/^(http.+)$/mg);
-
-			if (@urls) {
-				while (@urls) {
-					my $url = shift @urls;
-
-					if (IsUrl($url)) {
-						$hasToken{'url'} = 1;
-						my $reconLine = $url;
-						$detokenedMessage =~ s/$reconLine//;
-
-						DBAddVoteRecord($fileHash, $addedTime, 'url');
-					}
-				}
-			}
-		} # url "token"
-
-		# look for hash tags aka hashtags hash tag hashtag
-		if (GetConfig('admin/token/hashtag') && $message) {
-			WriteLog("IndexTextFile: check for hashtags...");
-			my @hashTags = ($message =~ m/\#([a-zA-Z0-9_]+)/mg);
-
-			if (@hashTags) {
-				WriteLog("IndexTextFile: hashtag(s) found");
-			}
-
-			while (@hashTags) {
-				my $hashTag = shift @hashTags;
-				$hashTag = trim($hashTag);
-
-				#if ($hashTag && ($authorHasTag{'admin'} || $authorHasTag{'hashtag'})) {
-				if ($hashTag) {
-					WriteLog('IndexTextFile: $hashTag = ' . $hashTag);
-
-					$hasToken{$hashTag} = 1;
-
-					if ($hasParent) {
-						WriteLog('$hasParent');
-
-						if (scalar(@itemParents)) {
-							foreach my $itemParentHash (@itemParents) {
-								if ($isSigned) {
-									# include author's key if message is signed
-									DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
-								}
-								else {
-									if ($hasCookie) {
-										# include author's key if message is cookied
-										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
-									} else {
-										DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
-									}
-								}
-								DBAddPageTouch('item', $itemParentHash);
-							}
-						}
-					} # if ($hasParent)
-					else { # no parent, !($hasParent)
-						WriteLog('$hasParent is FALSE');
-
-						if ($isSigned) {
-							# include author's key if message is signed
-							DBAddVoteRecord($fileHash, $addedTime, $hashTag, $gpgKey, $fileHash);
-						}
-						else {
-							if ($hasCookie) {
-								DBAddVoteRecord($fileHash, $addedTime, $hashTag, $hasCookie, $fileHash);
-							} else {
-								DBAddVoteRecord($fileHash, $addedTime, $hashTag, '', $fileHash);
-							}
-						}
-					}
-
-					DBAddPageTouch('tag', $hashTag);
-
-					$detokenedMessage =~ s/#$hashTag//g;
-				} # if ($hashTag)
-			} # while (@hashTags)
-		} # if (GetConfig('admin/token/hashtag') && $message)
-
-		if (GetConfig('admin/token/my_name_is')) {
-			# "my name is" token
-			if ($hasCookie) {
-				my @myNameIsLines = ($message =~ m/^(my name is )([A-Za-z0-9'_\. ]+)\r?$/mig);
-
-				WriteLog('@myNameIsLines = ' . scalar(@myNameIsLines));
-
-				if (@myNameIsLines) {
-					#my $lineCount = @myNameIsLines / 2;
-
-					while (@myNameIsLines) {
-						my $myNameIsToken = shift @myNameIsLines;
-						my $nameGiven = shift @myNameIsLines;
-
-						chomp $nameGiven;
-						$nameGiven = trim($nameGiven);
-
-						my $reconLine;
-						$reconLine = $myNameIsToken . $nameGiven;
-
-						if ($nameGiven && $hasCookie) {
-							$hasToken{'myNameIs'} = 1;
-
-							# # remove alias caches
-							# UnlinkCache('avatar/' . $hasCookie);
-							# UnlinkCache('avatar.color/' . $hasCookie);
-							# UnlinkCache('pavatar/' . $hasCookie);
-							#todo make this less "dangerous"
-							unlink(glob("cache/*/avatar/*/$gpgKey"));
-							unlink(glob("cache/*/avatar.plain/*/$gpgKey"));
-
-
-							# add alias
-							DBAddKeyAlias($hasCookie, $nameGiven, $fileHash);
-							DBAddKeyAlias('flush');
-
-							# touch author page
-							DBAddPageTouch('author', $hasCookie);
-
-							if (GetConfig('admin/index/make_primary_pages')) {
-								MakePage('author', $hasCookie);
-							}
-
-							# touch pages which are affected
-							DBAddPageTouch('scores');
-							DBAddPageTouch('stats');
-						}
-
-						$message =~ s/$reconLine/[My name is: $nameGiven for $hasCookie.]/g;
-					}
-				}
-			}
-		}
-
-		# title:
-		if ($message && GetConfig('admin/token/title')) {
-			# #title token is enabled
-
-			# looks for lines beginning with title: and text after
-			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
-
-			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
-
-			if (@setTitleToLines) { # means we found at least one title: token;
-				WriteLog('#title token found for ' . $fileHash);
-				WriteLog('$message = ' . $message);
-
-				#my $lineCount = @setTitleToLines / 3;
-				while (@setTitleToLines) {
-					# loop through all found title: token lines
-					my $setTitleToToken = shift @setTitleToLines;
-					my $titleSpace = shift @setTitleToLines;
-					my $titleGiven = shift @setTitleToLines;
-
-					chomp $setTitleToToken;
-					chomp $titleSpace;
-					chomp $titleGiven;
-					$titleGiven = trim($titleGiven);
-
-					my $reconLine;
-					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
-					WriteLog('title $reconLine = ' . $reconLine);
-
-					if ($titleGiven) {
-						$hasToken{'title'} = 1;
-
-						# if (($authorHasTag{'admin'} == 1 || $authorHasTag{'title'} == 1)) {
-						if (1) {
-							chomp $titleGiven;
-							if ($hasParent) {
-								# has parent(s), so add title to each parent
-								foreach my $itemParent (@itemParents) {
-									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
-
-									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
-
-									DBAddPageTouch('item', $itemParent);
-
-									if (GetConfig('admin/index/make_primary_pages')) {
-										#todo this may not be the right place for this?
-										MakePage('item', $itemParent, 1);
-									}
-								}
-							} else {
-								# no parents, so set title to self
-
-								WriteLog('Item has no parent, adding title to itself');
-
-								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
-								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
-							}
-
-							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
-						} else {
-							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
-						}
-					}
-				}
-			}
-		} # title: token
-
-
-		# accessloghash: AccessLogHash
-		if ($message && GetConfig('admin/token/access_log_hash')) {
-			# #title token is enabled
-
-			# looks for lines beginning with AccessLogHash: and text after
-			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @lines = ($message =~ m/^(AccessLogHash)(\W+)(.+)$/mig); #todo format instead of .+
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
-
-			WriteLog('@lines = ' . scalar(@lines));
-
-			if (@lines) { # means we found at least one line
-				WriteLog('#AccessLogHash token found for ' . $fileHash);
-				WriteLog('$message = ' . $message);
-
-				#my $lineCount = @setTitleToLines / 3;
-				while (@lines) {
-					# loop through all found title: token lines
-					my $token = shift @lines;
-					my $space = shift @lines;
-					my $value = shift @lines;
-
-					chomp $token;
-					chomp $space;
-					chomp $value;
-					$value = trim($value);
-
-					my $reconLine; # reconciliation
-					$reconLine = $token . $space . $value;
-
-					WriteLog('IndexTextFile: AccessLogHash $reconLine = ' . $reconLine);
-
-					if ($value) {
-						$hasToken{'AccessLogHash'} = 1;
-
-						chomp $value;
-						if ($hasParent) {
-							# has parent(s), so add title to each parent
-							foreach my $itemParent (@itemParents) {
-								DBAddItemAttribute($itemParent, 'access_log_hash', $value, $addedTime, $fileHash);
-								DBAddVoteRecord($itemParent, $addedTime, 'hasAccessLogHash');
-								DBAddPageTouch('item', $itemParent);
-							} # @itemParents
-						} else {
-							# no parents, ignore
-							WriteLog('IndexTextFile: AccessLogHash: Item has no parent, ignoring');
-
-							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
-							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
-						}
-					}
-
-					$message =~ s/$reconLine/[AccessLogHash]/;
-					$detokenedMessage =~ s/$reconLine//;
-					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
-				}
-			}
-		} # AccessLogHash token
-
-
-		#verify token
-		if ($message && GetConfig('admin/token/verify')) {
-			# #verify token is enabled
-
-			# looks for lines beginning with AccessLogHash: and text after
-			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @lines = ($message =~ m/^(#?verify)(\W+)(.+)$/mig); #todo format instead of .+
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
-
-			WriteLog('@lines = ' . scalar(@lines));
-
-			if (@lines) { # means we found at least one line
-				WriteLog('#verify token found in ' . $fileHash);
-				WriteLog('$message = ' . $message);
-
-				#my $lineCount = @setTitleToLines / 3;
-				while (@lines) {
-					# loop through all found title: token lines
-					my $token = shift @lines;
-					my $space = shift @lines;
-					my $value = shift @lines;
-
-					chomp $token;
-					chomp $space;
-					chomp $value;
-					$value = trim($value);
-
-					my $reconLine; # reconciliation
-					$reconLine = $token . $space . $value;
-
-					WriteLog('IndexTextFile: #verify $reconLine = ' . $reconLine);
-					WriteLog('IndexTextFile: #verify $value = ' . $value);
-
-					if ($value =~ m|https://www.reddit.com/user/([0-9a-zA-Z\-_]+)/?|) {
-						$hasToken{'verify'} = 1;
-						my $redditUsername = $1;
-						my $valueHash = sha1_hex($value);
-						my $profileHtml = '';
-
-						if (-e "once/$valueHash") {
-							WriteLog('IndexTextFile: once exists');
-							$profileHtml = GetFile("once/$valueHash");
-						} else {
-							#todo #bug #security
-							my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value) .'.json"';
-							WriteLog('IndexTextFile: #verify once needed, doing curl');
-							WriteLog('IndexTextFile: #verify "'.$curlCommand.'"');
-							
-							PutFile("once/$valueHash", `$curlCommand`);
-							$profileHtml = GetFile("once/$valueHash");
-						}
-
-						WriteLog('IndexTextFile: #verify $value = ' . $value);
-
-						if ($hasParent) {
-							# has parent(s), so add title to each parent
-							foreach my $itemParent (@itemParents) {
-								if (index($profileHtml, $itemParent) != -1) {
-									DBAddItemAttribute($itemParent, 'reddit_url', $value, $addedTime, $fileHash);
-									DBAddItemAttribute($itemParent, 'reddit_username', $redditUsername, $addedTime, $fileHash);
-									DBAddPageTouch('item', $itemParent);
-								}
-							} # @itemParents
-						} else {
-							# no parents, ignore
-							WriteLog('IndexTextFile: AccessLogHash: Item has no parent, ignoring');
-
-							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
-							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
-						}
-					} #reddit
-
-					if ($value =~ m|https://www.instagram.com/([0-9a-zA-Z._]+)/?|) {
-						$hasToken{'verify'} = 1;
-						my $instaUsername = $1;
-						my $valueHash = sha1_hex($value);
-						my $profileHtml = '';
-
-						if (-e "once/$valueHash") {
-							WriteLog('IndexTextFile: once exists');
-							$profileHtml = GetFile("once/$valueHash");
-						} else {
-							#todo #bug #security
-							my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value) . '"';
-							WriteLog('IndexTextFile: #verify once needed, doing curl');
-							WriteLog('IndexTextFile: #verify "'.$curlCommand.'"');
-
-							PutFile("once/$valueHash", `$curlCommand`);
-							$profileHtml = GetFile("once/$valueHash");
-						}
-
-						WriteLog('IndexTextFile: #verify $value = ' . $value);
-
-						if ($hasParent) {
-							# has parent(s), so add title to each parent
-							foreach my $itemParent (@itemParents) {
-								if (index($profileHtml, $itemParent) != -1) {
-									DBAddItemAttribute($itemParent, 'insta_url', $value, $addedTime, $fileHash);
-									DBAddItemAttribute($itemParent, 'insta_username', $instaUsername, $addedTime, $fileHash);
-									DBAddPageTouch('item', $itemParent);
-								}
-							} # @itemParents
-						} else {
-							# no parents, ignore
-							WriteLog('IndexTextFile: AccessLogHash: Item has no parent, ignoring');
-
-							# DBAddVoteRecord($fileHash, $addedTime, 'hasAccessLogHash');
-							# DBAddItemAttribute($fileHash, 'AccessLogHash', $titleGiven, $addedTime);
-						}
-					} #instagram
-
-					$message =~ str_replace($reconLine, '[Verified]', $message);
-					$detokenedMessage =~ str_replace($reconLine, '[Verified]', $detokenedMessage);
-					# $message = str_replace($reconLine, '[AccessLogHash: ' . $value . ']', $message);
-				} # @lines
-			}
-		} # verify token
-
-
-		# SHA512: AccessLogHash
-		if ($message && GetConfig('admin/token/sha512_hash')) {
-			# #title token is enabled
-
-			# looks for lines beginning with AccessLogHash: and text after
-			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
-			my @lines = ($message =~ m/^(SHA512)(\W+)(.+)$/mig); #todo format instead of .+
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
-
-			WriteLog('@lines = ' . scalar(@lines));
-
-			if (@lines) { # means we found at least one line
-				WriteLog('#SHA512 token found for ' . $fileHash);
-				WriteLog('$message = ' . $message);
-
-				#my $lineCount = @setTitleToLines / 3;
-				while (@lines) {
-					# loop through all found title: token lines
-					my $token = shift @lines;
-					my $space = shift @lines;
-					my $value = shift @lines;
-
-					chomp $token;
-					chomp $space;
-					chomp $value;
-					$value = trim($value);
-
-					my $reconLine; # reconciliation
-					$reconLine = $token . $space . $value;
-
-					WriteLog('IndexTextFile: SHA512 $reconLine = ' . $reconLine);
-
-					if ($value) {
-						$hasToken{'SHA512'} = 1;
-
-						chomp $value;
-						if ($hasParent) {
-							# has parent(s), so add title to each parent
-							foreach my $itemParent (@itemParents) {
-								DBAddItemAttribute($itemParent, 'sha512_hash', $value, $addedTime, $fileHash);
-								DBAddPageTouch('item', $itemParent);
-							} # @itemParents
-						} else {
-							# no parents, ignore
-							WriteLog('IndexTextFile: SHA512: Item has no parent, ignoring');
-						}
-					}
-
-					$message =~ s/$reconLine/[SHA512]/;
-					$detokenedMessage =~ s/$reconLine//;
-				}
-			}
-		} # SHA512 token
-
-		#look for #config and #resetconfig #setconfig
-		if (GetConfig('admin/token/config') && $message) {
-			if (
-				IsAdmin($gpgKey) #admin can always config
-					||
-				GetConfig('admin/anyone_can_config') # anyone can config
-					||
-				(
-					# signed can config
-					GetConfig('admin/signed_can_config')
-						&&
-					$isSigned
-				)
-					||
-				(
-					# cookied can config
-					GetConfig('admin/cookied_can_config')
-						&&
-					$hasCookie
-				)
-			) {
-				# preliminary conditions met
-
-				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W?)(.+)$/mg);
-				WriteLog('@configLines = ' . scalar(@configLines));
-
-				my @resetConfigLines = ($message =~ m/(resetconfig)(\W)([a-z0-9\/_]+)/mg);
-				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
-				push @configLines, @resetConfigLines;
-
-				my @setConfigLines = ($message =~ m/(setconfig)\W([a-z0-9\/_.]+)(\W)(.+?)/mg);
-				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
-				push @configLines, @setConfigLines;
-				# setconfig is alias for previously used token name
-
-				WriteLog('@configLines = ' . scalar(@configLines));
-
-				if (@configLines) {
-					#my $lineCount = @configLines / 5;
-
-					while (@configLines) {
-						my $configAction = shift @configLines;
-						my $space1 = shift @configLines;
-						my $configKey = shift @configLines;
-						my $space2 = '';
-						my $configValue;
-
-						# allow theme aliasing
-						my $configKeyActual = $configKey;
-						if ($configKey eq 'theme') {
-							# alias theme to html/theme
-							$configKeyActual = 'html/theme';
-						}
-
-						if ($configAction eq 'config' || $configAction eq 'setconfig') {
-							$space2 = shift @configLines;
-							$configValue = shift @configLines;
-						}
-						else {
-							$configValue = 'reset';
-						}
-						$configValue = trim($configValue);
-
-						if ($configAction && $configKey && $configKeyActual && ($configValue ne '')) {
-							my $reconLine;
-							if ($configAction eq 'config' || $configAction eq 'setconfig') {
-								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
-							}
-							elsif ($configAction eq 'resetconfig') {
-								$reconLine = $configAction . $space1 . $configKey;
-							}
-							else {
-								WriteLog('IndexTextFile: warning: $configAction fall-through when selecting $reconLine');
-								$reconLine = '';
-							}
-							WriteLog('IndexTextFile: #config: $reconLine = ' . $reconLine);
-
-							if (ConfigKeyValid($configKey) && $reconLine) {
-								WriteLog(
-									'ConfigKeyValid() passed! ' .
-										$reconLine .
-										'; IsAdmin() = ' . IsAdmin($gpgKey) .
-										'; isSigned = ' . ($isSigned ? $isSigned : '(no)') .
-										'; begins with admin = ' . (substr(lc($configKey), 0, 5) ne 'admin') .
-										'; signed_can_config = ' . GetConfig('admin/signed_can_config') .
-										'; anyone_can_config = ' . GetConfig('admin/anyone_can_config')
-								);
-
-								my $canConfig = 0;
-								if (IsAdmin($gpgKey)) {
-									$canConfig = 1;
-								}
-								if (substr(lc($configKeyActual), 0, 5) ne 'admin') {
-									if (GetConfig('admin/signed_can_config')) {
-										if ($isSigned) {
-											$canConfig = 1;
-										}
-									}
-									if (GetConfig('admin/cookied_can_config')) {
-										if ($hasCookie) {
-											$canConfig = 1;
-										}
-									}
-									if (GetConfig('admin/anyone_can_config')) {
-										$canConfig = 1;
-									}
-								}
-
-								if ($canConfig)	{
-									# checks passed, we're going to update/reset a config entry
-									DBAddVoteRecord($fileHash, $addedTime, 'config');
-
-									$reconLine = quotemeta($reconLine);
-
-									if ($configAction eq 'resetconfig') {
-										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 1, $fileHash);
-										$message =~ s/$reconLine/[Successful config reset: $configKeyActual will be reset to default.]/g;
-									}
-									else {
-										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
-										$message =~ s/$reconLine/[Successful config change: $configKeyActual = $configValue]/g;
-									}
-
-									$detokenedMessage =~ s/$reconLine//g;
-
-									if ($configKeyActual eq 'html/theme') {
-										# unlink cache/avatar.plain
-										# remove/rebuild all html
-										# todo
-									}
-								} # if ($canConfig)
-								else {
-									$message =~ s/$reconLine/[Attempted change to $configKeyActual ignored. Reason: Not operator.]/g;
-									$detokenedMessage =~ s/$reconLine//g;
-								}
-							} # if (ConfigKeyValid($configKey))
-							else {
-								#$message =~ s/$reconLine/[Attempted change to $configKey ignored. Reason: Config key has no default.]/g;
-								#$detokenedMessage =~ s/$reconLine//g;
-							}
-						}
-					} # while
-				}
-			}
-		}
-
-		if (0&&GetConfig('admin/token/addedtime') && $message) {
-			# look for addedtime, which adds an added time for an item
-			# #token
-			# addedtime/759434a7a060aaa5d1c94783f1a80187c4020226/1553658911
-
-			my @addedLines = ($message =~ m/^addedtime\/([0-9a-f]{40})\/([0-9]+)/mg);
-
-			if (@addedLines) {
-				WriteLog(". addedtime token found!");
-				my $lineCount = @addedLines / 2;
-
-				while (@addedLines) {
-					WriteLog("... \@addedLines");
-					my $itemHash = shift @addedLines;
-					my $itemAddedTime = shift @addedLines;
-
-					WriteLog("... $itemHash, $itemAddedTime");
-
-					my $reconLine = "addedtime/$itemHash/$itemAddedTime";
-
-					WriteLog("... $reconLine");
-
-					my $validated = 0;
-
-					if ($isSigned) {
-						WriteLog("... isSigned");
-						if (IsServer($gpgKey)) {
-							WriteLog("... isServer");
-
-							$validated = 1;
-
-							$message =~ s/$reconLine/[Server discovered $itemHash at $itemAddedTime.]/g;
-							$detokenedMessage =~ s/$reconLine//g;
-
-							DBAddItemParent($fileHash, $itemHash);
-
-							DBAddPageTouch('item', $itemHash);
-
-							DBAddVoteRecord($fileHash, $addedTime, 'timestamp');
-
-							DBAddPageTouch('tag', 'timestamp');
-						}
-					}
-
-					if (!$validated) {
-						$message =~ s/$reconLine/[Claim that $itemHash was added at $itemAddedTime.]/g;
-						$detokenedMessage =~ s/$reconLine//g;
-					}
-				}
-			}
-
-			$hasParent = 1;
-		}
-
-		# look for solved puzzles #puzzle
-		if (GetConfig('admin/token/puzzle') && $message) {
-			my @puzzleLines = ($message =~ m/^([0-9A-F]{16}) ([0-9]{10}) (0\.[0-9]+)/mg);
-
-			if (@puzzleLines) {
-				WriteLog(". puzzle token found!"); #todo prefix
-				#my $lineCount = @puzzleLines / 3;
-				#
-				# 	if ($isSigned) {
-				# 		WriteLog("... isSigned");
-				# 		if (IsServer($gpgKey)) {
-				# 			WriteLog("... isServer");
-				while (@puzzleLines) {
-					WriteLog("... \@puzzleLines");
-					my $authorKey = shift @puzzleLines;
-					my $mintedAt = shift @puzzleLines;
-					my $checksum = shift @puzzleLines;
-
-					WriteLog("... $authorKey, $mintedAt, $checksum");
-
-					my $reconLine = "$authorKey $mintedAt $checksum";
-
-					#$message .= sha512_hex($reconLine);
-
-					my $hash = sha512_hex($reconLine);
-
-					my @acceptedPuzzlePrefix = split("\n", GetConfig('puzzle/accepted'));
-					push @acceptedPuzzlePrefix, GetConfig('puzzle/prefix');
-
-					my $puzzleAccepted = 0;
-
-					foreach my $puzzlePrefix (@acceptedPuzzlePrefix) {
-						$puzzlePrefix = trim($puzzlePrefix);
-						if (!$puzzlePrefix) {
-							next;
-						}
-
-						my $puzzlePrefixLength = length($puzzlePrefix);
-						if (
-							substr($hash, 0, $puzzlePrefixLength) eq $puzzlePrefix
-								&&
-							(
-								$authorKey eq $gpgKey
-									||
-								$authorKey eq $hasCookie
-							)
-						) {
-							$message =~ s/$reconLine/[Solved puzzle with this prefix: $puzzlePrefix]/g;
-
-							DBAddVoteRecord($fileHash, $addedTime, 'puzzle');
-
-							DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
-
-							WriteLog("... $reconLine");
-
-							$detokenedMessage =~ s/$reconLine//g;
-
-							$puzzleAccepted = 1;
-
-							last;
-							#DBAddItemAttribute('
-							#$message .= 'puzzle valid!'; #$reconLine . "\n" . $hash;
-						}
-
-					}#foreach my $puzzlePrefix (@acceptedPuzzlePrefix) {
-
-					if (!$puzzleAccepted) {
-						$message =~ s/$reconLine/[Puzzle?]/g;
-					}
-
-				}
-				#
-				# 			DBAddVoteRecord($fileHash, $addedTime, 'device');
-				#
-				# 			DBAddPageTouch('tag', 'device');
-				# 		}
-				# 	}
-			}
-		}
-
-
-		# brc/2:00/AA
-		# brc/([2-10]:[00-59])/([0A-Z]{1-2})
-
-		# look for location (latlong) tokens
-		# latlong/44.1234567,-44.433435454
-
-		# sha512:
-
-		# addedby:
-
-		# latlong:
-
-		# event:
-
-		# # look for event tokens
-		# # event/1551234567/3600
-		# if (GetConfig('admin/token/event') && $message) {
-		# 	# get any matching token lines
-		# 	my @eventLines = ($message =~ m/^event\/([0-9]+)\/([0-9]+)/mg);
-		# 	#                                 prefix/time     /duration
-		#
-		# 	if (@eventLines) {
-		# 		my $lineCount = @eventLines / 2;
-		#
-		# 		WriteLog("... DBAddEventRecord \$lineCount = $lineCount");
-		#
-		# 		while (@eventLines) {
-		# 			my $eventTime = shift @eventLines;
-		# 			my $eventDuration = shift @eventLines;
-		#
-		# 			if ($isSigned) {
-		# 				DBAddEventRecord($fileHash, $eventTime, $eventDuration, $gpgKey);
-		# 			}
-		# 			else {
-		# 				DBAddEventRecord($fileHash, $eventTime, $eventDuration);
-		# 			}
-		#
-		# 			my $reconLine = "event/$eventTime/$eventDuration";
-		#
-		# 			#$message =~ s/$reconLine/[Event: $eventTime for $eventDuration]/g; #todo flesh out message
-		#
-		# 			my ($seconds, $minutes, $hours, $day_of_month, $month, $year, $wday, $yday, $isdst) = localtime($eventTime);
-		# 			$year = $year + 1900;
-		# 			$month = $month + 1;
-		#
-		# 			my $eventDurationText = $eventDuration;
-		# 			if ($eventDurationText >= 60) {
-		# 				$eventDurationText = $eventDurationText / 60;
-		# 				if ($eventDurationText >= 60) {
-		# 					$eventDurationText = $eventDurationText / 60;
-		# 					if ($eventDurationText >= 24) {
-		# 						$eventDurationText = $eventDurationText / 24;
-		# 						$eventDurationText = $eventDurationText . " days";
-		# 					}
-		# 					else {
-		# 						$eventDurationText = $eventDurationText . " hours";
-		# 					}
-		# 				}
-		# 				else {
-		# 					$eventDurationText = $eventDurationText . " minutes";
-		# 				}
-		# 			}
-		# 			else {
-		# 				$eventDurationText = $eventDurationText . " seconds";
-		# 			}
-		#
-		# 			if ($month < 10) {
-		# 				$month = '0' . $month;
-		# 			}
-		# 			if ($day_of_month < 10) {
-		# 				$day_of_month = '0' . $day_of_month;
-		# 			}
-		# 			if ($hours < 10) {
-		# 				$hours = '0' . $hours;
-		# 			}
-		# 			if ($minutes < 10) {
-		# 				$minutes = '0' . $minutes;
-		# 			}
-		# 			if ($seconds < 10) {
-		# 				$seconds = '0' . $seconds;
-		# 			}
-		#
-		# 			my $dateText = "$year/$month/$day_of_month $hours:$minutes:$seconds";
-		#
-		# 			$message =~ s/$reconLine/[Event: $dateText for $eventDurationText]/g;
-		#
-		# 			$detokenedMessage =~ s/$reconLine//g;
-		#
-		# 			DBAddVoteRecord($fileHash, $addedTime, 'event');
-		#
-		# 			DBAddPageTouch('tag', 'event');
-		#
-		# 			DBAddPageTouch('events');
-		# 		}
-		# 	}
-		# } # event token
 
 		if ($alias) { # if $alias is set, means this is a pubkey
-			DBAddVoteRecord($fileHash, $addedTime, 'pubkey');
-			# add the "pubkey" tag
-
-			DBAddPageTouch('tag', 'pubkey');
-			# add a touch to the pubkey tag page
-
-			DBAddPageTouch('author', $gpgKey);
-			# add a touch to the author page
+			DBAddVoteRecord($fileHash, $addedTime, 'pubkey'); # add the "pubkey" tag
+			DBAddPageTouch('tag', 'pubkey'); # add a touch to the pubkey tag page
+			DBAddPageTouch('author', $gpgKey);	# add a touch to the author page
 
 			my $themeName = GetConfig('html/theme');
-
-			UnlinkCache('avatar/' . $themeName . $gpgKey);
-			UnlinkCache('avatar.color/' . $themeName . $gpgKey);
-			UnlinkCache('pavatar/' . $themeName . $gpgKey);
+			UnlinkCache('avatar/' . $themeName . '/' . $gpgKey);
+			UnlinkCache('avatar.color/' . $themeName . '/' . $gpgKey);
+			UnlinkCache('pavatar/' . $themeName . '/' . $gpgKey);
 		} else { # not a pubkey
 			$detokenedMessage = trim($detokenedMessage);
 			# there may be whitespace remaining after all the tokens have been removed
 
+
+			if (GetConfig('admin/dev_mode')) {
+				# dev mode helps developer by automatically
+				# adding messages tagged #todo, #brainstorm, and #bug
+				# to their respective files under doc/*.txt
+
+				if ($hasToken{'meta'}) {
+					# only if already tagged #meta
+
+					#todo this can go under tagset/meta ?????
+					my @arrayOfMetaTokens = qw(todo brainstorm bug scratch known);
+
+					#todo instead of hard-coded list use tagset
+					foreach my $devTokenName (@arrayOfMetaTokens) {
+						if ($hasToken{$devTokenName}) {
+							if ($message) {
+								my $todoContents = GetFile("doc/$devTokenName.txt");
+								if (!$todoContents || index($todoContents, $message) == -1) {
+									AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
+									last; # one is ennough
+								}
+							}
+						}
+					}
+				}
+			} # admin/dev_mode
+
+			# first pass, look for cookie and parent
+			{
+				foreach my $tokenFoundRef (@tokensFound) {
+					my %tokenFound = %$tokenFoundRef;
+					if ($tokenFound{'token'} && $tokenFound{'param'}) {
+						if ($tokenFound{'token'} eq 'cookie') {
+							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+								WriteLog('IndexTextFile: DBAddAuthor(' . $tokenFound{'param'} . ')');
+								DBAddAuthor($tokenFound{'param'});
+								$hasCookie = $tokenFound{'param'};
+
+								$message = str_replace($tokenFound{'recon'}, $tokenFound{'message'}, $message);
+								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+							} else {
+								WriteLog('IndexTextFile: warning: cookie: sanity check failed');
+							}
+						} # cookie
+
+						if ($tokenFound{'token'} eq 'parent') {
+							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+								WriteLog('IndexTextFile: DBAddItemParent(' . $fileHash . ',' . $tokenFound{'param'} . ')');
+								DBAddItemParent($fileHash, $tokenFound{'param'});
+								push(@itemParents, $tokenFound{'param'});
+
+								# $message = str_replace($tokenFound{'recon'}, $tokenFound{'message'}, $message);
+								$message = str_replace($tokenFound{'recon'}, '>>' . $tokenFound{'param'}, $message); #hacky
+								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+							} else {
+								WriteLog('IndexTextFile: warning: parent: sanity check failed');
+							}
+						} # parent
+					} # parametrized token
+				}
+			}
+
+			if (!$hasToken{'example'}) { #example token negates most other tokens.
+				# second pass, after parents and user established
+
+				foreach my $tokenFoundRef (@tokensFound) {
+					my %tokenFound = %$tokenFoundRef;
+					if ($tokenFound{'token'} && $tokenFound{'param'}) {
+						WriteLog('IndexTextFile: $tokenFound{token} = ' . $tokenFound{'token'});
+						if (
+							$tokenFound{'token'} eq 'title' ||
+							$tokenFound{'token'} eq 'alt' ||
+							$tokenFound{'token'} eq 'access_log_hash' ||
+							$tokenFound{'token'} eq 'url'
+						) {
+							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+								WriteLog('IndexTextFile: passed: $tokenFound{recon} && $tokenFound{message} && $tokenFound{param}');
+								if (@itemParents) {
+									foreach my $itemParent (@itemParents) {
+										DBAddItemAttribute($itemParent, $tokenFound{'token'}, $tokenFound{'param'}, $addedTime, $fileHash);
+									}
+								} else {
+									DBAddItemAttribute($fileHash, $tokenFound{'token'}, $tokenFound{'param'}, $addedTime, $fileHash);
+								}
+							} else {
+								WriteLog('IndexTextFile: warning: ' . $tokenFound{'token'} . ' (generic): sanity check failed');
+							}
+						} # title, access_log_hash, url
+
+						if ($tokenFound{'token'} eq 'config') {
+							if (
+								IsAdmin($gpgKey) || #admin can always config
+								GetConfig('admin/anyone_can_config') || # anyone can config
+								(GetConfig('admin/signed_can_config') && $isSigned) || # signed can config
+								(GetConfig('admin/cookied_can_config') && $hasCookie) # cookied can config
+							) {
+								my ($configKey, $configSpacer, $configValue) = ($tokenFound{'param'} =~ m/(.+)(\W)(.+)/);
+
+								WriteLog('IndexTextFile: $configKey = ' . $configKey);
+								WriteLog('IndexTextFile: $configSpacer = ' . $configSpacer);
+								WriteLog('IndexTextFile: $configValue = ' . $configValue);
+
+								my $configKeyActual;
+								if ($configKey && $configValue) {
+									# alias 'theme' to 'html/theme'
+									$configKeyActual = $configKey;
+									if ($configKey eq 'theme') {
+										# alias theme to html/theme
+										$configKeyActual = 'html/theme';
+									}
+									$configValue = trim($configValue);
+								}
+
+								# #todo create a whitelist of safe keys non-admins can change
+
+								DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
+								$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
+								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+							}
+						}
+
+						if ($tokenFound{'token'} eq 'puzzle') { # puzzle
+							my ($authorKey, $mintedAt, $checksum) = split(' ', $tokenFound{'param'});
+							WriteLog("IndexTextFile: token: puzzle: $authorKey, $mintedAt, $checksum");
+
+							#todo must match message author key
+
+							my $hash = sha512_hex($tokenFound{'recon'});
+							my @acceptPuzzlePrefix = split("\n", GetConfig('puzzle/accept'));
+							push @acceptPuzzlePrefix, GetConfig('puzzle/prefix');
+							my $puzzleAccepted = 0;
+
+							foreach my $puzzlePrefix (@acceptPuzzlePrefix) {
+								$puzzlePrefix = trim($puzzlePrefix);
+								if (!$puzzlePrefix) {
+									next;
+								}
+
+								my $puzzlePrefixLength = length($puzzlePrefix);
+								if (
+									(substr($hash, 0, $puzzlePrefixLength) eq $puzzlePrefix) && # hash matches
+									($authorKey eq $gpgKey || $authorKey eq $hasCookie) # key matches cookie or fingerprint
+								) {
+									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
+									DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
+									$detokenedMessage =~ str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+									$puzzleAccepted = 1;
+
+									last;
+									#DBAddItemAttribute('
+									#$message .= 'puzzle valid!'; #$reconLine . "\n" . $hash;
+								}
+							}#foreach my $puzzlePrefix (@acceptPuzzlePrefix) {
+						} # puzzle
+
+						if ($tokenFound{'token'} eq 'my_name_is') { # my_name_is
+							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+								if ($hasCookie) {
+									$detokenedMessage =~ str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+									my $nameGiven = $tokenFound{'param'};
+									$message =~ s/$tokenFound{'recon'}/[my name is: $nameGiven]/g;
+
+									DBAddKeyAlias($hasCookie, $tokenFound{'param'}, $fileHash);
+									DBAddKeyAlias('flush');
+								}
+							} else {
+								WriteLog('IndexTextFile: warning: my_name_is: sanity check failed');
+							}
+						} # my_name_is
+
+						if ($tokenFound{'token'} eq 'hashtag') { #hashtag
+							if ($tokenFound{'param'} eq 'remove') { #remove
+								if (scalar(@itemParents)) {
+									WriteLog('IndexTextFile: Found #remove token, and item has parents');
+									foreach my $itemParent (@itemParents) {
+										# find the author of the item in question.
+										# this will help us determine whether the request can be fulfilled
+										my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
+										#WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($gpgKey) . '; $gpgKey = ' . $gpgKey . '; $parentItemAuthor = ' . $parentItemAuthor);
+										WriteLog('IndexTextFile: #remove: $gpgKey = ' . $gpgKey);
+										#WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($gpgKey));
+										WriteLog('IndexTextFile: #remove: $parentItemAuthor = ' . $parentItemAuthor);
+
+										# at this time only signed requests to remove are honored
+										if (
+											$gpgKey # is signed
+												&&
+												(
+													IsAdmin($gpgKey)                   # signed by admin
+														||                             # OR
+													($gpgKey eq $parentItemAuthor) 	   # signed by same as author
+												)
+										) {
+											WriteLog('IndexTextFile: #remove: Found seemingly valid request to remove');
+
+											AppendFile('log/deleted.log', $itemParent);
+											DBDeleteItemReferences($itemParent);
+
+											my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
+											if (-e $htmlFilename) {
+												WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' exists, calling unlink()');
+												unlink($htmlFilename);
+											}
+											else {
+												WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' does NOT exist, very strange');
+											}
+
+											my $itemParentPath = GetPathFromHash($itemParent);
+											if (-e $itemParentPath) {
+												# this only works if organize_files is on and file was put into its path
+												# otherwise it will be removed at another time
+												WriteLog('IndexTextFile: removing $itemParentPath = ' . $itemParentPath);
+												unlink($itemParentPath);
+											}
+
+											if (-e $file) {
+												#todo unlink the file represented by $voteFileHash, not $file
+												if (!GetConfig('admin/logging/record_remove_action')) {
+													# this removes the remove call itself
+													if (!$detokenedMessage) {
+														WriteLog('IndexTextFile: ' . $file . ' exists, calling unlink()');
+														unlink($file);
+													}
+												}
+											}
+											else {
+												WriteLog('IndexTextFile: ' . $file . ' does NOT exist, very strange');
+											}
+
+											#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
+										} # has permission to remove
+										else {
+											WriteLog('IndexTextFile: Request to remove file was not found to be valid');
+										}
+									} # foreach my $itemParent (@itemParents)
+								} # has parents
+							} # #remove
+						}
+
+					} #hashtag tokens
+				} # @tokensFound
+
+			} # not #example
+
+			$detokenedMessage = trim($detokenedMessage);
 			if ($detokenedMessage eq '') {
 				# add #notext label/tag
 				DBAddVoteRecord($fileHash, $addedTime, 'notext');
@@ -1223,98 +715,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				DBAddVoteRecord($fileHash, $addedTime, 'hastext');
 				DBAddPageTouch('tag', 'hastext');
 			} # has a $detokenedMessage
-
-			if (GetConfig('admin/dev_mode')) {
-				# dev mode helps developer by automatically
-				# adding messages tagged #todo, #brainstorm, and #bug
-				# to their respective files under doc/*.txt
-
-				if ($hasToken{'meta'}) {
-					# only if already tagged #meta
-
-					#todo this can go under tagset/meta ?????
-					my @arrayOfMetaTokens = qw(todo brainstorm bug scratch known);
-
-					#todo instead of hard-coded list use tagset
-					foreach my $devTokenName (@arrayOfMetaTokens) {
-						if ($hasToken{$devTokenName}) {
-							if ($message) {
-								my $todoContents = GetFile("doc/$devTokenName.txt");
-								if (!$todoContents || index($todoContents, $message) == -1) {
-									AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
-									last; # one is ennough
-								}
-							}
-						}
-					}
-				}
-			} # admin/dev_mode
-
-			if (!$hasToken{'example'}) { #example token negates most other tokens.
-				if ($hasToken{'remove'}) { #remove
-					if ($hasParent && scalar(@itemParents)) {
-						WriteLog('IndexTextFile: Found #remove token, and item has parents');
-						foreach my $itemParent (@itemParents) {
-							# find the author of the item in question.
-							# this will help us determine whether the request can be fulfilled
-							my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
-							WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($gpgKey) . '; $gpgKey = ' . $gpgKey . '; $parentItemAuthor = ' . $parentItemAuthor);
-
-							# at this time only signed requests to remove are honored
-							if (
-								$gpgKey # is signed
-									&&
-									(
-										IsAdmin($gpgKey)                   # signed by admin
-											||                             # OR
-										($gpgKey eq $parentItemAuthor) 	   # signed by same as author
-									)
-							) {
-								WriteLog('IndexTextFile: #remove: Found seemingly valid request to remove');
-
-								AppendFile('log/deleted.log', $itemParent);
-								DBDeleteItemReferences($itemParent);
-
-								my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
-								if (-e $htmlFilename) {
-									WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' exists, calling unlink()');
-									unlink($htmlFilename);
-								}
-								else {
-									WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' does NOT exist, very strange');
-								}
-
-								my $itemParentPath = GetPathFromHash($itemParent);
-								if (-e $itemParentPath) {
-									# this only works if organize_files is on and file was put into its path
-									# otherwise it will be removed at another time
-									WriteLog('IndexTextFile: removing $itemParentPath = ' . $itemParentPath);
-									unlink($itemParentPath);
-								}
-
-								if (-e $file) {
-									#todo unlink the file represented by $voteFileHash, not $file
-									if (!GetConfig('admin/logging/record_remove_action')) {
-										# this removes the remove call itself
-										if (!$detokenedMessage) {
-											WriteLog('IndexTextFile: ' . $file . ' exists, calling unlink()');
-											unlink($file);
-										}
-									}
-								}
-								else {
-									WriteLog('IndexTextFile: ' . $file . ' does NOT exist, very strange');
-								}
-
-								#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
-							} # has permission to remove
-							else {
-								WriteLog('IndexTextFile: Request to remove file was not found to be valid');
-							}
-						} # foreach my $itemParent (@itemParents)
-					} # has parents
-				} # #remove
-			} # not #example
 		} # not pubkey
 
 		if ($message) {
