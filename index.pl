@@ -166,26 +166,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			WriteLog('IndexTextFile: $gpgKey is false');
 		}
 
-		if (0) {
-			my %authorHasTag;
-			{
-				# look up author's tags
-
-				my @tagsAppliedToAuthor = DBGetAllAppliedTags(DBGetAuthorPublicKeyHash($gpgKey));
-				foreach my $tagAppliedToAuthor (@tagsAppliedToAuthor) {
-					$authorHasTag{$tagAppliedToAuthor} = 1;
-					my $tagsInTagSet = GetConfig('tagset/' . $tagAppliedToAuthor);
-					# if ($tagsInTagSet) {
-					# 	foreach my $tagInTagSet (split("\n", $tagsInTagSet)) {
-					# 		if ($tagInTagSet) {
-					# 			$authorHasTag{$tagInTagSet} = 1;
-					# 		}
-					# 	}
-					# }
-				}
-			}
-			#DBAddItemAttribute($fileHash, 'x_author_tags', join(',', keys %authorHasTag));
-		}
+		my %authorHasTag;
 
 		my $detokenedMessage = $message;
 		# this is used to store $message minus any tokens found
