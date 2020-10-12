@@ -2607,3 +2607,30 @@ sub GetDigitColor() { # returns a 2-char color that corresponds to a digit for c
 
 
 
+
+
+===
+
+Uncaught TypeError: Cannot use 'in' operator to search for 'contentWindow' in null
+    at call_if_frame (VM45345 userscript:_qute_js_creation:382)
+    at Object.window._qutebrowser.webelem.funcs.find_at_pos (VM45345 userscript:_qute_js_creation:416)
+    at <anonymous>:2:29
+
+#meta #qutebrowser #scratch
+-- 
+Cookie: 37E0171752087844
+Host: localhost:2784
+
+
+===
+
+Uncaught TypeError: Cannot use 'in' operator to search for 'contentWindow' in null
+    at call_if_frame (VM45345 userscript:_qute_js_creation:382)
+    at Object.window._qutebrowser.webelem.funcs.find_at_pos (VM45345 userscript:_qute_js_creation:416)
+    at <anonymous>:2:29
+
+#meta #qutebrowser #scratch
+addtext=Meditate...
+
+-- 
+Host: localhost:2784

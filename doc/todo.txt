@@ -1,3 +1,7 @@
+route.php
+	if the html returning indicates it is the pre-generated version
+		call HandleNotFound ($path, $pathRel)
+
 write page:
 	if not logged in:
 		"other options may be available when you register or sign in"

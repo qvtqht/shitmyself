@@ -1,53 +1,296 @@
-<div class="video-player-container player-container controls-visible paused" tabindex="-1">
-<div class="video-container media-container noselect" style="background-color:transparent">
-<video
-	class="video media"
-	id="video-frenchheartyassassinbug"
-	alt="RKBRQ1hp6HopCoTg GIF"
-	height="1024"
-	width="576"
-	muted=""
-	playsinline=""
-	preload="auto"
-	poster="https://thumbs.gfycat.com/FrenchHeartyAssassinbug-mobile.jpg"
-	style="max-width:576px;margin:0
-	auto;display:block"
-	tabindex="-1"
->
-<source src="https://thumbs.gfycat.com/FrenchHeartyAssassinbug-mobile.mp4" type="video/mp4"/>
-<source src="https://giant.gfycat.com/FrenchHeartyAssassinbug.webm" type="video/webm"/>
-<source src="https://giant.gfycat.com/FrenchHeartyAssassinbug.mp4" type="video/mp4"/>
-<source src="https://thumbs.gfycat.com/FrenchHeartyAssassinbug-mobile.mp4" type="video/mp4"/>
-</video>
-</div>
+		if (GetConfig('admin/token/cookie') && $detokenedMessage) {
+			# look for cookies
+			my @cookieLines = ($message =~ m/^(Cookie:\s)(.+)/mg);
+			if (@cookieLines) {
+				while (@cookieLines) {
+					my $cookieToken = shift @cookieLines;
+					my $cookieValue = shift @cookieLines;
+					my $reconLine = $cookieToken . $cookieValue;
 
+					if ($cookieToken && $cookieValue) {
+						my %newTokenFound;
+						$newTokenFound{'token'} = 'cookie';
+						$newTokenFound{'cookie'} = $cookieValue;
+						$newTokenFound{'recon'} = $reconLine;
+						$newTokenFound{'message'} = "Cookie: $cookieValue";
+						push(@tokensFound, \%newTokenFound);
 
-==========
+						$detokenedMessage =~ s/$reconLine//;
+					}
+				}
+			}
+		}
 
 
 
 
 
+		# SHA512: AccessLogHash
+		if ($message && GetConfig('admin/token/sha512_hash')) {
+			# #title token is enabled
+
+			# looks for lines beginning with AccessLogHash: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @lines = ($message =~ m/^(SHA512)(\W+)(.+)$/mig); #todo format instead of .+
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@lines = ' . scalar(@lines));
+
+			if (@lines) { # means we found at least one line
+				WriteLog('#SHA512 token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@lines) {
+					# loop through all found title: token lines
+					my $token = shift @lines;
+					my $space = shift @lines;
+					my $value = shift @lines;
+
+					chomp $token;
+					chomp $space;
+					chomp $value;
+					$value = trim($value);
+
+					my $reconLine; # reconciliation
+					$reconLine = $token . $space . $value;
+
+					WriteLog('IndexTextFile: SHA512 $reconLine = ' . $reconLine);
+
+					if ($value) {
+						$hasToken{'SHA512'} = 1;
+
+						chomp $value;
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
+							foreach my $itemParent (@itemParents) {
+								DBAddItemAttribute($itemParent, 'sha512_hash', $value, $addedTime, $fileHash);
+								DBAddPageTouch('item', $itemParent);
+							} # @itemParents
+						} else {
+							# no parents, ignore
+							WriteLog('IndexTextFile: SHA512: Item has no parent, ignoring');
+						}
+					}
+
+					$message =~ s/$reconLine/[SHA512]/;
+					$detokenedMessage =~ s/$reconLine//;
+				}
+			}
+		} # SHA512 token
 
 
 
-#Protect single file
-<Files admin.php>
-    AuthName "Dialog prompt"
-    AuthType Basic
-    AuthUserFile /home/username/example.com/.htpasswd
-    Require valid-user
-</Files>
-Protect multiple files
-This example protects multiple files:
+							chomp $titleGiven;
+							if ($hasParent) {
+								# has parent(s), so add title to each parent
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
 
-#Protect multiple files
-<FilesMatch "^(admin|staff).php$">
-AuthName "Dialog prompt"
-AuthType Basic
-AuthUserFile /home/username/example.com/.htpasswd
-Require valid-user
-</FilesMatch>
+									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+									DBAddPageTouch('item', $itemParent);
+
+									if (GetConfig('admin/index/make_primary_pages')) {
+										#todo this may not be the right place for this?
+										MakePage('item', $itemParent, 1);
+									}
+								}
+							} else {
+								# no parents, so set title to self
+
+								WriteLog('Item has no parent, adding title to itself');
+
+								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
+							}
+
+							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
+						} else {
+							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
+						}
+							chomp $titleGiven;
+							if ($hasParent) {
+								# has parent(s), so add title to each parent
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
+
+									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+									DBAddPageTouch('item', $itemParent);
+
+									if (GetConfig('admin/index/make_primary_pages')) {
+										#todo this may not be the right place for this?
+										MakePage('item', $itemParent, 1);
+									}
+								}
+							} else {
+								# no parents, so set title to self
+
+								WriteLog('Item has no parent, adding title to itself');
+
+								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
+							}
+
+							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
+						} else {
+							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
+						}
+
+
+
+		# title:
+		if ($message && GetConfig('admin/token/title')) {
+			# #title token is enabled
+
+			# looks for lines beginning with title: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
+
+			if (@setTitleToLines) { # means we found at least one title: token;
+				WriteLog('#title token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@setTitleToLines) {
+					# loop through all found title: token lines
+					my $setTitleToToken = shift @setTitleToLines;
+					my $titleSpace = shift @setTitleToLines;
+					my $titleGiven = shift @setTitleToLines;
+
+					chomp $setTitleToToken;
+					chomp $titleSpace;
+					chomp $titleGiven;
+					$titleGiven = trim($titleGiven);
+
+					my $reconLine;
+					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
+					WriteLog('title $reconLine = ' . $reconLine);
+
+					if ($titleGiven) {
+						$hasToken{'title'} = 1;
+
+						# if (($authorHasTag{'admin'} == 1 || $authorHasTag{'title'} == 1)) {
+						if (1) {
+							chomp $titleGiven;
+							if ($hasParent) {
+								# has parent(s), so add title to each parent
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
+
+									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+									DBAddPageTouch('item', $itemParent);
+
+									if (GetConfig('admin/index/make_primary_pages')) {
+										#todo this may not be the right place for this?
+										MakePage('item', $itemParent, 1);
+									}
+								}
+							} else {
+								# no parents, so set title to self
+
+								WriteLog('Item has no parent, adding title to itself');
+
+								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
+							}
+
+							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
+						} else {
+							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
+						}
+					}
+				}
+			}
+		} # title: token
+
+
+
+
+
+
+		# title:
+		if ($message && GetConfig('admin/token/title')) {
+			# #title token is enabled
+
+			# looks for lines beginning with title: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
+
+			if (@setTitleToLines) { # means we found at least one title: token;
+				WriteLog('#title token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@setTitleToLines) {
+					# loop through all found title: token lines
+					my $setTitleToToken = shift @setTitleToLines;
+					my $titleSpace = shift @setTitleToLines;
+					my $titleGiven = shift @setTitleToLines;
+
+					chomp $setTitleToToken;
+					chomp $titleSpace;
+					chomp $titleGiven;
+					$titleGiven = trim($titleGiven);
+
+					my $reconLine;
+					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
+					WriteLog('title $reconLine = ' . $reconLine);
+
+					if ($titleGiven) {
+						$hasToken{'title'} = 1;
+
+						# if (($authorHasTag{'admin'} == 1 || $authorHasTag{'title'} == 1)) {
+						if (1) {
+							chomp $titleGiven;
+							if ($hasParent) {
+								# has parent(s), so add title to each parent
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
+
+									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+									DBAddPageTouch('item', $itemParent);
+
+									if (GetConfig('admin/index/make_primary_pages')) {
+										#todo this may not be the right place for this?
+										MakePage('item', $itemParent, 1);
+									}
+								}
+							} else {
+								# no parents, so set title to self
+
+								WriteLog('Item has no parent, adding title to itself');
+
+								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
+							}
+
+							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
+						} else {
+							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
+						}
+					}
+				}
+			}
+		} # title: token
 
 
 
@@ -58,103 +301,130 @@ Require valid-user
 
 
 
+		# SHA512: AccessLogHash
+		if ($message && GetConfig('admin/token/sha512_hash')) {
+			# #title token is enabled
 
+			# looks for lines beginning with AccessLogHash: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @lines = ($message =~ m/^(SHA512)(\W+)(.+)$/mig); #todo format instead of .+
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
 
+			WriteLog('@lines = ' . scalar(@lines));
 
+			if (@lines) { # means we found at least one line
+				WriteLog('#SHA512 token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
 
+				#my $lineCount = @setTitleToLines / 3;
+				while (@lines) {
+					# loop through all found title: token lines
+					my $token = shift @lines;
+					my $space = shift @lines;
+					my $value = shift @lines;
 
+					chomp $token;
+					chomp $space;
+					chomp $value;
+					$value = trim($value);
 
+					my $reconLine; # reconciliation
+					$reconLine = $token . $space . $value;
 
+					WriteLog('IndexTextFile: SHA512 $reconLine = ' . $reconLine);
 
+					if ($value) {
+						$hasToken{'SHA512'} = 1;
 
+						chomp $value;
+						if ($hasParent) {
+							# has parent(s), so add title to each parent
+							foreach my $itemParent (@itemParents) {
+								DBAddItemAttribute($itemParent, 'sha512_hash', $value, $addedTime, $fileHash);
+								DBAddPageTouch('item', $itemParent);
+							} # @itemParents
+						} else {
+							# no parents, ignore
+							WriteLog('IndexTextFile: SHA512: Item has no parent, ignoring');
+						}
+					}
 
-  <table border="0" class='comment-tree'>
-	<tr class='athing comtr ' id='24627166'><td>
-		<table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="0"></td><td valign="top" class="votelinks">
-      <center><a id='up_24627166' href='vote?id=24627166&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=and-hi" class="hnuser">and-hi</a> <span class="age"><a href="item?id=24627166">4 days ago</a></span> <span id="unv_24627166"></span><span class="par"></span> <a class="togg" n="10" href="javascript:void(0)" onclick="return toggle(event, 24627166)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">It looks interesting but I do not really understand what it does. Could someone put this into context and summarize it, please?</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24627166&amp;goto=item%3Fid%3D24613124%2324627166">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-        <tr class='athing comtr ' id='24627464'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="40"></td><td valign="top" class="votelinks">
-      <center><a id='up_24627464' href='vote?id=24627464&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=scribu" class="hnuser">scribu</a> <span class="age"><a href="item?id=24627464">4 days ago</a></span> <span id="unv_24627464"></span><span class="par"></span> <a class="togg" n="3" href="javascript:void(0)" onclick="return toggle(event, 24627464)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">It&#x27;s a collection of features meant to sit on top of ActivityPub.<p>ActivityPub is a general protocol for decentralised social networking. Instead of Facebook or Twitter servers generating a feed for each user, user&#x27;s servers send updates to each-other.</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24627464&amp;goto=item%3Fid%3D24613124%2324627464">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-        <tr class='athing comtr ' id='24627520'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="80"></td><td valign="top" class="votelinks">
-      <center><a id='up_24627520' href='vote?id=24627520&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=TotempaaltJ" class="hnuser">TotempaaltJ</a> <span class="age"><a href="item?id=24627520">4 days ago</a></span> <span id="unv_24627520"></span><span class="par"></span> <a class="togg" n="2" href="javascript:void(0)" onclick="return toggle(event, 24627520)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">This homepage doesn&#x27;t do a great job at communicating this.</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24627520&amp;goto=item%3Fid%3D24613124%2324627520">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-        <tr class='athing comtr ' id='24630541'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="120"></td><td valign="top" class="votelinks">
-      <center><a id='up_24630541' href='vote?id=24630541&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=SahAssar" class="hnuser">SahAssar</a> <span class="age"><a href="item?id=24630541">4 days ago</a></span> <span id="unv_24630541"></span><span class="par"></span> <a class="togg" n="1" href="javascript:void(0)" onclick="return toggle(event, 24630541)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">I think the audience is expected to know about distributed systems and the fediverse. Think of it like being linked to <a href="https:&#x2F;&#x2F;luajit.org&#x2F;" rel="nofollow">https:&#x2F;&#x2F;luajit.org&#x2F;</a> without knowing anything about lua, programming and so on. Some links on HN are pulled from places where certain knowledge is pre-assumed.</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24630541&amp;goto=item%3Fid%3D24613124%2324630541">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-        <tr class='athing comtr ' id='24628552'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="40"></td><td valign="top" class="votelinks">
-      <center><a id='up_24628552' href='vote?id=24628552&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=paroneayea" class="hnuser">paroneayea</a> <span class="age"><a href="item?id=24628552">4 days ago</a></span> <span id="unv_24628552"></span><span class="par"></span> <a class="togg" n="3" href="javascript:void(0)" onclick="return toggle(event, 24628552)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">Okay, reply was long.  tl;dr, just watch this video: <a href="https:&#x2F;&#x2F;conf.tube&#x2F;videos&#x2F;watch&#x2F;18aa2f92-36cc-4424-9a4f-6f2de946fbd2" rel="nofollow">https:&#x2F;&#x2F;conf.tube&#x2F;videos&#x2F;watch&#x2F;18aa2f92-36cc-4424-9a4f-6f2de...</a><p>Hi!  Spritely&#x27;s main author here.  Spritely is taking on quite a few things, so it&#x27;s understandable that it might not be completely clear what from the tagline.<p>Here&#x27;s the short version: we&#x27;d like to bring better security, privacy, and rich interactions to the federated social web.  I was one of the co-authors of the ActivityPub standard so I have some strong opinions about what it&#x27;s capable of that isn&#x27;t happening yet.<p>If you want a friendly, semi-visual overview, here&#x27;s a video I just recorded for the ActivityPub conference: <a href="https:&#x2F;&#x2F;conf.tube&#x2F;videos&#x2F;watch&#x2F;18aa2f92-36cc-4424-9a4f-6f2de946fbd2" rel="nofollow">https:&#x2F;&#x2F;conf.tube&#x2F;videos&#x2F;watch&#x2F;18aa2f92-36cc-4424-9a4f-6f2de...</a><p>It goes over (most of) the layers in a fairly friendly way.<p>Within all the subprojects listed, the most ambitious is the Fantasary one, which is distributed virtual worlds.  Not as out there as it sounds, such a thing was built in the mid&#x2F;late 90s: <a href="https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=KNiePoNiyvE" rel="nofollow">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=KNiePoNiyvE</a><p>But in the dot-com crash, went up in flames.  However many of the ideas were carried forward by the object capability community, particularly the E language, on which Spritely Goblins is heavily influenced: <a href="http:&#x2F;&#x2F;www.erights.org&#x2F;" rel="nofollow">http:&#x2F;&#x2F;www.erights.org&#x2F;</a><p>The distributed games goal then becomes a driver for the other components, so even if that fails we should hopefully still get cool stuff.  Spritely Goblins, the foundational layer, already exists and has support for such features as time travel debugging: <a href="https:&#x2F;&#x2F;dustycloud.org&#x2F;blog&#x2F;goblins-time-travel-micropreview&#x2F;" rel="nofollow">https:&#x2F;&#x2F;dustycloud.org&#x2F;blog&#x2F;goblins-time-travel-micropreview...</a><p>and distributed networked programming, safe to run in a hostile network... here&#x27;s a chat program where the &quot;protocol&quot; authenticates the users joining the channel and also that the messages came from them, with the chatroom and user &quot;protocol&quot; both written in 250 lines of code combined... and without being planned at all for networked interaction, it just worked over the network... here&#x27;s a gif of it working over Tor Onion Services: <a href="https:&#x2F;&#x2F;dustycloud.org&#x2F;misc&#x2F;goblins-chat-captp-onion-services.gif" rel="nofollow">https:&#x2F;&#x2F;dustycloud.org&#x2F;misc&#x2F;goblins-chat-captp-onion-service...</a><p>No code was added to the &quot;protocol&quot; to expect network interactions; Goblins&#x27; CapTP (Capability Transport Protocol) took care of that for us.<p>Already that should sound pretty cool, but that&#x27;s just the foundation for the system.  Look at the other subprojects to see where we&#x27;re going from there.<p>Happy to answer questions if anyone has them!</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24628552&amp;goto=item%3Fid%3D24613124%2324628552">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-        <tr class='athing comtr ' id='24628563'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="80"></td><td valign="top" class="votelinks">
-      <center><a id='up_24628563' href='vote?id=24628563&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=paroneayea" class="hnuser">paroneayea</a> <span class="age"><a href="item?id=24628563">4 days ago</a></span> <span id="unv_24628563"></span><span class="par"></span> <a class="togg" n="1" href="javascript:void(0)" onclick="return toggle(event, 24628563)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">Also even then, I don&#x27;t expect people to understand just from hearing me explain about it in words.  Seeing is believing, and this is why Spritely is taking a &quot;demo-centric&quot; approach.  More thoughts on that here: <a href="https:&#x2F;&#x2F;dustycloud.org&#x2F;blog&#x2F;if-you-cant-tell-people-anything&#x2F;" rel="nofollow">https:&#x2F;&#x2F;dustycloud.org&#x2F;blog&#x2F;if-you-cant-tell-people-anything...</a></span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24628563&amp;goto=item%3Fid%3D24613124%2324628563">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-    <tr class='athing comtr ' id='24637811'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="80"></td><td valign="top" class="votelinks">
-      <center><a id='up_24637811' href='vote?id=24637811&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=and-hi" class="hnuser">and-hi</a> <span class="age"><a href="item?id=24637811">3 days ago</a></span> <span id="unv_24637811"></span><span class="par"></span> <a class="togg" n="1" href="javascript:void(0)" onclick="return toggle(event, 24637811)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c00">Thanks, I appreciate the long reply!<p>Good luck with the project, I hope it will work.</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24637811&amp;goto=item%3Fid%3D24613124%2324637811">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-      <tr class='athing comtr ' id='24627327'><td>
-            <table border='0'>  <tr>    <td class='ind'><img src="s.gif" height="1" width="40"></td><td valign="top" class="votelinks">
-      <center><a id='up_24627327' href='vote?id=24627327&amp;how=up&amp;goto=item%3Fid%3D24613124'><div class='votearrow' title='upvote'></div></a></center>    </td><td class="default"><div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
-          <a href="user?id=Shared404" class="hnuser">Shared404</a> <span class="age"><a href="item?id=24627327">4 days ago</a></span> <span id="unv_24627327"></span><span class="par"></span> <a class="togg" n="3" href="javascript:void(0)" onclick="return toggle(event, 24627327)"></a>          <span class='storyon'></span>
-                  </span></div><br><div class="comment">
-                  <span class="commtext c73">It appears to be a project with the goal of being a &quot;killer app&quot; that will push people onto the fediverse.<p>It appears to be both a game and a messenger, sort of like a distributed MMO.<p>Edit: Someone please correct me if I&#x27;ve misunderstood.</span>
-              <div class='reply'>        <p><font size="1">
-                      <u><a href="reply?id=24627327&amp;goto=item%3Fid%3D24613124%2324627327">reply</a></u>
-                  </font>
-      </div></div></td></tr>
-      </table></td></tr>
-        <tr class='athing c
+					$message =~ s/$reconLine/[SHA512]/;
+					$detokenedMessage =~ s/$reconLine//;
+				}
+			}
+		} # SHA512 token
+		# title:
+		if ($message && GetConfig('admin/token/title')) {
+			# #title token is enabled
+
+			# looks for lines beginning with title: and text after
+			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
+			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
+
+			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
+
+			if (@setTitleToLines) { # means we found at least one title: token;
+				WriteLog('#title token found for ' . $fileHash);
+				WriteLog('$message = ' . $message);
+
+				#my $lineCount = @setTitleToLines / 3;
+				while (@setTitleToLines) {
+					# loop through all found title: token lines
+					my $setTitleToToken = shift @setTitleToLines;
+					my $titleSpace = shift @setTitleToLines;
+					my $titleGiven = shift @setTitleToLines;
+
+					chomp $setTitleToToken;
+					chomp $titleSpace;
+					chomp $titleGiven;
+					$titleGiven = trim($titleGiven);
+
+					my $reconLine;
+					$reconLine = $setTitleToToken . $titleSpace . $titleGiven;
+					WriteLog('title $reconLine = ' . $reconLine);
+
+					if ($titleGiven) {
+						$hasToken{'title'} = 1;
+
+						# if (($authorHasTag{'admin'} == 1 || $authorHasTag{'title'} == 1)) {
+						if (1) {
+							chomp $titleGiven;
+							if ($hasParent) {
+								# has parent(s), so add title to each parent
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, 'title', $titleGiven, $addedTime, $fileHash);
+
+									DBAddVoteRecord($itemParent, $addedTime, 'hastitle');
+
+									DBAddPageTouch('item', $itemParent);
+
+									if (GetConfig('admin/index/make_primary_pages')) {
+										#todo this may not be the right place for this?
+										MakePage('item', $itemParent, 1);
+									}
+								}
+							} else {
+								# no parents, so set title to self
+
+								WriteLog('Item has no parent, adding title to itself');
+
+								DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
+								DBAddItemAttribute($fileHash, 'title', $titleGiven, $addedTime);
+							}
+
+							$message = str_replace($reconLine, '[Title: ' . $titleGiven . ']', $message);
+						} else {
+							$message = str_replace($reconLine, '[Title not applied, insufficient privileges]', $message);
+						}
+					}
+				}
+			}
+		} # title: token

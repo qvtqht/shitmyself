@@ -59,7 +59,7 @@ Long messages without JS may cause URI too long error
 All 40-character-long hex-looking strings are assumed to be existing items
 	Linked in the html-ized posts, even if they do not exist
 
-config/puzzle/accepted
+config/puzzle/accept
 	Must be in "reverse substring precedence"
 	That is, aaa before aa (because aa is substring of aaa)
 
@@ -76,6 +76,17 @@ trying to set xhr.timeout causes error in chrome
 
 Hashtags are stripped out of default title
 
+config/replies
+default/html/reply_form_before_reply_list
+default/html/reply_form_after_reply_list
+	two reply forms on one page may cause issues with js.
+	this would happen if all of those are enabled at once.
+	the second reply form would probably not have js enhancements, but would still work.
+		because of this, before will take precedence over after
+		after will not be shown if before is enabled
+
 Browser Issues
 ==============
 See browsers.txt
+
+
