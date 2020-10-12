@@ -11,7 +11,7 @@
 #
 # happens in 3 steps:
 # 1. query/touch_all.sh, which sets task.priority++
-# 2. calls update.pl --all, which builds all the touched pages
+# 2. calls pages.pl --all, which builds all the touched pages
 # 3. some legacy stuff follows, which is not yet covered by MakePage()
 #
 # the large commented out areas is what's already been
@@ -47,9 +47,9 @@ MakeSummaryPages();
 
 print `query/touch_all.sh`;
 
-print "update.pl --all ...\n";
+print "pages.pl --all ...\n";
 
-print `time ./update.pl --all`;
+print `time ./pages.pl --all`;
 
 #
 #
