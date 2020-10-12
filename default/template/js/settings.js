@@ -230,7 +230,7 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 
 		if (!prefValue && prefValue != 0) {
 			// defaults are set here currently
-			if (prefKey == 'beginner' || prefKey == 'beginner_highlight') {
+			if (prefKey == 'beginner' || prefKey == 'beginner_highlight' || prefKey == 'notify_on_change') {
 				prefValue = 1;
 			}
 		}
