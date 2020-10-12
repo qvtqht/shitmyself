@@ -1408,6 +1408,10 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	if (TrimPath($file) eq '404') {
 		$relativizeUrls = 0;
 	}
+	if ($file eq "$HTMLDIR/stats-footer.html") {
+		#note this means footer links will be broken if hosted on non-root dir on a domain
+		$relativizeUrls = 0;
+	}
 
 	WriteLog("PutHtmlFile($file), \$content)");
 
