@@ -101,8 +101,7 @@ function EventLoop () { // (currently unused) for calling things which need to h
 		var d = new Date();
 		var eventLoopEnd = d.getTime();
 		var eventLoopDuration = eventLoopEnd - eventLoopBegin;
-
-		document.title = eventLoopDuration;
+		//document.title = eventLoopDuration; // for debugging performance
 
 		if (window.timeoutEventLoop) {
 			// #todo does this work?
@@ -115,7 +114,7 @@ function EventLoop () { // (currently unused) for calling things which need to h
 		if (15000 < eventLoopDuration) {
 			eventLoopDuration = 15000;
 		}
-//		document.title = eventLoopDuration;
+		//document.title = eventLoopDuration; // for debugging performance
 
 		window.timeoutEventLoop = setTimeout('EventLoop()', eventLoopDuration);
 	}
