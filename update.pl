@@ -63,75 +63,6 @@ UnlinkCache('count_image');
 # WriteLog('Begin requires');
 
 
-sub OrganizeFile { # $file ; renames file based on hash of its contents
-# filename is obtained using GetFileHashPath()
-	my $file = shift;
-	chomp $file;
-
-	if (!-e $file) {
-		return $file; #todo is this right?
-	}
-
-	if (!GetConfig('admin/organize_files')) {
-		WriteLog('OrganizeFile: warning: was called when admin/organize_files was false.');
-	}
-
-	# organize files aka rename to hash-based path
-	my $fileHashPath = GetFileHashPath($file);
-
-	WriteLog('OrganizeFile: $file = ' . $file . '; $fileHashPath = ' . $fileHashPath);
-
-	if ($fileHashPath) {
-		WriteLog('OrganizeFile: $fileHashPath = ' . $fileHashPath);
-
-		if (-e $fileHashPath) {
-			WriteLog('OrganizeFile: Warning: file already exists = ' . $fileHashPath);
-		}
-
-		if ($fileHashPath && ($file ne $fileHashPath)) {
-			#there's a hash path and it is NOT the same as the file path
-
-			WriteLog('OrganizeFile: renaming ' . $file . ' to ' . $fileHashPath);
-
-			if (-e $fileHashPath) {
-				# new file already exists, rename only if not larger
-				WriteLog("OrganizeFile: warning: $fileHashPath already exists!");
-				if (-s $fileHashPath > -s $file) {
-					WriteLog("OrganizeFile: warning: unlink($file)");
-					unlink ($file);
-				} else {
-					WriteLog("OrganizeFile: rename($file, $fileHashPath), because $file is larger than $fileHashPath");
-					rename ($file, $fileHashPath);
-				}
-			} else {
-				#
-				WriteLog("OrganizeFile: new file does not exist, safe to rename.");
-				WriteLog("OrganizeFile rename ($file, $fileHashPath);");
-
-				rename ($file, $fileHashPath);
-			}
-
-			if (-e $fileHashPath) {
-				WriteLog('OrganizeFile: rename succeeded, changing value of $file');
-
-				$file = $fileHashPath;
-
-				WriteLog('OrganizeFile: $file is now ' . $file);
-			} else {
-				WriteLog("OrganizeFile: WARNING: rename failed, from $file to $fileHashPath");
-			}
-		} else {
-			WriteLog('OrganizeFile: did not need to rename ' . $file);
-		}
-	} else {
-		WriteLog('OrganizeFile: $fileHashPath is missing');
-	}
-
-	WriteLog("OrganizeFile: returning $file");
-
-	return $file;
-}
-
 sub ProcessTextFile { # $file ; add new text file to index
 	my $file = shift;
 	if ($file eq 'flush') {
@@ -626,14 +557,10 @@ elsif ($arg1) {
 		WriteLog('File ' . $arg1 . ' exists');
 
 		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.txt') { #$arg1 =~ m/\.txt$/
-
 			my $fileProcessed = ProcessTextFile($arg1);
-
 			if ($fileProcessed) {
 				IndexTextFile('flush');
-
 				WriteIndexedConfig();
-
 				MakePage('item', $fileProcessed, 1);
 			}
 		}
