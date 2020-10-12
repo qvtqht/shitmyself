@@ -245,6 +245,8 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			#
 			if ($debugType == 'console.log') {
 				$scriptTemplate = str_replace("//alert('DEBUG:", "console.log('", $scriptTemplate);
+			} elseif ($debugType == 'document.title') {
+				$scriptTemplate = str_replace("//alert('DEBUG:", "document.title = ('", $scriptTemplate);
 			} else {
 				$scriptTemplate = str_replace("//alert('DEBUG:", "if(!window.dbgoff)dbgoff=!confirm('DEBUG:", $scriptTemplate);
 			}
