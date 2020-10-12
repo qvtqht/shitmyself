@@ -197,9 +197,13 @@ function CheckIfFresh () {
 } // CheckIfFresh()
 
 if (window.GetPrefs) {
-	var needNotify = GetPrefs('notify_on_change') || 0;
+	var needNotify = (GetPrefs('notify_on_change') ? 1 : 0);
 	if (needNotify == 1) { // check value of notify_on_change preference
-		CheckIfFresh();
+		if (window.EventLoop) {
+			EventLoop();
+		} else {
+			CheckIfFresh();
+		}
 	}
 }
 
