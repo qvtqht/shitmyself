@@ -64,6 +64,14 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		//#todo only if url ends with #reply
 		document.compose.comment.focus();
 	}
+
+	if (window.EventLoop) {
+		if (window.CheckIfFresh) {
+			window.eventLoopFresh = 1;
+		}
+		window.eventLoopEnabled = 1
+		EventLoop();
+	}
 }
 
 function EventLoop () { // (currently unused) for calling things which need to happen on a regular basis
@@ -71,6 +79,10 @@ function EventLoop () { // (currently unused) for calling things which need to h
 // replaces several independent timeouts
 // #todo add accounting for different intervals?
 // #todo add secondary EventLoopRestore timer which ensures this one runs when needed
+	//alert('debug: EventLoop');
+	var d = new Date();
+	var eventLoopBegin = d.getTime();
+
 	if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
 		ShowTimestamps();
 	}
@@ -85,14 +97,29 @@ function EventLoop () { // (currently unused) for calling things which need to h
 		}
 	}
 
-	//if (window.eventLoopEnabled) {
+	if (window.eventLoopEnabled) {
+		var d = new Date();
+		var eventLoopEnd = d.getTime();
+		var eventLoopDuration = eventLoopEnd - eventLoopBegin;
+
+		document.title = eventLoopDuration;
+
 		if (window.timeoutEventLoop) {
 			// #todo does this work?
 			clearTimeout(window.timeoutEventLoop);
 		}
-		window.timeoutEventLoop = setTimeout('EventLoop()', 15000);
-	//}
-}
+
+		if (eventLoopDuration < 100) {
+			eventLoopDuration = 100;
+		}
+		if (15000 < eventLoopDuration) {
+			eventLoopDuration = 15000;
+		}
+//		document.title = eventLoopDuration;
+
+		window.timeoutEventLoop = setTimeout('EventLoop()', eventLoopDuration);
+	}
+} // EventLoop()
 
 function UrlExists(url) { // checks if url exists
 // todo use async
