@@ -115,14 +115,17 @@ function freshCallback() { // callback for requesting HEAD for current page
 									n = Math.ceil(n / 1000);
 
 									var newTs = document.getElementById('freshTimestamp');
-									newTs.setAttribute('epoch', n);
-									newTs.innerHTML = 'just now!';
+									if (newTs) {
+										newTs.setAttribute('epoch', n);
+										newTs.innerHTML = 'just now!';
+									}
 								} else { // add new floatie
 									var d = new Date();
 									var n = d.getTime();
 									n = Math.ceil(n / 1000);
 
 									var a = document.getElementById('freshAria');
+									var space = document.createElement('span');
 									space.innerHTML = ' ';
 									a.appendChild(space);
 									var newTs = document.createElement('span');
