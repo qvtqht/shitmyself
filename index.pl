@@ -107,7 +107,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	my $hasCookie = 0;
 
 	my $addedTime;          # time added, epoch format
-	my $addedTimeIsNew = 0; # set to 1 if $addedTime is missing and we just created a new entry
 	my $fileHash;            # git's hash of file blob, used as identifier
 	my $isAdmin = 0;        # was this posted by admin?
 
@@ -128,8 +127,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		# see what gpg says about the file.
 		# if there is no gpg content, the attributes are still populated as possible
-
-		# $txt = $gpgResults{'text'};          # contents of the text file
 		$txt = $gpgResults{'text'};          # contents of the text file
 		$message = $gpgResults{'message'};   # message which will be displayed once tokens are processed
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
@@ -161,7 +158,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			$alias = '';
 		}
 		WriteLog('IndexTextFile: $alias = ' . $alias);
-
 		if ($gpgKey) {
 			WriteLog('IndexTextFile: $gpgKey = ' . $gpgKey);
 		} else {
@@ -212,74 +208,58 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 
 		# debug output
-		WriteLog('IndexTextFile: ' . $fileHash);
+		WriteLog('IndexTextFile: $fileHash = ' . $fileHash);
 		if ($addedTime) {
 			WriteLog('IndexTextFile: $addedTime = ' . $addedTime);
-		}
-		else {
+		} else {
 			WriteLog('IndexTextFile: $addedTime is not set');
-		}
-
-		if (!$addedTime) {
-			# This file has not been indexed before,
-			# so it should get an added_time record.
-			# This is what we'll do here.
 
 			if (GetConfig('admin/logging/write_chain_log')) {
-				AddToChainLog($fileHash);
+				$addedTime = AddToChainLog($fileHash);
 			}
-
-			WriteLog("... No added time found for " . $fileHash . " setting it to now.");
-
-			# current time
-			my $newAddedTime = GetTime();
-			$addedTime = $newAddedTime;
-
-			# if (GetConfig('admin/logging/write_added_log')) {
-			# 	# add new line to added.log
-			# 	my $logLine = $gpgResults{'gitHash'} . '|' . $newAddedTime;
-			# 	AppendFile('./log/added.log', $logLine);
-			# }
-
-			$addedTimeIsNew = 1;
 		}
 
 		# admin_imprint
-		if ($gpgKey && $alias && !GetAdminKey() && GetConfig('admin/admin_imprint') && $alias eq 'Operator') {
+		if (
+			$gpgKey &&
+			$alias &&
+			!GetAdminKey() &&
+			GetConfig('admin/admin_imprint') &&
+			$alias eq 'Operator'
+		) {
 			# if there is no admin set, and config/admin/admin_imprint is true
 			# and if this item is a public key
 			# go ahead and make this user admin
 			# and announce it via a new .txt file
-
 			PutFile('./admin.key', $txt);
 
 			my $newAdminMessage = $TXTDIR . '/' . GetTime() . '_newadmin.txt';
 			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n" . GetTime());
 			ServerSign($newAdminMessage);
-		}
+		} # admin_imprint
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
 			# it was posted by admin
 			$isAdmin = 1;
-			#$authorHasTag{'admin'} = 1;
+			$authorHasTag{'admin'} = 1;
 
-			if (GetConfig('admin/admin_last_action') < $addedTime) {
-				PutConfig('admin/admin_last_action', $addedTime);
+			if (
+				!GetConfig('admin/last_admin_action') ||
+				GetConfig('admin/last_admin_action') < $addedTime
+			) {
+				# reset counter for latest admin action
+				PutConfig('admin/last_admin_action', $addedTime);
 			}
 
-			DBAddVoteRecord($fileHash, $addedTime, 'admin');
-
-			DBAddPageTouch('tag', 'admin');
-			DBAddPageTouch('scores');
-			DBAddPageTouch('stats');
-		}
+			#DBAddVoteRecord($fileHash, $addedTime, 'admin');
+		} # $isSigned && $gpgKey && IsAdmin($gpgKey)
 
 		if ($isSigned && $gpgKey) {
 			# it was signed and there's a gpg key
 			DBAddAuthor($gpgKey);
 			DBAddPageTouch('author', $gpgKey);
 
-			if (! ($gpgKey =~ m/\s/)) {
+			if ( ! ($gpgKey =~ m/\s/)) { #todo what is this do?
 				#DBAddPageTouch() may be a better place for this
 				# sanity check for gpgkey having any whitespace in it before using it in a glob for unlinking cache items
 				WriteLog('IndexTextFile: proceeding to unlink avatar caches for ' . $gpgKey);
@@ -291,32 +271,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			} else {
 				WriteLog('IndexTextFile: NOT unlinking avatar caches for ' . $gpgKey);
 			}
-
-			DBAddPageTouch('scores');
-			DBAddPageTouch('stats');
 		}
 
 		if ($alias) {
 			# pubkey
-
 			DBAddKeyAlias($gpgKey, $alias, $fileHash);
-
-			UnlinkCache('avatar/' . $gpgKey);
-			UnlinkCache('avatar.color/' . $gpgKey);
-			UnlinkCache('pavatar/' . $gpgKey);
-
-			DBAddKeyAlias('flush');
-
-			if (GetConfig('admin/index/make_primary_pages')) {
-				MakePage('author', $gpgKey);
-			}
-
-			DBAddPageTouch('author', $gpgKey);
-			DBAddPageTouch('scores');
-			DBAddPageTouch('stats');
+			ExpireAliasCache($gpgKey);
 		}
-
-		DBAddPageTouch('rss');
 
 		my $itemName = TrimPath($file);
 
