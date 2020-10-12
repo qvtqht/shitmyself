@@ -678,7 +678,6 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 	# $file{'show_quick_vote'} = 1;
 	$file{'vote_buttons'} = 1;
 	$file{'format_avatars'} = 1;
-	$file{'reply_form'} = GetConfig('replies') ? 1 : 0;
 
 	if (!$file{'item_title'}) {
 		$file{'item_title'} = 'Untitled';
@@ -712,8 +711,8 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		# this will contain the replies as html output
 		my $allReplies = '';
 
-		if (GetConfig('replies')) {
-			# add reply form below item
+		if (GetConfig('replies') && GetConfig('html/reply_form_before_reply_list')) {
+			# add reply form
 			my $replyForm = GetReplyForm($file{'file_hash'});
 			$allReplies .= $replyForm;
 		}
@@ -824,13 +823,21 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			}
 		}
 
+		if (GetConfig('replies') && GetConfig('html/reply_form_after_reply_list') && !GetConfig('html/reply_form_before_reply_list')) {
+			# add reply form
+			my $replyForm = GetReplyForm($file{'file_hash'});
+			# start with a horizontal rule to separate from above content
+			$allReplies .= '<hr size=3>';
+			$allReplies .= $replyForm;
+		}
+
 		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
 		$itemTemplate .= '<hr><br>';
 	}
 	else {
 		my $allReplies = '';
 		if (GetConfig('replies')) {
-			# add reply form below item
+			# add reply form
 			my $replyForm = GetReplyForm($file{'file_hash'});
 			$allReplies .= $replyForm;
 		}
