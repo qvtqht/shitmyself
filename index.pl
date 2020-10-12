@@ -548,6 +548,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							#todo must match message author key
 
 							my $hash = sha512_hex($tokenFound{'recon'});
+							my $configPuzzleAccept = GetConfig('puzzle/accept');
+							if (!$configPuzzleAccept) {
+								$configPuzzleAccept = '';
+							}
 							my @acceptPuzzlePrefix = split("\n", GetConfig('puzzle/accept'));
 							push @acceptPuzzlePrefix, GetConfig('puzzle/prefix');
 							my $puzzleAccepted = 0;
