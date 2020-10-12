@@ -312,10 +312,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					$overthrowInterval = 1;
 				}
 
-				if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
+				if (time() - GetConfig('admin/latest_admin_action') > $overthrowInterval) {
 					WriteLog('ProcessAccessLog: Overthrow conditions met');
 
-					PutConfig('admin/admin_last_action', 0);
+					PutConfig('admin/latest_admin_action', 0);
 
 					if (file_exists('admin.key')) {
 						unlink('admin.key');

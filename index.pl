@@ -246,11 +246,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			$authorHasTag{'admin'} = 1;
 
 			if (
-				!GetConfig('admin/last_admin_action') ||
-				GetConfig('admin/last_admin_action') < $addedTime
+				!GetConfig('admin/latest_admin_action') ||
+				GetConfig('admin/latest_admin_action') < $addedTime
 			) {
 				# reset counter for latest admin action
-				PutConfig('admin/last_admin_action', $addedTime);
+				PutConfig('admin/latest_admin_action', $addedTime);
 			}
 
 			#DBAddVoteRecord($fileHash, $addedTime, 'admin');
