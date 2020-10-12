@@ -188,7 +188,9 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 
 			if (GetPrefs('notify_on_change')) {
 				// check if page has changed, notify user if so
-				CheckIfFresh();
+				if (window.EventLoop) {
+					EventLoop();
+				}
 			}
 		}
 
@@ -385,6 +387,10 @@ function SettingsOnload () { // onload function for settings page
 	return false;
 } // SettingsOnload()
 
-ShowAdvanced(0); // #todo replace with body.onload ?
+if (window.EventLoop) {
+	EventLoop(); // #todo replace with body.onload ?
+} else {
+	ShowAdvanced();
+}
 
 // == end settings.js

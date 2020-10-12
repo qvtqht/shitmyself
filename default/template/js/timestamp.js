@@ -93,15 +93,24 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 				}
 			}
 		}
-	
-		if (changeLogged) {
-			setTimeout('ShowTimestamps()', 5000);
+
+		if (window.EventLoop) {
+			// do nothing
 		} else {
-			setTimeout('ShowTimestamps()', 15000);
+			if (changeLogged) {
+				setTimeout('ShowTimestamps()', 5000);
+			} else {
+				setTimeout('ShowTimestamps()', 15000);
+			}
 		}
 	}
 }
 
-ShowTimestamps(); // #todo this should probably be called from onload somehow
+if (window.EventLoop) {
+	EventLoop();
+} else {
+	ShowTimestamps();
+}
+ // #todo this should probably be called from onload somehow
 
 // == end timestamp.js

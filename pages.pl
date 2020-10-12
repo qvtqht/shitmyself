@@ -906,7 +906,12 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		$txtIndex = InjectJs($txtIndex, qw(settings avatar voting utils profile translit timestamp));
 	}
 
-#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
+	}
+
+	#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
 	return $txtIndex;
@@ -1756,7 +1761,6 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 
 sub WriteMenuList { # writes config/list/menu based on site configuration
 	#todo this function is not obvious, overrides obvious list/menu
-
 	my @menu;
 
 	push @menu, 'read';
@@ -1764,6 +1768,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 
 	#upload
 	if (GetConfig('admin/php/enable') && GetConfig('admin/image/enable')) {
+		# push @menu, 'art';
 		push @menu, 'upload';
 	}
 
@@ -2083,7 +2088,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	$htmlOutput .= GetPageFooter(); # </body></html>
 
 	# add necessary js
-	$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar));
+	$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar utils));
 #	$htmlOutput = InjectJs($htmlOutput, qw(settings));
 
 	return $htmlOutput;
@@ -2243,6 +2248,10 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		#todo move this upwards, shouldn't be decided here
 
 		push @scriptNames, 'force_profile';
+	}
+
+	if (GetConfig('admin/js/dragging')) {
+		push @scriptNames, 'dragging'; 
 	}
 
 	#output list of all the scripts we're about to include
@@ -2931,6 +2940,11 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 	}
 
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
+	}
+
 	return $txtIndex;
 } # GetReadPage()
 
@@ -3285,7 +3299,12 @@ sub MakeSimplePage { # given page name, makes page
 	);
 	$html .= $contentWindow;
 	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(avatar settings profile));
+	$html = InjectJs($html, qw(avatar settings profile utils));
+
+	if (GetConfig('admin/js/enable')) {
+		$html =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$html =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
+	}
 
 	PutHtmlFile("$pageName.html", $html);
 
@@ -3790,7 +3809,7 @@ sub GetWritePage { # returns html for write page
 			$writePageHtml,
 			'body',
 			'onload',
-			'if (window.writeOnload) writeOnload(); if (document.compose.comment) { document.compose.comment.focus() }'
+			'if (window.OnLoadEverything) { OnLoadEverything(); }'
 		);
 	}
 
@@ -3853,7 +3872,6 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 	my $title = "Profile";
 	my $titleHtml = "Profile";
 
-
 	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
 		$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
 		$txtIndex .= GetTemplate('maincontent.template');
@@ -3882,8 +3900,8 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 			$txtIndex = InjectJs($txtIndex, qw(settings utils profile timestamp));
 
 			# these two lines are different, regex is hard sometimes
-			$txtIndex =~ s/<body /<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }" /;
-			$txtIndex =~ s/<body>/<body onload="if (window.ProfileOnLoad) { ProfileOnLoad(); }">/;
+			$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /;
+			$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/;
 		} else {
 			# js is disabled
 		}
@@ -3941,20 +3959,16 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $settingsTemplate = GetTemplate('form/settings.template');
 	$txtIndex .= $settingsTemplate;
 
-	# # stats are already displayed in footer
-	# my $statsTable = GetStatsTable();
-	# $txtIndex .= $statsTable;
-
 	$txtIndex .= GetPageFooter();
 
 	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback));
 	if (GetConfig('admin/js/enable')) {
-		$txtIndex =~ s/<body /<body onload="if (window.SettingsOnload) { SettingsOnload(); }" /i;
-		$txtIndex =~ s/<body>/<body onload="if (window.SettingsOnload) { SettingsOnload(); }">/i;
+		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
 
 	return $txtIndex;
-}
+} # GetSettingsPage()
 
 sub GetEtcPage { # returns html for etc page (/etc.html)
 	my $txtIndex = "";
@@ -4266,6 +4280,9 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			WriteLog("MakePage: tag: $tagName");
 			my $tagPage = GetReadPage('tag', $tagName);
 			PutHtmlFile($targetPath, $tagPage);
+			if ($tagName eq 'image') {
+				PutHtmlFile("art.html", $tagPage);
+			}
 		}
 	}
 	#

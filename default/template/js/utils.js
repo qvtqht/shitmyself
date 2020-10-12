@@ -20,7 +20,30 @@ function unescapeHTML(html) {
 // end html escape hack
 
 function OnLoadEverything () { // checks for each onLoad function and calls it
+// keywords: OnLoadAll BodyOnLoad body onload body.onload
 // typically called from body.onload
+	//alert('debug: OnLoadEverything() begins');
+
+	var loadingIndicator;
+	if (!loadingIndicator) {
+		if (document.getElementById) {
+			loadingIndicator = document.getElementById('loadingIndicator');
+		}
+	}
+	if (loadingIndicator) {
+		// #todo this should go into body.onload. but we are already injecting that event somewhere else.
+		if (window.openPgpJsLoadBegin && !!window.openpgp) {
+			loadingIndicator.innerHTML = 'Finished loading page. Loading library...';
+			setTimeout('WaitForOpenPgp()', 500);
+		} else {
+			if (window.HideLoadingIndicator) {
+				HideLoadingIndicator();
+			}
+		}
+	}
+	if (window.ItsYou) {
+		ItsYou();
+	}
 	if (window.SettingsOnLoad) {
 		SettingsOnLoad();
 	}
@@ -32,6 +55,10 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	}
 	if (window.DraggingInit) {
 		DraggingInit();
+	}
+	if (window.ShowAdvanced) {
+		window.eventLoopShowAdvanced = 1;
+		ShowAdvanced(0);
 	}
 	if (document.compose && document.compose.comment && document.compose.comment.focus) {
 		//#todo only if url ends with #reply
@@ -53,16 +80,18 @@ function EventLoop () { // (currently unused) for calling things which need to h
 	}
 
 	if (window.eventLoopFresh && window.CheckIfFresh) {
-		CheckIfFresh();
+		if (GetPrefs('notify_on_change')) {
+			CheckIfFresh();
+		}
 	}
 
-	if (window.eventLoopEnable) {
+	//if (window.eventLoopEnabled) {
 		if (window.timeoutEventLoop) {
 			// #todo does this work?
 			clearTimeout(window.timeoutEventLoop);
 		}
 		window.timeoutEventLoop = setTimeout('EventLoop()', 15000);
-	}
+	//}
 }
 
 function UrlExists(url) { // checks if url exists
