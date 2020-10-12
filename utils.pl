@@ -243,6 +243,7 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 } # EnsureSubdirs()
 
 sub PutCache { # $cacheName, $content; stores value in cache
+	#todo sanity checks
 	my $cacheName = shift;
 	chomp($cacheName);
 
@@ -1313,46 +1314,6 @@ sub RemoveHtmlFile { # $file ; removes existing html file
 } # RemoveHtmlFile()
 
 #
-# sub RelativizeUrls {
-# 	my $html = shift;
-# 	my $count = shift; #levels of paths deep
-# 	my $fileName = shift;
-# 	if (1) {
-# 		# only the following *exact* formats are converted
-# 		# thus it is important to maintain this exact format throughout the html and js templates
-# 		# src="/
-# 		# href="/
-# 		# .src = '/
-# 		# .location = '/
-#
-# 		# first we determine how many levels deep our current file is
-# 		# we do this by counting slashes in $file
-#
-# 		# replaced with param above?
-#
-# 		# my $count = ($filePath =~ s/\//\//g) + 1;
-#
-# 		# then we build the path prefix.
-# 		# the same prefix is used on all links
-# 		# this can be done more efficiently on a per-link basis
-# 		# but most subdirectory-located files are of the form /aa/bb/aabbcc....html anyway
-# 		my $subDir;
-# 		if ($count == 1) {
-# 			$subDir = './';
-# 		} else {
-# 			$subDir = str_repeat('../', $count - 1);
-# 			# $subDir = '../' x ($count - 1);
-# 		}
-#
-# 		# here is where we do substitutions
-# 		# it may be wiser to use str_replace here
-# 		$content =~ s/src="\//src="$subDir/ig;
-# 		$content =~ s/href="\//href="$subDir/ig;
-# 		$content =~ s/action="\//action="$subDir/ig;
-# 		$content =~ s/\.src = '\//.src = '$subDir/ig;
-# 		$content =~ s/\.location = '\//.location = '$subDir/ig;
-# 	}
-# }
 
 sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, with special rules; parameters: $file, $content
 	# the special rules are:
@@ -1456,7 +1417,12 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		if ($count == 1) {
 			$subDir = './';
 		} else {
-			$subDir = '../' x ($count - 1);
+			if ($count < 1) {
+				WriteLog('PutHtmlFile: relativize_urls: sanity check failed, $count is < 1');
+			} else {
+				# $subDir = '../' x ($count - 1);
+				$subDir = str_repeat('../', ($count - 1));
+			}
 		}
 
 		# here is where we do substitutions
