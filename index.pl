@@ -3,7 +3,7 @@
 use strict;
 use warnings FATAL => 'all';
 use utf8;
-use POSIX qw(strftime);
+#use POSIX qw(strftime);
 use Cwd qw(cwd);
 use Digest::SHA qw(sha512_hex);
 
