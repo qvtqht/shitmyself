@@ -1163,7 +1163,7 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 	if ($widgetTemplate) {
 		# <a href="/etc.html">More</a>
 		WriteLog('GetWidgetExpand: got template ok, going to fill it in');
-		$widgetTemplate =~ str_replace('/etc.html', $url, $widgetTemplate);
+		$widgetTemplate = str_replace('/etc.html', $url, $widgetTemplate);
 
 		if (GetConfig('admin/js/enable')) {
 			my $jsTemplate = "if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement); } else { return true; }";

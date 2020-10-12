@@ -543,9 +543,9 @@ function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings
 		$windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar = str_replace('$windowTitle', $windowTitle, $windowTitlebar);
 
-		$windowTemplate =~ str_replace('$windowTitlebar', $windowTitlebar, $windowTemplate);
+		$windowTemplate = str_replace('$windowTitlebar', $windowTitlebar, $windowTemplate);
 	} else {
-		$windowTemplate =~ str_replace('$windowTitlebar', '', $windowTemplate);
+		$windowTemplate = str_replace('$windowTitlebar', '', $windowTemplate);
 	}
 
 	// menubar, if there is menubar content
