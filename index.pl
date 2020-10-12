@@ -94,68 +94,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	# admin/organize_files
 	# renames files to their hashes
-	if (GetConfig('admin/organize_files') && substr(lc($file), length($file) -4, 4) eq ".txt") {
-		# don't touch server.key.txt or $TXTDIR directory or directories in general
-		if ($file ne "$TXTDIR/server.key.txt" && $file ne $TXTDIR && !-d $file) {
-			WriteLog('IndexTextFile: admin/organize_files is set, do we need to organize?');
 
-			# Figure out what the file's path should be
-			my $fileHashPath = GetFileHashPath($file);
-
-			# turns out this is actually the opposite of what needs to happen
-			# but this code snippet may come in handy
-			# if (index($fileHashPath, $SCRIPTDIR) == 0) {
-			# 	WriteLog('IndexTextFile: hash path begins with $SCRIPTDIR, removing it');
-			# 	$fileHashPath = str_replace($SCRIPTDIR . '/', '', $fileHashPath);
-			# } # index($fileHashPath, $SCRIPTDIR) == 0
-			# else {
-			# 	WriteLog('IndexTextFile: hash path does NOT begin with $SCRIPTDIR, leaving it alone');
-			# }
-
-			if ($fileHashPath) {
-				# Does it match?
-				if ($file eq $fileHashPath) {
-					# No action needed
-					WriteLog('IndexTextFile: hash path matches, no action needed');
-				}
-				# It doesn't match, fix it
-				elsif ($file ne $fileHashPath) {
-					WriteLog('IndexTextFile: hash path does not match, organize');
-					WriteLog('Before: ' . $file);
-					WriteLog('After: ' . $fileHashPath);
-
-					if (-e $fileHashPath) {
-						# new file already exists, rename only if not larger
-						WriteLog("Warning: $fileHashPath already exists!");
-
-						if (-s $fileHashPath > -s $file) {
-							unlink ($file);
-						} else {
-							rename ($file, $fileHashPath);
-						}
-					} # -e $fileHashPath
-					else {
-						# new file does not exist, safe to rename
-						rename ($file, $fileHashPath);
-					}
-
-					# if new file exists
-					if (-e $fileHashPath) {
-						$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
-					} else {
-						WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
-					}
-				} # $file ne $fileHashPath
-				else {
-					WriteLog('IndexTextFile: it already matches, next!');
-					WriteLog('$file: ' . $file);
-					WriteLog('$fileHashPath: ' . $fileHashPath);
-				}
-			} # $fileHashPath
-		}
-		else {
-			WriteLog('IndexTextFile: organizing not needed');
-		}
+	if (GetConfig('admin/organize_files')) {
+		$file = OrganizeFile($file);
 	}
 
 	# file's attributes
