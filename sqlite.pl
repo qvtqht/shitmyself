@@ -919,6 +919,10 @@ sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 
 	$query .= '(?)';
 	push @queryParams, $key;
+
+	DBAddPageTouch('author', $key);
+	DBAddPageTouch('scores');
+	DBAddPageTouch('stats');
 }
 
 sub DBGetTouchedPages { # Returns items from task table, used for prioritizing which pages need rebuild
@@ -1337,6 +1341,8 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 
 	$query .= "(?, ?, ?)";
 	push @queryParams, $key, $alias, $pubkeyFileHash;
+
+	DBAddPageTouch('author', $key);
 }
 
 sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
@@ -1363,6 +1369,7 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 	}
 
 	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
+		DBAddPageTouch('flush');
 		DBAddItemParent('flush');
 		$query = '';
 		@queryParams = ();
@@ -1388,6 +1395,9 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 
 	$query .= '(?, ?)';
 	push @queryParams, $itemHash, $parentHash;
+
+	DBAddPageTouch('item', $itemHash);
+	DBAddPageTouch('item', $parentHash);
 }
 
 sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError ; Adds a new item to database
