@@ -605,7 +605,11 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
+	if (GetConfig('admin/js/enable')) {
+		$txtIndex = InjectJs($txtIndex, qw(settings avatar profile utils fresh));
+		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
+	}
 
 	return $txtIndex;
 } # GetTagsPage
