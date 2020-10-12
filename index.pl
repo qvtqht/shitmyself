@@ -552,7 +552,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							if (!$configPuzzleAccept) {
 								$configPuzzleAccept = '';
 							}
-							my @acceptPuzzlePrefix = split("\n", GetConfig('puzzle/accept'));
+							my @acceptPuzzlePrefix = split("\n", $configPuzzleAccept);
 							push @acceptPuzzlePrefix, GetConfig('puzzle/prefix');
 							my $puzzleAccepted = 0;
 
