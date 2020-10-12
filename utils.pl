@@ -639,7 +639,7 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 				my ($authorAttribute, $authorAttributeValue) = split('\|', $authorAttributeLine);
 				WriteLog('GetAvatar: $authorAttribute = ' . $authorAttribute);
 
-				if ($authorAttribute eq 'reddit_username') {
+				if ($authorAttribute eq 'reddit_username') { #todo add or admin
 					WriteLog('GetAvatar: found reddit_username!');
 
 					$hasReddit = $authorAttributeValue;
@@ -2534,6 +2534,10 @@ sub file_exists { # $file ; port of php file_exists()
 	return 0; #unreachable code
 }
 
+sub ExpireAliasCache { # $fingerprint ; removes all caches for alias
+
+}
+
 sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog('GetItemEasyFind()');
 
@@ -2789,13 +2793,13 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	}
 
 	if ($file eq "$TXTDIR/server.key.txt" || $file eq $TXTDIR || -d $file) {
-		WriteLog('OrganizeFile: file does not meet criteria, ignoring.');
+		# $file should not be server.key, the txt directory, or a directory
+		WriteLog('OrganizeFile: file is on ignore list, ignoring.');
 		return $file;
 	}
 
 	# organize files aka rename to hash-based path
 	my $fileHashPath = GetFileHashPath($file);
-
 
 	# turns out this is actually the opposite of what needs to happen
 	# but this code snippet may come in handy
@@ -2807,15 +2811,13 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	# 	WriteLog('IndexTextFile: hash path does NOT begin with $SCRIPTDIR, leaving it alone');
 	# }
 
-
 	if ($fileHashPath) {
-		# Does it match?
 		if ($file eq $fileHashPath) {
-			# No action needed
+			# Does it match? No action needed
 			WriteLog('OrganizeFile: hash path matches, no action needed');
 		}
-		# It doesn't match, fix it
 		elsif ($file ne $fileHashPath) {
+			# It doesn't match, fix it
 			WriteLog('OrganizeFile: hash path does not match, organize');
 			WriteLog('OrganizeFile: Before: ' . $file);
 			WriteLog('OrganizeFile: After: ' . $fileHashPath);
