@@ -1948,7 +1948,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 			$topMenuTemplate,
 			'a href="/etc.html"',
 			'onclick',
-			"if (window.ShowAll) { return ShowAll(this); } else { return true; }"
+			"if (window.SetPrefs) { SetPrefs('show_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
 		);
 	}
 
