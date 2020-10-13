@@ -467,12 +467,16 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 	WriteLog("RedirectWithResponse($url, $message)");
 
 	// should only redirect once per session
-	static $redirected = 0;
-	if ($redirected > 0) {
+	static $redirected;
+	if (isset($redirected) && $redirected > 0) {
 		WriteLog('RedirectWithResponse: warning: called more than once!');
 		return;
 	}
-	$redirected++;
+	if (!$redirected) {
+		$redirected = 1;
+	} else {
+		$redirected++;
+	}
 
 	if (headers_sent()) {
 		// problem, can't redirect if headers already sent;
