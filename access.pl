@@ -392,6 +392,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 				# The message comes after the prefix, so just trim it
 				my $message = (substr($file, length($submitPrefix)));
+				my %headerFooter = (); # stores header-footer entries before appending them to "-- " signature
 
 				# If there is a message...
 				if ($message) {
@@ -450,7 +451,9 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 						else {
 							if ($paramName && $paramValue) {
-								$message .= "\n" . $paramName . '=' . $paramValue . "\n";
+								# $message .= "\n" . $paramName . '=' . $paramValue . "\n";
+								# $message .= "\n" . $paramName . '=' . $paramValue . "\n";
+								$headerFooter{$paramName} = $paramValue
 							}
 						}
 					} # @messageItems
