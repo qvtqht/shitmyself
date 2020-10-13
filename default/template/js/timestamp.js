@@ -107,7 +107,7 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 }
 
 if (window.EventLoop) {
-	EventLoop();
+	// do nothing
 } else {
 	ShowTimestamps();
 }
