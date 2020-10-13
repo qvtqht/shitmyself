@@ -118,11 +118,10 @@ function EventLoop () { // (currently unused) for calling things which need to h
 			clearTimeout(window.timeoutEventLoop);
 		}
 
-		if (eventLoopDuration < 100) {
-			eventLoopDuration = 100;
-		}
-		if (15000 < eventLoopDuration) {
-			eventLoopDuration = 15000;
+		if (eventLoopDuration > 100) {
+			eventLoopDuration = 10000;
+		} else {
+			eventLoopDuration = 3000;
 		}
 		//document.title = eventLoopDuration; // for debugging performance
 
