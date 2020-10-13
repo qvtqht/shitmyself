@@ -246,7 +246,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# no spaces in gpg key; \s is whitespace
 				ExpireAliasCache();
 			} else {
-				WriteLog('IndexTextFile: NOT unlinking avatar caches for ' . $gpgKey);
+				WriteLog('IndexTextFile: warning: $gpgKey contains space(s)');
 			}
 		}
 
