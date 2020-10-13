@@ -1,3 +1,12 @@
+ARCHITECTURAL PRIORITIES
+* decouple initial file pickup into db and full index
+* redirect jankiness from profile and post
+* pages not expired from cache
+
+
+
+#bug reply field gets autofocused due to write js
+
 route.php
 	if the html returning indicates it is the pre-generated version
 		call HandleNotFound ($path, $pathRel)
