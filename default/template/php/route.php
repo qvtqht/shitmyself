@@ -458,8 +458,12 @@ if (GetConfig('admin/php/route_enable')) {
 							}
 
 							if (preg_match('/^[a-f0-9]{8}$/', $messageId)) {
+								WriteLog('route.php: Found $messageId which is [a-f0-9]{8}');
+
 								$serverResponse = RetrieveServerResponse($messageId);
 								$serverResponse = trim($serverResponse);
+							} else {
+								WriteLog('route.php: NOT Found $messageId which is [a-f0-9]{8}');
 							}
 
 							if (!$serverResponse && !$redirectUrl) {
