@@ -4469,46 +4469,52 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 	# this is from the task table
 	my $touchedPages = DBGetTouchedPages($pagesLimit);
 
-	# de-reference array of touched pages
-	my @touchedPagesArray = @$touchedPages;
+	if ($touchedPages) { #todo actually check it's an array reference or something?
+		# de-reference array of touched pages
+		my @touchedPagesArray = @$touchedPages;
 
-	# write number of touched pages to log
-	WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
+		# write number of touched pages to log
+		WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
 
-	# this part will refresh any pages that have been "touched"
-	# in this case, 'touch' means when an item that affects the page
-	# is updated or added
-	foreach my $page (@touchedPagesArray) {
-		if ($timeLimit && $startTime && ((time() - $startTime) > $timeLimit)) {
-			WriteMessage("BuildTouchedPages: Time limit reached, exiting loop");
-			WriteMessage("BuildTouchedPages: " . time() . " - $startTime > $timeLimit");
-			last;
+		# this part will refresh any pages that have been "touched"
+		# in this case, 'touch' means when an item that affects the page
+		# is updated or added
+		foreach my $page (@touchedPagesArray) {
+			if ($timeLimit && $startTime && ((time() - $startTime) > $timeLimit)) {
+				WriteMessage("BuildTouchedPages: Time limit reached, exiting loop");
+				WriteMessage("BuildTouchedPages: " . time() . " - $startTime > $timeLimit");
+				last;
+			}
+
+			$pagesProcessed++;
+			#	if ($pagesProcessed > $pagesLimit) {
+			#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
+			#		last;
+			#	}
+			#	if ((GetTime2() - $startTime) > $timeLimit) {
+			#		WriteLog("Time limit reached, exiting loop");
+			#		last;
+			#	}
+
+			# dereference @pageArray and get the 3 items in it
+			my @pageArray = @$page;
+			my $pageType = shift @pageArray;
+			my $pageParam = shift @pageArray;
+			my $touchTime = shift @pageArray;
+
+			# output to log
+			WriteLog("\$pageType = $pageType");
+			WriteLog("\$pageParam = $pageParam");
+			WriteLog("\$touchTime = $touchTime");
+
+			MakePage($pageType, $pageParam);
+
+			DBDeletePageTouch($pageType, $pageParam);
 		}
-
-		$pagesProcessed++;
-		#	if ($pagesProcessed > $pagesLimit) {
-		#		WriteLog("Will not finish processing pages, as limit of $pagesLimit has been reached");
-		#		last;
-		#	}
-		#	if ((GetTime2() - $startTime) > $timeLimit) {
-		#		WriteLog("Time limit reached, exiting loop");
-		#		last;
-		#	}
-
-		# dereference @pageArray and get the 3 items in it
-		my @pageArray = @$page;
-		my $pageType = shift @pageArray;
-		my $pageParam = shift @pageArray;
-		my $touchTime = shift @pageArray;
-
-		# output to log
-		WriteLog("\$pageType = $pageType");
-		WriteLog("\$pageParam = $pageParam");
-		WriteLog("\$touchTime = $touchTime");
-
-		MakePage($pageType, $pageParam);
-
-		DBDeletePageTouch($pageType, $pageParam);
+	} # $touchedPages
+	else {
+		WriteLog('BuildTouchedPages: warning: $touchedPages was false, and thus not an array reference.');
+		return 0;
 	}
 
 	return $pagesProcessed;
