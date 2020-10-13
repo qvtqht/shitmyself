@@ -430,12 +430,13 @@ function RetrieveServerResponse ($messageId) { // retrieves response message for
 
 	$message = GetCache('sm' . $messageId);
 	if ($message) {
-		// message was found, remove it
-		WriteLog("RetrieveServerResponse: Message found, not deleting");
-
 		if (!GetConfig('admin/php/debug')) {
+			WriteLog("RetrieveServerResponse: Message found, removing.");
+			// message was found, remove it
 			// remove stored message if not in debug mode
 			UnlinkCache('sm' . $messageId);
+		} else {
+			WriteLog("RetrieveServerResponse: Message found, not deleting because debug mode.");
 		}
 	} else {
 		WriteLog('RetrieveServerResponse: warning: message not found!');
