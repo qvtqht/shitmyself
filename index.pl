@@ -527,11 +527,17 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									$configValue = trim($configValue);
 								}
 
-								# #todo create a whitelist of safe keys non-admins can change
+								if (ConfigKeyValid($configKeyActual)) {
+									# #todo create a whitelist of safe keys non-admins can change
 
-								DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
-								$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
-								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+									DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
+									$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
+									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+								} else {
+									# token tried to pass unacceptable config key
+									$message = str_replace($tokenFound{'recon'}, "[Not Accepted: $configKeyActual]", $message);
+									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+								}
 							}
 						}
 
