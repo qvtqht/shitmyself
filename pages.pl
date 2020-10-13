@@ -2102,9 +2102,14 @@ sub GetTopItemsPage { # returns page with top items listing
 
 	$htmlOutput .= GetPageFooter(); # </body></html>
 
-	# add necessary js
-	$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar utils));
-#	$htmlOutput = InjectJs($htmlOutput, qw(settings));
+	if (GetConfig('admin/js/enable')) {
+		# add necessary js
+		$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar utils));
+		$htmlOutput =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$htmlOutput =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
+
+		# $htmlOutput = InjectJs($htmlOutput, qw(settings));
+	}
 
 	return $htmlOutput;
 } #GetTopItemsPage
@@ -3758,8 +3763,9 @@ sub GetSearchPage { # returns html for search page
 	$html .= GetPageFooter();
 
 	if (GetConfig('admin/js/enable')) {
-		$html = AddAttributeToTag($html, 'body', 'onload', 'if (window.searchOnload) searchOnload(); if (document.search.q) { document.search.q.focus() }');
 		$html = InjectJs($html, qw(settings avatar profile puzzle));
+		$html =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
+		$html =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
 	return $html;
 } # GetSearchPage()
