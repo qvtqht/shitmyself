@@ -4250,6 +4250,31 @@ sub GetItemPageFromHash {
 	}
 }
 
+sub GetItemTemplateFromHash {
+#todo unfinished
+	my $fileHash = shift;
+	chomp $fileHash;
+
+	WriteLog("GetItemTemplateFromHash($fileHash)");
+
+	# get item list using DBGetItemList()
+	# #todo clean this up a little, perhaps crete DBGetItem()
+	my @files = DBGetItemList({'where_clause' => "WHERE file_hash = '$fileHash'"});
+
+	if (scalar(@files)) {
+		my $file = $files[0];
+
+		WriteLog('GetItemTemplateFromHash: my $itemPage = GetItemTemplate($file = "' . $file . '")');
+		my $itemPage = GetItemTemplate($file);
+
+		return $itemPage;
+	} # scalar(@files)
+	else {
+		WriteLog('GetItemTemplateFromHash: warning: sanity check failed');
+		return '';
+	} #
+} # DBGetItemTemplateFromHash()
+
 sub PutStatsPages {
 	my $statsPage = GetStatsPage();
 	PutHtmlFile("stats.html", $statsPage);
