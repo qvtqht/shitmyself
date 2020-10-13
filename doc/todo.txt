@@ -1,3 +1,9 @@
+#bug handle404 clashes with server response message
+
+need to make more button sticky via same prefs as settings page
+
+debug.log how to trim top?
+
 ARCHITECTURAL PRIORITIES
 * decouple initial file pickup into db and full index
 * redirect jankiness from profile and post
