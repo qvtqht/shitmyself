@@ -162,7 +162,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	#This hash will hold the previous lines we've already processed
 	my %prevLines;
 	{
-		WriteLog("Loading processed.log...\n");
+		WriteLog("ProcessAccessLog: Loading processed.log...\n");
 
 		#If processed.log exists, we load it into %prevLines
 		#This is how we will know if we've already looked at a line in the log file
@@ -176,11 +176,11 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		}
 	}
 
-	WriteLog("Processing $logfile...\n");
+	WriteLog("ProcessAccessLog: Processing $logfile...\n");
 
 	# The log file should always be there
 	if (!open(LOGFILE, $logfile)) {
-		WriteLog('Could not open log file.');
+		WriteLog('ProcessAccessLog: Could not open: $logfile = ' . $logfile);
 		return;
 	}
 
@@ -189,10 +189,9 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 	# The following section parses the access log
 	# Thank you, StackOverflow
-	my $lineCounter;
+	my $lineCounter = 0;
 	foreach my $line (<LOGFILE>) {
-		WriteLog($line);
-
+		WriteLog('ProcessAccessLog: $lineCounter = ' . $lineCounter . '; $line = ' . $line);
 		$lineCounter++;
 
 		#Check to see if we've already processed this line
@@ -252,7 +251,6 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		$userAgent = trim($userAgent);
 
 		WriteLog('ProcessAccessLog: $date = ' . $date);
-
 		AppendFile('log/useragent.log', $userAgent);
 
 		my $errorTrap = 0;
@@ -446,7 +444,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						elsif ($paramName eq 'debug') {
 							if ($paramValue eq 'on') {
 								$recordDebugInfo = 1;
-								WriteLog('$recordDebugInfo = 1');
+								WriteLog('ProcessAccessLog: $recordDebugInfo = 1');
 							}
 						}
 
@@ -455,7 +453,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								$message .= "\n" . $paramName . '=' . $paramValue . "\n";
 							}
 						}
-					}
+					} # @messageItems
 
 
 					#					if ($replyUrlToken) {
@@ -473,7 +471,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 
 					# Generate filename from date and time
 					my $filename;
-					#					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
+					# $filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 					$filename = GenerateFilenameFromTime($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute, $timeSecond);
 
 					# Write to log file/debug console
@@ -514,7 +512,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 									}
 								}
 							} else {
-								WriteLog('WARNING: tried to organize file, but $hashFilename was false');
+								WriteLog('ProcessAccessLog: warning: tried to organize file, but $hashFilename was false');
 							}
 						}
 
@@ -542,7 +540,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						# 	AppendFile('./log/added.log', $addedLog);
 						#
 						# 	if (GetConfig('admin/access_log_call_index')) {
-						# 		WriteLog('access.pl: access_log_call_index is true, therefore DBAddItemAttribute(' . $fileHash . ',add_timestamp,' . $addedTime . ')');
+						# 		WriteLog('ProcessAccessLog: access_log_call_index is true, therefore DBAddItemAttribute(' . $fileHash . ',add_timestamp,' . $addedTime . ')');
 						# 		DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
 						# 	}
 						# }
@@ -561,8 +559,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							my $debugFilename = 'debug_' . $fileHash . '.txt';
 							$debugFilename = $TXTDIR . '/' . $debugFilename;
 
-							WriteLog('PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
-
+							WriteLog('ProcessAccessLog: PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');
 							PutFile($debugFilename, $debugInfo);
 						}
 
