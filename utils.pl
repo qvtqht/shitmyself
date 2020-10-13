@@ -1338,10 +1338,16 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 		$tagAttribute = $attributeName . '=' . $attributeValue . '';
 	}
 
-	#todo this is sub-optimal
-	$html =~ s/\<$tag\w/<$tag $tagAttribute /i;
-	$html =~ s/\<$tag/<$tag $tagAttribute /i; #  is this right/necessary? #todo
-	$html =~ s/\<$tag>/<$tag $tagAttribute>/i;
+	$html = str_ireplace('<' . $tag . ' ', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+	$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+	$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+
+	# #todo this is sub-optimal
+	# $html =~ s/\<$tag\w/<$tag $tagAttribute /i;
+	# $html =~ s/\<$tag/<$tag $tagAttribute /i; #  is this right/necessary? #todo
+	# $html =~ s/\<$tag>/<$tag $tagAttribute>/i;
+
+	
 
 	#WriteLog('AddAttributeToTag: $html after: '.$html);
 
