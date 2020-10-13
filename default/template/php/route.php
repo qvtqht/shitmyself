@@ -311,6 +311,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/read.html' ||
 			$path == '/write.html' ||
 			$path == '/upload.html' ||
+			$path == '/upload_multi.html' ||
 			$path == '/authors.html' ||
 			$path == '/profile.html' ||
 			$path == '/etc.html' ||

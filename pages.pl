@@ -3376,6 +3376,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $uploadPage = GetUploadPage();
 	PutHtmlFile("upload.html", $uploadPage);
 
+	# Upload page
+	my $uploadMultiPage = GetUploadPage('upload_multi.template');
+	PutHtmlFile("upload_multi.html", $uploadMultiPage);
+
 	# Search page
 	my $searchPage = GetSearchPage();
 	PutHtmlFile("search.html", $searchPage);
@@ -3636,11 +3640,17 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 }
 
 sub GetUploadWindow { # upload window for upload page
-	my $uploadForm = GetTemplate('form/upload.template');
+	my $template = shift;
+	if (!$template) {
+		$template = 'upload.template';
+	}
+
+	my $uploadForm = GetTemplate("form/$template");
 	if (GetConfig('admin/js/enable')) {
 		# $uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "if (document.upload && document.upload.submit && document.upload.submit.value == 'Upload') { document.upload.submit.click(); }");
 		# this caused back button breaking
-		$uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "UploadedFileOnChange(this)");
+		$uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "if (window.UploadedFileOnChange) { UploadedFileOnChange(this); }");
+		$uploadForm = AddAttributeToTag($uploadForm, 'input name="uploaded_file[]"', 'onchange', "if (window.UploadedFileMultiOnChange) { UploadedFileMultiOnChange(this); }");
 		$uploadForm = AddAttributeToTag($uploadForm, 'input name=submit', 'onclick', "this.value='Meditate...';");
 	}
 	my $allowFiles = GetConfig('admin/image/allow_files');
@@ -3732,9 +3742,13 @@ sub GetUploadPage { # returns html for upload page
 	my $title = 'Upload';
 
 	if (GetConfig('admin/php/enable')) {
+		my $template = shift;
+		if (!$template) {
+			$template = 'upload.template';
+		}
 		$html .= GetPageHeader($title, $title, 'upload');
 		$html .= GetTemplate('maincontent.template');
-		$html .= GetUploadWindow();
+		$html .= GetUploadWindow($template);
 		$html .= GetPageFooter();
 
 		if (GetConfig('admin/js/enable')) {

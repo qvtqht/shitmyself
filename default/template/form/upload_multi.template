@@ -1,0 +1,10 @@
+<!-- form/upload_multi.template ; file multiple upload form -->
+<form enctype="multipart/form-data" action="/upload.php" method="POST" name=upload id=upload>
+	<p>Upload multiple pictures here.</p>
+	<p><input name="uploaded_file[]" type=file id=uploaded_file multiple></p>
+	<p><input name=submit type=submit value=Upload id=submit></p>
+	<span id=spanImagePreview></span>
+	<p>Allowed files: $allowFiles</p>
+	<p>Only images supported, video support to come.</p>
+</form>
+<!-- / form/upload_multi.template -->
