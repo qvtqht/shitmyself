@@ -4520,37 +4520,48 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 	return $pagesProcessed;
 } # BuildTouchedPages
 
-
-my $arg1 = shift;
-if ($arg1) {
-	if (IsItem($arg1)) {
-		print ("recognized item identifier\n");
-		MakePage('item', $arg1, 1);
-	}
-	elsif (IsFingerprint($arg1)) {
-		print ("recognized author fingerprint\n");
-		MakePage('author', $arg1, 1);
-	}
-	elsif (substr($arg1, 0, 1) eq '#') {
-		#todo sanity checks here
-		print ("recognized hash tag $arg1\n");
-		MakePage('tag', substr($arg1, 1), 1);
-	}
-	elsif ($arg1 eq '--summary' || $arg1 eq '-s') {
-		print ("recognized --summary\n");
-		MakeSummaryPages();
-	}
-	elsif ($arg1 eq '--index' || $arg1 eq '-i') {
-		print ("recognized --index\n");
-		WriteIndexPages();
-	}
-	else {
-		print ("Available arguments:\n");
-		print ("--summary or -s for all summary pages\n");
-		print ("--index or -i for all index pages\n");
-		print ("item id for one item's page\n");
-		print ("author fingerprint for one item's page\n");
-		print ("#tag for one tag's page\n");
+while (my $arg1 = shift) {
+	# go through all the arguments one at a time
+	if ($arg1) {
+		if ($arg1 eq '--theme') {
+			print ("recognized token --theme");
+			my $themeArg = shift;
+			chomp $themeArg;
+			GetConfig('html/theme', 'override', $themeArg);
+		}
+		elsif (IsItem($arg1)) {
+			print ("recognized item identifier\n");
+			MakePage('item', $arg1, 1);
+		}
+		elsif (IsFingerprint($arg1)) {
+			print ("recognized author fingerprint\n");
+			MakePage('author', $arg1, 1);
+		}
+		elsif (substr($arg1, 0, 1) eq '#') {
+			#todo sanity checks here
+			print ("recognized hash tag $arg1\n");
+			MakePage('tag', substr($arg1, 1), 1);
+		}
+		elsif ($arg1 eq '--summary' || $arg1 eq '-s') {
+			print ("recognized --summary\n");
+			MakeSummaryPages();
+		}
+		elsif ($arg1 eq '--index' || $arg1 eq '-i') {
+			print ("recognized --index\n");
+			WriteIndexPages();
+		}
+		elsif ($arg1 eq '--all' || $arg1 eq '-i') {
+			print ("recognized --all\n");
+			BuildTouchedPages();
+		}
+		else {
+			print ("Available arguments:\n");
+			print ("--summary or -s for all summary pages\n");
+			print ("--index or -i for all index pages\n");
+			print ("item id for one item's page\n");
+			print ("author fingerprint for one item's page\n");
+			print ("#tag for one tag's page\n");
+		}
 	}
 }
 
