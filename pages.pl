@@ -1328,9 +1328,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			}
 		}
 
-		if ($file{'expand_item_references'}) {
-			# >> \>\>
-			$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
+		#if ($file{'expand_item_references'}) { #todo this also doesn't do anything
+		#if ($file{'item_type'} eq 'image') { #todo this doesn't work
+		if (0) {
+			# >> \>\> #does not work
+			$message =~ s/>>([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
 		} else {
 			# if any references to other items, replace with link to item
 			$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
