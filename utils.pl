@@ -1222,6 +1222,9 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 		WriteLog('str_replace: warning: $string not supplied');
 		return "";
 	}
+
+	WriteLog("str_replace($replace_this, $with_this, $string)");
+
 	if ($replace_this eq $with_this) {
 		WriteLog('str_replace: warning: $replace_this eq $with_this');
 		return $string;
