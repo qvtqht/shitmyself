@@ -1247,6 +1247,42 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 	return $string;
 } # str_replace()
 
+#props http://www.bin-co.com/perl/scripts/str_replace.php
+sub str_ireplace { # $replaceWhat, $replaceWith, $string ; emulates some of str_ireplace() from php
+	# fourth $count parameter not implemented yet
+	my $replace_this = shift;
+	my $with_this  = shift;
+	my $string   = shift;
+
+	if (!defined($string) || !$string) {
+		WriteLog('str_ireplace: warning: $string not supplied');
+		return "";
+	}
+
+	WriteLog("str_ireplace($replace_this, $with_this, $string)");
+
+	if ($replace_this eq $with_this) {
+		WriteLog('str_ireplace: warning: $replace_this eq $with_this');
+		return $string;
+	}
+
+	WriteLog("str_ireplace: sanity check passed, proceeding");
+
+	my $length = length($string);
+	my $target = length($replace_this);
+
+	for (my $i = 0; $i < $length - $target + 1; $i++) {
+		if (lc(substr($string, $i, $target)) eq lc($replace_this)) {
+			$string = substr ($string, 0, $i) . $with_this . substr($string, $i + $target);
+			$i += length($with_this) - length($replace_this); # when new string contains old string
+		}
+	}
+
+	WriteLog("str_ireplace: result: $string");
+
+	return $string;
+} # str_replace()
+
 sub ReplaceStrings {
 	my $content = shift;
 	my $newLanguage = shift;
