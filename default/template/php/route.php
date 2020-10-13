@@ -339,7 +339,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
 
 		if ($pathRel && file_exists($pathRel)) {
-			WriteLog('$pathRel exist: ' . $pathRel);
+			WriteLog('route.php: $pathRel exist: ' . $pathRel);
 			$html = file_get_contents($pathRel);
 		}
 	}
@@ -546,15 +546,15 @@ if (GetConfig('admin/php/route_enable')) {
 									if (file_exists('../admin.key')) {
 										unlink('../admin.key');
 										WriteLog('Overthrow successful');
-										RedirectWithResponse('/settings.html', 'Overthrow successful! Register to become operator.');
+										RedirectWithResponse('/settings.html', 'Register to become operator.');
 									} else {
 										WriteLog('Overthrow already in effect: admin.key missing');
-										RedirectWithResponse('/settings.html', 'Overthrow already happened! Register to become operator.</a>');
+										RedirectWithResponse('/settings.html', 'Register to become operator.');
 									}
 								} else {
 									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
 
-									RedirectWithResponse('/settings.html', 'Overthrow unsuccessful, conditions not met. This incident will be reported.');
+									RedirectWithResponse('/settings.html', 'Conditions not met. This incident will be reported.');
 								}
 							} else {
 								WriteLog('Overthrow conditions not met');
