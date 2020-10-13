@@ -44,6 +44,9 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	if (window.ItsYou) {
 		ItsYou();
 	}
+	if (window.ShowTimestamps) {
+		window.eventLoopShowTimestamps = 1;
+	}
 	if (window.SettingsOnLoad) {
 		SettingsOnLoad();
 	}
