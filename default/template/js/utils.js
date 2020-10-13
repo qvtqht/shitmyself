@@ -60,7 +60,7 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		window.eventLoopShowAdvanced = 1;
 		ShowAdvanced(0);
 	}
-	if (document.compose && document.compose.comment && document.compose.comment.focus) {
+	if ((window.location.href.indexOf("write.html") != -1) && document.compose && document.compose.comment && document.compose.comment.focus) {
 		//#todo only if url ends with #reply
 		document.compose.comment.focus();
 	}
