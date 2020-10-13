@@ -928,22 +928,21 @@ sub ConfigKeyValid { #checks whether a config key is valid
 
 	WriteLog("ConfigKeyValid($configName)");
 
-	if ($configName =~ /^[a-z0-9_\/]{1,64}$/) {
+	if (! ($configName =~ /^[a-z0-9_\/]{1,64}$/) ) {
 		WriteLog("ConfigKeyValid: warning: sanity check failed!");
+		return 0;
 	}
 
 	WriteLog('ConfigKeyValid: $configName sanity check passed:');
 
 	if (-e "default/$configName") {
 		WriteLog("ConfigKeyValid: default/$configName exists");
-
 		return 1;
 	} else {
 		WriteLog("ConfigKeyValid: default/$configName NOT exist!");
-
 		return 0;
 	}
-}
+} # ConfigKeyValid()
 
 sub GetHtmlFilename { # get the HTML filename for specified item hash
 	# Returns 'ab/cd/abcdef01234567890[...].html'
