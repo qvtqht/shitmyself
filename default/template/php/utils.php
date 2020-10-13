@@ -682,10 +682,14 @@ function AddAttributeToTag ($html, $tag, $attributeName, $attributeValue) { // a
 
 	WriteLog('AddAttributeToTag: $tagAttribute is ' . $tagAttribute);
 
-	// #todo this is sub-optimal
-	$html = preg_replace("/\<$tag\w/i", "<$tag $tagAttribute ", $html);
-	$html = preg_replace("/\<$tag/i", "<$tag $tagAttribute ", $html); // is this right/necessary? #todo
-	$html = preg_replace("/\<$tag\>/i", "<$tag $tagAttribute>", $html);
+	$html = str_ireplace('<' . $tag . ' ', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+	$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+	$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+
+// 	// #todo this is sub-optimal
+// 	$html = preg_replace("/\<$tag\w/i", "<$tag $tagAttribute ", $html);
+// 	$html = preg_replace("/\<$tag/i", "<$tag $tagAttribute ", $html); // is this right/necessary? #todo
+// 	$html = preg_replace("/\<$tag\>/i", "<$tag $tagAttribute>", $html);
 
 	return $html;
 }
