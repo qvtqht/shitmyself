@@ -2512,6 +2512,7 @@ sub file_exists { # $file ; port of php file_exists()
 }
 
 sub ExpireAliasCache { # $fingerprint ; removes all caches for alias
+	WriteLog('ExpireAliasCache: warning: function not yet implemented');
 
 }
 
