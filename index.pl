@@ -1007,6 +1007,7 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 	my $file = shift;
 
 	if ($file eq 'flush') {
+		WriteLog('IndexFile: flush was requested');
 		IndexImageFile('flush');
 		IndexTextFile('flush');
 		return;
