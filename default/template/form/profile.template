@@ -6,12 +6,12 @@
 
 	<span id=spanSignedInStatus></span>
 
-	<p>Handle: <b><span id=lblHandle></span></b>
+	<p><span class=beginner>Handle: </span><b><span id=lblHandle></span></b>
 
-	<p>Fingerprint: <span id=lblFingerprint></span>
+	<p><span class=beginner>Fingerprint: </span><span id=lblFingerprint></span>
 
 	<p class=advanced>
-		PGP: <span id=lblSigningIndicator>No</span>
+		<span class=beginner>PGP: </span><span id=lblSigningIndicator>No</span>
 	</p>
 
 	<p>
@@ -22,6 +22,7 @@
 			id=btnRegister
 			value="Enter"
 		>
+		<span class=beginner><br>Use Enter button to create profile.<br><br></span>
 		<input
 			type=submit
 			name=btnSignOut
@@ -29,6 +30,7 @@
 			id=btnSignOut
 			value="Exit"
 		>
+		<span class=beginner><br>Use Exit button to sign out.<br><br></span>
 	</p>
 
 	<span id=spanProfileLink></span>
