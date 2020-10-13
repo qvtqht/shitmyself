@@ -2724,7 +2724,7 @@ sub GetAuthorInfoBox {
 	}
 
 	if (!$authorFriends) {
-		$authorFriends = '(no friends, or very private)';
+		$authorFriends = '*';
 	}
 
 	# wrap list of friends in wrapper
