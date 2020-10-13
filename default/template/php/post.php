@@ -212,7 +212,7 @@ if (isset($comment) && $comment) {
 
 				WriteLog('post.php: ... continue after redirect? sadface');
 			} else {
-				WriteLog('file_exists(GetHtmlFilename($newFileHash)) FALSE');
+				WriteLog('post.php: file_exists(GetHtmlFilename($newFileHash)) FALSE');
 			}
 		} # strpos($comment, 'PUBLIC KEY BLOCK')
 
