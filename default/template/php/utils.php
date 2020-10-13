@@ -100,7 +100,7 @@ function GetMyVersion () { // returns current git commit id
 
 		//save to config so that we don't have to call git next time
 		//PutConfig('admin/my_version', $myVersion);
-		file_put_contents('../config/admin/my_version', $myVersion); //#todo PutConfig()
+		PutConfig('admin/my_version', $myVersion);
 	}
 
 	$myVersion = trim($myVersion);
@@ -225,14 +225,11 @@ function DoFlush () {
 
 function PutConfig ($configKey, $configValue) { # writes config value to config storage
 	WriteLog("PutConfig($configKey, $configValue)");
-
 	$configDir = '../config'; // config is stored here
-
-	$putFileResult = PutFile("configDir/$configKey", $configValue);
+	$putFileResult = PutFile("$configDir/$configKey", $configValue);
 	GetConfig($configKey, 'unmemo');
-
 	return $putFileResult;
-}
+} # PutConfig()
 
 function GetConfig ($configKey, $token = 0) { // get value for config value $configKey
 	WriteLog("GetConfig($configKey, $token)");

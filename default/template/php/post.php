@@ -148,7 +148,7 @@ if (isset($comment) && $comment) {
 			$stopTime = $stopTimeConfig;
 		}
 		$stopTime += 30;
-		file_put_contents('../config/admin/stop', $stopTime); //#todo PutConfig()
+		PutConfig('admin/stop', $stopTime);
 		if ($stopTime > time()) {
 			print("Stop request received. Users without cookie won't be able to post for " . ($stopTime - time()) . ' seconds.');
 		}
