@@ -242,15 +242,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			DBAddAuthor($gpgKey);
 			DBAddPageTouch('author', $gpgKey);
 
-			if ( ! ($gpgKey =~ m/\s/)) { #todo what is this do?
-				#DBAddPageTouch() may be a better place for this
-				# sanity check for gpgkey having any whitespace in it before using it in a glob for unlinking cache items
-				WriteLog('IndexTextFile: proceeding to unlink avatar caches for ' . $gpgKey);
-
-				#todo make this less "dangerous"
-				#todo use globally defined cache dir
-				unlink(glob("cache/*/avatar/*/$gpgKey"));
-				unlink(glob("cache/*/avatar.plain/*/$gpgKey"));
+			if ( ! ($gpgKey =~ m/\s/)) {
+				# no spaces in gpg key; \s is whitespace
+				ExpireAliasCache();
 			} else {
 				WriteLog('IndexTextFile: NOT unlinking avatar caches for ' . $gpgKey);
 			}
