@@ -236,10 +236,10 @@ if (!defined($arg1) || $arg1 eq '--all') {
 	}
 
 	WriteLog('update.pl begin');
-
-	my %counter;
-	$counter{'access_log'} = 0;
-	$counter{'indexed_file'} = 0;
+	#
+	# my %counter;
+	# $counter{'access_log'} = 0;
+	# $counter{'indexed_file'} = 0;
 
 	PutFile('cron.lock', $currentTime);
 	$lockTime = $currentTime;
@@ -248,10 +248,10 @@ if (!defined($arg1) || $arg1 eq '--all') {
 	my $lastFlow = GetConfig('admin/update/last_run');
 
 	if ($lastFlow) {
-		WriteLog('$lastFlow = ' . $lastFlow);
+		WriteLog('update.pl: $lastFlow = ' . $lastFlow);
 	}
 	else {
-		WriteLog('$lastFlow undefined');
+		WriteLog('update.pl: $lastFlow undefined');
 		$lastFlow = 0;
 	}
 
@@ -260,7 +260,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 	#	WriteLog("\$accessLogPath = $accessLogPath");
 	#
 	# this will store the new item count we get from access.log
-	my $newItemCount;
+	my $newItemCount = 0;
 
 	# time limit -- how long this script is allowed to run for
 	my $timeLimit = GetConfig('admin/update/limit_time');
@@ -276,7 +276,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 	}
 
 	if ((time()-(GetConfig('admin/access_log_last_seen')||0)) > 5) { #todo make this more configurable
-		#do not process access.log more than once per 100 seconds
+		#do not process access.log more than once per 5 seconds
 		PutConfig('admin/access_log_last_seen', time());
 
 		WriteMessage('Reading access.log...');
@@ -371,38 +371,31 @@ if (!defined($arg1) || $arg1 eq '--all') {
 			# Go through all the files
 			foreach my $file (@files) {
 				if ($filesProcessed >= $filesLimit) {
-					WriteLog("Will not finish processing files, as limit of $filesLimit has been reached.");
+					WriteLog("update.pl: Will not finish processing files, as limit of $filesLimit has been reached.");
 					last;
 				}
 
 				if (!$noLimits && (time() - $startTime) > $timeLimit) {
-					WriteMessage("Time limit reached, exiting loop");
+					WriteMessage("update.pl: Time limit reached, exiting loop");
 					last;
 				}
-
-				WriteMessage('ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 
 				# Trim the file path
 				chomp $file;
 				$file = trim($file);
 
-				# Log it
-				WriteLog('update.pl: $file = ' . $file);
-
 				#todo add rss.txt addition
 
 				# If the file exists, and is not a directory, process it
 				if (-e $file && !-d $file) {
+					WriteMessage('update.pl: ProcessTextFile: ' . $filesProcessed . '/' . $filesLimit . '; $file = ' . $file);
 					$filesProcessed += (ProcessTextFile($file) ? 1 : 0);
+				} else {
+					WriteMessage('update.pl: warning: file sanity check: $file = ' . $file);
 				}
-				else {
-					# this should not happen
-					WriteLog("Error! $file doesn't exist!");
-				}
-			}
+			} # @files
 
 			ProcessTextFile('flush');
-
 			WriteIndexedConfig();
 
 			# TEXT FILE PROCESSING PART ENDS HERE
@@ -472,10 +465,9 @@ if (!defined($arg1) || $arg1 eq '--all') {
 				# If the file exists, and is not a directory, process it
 				if (-e $file && !-d $file) {
 					$filesProcessed += (ProcessImageFile($file) ? 1 : 0);
-				}
-				else {
+				} else {
 					# this should not happen
-					WriteLog("Error! $file doesn't exist!");
+					WriteLog('update.pl: warning: sanity check failed on $file = ' . $file);
 				}
 			}
 
@@ -533,9 +525,9 @@ if (!defined($arg1) || $arg1 eq '--all') {
 
 	} # while ($filesProcessed > 0 || $pagesProcessed > 1)
 
-	WriteLog('Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
+	WriteLog('update.pl: Returned from: $pagesProcessed = BuildTouchedPages(); $pagesProcessed = ' . (defined($pagesProcessed) ? $pagesProcessed : 'undefined'));
 
-	WriteLog('Saving last update time...');
+	WriteLog('update.pl: Saving last update time...');
 
 	# save current time in config/admin/update/last
 	my $newLastFlow = GetTime2();
@@ -586,6 +578,6 @@ if (-e 'cron.lock') {
 	PutFile('cron.lock', '0');
 }
 
-WriteMessage("Done!\n\n");
+WriteMessage("update.pl: Done!\n\n");
 
 1;
