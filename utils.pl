@@ -1227,7 +1227,7 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 		return $string;
 	}
 
-	WriteLog("str_replace($replace_this, $with_this, $string)");
+	WriteLog("str_replace: sanity check passed, proceeding");
 
 	my $length = length($string);
 	my $target = length($replace_this);
