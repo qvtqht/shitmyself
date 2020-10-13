@@ -24,23 +24,6 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 // typically called from body.onload
 	//alert('debug: OnLoadEverything() begins');
 
-	var loadingIndicator;
-	if (!loadingIndicator) {
-		if (document.getElementById) {
-			loadingIndicator = document.getElementById('loadingIndicator');
-		}
-	}
-	if (loadingIndicator) {
-		// #todo this should go into body.onload. but we are already injecting that event somewhere else.
-		if (window.openPgpJsLoadBegin && !!window.openpgp) {
-			loadingIndicator.innerHTML = 'Finished loading page. Loading library...';
-			setTimeout('WaitForOpenPgp()', 500);
-		} else {
-			if (window.HideLoadingIndicator) {
-				HideLoadingIndicator();
-			}
-		}
-	}
 	if (window.ItsYou) {
 		ItsYou();
 	}
@@ -74,6 +57,24 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		}
 		window.eventLoopEnabled = 1
 		EventLoop();
+	}
+	
+	var loadingIndicator;
+	if (!loadingIndicator) {
+		if (document.getElementById) {
+			loadingIndicator = document.getElementById('loadingIndicator');
+		}
+	}
+	if (loadingIndicator) {
+		// #todo this should go into body.onload. but we are already injecting that event somewhere else.
+		if (window.openPgpJsLoadBegin && !!window.openpgp) {
+			loadingIndicator.innerHTML = 'Finished loading page. Loading library...';
+			setTimeout('WaitForOpenPgp()', 500);
+		} else {
+			if (window.HideLoadingIndicator) {
+				HideLoadingIndicator();
+			}
+		}
 	}
 }
 

@@ -1,7 +1,7 @@
 // begin loading_begin.js
 
-var loadingIndicatorWaitToShowMin = 500;
-var loadingIndicatorWaitToHideMin = 500;
+//var loadingIndicatorWaitToShowMin = 1500;
+//var loadingIndicatorWaitToHideMin = 500;
 
 function addLoadingIndicator (strMessage) { // adds loading indicator bar (to top of page, depending on style)
 	if (!strMessage) {
