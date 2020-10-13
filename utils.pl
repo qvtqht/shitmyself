@@ -1116,14 +1116,23 @@ sub PutConfig { # $configName, $configValue ; writes config value to config stor
 	my $configName = shift;
 	my $configValue = shift;
 
+	WriteLog("PutConfig($configName, $configValue)");
+
+	if (index($configName, '..') != -1) {
+		WriteLog('PutConfig: warning: sanity check failed: $configName contains ".."');
+		WriteLog('PutConfig: warning: sanity check failed: $configName contains ".."');
+		return '';
+	}
+
 	chomp $configValue;
 
 	my $putFileResult = PutFile("config/$configName", $configValue);
 
+	# ask GetConfig() to remove memo-ized value it stores inside
 	GetConfig($configName, 'unmemo');
 
 	return $putFileResult;
-}
+} # PutConfig()
 
 sub PutFile { # Writes content to a file; $file, $content, $binMode
 	# $file = file path
