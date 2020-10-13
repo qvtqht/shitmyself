@@ -46,7 +46,7 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		window.eventLoopShowAdvanced = 1;
 		ShowAdvanced(0);
 	}
-	if ((window.location.href.indexOf("write.html") != -1) && document.compose && document.compose.comment && document.compose.comment.focus) {
+	if ((window.location.href.indexOf('write') != -1) && document.compose && document.compose.comment && document.compose.comment.focus) {
 		//#todo only if url ends with #reply
 		document.compose.comment.focus();
 	}
@@ -64,6 +64,12 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		if (document.getElementById) {
 			loadingIndicator = document.getElementById('loadingIndicator');
 		}
+	}
+	if (window.searchOnload) {
+		searchOnload();
+	}
+	if ((window.location.href.indexOf('search') != -1) && document.search.q) {
+		document.search.q.focus();
 	}
 	if (loadingIndicator) {
 		// #todo this should go into body.onload. but we are already injecting that event somewhere else.
