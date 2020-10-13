@@ -675,6 +675,40 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 	return $newItemCount;
 } # ProcessAccessLog()
 
+sub ProcessAllAccessLogsInConfig {
+	# get list of access log path(s)
+	WriteLog('ProcessAllAccessLogsInConfig()');
+	my $accessLogPathsConfig = GetConfig('admin/access_log_path_glob_list');
+	my @accessLogPaths;
+	my $newItemCount = 0; #keep score
+
+	{ # get all the paths out of the globs
+		my @accessLogPathGlobs;
+		if ($accessLogPathsConfig) {
+			@accessLogPathGlobs = split("\n", $accessLogPathsConfig);
+		}
+		if (@accessLogPathGlobs) {
+			foreach my $accessLogPathGlob (@accessLogPathGlobs) {
+				push @accessLogPaths, glob($accessLogPathGlob);
+			}
+		}
+	}
+
+	foreach my $accessLogPath (@accessLogPaths) {
+		# Check to see if access log exists
+		if (-e $accessLogPath) {
+			#Process the access log (access.pl)
+			$newItemCount += ProcessAccessLog($accessLogPath, 0);
+			WriteLog('Processed ' . $accessLogPath . '; $newItemCount = ' . $newItemCount);
+		}
+		else {
+			WriteLog("ProcessAllAccessLogsInConfig: warning: Could not find $accessLogPath");
+		}
+	}
+
+	return $newItemCount;
+} # ProcessAllAccessLogsInConfig()
+
 if ($arg1) {
 	chomp $arg1;
 	if (-e $arg1) {
