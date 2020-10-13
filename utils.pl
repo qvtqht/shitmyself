@@ -1245,7 +1245,7 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 	WriteLog("str_replace: result: $string");
 
 	return $string;
-}
+} # str_replace()
 
 sub ReplaceStrings {
 	my $content = shift;
