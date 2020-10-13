@@ -2,13 +2,11 @@
 
 <p>Welcome to the help pages.</p>
 
-<p>This website runs on a system called hike.</p>#todo
+<p>This website is designed to help communicate.</p>
 
-<p><a href="./profile.html">Profile</a>: If you want to register or sign in.</p>
-
-<p><a href="./settings.html">Settings</a>: To adjust how it works.</p>
-
-<p><a href="./access.html">Accessibility Mode</a>: Make site easier to use.</p>
+<p><a href="/profile.html">Profile</a>: If you want to register or sign in.</p>
+<p><a href="/settings.html">Settings</a>: To adjust how it works.</p>
+<p><a href="/access.html">Accessibility Mode</a>: Make site easier to use.</p>
 
 <hr>
 
