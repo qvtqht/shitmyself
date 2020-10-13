@@ -1142,6 +1142,8 @@ sub GetItemVotesSummary { # returns html with list of tags applied to item, and 
 sub str_repeat {
 	my $string = shift;
 	my $count = shift;
+	WriteLog('str_repeat: $string = ' . $string . '; $count = ' . $count);
+	WriteLog('str_repeat: ' . $string x $count); #todo performance?
 	return $string x $count;
 }
 
