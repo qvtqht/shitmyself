@@ -2441,6 +2441,10 @@ sub GetTimestampWidget { # $time ; returns timestamp widget
 	} else {
 		WriteLog('GetTimestampWidget: $epoch = false');
 		$widget = GetTemplate('widget/timestamp.template');
+
+		$widget = str_replace("\n", '', $widget);
+		# if we don't do this, the link has an extra space
+
 		my $timeDate = $time;
 		$timeDate = FormatDate($time);
 		# Alternative formats tried
