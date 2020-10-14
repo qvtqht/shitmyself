@@ -3996,8 +3996,8 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback));
 	if (GetConfig('admin/js/enable')) {
+		$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback utils));
 		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
 		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
