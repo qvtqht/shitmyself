@@ -9,6 +9,7 @@
 }
 
 .tag-remove {
+/* remove tag */
 	font-weight: bold;
 }
 
