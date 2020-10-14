@@ -1225,6 +1225,11 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 
 	WriteLog("str_replace($replace_this, $with_this, $string)");
 
+	if (!defined($replace_this) || !defined($with_this)) {
+		WriteLog('str_replace: warning: sanity check failed, missing $replace_this or $with_this');
+		return $string;
+	}
+
 	if ($replace_this eq $with_this) {
 		WriteLog('str_replace: warning: $replace_this eq $with_this');
 		return $string;
@@ -1236,9 +1241,16 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 	my $target = length($replace_this);
 
 	for (my $i = 0; $i < $length - $target + 1; $i++) {
-		if (substr($string, $i, $target) eq $replace_this) {
+		#todo there is a bug here
+		if (!defined(substr($string, $i, $target))) {
+			WriteLog("str_replace: warning: !defined(substr($string, $i, $target))");
+		}
+		elsif (substr($string, $i, $target) eq $replace_this) {
 			$string = substr ($string, 0, $i) . $with_this . substr($string, $i + $target);
 			$i += length($with_this) - length($replace_this); # when new string contains old string
+			$length += length($with_this) - length($replace_this); # string is getting shorter or longer
+		} else {
+			# do nothing
 		}
 	}
 
