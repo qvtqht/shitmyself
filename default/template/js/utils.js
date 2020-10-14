@@ -94,7 +94,12 @@ function EventLoop () { // (currently unused) for calling things which need to h
 	var eventLoopBegin = d.getTime();
 
 	if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
-		ShowTimestamps();
+		if (5000 < (eventLoopBegin - window.eventLoopShowTimestamps)) {
+			ShowTimestamps();
+			window.eventLoopShowTimestamps = eventLoopBegin;
+		} else {
+			// do nothing
+		}
 	}
 
 	if (window.eventLoopShowAdvanced && window.ShowAdvanced) {
@@ -118,10 +123,12 @@ function EventLoop () { // (currently unused) for calling things which need to h
 			clearTimeout(window.timeoutEventLoop);
 		}
 
-		if (eventLoopDuration > 100) {
-			eventLoopDuration = 10000;
+		if (100 < eventLoopDuration) {
+			// if loop went longer than 100ms, run every 3 seconds or more
+			eventLoopDuration = eventLoopDuration * 30;
 		} else {
-			eventLoopDuration = 3000;
+			// otherwise run every 1 second
+			eventLoopDuration = 1000;
 		}
 		//document.title = eventLoopDuration; // for debugging performance
 
