@@ -1,3 +1,6 @@
+how to recover from between clean and build?
+
+
 When returning an error on token parse
 	could output last 20 lines of debug log
 		if it exists

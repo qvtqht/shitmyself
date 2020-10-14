@@ -14,23 +14,6 @@
 			if ($hasParent) {
 				WriteLog('$hasParent');
 
-				if (scalar(@itemParents)) {
-					foreach my $itemParentHash (@itemParents) {
-						if ($isSigned) {
-							# include author's key if message is signed
-							DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
-						}
-						else {
-							if ($hasCookie) {
-								# include author's key if message is cookied
-								DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
-							} else {
-								DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
-							}
-						}
-						DBAddPageTouch('item', $itemParentHash);
-					}
-				}
 			} # if ($hasParent)
 			else { # no parent, !($hasParent)
 				WriteLog('$hasParent is FALSE');
