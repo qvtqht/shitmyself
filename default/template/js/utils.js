@@ -30,8 +30,8 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	if (window.ShowTimestamps) {
 		window.eventLoopShowTimestamps = 1;
 	}
-	if (window.SettingsOnLoad) {
-		SettingsOnLoad();
+	if (window.SettingsOnload) {
+		SettingsOnload();
 	}
 	if (window.ProfileOnLoad) {
 		ProfileOnLoad();
