@@ -357,14 +357,14 @@ function LoadCheckbox (c, prefKey) { // updates checkbox state to reflect settin
 
 
 function SettingsOnload () { // onload function for settings page
-	//alert('DEBUG: SettingsOnload() begin');
+	//alert('debug: SettingsOnload() begin');
 
 	if (document.getElementById) {
 	// below is code which sets the checked state of settings checkboxes
 	// based on settings state
 		var pane;
 
-		LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
+		//LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
 		LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
 		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
 
