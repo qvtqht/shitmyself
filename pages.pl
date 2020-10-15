@@ -2334,7 +2334,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		if ($script eq 'profile') {
 			# for profile.js we need to fill in current admin id
 			my $currentAdminId = GetAdminKey() || '-';
-
+			#todo this whole thing should change to include non-root admins
 			$scriptTemplate =~ s/\$currentAdminId/$currentAdminId/g;
 		}
 
@@ -2933,7 +2933,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 				$itemTemplate = GetItemTemplate($row); # GetReadPage()
 			} else {
 				$itemTemplate = '<p>Problem decoding message</p>';
-				WriteLog('Something happened and there is no $message where I expected it... Oh well, moving on.');
+				WriteLog('GetReadPage: Something happened and there is no $message where I expected it... Oh well, moving on.');
 			}
 
 			if ($itemComma eq '') {
