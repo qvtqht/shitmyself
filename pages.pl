@@ -453,7 +453,7 @@ sub GetEventsPage { # returns html for events page
 			$eventDuration = '(no duration)';
 		}
 
-		my $eventVoteButtons = GetItemVoteButtons($eventItemHash, 'event');
+		my $eventVoteButtons = GetItemTagButtons($eventItemHash, 'event');
 
 		my $eventItem = GetTemplate('event/event_item2.template');
 
@@ -715,8 +715,13 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		# this will contain the replies as html output
 		my $allReplies = '';
 
+		{
+			my $voteButtons = GetItemTagButtons($file{'file_hash'});
+			$allReplies .= GetWindowTemplate('Add Tags', '', '', $voteButtons);
+		}
+
 		if (GetConfig('replies') && GetConfig('html/reply_form_before_reply_list')) {
-			# add reply form
+			# add reply form before replies
 			my $replyForm = GetReplyForm($file{'file_hash'});
 			$allReplies .= $replyForm;
 		}
@@ -822,13 +827,12 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 				$allReplies .= $replyTemplate;
 			}
 			else {
-
 				WriteLog('Warning: replyTemplate is missing for some reason!');
 			}
-		}
+		} # foreach my $replyItem (@itemReplies)
 
 		if (GetConfig('replies') && GetConfig('html/reply_form_after_reply_list') && !GetConfig('html/reply_form_before_reply_list')) {
-			# add reply form
+			# add reply form after replies
 			my $replyForm = GetReplyForm($file{'file_hash'});
 			# start with a horizontal rule to separate from above content
 			$allReplies .= '<hr size=3>';
@@ -837,17 +841,24 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
 		$itemTemplate .= '<hr><br>';
-	}
+	} # $file{'child_count'}
 	else {
 		my $allReplies = '';
 		if (GetConfig('replies')) {
-			# add reply form
+			# add reply form if no existing replies
+
+			{
+				my $voteButtons = GetItemTagButtons($file{'file_hash'});
+				$allReplies .= GetWindowTemplate('Add Tags', '', '', $voteButtons);
+			}
+
+
 			my $replyForm = GetReplyForm($file{'file_hash'});
 			$allReplies .= $replyForm;
 		}
 		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
 		$itemTemplate .= '<hr><br>';
-	}
+	} # replies and reply form
 
 	###############
 	### /REPLIES##########
@@ -942,10 +953,6 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 	$replyTag =~ s/\$parentPost/$replyTo/g;
 	$replyForm =~ s/\$replyTo/$replyTo/g;
 
-	# at the top of reply.template, there is a placeholder for the voting buttons
-	my $voteButtons = GetItemVoteButtons($replyTo);
-	$replyForm =~ s/\$votesSummary/$voteButtons/g;
-
 	if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
 		$replyForm =~ s/\/post\.html/\/post.php/g;
 	}
@@ -1004,20 +1011,20 @@ sub GetItemHtmlLink { # $hash, [link caption], [#anchor]
 	}
 } # GetItemHtmlLink()
 
-sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
+sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
 	my $fileHash = shift; # item's file hash
 	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
 	my $returnTo = shift; # (optional) what page to return to instead of current (for use by post.php)
-	WriteLog('GetItemVoteButtons(' . ($fileHash ? $fileHash : '-') . ', ' . ($tagSet ? $tagSet : '-') . ')');
+	WriteLog('GetItemTagButtons(' . ($fileHash ? $fileHash : '-') . ', ' . ($tagSet ? $tagSet : '-') . ')');
 
 	if (!IsItem($fileHash)) {
-		WriteLog('GetItemVoteButtons: warning: sanity check failed, returning');
+		WriteLog('GetItemTagButtons: warning: sanity check failed, returning');
 		return '';
 	}
 
 	my @quickVotesList; # this will hold all the tag buttons we want to display
 	my %voteTotals = DBGetItemVoteTotals($fileHash);
-	WriteLog('GetItemVoteButtons: scalar(%voteTotals) = ' . scalar(%voteTotals));
+	WriteLog('GetItemTagButtons: scalar(%voteTotals) = ' . scalar(%voteTotals));
 
 	if ($tagSet) {
 		# if $tagSet is specified, just use that list of tags
@@ -1027,7 +1034,7 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 		}
 		else {
 			# no tagset?
-			WriteLog('GetItemVoteButtons: warning: tagset not found: ' . $tagSet);
+			WriteLog('GetItemTagButtons: warning: tagset not found: ' . $tagSet);
 			return '';
 		}
 	} # $tagSet
@@ -1057,7 +1064,7 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
 	my $jsEnabled = GetConfig('admin/js/enable');
 
-	WriteLog('GetItemVoteButtons: @quickVotesList = ' . scalar(@quickVotesList));
+	WriteLog('GetItemTagButtons: @quickVotesList = ' . scalar(@quickVotesList));
 
 	foreach my $quickTagValue (@quickVotesList) {
 		my $ballotTime = GetTime();
@@ -1089,7 +1096,7 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 			}
 
 			my $quickTagCaption = GetString($quickTagValue);
-			WriteLog('GetItemVoteButtons: $$$ ' . $quickTagCaption . ' $ ' . $quickTagValue);
+			WriteLog('GetItemTagButtons: $$$ ' . $quickTagCaption . ' $ ' . $quickTagValue);
 			if ($voteTotals{$quickTagCaption}) {
 				# $voteTotals{$quickTagCaption} is the number of tags of this type item has
 
@@ -1115,12 +1122,12 @@ sub GetItemVoteButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons 
 		} # if ($fileHash && $ballotTime)
 	} # foreach my $quickTagValue (@quickVotesList)
 
-	WriteLog('GetItemVoteButtons returning: ' . $tagButtons);
+	WriteLog('GetItemTagButtons returning: ' . $tagButtons);
 
 	return $tagButtons;
-} # GetItemVoteButtons()
+} # GetItemTagButtons()
 
-sub GetItemVotesSummary { # returns html with list of tags applied to item, and their counts
+sub GetItemTagsSummary { # returns html with list of tags applied to item, and their counts
 	my $fileHash = shift;
 
 	#todo sanity checks
@@ -1340,7 +1347,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		if ($itemHash) {
-			$message =~ s/\[\[([a-z]+)\]\]/GetItemVoteButtons($itemHash, $1)/ge;
+			$message =~ s/\[\[([a-z]+)\]\]/GetItemTagButtons($itemHash, $1)/ge;
 		}
 
 		WriteLog('GetItemTemplate: $message is: ' . $message);
@@ -1587,11 +1594,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				if (defined($file{'vote_return_to'}) && $file{'vote_return_to'}) {
 					WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
 
-					$quickVotesButtons = GetItemVoteButtons($file{'file_hash'}, 0, $file{'vote_return_to'}); #todo refactor to take vote totals directly
+					$quickVotesButtons = GetItemTagButtons($file{'file_hash'}, 0, $file{'vote_return_to'}); #todo refactor to take vote totals directly
 				} else {
 					# WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
 
-					$quickVotesButtons = GetItemVoteButtons($file{'file_hash'}); #todo refactor to take vote totals directly
+					$quickVotesButtons = GetItemTagButtons($file{'file_hash'}); #todo refactor to take vote totals directly
 				}
 
 				my $quickVoteButtonGroup = GetTemplate('vote/votequick2.template');
@@ -1610,11 +1617,11 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (defined($file{'vote_return_to'}) && $file{'vote_return_to'}) {
 			WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
 
-			$itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all', $file{'vote_return_to'}); #todo refactor to take vote totals directly
+			$itemFlagButton = GetItemTagButtons($file{'file_hash'}, 'all', $file{'vote_return_to'}); #todo refactor to take vote totals directly
 		} else {
 			# WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
 
-			$itemFlagButton = GetItemVoteButtons($file{'file_hash'}, 'all'); #todo refactor to take vote totals directly
+			$itemFlagButton = GetItemTagButtons($file{'file_hash'}, 'all'); #todo refactor to take vote totals directly
 		}
 
 		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
@@ -1698,12 +1705,12 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 	#WriteLog('GetThemeAttribute(' . $attributeName . ')');
 
 	# default theme
-#	my $themeName = 'theme.dark';
-#	my $themeName = 'theme.win95';
+	#	my $themeName = 'theme.dark';
+	#	my $themeName = 'theme.win95';
 
 	my $themeName = GetConfig('html/theme');
 	if (substr($themeName, 0, 6) eq 'theme.') {
-	# compatibility
+		# compatibility
 		if (length($themeName) > 6) {
 			$themeName = substr($themeName, 6);
 		}
@@ -2566,7 +2573,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey) || $authorKey;
 
-		my $authorVoteButtons = GetItemVoteButtons($authorKey, 'author');
+		my $authorVoteButtons = GetItemTagButtons($authorKey, 'author');
 
 		if (!$authorVoteButtons) {
 			$authorVoteButtons = '-';
@@ -2665,9 +2672,9 @@ sub GetAuthorInfoBox {
 	if ($authorDescription) {
 		$authorDescription .= '<br>';
 	}
-	$authorDescription .= GetItemVotesSummary($publicKeyHash);
+	$authorDescription .= GetItemTagsSummary($publicKeyHash);
 
-	my $profileVoteButtons = GetItemVoteButtons($publicKeyHash, 'pubkey');
+	my $profileVoteButtons = GetItemTagButtons($publicKeyHash, 'pubkey');
 
 	$authorLastSeen = GetTimestampWidget($authorLastSeen);
 
