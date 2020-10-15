@@ -1803,7 +1803,6 @@ sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute no
 
 sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add attribute to item
 # currently no constraints
-
 	state $query;
 	state @queryParams;
 
@@ -1892,7 +1891,7 @@ sub DBGetAddedTime { # return added time for item specified
 
 	my $query = "
 		SELECT
-			MAX(value) AS add_timestamp
+			MIN(value) AS add_timestamp
 		FROM item_attribute
 		WHERE
 			file_hash = '$fileHash' AND
