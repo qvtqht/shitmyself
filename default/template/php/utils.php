@@ -527,7 +527,13 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 	}
 }
 
-function GetWindowTemplate ($windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus) { // returns html for window template
+function GetWindowTemplate ( # body, title, headings, status, menu
+	$windowBody,
+	$windowTitle,
+	$columnHeadings,
+	$windowStatus,
+	$windowMenubarContent
+) { // returns html for window template
 // uses template/window/standard.template by default
 
 	// stores number of columns if they exist
