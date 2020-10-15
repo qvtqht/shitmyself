@@ -244,7 +244,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			if ( ! ($gpgKey =~ m/\s/)) {
 				# no spaces in gpg key; \s is whitespace
-				ExpireAliasCache();
+				ExpireAvatarCache($gpgKey); # expire avatar cache
 			} else {
 				WriteLog('IndexTextFile: warning: $gpgKey contains space(s)');
 			}
@@ -253,7 +253,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if ($alias) {
 			# pubkey
 			DBAddKeyAlias($gpgKey, $alias, $fileHash);
-			ExpireAliasCache($gpgKey);
+			ExpireAvatarCache($gpgKey); # expire alias cache
 		}
 
 		my $itemName = TrimPath($file);
@@ -441,7 +441,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			} # admin/dev_mode
 
-			# first pass, look for cookie and parent
+			# first pass, look for cookie, parent, auth
 			{
 				foreach my $tokenFoundRef (@tokensFound) {
 					my %tokenFound = %$tokenFoundRef;
