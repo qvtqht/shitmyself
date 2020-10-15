@@ -56,6 +56,7 @@ function WriteOnload () { // onload handler for write page
 						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
 						if (spanWriteAdvanced) {
 							var btnSolvePuzzle = document.createElement('input');
+							btnSolvePuzzle.setAttribute('id', 'btnSolvePuzzle');
 							btnSolvePuzzle.setAttribute('type', 'button');
 							btnSolvePuzzle.setAttribute('value', 'Solve Puzzle');
 							btnSolvePuzzle.setAttribute('onclick',	"if (window.solvePuzzle) { return solvePuzzle(this); } else { return true; }");
