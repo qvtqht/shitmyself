@@ -17,6 +17,7 @@ while (!system('./update.pl --all')) { # if error in update, quit
 #  |_|\___/ \___/| .__(_) .__/|_|
 #                |_|    |_|
 # ';
+	sleep 5;
 
 }
 
