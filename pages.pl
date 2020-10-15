@@ -65,7 +65,7 @@ sub GetDialogPage { # returns html page with dialog
 
 			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('htmlstart.template');
 			$pageTemplate .= GetTemplate('maincontent.template');
-			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, '');
+			$pageTemplate .= GetWindowTemplate($windowContents, $pageTitle);
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 			$pageTemplate .= GetPageFooter();
 
@@ -84,7 +84,7 @@ sub GetDialogPage { # returns html page with dialog
 
 			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '401'); #GetTemplate('htmlstart.template');
 			$pageTemplate .= GetTemplate('maincontent.template');
-			$pageTemplate .= GetWindowTemplate($pageTitle, '', '', $windowContents, '');
+			$pageTemplate .= GetWindowTemplate($windowContents, $pageTitle);
 			$pageTemplate .= GetPageFooter();
 
 			return $pageTemplate;
@@ -179,28 +179,40 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent/$windowId, $columnHeadings, $windowBody, $windowStatus
+sub GetWindowTemplate { #: body, title, headings, status, menu
 # returns template for html-table-based-"window"
-	my $windowTitle = shift;
-	my $windowMenubarContent = shift;
-	my $columnHeadings = shift;
+
+	# $windowBody
+	# what goes inside the biggest table cell in the middle
+	# it is wrapped in <tr><td>...</td></tr> if does not contain "<tr"
+
+	# $windowTitle = title bar, typically at the top of the window
+
+	# $columnHeadings = column headings,
+	# in format: col1,col2,col3
+	# rendered as: <tr><td>col1</td><td>col2</td><td>col3</td>
+	# each column name can contain html, e.g. link to sort by that column
+
+	# $windowStatus
+	# thing typically at the bottom of the window, as html
+
+	# $windowMenubar
+	# thing typically at the top of the window, as html
+
+	# NOT IMPLEMENTED $windowId = if set, id=foo parameter is added to top-level tag
+
 	my $windowBody = shift;
+	my $windowTitle = shift;
+	my $columnHeadings = shift;
 	my $windowStatus = shift;
+	my $windowMenubarContent = shift;
 
-	# this is part of transitioning second argument to being id instead of menubar
-	my $windowId = '';
-	if ($windowMenubarContent) {
-		if ($windowMenubarContent eq 'dialogProfile') {
-			$windowId = 'dialogProfile';
-		}
-	}
-
+	my $contentColumnCount = 0;
 	# stores number of columns if they exist
 	# if no columns, remains at 0
 	# whether there are columns or not determines:
-	# * column headers
+	# * column headers are added or no?
 	# * colspan= in non-column cells
-	my $contentColumnCount = 0;
 
 	# base template
 	my $windowTemplate = GetTemplate('window/standard.template');
@@ -209,7 +221,7 @@ sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent/$windowId, $colum
 	if ($windowTitle) {
 		my $windowTitlebar = GetTemplate('window/titlebar.template');
 		$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
-
+		
 		$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
 	} else {
 		$windowTemplate =~ s/\$windowTitlebar//g;
@@ -717,7 +729,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 		{
 			my $voteButtons = GetItemTagButtons($file{'file_hash'});
-			$allReplies .= GetWindowTemplate('Add Tags', '', '', $voteButtons);
+			$allReplies .= GetWindowTemplate($voteButtons, 'Add Tags'); #todo make class=advanced
 		}
 
 		if (GetConfig('replies') && GetConfig('html/reply_form_before_reply_list')) {
@@ -849,7 +861,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 			{
 				my $voteButtons = GetItemTagButtons($file{'file_hash'});
-				$allReplies .= GetWindowTemplate('Add Tags', '', '', $voteButtons);
+				$allReplies .= GetWindowTemplate($voteButtons, 'Add Tags');
 			}
 
 
@@ -912,7 +924,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			# $itemAttributes =~ s/\|/$tdTd/gi;
 			# $itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
 
-			my $itemAttributesWindow = GetWindowTemplate('Item Attributes', '', 'attribute,value', $itemAttributesTable, '');
+			my $itemAttributesWindow = GetWindowTemplate($itemAttributesTable, 'Item Attributes', 'attribute,value');
 			$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
 			$txtIndex .= $itemAttributesWindow;
 		}
@@ -2092,11 +2104,11 @@ sub GetTopItemsPage { # returns page with top items listing
 		my $columnHeadings = '';
 
 		$itemListingWrapper = GetWindowTemplate(
-			'Top Approved Threads',
-			'<a class=beginner href="/write.html">New Topic</a><br>', #todo templatify
-			$columnHeadings,
 			$itemListings,
-			$statusText
+			'Top Approved Threads',
+			$columnHeadings,
+			$statusText,
+			'<a class=beginner href="/write.html">New Topic</a><br>' #todo templatify
 		);
 
 		$htmlOutput .= $itemListingWrapper;
@@ -3195,7 +3207,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 		#todo this should be in template
 		my $infoMessage = '<p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p>';
 
-		$indexPage .= GetWindowTemplate('No Items', '', '', $infoMessage, 'Ready');
+		$indexPage .= GetWindowTemplate($infoMessage, 'No Items');
 
 		$indexPage .= GetPageFooter();
 
@@ -3316,11 +3328,8 @@ sub MakeSimplePage { # given page name, makes page
 
 	my $pageContent = GetTemplate("page/$pageName.template");
 	my $contentWindow = GetWindowTemplate(
-		ucfirst($pageName),
-		'', #menubar
-		'', #columns
 		$pageContent,
-		'' # statusbar
+		ucfirst($pageName)
 	);
 	$html .= $contentWindow;
 	$html .= GetPageFooter();
@@ -3470,7 +3479,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $okPage;
 	$okPage .= GetPageHeader('OK', 'OK', 'default');
 	my $windowContents = GetTemplate('action_ok.template');
-	$okPage .= GetWindowTemplate('Data Received', '', '', $windowContents, 'Ready');
+	$okPage .= GetWindowTemplate($windowContents, 'Data Received', '', 'Ready');
 	$okPage .= GetPageFooter();
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
 	$okPage = InjectJs($okPage, qw(settings));
@@ -3660,13 +3669,13 @@ sub GetUploadWindow { # upload window for upload page
 	}
 	my $allowFiles = GetConfig('admin/image/allow_files');
 	$uploadForm =~ s/\$allowFiles/$allowFiles/gms;
-	my $uploadWindow = GetWindowTemplate('Upload', '', '', $uploadForm, '');
+	my $uploadWindow = GetWindowTemplate($uploadForm, 'Upload');
 	return $uploadWindow;
 } # GetUploadWindow()
 
 sub GetSearchWindow { # search window for search page
 	my $searchForm = GetTemplate('form/search.template');
-	my $searchWindow = GetWindowTemplate('Public Search', '', '', $searchForm, '');
+	my $searchWindow = GetWindowTemplate($searchForm, 'Public Search');
 	return $searchWindow;
 } # GetSearchWindow()
 
@@ -3762,7 +3771,7 @@ sub GetUploadPage { # returns html for upload page
 	} else {
 		$html .= GetPageHeader($title, $title, 'upload');
 		$html .= GetTemplate('maincontent.template');
-		$html .= GetWindowTemplate($title, '', '', '<p>Upload feature is not available. Apologies.</p>');
+		$html .= GetWindowTemplate('<p>Upload feature is not available. Apologies.</p>', $title);
 		$html .= GetPageFooter();
 		if (GetConfig('admin/js/enable')) {
 			$html = InjectJs($html, qw(settings avatar profile));
@@ -3926,12 +3935,8 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 		}
 
 		my $profileWindow = GetWindowTemplate(
-			'Profile',
-			'',
-	#		'<a class=advanced href="/gpg.html">Signatures</a>',
-			'',
 			$profileWindowContents,
-			''
+			'Profile',
 		);
 		$txtIndex .= $profileWindow;
 		$txtIndex .= GetPageFooter();
@@ -3951,12 +3956,8 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 
 		my $profileWindowContents = GetTemplate('form/profile_no.template');
 		my $profileWindow = GetWindowTemplate(
-			'Profile',
-			'',
-			#		'<a class=advanced href="/gpg.html">Signatures</a>',
-			'',
 			$profileWindowContents,
-			''
+			'Profile'
 		);
 
 		$txtIndex .= $profileWindow;
@@ -3979,7 +3980,10 @@ sub GetAccessPage { # returns html for accessibility mode page, /access.html
 	$html = GetPageHeader($title, $title, 'access');
 	$html .= GetTemplate('maincontent.template');
 	my $accessTemplate = GetTemplate('access.template');
-	$accessTemplate = GetWindowTemplate('Select Accessibility Mode', '', '', $accessTemplate, '');
+	$accessTemplate = GetWindowTemplate(
+		$accessTemplate,
+		'Select Accessibility Mode'
+	);
 	$html .= $accessTemplate;
 	$html .= GetPageFooter();
 
@@ -4027,7 +4031,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$etcPageContent =~ s/\$etcMenuItems/$menuItems/;
 
-	my $etcPageWindow = GetWindowTemplate('More', '', '', $etcPageContent, '');
+	my $etcPageWindow = GetWindowTemplate($etcPageContent, 'More');
 
 	$txtIndex .= $etcPageWindow;
 
@@ -4239,7 +4243,12 @@ sub MakeDataPage { # returns html for /data.html
 
 	$dataPageContents = $dataPageContents;
 
-	my $dataPageWindow = GetWindowTemplate('Data', '', '', $dataPageContents, 'Ready');
+	my $dataPageWindow = GetWindowTemplate(
+		$dataPageContents,
+		'Data',
+		'',
+		'Ready'
+	);
 
 	$dataPage .= $dataPageWindow;
 
@@ -4305,11 +4314,8 @@ sub PutStatsPages {
 	PutHtmlFile("stats.html", $statsPage);
 
 	my $statsFooter = GetWindowTemplate(
-		'Site Statistics*',
-		'',
-		'',
 		GetStatsTable('stats-horizontal.template'),
-		''
+		'Site Statistics*'
 	);
 	PutHtmlFile("stats-footer.html", $statsFooter);
 }
