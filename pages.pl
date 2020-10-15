@@ -179,7 +179,7 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent, $columnHeadings, $windowBody, $windowStatus
+sub GetWindowTemplate { #: $windowTitle, $windowMenubarContent/$windowId, $columnHeadings, $windowBody, $windowStatus
 # returns template for html-table-based-"window"
 	my $windowTitle = shift;
 	my $windowMenubarContent = shift;
