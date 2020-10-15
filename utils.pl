@@ -572,7 +572,7 @@ sub GetHtmlAvatar { # Returns HTML avatar from cache
 	#	return 'unregistered';
 }
 
-sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
+sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, using avatar.template
 	# affected by config/html/color_avatars
 	WriteLog("GetAvatar(...)");
 
@@ -603,17 +603,22 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 
 	WriteLog("GetAvatar($gpgKey)");
 
-	if ($avatarCache{$gpgKey}) {
-		WriteLog('GetAvatar: found in %avatarCache');
-		return $avatarCache{$gpgKey};
-	}
+	my $noCache = shift;
+	$noCache = ($noCache ? 1 : 0);
 
-	WriteLog("GetAvatar: continuing with cache lookup");
-
-	my $avCacheFile = GetCache($avatarCacheDir . $gpgKey);
-	if ($avCacheFile) {
-		$avatarCache{$gpgKey} = $avCacheFile;
-		return $avCacheFile;
+	if (!$noCache) {
+		if ($avatarCache{$gpgKey}) {
+			WriteLog('GetAvatar: found in %avatarCache');
+			return $avatarCache{$gpgKey};
+		}
+		my $avCacheFile = GetCache($avatarCacheDir . $gpgKey);
+		if ($avCacheFile) {
+			WriteLog('GetAvatar: continuing with disk cache');
+			$avatarCache{$gpgKey} = $avCacheFile;
+			return $avCacheFile;
+		}
+	} else {
+		WriteLog('GetAvatar: $noCache is true, ignoring cache');
 	}
 
 	my $avatar = GetTemplate($avatarTemplate);
@@ -631,7 +636,7 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 		my $hasReddit = 0;
 		my $alias = '';
 		if (!$alias) {
-			$alias = GetAlias($gpgKey);
+			$alias = GetAlias($gpgKey, $noCache);
 			$alias = trim($alias);
 
 		}
@@ -720,10 +725,21 @@ sub GetAvatar { # returns HTML avatar based on author key, using avatar.template
 	return $avatar;
 } # GetAvatar()
 
-sub GetAlias { # $gpgKey ; Returns alias for a GPG key
+sub GetAlias { # $gpgKey, $noCache ; Returns alias for a GPG key
 	my $gpgKey = shift;
 	chomp $gpgKey;
 	WriteLog("GetAlias($gpgKey)");
+
+	my $noCache = shift;
+	$noCache = ($noCache ? 1 : 0);
+
+	state %aliasCache;
+	if (!$noCache) {
+		if (exists($aliasCache{$gpgKey})) {
+			return $aliasCache{$gpgKey};
+		}
+	}
+
 	my $alias = DBGetAuthorAlias($gpgKey);
 
 	if ($alias && length($alias) > 24) {
@@ -734,7 +750,9 @@ sub GetAlias { # $gpgKey ; Returns alias for a GPG key
 		$alias =~ s|<.+?>||g;
 		trim($alias);
 		chomp $alias;
-		return $alias;
+
+		$aliasCache{$gpgKey} = $alias;
+		return $aliasCache{$gpgKey};
 	} else {
 		return $gpgKey;
 		#		return 'unregistered';
@@ -2569,7 +2587,8 @@ sub file_exists { # $file ; port of php file_exists()
 	return 0; #unreachable code
 }
 
-sub ExpireAliasCache { # $fingerprint ; removes all caches for alias
+sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
+	# DeleteAvatarCache ExpireAvatarCache
 	WriteLog('ExpireAliasCache: warning: function not yet implemented');
 
 }
