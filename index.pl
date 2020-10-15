@@ -253,6 +253,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if ($alias) {
 			# pubkey
 			DBAddKeyAlias($gpgKey, $alias, $fileHash);
+			DBAddItemAttribute($fileHash, 'gpg_alias', $alias);
+			DBAddItemAttribute($fileHash, 'gpg_fingerprint', $gpgKey);
 			ExpireAvatarCache($gpgKey); # expire alias cache
 		}
 
