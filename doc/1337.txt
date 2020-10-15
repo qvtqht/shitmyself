@@ -1,0 +1,159 @@
+OPERATOR'S MANUAL
+   * * *
+INSTALLATION (See README for details.)
+============
+git clone https://www.github.com/gulkily/shitmyself
+sudo apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick php-cgi
+sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick php-cgi
+./build.pl
+echo 1 > config/admin/lighttpd/enable
+./build.pl
+lynx http://admin:admin@localhost:2784/
+   * * *
+SETTING ROOT KEY
+================
+Path: ./admin.key
+Format: -----BEGIN PGP PUBLIC KEY BLOCK-----
+Example: gpg --armor --export > ./admin.key
+   * * *
+COMMON TASKS
+============
+./rebuild_dev.sh ; #Rebuild entire site, useful during dev
+
+./generate.pl    ; #Regenerate entire frontend
+
+./index.pl --all ; #Index all unindexed files in ./html/txt
+
+./clean_dev.sh   ; #Remove cache and non-default templates.
+
+./pages.pl --all ; #Build all touched pages
+
+./query/touch_all.sh ; #Touch all pages in index
+   * * *
+CONFIGURATION
+=============
+Each configuration setting is stored in an individual text file.
+
+Defaults are stored in ./default/foo/bar/key_name
+	This includes things like template/, and string/
+
+Config is stored in ./config/foo/bar/key_name
+	Each file is duplicated here the first time it is accessed
+	This allows preserving settings even when defaults change
+	Config can be specified in posted items
+		Publicly visible
+		Indexed into index.sqlite3
+		Then written into ./config/
+
+Here are some popular items in the config tree:
+
+config/
+	template/ all the templates
+		*.template are almost all html
+		js/ javascript
+		php/ php
+		css/ css
+	theme/ theme things
+		chicago/ theme called chicago
+			color/ color values
+			template/ anything in here overrides existing template
+				yes, that means several steps of lookup
+   * * *
+UNMANAGED MODE
+==============
+It is possible for users to alternate being Root Operator.
+Very convenient for non-critical, localized, or secured instances.
+All of these settings are off by default.
+
+./config/admin/allow_deop=1
+# this allows server to consider "overthrow" request)
+
+./config/admin/overthrow_interval=3600
+# this is how long since RO's last action before overthrow is allowed)
+
+./config/admin/latest_admin_action=1602741820
+# epoch time of admin's last action)
+
+./config/admin/admin_imprint=1
+# allows imprinting of new RO if admin.key is not present)
+
+./config/admin/allow_admin_permissions_tag_lookup=1
+# allows Root Operator to add other admin users by tagging them #admin
+
+./config/admin/anyone_can_config=1
+# allows anyone at all to change server config, with no restrictions
+
+./config/admin/cookied_can_config=1
+# allows anyone with a cookie to change server config
+
+./config/admin/signed_can_config=1
+# allows anyone to configure as long as message is signed. useful for testing
+   * * *
+TROUBLESHOOTING
+===============
+
+If you can't upgrade with git
+=============================
+$ cd ~/hike
+$ git stash
+$ git pull --all
+$ ./build.pl
+
+If site is taking too long to update
+====================================
+The following will archive content to make room for new content.
+Archived files go into ./archive/
+$ cd ~/hike
+$ ./archive.pl
+
+If config is messed up
+======================
+If you are using manual configuration, use this to back up your
+existing configuration and reset it:
+$ cd ~/hike
+$ mv config config.`date +%s`
+$ ./clean.sh ; ./build.pl
+If you are using signed configuration, do this first:
+$ cd ~/hike
+$ grep config html/txt
+(Move these files into ./archive/)
+
+If having trouble accessing instance
+====================================
+Try using http, it is more compatible
+Disable extra features:
+./config/admin/php/enable=0
+./config/admin/js/enable=0
+Alternatively, with PHP enabled, you can use Light Mode:
+./config/admin/php/enable=1
+./config/admin/php/light_mode_always_on=1
+
+If browser is acting strange
+============================
+Disable JS in browser (separate guide #todo)
+Disable js module on server to stop JS output
+Enable Light Mode on browser side (#todo method without cookies? alt domain?)
+Enable Light Mode on server
+Older browsers may have problems with PHP-added headers. Disable php. #todo fix it
+   * * *
+DEBUG LOGGING
+=============
+# ./config/admin/debug
+Controls Perl (top-level) debugging, including build, index, and generate frontend.
+Set its contents to 1 to enable debug output to ./log/log.log
+Differs from other config keys in that its presence is what turns on debugging.
+NOTE: Delete the file to disable logging. Setting it to 0 will not disable debugging.
+
+# ./config/admin/php/debug
+Controls debugging in PHP module. Set to 1 to enable.
+Debug output is dumped at the bottom of HTML.
+You must have advanced layer visible enabled to see.
+
+# ./config/admin/js/debug
+Controls debugging in JS module.
+Set to 1 to display messages as confirm() dialogs
+	When dialog appars, choose Yes/OK to continue seeing messages
+	Choose No/Cancel to ignore all debug messages
+Set to "console.log" to display messages there
+	Note: Not all browsers support this
+Set to "document.title" to display messages in document title
