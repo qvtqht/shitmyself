@@ -1051,8 +1051,12 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	#todo item_page should have all the child items for replies
 
 	#file_hash
-	my @tables = qw(author_alias config item item_attribute vote);
-
+	my @tables = qw(
+		author_alias
+		config
+		item
+		item_attribute
+	);
 	foreach (@tables) {
 		my $query = "DELETE FROM $_ WHERE file_hash = '$hash'";
 		SqliteQuery2($query);
@@ -1060,11 +1064,36 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 
 	#item_hash
 	my @tables2 = qw(brc event item_page item_parent location);
-
 	foreach (@tables2) {
 		my $query = "DELETE FROM $_ WHERE item_hash = '$hash'";
 		SqliteQuery2($query);
 	}
+
+	{
+		my $query = "DELETE FROM vote WHERE ballot_hash = '$hash'";
+		SqliteQuery2($query);
+	}
+
+	{
+		my $query = "DELETE FROM item_attribute WHERE source = '$hash'";
+		SqliteQuery2($query);
+	}
+
+
+	#ballot_hash
+	my @tables3 = qw(vote);
+	foreach (@tables3) {
+		my $query = "DELETE FROM $_ WHERE ballot_hash = '$hash'";
+		SqliteQuery2($query);
+	}
+
+	#todo
+	#item_attribute.source
+	#item_parent (?)
+	#item_page (and refresh)
+	#
+	#
+	#
 
 	#todo any successes deleting stuff should result in a refresh for the affected page
 }
