@@ -4333,12 +4333,17 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 	WriteMessage('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
+	my $lazyGen =
+		GetConfig('admin/pages/lazy_page_generation') &&
+		GetConfig('admin/pages/php/enabled') &&
+		GetConfig('admin/pages/php/rewrite');
+
 	# tag page, get the tag name from $pageParam
 	if ($pageType eq 'tag') {
 		my $tagName = $pageParam;
 		my $targetPath = "top/$tagName.html";
 
-		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+		if ($lazyGen) {
 			WriteLog('MakePage: tag: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
 		} else {
@@ -4356,7 +4361,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $authorKey = $pageParam;
 		my $targetPath = "author/$authorKey/index.html";
 
-		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+		if ($lazyGen) {
 			WriteLog('MakePage: author: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
 		} else {
@@ -4378,7 +4383,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
 		my $targetPath = GetHtmlFilename($fileHash);
 
-		if (GetConfig('admin/pages/lazy_page_generation') && !$priority) {
+		if ($lazyGen) {
 			WriteLog('MakePage: item: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
 			return;
