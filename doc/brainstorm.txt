@@ -1,3 +1,11 @@
+vote button
+---->
+    item html
+    (via pages.pl --window [item] #todo)
+     <-----
+replace innerHTML
+
+
 how to recover from between clean and build?
 
 

@@ -85,9 +85,9 @@ default: Anonymous
 theme/color_primary
 list of \n-separated hex colors (012bcd format) to be used randomly for ui colors
 
-admin/access_log_path_list
+admin/access_log_path_glob_list
 this is where access.pl will look for the access log from the web server.
-\n-separated list
+\n-separated list of globs (so wildcards allowed, e.g. log/access.log.*)
 default: log/access.log
 
 admin/admin_imprint

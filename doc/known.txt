@@ -1,5 +1,12 @@
 Known Issues
 ============
+When try to resubmit deleted item (exact text) get 404 page
+	Feature-bug
+		The 404 is good, but could use additional messaging
+
+Lighttpd + PHP
+	Changing ./config/admin/php/enable requires rebuild and lighttpd restart
+
 Just a basic prototype, not optimized to scale, and still a work in progress
 
 Sometimes new entries stop being picked up from access.log and/or written to the access log by web server
@@ -84,6 +91,13 @@ default/html/reply_form_after_reply_list
 	the second reply form would probably not have js enhancements, but would still work.
 		because of this, before will take precedence over after
 		after will not be shown if before is enabled
+
+Code Issues
+===========
+In js, there is inconsistent capitalization, some camel, some capitalized
+
+Quite a few #todos throughout the code
+
 
 Browser Issues
 ==============

@@ -1,3 +1,7 @@
+Store current config
+	Compare current config to last stored config
+		Publish config if changes
+
 #bug handle404 clashes with server response message
 
 need to make more button sticky via same prefs as settings page
