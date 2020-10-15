@@ -1562,7 +1562,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	if (index($content, '$') > -1) {
 		# test for $ character in html output, warn/crash if it is there
 		if (!($fileProvided eq 'openpgp.js')) {
-			WriteLog('PutHtmlFile: warning: $content contains $ symbol!');
+			WriteLog('PutHtmlFile: warning: $content contains $ symbol! $file = ' . ($file ? $file : '-'));
 		}
 	}
 
