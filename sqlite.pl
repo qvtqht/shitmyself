@@ -1342,6 +1342,7 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 	$query .= "(?, ?, ?)";
 	push @queryParams, $key, $alias, $pubkeyFileHash;
 
+	ExpireAvatarCache($key); # does fresh lookup, no cache
 	DBAddPageTouch('author', $key);
 }
 
@@ -2069,17 +2070,11 @@ sub DBGetAuthorAlias { # returns author's alias by gpg key
 		return;
 	}
 
-	state %aliasCache;
-	if (exists($aliasCache{$key})) {
-		return $aliasCache{$key};
-	}
-
 	$key = SqliteEscape($key);
 
 	if ($key) {
 		my $query = "SELECT alias FROM author_alias WHERE key = '$key'";
-		$aliasCache{$key} = SqliteGetValue($query);
-		return $aliasCache{$key};
+		return SqliteGetValue($query);
 	} else {
 		return "";
 	}
@@ -2177,7 +2172,8 @@ sub DBGetAuthorPublicKeyHash { # Returns the hash/identifier of the file contain
 	}
 
 	state %authorPubKeyCache;
-	if (exists($authorPubKeyCache{$key})) {
+	if (exists($authorPubKeyCache{$key}) && $authorPubKeyCache{$key}) {
+		WriteLog('DBGetAuthorPublicKeyHash: returning from memo: ' . $authorPubKeyCache{$key});
 		return $authorPubKeyCache{$key};
 	}
 
@@ -2185,8 +2181,15 @@ sub DBGetAuthorPublicKeyHash { # Returns the hash/identifier of the file contain
 
 	if ($key) { #todo fix non-param sql
 		my $query = "SELECT MAX(author_alias.file_hash) AS file_hash FROM author_alias WHERE key = '$key'";
-		$authorPubKeyCache{$key} = SqliteGetValue($query);
-		return $authorPubKeyCache{$key};
+		my $fileHashReturned = SqliteGetValue($query);
+		if ($fileHashReturned) {
+			$authorPubKeyCache{$key} = SqliteGetValue($query);
+			WriteLog('DBGetAuthorPublicKeyHash: returning ' . $authorPubKeyCache{$key});
+			return $authorPubKeyCache{$key};
+		} else {
+			WriteLog('DBGetAuthorPublicKeyHash: database drew a blank, returning 0');
+			return 0;
+		}
 	} else {
 		return "";
 	}
