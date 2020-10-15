@@ -2616,7 +2616,7 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 		return 0;
 	}
 
-	return GetAvatar($fingerprint, 1);
+	return GetAvatar($key, 1); # the 1 makes it overlook cache
 }
 
 sub GetItemEasyFind { #returns Easyfind strings for item
