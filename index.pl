@@ -661,6 +661,55 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									} # foreach my $itemParent (@itemParents)
 								} # has parents
 							} # #remove
+							elsif (
+								$tokenFound{'param'} eq 'admin' ||
+								$tokenFound{'param'} eq 'approve'
+							) { #admin
+								my $hashTag = $tokenFound{'param'};
+								if (scalar(@itemParents)) {
+									WriteLog('IndexTextFile: Found #admin token, and item has parents');
+									foreach my $itemParent (@itemParents) {
+										# find the author of this item
+										# this will help us determine whether the request can be fulfilled
+
+										# at this time only signed requests to remove are honored
+										if (
+											$gpgKey # is signed
+											&&
+											IsAdmin($gpgKey)                   # signed by admin
+										) {
+											WriteLog('IndexTextFile: #admin: Found seemingly valid request to admin');
+											DBAddVoteRecord($itemParent, $addedTime, $hashTag, $gpgKey, $fileHash);
+											DBAddVoteRecord('flush');
+										} # has permission to remove
+										else {
+											WriteLog('IndexTextFile: Request to admin file was not found to be valid');
+										}
+									} # foreach my $itemParent (@itemParents)
+								} # has parents
+							} # admin
+							else {
+								if ($tokenFound{'param'} =~ /^[0-9a-zA-Z_]+$/) { #todo actual hashtag format
+									my $hashTag = $tokenFound{'param'};
+									if (scalar(@itemParents)) {
+										foreach my $itemParentHash (@itemParents) {
+											if ($isSigned) {
+												# include author's key if message is signed
+												DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
+											}
+											else {
+												if ($hasCookie) {
+													# include author's key if message is cookied
+													DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
+												} else {
+													DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
+												}
+											}
+											DBAddPageTouch('item', $itemParentHash);
+										} # @itemParents
+									} # scalar(@itemParents)
+								}
+							}
 						}
 
 					} #hashtag tokens
