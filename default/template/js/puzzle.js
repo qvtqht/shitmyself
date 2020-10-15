@@ -67,11 +67,18 @@ function doSolvePuzzle () { // solves puzzle
 			}
 		}
 	}
+	var btnSolvePuzzle = document.getElementById('btnSolvePuzzle');
 	if (window.signMessage) {
+		if (btnSolvePuzzle) {
+			btnSolvePuzzle.value = 'Rejoice...';
+		}
 		signMessage();
 	}
 	if (window.writeSubmit) {
 		writeSubmit();
+		if (btnSolvePuzzle) {
+			btnSolvePuzzle.value = 'Rejoice...';
+		}
 	}
 } // doSolvePuzzle()
 
