@@ -2,66 +2,66 @@ OPERATOR'S MANUAL
    * * *
 INSTALLATION (See README for details.)
 ============
-git clone https://www.github.com/gulkily/shitmyself
 sudo apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick php-cgi
 sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick php-cgi
-./build.pl
+git clone https://www.github.com/gulkily/shitmyself
+cd shitmyself
+time ./build.pl
 echo 1 > config/admin/lighttpd/enable
-./build.pl
+time ./build.pl
 lynx http://admin:admin@localhost:2784/
    * * *
 SETTING ROOT KEY
 ================
+The Root Operator key points to the "authority source".
+This user has full privileges, and can #admin other users.
 Path: ./admin.key
 Format: -----BEGIN PGP PUBLIC KEY BLOCK-----
 Example: gpg --armor --export > ./admin.key
    * * *
 COMMON TASKS
 ============
+Scripts:
 ./rebuild_dev.sh ; #Rebuild entire site, useful during dev
-
 ./generate.pl    ; #Regenerate entire frontend
-
 ./index.pl --all ; #Index all unindexed files in ./html/txt
-
 ./clean_dev.sh   ; #Remove cache and non-default templates.
-
 ./pages.pl --all ; #Build all touched pages
-
 ./query/touch_all.sh ; #Touch all pages in index
    * * *
 CONFIGURATION
 =============
 Each configuration setting is stored in an individual text file.
 
-Defaults are stored in ./default/foo/bar/key_name
+Defaults are stored in ./default/
+	Examples: ./default/admin/html/ascii_only
 	This includes things like template/, and string/
 
-Config is stored in ./config/foo/bar/key_name
-	Each file is duplicated here the first time it is accessed
+Config is stored in ./config/
+	Example: ./config/admin/html/ascii_only
+	Copied from default/ the first time it is accessed
+		#todo This can be toggled, but there's no toggle yet
 	This allows preserving settings even when defaults change
 	Config can be specified in posted items
 		Publicly visible
 		Indexed into index.sqlite3
 		Then written into ./config/
 
-Here are some popular items in the config tree:
-
+Some popular places on the config tree:
 config/
-	template/ all the templates
-		*.template are almost all html
-		js/ javascript
-		php/ php
-		css/ css
-	theme/ theme things
-		chicago/ theme called chicago
-			color/ color values
-			template/ anything in here overrides existing template
-				yes, that means several steps of lookup
+	template/
+		js/
+		php/
+		css/
+	theme/
+		chicago/
+			color/
+			template/
+Note: There are several lookups when it comes to templates.
    * * *
 UNMANAGED MODE
 ==============
-It is possible for users to alternate being Root Operator.
+It is possible for users to share responsibility being Root Operator.
 Very convenient for non-critical, localized, or secured instances.
 All of these settings are off by default.
 
