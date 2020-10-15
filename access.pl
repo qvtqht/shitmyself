@@ -717,6 +717,8 @@ if ($arg1) {
 	if (-e $arg1) {
 		print("Recognized existing file $arg1\n");
 		ProcessAccessLog($arg1);
+	} elsif ($arg1 eq '--all') {
+		ProcessAllAccessLogsInConfig();
 	} else {
 		print("Argument not understood.");
 	}
