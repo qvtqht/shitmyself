@@ -1769,6 +1769,9 @@ sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwis
 sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
 	# will probably be redesigned in the future
 	my $key = shift;
+
+	WriteLog("IsAdmin($key)");
+
 	if (!IsFingerprint($key)) {
 		WriteLog('IsAdmin: warning: $key failed sanity check, returning 0');
 		return 0;
@@ -1782,19 +1785,34 @@ sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
 	#	my $adminKey = GetAdminKey();
 	#
 	#	if ($adminKey eq $key) {
-	if ($key eq GetAdminKey() || $key eq GetServerKey()) {
+	if ($key eq GetAdminKey()) {
+		WriteLog('IsAdmin: $key eq GetAdminKey(), return 1 ');
 		return 1; # is admin, return true;
 	} else {
 		if (GetConfig('admin/allow_admin_permissions_tag_lookup')) {
+			WriteLog('IsAdmin: not root admin, checking tags');
+
 			my $pubKeyHash = DBGetAuthorPublicKeyHash($key);
 			if ($pubKeyHash) {
+				WriteLog('IsAdmin: $pubKeyHash = ' . $pubKeyHash);
+
 				my %pubKeyVoteTotals = DBGetItemVoteTotals($pubKeyHash);
+				WriteLog('IsAdmin: join(",", keys(%pubKeyVoteTotals)) = ' . join(",", keys(%pubKeyVoteTotals)));
+
 				if ($pubKeyVoteTotals{'admin'}) {
+					WriteLog('IsAdmin: admin FOUND, return 1');
 					return 1;
 				} else {
+					WriteLog('IsAdmin: admin NOT found, return 1');
 					return 0; # not admin, return false;
 				}
+			} else {
+				WriteLog('IsAdmin: warning, no $pubKeyHash, how did we even get here?');
+				return 0;
 			}
+		} else {
+			WriteLog('IsAdmin: allow_admin_permissions_tag_lookup is false, stopping here');
+			return 0;
 		}
 	}
 
