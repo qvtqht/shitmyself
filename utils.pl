@@ -2609,6 +2609,14 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 	# DeleteAvatarCache ExpireAvatarCache
 	WriteLog('ExpireAliasCache: warning: function not yet implemented');
 
+	my $key = shift;
+	WriteLog("ExpireAvatarCache($key)");
+	if (!IsFingerprint($key)) {
+		WriteLog('ExpireAvatarCache: warning: sanity check failed');
+		return 0;
+	}
+
+	return GetAvatar($fingerprint, 1);
 }
 
 sub GetItemEasyFind { #returns Easyfind strings for item
