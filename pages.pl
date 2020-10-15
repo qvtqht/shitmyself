@@ -1940,8 +1940,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
 
-	my $adminKey = GetAdminKey();
-
 	my $topMenuTemplate = GetTemplate('topmenu2.template');
 	if (GetConfig('admin/js/enable')) {
 		$topMenuTemplate = AddAttributeToTag(
