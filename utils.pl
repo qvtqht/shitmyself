@@ -708,7 +708,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	}
 
 	#my $colorUsername = GetThemeColor('username');
-	my $colorUsername = '#c0c0c0';
+	my $colorUsername = '';
 	$avatar =~ s/\$colorUsername/$colorUsername/g;
 	#
 	# if ($hasReddit) {
