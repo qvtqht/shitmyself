@@ -581,15 +581,17 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 
 	if (!$avatarCacheDir || !$avatarTemplate) {
 		if (GetConfig('html/color_avatars')) {
-			$avatarCacheDir = 'avatar.color/';
+			$avatarCacheDir = 'avatar.color';
 			$avatarTemplate = 'avatar.template';
 		} else {
-			$avatarCacheDir = 'avatar.plain/';
+			$avatarCacheDir = 'avatar.plain';
 			$avatarTemplate = 'avatar2.template';
 		}
 		my $themeName = GetConfig('html/theme');
-		$avatarCacheDir .= $themeName . '/';
+		$avatarCacheDir .= '/' . $themeName;
 	}
+
+	WriteLog('GetAvatar: $avatarCacheDir = ' . $avatarCacheDir . '; $avatarTemplate = ' . $avatarTemplate);
 
 	state %avatarCache;
 
@@ -611,7 +613,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 			WriteLog('GetAvatar: found in %avatarCache');
 			return $avatarCache{$gpgKey};
 		}
-		my $avCacheFile = GetCache($avatarCacheDir . $gpgKey);
+		my $avCacheFile = GetCache("$avatarCacheDir/$gpgKey");
 		if ($avCacheFile) {
 			WriteLog('GetAvatar: continuing with disk cache');
 			$avatarCache{$gpgKey} = $avCacheFile;
