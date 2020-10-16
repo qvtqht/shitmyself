@@ -624,6 +624,15 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	}
 
 	my $avatar = GetTemplate($avatarTemplate);
+	{
+		#this trims extra whitespace from avatar template
+		#otherwise there may be extra spaces in layout
+		#WriteLog('avdesp before:'.$avatar);
+		$avatar =~ s/\>\s+/>/g;
+		$avatar =~ s/\s+\</</g;
+		#WriteLog('avdesp after:'.$avatar);
+	}
+
 	#todo strip all whtespace outside of html tags here to make it non-wrap
 
 	my $hasReddit = 0;
@@ -666,34 +675,41 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		} # $authorItemAttributes
 
 		if (GetConfig('html/color_avatars')) {
-			my $color1 = substr($gpgKey, 0, 6);
-			my $color2 = substr($gpgKey, 3, 6);
-			my $color3 = substr($gpgKey, 6, 6);
-			my $color4 = substr($gpgKey, 9, 6);
+			my $color1 = '#' . substr($gpgKey, 0, 6);
+			my $color2 = '#' . substr($gpgKey, 3, 6);
+			my $color3 = '#' . substr($gpgKey, 6, 6);
+			my $color4 = '#' . substr($gpgKey, 9, 6);
+			my $color5 = '#' . substr($gpgKey, 12, 4) . substr($gpgKey, 0, 2);
 
 			$alias = encode_entities2($alias);
 			#$alias = encode_entities($alias, '<>&"');
 
 			if ($alias) {
-				#		my $char1 = substr($gpg_key, 12, 1);
-				#		my $char2 = substr($gpg_key, 13, 1);
-				#		my $char3 = substr($gpg_key, 14, 1);
-				#
-				#		$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-				#		$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
-				#		$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+				my $char1;
+				my $char2;
+				my $char3;
 
-				my $char1 = '*';
-				my $char2 = '*';
+				$char1 = substr($gpgKey, 12, 1);
+				$char2 = substr($gpgKey, 13, 1);
+				$char3 = substr($gpgKey, 14, 1);
+
+				$char1 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+				$char2 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+				$char3 =~ tr/0123456789abcdefABCDEF/~@#$%^&*+=><|*+=><|}:+/;
+
+				# $char1 = '*';
+				# $char2 = '*';
+				# $char3 = '*';
 
 				$avatar =~ s/\$color1/$color1/g;
 				$avatar =~ s/\$color2/$color2/g;
 				$avatar =~ s/\$color3/$color3/g;
-				#$avatar =~ s/\$color4/$color4/g;
+				$avatar =~ s/\$color4/$color4/g;
+				$avatar =~ s/\$color5/$color5/g;
 				$avatar =~ s/\$alias/$alias/g;
 				$avatar =~ s/\$char1/$char1/g;
 				$avatar =~ s/\$char2/$char2/g;
-				#$avatar =~ s/\$char3/$char3/g;
+				$avatar =~ s/\$char3/$char3/g;
 			}
 			else {
 				$avatar = '';
@@ -710,19 +726,19 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	}
 
 	#my $colorUsername = GetThemeColor('username');
-	my $colorUsername = '';
+	my $colorUsername = 'green';
+	if ($hasReddit) {
+		my $colorUsername = 'purple';
+	}
+	if (IsAdmin($gpgKey)) {
+		$colorUsername = 'red';
+	}
 	$avatar =~ s/\$colorUsername/$colorUsername/g;
-	#
-	# if ($hasReddit) {
-	# 	my $colorUsername = '#ff00ff';
-	# 	$avatar =~ s/\$colorUsername/$colorUsername/g;
-	# } else {
-	# }
 
 	$avatarCache{$gpgKey} = $avatar;
 
 	if ($avatar) {
-		PutCache($avatarCacheDir . $gpgKey, $avatar);
+		PutCache("$avatarCacheDir/$gpgKey", $avatar);
 	}
 
 	return $avatar;
@@ -2054,6 +2070,9 @@ sub GpgParse {
 	WriteLog('GpgParse: $gpgStderrOutput: ' . "\n" . $gpgStderrOutput);
 
 	if ($gpgStderrOutput) {
+		if ($gpgStderrOutput =~ /([0-9A-F]{40})/) {
+			$returnValues{'key_long'} = $1;
+		}
 		if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
 			$returnValues{'isSigned'} = 1;
 			$returnValues{'key'} = $1;
