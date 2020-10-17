@@ -10,4 +10,8 @@
 
 ./build.pl
 
+./index.pl --all
+
+./pages.pl --all
+
 ./update.pl --all
