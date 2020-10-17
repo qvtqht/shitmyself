@@ -766,9 +766,11 @@ sub GetAlias { # $gpgKey, $noCache ; Returns alias for a GPG key
 	}
 
 	if ($alias) {
-		$alias =~ s|<.+?>||g;
-		trim($alias);
-		chomp $alias;
+		{ # remove email address, if any
+			$alias =~ s|<.+?>||g;
+			trim($alias);
+			chomp $alias;
+		}
 
 		$aliasCache{$gpgKey} = $alias;
 		return $aliasCache{$gpgKey};
@@ -2638,7 +2640,7 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 		return 0;
 	}
 
-	return GetAvatar($key, 1); # the 1 makes it overlook cache
+	#return GetAvatar($key, 1); # the 1 makes it overlook cache
 }
 
 sub GetItemEasyFind { #returns Easyfind strings for item
