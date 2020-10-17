@@ -103,8 +103,8 @@ sub GetStylesheet { # returns style template based on config
 	my $style = GetTemplate('css/default.css.template');
 	# baseline style
 
-	if (GetConfig('html/color_avatars')) {
-		$style .= "\n" . GetTemplate('style.avatar.template');
+	if (GetConfig('html/avatar_icons')) {
+		$style .= "\n" . GetTemplate('css/avatar.css');
 		# add style for color avatars if that's the setting
 	}
 
