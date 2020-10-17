@@ -30,6 +30,10 @@ input[type=text], input[type=password], select, option, textarea {
 	font-size: 10pt;
 	margin: 10pt;
 }
+.dialog .dialog {
+	box-shadow: 3pt 3pt 0 #808080;
+	border: $borderDialog;
+}
 .statusbar td {
 	border: 1pt inset $colorWindow;
 }
