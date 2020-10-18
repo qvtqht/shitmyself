@@ -1142,8 +1142,12 @@ sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons f
 sub GetItemTagsSummary { # returns html with list of tags applied to item, and their counts
 	my $fileHash = shift;
 
-	#todo sanity checks
+	if (!IsItem($fileHash)) {
+		WriteLog('GetItemTagsSummary: warning: sanity check failed');
+		return '';
+	}
 
+	WriteLog("GetItemTagsSummary($fileHash)");
 	my %voteTotals = DBGetItemVoteTotals($fileHash);
 
 	my $votesSummary = '';
