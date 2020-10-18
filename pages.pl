@@ -2362,6 +2362,9 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			my $puzzlePrefix = GetConfig('puzzle/prefix');;
 			my $puzzleCycleLimit = GetConfig('puzzle/cycle_limit');
 
+			WriteLog('InjectJs: puzzle: $puzzlePrefix = ' . $puzzlePrefix);
+			WriteLog('InjectJs: puzzle: $puzzleCycleLimit = ' . $puzzleCycleLimit);
+
 			$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$puzzlePrefix';/g;
 			$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $puzzleCycleLimit;/g;
 		}
