@@ -135,6 +135,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
 		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
 		$gpgTimestamp = $gpgResults{'signTimestamp'} || '';        # signature timestamp
+		$gpgKeyLong = $gpgResults{'key_long'};
 
 		if (!$isSigned && !$message) {
 			$message = GetFile($file);
