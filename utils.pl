@@ -2468,8 +2468,11 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 		return 0;
 	}
 
-	#return GetAvatar($key, 1); # the 1 makes it overlook cache
-}
+	my $themeName = GetConfig('html/theme');
+	UnlinkCache('avatar/' . $themeName . '/' . $key);
+	UnlinkCache('avatar.color/' . $themeName . '/' . $key);
+	UnlinkCache('pavatar/' . $themeName . '/' . $key);
+} # ExpireAvatarCache()
 
 sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog('GetItemEasyFind()');
