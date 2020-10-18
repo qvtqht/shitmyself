@@ -5,6 +5,20 @@
 
 use strict;
 use warnings;
+#use warnings FATAL => 'all';
+#
+# $SIG{__WARN__} = sub {
+# 	if (open (my $fileHandle, ">>", 'log/log.log')) {
+# 		say $fileHandle "\n" . time() . " ";
+# 		say $fileHandle @_;
+# 		say $fileHandle "\n";
+# 		close $fileHandle;
+# 	}
+#
+# 	if (-e 'config/admin/debug') {
+# 		die `This program does not tolerate warnings like: @_`;
+# 	}
+# };
 
 use utf8;
 use 5.010;
