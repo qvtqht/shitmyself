@@ -107,11 +107,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	my $hasCookie = 0;
 
 	my $addedTime;          # time added, epoch format
-	my $fileHash;            # git's hash of file blob, used as identifier
+	my $fileHash;           # git's hash of file blob, used as identifier
 	my $isAdmin = 0;        # was this posted by admin?
 
 	# author's attributes
-	my $gpgKey;             # author's gpg key, hex 16 chars
+	my $gpgKey;             # author's gpg key, hexadecimal 16 chars, uppercase
+	my $gpgKeyLong;			# author's gpg key, hexadecimal 40 chars, uppercase
 	my $alias;              # author's alias, as reported by gpg's parsing of their public key
 
 	my $verifyError = 0;    # was there an error verifying the file with gpg?
@@ -518,8 +519,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								WriteLog('IndexTextFile: $configSpacer = ' . $configSpacer);
 								WriteLog('IndexTextFile: $configValue = ' . $configValue);
 
-								my $configKeyActual;
-								if ($configKey && $configValue) {
+								my $configKeyActual = '';
+								if ($configKey && defined($configValue) && $configValue ne '') {
 									# alias 'theme' to 'html/theme'
 									$configKeyActual = $configKey;
 									if ($configKey eq 'theme') {
