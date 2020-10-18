@@ -70,14 +70,14 @@ function doSolvePuzzle () { // solves puzzle
 	var btnSolvePuzzle = document.getElementById('btnSolvePuzzle');
 	if (window.signMessage) {
 		if (btnSolvePuzzle) {
-			btnSolvePuzzle.value = 'Rejoice...';
+			btnSolvePuzzle.value = 'Signing...';
 		}
 		signMessage();
 	}
 	if (window.writeSubmit) {
 		writeSubmit();
 		if (btnSolvePuzzle) {
-			btnSolvePuzzle.value = 'Rejoice...';
+			btnSolvePuzzle.value = 'Sending...';
 		}
 	}
 } // doSolvePuzzle()
@@ -91,7 +91,7 @@ function solvePuzzle (t) { // t = button pressed ; begins puzzle solving process
 	}
 	if (t) {
 		// update button caption
-		t.value = 'Meditate...';
+		t.value = 'Solving...';
 	}
 
 	// set timeout to solve puzzle
