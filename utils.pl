@@ -1615,7 +1615,7 @@ sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwis
 	}
 }
 
-sub IsAdmin { # $key ; returns 1 if user is #admin, otherwise 0
+sub IsAdmin { # $key ; returns 1 if user is admin, otherwise 0
 	# will probably be redesigned in the future
 	my $key = shift;
 
