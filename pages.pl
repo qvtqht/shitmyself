@@ -4625,6 +4625,7 @@ while (my $arg1 = shift) {
 sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, using avatar.template
 	# affected by config/html/avatar_icons
 	WriteLog("GetAvatar(...)");
+	my $aliasHtmlEscaped = '';
 
 	state $avatarCacheDir;
 	state $avatarTemplate;
