@@ -410,10 +410,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			DBAddPageTouch('tag', 'pubkey'); # add a touch to the pubkey tag page
 			DBAddPageTouch('author', $gpgKey);	# add a touch to the author page
 
-			my $themeName = GetConfig('html/theme');
-			UnlinkCache('avatar/' . $themeName . '/' . $gpgKey);
-			UnlinkCache('avatar.color/' . $themeName . '/' . $gpgKey);
-			UnlinkCache('pavatar/' . $themeName . '/' . $gpgKey);
+			ExpireAvatarCache($gpgKey);
 		} else { # not a pubkey
 			$detokenedMessage = trim($detokenedMessage);
 			# there may be whitespace remaining after all the tokens have been removed
