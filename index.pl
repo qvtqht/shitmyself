@@ -32,7 +32,7 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 
 			foreach my $currentLine (@addedRecord) {
 				WriteLog("MakeChainIndex: $currentLine");
-				WriteMessage("Verifying Chain Log: $sequenceNumber");
+				WriteMessage("Verifying Chain: $sequenceNumber");
 
 				my ($fileHash, $addedTime, $proofHash) = split('\|', $currentLine);
 				my $expectedHash = md5_hex($previousLine . '|' . $fileHash . '|' . $addedTime);
