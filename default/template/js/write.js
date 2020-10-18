@@ -137,7 +137,8 @@ function writeSubmit (t) { // called when user submits write form
 			//alert('DEBUG: getPrivateKey() is true, writeSubmit() Calling signMessage()');
 
 			if (document.getElementById) {
-				if (document.getElementById('chkSignAs').checked) {
+				var chkSignAs = document.getElementById('chkSignAs');
+				if (!chkSignAs || (chkSignAs && chkSignAs.checked)) {
 					if (window.signMessage) {
 						var signMessageResult = signMessage();
 						if (!signMessageResult) {
