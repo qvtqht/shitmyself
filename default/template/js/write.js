@@ -157,12 +157,7 @@ function writeSubmit (t) { // called when user submits write form
 		//alert('DEBUG: Test Failed: window.getPrivateKey: ' + !!window.getPrivateKey + '; window.signMessage: ' + !!window.signMessage);
 	}
 
-	if (window.freshTimeoutId) {
-		// if fresh.js is running, turn it off
-		// the "page has changed" indicator
-		// should not appear while waiting for form to submit
-		clearTimeout(window.freshTimeoutId);
-	}
+	window.eventLoopFresh = 0; // disables fresh.js. may not be a wise move here.
 
 	return true;
 }
