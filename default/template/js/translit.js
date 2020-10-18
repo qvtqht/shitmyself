@@ -1,11 +1,11 @@
 // begin translit.js -- substitutes typed characters with different character set
 
 // translitKeyState
-// 0 = off (touched)
-// 1 = russian phonetic optimized
+// 0 = off
 // 2 = off/passthrough (touched)
 // 3 = russian phonetic
 // 4 = dvorak
+// REMOVED 1 = russian phonetic optimized
 
 function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 // called via textarea or input's onkeydown event
