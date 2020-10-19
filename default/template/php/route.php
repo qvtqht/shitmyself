@@ -719,7 +719,7 @@ if (GetConfig('admin/php/route_enable')) {
 			$lightMode = 1;
 		}
 
-		{
+		if ($_GET && isset($_GET['theme'])) {
 			$themeMode = $_GET['theme']; // normalize the request
 			if ($themeMode != 'chicago') {
 				$themeMode = '';
