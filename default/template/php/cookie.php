@@ -42,6 +42,14 @@ else {
 			setcookie2('cookie', $cookie);
 
 			$secret = GetConfig('admin/secret');
+			if (!$secret) {
+				WriteLog('cookie.php: $secret was false, making a new one');
+				$secret = md5(time()); #todo #security
+				PutConfig('admin/secret', $secret);
+			}
+			else {
+				WriteLog('cookie.php: $secret was true');
+			}
 
 			$checksum = md5($cookie . '/' . $secret);
 			setcookie2('checksum', $checksum);
