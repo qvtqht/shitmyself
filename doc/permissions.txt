@@ -1,26 +1,26 @@
 The permissions system is designed to be simple.
 ================================================
 
-Note: at this time, this is still in process of being implemented.
+There is the top user, Operator.
+	This user is defined with ./admin.key
+		admin.key is in the format of -----BEGIN PGP PUBLIC KEY BLOCK-----
+	This user has the #admin tag.
 
-
-There is the top admin user, Admin.
-
-This user has the "admin" tag.
+This tag, #admin, allows assigning any other tags.
 
 Anyone with "admin" tag can assign any other tag.
+	For any other tag, you must have the tag assigned to you in order to assign the same tag.
+		There are also "tagsets", which have a list of tags under them, which can also be assigned
+			For example, tagset/moderator would have 'remove' under it
+			Tagsets are also tags themselves, so they would be able to assign #moderator
 
-For any other tag, you must have the tag assigned to you in order to assign the same tag.
+For example, here is the process of changing the Admin user
+	First, change admin.key  to the new admin's public key.
+	Then new admin adds #admin key to the previous root admin
+		This enables the effects of all their previous actions and vouches.
 
-Also, if your tag has a tagset list, you can assign any of those tags as well.
 
-So, for example, here is how it would work with a new admin user performing a non-hostile takeover on a board.
 
-First, the admin.key file would be changed to the new admin's public key.
-
-Then the new admin would vouch the old admin by assigning #admin to them, in order to preserve all their previous actions.
-
-The permissions might then look like this:
 
 
 NewAdmin

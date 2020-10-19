@@ -239,7 +239,7 @@
 		#look for #config and #resetconfig #setconfig
 		if (GetConfig('admin/token/config') && $message) {
 			if (
-				IsAdmin($gpgKey) #admin can always config
+				IsAdmin($gpgKey) # admin can always config
 					||
 				GetConfig('admin/anyone_can_config') # anyone can config
 					||

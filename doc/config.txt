@@ -194,7 +194,7 @@ zip_interval
 how frequentlly the zip archive of the entire site is updated, in seconds
 default: 3600
 
-html/color_avatars
+html/avatar_icons
 1 or 0
 if 1, generates pretty multicolor avatars for aliases/fingerprints
 if 0, leaves avatars as just alias

@@ -1,3 +1,5 @@
+attributes should be rewritten back into header-footer
+
 Store current config
 	Compare current config to last stored config
 		Publish config if changes
@@ -9,10 +11,10 @@ need to make more button sticky via same prefs as settings page
 debug.log how to trim top?
 
 ARCHITECTURAL PRIORITIES
+========================
 * decouple initial file pickup into db and full index
 * redirect jankiness from profile and post
 * pages not expired from cache
-
 
 
 #bug reply field gets autofocused due to write js
@@ -1014,10 +1016,6 @@ getElementById() polyfill for netscape
 
 Add simple index page for txt/
 
-#bug An extra eol is happening somewhere in between avatar2.template and authorlink.template
-	causing for an extra trailing underlined space at the end of the username link
-		html/color_avatars=0
-
 Put infobox with all of the item's attributes on item details page
 
 sharePubKey() should not change the current page, if possible
@@ -1609,9 +1607,6 @@ Entertaining stats page
    number of vote records
    busiest days?
 
-Add "via [sitename]" to pulled and pushed items
-
-Sometimes generated keys have the header/comment field
 
 rebuilding everything twice is a good way of maintaining integrity
 

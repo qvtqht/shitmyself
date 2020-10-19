@@ -1,3 +1,327 @@
+The division sign ; Obelus
+ASCII CODE 246 :
+÷
+HTML entity :
+&divide;
+[ Home ]
+[ español ]
+What is my IP address ?
+your public IP address is:
+162.158.74.224
+
+ASCII control characters
+00NULL(Null character)01SOH(Start of Header)02STX(Start of Text)03ETX(End of Text)04EOT(End of Trans.)05ENQ(Enquiry)06ACK(Acknowledgement)07BEL(Bell)08BS(Backspace)09HT(Horizontal Tab)10LF(Line feed)11VT(Vertical Tab)12FF(Form feed)13CR(Carriage return)14SO(Shift Out)15SI(Shift In)16DLE(Data link escape)17DC1(Device control 1)18DC2(Device control 2)19DC3(Device control 3)20DC4(Device control 4)21NAK(Negative acknowl.)22SYN(Synchronous idle)23ETB(End of trans. block)24CAN(Cancel)25EM(End of medium)26SUB(Substitute)27ESC(Escape)28FS(File separator)29GS(Group separator)30RS(Record separator)31US(Unit separator)127DEL(Delete)
+ASCII printable
+characters
+32space33!34"35#36$37%38&39'40(41)42*43+44,45-46.47/48049150251352453554655756857958:59;60<61=62>63?64@65A66B67C68D69E70F71G72H73I74J75K76L77M78N79O80P81Q82R83S84T85U86V87W88X89Y90Z91[92\93]94^95_96`97a98b99c100d101e102f103g104h105i106j107k108l109m110n111o112p113q114r115s116t117u118v119w120x121y122z123{124|125}126~
+Extended ASCII
+characters
+128Ç129ü130é131â132ä133à134å135ç136ê137ë138è139ï140î141ì142Ä143Å144É145æ146Æ147ô148ö149ò150û151ù152ÿ153Ö154Ü155ø156£157Ø158×159ƒ160á161í162ó163ú164ñ165Ñ166ª167º168¿169®170¬171½172¼173¡174«175»176░177▒178▓179│180┤181Á182Â183À184©185╣186║187╗188╝189¢190¥191┐192└193┴194┬195├196─197┼198ã199Ã200╚201╔202╩203╦204╠205═206╬207¤208ð209Ð210Ê211Ë212È213ı214Í215Î216Ï217┘218┌219█220▄221¦222Ì223▀224Ó225ß226Ô227Ò228õ229Õ230µ231þ232Þ233Ú234Û235Ù236ý237Ý238¯239´240≡241±242‗243¾244¶245§246÷247¸248°249¨250·251¹252³253²254■255nbspthe ascii code 246 - The division sign ; Obelus
+frequently-used
+(spanish language)
+ñalt + 164Ñalt + 165@alt + 64¿alt + 168?alt + 63¡alt + 173!alt + 33:alt + 58/alt + 47\alt + 92
+vowels acute accent
+(spanish language)
+áalt + 160éalt + 130íalt + 161óalt + 162úalt + 163Áalt + 181Éalt + 144Íalt + 214Óalt + 224Úalt + 233
+vowels with
+diaresis
+äalt + 132ëalt + 137ïalt + 139öalt + 148üalt + 129Äalt + 142Ëalt + 211Ïalt + 216Öalt + 153Üalt + 154
+mathematical
+symbols
+½alt + 171¼alt + 172¾alt + 243¹alt + 251³alt + 252²alt + 253ƒalt + 159±alt + 241×alt + 158÷alt + 246
+commercial / trade
+symbols
+$alt + 36£alt + 156¥alt + 190¢alt + 189¤alt + 207®alt + 169©alt + 184ªalt + 166ºalt + 167°alt + 248
+quotes and
+parenthesis
+"alt + 34'alt + 39(alt + 40)alt + 41[alt + 91]alt + 93{alt + 123}alt + 125«alt + 174»alt + 175Brief History of ASCII code:
+The American Standard Code for Information Interchange, or ASCII code, was created in 1963 by the "American Standards Association" Committee or "ASA", the agency changed its name in 1969 by "American National Standards Institute" or "ANSI" as it is known since.
+
+This code arises from reorder and expand the set of symbols and characters already used in telegraphy at that time by the Bell company.
+
+At first only included capital letters and numbers , but in 1967 was added the lowercase letters and some control characters, forming what is known as US-ASCII, ie the characters 0 through 127.
+So with this set of only 128 characters was published in 1967 as standard, containing all you need to write in English language.
+
+In 1981, IBM developed an extension of 8-bit ASCII code, called "code page 437", in this version were replaced some obsolete control characters for graphic characters. Also 128 characters were added , with new symbols, signs, graphics and latin letters, all punctuation signs and characters needed to write texts in other languages, ​​such as Spanish.
+In this way was added the ASCII characters ranging from 128 to 255.
+
+IBM includes support for this code page in the hardware of its model 5150, known as "IBM-PC", considered the first personal computer.
+The operating system of this model, the "MS-DOS" also used this extended ASCII code.
+Almost all computer systems today use the ASCII code to represent characters and texts. (536) .
+
+How to use the ASCII code:
+Without knowing it you use it all the time, every time you use a computer system, but if all you need is to get some of the characters not included in your keyboard should do the following, for example:
+
+
+How typing: The division sign ; Obelus ?
+WINDOWS: on computers with Windows operating system like Windows 8, Win 7, Vista, Windows XP, etc..
+To get the letter, character, sign or symbol "÷" : ( The division sign ; Obelus ) on computers with Windows operating system:
+
+1) Press the "Alt" key on your keyboard, and do not let go.
+2) While keep press "Alt", on your keyboard type the number "246", which is the number of the letter or symbol "÷" in ASCII table.
+3) Then stop pressing the "Alt" key, and ...you got it! (537)
+
+Full list of ASCII characters, letters, symbols and signs with descriptions:
+ASCII control characters non printable :ASCII code 00 = NULL ( Null character )
+ASCII code 01 = SOH ( Start of Header )
+ASCII code 02 = STX ( Start of Text )
+ASCII code 03 = ETX ( End of Text, hearts card suit )
+ASCII code 04 = EOT ( End of Transmission, diamonds card suit )
+ASCII code 05 = ENQ ( Enquiry, clubs card suit )
+ASCII code 06 = ACK ( Acknowledgement, spade card suit )
+ASCII code 07 = BEL ( Bell )
+ASCII code 08 = BS ( Backspace )
+ASCII code 09 = HT ( Horizontal Tab )
+ASCII code 10 = LF ( Line feed )
+ASCII code 11 = VT ( Vertical Tab, male symbol, symbol for Mars )
+ASCII code 12 = FF ( Form feed, female symbol, symbol for Venus )
+ASCII code 13 = CR ( Carriage return )
+ASCII code 14 = SO ( Shift Out )
+ASCII code 15 = SI ( Shift In )
+ASCII code 16 = DLE ( Data link escape )
+ASCII code 17 = DC1 ( Device control 1 )
+ASCII code 18 = DC2 ( Device control 2 )
+ASCII code 19 = DC3 ( Device control 3 )
+ASCII code 20 = DC4 ( Device control 4 )
+ASCII code 21 = NAK ( NAK Negative-acknowledge )
+ASCII code 22 = SYN ( Synchronous idle )
+ASCII code 23 = ETB ( End of trans. block )
+ASCII code 24 = CAN ( Cancel )
+ASCII code 25 = EM ( End of medium )
+ASCII code 26 = SUB ( Substitute )
+ASCII code 27 = ESC ( Escape )
+ASCII code 28 = FS ( File separator )
+ASCII code 29 = GS ( Group separator )
+ASCII code 30 = RS ( Record separator )
+ASCII code 31 = US ( Unit separator )
+ASCII code 127 = DEL ( Delete )
+Printable ASCII characters :
+( alphanumeric, symbols and signs )ASCII code 32 = space ( Space )
+ASCII code 33 = ! ( Exclamation mark )
+ASCII code 34 = " ( Double quotes ; Quotation mark ; speech marks )
+ASCII code 35 = # ( Number sign )
+ASCII code 36 = $ ( Dollar sign )
+ASCII code 37 = % ( Percent sign )
+ASCII code 38 = & ( Ampersand )
+ASCII code 39 = ' ( Single quote or Apostrophe )
+ASCII code 40 = ( ( round brackets or parentheses, opening round bracket )
+ASCII code 41 = ) ( parentheses or round brackets, closing parentheses )
+ASCII code 42 = * ( Asterisk )
+ASCII code 43 = + ( Plus sign )
+ASCII code 44 = , ( Comma )
+ASCII code 45 = - ( Hyphen , minus sign )
+ASCII code 46 = . ( Dot, full stop )
+ASCII code 47 = / ( Slash , forward slash , fraction bar , division slash )
+ASCII code 48 = 0 ( number zero )
+ASCII code 49 = 1 ( number one )
+ASCII code 50 = 2 ( number two )
+ASCII code 51 = 3 ( number three )
+ASCII code 52 = 4 ( number four )
+ASCII code 53 = 5 ( number five )
+ASCII code 54 = 6 ( number six )
+ASCII code 55 = 7 ( number seven )
+ASCII code 56 = 8 ( number eight )
+ASCII code 57 = 9 ( number nine )
+ASCII code 58 = : ( Colon )
+ASCII code 59 = ; ( Semicolon )
+ASCII code 60 = < ( Less-than sign )
+ASCII code 61 = = ( Equals sign )
+ASCII code 62 = > ( Greater-than sign ; Inequality )
+ASCII code 63 = ? ( Question mark )
+ASCII code 64 = @ ( At sign )
+ASCII code 65 = A ( Capital letter A )
+ASCII code 66 = B ( Capital letter B )
+ASCII code 67 = C ( Capital letter C )
+ASCII code 68 = D ( Capital letter D )
+ASCII code 69 = E ( Capital letter E )
+ASCII code 70 = F ( Capital letter F )
+ASCII code 71 = G ( Capital letter G )
+ASCII code 72 = H ( Capital letter H )
+ASCII code 73 = I ( Capital letter I )
+ASCII code 74 = J ( Capital letter J )
+ASCII code 75 = K ( Capital letter K )
+ASCII code 76 = L ( Capital letter L )
+ASCII code 77 = M ( Capital letter M )
+ASCII code 78 = N ( Capital letter N )
+ASCII code 79 = O ( Capital letter O )
+ASCII code 80 = P ( Capital letter P )
+ASCII code 81 = Q ( Capital letter Q )
+ASCII code 82 = R ( Capital letter R )
+ASCII code 83 = S ( Capital letter S )
+ASCII code 84 = T ( Capital letter T )
+ASCII code 85 = U ( Capital letter U )
+ASCII code 86 = V ( Capital letter V )
+ASCII code 87 = W ( Capital letter W )
+ASCII code 88 = X ( Capital letter X )
+ASCII code 89 = Y ( Capital letter Y )
+ASCII code 90 = Z ( Capital letter Z )
+ASCII code 91 = [ ( square brackets or box brackets, opening bracket )
+ASCII code 92 = \ ( Backslash , reverse slash )
+ASCII code 93 = ] ( box brackets or square brackets, closing bracket )
+ASCII code 94 = ^ ( Circumflex accent or Caret )
+ASCII code 95 = _ ( underscore , understrike , underbar or low line )
+ASCII code 96 = ` ( Grave accent )
+ASCII code 97 = a ( Lowercase letter a , minuscule a )
+ASCII code 98 = b ( Lowercase letter b , minuscule b )
+ASCII code 99 = c ( Lowercase letter c , minuscule c )
+ASCII code 100 = d ( Lowercase letter d , minuscule d )
+ASCII code 101 = e ( Lowercase letter e , minuscule e )
+ASCII code 102 = f ( Lowercase letter f , minuscule f )
+ASCII code 103 = g ( Lowercase letter g , minuscule g )
+ASCII code 104 = h ( Lowercase letter h , minuscule h )
+ASCII code 105 = i ( Lowercase letter i , minuscule i )
+ASCII code 106 = j ( Lowercase letter j , minuscule j )
+ASCII code 107 = k ( Lowercase letter k , minuscule k )
+ASCII code 108 = l ( Lowercase letter l , minuscule l )
+ASCII code 109 = m ( Lowercase letter m , minuscule m )
+ASCII code 110 = n ( Lowercase letter n , minuscule n )
+ASCII code 111 = o ( Lowercase letter o , minuscule o )
+ASCII code 112 = p ( Lowercase letter p , minuscule p )
+ASCII code 113 = q ( Lowercase letter q , minuscule q )
+ASCII code 114 = r ( Lowercase letter r , minuscule r )
+ASCII code 115 = s ( Lowercase letter s , minuscule s )
+ASCII code 116 = t ( Lowercase letter t , minuscule t )
+ASCII code 117 = u ( Lowercase letter u , minuscule u )
+ASCII code 118 = v ( Lowercase letter v , minuscule v )
+ASCII code 119 = w ( Lowercase letter w , minuscule w )
+ASCII code 120 = x ( Lowercase letter x , minuscule x )
+ASCII code 121 = y ( Lowercase letter y , minuscule y )
+ASCII code 122 = z ( Lowercase letter z , minuscule z )
+ASCII code 123 = { ( braces or curly brackets, opening braces )
+ASCII code 124 = | ( vertical-bar, vbar, vertical line or vertical slash )
+ASCII code 125 = } ( curly brackets or braces, closing curly brackets )
+ASCII code 126 = ~ ( Tilde ; swung dash )
+ASCII Extended Characters :ASCII code 128 = Ç ( Majuscule C-cedilla )
+ASCII code 129 = ü ( letter u with umlaut or diaeresis , u-umlaut )
+ASCII code 130 = é ( letter e with acute accent or e-acute )
+ASCII code 131 = â ( letter a with circumflex accent or a-circumflex )
+ASCII code 132 = ä ( letter a with umlaut or diaeresis , a-umlaut )
+ASCII code 133 = à ( letter a with grave accent )
+ASCII code 134 = å ( letter a with a ring )
+ASCII code 135 = ç ( Minuscule c-cedilla )
+ASCII code 136 = ê ( letter e with circumflex accent or e-circumflex )
+ASCII code 137 = ë ( letter e with umlaut or diaeresis ; e-umlauts )
+ASCII code 138 = è ( letter e with grave accent )
+ASCII code 139 = ï ( letter i with umlaut or diaeresis ; i-umlaut )
+ASCII code 140 = î ( letter i with circumflex accent or i-circumflex )
+ASCII code 141 = ì ( letter i with grave accent )
+ASCII code 142 = Ä ( letter A with umlaut or diaeresis ; A-umlaut )
+ASCII code 143 = Å ( Capital letter A with a ring )
+ASCII code 144 = É ( Capital letter E with acute accent or E-acute )
+ASCII code 145 = æ ( Latin diphthong ae in lowercase )
+ASCII code 146 = Æ ( Latin diphthong AE in uppercase )
+ASCII code 147 = ô ( letter o with circumflex accent or o-circumflex )
+ASCII code 148 = ö ( letter o with umlaut or diaeresis ; o-umlaut )
+ASCII code 149 = ò ( letter o with grave accent )
+ASCII code 150 = û ( letter u with circumflex accent or u-circumflex )
+ASCII code 151 = ù ( letter u with grave accent )
+ASCII code 152 = ÿ ( Lowercase letter y with diaeresis )
+ASCII code 153 = Ö ( Letter O with umlaut or diaeresis ; O-umlaut )
+ASCII code 154 = Ü ( Letter U with umlaut or diaeresis ; U-umlaut )
+ASCII code 155 = ø ( Lowercase slashed zero or empty set )
+ASCII code 156 = £ ( Pound sign ; symbol for the pound sterling )
+ASCII code 157 = Ø ( Uppercase slashed zero or empty set )
+ASCII code 158 = × ( Multiplication sign )
+ASCII code 159 = ƒ ( Function sign ; f with hook sign ; florin sign )
+ASCII code 160 = á ( Lowercase letter a with acute accent or a-acute )
+ASCII code 161 = í ( Lowercase letter i with acute accent or i-acute )
+ASCII code 162 = ó ( Lowercase letter o with acute accent or o-acute )
+ASCII code 163 = ú ( Lowercase letter u with acute accent or u-acute )
+ASCII code 164 = ñ ( eñe, enie, spanish letter enye, lowercase n with tilde )
+ASCII code 165 = Ñ ( Spanish letter enye, uppercase N with tilde, EÑE, enie )
+ASCII code 166 = ª ( feminine ordinal indicator )
+ASCII code 167 = º ( masculine ordinal indicator )
+ASCII code 168 = ¿ ( Inverted question marks )
+ASCII code 169 = ® ( Registered trademark symbol )
+ASCII code 170 = ¬ ( Logical negation symbol )
+ASCII code 171 = ½ ( One half )
+ASCII code 172 = ¼ ( Quarter, one fourth )
+ASCII code 173 = ¡ ( Inverted exclamation marks )
+ASCII code 174 = « ( Angle quotes, guillemets, right-pointing quotation mark )
+ASCII code 175 = » ( Guillemets, angle quotes, left-pointing quotation marks )
+ASCII code 176 = ░ ( Graphic character, low density dotted )
+ASCII code 177 = ▒ ( Graphic character, medium density dotted )
+ASCII code 178 = ▓ ( Graphic character, high density dotted )
+ASCII code 179 = │ ( Box drawing character single vertical line )
+ASCII code 180 = ┤ ( Box drawing character single vertical and left line )
+ASCII code 181 = Á ( Capital letter A with acute accent or A-acute )
+ASCII code 182 = Â ( Letter A with circumflex accent or A-circumflex )
+ASCII code 183 = À ( Letter A with grave accent )
+ASCII code 184 = © ( Copyright symbol )
+ASCII code 185 = ╣ ( Box drawing character double line vertical and left )
+ASCII code 186 = ║ ( Box drawing character double vertical line )
+ASCII code 187 = ╗ ( Box drawing character double line upper right corner )
+ASCII code 188 = ╝ ( Box drawing character double line lower right corner )
+ASCII code 189 = ¢ ( Cent symbol )
+ASCII code 190 = ¥ ( YEN and YUAN sign )
+ASCII code 191 = ┐ ( Box drawing character single line upper right corner )
+ASCII code 192 = └ ( Box drawing character single line lower left corner )
+ASCII code 193 = ┴ ( Box drawing character single line horizontal and up )
+ASCII code 194 = ┬ ( Box drawing character single line horizontal down )
+ASCII code 195 = ├ ( Box drawing character single line vertical and right )
+ASCII code 196 = ─ ( Box drawing character single horizontal line )
+ASCII code 197 = ┼ ( Box drawing character single line horizontal vertical )
+ASCII code 198 = ã ( Lowercase letter a with tilde or a-tilde )
+ASCII code 199 = Ã ( Capital letter A with tilde or A-tilde )
+ASCII code 200 = ╚ ( Box drawing character double line lower left corner )
+ASCII code 201 = ╔ ( Box drawing character double line upper left corner )
+ASCII code 202 = ╩ ( Box drawing character double line horizontal and up )
+ASCII code 203 = ╦ ( Box drawing character double line horizontal down )
+ASCII code 204 = ╠ ( Box drawing character double line vertical and right )
+ASCII code 205 = ═ ( Box drawing character double horizontal line )
+ASCII code 206 = ╬ ( Box drawing character double line horizontal vertical )
+ASCII code 207 = ¤ ( Generic currency sign )
+ASCII code 208 = ð ( Lowercase letter eth )
+ASCII code 209 = Ð ( Capital letter Eth )
+ASCII code 210 = Ê ( Letter E with circumflex accent or E-circumflex )
+ASCII code 211 = Ë ( Letter E with umlaut or diaeresis, E-umlaut )
+ASCII code 212 = È ( Capital letter E with grave accent )
+ASCII code 213 = ı ( Lowercase dot less i )
+ASCII code 214 = Í ( Capital letter I with acute accent or I-acute )
+ASCII code 215 = Î ( Letter I with circumflex accent or I-circumflex )
+ASCII code 216 = Ï ( Letter I with umlaut or diaeresis ; I-umlaut )
+ASCII code 217 = ┘ ( Box drawing character single line lower right corner )
+ASCII code 218 = ┌ ( Box drawing character single line upper left corner )
+ASCII code 219 = █ ( Block, graphic character )
+ASCII code 220 = ▄ ( Bottom half block )
+ASCII code 221 = ¦ ( Vertical broken bar )
+ASCII code 222 = Ì ( Capital letter I with grave accent )
+ASCII code 223 = ▀ ( Top half block )
+ASCII code 224 = Ó ( Capital letter O with acute accent or O-acute )
+ASCII code 225 = ß ( Letter Eszett ; scharfes S or sharp S )
+ASCII code 226 = Ô ( Letter O with circumflex accent or O-circumflex )
+ASCII code 227 = Ò ( Capital letter O with grave accent )
+ASCII code 228 = õ ( Lowercase letter o with tilde or o-tilde )
+ASCII code 229 = Õ ( Capital letter O with tilde or O-tilde )
+ASCII code 230 = µ ( Lowercase letter Mu ; micro sign or micron )
+ASCII code 231 = þ ( Lowercase letter Thorn )
+ASCII code 232 = Þ ( Capital letter Thorn )
+ASCII code 233 = Ú ( Capital letter U with acute accent or U-acute )
+ASCII code 234 = Û ( Letter U with circumflex accent or U-circumflex )
+ASCII code 235 = Ù ( Capital letter U with grave accent )
+ASCII code 236 = ý ( Lowercase letter y with acute accent )
+ASCII code 237 = Ý ( Capital letter Y with acute accent )
+ASCII code 238 = ¯ ( Macron symbol )
+ASCII code 239 = ´ ( Acute accent )
+ASCII code 240 = ≡ ( Congruence relation symbol )
+ASCII code 241 = ± ( Plus-minus sign )
+ASCII code 242 = ‗ ( underline or underscore )
+ASCII code 243 = ¾ ( three quarters, three-fourths )
+ASCII code 244 = ¶ ( Paragraph sign or pilcrow ; end paragraph mark )
+ASCII code 245 = § ( Section sign )
+ASCII code 246 = ÷ ( The division sign ; Obelus )
+( HTML entity = &divide; )ASCII code 247 = ¸ ( cedilla )
+ASCII code 248 = ° ( Degree symbol )
+ASCII code 249 = ¨ ( Diaresis )
+ASCII code 250 = · ( Interpunct or space dot )
+ASCII code 251 = ¹ ( Superscript one, exponent 1, first power )
+ASCII code 252 = ³ ( Superscript three, exponent 3, cube, third power )
+ASCII code 253 = ² ( Superscript two, exponent 2, square, second power )
+ASCII code 254 = ■ ( black square )
+ASCII code 255 = nbsp ( Non-breaking space or no-break space )
+Links : [ Home ] - [ PDF format ] - [ plain text ] - [ Excel spreadsheet ] - [ Word document ] - [ image 1 ] - - [ en español ]Keywords for this page - ASCII code The division sign ; Obelus : ÷
+How to type or write ASCII code The division sign ; Obelus, ÷ division, sign, obelus,ascii,246, ascii art, ascii table, code ascii, ascii character, ascii text, ascii chart, ascii characters, ascii codes, characters, codes, tables, symbols, list, alt, keys, keyboard, spelling, control, printable, extended, letters, epistles, handwriting, scripts, lettering, majuscules, capitals, minuscules, lower, case, small, acute, accent, sharp, engrave, diaresis, circumflex, tilde, cedilla, anillo, circlet, eñe, enie, arroba, pound, sterling, cent, type, write, spell, spanish, english, notebooks, laptops, ascii, asci, asccii, asqui, askii, aski, aschi, aschii, (538) .
+
 Added Support for phonetic Russian typing in text fields.
 
 This is definitely a "scratching my own itch" feature, primarily intended for desktop.

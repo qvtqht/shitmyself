@@ -92,6 +92,8 @@ default/html/reply_form_after_reply_list
 		because of this, before will take precedence over after
 		after will not be shown if before is enabled
 
+Sometimes generated keys have the header/comment field
+
 Code Issues
 ===========
 In js, there is inconsistent capitalization, some camel, some capitalized
