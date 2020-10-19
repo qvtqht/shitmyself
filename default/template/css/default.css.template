@@ -89,5 +89,9 @@ div.txt {
 }
 /* end css/default.css */
 noscript {
-	color: c08000;
+	color: red;
+}
+.menubar a {
+	text-decoration: none;
+	color: $colorText;
 }
