@@ -456,7 +456,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								$headerFooter{$paramName} = $paramValue
 							}
 						}
-					} # @messageItems
+					} # @messageItems ( message "items" are url params #todo rename)
 
 
 					#					if ($replyUrlToken) {
