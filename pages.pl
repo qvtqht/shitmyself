@@ -4636,7 +4636,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 			$avatarTemplate = 'avatar.template';
 		} else {
 			$avatarCacheDir = 'avatar.plain';
-			$avatarTemplate = 'avatar2.template';
+			$avatarTemplate = 'avatar-username.template';
 		}
 		my $themeName = GetConfig('html/theme');
 		$avatarCacheDir .= '/' . $themeName;
