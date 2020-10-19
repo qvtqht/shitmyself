@@ -596,8 +596,9 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							}
 
 							if (GetConfig('admin/logging/record_clients') && $recordFingerprint) {
-								my $clientFingerprint = md5_hex($hostname . $userAgent);
-								$addedMessage .= "AddedBy: $clientFingerprint\n";
+								WriteLog('ProcessAccessLog: admin/logging/record_clients && $recordFingerprint');
+								my $clientFingerprint = uc(substr(md5_hex($hostname . $userAgent), 0, 16));
+								$addedMessage .= "Cookie: $clientFingerprint\n";
 							}
 
 							if (GetConfig('admin/logging/record_sha512')) {
