@@ -1202,14 +1202,13 @@ sub IsUrl { # add basic isurl()
 } # IsUrl()
 
 sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds attr=value to html tag;
-	WriteLog('AddAttributeToTag() begin');
-
 	my $html = shift; # chunk of html to work with
 	my $tag = shift; # tag we'll be modifying
 	my $attributeName = shift; # name of attribute
 	my $attributeValue = shift; # value of attribute
 
-	#WriteLog('AddAttributeToTag: $html before: '.$html);
+	WriteLog("AddAttributeToTag(\$html, $tag, $attributeName, $attributeValue)");
+	WriteLog('AddAttributeToTag: $html before: ' . $html);
 
 	my $tagAttribute = '';
 	if ($attributeValue =~ m/\w/) {
@@ -1228,9 +1227,7 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 	# $html =~ s/\<$tag/<$tag $tagAttribute /i; #  is this right/necessary? #todo
 	# $html =~ s/\<$tag>/<$tag $tagAttribute>/i;
 
-	
-
-	#WriteLog('AddAttributeToTag: $html after: '.$html);
+	WriteLog('AddAttributeToTag: $html after: ' . $html);
 
 	return $html;
 }
