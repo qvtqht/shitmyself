@@ -1,0 +1,9 @@
+<!-- avatar-username.template -->
+<span class=avatar>
+	<span class=username>
+		<font color=$colorUsername>
+			$alias
+		</font>
+	</span>
+</span>
+<!-- / avatar-username.template -->
