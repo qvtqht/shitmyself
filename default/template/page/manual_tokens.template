@@ -38,7 +38,7 @@
 
 <p>The #config and #resetconfig tokens allow changing configuration.</p>
 
-<p>Example: <code>#config html/color_avatars 1</code></p>
+<p>Example: <code>#config html/avatar_icons 1</code></p>
 
 <p>Example: <code>#config string/en/page_intro/post dc4f0b7833c04bcdf0a5e89b4be6bc9e11a1518f</code></p>
 
