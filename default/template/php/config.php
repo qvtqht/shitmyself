@@ -14,7 +14,9 @@ function index ($string, $needle) { // emulates perl's index(), returning -1 ins
 echo(time());
 
 echo "<br><hr><br>";
-echo "<br>legend<br><font color=red>*</font> - never looked up (only present in default/)<br><b>*</b>default - has been looked up with GetConfig, value is the same as in default<br><b>*</b><b>changed</b> - has been looked up with GetConfig, value is different from default<br><hr><br>";
+echo "<br>Below is set of local config which differs from defaults<br>";
+echo "<br>You can copy and paste this into Write form of your own site, sign it, and post as Operator.";
+echo "<br><hr><br>";
 
 $default = explode("\n", `find ../default`);
 $config = explode("\n", `find ../config`);
