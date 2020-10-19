@@ -1,6 +1,6 @@
 /* begin theme/chicago/additional.css */
 body {
-	font-family: helvetica;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14pt;
 	background-color: $colorBackground;
 	margin: 0;
@@ -26,7 +26,7 @@ input[type=text], input[type=password], select, option, textarea {
 	box-shadow: 3pt 3pt 0 #006767;
 	border: $borderDialog;
 	background-color: $colorWindow;
-	font-family: tahoma, helvetica, arial, sans-serif;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 10pt;
 	margin: 10pt;
 }
@@ -38,7 +38,7 @@ input[type=text], input[type=password], select, option, textarea {
 	border: 1pt inset $colorWindow;
 }
 textarea {
-    font-family: serif;
+    font-family: Fixedsys, "Courier New", Courier, monospace;
     font-size: 12pt;
 }
 fieldset {
@@ -47,7 +47,7 @@ fieldset {
 
 .txt {
 /* regular text */
-	font-family: tahoma;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14pt;
 }
 
