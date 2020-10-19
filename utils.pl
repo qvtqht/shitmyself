@@ -264,15 +264,17 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 	my $cacheName = shift;
 	chomp($cacheName);
 
+	WriteLog("UnlinkCache($cacheName)");
+
 	state $myVersion;
 	if (!$myVersion) {
 		$myVersion = GetMyCacheVersion();
 	}
 
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
+	my $cacheFile = './cache/' . $myVersion . '/' . $cacheName;
 
-	if (-e $cacheName) {
-		unlink($cacheName);
+	if (-e $cacheFile) {
+		unlink($cacheFile);
 	}
 }
 
