@@ -4752,9 +4752,9 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 				$char3 = substr($gpgKey, 14, 1);
 
 				# 
-				$char1 =~ tr/0123456789ABCDEF/)!@#$%^&*(;,.:['/;
-				$char2 =~ tr/0123456789ABCDEF/)!@#$%^&*(;,.:['/;
-				$char3 =~ tr/0123456789ABCDEF/)!@#$%^&*(;,.:['/;
+				$char1 =~ tr/0123456789ABCDEF/)!]#$%^&*(;,.:['/;
+				$char2 =~ tr/0123456789ABCDEF/)!]#$%^&*(;,.:['/;
+				$char3 =~ tr/0123456789ABCDEF/)!]#$%^&*(;,.:['/;
 
 				# $char1 =~ tr/0123456789ABCDEF/abcdefghijklmnop/;
 				# $char2 =~ tr/0123456789ABCDEF/abcdefghijklmnop/;
