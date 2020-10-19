@@ -1771,6 +1771,7 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHa
 	push @queryParams, $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash;
 
 	DBAddPageTouch('tag', $voteValue);
+	DBAddPageTouch('item', $fileHash);
 }
 
 sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute not specified
