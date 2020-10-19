@@ -1533,7 +1533,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$adminContainer =~ s/\$message/$itemText/g;
 
 				$itemText = $adminContainer;
-			}
+			} # $isAdmin
 		} # $itemType eq 'txt'
 
 		if (GetConfig('admin/image/enable') && $itemType eq 'image') {
@@ -1570,7 +1570,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
 		if ($authorLink) {
-			$itemTemplate =~ s/\$authorLink/[$authorLink]/g;
+			$itemTemplate =~ s/\$authorLink/$authorLink/g;
 		} else {
 			$itemTemplate =~ s/\$authorLink;//g;
 			# if there is no authorlink needed,
