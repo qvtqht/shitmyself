@@ -13,8 +13,13 @@
 			</td>
 		</tr>
 
+		<tr>
+			<th colspan=2>
+				<font size=5>$avatar</font>
+			</th>
+		</tr>
+
 		<tr><td>notes:</td><td><b><span id=itsyou>*</span></b></td></tr>
-		<tr><td>handle:</td><td>$avatar</td></tr>
 		<tr class=advanced><td>fingerprint:</td><td>$fingerprint</td></tr>
 		<tr class=advanced><td>score:</td><td>$authorScore</td></tr>
 		<tr><td>items:</td><td>$itemCount</td></tr>
