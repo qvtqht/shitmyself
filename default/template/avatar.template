@@ -1,20 +1,22 @@
 <!-- avatar.template -->
-<span class=avatar style="border-color: $color5">
-	<span class=username>
-		<font color="$colorUsername">
-			<b>$alias</b>
-		</font>
+<nobr>
+	<span class=avatar style="border-color: $color5">
+		<span class=username>
+			<font color="$colorUsername">
+				<b>$alias</b>
+			</font>
+		</span>
+		<span class=icon style="background-color: $color1; background-image: linear-gradient(to right, $color1, $colorB); border: 1pt solid $color6; text-shadow: -1pt -1pt 0 $color7, 1pt -1pt 0 $color8, -1pt 1pt 0 $color9, 1pt 1pt 0 $colorA;">
+			<font color="$color2">
+				$char1
+			</font>
+			<font color="$color3">
+				$char2
+			</font>
+			<font color="$color4">
+				$char3
+			</font>
+		</span>
 	</span>
-	<span class=icon style="background-color: $color1; background-image: linear-gradient(to right, $color1, $colorB); border: 1pt solid $color6; text-shadow: -1pt -1pt 0 $color7, 1pt -1pt 0 $color8, -1pt 1pt 0 $color9, 1pt 1pt 0 $colorA;">
-		<font color="$color2">
-			$char1
-		</font>
-		<font color="$color3">
-			$char2
-		</font>
-		<font color="$color4">
-			$char3
-		</font>
-	</span>
-</span>
+</nobr>
 <!-- / avatar.template -->
