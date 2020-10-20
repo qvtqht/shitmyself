@@ -932,12 +932,12 @@ if (GetConfig('admin/php/route_enable')) {
 			//			);
 			$html = str_replace(
 				'>Accessibility mode<',
-				'><font color=orange>Accessibility mode is ON</font><',
+				'><font color=orange>Light Mode is ON</font><',
 				$html
 			);
 			$html = str_replace(
-				'>Turn On Light Mode<',
-				'><strong><big>** Light Mode Is Currently Selected **</big></strong><',
+				'>Turn On<',
+				'>Is ON<',
 				$html
 			);
 			//
@@ -950,8 +950,8 @@ if (GetConfig('admin/php/route_enable')) {
 			//#todo perhaps strip onclick, onkeypress, etc., and style
 		} else {
 			$html = str_replace(
-				'>Turn Off Light Mode<',
-				'><strong><big>** Light Mode is Currently Turned Off **</big></strong><',
+				'>Turn Off<',
+				'>Is OFF<',
 				$html
 			);
 		} // light mode
