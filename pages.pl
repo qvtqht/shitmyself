@@ -2252,6 +2252,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
 
+	$statsPage .= GetTemplate('maincontent.template');
 	my $statsTable = GetStatsTable();
 	$statsPage .= $statsTable;
 
