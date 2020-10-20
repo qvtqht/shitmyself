@@ -2677,6 +2677,7 @@ sub GetAuthorInfoBox {
 	}
 
 	my $authorInfoTemplate = GetTemplate('author_info.template');
+	$authorInfoTemplate = FillThemeColors($authorInfoTemplate);
 
 	my $authorAliasHtml = GetAlias($authorKey);
 	my $authorAvatarHtml = GetAvatar($authorKey);
