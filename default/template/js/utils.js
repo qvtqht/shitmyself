@@ -46,7 +46,15 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		window.eventLoopShowAdvanced = 1;
 		ShowAdvanced(0);
 	}
-	if ((window.location.href.indexOf('write') != -1) && document.compose && document.compose.comment && document.compose.comment.focus) {
+	if (
+		(
+			window.location.href.indexOf('write') != -1 || // write is in location
+			window.location.hash.indexOf('reply') != -1 // #reply hash at end of url
+		) &&
+		document.compose &&
+		document.compose.comment &&
+		document.compose.comment.focus
+	) {
 		//#todo only if url ends with #reply
 		document.compose.comment.focus();
 	}
