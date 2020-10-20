@@ -4541,6 +4541,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my %queryParams;
 
 		$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+		$queryParams{'limit_clause'} = 'LIMIT 200';
 		my @rssFiles = DBGetItemList(\%queryParams);
 
 		PutFile("$HTMLDIR/rss.xml", GetRssFile(@rssFiles));
