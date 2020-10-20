@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
 
 # pages.pl
 # to do with html page generation
@@ -2206,14 +2206,24 @@ sub GetStatsTable {
 	# count total number of files
 	my $filesTotal = 0;
 
-	my $filesTxt = GetCache('count_txt') || trim(`find $TXTDIR -name \\\*.txt | wc -l`);
-	PutCache('count_txt', $filesTxt);
-	$filesTotal += $filesTxt;
+	if ($TXTDIR =~ m/^([^\s]+)$/) { #security #taint
+		$TXTDIR = $1;
+		my $filesTxt = GetCache('count_txt') || trim(`find $TXTDIR -name \\\*.txt | wc -l`);
+		PutCache('count_txt', $filesTxt);
+		$filesTotal += $filesTxt;
+	} else {
+		WriteLog('GetStatsTable: warning: sanity check failed: $TXTDIR contains space');
+	}
 
 	if (GetConfig('admin/image/enable')) {
-		my $filesImage =  GetCache('count_image') || trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
-		PutCache('count_image', $filesImage);
-		$filesTotal += $filesImage;
+		if ($IMAGEDIR =~ m/^([^\s]+)$/) { #security #taint
+			$IMAGEDIR = $1;
+			my $filesImage =  GetCache('count_image') || trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
+			PutCache('count_image', $filesImage);
+			$filesTotal += $filesImage;
+		} else {
+			WriteLog('GetStatsTable: warning: sanity check failed: $IMAGEDIR contains space');
+		}
 	}
 
 	my $chainLogLength = 0;
@@ -3669,7 +3679,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 			if ($HtpasswdTemplate & $HtaccessHttpAuthTemplate) {
 				PutFile("$HTMLDIR/.htpasswd", $HtpasswdTemplate);
-				chmod 0644, "$HTMLDIR/.htpasswd";
+				if ($HTMLDIR =~ m/^([^\s]+)$/) { #todo security less permissive and untaint at top of file #security #taint
+					$HTMLDIR = $1;
+					chmod 0644, "$HTMLDIR/.htpasswd";
+				}
 
 				$HtaccessHttpAuthTemplate =~ s/\.htpasswd/$HTMLDIR\/\.htpasswd/;
 

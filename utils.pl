@@ -1,4 +1,5 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
+$ENV{PATH}="/bin:/usr/bin";
 
 use strict;
 use warnings;
@@ -1049,19 +1050,24 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 	#WriteLog($content);
 	#WriteLog("====");
 
-	if (open (my $fileHandle, ">", $file)) {
-		WriteLog("PutFile: file handle opened for $file");
-		if ($binMode) {
-			WriteLog("PutFile: binmode $fileHandle, ':utf8';");
-			binmode $fileHandle, ':utf8';
+	if ($file =~ m/^([^\s]+)$/) { #todo this is overly permissive #security #taint
+		$file = $1;
+		if (open (my $fileHandle, ">", $file)) {
+			WriteLog("PutFile: file handle opened for $file");
+			if ($binMode) {
+				WriteLog("PutFile: binmode $fileHandle, ':utf8';");
+				binmode $fileHandle, ':utf8';
+			}
+			WriteLog("PutFile: print $fileHandle $content;");
+			print $fileHandle $content; #todo wide character error here
+
+			WriteLog("PutFile: close $fileHandle;");
+			close $fileHandle;
+
+			return 1;
 		}
-		WriteLog("PutFile: print $fileHandle $content;");
-		print $fileHandle $content; #todo wide character error here
-
-		WriteLog("PutFile: close $fileHandle;");
-		close $fileHandle;
-
-		return 1;
+	} else {
+		WriteLog('PutFile: warning: sanity check failed: $file contains space');
 	}
 }
 
