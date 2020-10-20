@@ -1808,8 +1808,11 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	my $colorWindow = GetThemeColor('window');
 	$html =~ s/\$colorWindow/$colorWindow/g;
 
+	my $colorDialogHeading = GetThemeColor('dialog_heading');
+	$html =~ s/\$colorDialogHeading/$colorDialogHeading/g;
+
 	return $html;
-}
+} # FillThemeColors()
 
 sub WriteMenuList { # writes config/list/menu based on site configuration
 	#todo this function is not obvious, overrides obvious list/menu
