@@ -8,7 +8,7 @@
         <input type=submit value=Send>
     </form>
 </p>
-<p><a href="/top/approved.html">Read what's new</a>
+<p><a href="/top/approve.html">Read what's new</a>
 <p><a href="/manual.html">Manual</a></p>
 <!-- / welcome.template -->
 
