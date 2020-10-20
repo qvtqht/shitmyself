@@ -4476,13 +4476,15 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 		if (scalar(@files)) {
 			my $file = $files[0];
-
-			# create a subdir for the first 2 characters of its hash if it doesn't exist already
-			if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
-				mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2)));
-			}
-			if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2))) {
-				mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)));
+			if ($HTMLDIR =~ m/^(^\s+)$/) { #security #taint #todo
+				$HTMLDIR = $1; # untaint
+				# create a subdir for the first 2 characters of its hash if it doesn't exist already
+				if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2))) {
+					mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2)));
+				}
+				if (!-e ($HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2))) {
+					mkdir(($HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2, 2)));
+				}
 			}
 
 			# get the page for this item and write it
