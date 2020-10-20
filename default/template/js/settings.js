@@ -24,12 +24,6 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 		// #todo this may cause issues in some themes
 	}
 
-	if (borderStyle) {
-		// border style
-		element.style.border = borderStyle;
-		element.style.borderRadius = '3pt';
-	}
-
 	// depending on element type, we set different display style
 	// block, table-row, table-cell, or default of 'initial'
 	if (displayValue == 'initial' && (element.nodeName == 'P' || element.nodeName == 'H3' || element.nodeName == 'FIELDSET' || element.nodeName == 'HR')) {
@@ -47,10 +41,15 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 			displayValue = 'inline';
 		}
 		element.style.display = displayValue;
+		if (borderStyle) {
+			// border style
+			element.style.border = borderStyle;
+			element.style.borderRadius = '3pt';
+		}
 	}
 
 	return 1;
-}
+} // SetElementVisible()
 
 function ShowAll (t, container) { // shows all elements, overriding settings
 // admin elements are excluded. only beginner, advanced class elements are shown
