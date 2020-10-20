@@ -291,7 +291,7 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 				fileLoadKeyFromText.setAttribute(
 					'onchange',
 					 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }'
-				 );
+				);
 				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
 				// fileLoadKeyFromText.setAttribute('style', 'display: none');
 				// i tried hiding file selector and using a button instead.
@@ -548,10 +548,10 @@ function ProfileOnLoad () { // onload event for profile page
 
 	var lblSigningIndicator;
 	if (document.getElementById) {
-		//alert('DEBUG: ProfileOnLoad: document.getElementById check passed');
+		//alert('debug: ProfileOnLoad: document.getElementById check passed');
 
 		if (window.getPrivateKey) {
-			//alert('DEBUG: ProfileOnLoad: window.getPrivateKey check passed');
+			//alert('debug: ProfileOnLoad: window.getPrivateKey check passed');
 
 			if (getUserFp() == '$currentAdminId') {
 				// if user's fingerprint matches current admin, set show_admin true
@@ -609,7 +609,8 @@ function ProfileOnLoad () { // onload event for profile page
 
 					//alert('DEBUG: ProfileOnLoad: calling PubKeyPing()');
 					PubKeyPing();
-				} else {
+				} // pk is true
+				else {
 					//alert('DEBUG: pk = false')
 					if (lblSigningIndicator) {
 						//alert('DEBUG: lblSigningIndicator check passed');
@@ -632,7 +633,7 @@ function ProfileOnLoad () { // onload event for profile page
 				//alert('DEBUG: ProfileOnLoad: window.localStorage check FAILED');
 			}
 		} else {
-			//alert('DEBUG: ProfileOnLoad: window.getPrivateKey check FAILED');
+			//alert('debug: ProfileOnLoad: window.getPrivateKey check FAILED');
 		}
 	} else {
 		//alert('DEBUG: ProfileOnLoad: document.getElementById check FAILED');
