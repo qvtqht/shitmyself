@@ -1,12 +1,13 @@
 <!-- access.template ; for letting user switch accessibility mode -->
 <h3>Do you want to enable Light Mode?</h3>
-<h3><a href="/access.html?light=1">Turn On Light Mode</a></h3>
-<p class=beginner>
-	Designed for maximum accessibility, no styling or extras.
-</p>
 
-<h3><a href="/access.html?light=0">Turn Off Light Mode</a></h3>
-<p class=beginner>
-	Extra formatting and non-essential convenience features.
+<h3><a href="/access.html?light=1">Turn On</a></h3>
+
+<h3><a href="/access.html?light=0">Turn Off</a></h3>
+
+<hr>
+<p>
+	Light Mode is designed for accessibility.<br>
+	All non-essential and convenience features are turned off.
 </p>
 <!-- / access.template -->

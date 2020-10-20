@@ -4046,15 +4046,14 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 
 sub GetAccessPage { # returns html for accessibility mode page, /access.html
 	my $html = '';
-
-	my $title = 'Access';
+	my $title = 'Light Mode';
 
 	$html = GetPageHeader($title, $title, 'access');
 	$html .= GetTemplate('maincontent.template');
 	my $accessTemplate = GetTemplate('access.template');
 	$accessTemplate = GetWindowTemplate(
 		$accessTemplate,
-		'Select Accessibility Mode'
+		'Light Mode'
 	);
 	$html .= $accessTemplate;
 	$html .= GetPageFooter();
