@@ -34,6 +34,11 @@ use Cwd qw(cwd);
 
 
 my $SCRIPTDIR = cwd();
+
+if ($SCRIPTDIR =~ m/^([^\s]+)$/) { #todo security less permissive and untaint at top of file #security #taint
+	$SCRIPTDIR = $1;
+}
+
 my $HTMLDIR = $SCRIPTDIR . '/html';
 my $PHPDIR = $SCRIPTDIR . '/html';
 my $TXTDIR = $HTMLDIR . '/txt';
