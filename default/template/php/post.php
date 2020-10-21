@@ -276,7 +276,7 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 if (!$redirectUrl && $fileUrlPath) {
 	$finishTime = time() - $postPhpStartTime;
 
-	if (!$redirectMessage) {
+	if (!isset($redirectMessage)) {
 		$redirectMessage = "Success! Item posted. <small class=advanced> in $finishTime"."s</small>";
 	}
 
