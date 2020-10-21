@@ -252,6 +252,12 @@ sub PutCache { # $cacheName, $content; stores value in cache
 	chomp($cacheName);
 
 	my $content = shift;
+
+	if (!defined($content)) {
+		WriteLog('PutCache: warning: sanity check failed, no $content');
+		return 0;
+	}
+	
 	chomp($content);
 
 	state $myVersion;
@@ -262,7 +268,7 @@ sub PutCache { # $cacheName, $content; stores value in cache
 	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
 
 	return PutFile($cacheName, $content);
-}
+} # PutCache()
 
 sub UnlinkCache { # removes cache by unlinking file it's stored in
 	my $cacheName = shift;
