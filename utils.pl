@@ -2805,4 +2805,78 @@ sub VerifyThirdPartyAccount {
 	my $thirdPartyUrl = shift;
 } # verify token
 
+sub ProcessTextFile { # $file ; add new text file to index
+	my $file = shift;
+	if ($file eq 'flush') {
+		IndexTextFile('flush');
+	}
+	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
+	if ($file ne $relativePath) {
+		$file = $relativePath;
+	}
+	my $addedTime = GetTime2();
+	WriteLog('ProcessTextFile: $file = ' . $file . '; $addedTime = ' . $addedTime);
+
+	# get file's hash from git
+	my $fileHash = GetFileHash($file);
+	if (!$fileHash) {
+		return 0;
+	}
+
+	WriteLog('ProcessTextFile: $fileHash = ' . $fileHash);
+
+	# if deletion of this file has been requested, skip
+	if (IsFileDeleted($file, $fileHash)) {
+		WriteLog('ProcessTextFile: IsFileDeleted() returned true, skipping');
+		WriteLog('ProcessTextFile: return 0');
+
+		return 0;
+	}
+
+	if (GetConfig('admin/organize_files')) {
+		my $fileNew = OrganizeFile($file);
+		if ($fileNew eq $file) {
+			WriteLog('ProcessTextFile: $fileNew eq $file');
+		} else {
+			WriteLog('ProcessTextFile: changing $file to new value per OrganizeFile()');
+			$file = $fileNew;
+			WriteLog('ProcessTextFile: $file = ' . $file);
+		}
+	} else {
+		WriteLog("ProcessTextFile: organize_files is off, continuing");
+	}
+
+	if (!GetCache('indexed/' . $fileHash)) {
+		WriteLog('ProcessTextFile: ProcessTextFile(' . $file . ') not in cache/indexed, calling IndexTextFile');
+
+		IndexTextFile($file);
+		IndexTextFile('flush');
+
+		PutCache('indexed/' . $fileHash, '1');
+	} else {
+		# return 0 so that this file is not counted
+		WriteLog('ProcessTextFile: already indexed ' . $fileHash . ', return 0');
+		return 0;
+	}
+
+	WriteLog('ProcessTextFile: return ' . $fileHash);
+	return $fileHash;
+
+	# run commands to
+	#	  add changed file to git repo
+	#    commit the change with message 'hi' #todo
+	#    cd back to pwd
+
+
+	#		# below is for debugging purposes
+	#
+	#		my %queryParams;
+	#		$queryParams{'where_clause'} = "WHERE file_hash = '$fileHash'";
+	#
+	#		my @files = DBGetItemList(\%queryParams);
+	#
+	#		WriteLog("Count of new items for $fileHash : " . scalar(@files));
+
+} # ProcessTextFile()
+
 1;
