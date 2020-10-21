@@ -900,6 +900,11 @@ sub IndexImageFile { # $file ; indexes one image file into database
 
 	if (IsImageFile($file)) {
 		my $fileHash = GetFileHash($file);
+
+		if (GetCache('indexed/'.$fileHash)) {
+			return;
+		}
+
 		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
 
 		$addedTime = DBGetAddedTime($fileHash);
@@ -986,6 +991,9 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		DBAddPageTouch('rss');
 		DBAddPageTouch('index');
 		DBAddPageTouch('flush');
+
+		PutCache('indexed/'.$fileHash, 1);
+		return 1;
 	}
 } # IndexImageFile()
 
