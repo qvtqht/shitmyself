@@ -99,6 +99,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		$file = OrganizeFile($file);
 	}
 
+	my $fileHash; # hash of file contents
+	$fileHash = GetFileHash($file);                # hash
+
+	if (GetCache('indexed/'.$fileHash)) {
+		return;
+	}
+
 	# file's attributes
 	my $txt = "";           # original text inside file
 	my $message = "";       # outputted text after parsing
@@ -107,7 +114,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	my $hasCookie = 0;
 
 	my $addedTime;          # time added, epoch format
-	my $fileHash;           # git's hash of file blob, used as identifier
 	my $isAdmin = 0;        # was this posted by admin?
 
 	# author's attributes
@@ -151,7 +157,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		WriteLog('IndexTextFile: $gpgTimestamp = ' . ($gpgTimestamp ? $gpgTimestamp : '--'));
 
 		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
-		$fileHash = GetFileHash($file);                # hash provided by git for the file
+
 		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; #
 
 		# $fileMeta = GetItemMeta($fileHash, $file);
@@ -801,6 +807,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddPageTouch('index');
 		DBAddPageTouch('flush'); #todo shouldn't be here
 	}
+
+	PutCache('indexed/'.$fileHash, 1);
+	return 1;
 } # IndexTextFile()
 
 sub AddToChainLog { # $fileHash ; add line to log/chain.log
