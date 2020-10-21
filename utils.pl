@@ -239,7 +239,10 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	}
 
 	if ( !-d $dirs && !-e $dirs ) {
-		make_path $dirs or WriteLog("EnsureSubdirs: Failed to create path: $dirs");
+		if ( $dirs =~ m/^([^\s]+)$/ ) { #security #taint
+			$dirs = $1; #untaint
+			make_path $dirs or WriteLog("EnsureSubdirs: Failed to create path: $dirs");
+		}
 	}
 } # EnsureSubdirs()
 
