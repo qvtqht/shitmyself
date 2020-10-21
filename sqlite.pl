@@ -85,6 +85,9 @@ sub SqliteMakeTables { # creates sqlite schema
 		return;
 	}
 
+	# wal
+	SqliteQuery2("PRAGMA journal_mode=WAL;");
+
 	# author
 	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
 
