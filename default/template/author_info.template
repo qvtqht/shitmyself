@@ -14,7 +14,7 @@
 		</tr>
 
 		<tr>
-			<th colspan=2>
+			<th colspan=2 bgcolor="$colorDialogHeading">
 				<font size=5>$avatar</font>
 			</th>
 		</tr>
