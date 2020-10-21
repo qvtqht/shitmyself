@@ -24,16 +24,16 @@ function WriteOnload () { // onload handler for write page
 				var gt = unescape('%3E');
 				if (window.getAvatar) {
 					var spanSignAs = document.getElementById('spanSignAs');
-					if (!GetPrefs('sign_by_default')) {
-						var btnSignAs = document.createElement('input');
-						btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
-						btnSignAs.setAttribute('type', 'submit');
-						btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
-						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a GTbuttonLT
-						spanSignAs.appendChild(btnSignAs);
-
-					}
-					else { // this is for the sign yes/no checkbox
+//					if (!GetPrefs('sign_by_default')) {
+//						var btnSignAs = document.createElement('input');
+//						btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
+//						btnSignAs.setAttribute('type', 'submit');
+//						btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
+//						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a GTbuttonLT
+//						spanSignAs.appendChild(btnSignAs);
+//
+//					}
+//					else { // this is for the sign yes/no checkbox
 						var lblSignAs = document.createElement('label');
 						lblSignAs.setAttribute('for', 'chkSignAs');
 
@@ -49,8 +49,7 @@ function WriteOnload () { // onload handler for write page
 						lblSignAs.appendChild(chkSignAs);
 
 						spanSignAs.appendChild(lblSignAs);
-					}
-
+//					}
 
 					if (window.solvePuzzle) {
 						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
