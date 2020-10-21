@@ -1,18 +1,27 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
+$ENV{PATH}="/bin:/usr/bin";
 
 use strict;
 use warnings;
 use Cwd qw(cwd);
 use File::Copy qw(copy);
 
-my $date = `date +%s`;
-chomp $date;
-
-if (!$date =~ m/^[0-9]+/) {
+my $date = '';
+if (`date +%s` =~ m/^([0-9]{10})/) { #todo extend number of accepted chars #security #taint
+	$date = $1;
+} else {
 	die "\$date should be a decimal number, but it's actually $date";
 }
 
 my $SCRIPTDIR = cwd();
+chomp $SCRIPTDIR;
+if ($SCRIPTDIR =~ m/^([^\s]+)$/) { #security #taint
+	$SCRIPTDIR = $1;
+} else {
+	print "sanity check failed #\n";
+	exit;
+}
+
 my $ARCHIVEDIR = $SCRIPTDIR . '/archive';
 
 if (!-e $ARCHIVEDIR) {
@@ -20,6 +29,7 @@ if (!-e $ARCHIVEDIR) {
 }
 
 my $ARCHIVE_DATE_DIR = '';
+
 if (-d $ARCHIVEDIR) {
 	while (-e "$ARCHIVEDIR/$date") {
 		$date++;
@@ -72,6 +82,13 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 	my $archiveDirRelative = $ARCHIVE_DATE_DIR;
 	if (index($archiveDirRelative . '/', $pwd) == 0 && length($archiveDirRelative) > length($pwd)) {
 		$archiveDirRelative = substr($archiveDirRelative, length($pwd . '/'));
+	}
+
+	if ($archiveDirRelative =~ m/^([^\s]+)$/) { #security #taint
+		$archiveDirRelative = $1;
+	} else {
+		print ('sanity check failed on $archiveDirRelative' . "\n");
+		exit;
 	}
 
 	print("tar -acf $archiveDirRelative.tar.gz $archiveDirRelative\n");
