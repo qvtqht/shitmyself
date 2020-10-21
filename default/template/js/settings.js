@@ -299,7 +299,7 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
 			SetPrefs('show_meanies', 0);
-			SetPrefs('sign_by_default', 1);
+//			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);
 			SetPrefs('advanced_highlight', 1);
@@ -364,15 +364,15 @@ function SettingsOnload () { // onload function for settings page
 		var pane;
 
 		//LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
-		LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
+		//LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
 		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
 
-		if (GetPrefs('sign_by_default') == 1) {
-			var cbM = document.getElementById('chkSignByDefault');
-			if (cbM) {
-				cbM.checked = 1;
-			}
-		}
+		//if (GetPrefs('sign_by_default') == 1) {
+		//	var cbM = document.getElementById('chkSignByDefault');
+		//	if (cbM) {
+		//		cbM.checked = 1;
+		//	}
+		//}
 
 		if (GetPrefs('show_admin') == 1) {
 			var cbM = document.getElementById('chkShowAdmin');
