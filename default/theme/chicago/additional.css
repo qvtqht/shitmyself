@@ -49,13 +49,18 @@ fieldset {
 /* regular text */
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14pt;
+	background-color: #d0d2d4;
+	border: 1pt #ffffff inset;
 }
 
 a:focus, a:active {
     color: red !important;
     background-color: orange !important;
 }
-input:focus, textarea:focus {
+textarea:focus {
+    border: 3pt solid orange;
+}
+input:focus {
     background-color: orange;
 }
 #serverResponse {
