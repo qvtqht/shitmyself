@@ -1,0 +1,10 @@
+<!-- titlebar.template -->
+<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+	<td>
+		<font color="$colorTitlebarText"><b>$windowTitle</b></font><br>
+	</td>
+	<td align=right>
+		<a href=#><font color="#ffffff">&pi;</font></a>
+	</td>
+</tr>
+<!-- / titlebar.template -->

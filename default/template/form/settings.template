@@ -30,11 +30,6 @@
 						</p>
 
 						<p class=advanced>
-							<label for=chkSignByDefault>
-								<input type=checkbox id=chkSignByDefault name=chkSignByDefault onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'sign_by_default'); }">
-								Sign message automatically when sending
-							</label>
-							<br>
 							<label for=chkShowAdmin>
 								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
 								Show operator controls
