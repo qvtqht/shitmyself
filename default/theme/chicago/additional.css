@@ -41,9 +41,6 @@ textarea {
     font-family: Fixedsys, "Courier New", Courier, monospace;
     font-size: 12pt;
 }
-fieldset {
-    border-radius: 3pt;
-}
 
 .txt {
 /* regular text */
