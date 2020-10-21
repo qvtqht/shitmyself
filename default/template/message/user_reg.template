@@ -1,4 +1,3 @@
-$name has joined.
+[$name has joined.]
 
--- 
-Identifier: $fingerprint
+[Fingerprint: $fingerprint]
