@@ -672,21 +672,20 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							elsif (
 								$tokenFound{'param'} eq 'admin' ||
 								$tokenFound{'param'} eq 'approve'
-							) { #admin
+							) { # #admin #approve tokens which need permissions
 								my $hashTag = $tokenFound{'param'};
 								if (scalar(@itemParents)) {
-									WriteLog('IndexTextFile: Found #admin token, and item has parents');
+									WriteLog('IndexTextFile: Found permissioned token ' . $tokenFound{'param'} . ', and item has parents');
 									foreach my $itemParent (@itemParents) {
 										# find the author of this item
 										# this will help us determine whether the request can be fulfilled
 
-										# at this time only signed requests to remove are honored
 										if (
 											$gpgKey # is signed
 											&&
 											IsAdmin($gpgKey)                   # signed by admin
 										) {
-											WriteLog('IndexTextFile: #admin: Found seemingly valid request to admin');
+											WriteLog('IndexTextFile: #admin: Found seemingly valid request');
 											DBAddVoteRecord($itemParent, $addedTime, $hashTag, $gpgKey, $fileHash);
 											DBAddVoteRecord('flush');
 										} # has permission to remove
@@ -695,7 +694,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 										}
 									} # foreach my $itemParent (@itemParents)
 								} # has parents
-							} # admin
+							} # #admin #approve
 							else {
 								if ($tokenFound{'param'} =~ /^[0-9a-zA-Z_]+$/) { #todo actual hashtag format
 									my $hashTag = $tokenFound{'param'};
