@@ -826,6 +826,7 @@ sub ConfigKeyValid { #checks whether a config key is valid
 } # ConfigKeyValid()
 
 sub GetHtmlFilename { # get the HTML filename for specified item hash
+	# GetItemUrl GetItemHtmlLink { #keywords
 	# Returns 'ab/cd/abcdef01234567890[...].html'
 	my $hash = shift;
 
