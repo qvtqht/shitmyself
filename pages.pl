@@ -675,6 +675,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 	# we're expecting a reference to a hash as the first parameter
 	# todo sanity checks here, it will probably break if anything else is supplied
+	# keyword: ItemInfo {
 	my %file = %{shift @_};
 
 	# create $fileHash and $filePath variables, since we'll be using them a lot
@@ -1030,7 +1031,7 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 	return $replyForm;
 } # GetReplyForm();
 
-sub GetItemHtmlLink { # $hash, [link caption], [#anchor]
+sub GetItemHtmlLink { # $hash, [link caption], [#anchor] ; returns <a href=...
 	my $hash = shift;
 
 	if ($hash) {
@@ -3187,6 +3188,8 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 } # GetMenuItem()
 
 sub WriteIndexPages { # writes the queue pages (index0-n.html)
+	# sub MakeIndexPages {
+
 	my $pageLimit = GetConfig('page_limit');
 	if (!$pageLimit) {
 		$pageLimit = 250;
@@ -4285,10 +4288,9 @@ sub GetVersionPage { # returns html with version information for $version (git c
 	return $txtPageHtml;
 }
 
-sub MakeDataPage { # returns html for /data.html
-	WriteLog('MakeDataPage() called');
-
+sub WriteDataPage { # writes /data.html (and zip files if needed)
 	#This makes the zip file as well as the data.html page that lists its size
+	WriteLog('MakeDataPage() called');
 
 	my $zipInterval = 3600;
 	my $lastZip = GetCache('last_zip');
@@ -4299,6 +4301,7 @@ sub MakeDataPage { # returns html for /data.html
 		# zip -qr foo.zip somefile
 		# -q for quiet
 		# -r for recursive
+		#todo write zip call
 
 		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
 		
@@ -4309,12 +4312,8 @@ sub MakeDataPage { # returns html for /data.html
 	} else {
 		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
 	}
-
-
 	my $dataPage = GetPageHeader("Data", "Data", 'data');
-
 	$dataPage .= GetTemplate('maincontent.template');
-
 	my $dataPageContents = GetTemplate('data.template');
 
 	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
@@ -4343,15 +4342,13 @@ sub MakeDataPage { # returns html for /data.html
 	);
 
 	$dataPage .= $dataPageWindow;
-
 	$dataPage .= GetPageFooter();
-
 	$dataPage = InjectJs($dataPage, qw(settings avatar profile));
 
 	PutHtmlFile("data.html", $dataPage);
-}
+} # WriteDataPage()
 
-sub GetItemPageFromHash {
+sub GetItemPageFromHash { # $fileHash, returns html
 #todo unfinished
 
 	my $fileHash = shift;
@@ -4423,11 +4420,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		$priority = 0;
 	}
 
-	WriteLog('MakePage: lazy_page_generation: ' . GetConfig('admin/pages/lazy_page_generation') . '; $priority: ' . $priority);
-
 	#todo sanity checks
-
-	WriteLog('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
 	WriteMessage('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
@@ -4442,7 +4435,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $targetPath = "top/$tagName.html";
 
 		if ($lazyGen) {
-			WriteLog('MakePage: tag: lazy is on, removing instead');
+			WriteLog('MakePage: tag: $lazyGen is on, removing instead');
 			RemoveHtmlFile($targetPath);
 		} else {
 			WriteLog("MakePage: tag: $tagName");
@@ -4651,50 +4644,6 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 	return $pagesProcessed;
 } # BuildTouchedPages
 
-while (my $arg1 = shift) {
-	# go through all the arguments one at a time
-	if ($arg1) {
-		if ($arg1 eq '--theme') {
-			print ("recognized token --theme");
-			my $themeArg = shift;
-			chomp $themeArg;
-			GetConfig('html/theme', 'override', $themeArg);
-		}
-		elsif (IsItem($arg1)) {
-			print ("recognized item identifier\n");
-			MakePage('item', $arg1, 1);
-		}
-		elsif (IsFingerprint($arg1)) {
-			print ("recognized author fingerprint\n");
-			MakePage('author', $arg1, 1);
-		}
-		elsif (substr($arg1, 0, 1) eq '#') {
-			#todo sanity checks here
-			print ("recognized hash tag $arg1\n");
-			MakePage('tag', substr($arg1, 1), 1);
-		}
-		elsif ($arg1 eq '--summary' || $arg1 eq '-s') {
-			print ("recognized --summary\n");
-			MakeSummaryPages();
-		}
-		elsif ($arg1 eq '--index' || $arg1 eq '-i') {
-			print ("recognized --index\n");
-			WriteIndexPages();
-		}
-		elsif ($arg1 eq '--all' || $arg1 eq '-i') {
-			print ("recognized --all\n");
-			BuildTouchedPages();
-		}
-		else {
-			print ("Available arguments:\n");
-			print ("--summary or -s for all summary pages\n");
-			print ("--index or -i for all index pages\n");
-			print ("item id for one item's page\n");
-			print ("author fingerprint for one item's page\n");
-			print ("#tag for one tag's page\n");
-		}
-	}
-}
 
 sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, using avatar.template
 	# affected by config/html/avatar_icons
@@ -4893,5 +4842,54 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 
 	return $avatar;
 } # GetAvatar()
+
+while (my $arg1 = shift) {
+	# go through all the arguments one at a time
+	if ($arg1) {
+		if ($arg1 eq '--theme') {
+			print ("recognized token --theme");
+			my $themeArg = shift;
+			chomp $themeArg;
+			GetConfig('html/theme', 'override', $themeArg);
+		}
+		elsif (IsItem($arg1)) {
+			print ("recognized item identifier\n");
+			MakePage('item', $arg1, 1);
+		}
+		elsif (IsFingerprint($arg1)) {
+			print ("recognized author fingerprint\n");
+			MakePage('author', $arg1, 1);
+		}
+		elsif (substr($arg1, 0, 1) eq '#') {
+			#todo sanity checks here
+			print ("recognized hash tag $arg1\n");
+			MakePage('tag', substr($arg1, 1), 1);
+		}
+		elsif ($arg1 eq '--summary' || $arg1 eq '-s') {
+			print ("recognized --summary\n");
+			MakeSummaryPages();
+		}
+		elsif ($arg1 eq '--index' || $arg1 eq '-i') {
+			print ("recognized --index\n");
+			WriteIndexPages();
+		}
+		elsif ($arg1 eq '--data' || $arg1 eq '-i') {
+			print ("recognized --data\n");
+			WriteDataPage();
+		}
+		elsif ($arg1 eq '--all' || $arg1 eq '-i') {
+			print ("recognized --all\n");
+			BuildTouchedPages();
+		}
+		else {
+			print ("Available arguments:\n");
+			print ("--summary or -s for all summary pages\n");
+			print ("--index or -i for all index pages\n");
+			print ("item id for one item's page\n");
+			print ("author fingerprint for one item's page\n");
+			print ("#tag for one tag's page\n");
+		}
+	}
+}
 
 1;
