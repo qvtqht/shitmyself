@@ -4422,10 +4422,17 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 	WriteMessage('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
-	my $lazyGen =
+	my $lazyGen;
+	$lazyGen =
 		GetConfig('admin/pages/lazy_page_generation') &&
-		GetConfig('admin/pages/php/enabled') &&
-		GetConfig('admin/pages/php/rewrite');
+		GetConfig('admin/php/enabled') &&
+		GetConfig('admin/php/rewrite');
+	if (!defined($lazyGen)) {
+		$lazyGen = 0;
+		WriteLog('MakePage: warning: $lazyGen was undefined');
+	}
+
+	WriteLog('MakePage: $lazyGen = ' . $lazyGen . '; $priority = ' . $priority);
 
 	# tag page, get the tag name from $pageParam
 	if ($pageType eq 'tag') {
