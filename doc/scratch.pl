@@ -258,59 +258,34 @@
 				)
 			) {
 				# preliminary conditions met
-
-				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W?)(.+)$/mg);
-				WriteLog('@configLines = ' . scalar(@configLines));
-
-				my @resetConfigLines = ($message =~ m/(resetconfig)(\W)([a-z0-9\/_]+)/mg);
-				WriteLog('@resetConfigLines = ' . scalar(@resetConfigLines));
-				push @configLines, @resetConfigLines;
-
-				my @setConfigLines = ($message =~ m/(setconfig)\W([a-z0-9\/_.]+)(\W)(.+?)/mg);
-				WriteLog('@setConfigLines = ' . scalar(@setConfigLines));
-				push @configLines, @setConfigLines;
-				# setconfig is alias for previously used token name
-
+				my @configLines = ($message =~ m/(config)(\W)([a-z0-9\/_]+)(\W+?[=]?\W+?)(.+?)$/mg);
+				#                                 1       2   3             4             5
 				WriteLog('@configLines = ' . scalar(@configLines));
 
 				if (@configLines) {
 					#my $lineCount = @configLines / 5;
 
 					while (@configLines) {
-						my $configAction = shift @configLines;
-						my $space1 = shift @configLines;
-						my $configKey = shift @configLines;
-						my $space2 = '';
-						my $configValue;
+						my $configAction = shift @configLines; # 1
+						my $space1 = shift @configLines; # 2
+						my $configKey = shift @configLines; # 3
+						my $space2 = ''; # 4
+						my $configValue; # 5
 
-						# allow theme aliasing
+						# allow theme aliasing, currently only one alias: theme to html/theme
 						my $configKeyActual = $configKey;
 						if ($configKey eq 'theme') {
 							# alias theme to html/theme
 							$configKeyActual = 'html/theme';
 						}
 
-						if ($configAction eq 'config' || $configAction eq 'setconfig') {
-							$space2 = shift @configLines;
-							$configValue = shift @configLines;
-						}
-						else {
-							$configValue = 'reset';
-						}
+						$space2 = shift @configLines;
+						$configValue = shift @configLines;
 						$configValue = trim($configValue);
 
-						if ($configAction && $configKey && $configKeyActual && ($configValue ne '')) {
+						if ($configAction && $configKey && $configKeyActual) {
 							my $reconLine;
-							if ($configAction eq 'config' || $configAction eq 'setconfig') {
-								$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
-							}
-							elsif ($configAction eq 'resetconfig') {
-								$reconLine = $configAction . $space1 . $configKey;
-							}
-							else {
-								WriteLog('IndexTextFile: warning: $configAction fall-through when selecting $reconLine');
-								$reconLine = '';
-							}
+							$reconLine = $configAction . $space1 . $configKey . $space2 . $configValue;
 							WriteLog('IndexTextFile: #config: $reconLine = ' . $reconLine);
 
 							if (ConfigKeyValid($configKey) && $reconLine) {
@@ -326,7 +301,8 @@
 								if (IsAdmin($gpgKey)) {
 									$canConfig = 1;
 								}
-								if (substr(lc($configKeyActual), 0, 5) ne 'admin') {
+
+								if (!$canConfig && substr(lc($configKeyActual), 0, 5) ne 'admin') {
 									if (GetConfig('admin/signed_can_config')) {
 										if ($isSigned) {
 											$canConfig = 1;
@@ -348,7 +324,7 @@
 
 									$reconLine = quotemeta($reconLine);
 
-									if ($configAction eq 'resetconfig') {
+									if ($configValue eq 'default') {
 										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 1, $fileHash);
 										$message =~ s/$reconLine/[Successful config reset: $configKeyActual will be reset to default.]/g;
 									}

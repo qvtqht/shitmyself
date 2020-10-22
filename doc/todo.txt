@@ -1,4 +1,26 @@
+improve clean process
+	instead of rm, use mv
+		create directory trash
+			under trash, create dated directory
+			move everything in there
+	at some point, clean out trash directory
+		for example, at the end of build
+		or on every update
+		clean out a bit at a time, so as to not stall flow
+		e.g. find first 1000 files and delete them
+
+
+
+create "imprint" of shortcut keys so they don't keep changing
+
+
 attributes should be rewritten back into header-footer
+
+#security #taint
+In order to quickly add -T (taint mode) compliance, i've added
+some VERY basic sanity checks against these unsafe strings.
+The checks should be extended, as they're mostly "not whitespace"
+which is however better than nothing.
 
 Store current config
 	Compare current config to last stored config
@@ -1897,3 +1919,7 @@ require profile mode is janky and locks out links and any non-cookie users
 ===
 
 #todo auto arrange windows one by one, adding height values, placing them one after the next, unless already in preferences #meta
+
+===
+
+#todo #meta replying by non-advanced users is not discoverable 
