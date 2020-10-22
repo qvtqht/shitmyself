@@ -3446,8 +3446,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 # js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
 
-	WriteIndexPages(); #todo factor this out.
-
 	PutHtmlFile("test.html", GetTemplate('test.template'));
 	PutHtmlFile("keyboard.html", GetTemplate('keyboard/keyboard.template'));
 	PutHtmlFile("keyboard_netscape.html", GetTemplate('keyboard/keyboard_netscape.template'));
@@ -4547,7 +4545,17 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# index pages (queue)
 	elsif ($pageType eq 'index') {
-		WriteIndexPages();
+		my $lastIndexPages = GetCache('last/index_pages');
+		if (!$lastIndexPages) {
+			$lastIndexPages = 0;
+		}
+		if ((time() - $lastIndexPages) > 600) {
+			#do nothing
+		} else {
+			WriteIndexPages();
+
+			PutCache('last/index_pages', time());
+		}
 	}
 	#
 	# rss feed
