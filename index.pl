@@ -519,9 +519,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							) {
 								my ($configKey, $configSpacer, $configValue) = ($tokenFound{'param'} =~ m/(.+)(\W)(.+)/);
 
-								WriteLog('IndexTextFile: $configKey = ' . $configKey);
-								WriteLog('IndexTextFile: $configSpacer = ' . $configSpacer);
-								WriteLog('IndexTextFile: $configValue = ' . $configValue);
+								WriteLog('IndexTextFile: $configKey = ' . (defined($configKey) ? $configKey : '(undefined)'));
+								WriteLog('IndexTextFile: $configSpacer = ' . (defined($configSpacer) ? $configSpacer : '(undefined)'));
+								WriteLog('IndexTextFile: $configValue = ' . (defined($configValue) ? $configValue : '(undefined)'));
 
 								my $configKeyActual = '';
 								if ($configKey && defined($configValue) && $configValue ne '') {
