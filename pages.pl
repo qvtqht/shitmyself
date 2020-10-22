@@ -901,6 +901,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 	{
 		#my $itemInfoTemplate = GetTemplate('item_info.template');
 		my $itemInfoTemplate;
+		WriteLog('GetItemPage: my $itemInfoTemplate; ');
 
 		my $itemAttributes = DBGetItemAttribute($file{'file_hash'});
 		$itemAttributes = trim($itemAttributes);
@@ -921,7 +922,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 					}
 
 					$itemAttributesTable .= '<tr><td>';
-					$itemAttributesTable .= $iaName;
+					$itemAttributesTable .= GetString("item_attribute/$iaName") . ':';
 					$itemAttributesTable .= '</td><td>';
 					$itemAttributesTable .= $iaValue;
 					$itemAttributesTable .= '</td></tr>';
