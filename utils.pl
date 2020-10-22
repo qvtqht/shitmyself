@@ -387,7 +387,9 @@ sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from 
 			}
 
 			if (!$string) {
-				$string = $stringKey;
+				$string = TrimPath($stringKey);
+				# if string is not found, display string key
+				# trin string key's path to make it less confusing
 			}
 
 			chomp($string);
