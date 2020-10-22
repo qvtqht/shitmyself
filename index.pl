@@ -576,6 +576,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								) {
 									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
 									DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
+									DBAddVoteRecord($fileHash, $mintedAt, 'puzzle');
 									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
 									$puzzleAccepted = 1;
 
