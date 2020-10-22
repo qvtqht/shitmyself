@@ -6,7 +6,7 @@
 # rebuilds entire site
 # calls update.pl --all to re-import all data
 
-./clean.sh
+./clean_dev.sh
 
 ./build.pl
 
