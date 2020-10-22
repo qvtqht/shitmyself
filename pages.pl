@@ -226,7 +226,7 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 	my $windowStatus = shift;
 	my $windowMenubarContent = shift;
 
-	my $contentColumnCount = 0;
+	my $contentColumnCount = 1;
 	# stores number of columns if they exist
 	# if no columns, remains at 0
 	# whether there are columns or not determines:
@@ -238,10 +238,16 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 
 	# titlebar, if there is a title
 	if ($windowTitle) {
-		my $windowTitlebar = GetTemplate('window/titlebar.template');
-		$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
-		
-		$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
+		if (1 || $columnHeadings) {
+			my $windowTitlebar = GetTemplate('window/titlebar.template');
+			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
+			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
+		} else {
+			my $windowTitlebar = GetTemplate('window/titlebar_with_x.template');
+			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
+			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
+			$contentColumnCount = 2;
+		}
 	} else {
 		$windowTemplate =~ s/\$windowTitlebar//g;
 	}
@@ -278,13 +284,19 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 		$contentColumnCount = scalar(@columnsArray);
 	} else {
 		$windowTemplate =~ s/\$windowHeader//g;
-		$contentColumnCount = 0;
 	}
 
 	# main window content, aka body
 	if ($windowBody) {
 		if (index(lc($windowBody), '<tr') == -1) {
-			$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
+			if ($contentColumnCount > 1) {
+				#todo templatize?
+				$windowBody = '<tr class=content><td colspan=$contentColumnCount>' . $windowBody . '</td></tr>';
+			} else {
+				$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
+			}
+		} else {
+			$windowBody = str_replace('$contentColumnCount', $contentColumnCount, $windowBody);
 		}
 
 		$windowTemplate =~ s/\$windowBody/$windowBody/g;
@@ -295,16 +307,15 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 	# statusbar
 	if ($windowStatus) {
 		my $windowStatusTemplate = GetTemplate('window/status.template');
-
+		$windowBody = str_replace('$contentColumnCount', $contentColumnCount, $windowBody);
 		$windowStatusTemplate =~ s/\$windowStatus/$windowStatus/g;
-
 		$windowTemplate =~ s/\$windowStatus/$windowStatusTemplate/g;
 	} else {
 		$windowTemplate =~ s/\$windowStatus//g;
 	}
 
 	# fill in column counts if necessary
-	if ($contentColumnCount) {
+	if ($contentColumnCount && $contentColumnCount != 1) {
 		$windowTemplate =~ s/\$contentColumnCount/$contentColumnCount/g;
 	} else {
 		$windowTemplate =~ s/\ colspan=\$contentColumnCount//g;
