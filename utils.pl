@@ -1768,7 +1768,9 @@ sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a f
 	while (index($string, "/") >= 0) {
 		$string = substr($string, index($string, "/") + 1);
 	}
-	$string = substr($string, 0, index($string, ".") + 0);
+	if (index($string, ".") != -1) {
+		$string = substr($string, 0, index($string, ".") + 0);
+	}
 	return $string;
 }
 
