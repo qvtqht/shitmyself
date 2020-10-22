@@ -431,14 +431,15 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					# only if already tagged #meta
 
 					#todo this can go under tagset/meta ?????
-					my @arrayOfMetaTokens = qw(todo brainstorm bug scratch known);
+					my @arrayOfMetaTokens = qw(todo brainstorm bug scratch known notes);
 
 					#todo instead of hard-coded list use tagset
+					#todo apply to parents if parents
 					foreach my $devTokenName (@arrayOfMetaTokens) {
 						if ($hasToken{$devTokenName}) {
 							if ($message) {
-								my $todoContents = GetFile("doc/$devTokenName.txt");
-								if (!$todoContents || index($todoContents, $message) == -1) {
+								my $docContents = GetFile("doc/$devTokenName.txt");
+								if (!$docContents || index($docContents, $message) == -1) {
 									AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
 									last; # one is ennough
 								}
