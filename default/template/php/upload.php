@@ -63,7 +63,7 @@ if (!empty($_FILES['uploaded_file'])) {
                 				IndexImageFile($path);
 							}
 
-							RedirectWithResponse('/write.html', 'Thank you! If it does not appear right away, please meditate...');
+							RedirectWithResponse('/write.html', 'Thank you! Upload received and processing.');
                 		}
 					}
 				}
@@ -159,7 +159,7 @@ if (!empty($_FILES['uploaded_file'])) {
 						RedirectWithResponse($fileUrlPath, 'Success! Thank you for uploading this beautiful picture!');
 					} else {
 						// good enough for now, eventually would be nice if it went to the actual item #todo
-						RedirectWithResponse('/index0.html', 'Thank you! If it does not appear right away, please meditate...');
+						RedirectWithResponse('/write.html', 'Thank you! Upload received and processing.');
 					}
 				}
 

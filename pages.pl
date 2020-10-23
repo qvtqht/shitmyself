@@ -3752,6 +3752,10 @@ sub GetUploadWindow { # upload window for upload page
 	if (!$template) {
 		$template = 'upload.template';
 	}
+	my $title = 'Upload';
+	if (index(lc($template), 'multi') != -1) {
+		$title = 'Upload Multiple Files';
+	}
 
 	my $uploadForm = GetTemplate("form/$template");
 	if (GetConfig('admin/js/enable')) {
@@ -3763,7 +3767,7 @@ sub GetUploadWindow { # upload window for upload page
 	}
 	my $allowFiles = GetConfig('admin/image/allow_files');
 	$uploadForm =~ s/\$allowFiles/$allowFiles/gms;
-	my $uploadWindow = GetWindowTemplate($uploadForm, 'Upload');
+	my $uploadWindow = GetWindowTemplate($uploadForm, $title);
 	return $uploadWindow;
 } # GetUploadWindow()
 
