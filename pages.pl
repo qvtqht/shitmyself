@@ -4457,6 +4457,13 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $authorKey = $pageParam;
 		my $targetPath = "author/$authorKey/index.html";
 
+		if ($pageParam =~ m/^([0-9A-F]{16})$/) {
+			$pageParam = $1;
+		} else {
+			WriteLog('MakePage: author: warning: $pageParam sanity check failed. returning');
+			return '';
+		}
+
 		if ($lazyGen) {
 			WriteLog('MakePage: author: lazy is on, removing instead');
 			RemoveHtmlFile($targetPath);
