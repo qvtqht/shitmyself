@@ -688,6 +688,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 										) {
 											WriteLog('IndexTextFile: #admin: Found seemingly valid request');
 											DBAddVoteRecord($itemParent, $addedTime, $hashTag, $gpgKey, $fileHash);
+											my $authorGpgFingerprint = DBGetItemAttribute($itemParent, 'gpg_fingerprint');
+											if ($authorGpgFingerprint) {
+												WriteLog('IndexTextFile: #admin: found $authorGpgFingerprint');
+												ExpireAvatarCache($authorGpgFingerprint);
+											} else {
+												WriteLog('IndexTextFile: #admin: did NOT find $authorGpgFingerprint');
+											}
 											DBAddVoteRecord('flush');
 										} # has permission to remove
 										else {
