@@ -57,6 +57,9 @@ a:focus, a:active {
 textarea:focus {
     border: 3pt solid orange;
 }
+textarea {
+	border: 3pt dotted $colorWindow;
+}
 input:focus {
     background-color: orange;
 }
