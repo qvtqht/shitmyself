@@ -13,6 +13,7 @@
 	font-weight: bold;
 }
 
+.tag-approve,
 .tag-accept,
 .tag-friend,
 .tag-attend {
