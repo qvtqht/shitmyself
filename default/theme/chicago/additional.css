@@ -58,7 +58,7 @@ textarea:focus {
     border: 3pt solid orange;
 }
 textarea {
-	border: 3pt dotted $colorWindow;
+	border: 3pt double $colorWindow;
 }
 input:focus {
     background-color: orange;
