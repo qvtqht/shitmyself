@@ -502,14 +502,14 @@ function PubKeyPing () { // checks if user's public key is on server
 //
 	//alert('DEBUG: PubKeyPing() begin');
 
-	var lastPubKeyPing = GetPrefs('last_pubkey_ping');
+	var lastPing = GetPrefs('last_pubkey_ping');
 
-	if (lastPubKeyPing && (time() < (lastPubKeyPing + 3600))) {
-		//alert('DEBUG: PubKeyPing: lastPubKeyPing+10 = ' + (lastPubKeyPing+10) + ' < time() = ' + time());
+	if (lastPing && (time() < (lastPing + 3600))) {
+		//alert('DEBUG: PubKeyPing: lastPing+10 = ' + (lastPing+10) + ' < time() = ' + time());
 	} else {
-		//alert('DEBUG: PubKeyPing: lastPubKeyPing was false or stale, doing a check at ' + time());
+		//alert('DEBUG: PubKeyPing: lastPing was false or stale, doing a check at ' + time());
 
-		if (window.getUserFp) {
+		if (window.location.href.indexOf('profile') != -1 && window.getUserFp) {
 			//alert('DEBUG; PubKeyPing: window.getUserFp check passed');
 
 			var myFingerprint = getUserFp();
@@ -521,27 +521,27 @@ function PubKeyPing () { // checks if user's public key is on server
 					//alert('DEBUG: PubKeyPing: profile already exists');
 				} else {
 					if (window.sharePubKey) {
-						//alert('DEBUG: PubKeyPing: lastPubKeyPing: window.sharePubKey check passed, doing it...');
+						//alert('DEBUG: PubKeyPing: lastPing: window.sharePubKey check passed, doing it...');
 						sharePubKey();
+
+						lastPing = time();
+						SetPrefs('last_pubkey_ping', lastPing);
 					} else {
-						//alert('DEBUG: PubKeyPing: lastPubKeyPing: window.sharePubKey check FAILED');
+						//alert('DEBUG: PubKeyPing: lastPing: window.sharePubKey check FAILED');
 					}
 				}
 			} else {
 				//alert('DEBUG: PubKeyPing: myFingerprint: false');
 			}
 
-			//alert('DEBUG: PubKeyPing: lastPubKeyPing check complete, saving time');
-
-			lastPubKeyPing = time();
-			SetPrefs('last_pubkey_ping', lastPubKeyPing);
+			//alert('DEBUG: PubKeyPing: lastPing check complete, saving time');
 		} else {
 			//alert('DEBUG: PubKeyPing: window.getUserFp check FAILED');
 		}
 	}
 
 	return true;
-}
+} // PubKeyPing()
 
 function ProfileOnLoad () { // onload event for profile page
 	//alert('DEBUG: ProfileOnLoad() begin');
