@@ -2147,7 +2147,7 @@ sub GetTopItemsPage { # returns page with top items listing
 			'Top Approved Threads',
 			$columnHeadings,
 			$statusText,
-			'<a class=beginner href="/write.html">New Topic</a><br>' #todo templatify
+			''
 		);
 
 		$htmlOutput .= $itemListingWrapper;
