@@ -1,4 +1,6081 @@
 
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF
+		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns="http://purl.org/rss/1.0/"
+		xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+		xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+>
+
+	<channel rdf:about="http://localhost:2784/">
+		<title>Welcome!</title>
+		<link>
+		http://localhost:2784</link>
+		<description>This is a flexible message board which you can read and write.</description>
+		<pubDate>Mon Oct 19 04:14:35 2020</pubDate>
+		<items>
+			<rdf:Seq>
+				<rdf:li rdf:resource="http://localhost:2784/db/7e/db7e3683.html" />
+<rdf:li rdf:resource="http://localhost:2784/1c/29/1c2911a0.html" />
+<rdf:li rdf:resource="http://localhost:2784/f9/16/f9161a2d.html" />
+<rdf:li rdf:resource="http://localhost:2784/73/4f/734fb454.html" />
+<rdf:li rdf:resource="http://localhost:2784/83/ff/83fff0e2.html" />
+<rdf:li rdf:resource="http://localhost:2784/7f/fa/7ffaf895.html" />
+<rdf:li rdf:resource="http://localhost:2784/63/72/6372b0e8.html" />
+<rdf:li rdf:resource="http://localhost:2784/c5/80/c58010d6.html" />
+<rdf:li rdf:resource="http://localhost:2784/b6/88/b688fccc.html" />
+<rdf:li rdf:resource="http://localhost:2784/fd/26/fd26b384.html" />
+<rdf:li rdf:resource="http://localhost:2784/f4/b8/f4b82179.html" />
+<rdf:li rdf:resource="http://localhost:2784/2f/c9/2fc9f920.html" />
+<rdf:li rdf:resource="http://localhost:2784/83/8f/838faeec.html" />
+<rdf:li rdf:resource="http://localhost:2784/fa/8c/fa8cb19a.html" />
+<rdf:li rdf:resource="http://localhost:2784/fd/02/fd0223fd.html" />
+<rdf:li rdf:resource="http://localhost:2784/02/6c/026cb4b6.html" />
+<rdf:li rdf:resource="http://localhost:2784/ba/83/ba83ec69.html" />
+<rdf:li rdf:resource="http://localhost:2784/b3/51/b3515761.html" />
+<rdf:li rdf:resource="http://localhost:2784/36/4b/364b38a3.html" />
+<rdf:li rdf:resource="http://localhost:2784/80/54/80544aa1.html" />
+<rdf:li rdf:resource="http://localhost:2784/63/03/63030e41.html" />
+<rdf:li rdf:resource="http://localhost:2784/97/56/9756117c.html" />
+<rdf:li rdf:resource="http://localhost:2784/57/9d/579d2dbc.html" />
+<rdf:li rdf:resource="http://localhost:2784/34/78/347840bf.html" />
+<rdf:li rdf:resource="http://localhost:2784/17/d2/17d2c128.html" />
+<rdf:li rdf:resource="http://localhost:2784/24/ae/24aea80c.html" />
+<rdf:li rdf:resource="http://localhost:2784/02/72/02727a5a.html" />
+<rdf:li rdf:resource="http://localhost:2784/b7/ea/b7ea8402.html" />
+<rdf:li rdf:resource="http://localhost:2784/8d/47/8d47104c.html" />
+<rdf:li rdf:resource="http://localhost:2784/24/cc/24ccba30.html" />
+<rdf:li rdf:resource="http://localhost:2784/e5/aa/e5aa9b38.html" />
+<rdf:li rdf:resource="http://localhost:2784/d5/f7/d5f7dd72.html" />
+<rdf:li rdf:resource="http://localhost:2784/a5/74/a574eacc.html" />
+<rdf:li rdf:resource="http://localhost:2784/a9/4a/a94ab993.html" />
+<rdf:li rdf:resource="http://localhost:2784/ba/f5/baf596e0.html" />
+<rdf:li rdf:resource="http://localhost:2784/87/33/87337614.html" />
+<rdf:li rdf:resource="http://localhost:2784/f2/1e/f21e58c6.html" />
+<rdf:li rdf:resource="http://localhost:2784/90/a9/90a9c374.html" />
+<rdf:li rdf:resource="http://localhost:2784/8d/6a/8d6ab2ef.html" />
+<rdf:li rdf:resource="http://localhost:2784/85/20/8520857c.html" />
+<rdf:li rdf:resource="http://localhost:2784/63/df/63df525b.html" />
+<rdf:li rdf:resource="http://localhost:2784/a5/9d/a59d8872.html" />
+<rdf:li rdf:resource="http://localhost:2784/02/bd/02bdf35f.html" />
+<rdf:li rdf:resource="http://localhost:2784/1c/e8/1ce882bf.html" />
+<rdf:li rdf:resource="http://localhost:2784/ba/ed/baeddbbd.html" />
+<rdf:li rdf:resource="http://localhost:2784/69/fc/69fc16f3.html" />
+<rdf:li rdf:resource="http://localhost:2784/08/bd/08bdd800.html" />
+<rdf:li rdf:resource="http://localhost:2784/8d/19/8d193555.html" />
+<rdf:li rdf:resource="http://localhost:2784/37/c6/37c63e3d.html" />
+<rdf:li rdf:resource="http://localhost:2784/aa/79/aa79d81d.html" />
+<rdf:li rdf:resource="http://localhost:2784/64/32/643275c6.html" />
+<rdf:li rdf:resource="http://localhost:2784/b1/52/b152190c.html" />
+<rdf:li rdf:resource="http://localhost:2784/8c/95/8c95f27e.html" />
+<rdf:li rdf:resource="http://localhost:2784/0e/73/0e73787b.html" />
+<rdf:li rdf:resource="http://localhost:2784/5a/2a/5a2abb35.html" />
+<rdf:li rdf:resource="http://localhost:2784/08/55/0855e8a3.html" />
+<rdf:li rdf:resource="http://localhost:2784/60/88/60887276.html" />
+<rdf:li rdf:resource="http://localhost:2784/6e/e9/6ee95b45.html" />
+<rdf:li rdf:resource="http://localhost:2784/26/e1/26e1635a.html" />
+<rdf:li rdf:resource="http://localhost:2784/ef/3c/ef3c793a.html" />
+<rdf:li rdf:resource="http://localhost:2784/5d/2a/5d2a2aba.html" />
+<rdf:li rdf:resource="http://localhost:2784/57/37/5737b739.html" />
+<rdf:li rdf:resource="http://localhost:2784/68/67/6867cdbf.html" />
+<rdf:li rdf:resource="http://localhost:2784/8b/c4/8bc46f21.html" />
+<rdf:li rdf:resource="http://localhost:2784/65/67/6567ce03.html" />
+<rdf:li rdf:resource="http://localhost:2784/77/9e/779e7504.html" />
+<rdf:li rdf:resource="http://localhost:2784/bc/97/bc977083.html" />
+<rdf:li rdf:resource="http://localhost:2784/4e/24/4e2492a1.html" />
+<rdf:li rdf:resource="http://localhost:2784/b7/7f/b77f70a5.html" />
+<rdf:li rdf:resource="http://localhost:2784/c8/68/c8683e51.html" />
+<rdf:li rdf:resource="http://localhost:2784/92/65/9265e75a.html" />
+<rdf:li rdf:resource="http://localhost:2784/5a/ea/5aeaae9a.html" />
+<rdf:li rdf:resource="http://localhost:2784/fa/10/fa1093d5.html" />
+<rdf:li rdf:resource="http://localhost:2784/3b/c6/3bc69db7.html" />
+<rdf:li rdf:resource="http://localhost:2784/e0/0f/e00ffa25.html" />
+<rdf:li rdf:resource="http://localhost:2784/ee/8d/ee8dd06b.html" />
+<rdf:li rdf:resource="http://localhost:2784/9e/34/9e34b624.html" />
+<rdf:li rdf:resource="http://localhost:2784/3b/03/3b0334d2.html" />
+<rdf:li rdf:resource="http://localhost:2784/8d/30/8d304ada.html" />
+<rdf:li rdf:resource="http://localhost:2784/f2/45/f24506a0.html" />
+<rdf:li rdf:resource="http://localhost:2784/c3/08/c308b56a.html" />
+<rdf:li rdf:resource="http://localhost:2784/fb/76/fb7629fc.html" />
+<rdf:li rdf:resource="http://localhost:2784/2c/36/2c363041.html" />
+<rdf:li rdf:resource="http://localhost:2784/fd/bf/fdbf6bfe.html" />
+<rdf:li rdf:resource="http://localhost:2784/e6/28/e6283194.html" />
+<rdf:li rdf:resource="http://localhost:2784/05/6b/056b9f6c.html" />
+<rdf:li rdf:resource="http://localhost:2784/e9/e9/e9e97b2b.html" />
+<rdf:li rdf:resource="http://localhost:2784/79/61/79612d37.html" />
+<rdf:li rdf:resource="http://localhost:2784/1a/f1/1af14346.html" />
+<rdf:li rdf:resource="http://localhost:2784/9a/cd/9acdb2ef.html" />
+<rdf:li rdf:resource="http://localhost:2784/21/09/2109c68c.html" />
+<rdf:li rdf:resource="http://localhost:2784/fd/8e/fd8e7468.html" />
+<rdf:li rdf:resource="http://localhost:2784/73/35/7335ac3c.html" />
+<rdf:li rdf:resource="http://localhost:2784/80/df/80df27b2.html" />
+<rdf:li rdf:resource="http://localhost:2784/e0/70/e070301a.html" />
+<rdf:li rdf:resource="http://localhost:2784/1f/ad/1fadcca2.html" />
+<rdf:li rdf:resource="http://localhost:2784/60/86/6086e2c0.html" />
+<rdf:li rdf:resource="http://localhost:2784/73/70/7370b3db.html" />
+<rdf:li rdf:resource="http://localhost:2784/8e/e8/8ee8441a.html" />
+<rdf:li rdf:resource="http://localhost:2784/b1/9b/b19b1c2d.html" />
+<rdf:li rdf:resource="http://localhost:2784/f0/79/f0791f4e.html" />
+<rdf:li rdf:resource="http://localhost:2784/e7/e8/e7e86cef.html" />
+<rdf:li rdf:resource="http://localhost:2784/03/da/03dacaaf.html" />
+<rdf:li rdf:resource="http://localhost:2784/8c/13/8c1304cc.html" />
+<rdf:li rdf:resource="http://localhost:2784/00/47/00473a56.html" />
+
+			</rdf:Seq>
+		</items>
+
+	</channel>
+
+	<item rdf:about="http://localhost:2784/db/7e/db7e3683.html">
+		<guid>http://localhost:2784/db/7e/db7e3683.html</guid>
+		<pubDate>1603106056</pubDate>
+		<title>#spam</title>
+		<link>http://localhost:2784/db/7e/db7e3683.html</link>
+		<description>
+				<![CDATA[
+				#spam<br />
+<br />
+&gt;&gt;03257c0ff0122f3b2183205040c207e1898b1a96
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/1c/29/1c2911a0.html">
+		<guid>http://localhost:2784/1c/29/1c2911a0.html</guid>
+		<pubDate>1603106056</pubDate>
+		<title>#great</title>
+		<link>http://localhost:2784/1c/29/1c2911a0.html</link>
+		<description>
+				<![CDATA[
+				#great<br />
+<br />
+&gt;&gt;fa2259b552813df0ebc27f0b74d751366cb7e5ff
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/f9/16/f9161a2d.html">
+		<guid>http://localhost:2784/f9/16/f9161a2d.html</guid>
+		<pubDate>1603106055</pubDate>
+		<title>#disagree</title>
+		<link>http://localhost:2784/f9/16/f9161a2d.html</link>
+		<description>
+				<![CDATA[
+				#disagree<br />
+<br />
+&gt;&gt;7a078487e55c39e160c628a7925148eb5f5c904e
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/73/4f/734fb454.html">
+		<guid>http://localhost:2784/73/4f/734fb454.html</guid>
+		<pubDate>1603106043</pubDate>
+		<title>#friend</title>
+		<link>http://localhost:2784/73/4f/734fb454.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;83fff0e2a7fa14ca3de12d7b4e94012d1f684529
+<br />
+#friend
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/83/ff/83fff0e2.html">
+		<guid>http://localhost:2784/83/ff/83fff0e2.html</guid>
+		<pubDate>1603105995</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: 35BF042D697D0103<br />
+</title>
+		<link>http://localhost:2784/83/ff/83fff0e2.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: 35BF042D697D0103<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/7f/fa/7ffaf895.html">
+		<guid>http://localhost:2784/7f/fa/7ffaf895.html</guid>
+		<pubDate>1603103718</pubDate>
+		<title>Code of conduct
+</title>
+		<link>http://localhost:2784/7f/fa/7ffaf895.html</link>
+		<description>
+				<![CDATA[
+				Code of conduct
+<br />
+Name calling and anti-social comments will not be posted.
+<br />
+Comments must be related to the topic. Unrelated comments will not be posted. Make sure you are submitting your comment to the correct blog entry; Yes, people have submitted great comments to the wrong blog entries.
+<br />
+Comments should be rational and logical, citing findings as appropriate.
+<br />
+Opinions and speculations are desired and welcome, but if they are represented as fact then they may be moderated or censored.
+<br />
+The moderator reserves the right to end tangential discussions and censor offensive or inappropriate content.
+<br />
+
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/63/72/6372b0e8.html">
+		<guid>http://localhost:2784/63/72/6372b0e8.html</guid>
+		<pubDate>1603093358</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 31ECE06E9A9ABCD0<br />
+</title>
+		<link>http://localhost:2784/63/72/6372b0e8.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 31ECE06E9A9ABCD0<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/c5/80/c58010d6.html">
+		<guid>http://localhost:2784/c5/80/c58010d6.html</guid>
+		<pubDate>1603048883</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 23D09C9A15F83DFF<br />
+</title>
+		<link>http://localhost:2784/c5/80/c58010d6.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 23D09C9A15F83DFF<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/b6/88/b688fccc.html">
+		<guid>http://localhost:2784/b6/88/b688fccc.html</guid>
+		<pubDate>1603048412</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: E61F60C45107C79E<br />
+</title>
+		<link>http://localhost:2784/b6/88/b688fccc.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: E61F60C45107C79E<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fd/26/fd26b384.html">
+		<guid>http://localhost:2784/fd/26/fd26b384.html</guid>
+		<pubDate>1602972957</pubDate>
+		<title>NNPA
+</title>
+		<link>http://localhost:2784/fd/26/fd26b384.html</link>
+		<description>
+				<![CDATA[
+
+<br />
+NNPA
+<br />
+Kick-start your year by planning ahead!
+<br />
+VIRTUAL NNPA 2020 ANNUAL CONVENTION
+<br />
+BLACK PRESS: VITAL VOICE OF BLACK AMERICA
+<br />
+TRUST, HOPE &amp; RESILIENCE
+<br />
+OVERCOMING COVID-19
+<br />
+CELEBRATING 80 YEARS OF THE NNPA AND 193 YEARS OF THE BLACK PRESS
+<br />
+
+<br />
+JULY 8-9, 2020 —  REGISTRATION DETAILS COMING SOON
+<br />
+
+<br />
+NNPA 2020 NATIONAL LEADERSHIP AWARDS RECEPTION
+<br />
+September 16-17, 2020Marriott Marquis
+<br />
+901 Marriott Massachusetts Avenue, NW
+<br />
+Washington, DC  20001
+<br />
+
+<br />
+l
+<br />
+THE BLACK PRESS OF AMERICA IS MORE RELEVANT THAN EVER
+<br />
+NNPA is a trade association of the more than 200 African American-owned community newspapers from around the United States. Since its founding 75 years ago, NNPA has consistently been the voice of the black community.
+<br />
+
+<br />
+l
+<br />
+CREDO OF THE BLACK PRESS
+<br />
+The Black Press believes that America can best lead the world away from racial and national antagonisms when it accords to every person, regardless of race, color or creed, full human and legal rights. Hating no person, the Black Press strives to help every person in the firm belief that all are hurt as long as anyone is held back.
+<br />
+
+<br />
+
+<br />
+BECOME A MEMBER OF NNPA
+<br />
+The National Newspaper Publishers Association (NNPA) is committed to providing its members with valuable information, opportunities, and services. We recognize that communication amongst our publishers is a key tool to improving the industry.
+<br />
+
+<br />
+blackpressusa
+<br />
+
+<br />
+As the only national website featuring news exclusively from African-American journalists and Black community publications, www.BlackPressUSA.com has been well-received by on-line news readers, including several popular Black talk radio hosts. “I used to check the Washington Post’s website first thing every morning,” says Joe Madison, morning talk radio host at WOL-AM in Washington, DC. “Now I check BlackPressUSA.com.”
+<br />
+
+<br />
+Visit BlackPressUSA.com
+<br />
+OUR PARTNERS
+<br />
+ADVERTISE WITH OUR MEMBER PUBLISHERS.
+<br />
+We assist our advertisers with the planning &amp; implementation of any marketing campaign targeting our readership and the African American Community. Utilizing NNPA Media Services is an efficient and effective way to reach a diversified target audience with customized advertising packages.
+<br />
+
+<br />
+Advertise with our member publications.
+<br />
+NNPA MEDIA SERVICES IS THE GATEWAY TO NEARLY 200 REGIONAL AND LOCAL NEWSPAPERS WITH MORE THAN 20.1 MILLION READERS PER WEEK.
+<br />
+The buying power of the African American community is projected to grow to $1.3 trillion by 2017, according to Nielsen Media Research and NNPA research services.
+<br />
+
+<br />
+NATIONAL AGGREGATION OF NNPA AFRICAN AMERICAN (AA) READERS
+<br />
+African American: 99%
+<br />
+Median Age: 25-35 years
+<br />
+% Married: 40%
+<br />
+Median Income: $35,500.00 to $45,000.00
+<br />
+Total 2014 Audience: 20.1 million per week
+<br />
+Total AA 25-54 Audience: 19 million
+<br />
+Total AA 18-34 Audience: 12.8 million
+<br />
+Total AA 35-49 Audience: 14 million
+<br />
+AMERICANS FROM ALL BACKGROUNDS SEEK NEWS FROM THE BLACK PERSPECTIVE
+<br />
+As the largest and most influential Black-owned media resource in America, NNPA delivers news, information, and commentary to over 20 million people each week.
+<br />
+
+<br />
+FOLLOWERS BY SOCIAL PLATFORM:
+<br />
+
+<br />
+FACEBOOK
+<br />
+
+<br />
+FACEBOOK
+<br />
+
+<br />
+TWITTER
+<br />
+
+<br />
+TWITTER
+<br />
+
+<br />
+INSTAGRAM
+<br />
+
+<br />
+INSTAGRAM
+<br />
+Designed by Elegant Themes | Powered by WordPress
+<br />
+
+<br />
+Welcome Advertise with Us Contact Privacy Policy   <br />
+-- <br />
+[Cookie]
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/f4/b8/f4b82179.html">
+		<guid>http://localhost:2784/f4/b8/f4b82179.html</guid>
+		<pubDate>1602952057</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 74C5D1E7DE70B33A<br />
+</title>
+		<link>http://localhost:2784/f4/b8/f4b82179.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 74C5D1E7DE70B33A<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/2f/c9/2fc9f920.html">
+		<guid>http://localhost:2784/2f/c9/2fc9f920.html</guid>
+		<pubDate>1602929672</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 5F020644F7083333<br />
+</title>
+		<link>http://localhost:2784/2f/c9/2fc9f920.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 5F020644F7083333<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/83/8f/838faeec.html">
+		<guid>http://localhost:2784/83/8f/838faeec.html</guid>
+		<pubDate>1602921126</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 7905E87EF5ADCBA9<br />
+</title>
+		<link>http://localhost:2784/83/8f/838faeec.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 7905E87EF5ADCBA9<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fa/8c/fa8cb19a.html">
+		<guid>http://localhost:2784/fa/8c/fa8cb19a.html</guid>
+		<pubDate>1602902189</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: D78FC18291D2122D<br />
+</title>
+		<link>http://localhost:2784/fa/8c/fa8cb19a.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: D78FC18291D2122D<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fd/02/fd0223fd.html">
+		<guid>http://localhost:2784/fd/02/fd0223fd.html</guid>
+		<pubDate>1602898001</pubDate>
+		<title>Yes, the queries are more efficient.
+</title>
+		<link>http://localhost:2784/fd/02/fd0223fd.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;28181c5edb33595bab7efbc31092bd681ae2d6e4
+<br />
+
+<br />
+Yes, the queries are more efficient.
+<br />
+
+<br />
+But if you are caching the query outputs?
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/02/6c/026cb4b6.html">
+		<guid>http://localhost:2784/02/6c/026cb4b6.html</guid>
+		<pubDate>1602886736</pubDate>
+		<title>https://cacm.acm.org/blogs/blog-cacm/248022-what-everyone-knows-and-what-no-one-knows/fulltext</title>
+		<link>http://localhost:2784/02/6c/026cb4b6.html</link>
+		<description>
+				<![CDATA[
+				https://cacm.acm.org/blogs/blog-cacm/248022-what-everyone-knows-and-what-no-one-knows/fulltext<br />
+-- <br />
+[Cookie]
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/ba/83/ba83ec69.html">
+		<guid>http://localhost:2784/ba/83/ba83ec69.html</guid>
+		<pubDate>1602874408</pubDate>
+		<title>title: Гетманщина</title>
+		<link>http://localhost:2784/ba/83/ba83ec69.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;f652c45f1dd9a8d268a46321d07ed28833ff3ca4
+<br />
+
+<br />
+title: Гетманщина
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/b3/51/b3515761.html">
+		<guid>http://localhost:2784/b3/51/b3515761.html</guid>
+		<pubDate>1602874105</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: BBBAA29C764FE9D1<br />
+</title>
+		<link>http://localhost:2784/b3/51/b3515761.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: BBBAA29C764FE9D1<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/36/4b/364b38a3.html">
+		<guid>http://localhost:2784/36/4b/364b38a3.html</guid>
+		<pubDate>1602861790</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 86C1D4FD0ED0DFA8<br />
+</title>
+		<link>http://localhost:2784/36/4b/364b38a3.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 86C1D4FD0ED0DFA8<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/80/54/80544aa1.html">
+		<guid>http://localhost:2784/80/54/80544aa1.html</guid>
+		<pubDate>1602861755</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 87379FD5B5823468<br />
+</title>
+		<link>http://localhost:2784/80/54/80544aa1.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 87379FD5B5823468<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/63/03/63030e41.html">
+		<guid>http://localhost:2784/63/03/63030e41.html</guid>
+		<pubDate>1602859404</pubDate>
+		<title>#disagree</title>
+		<link>http://localhost:2784/63/03/63030e41.html</link>
+		<description>
+				<![CDATA[
+				#disagree<br />
+<br />
+&gt;&gt;c3941c26a0d5db12639e1a153d523eae2368b428
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/97/56/9756117c.html">
+		<guid>http://localhost:2784/97/56/9756117c.html</guid>
+		<pubDate>1602794477</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: FF60C3FF3BDE4923<br />
+</title>
+		<link>http://localhost:2784/97/56/9756117c.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: FF60C3FF3BDE4923<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/57/9d/579d2dbc.html">
+		<guid>http://localhost:2784/57/9d/579d2dbc.html</guid>
+		<pubDate>1602761347</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 8B4DC4BF97D2270F<br />
+</title>
+		<link>http://localhost:2784/57/9d/579d2dbc.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 8B4DC4BF97D2270F<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/34/78/347840bf.html">
+		<guid>http://localhost:2784/34/78/347840bf.html</guid>
+		<pubDate>1602755724</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: F7849519281B2651<br />
+</title>
+		<link>http://localhost:2784/34/78/347840bf.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: F7849519281B2651<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/17/d2/17d2c128.html">
+		<guid>http://localhost:2784/17/d2/17d2c128.html</guid>
+		<pubDate>1602748255</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: 44D3CE50CCEF9794<br />
+</title>
+		<link>http://localhost:2784/17/d2/17d2c128.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: 44D3CE50CCEF9794<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/24/ae/24aea80c.html">
+		<guid>http://localhost:2784/24/ae/24aea80c.html</guid>
+		<pubDate>1602745214</pubDate>
+		<title>Гуаньси (кит. трад. 關係, упр. 关系, пиньинь guānxì) — китайский термин, в русском uined jumpsuits, and military suits. As jingoism ran high during the Gulf War, they costumed Ice in an American flag motif. It was very corny. He says that toward the end of his stint on the tour, his merch began outselling Hammer and a friendly rivalry broke out, which briefly turned acrimonious as the media baited them into taking shots at each other.
+<br />
+
+<br />
+Then there was the “Under Pressure” sample. According to Earthquake, Queen, David Bowie, and their publishers took 85 percent of the royalties. Clueless journalists lambasted Ice for stealing the riff rather than practicing hip-hop tradition. To be fair, Ice did himself no favors when he gave interviews admitting to the sample, but goofily splitting hairs between the “ding ding ding” of the two songs’ bass lines.
+<br />
+
+<br />
+To hip-hop devotees, the brazen sample flip was the first of several acts of war. The genre started with outright heists of Chic’s “Good Times” and Liquid Liquid’s “The Cavern,” but Ice dropped right as the Bomb Squad, Prince Paul, and the Dust Brothers were creating psychedelic sample mosaics that felt like the next advancement of Phil Spector’s Wall of Sound. By 1997, Puffy and Mase would rip off “Let’s Dance” with a video of them getting jiggy in the middle of the Sahara with what appeared to be an Algerian militia. It elicited a modest furor, but the mad rappers were slowly silenced. What Ice was crucified for practically eventually became a hip-hop rite of passage.
+<br />
+
+<br />
+Back in late 1990, the 23-year-old became the pale face of hip-hop apostasy, attracting oblivious Karens and Brads at a startling clip.
+<br />
+
+<br />
+“I was mentioning eight balls of cocaine, 9-millimeter guns, a 12-gauge shotgun, and prostitutes. You can’t paint this picture to a 9-year-old. So how did they clean it up? Use the image, let ’em focus on the beat and the dancing—it worked,” Ice says. “I wasn’t targeted to be a role model; I was never put out as an artificial boy-band thing to fit this new audience that I was catering to now. All of a sudden, it went from Black clubs that I thought I’d been in and would be in forever to stadiums with white people.”
+<br />
+
+<br />
+Robert Christgau, then the reigning dean of critics, eviscerated him for being somehow “blander than Hammer.” The barrage of criticism felt intentionally ruthless; To the Extreme might be far from a classic, but “Ice Is Workin’ It” is a surprisingly muscular display of lyrical bluster, à la LL Cool J. The pair of Khayree songs are funky party tracks that admirably convey why KMEL booked Vanilla Ice to headline its New Year’s Eve 1991 concert. There are certainly embarrassing moments, like the sappy ballad “I Love You” or “Rasta Man,” which seems like the covert blueprint for Lonely Island’s “Ras Trent.” But even absent “Ice Ice Baby,” it’s essentially a replacement-level 1990 rap album, no worse than anything Kwamé put out.
+<br />
+
+<br />
+The Source, the bible of hip-hop, ran a one-page diatribe by Dan Charnas with the headline “Vanilla Ice: Our Worst Nightmare?” He envisioned the “nightmare become reality” where the American mass media pigeonholes hip-hop as the totality of Hammer, Ice, and Young MC, where true innovators would get whitewashed by derivative pop opportunists. Nonetheless, Charnas incisively noted that Ice was similar to what MC Serch of 3rd Bass might’ve been like had he grown up in the South.
+<br />
+
+<br />
+“I remembered watching [Hammer’s] ‘U Can’t Touch This’ video and being really angry. What is this shit? It’s horrible. He was definitely a good dancer, but this is the worst song I’ve ever heard. The Rick James sample was so obvious,” says Jonathan Shecter, the cofounder of The Source and its editor-in-chief from 1988 to 1996. “We’d already started writing negative things about Hammer, then out of nowhere came ‘Ice Ice Baby,’ this even more offensive song. The sample was even more obvious, and I didn’t like his rapping either. It became the biggest song in the world and now we had another enemy. Now, all of our anger was directed at him.”
+<br />
+
+<br />
+Ironically, Shecter had been one-half of B.M.O.C., the duo of white rappers who first sampled “Play That Funky Music.” The entire staff of his publication—Black, white, Latino, and Asian—all shared a mutual loathing of Hammer and Ice. Only later did Schecter reconcile the vampiric nature of the music industry. No matter how many indignant essays were written, record executives would continue their desperate search for an MC Hammer or Vanilla Ice of their own.
+<br />
+
+<br />
+Every label tried to sign a white rapper. In a reminder that life is totally arbitrary and we are all susceptible to confirmation bias, Public Enemy and the Bomb Squad put on a group of white kids called Young Black Teenagers. Competent but unoriginal, YBT rapped about Kelly from Married With Children and cringingly titled a song “Daddy Kalled Me Niga Cause I Likeded to Rhyme.” This interview may as well be the foundational text for Rachel Dolezal, but because of their connections, they received a pass. Eazy E tried and failed twice with Tairrie B and Blood of Abraham. Jive hoped that Kid Rock would give them an “Ice Ice Baby,” but instead his Grits Sandwiches for Breakfast bricked despite production from Too Short and D-Nice of Boogie Down Productions. The only “success” was Marky Mark in 1991, who racked up a no. 1 record for a hip-house track produced by a member of New Kids on the Block while somehow receiving a fraction of the censure as Ice.
+<br />
+
+<br />
+“My image would’ve been different if I’d signed to Def Jam, but it’s hard to speculate how the record sales would have been impacted,” Ice says. “A lot of people probably could see me being more respected with a crew like Public Enemy, instead of being all alone and being put into the pop world. It probably would have happened on its own anyway though. ‘Ice Ice Baby’ was magical; it had fairy dust all over it.”
+<br />
+
+<br />
+For all the nuclear attacks, hip-hop would’ve gone mainstream with or without Vanilla Ice. In many respects, Kid N’ Play established a template for Hammer and Ice’s brand of poppy dance rap, but because they were from the Bronx and Queens, purists (accurately) recognized them as the latest evolution of the four elements—kid-friendly but still reverent of tradition. The same month that To the Extreme dropped, NBC premiered The Fresh Prince of Bel-Air and Kid N’ Play, a Saturday-morning program that turned the latter into literal cartoons. Yet when artists from the Bay and Dallas/Miami did it, their commercialization was considered hip-hop’s death knell.
+<br />
+
+<br />
+In reality, the genre had been steadily crossing over since 1986, when Run-DMC covered Aerosmith’s “Walk This Way” and the Beastie Boys tapped into a fraternity crowd that needed white rappers talking about beer, burgers, and girls to make them care. In 1989, the Grammys introduced the Best Rap Performance category, giving the first award to DJ Jazzy Jeff and the Fresh Prince. In that same year, Young MC, Tone Loc, and Biz Markie all cracked the upper reaches of the Billboard Hot 100. Just before Hammer and Ice’s 1990 takeover, Bell Biv DeVoe and Salt-N-Pepa became pop-rap sensations. Ice certainly wasn’t the first nor would he be the last; he just happened to be the largest target.
+<br />
+
+<br />
+You could almost see the gears turning in Keenen Ivory Wayans’s head. In January 1991, the In Living Color creator was tasked with introducing Vanilla Ice’s performance of “Ice Ice Baby” at the American Music Awards. Dressed like Captain America meets Aladdin, Ice eventually won the award for Favorite New Pop/Rock Artist. Flanked by Quon and the VIP Posse, Ice gave an abbreviated but memorable speech that concluded with his saying “to the people who try to hold me down and talk bad about me, kiss my white butt.”
+<br />
+
+<br />
+
+<br />
+“I was getting hate everywhere. I was like, ‘I’m going to show y’all. Here it is, in your face. Eat a dick. Fuck you,’” Ice says. “It was wrong and I regret it; I was stupid, young, and dumb. Shit hit me from left, it hit me from right, from above and from under. I wasn’t coached on what to say. In hindsight, I should’ve just thanked my mom.”
+<br />
+
+<br />
+It’s hard to blame him much. He was 23 and secure in the belief that every artist has when they’re on top of the world: This will continue forever. Despite the searing criticism, things still looked rosy. He had just filmed the iconic “Ninja Rap” scene from Teenage Mutant Ninja Turtles 2: Secret of the Ooze and Madonna had popped into his dressing room at Madison Square Garden to give him her phone number. They became a couple after he visited her in Indiana on the set of A League of Their Own, culminating in his appearance in her Sex book.
+<br />
+
+<br />
+
+<br />
+Photo by Bill Nation/Sygma via Getty Images
+<br />
+No one could’ve defended against what came next. On Sunday, February 10, 1991, just 12 days after Wayans watched Ice perform at the AMA’s, Jim Carrey parodied him on In Living Color. “White White Baby” is a massacre. It’s not technically a diss song, but if it were, it’d be up there with “Who Shot Ya,” “The Bridge Is Over,” “Hit ’Em Up,” and “Takeover”/“Ether.” It’s difficult to convey the magnitude of the Fox sketch show in 1991. It had been on the air for only 10 months, but it had become the hip-hop generation’s analogue to Saturday Night Live in the late ’70s. We now recognize Carrey as a brilliant satirist, imitator, and actor who was on the verge of becoming Hollywood’s most bankable comic. But at the time, all anyone knew was that Fire Marshal Bill had just set Vanilla Ice up in flames.
+<br />
+
+<br />
+
+<br />
+If the previous fusillades were often academic and easily dismissed, “White White Baby” was the shit that made your soul burn slow. Carrey pulls off the look perfectly: the cuts in his scalp, the dazzling preposterousness of the emperor’s new pajamas, the all-Black backing dancers with the “marketable” face up front. Had it been anyone else other than the future Ace Ventura, Ice might’ve been spared, but Carrey was already a master. The gesticulations and flailing dance moves were amplified just enough to make you question why you liked Ice in the first place. It was both slapstick and skull-crushing: As he rapped “Let’s kick it,” Carrey sent a single shoe into the rafters and chased after it like an outfielder losing a fly ball in the sun. His Ice is an empty mannequin, a brainless puppet foisted into the spotlight solely because of his skin color—rap’s Manchurian candidate, backed by the dark machinations of industry to exploit a rich cultural tradition.
+<br />
+
+<br />
+With all savage parody, there is enough truth for it to stick. With all good comedy, it’s fucking absurd. Carrey does a Three Stooges routine while pumping his arms and skittering backward on one leg. He pelvic-thrusts, turkey-necks, sticks his tongue out, and does the “I’m a little teapot short and stout.” The dancers do a call-and-response mocking his real name, and Carrey says nothing rhymes with Van Winkle.
+<br />
+
+<br />
+With pitch-perfect mannerism and vocal tone, Carrey spits, “I’m white and I’m capitalizing / On a trend that’s currently rising.”
+<br />
+
+<br />
+Before ultimately leaving in disgust, the dancers chant: “When you gonna stop?”
+<br />
+
+<br />
+“Maybe never,” Carrey responds. “I become richer with every endeavor. … I’m living large and my bank is stupid / Because I just listen to real rap and dupe it.”
+<br />
+
+<br />
+Ice was arraigned as the latest in a long line of white appropriators, from Bix Beiderbecke to Elvis to Led Zeppelin. If he’d received private support from some of rap’s most respected figures, he was an unguarded mark in the public eye. Dallas wasn’t about to defend him because he didn’t represent it, and even if it had, unless Michael Irvin stepped forward to say that he’d seen Ice kill brains like poisonous mushrooms, no one would’ve cared. Nearly a decade later, the Interscope brain trust knew to pair Eminem with Dre to ensure his street credibility and avoid another Vanilla Ice meltdown. But Ice had emerged at the apex of the conscious rap era, unaffiliated and dressed like an opulent Nordic dictator. It was open season.
+<br />
+
+<br />
+The fait accompli occurred just two days later. Invited on The Arsenio Hall Show, Ice walked blithely into the lion’s den. This was peak Arsenio, where the Dog Pound was howling and the best rappers and entertainers appeared nightly. The same year that they turned over the program to Prince one night for the best hour of music television ever aired. Someone should’ve warned Ice.
+<br />
+
+<br />
+
+<br />
+It remains a brutal interview to watch. You can practically see Ice’s career leave his body. There is none of the jocular banter of late-night programs. From the start, Hall is antagonistic and aiming for the jugular. Dressed in a bedazzled green-and-white proto Power Ranger suit, Ice is immediately greeted by Flava Flav. A scowling Hall hammers him on the American Music Awards gaffe, his “white rapper revenge oppression,” the mistruths in his biography.
+<br />
+
+<br />
+Ice’s rebuttals are reasonable, but he’s defensive and rattled. It doesn’t help much that his hair is sculpted and blow dried, the cuts in his eyebrow delicately shaved. Had Ice shown up looking like he had on the cover of Hooked, it might’ve gone differently, but he was too deep into his public persona.
+<br />
+
+<br />
+For all his missteps, Ice never wavered from acknowledging his creative debt to a Black art form. He gave a lot of foolish quotes at the time, but his commitment to the culture was deep and genuine, even if it got lost in the mass-market translation. As ridiculous as his Ice by Ice book was, he shouted out his love of Rakim, the Geto Boys, Big Daddy Kane, N.W.A, and Audio Two—singling them out as brilliant artists who deserved more love from the mainstream music world.
+<br />
+
+<br />
+But Arsenio wouldn’t concede an inch. He’d later explain that he’d felt like he’d been used and misled by biographical information that Ice’s team had given him. He was “pissed.” When Ice tried to point out his friendship with Flava Flav, Arsenio spat back, “Is that why you brought him out, to show that you have a Black supporter?”
+<br />
+
+<br />
+There was no point to explaining the City Lights years or the fact that Chuck D had tried to sign him. After all, this is what mass culture does: It flattens and removes the arcane but relevant details. The people want the shiny suit until they don’t want it anymore. Then there’s always a next model to replace it.
+<br />
+
+<br />
+As his world was collapsing, Ice says that a young 2Pac was one of the people who gave him the strength to keep enduring. This was a young Pac, fresh off “Same Song” with Digital Underground and about to begin recording his debut, 2Pacalypse Now.
+<br />
+
+<br />
+“We’d played some early shows together with Digital Underground and let me tell you, 2Pac was one of the biggest Vanilla Ice supporters you ever met,” Ice says. “He gave me great advice: Keep your head up, don’t let no haters fucking keep you down, keep doing your thing, and don’t focus them people ain’t paying for your bills. You know who is? The ones that’re buying it. Focus on them.”
+<br />
+
+<br />
+“All you have to do is play ‘Ice Ice Baby’ and you’ll remember everything you were wearing, who you were dating, how cheesy and corny we were.” —Vanilla Ice
+<br />
+According to lore and VH1, 2Pac’s future label boss, Suge Knight, paid a visit to Ice’s room at the Bel Age Hotel the same night as the Arsenio Hall taping. The story famously holds that the former University of Nevada defensive end dangled Ice from a balcony in order to secure songwriting points off “Ice Ice Baby.” In Knight’s version, Ice had stolen the lyrics from Mario Johnson, Earthquake’s former collaborator. In Ice’s version, Knight extorted him into signing away millions of royalty dollars, which became part of the seed money for Death Row.
+<br />
+
+<br />
+As with all things pertaining to Vanilla Ice, the absolute truth is impossible to ascertain, but the stories are relentlessly entertaining. In Earthquake’s reminiscence, Knight approached Quon on the set of Arsenio demanding money from “Ice Ice Baby,” but the manager demurred. Later that evening, Knight and his hulking bodyguards found their way into Ice’s suite for an impromptu business meeting.
+<br />
+
+<br />
+“Every time Mario [Johnson] said something, Ice would interrupt him and call him a liar,” Earthquake says. “Suge said, ‘Ice, when you had the floor, no one interrupted you.’ Ice interrupted two more times. After the third time, he said, ‘Ice, I’ma ask you more time or I’ma throw your ass off the balcony.’”
+<br />
+
+<br />
+Earthquake says that he never saw Ice pen the lyrics to “Ice Ice Baby”; in his last conversation with Johnson—who Suge would soon rename “Chocolate”—the rapper emphatically refused to write anything for Ice.
+<br />
+
+<br />
+In Ice’s rendition of the Suge confrontation, Johnson was a minor acquaintance whom he’d given a few rides home after the club. Suddenly, “Ice Ice Baby” became the biggest song in the world. Ice had temporarily moved to L.A. and met Suge Knight, who started suspiciously materializing wherever he went, dressed in black suits and shades like a Mafia don. Finally, he appeared inside his luxury hotel room.
+<br />
+
+<br />
+Ice vehemently swore that he wrote every bar to “Ice Ice Baby.” He says that Suge politely asked him to step out on the balcony for a conversation. His bodyguards came in armed, but peaceful. No one was looking for trouble, but they wouldn’t go out of their way to avoid it either. They told Earthquake to sit down and shut up, and everything would be cool. The same went for Ice’s bodyguards. Out on the balcony, Suge began explaining that he would take some points off the record; at this point, Ice says that he didn’t even know what that meant.
+<br />
+
+<br />
+“He says, ‘Ice, listen, man. Here in L.A., it’s rough. There’s a lot of gangs.’ He explains a lot to me that I already knew; rap music had always been gangster,” Ice says. “I asked, ‘What am I paying for?’ He says, ‘Protection … because of all these gangs. We’re going to be looking after you now. You’re in with a very tight clique.’ He said so many rappers and musicians that you wouldn’t even think pay Suge Knight.”
+<br />
+
+<br />
+It was the proverbial offer that he couldn’t refuse. Ice signed away two points on the spot, technically to Johnson, who Ice says was brought back into the room freshly bloodied and bruised.
+<br />
+
+<br />
+“I was like, ‘What the fuck is this? Damn.’ It just went from being peaceful and shit to crazy,” Ice says. “Suge said, ‘This is how we’re going to get our points right there [pointing at Johnson].’ So, they basically took those points and put [Johnson] in the place where he wasn’t. He didn’t help me write anything.”
+<br />
+
+<br />
+Things only grew worse. Rather than get him back in the studio to follow up the smash that had been recorded years before, SBK tried to cash in with the extremely bad Extremely Live—a live album with a few new songs, including “Rollin in My 5.0,” which tried to replicate “Ice Ice Baby” but this time with a sample of Steve Miller’s “Fly Like an Eagle.” It was critically loathed and the singles failed to chart; the album peaked at no. 30 and quickly disappeared into record store bargain bin eternity.
+<br />
+
+<br />
+By the summer of 1991, Marky Mark had replaced Ice as pop’s flavor-of-the-month white rapper. In a bulldozing attack, 3rd Bass dissed Ice with “Pop Goes the Weasel.” The song was good, but the appropriations committed by the white rappers from Queens and Long Island were no different from those perpetrated by Ice. They jacked a straightforward pop hit (Peter Gabriel’s “Sledgehammer”), used Black people and the Watts Towers (?!) as props to score authenticity points, and presented themselves as white saviors attempting to preserve hip-hop’s cultural purity. The Source pointed out the deceptive similarities between Ice and MC Serch, but the other rapper in the group, Pete Nice, had an English degree from an Ivy League school. Ice was a high school dropout from a broken home—not to mention that he had dramatically better dance moves than the bespectacled Serch.
+<br />
+
+<br />
+But because they were from New York, signed to Def Jam, and had recruited punk rock legend Henry Rollins to play Ice in the video, 3rd Bass was hailed as a refreshing change from Ice’s “same old thieving.” Between In Living Color, Arsenio, and 3rd Bass, I completely bought in too. Ice suddenly became played out and corny. A Tribe Called Quest’s Low End Theory dropped that September. On the “Scenario” remix that came out a few months later, Phife sneered “Vanilla Ice platinum? That shit’s ridiculous.”
+<br />
+
+<br />
+The Ice Age formally ended that October with the release of Cool As Ice. Financed by SBK at the apogee of his success, the film was conceived as a modern cross between The Wild One and Jailhouse Rock. Though it’s since become a sort of camp classic, it received atrocious reviews and grossed just $1.2 million on a $6 million budget. The soundtrack album flopped, and the film was nominated for seven Golden Raspberry Awards. Ice won the Razzie for “Worst New Star”; he did not show up to accept the trophy.
+<br />
+
+<br />
+IV. Word to Your Mother
+<br />
+If anyone disproves the F. Scott Fitzgerald cliché about second acts in American life, it’s Vanilla Ice. But what’s overlooked about that adage is the idea that while one’s life can splinter in new directions and even regenerate to a degree, there remains the lingering memory of that first pristine wave of success. This is a nation perpetually in thrall to the new, simultaneously sentimental and suspicious of age. No matter how many times Ice has attempted to rebrand or redefine himself, there is the understanding that it could go only so far. “Ice Ice Baby” was too big, too era-defining, the song you chase forever until you eventually learn to let go.
+<br />
+
+<br />
+“It was beyond wildfire, beyond a tsunami. Just unbelievable success, so fast, and so incredibly impactful—to the point where we look back 30 years later and ‘Ice Ice Baby’ has become an anthem that actually defines the ’90s,” Ice says. “All you have to do is play ‘Ice Ice Baby’ and you’ll remember everything you were wearing, who you were dating, how cheesy and corny we were. The ’90s just had that attitude.”
+<br />
+
+<br />
+
+<br />
+Photo by Matthew Eisman/Getty Images
+<br />
+The more accurate Fitzgeraldian aphorism to describe Ice is “Vitality shows in not only the ability to persist but the ability to start over.” Anyone with a passing familiarity with pop culture has witnessed at least a half-dozen versions of Ice. After vanishing in late ’91, he retreated to a mansion on Star Island to pursue a decorated motocross and Jet Ski career (he was ranked no. 6 in the world in the latter at one point). Upon his ’94 reemergence, he tried to adapt to the times by going hardcore, sporting dreadlocks and rapping about weed smoking like an excited teenager who had just hit his first bong. After it failed, he nearly overdosed, which led him toward spirituality, therapy, marriage, and a grunge band. There was the nu-metal phase when he collaborated with one of Korn’s producers and another phase at the beginning of the millennium when he appeared on any reality show that would take him. Eventually, he landed on VH1’s The Surreal Life, where Tammy Faye Bakker offered the most valuable advice that anyone had given him since 2Pac: “Honey, you are who you are because of who you were. Embrace it.”
+<br />
+
+<br />
+There were brushes with the law: a 2008 arrest after his wife said he kicked and hit her (the charges were later dropped after she recanted). He copped to a plea deal in 2015 related to charges of residential burglary and grand theft after police say he took furniture, a pool heater, and bicycles from a Florida home that he presumed was vacant. He became a Juggalo and released an album on ICP’s label, starred in an Adam Sandler movie, played Captain Hook in a British production of Peter Pan, and nearly was involved in a Fourth of July concert in Texas that was called off because of COVID-19 concerns. This is all in addition to the decade-long run of The Vanilla Ice Project.
+<br />
+
+<br />
+Most recently, Dave Franco announced an Ice biopic in the vein of The Disaster Artist. The logline for To the Extreme reads: “From a high school dropout selling cars in Dallas to having the first hip-hop single to top the Billboard charts … a young Vanilla Ice struggles with stardom, extortion attempts and selling out as he makes music history.”
+<br />
+
+<br />
+In the three decades since the album’s release, it has become difficult to see the world in which it all emerged. The questions of cultural appropriation and artistic integrity continue to be paramount to the modern conversation, but it is almost impossible to imagine a landscape where a few negative articles, a comedy sketch, and a rough appearance on a syndicated late-night show could cause the biggest artist on earth to completely implode. The fear of Ice was that it would hasten a world in which the urgent salvos of Public Enemy and N.W.A would never reach white Middle American households. But both are deservedly enshrined in the Rock &amp; Roll Hall of Fame, and the latter had a biopic that grossed more than $200 million and was nominated for an Academy Award.
+<br />
+
+<br />
+After Vanilla Ice and Marky Mark left the limelight, another solo white rapper wouldn’t become famous until Eminem eight years later. And after that, it would be over a decade before Macklemore raised all the same troubling questions that had first been asked during the presidency of the elder George Bush. Hip-hop has been so thoroughly co-opted and embedded into the mainstream of pop existence that rappers, many of them white, can pack arenas without remotely intersecting with the street world. The question of selling out is so obsolete that Travis Scott—who never met a beat, ad-lib, or nickname that he couldn’t steal—can do a nihilistically shameless cross-promotional deal with McDonald’s. And rather than catch flak for partnering with a soulless corporate behemoth, millions of teenagers treat his pseudo Happy Meal like the holy grail.
+<br />
+
+<br />
+If Vanilla Ice were to debut today, he might be something like G-Eazy, a well-meaning and technically adequate rapper acknowledging his cultural debt. After all, the Bay Area artist got his start selling post-hyphy music on the streets of Berkeley and Oakland before cleaning up his image to look like a leather-jacketed ’50s black-and-white matinee idol.
+<br />
+
+<br />
+The more accurate comparison might be Post Malone, a fellow Dallas native who has been condemned for borrowing hip-hop tropes without paying the proper respect to the art form. In a fitting twist, Malone records for Republic, the label founded and run by Monte Lipman, the original A&amp;R who discovered Ice in 1990. But whereas Ice was felled by the ceaseless avalanche of criticism and scorn, Malone’s star has only ascended in spite of, or maybe even because of, it. When I wrote a diatribe against his staggering creative emptiness, woeful theft, and insistence on treating hip-hop like a Halloween costume, I received death threats and was the subject of multiple articles questioning my objectivity. We have been in the “too big to fail” era for far too long, and it extends to all walks of life, except maybe the country itself.
+<br />
+
+<br />
+As for Vanilla Ice, it would be comforting if we could look back and believe that all the hatred was meant for something, rather than as an ideological Alamo for gatekeepers desperate to stop an inexorable annexation. He survived, made millions of dollars, the story ends well. But it is difficult to remember his rise and fall as anything but a senseless casualty, for important causes that no one can quite remember.
+<br />
+
+<br />
+Jeff Weiss is the founder and editor of POW. His work has appeared in The Washington Post, the Los Angeles Times, and GQ.
+<br />
+
+<br />
+60 SONGS THAT EXPLAIN THE '90S
+<br />
+‘60 Songs That Explain the ’90s,’ Episode 1: Alanis Morissette and the Greatest Eff-You Anthem of the Decade
+<br />
+TV
+<br />
+It’s the Jacket: A Mini Oral History of A.J. Soprano’s Slipknot Windbreaker, Its Online Resurrection, and the Style of ‘The Sopranos’
+<br />
+MUSIC
+<br />
+‘Light Up the Sky’ Doesn’t Gawk at Blackpink—It Tries to Understand Them
+<br />
+View all stories in Music
+<br />
+Terms of Use Privacy Notice Cookie Policy Do not sell my info Communications Preferences Accessibility Platform Status
+<br />
+Contact Send Us a Tip
+<br />
+An SB Nation affiliate site
+<br />
+
+<br />
+Advertise with us
+<br />
+Jobs @ The Ringer
+<br />
+Content ©2020 The Ringer All Rights Reserved
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/24/cc/24ccba30.html">
+		<guid>http://localhost:2784/24/cc/24ccba30.html</guid>
+		<pubDate>1602626282</pubDate>
+		<title>Software Updated to Version 88066270..</title>
+		<link>http://localhost:2784/24/cc/24ccba30.html</link>
+		<description>
+				<![CDATA[
+				Software Updated to Version 88066270..<br />
+<br />
+Installed software version has changed from 7d925a43b6ab8545f84009dbe77969b632926c0f to 88066270068eded797b3f4bcadc0a2fe3e4d61f0<br />
+<br />
+88066270 Merge remote-tracking branch 'refs/remotes/origin/master'<br />
+f473c4c9 profile.template: add more layering of beginner vs expert<br />
+1f56fe7a Add debug output<br />
+277c3b6e Fixx duplicate call detector in RedirectWithResponse()<br />
+2e547482 Add debug output to RetrieveServerResponse()<br />
+6ab3f110 Improve loading indicator<br />
+fad6f3e9 Set eventLoopShowTimestamps on in OnLoadEverything()<br />
+e912513f Remove call to EventLoop(), it's called somewhere else<br />
+9ab724d5 Add to doc<br />
+cdd8ec2b IndexFile() add debug output<br />
+5870dcd6 #config token: validate supplied config key with ConfigKeyValid() before applying<br />
+4753b267 IndexTextFile() add debug output<br />
+c870cd46 IndexTextFile() integrate ExpireAliasCache() and add debug output<br />
+fbb60ad2 ExpireAliasCache() add debug output<br />
+3d882a2a str_replace() improve debug output<br />
+27e63cf9 str_replace() improve debug output<br />
+5c89bdde str_replace() improve debug output<br />
+9c3386b1 PutConfig() add sanity checks<br />
+5812521f ConfigKeyValid() : add sanity check<br />
+1c3f85e7 pages.pl: Allow multiple arguments<br />
+4f4ae35f Add sanity check to BuildTouchedPages()<br />
+024bb827 Add GetItemTemplateFromHash()<br />
+3ccf63ec Change message displayed when user has not marked anyone as #friend<br />
+<br />
+#changelog
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/e5/aa/e5aa9b38.html">
+		<guid>http://localhost:2784/e5/aa/e5aa9b38.html</guid>
+		<pubDate>1602562498</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F813979FE710FACA<br />
+</title>
+		<link>http://localhost:2784/e5/aa/e5aa9b38.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F813979FE710FACA<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/d5/f7/d5f7dd72.html">
+		<guid>http://localhost:2784/d5/f7/d5f7dd72.html</guid>
+		<pubDate>1602561482</pubDate>
+		<title>Mously has joined.<br />
+<br />
+--<br />
+Identifier: 34E02C732D675689<br />
+</title>
+		<link>http://localhost:2784/d5/f7/d5f7dd72.html</link>
+		<description>
+				<![CDATA[
+				Mously has joined.<br />
+<br />
+--<br />
+Identifier: 34E02C732D675689<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/a5/74/a574eacc.html">
+		<guid>http://localhost:2784/a5/74/a574eacc.html</guid>
+		<pubDate>1602561304</pubDate>
+		<title>#like</title>
+		<link>http://localhost:2784/a5/74/a574eacc.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;a94ab993604882b46583597a56c3d5b59adaeceb
+<br />
+#like
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/a9/4a/a94ab993.html">
+		<guid>http://localhost:2784/a9/4a/a94ab993.html</guid>
+		<pubDate>1602561291</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 9C3F92D5E6B673C1<br />
+</title>
+		<link>http://localhost:2784/a9/4a/a94ab993.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 9C3F92D5E6B673C1<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/ba/f5/baf596e0.html">
+		<guid>http://localhost:2784/ba/f5/baf596e0.html</guid>
+		<pubDate>1602541754</pubDate>
+		<title>#approve</title>
+		<link>http://localhost:2784/ba/f5/baf596e0.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;cba79cca734fe8a92cb2a1b24aed9655b466a776
+<br />
+#approve
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/87/33/87337614.html">
+		<guid>http://localhost:2784/87/33/87337614.html</guid>
+		<pubDate>1602541626</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 551EFE84D93180E9<br />
+</title>
+		<link>http://localhost:2784/87/33/87337614.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 551EFE84D93180E9<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/f2/1e/f21e58c6.html">
+		<guid>http://localhost:2784/f2/1e/f21e58c6.html</guid>
+		<pubDate>1602541593</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: D3B8C186DFB8F88D<br />
+</title>
+		<link>http://localhost:2784/f2/1e/f21e58c6.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: D3B8C186DFB8F88D<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/90/a9/90a9c374.html">
+		<guid>http://localhost:2784/90/a9/90a9c374.html</guid>
+		<pubDate>1602541418</pubDate>
+		<title>Update</title>
+		<link>http://localhost:2784/90/a9/90a9c374.html</link>
+		<description>
+				<![CDATA[
+				Update<br />
+timestamp=1602541412<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8d/6a/8d6ab2ef.html">
+		<guid>http://localhost:2784/8d/6a/8d6ab2ef.html</guid>
+		<pubDate>1602541418</pubDate>
+		<title>Update</title>
+		<link>http://localhost:2784/8d/6a/8d6ab2ef.html</link>
+		<description>
+				<![CDATA[
+				Update<br />
+timestamp=1602541408<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/85/20/8520857c.html">
+		<guid>http://localhost:2784/85/20/8520857c.html</guid>
+		<pubDate>1602504149</pubDate>
+		<title>Software Updated to Version 0c01eca1..</title>
+		<link>http://localhost:2784/85/20/8520857c.html</link>
+		<description>
+				<![CDATA[
+				Software Updated to Version 0c01eca1..<br />
+<br />
+Installed software version has changed from 0845c76da0981bf484cb761c75af25172190ae6b to 0c01eca1b40d09e2c8332427854fec21ff2bee2c<br />
+<br />
+0c01eca1 Merge branch 'master' of https://www.github.com/gulkily/shitmyself<br />
+d1134153 fix typo<br />
+<br />
+#changelog
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/63/df/63df525b.html">
+		<guid>http://localhost:2784/63/df/63df525b.html</guid>
+		<pubDate>1602503377</pubDate>
+		<title>The Data Economy 2.0
+</title>
+		<link>http://localhost:2784/63/df/63df525b.html</link>
+		<description>
+				<![CDATA[
+				The Data Economy 2.0
+<br />
+
+<br />
+Irene Ng
+<br />
+Follow
+<br />
+Oct 12 · 3 min read
+<br />
+
+<br />
+
+<br />
+
+<br />
+
+<br />
+The Manifesto
+<br />
+Our mission is to give every individual on the planet a personal data account (PDA), a technology that enable individuals to share their personal data through legal contracts, and not merely consent. Our patent pending PDA technology enable the commodification of personal data into an asset that is legally owned by individuals through their own cloud-based personal data server (called a “HAT Microserver”) and shareable by them through direct consumer contract.
+<br />
+
+<br />
+We see a time where the value of data is of benefit to everyone, which we call Data Economy 2.0 (DE2.0), where personal data is an asset class, owned by individuals, transact-able with organisations, standardised for exchanges, yield generating as a market, and regulated for stewardship.
+<br />
+
+<br />
+The Problem
+<br />
+Pervasive usage of personal data. and a lack of transparency towards its handling has led to global concerns on privacy and equity with increasing breakdown of trust. A robust, scalable, technical, legal and ethical solution has not yet been readily deployed to solve for this. This leads to the quality of data being poorer, permissions in decline, costs increase, and the opportunity to benefit from data fades. Organisations are responding by locking-down, stepping back from handling data, some giving up on the opportunities of benefitting from data – which is not of long-term benefit to all. Individuals are increasingly frustrated, yet value what data offers, so want options that assure their data is being used responsibly.
+<br />
+
+<br />
+
+<br />
+The Solution
+<br />
+We provide infrastructure that enables the secure, compliant mobility of personal data across apps, services, and borders using PDAs, or personal data accounts. They are hosted by Dataswift, legally owned by the individual, and accessible by organisations on-demand. The result: GDPR, CCPA, HIPAA, PIPEDA, LGPD and everything that comes next – would be irrelevant and you can be future-proof. These are bold claims, and timing is everything. From FinTech to healthcare to IoT apps, we create, plugin and power the essential data infrastructure for any business who wants to collect, store, process and share customers’ data responsibly. PDAs transform the personal data they hold into an asset and maintain the value of the data for their future business.
+<br />
+
+<br />
+
+<br />
+The Opportunity for Organisations, Cities, Governments
+<br />
+The environment for data storage, exchange and compliance has been thrown into disarray as data regulators change the economic and legal nature of personal data. These regulations seek to protect consumers, as they should. However, they end up fragmenting markets to find solutions to continue the value that personal data creates. These are billion dollar markets: $120b data brokering market, $110b identity and data protection market, $55b compliance market and $160b data storage market. These markets would divide between centralised systems and Data Economy 2.0 – decentralised personal data ownership. Our Personal Data Account Management platform aim to play a major role in establishing the Data Economy 2.0.
+<br />
+
+<br />
+Our mission is to enable organisations and governments to implement and benefit from this new economy through the development of technology, tools and infrastructure; through discovery and design partnerships and through partnerships for transformation. We aim to help a pandemic ridden world leap frog to a new form of digital society, with a personal data asset that put individuals first, and therefore able to create a multiplier for their economy the way money has been able to.
+<br />
+
+<br />
+I’m reaching out to organisations, cities, governments to join us. We are already in 4 countries and expanding further. Contact me if you can help. Let’s make Data Economy 2.0 happen.
+<br />
+
+<br />
+Personal Data
+<br />
+Personal Data Ownership
+<br />
+Privacy
+<br />
+Trust
+<br />
+228 claps
+<br />
+
+<br />
+
+<br />
+
+<br />
+
+<br />
+
+<br />
+WRITTEN BY
+<br />
+
+<br />
+Irene Ng
+<br />
+Follow
+<br />
+Group CEO, Dataswift Inc. https://dataswift.io; Professor, University of Warwick; Turing Fellow; Website http://ireneng.com
+<br />
+
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/a5/9d/a59d8872.html">
+		<guid>http://localhost:2784/a5/9d/a59d8872.html</guid>
+		<pubDate>1602503187</pubDate>
+		<title>Admin has changed from 0 to E38FBD06A4B8D415</title>
+		<link>http://localhost:2784/a5/9d/a59d8872.html</link>
+		<description>
+				<![CDATA[
+				Admin has changed from 0 to E38FBD06A4B8D415
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/02/bd/02bdf35f.html">
+		<guid>http://localhost:2784/02/bd/02bdf35f.html</guid>
+		<pubDate>1602503034</pubDate>
+		<title>Software Updated to Version 79dfb1c5..</title>
+		<link>http://localhost:2784/02/bd/02bdf35f.html</link>
+		<description>
+				<![CDATA[
+				Software Updated to Version 79dfb1c5..<br />
+<br />
+Installed software version has changed from 0 to 79dfb1c529370cabc71759cef6a1e42b27a99596<br />
+<br />
+No changelog will be generated because $lastVersion is false<br />
+<br />
+#changelog
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/1c/e8/1ce882bf.html">
+		<guid>http://localhost:2784/1c/e8/1ce882bf.html</guid>
+		<pubDate>1602463585</pubDate>
+		<title>????? has joined.<br />
+<br />
+--<br />
+Identifier: 309DFC001BBC246C<br />
+</title>
+		<link>http://localhost:2784/1c/e8/1ce882bf.html</link>
+		<description>
+				<![CDATA[
+				????? has joined.<br />
+<br />
+--<br />
+Identifier: 309DFC001BBC246C<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/ba/ed/baeddbbd.html">
+		<guid>http://localhost:2784/ba/ed/baeddbbd.html</guid>
+		<pubDate>1602461627</pubDate>
+		<title>upgrade initiated at 1602461566</title>
+		<link>http://localhost:2784/ba/ed/baeddbbd.html</link>
+		<description>
+				<![CDATA[
+				upgrade initiated at 1602461566<br />
+Fetching origin<br />
+Auto-merging doc/brainstorm.txt<br />
+Removing default/admin/admin_last_action<br />
+Merge made by the 'recursive' strategy.<br />
+ default/admin/admin_last_action   |   1 -<br />
+ default/admin/js/debug.list       |   3 +<br />
+ default/admin/js/dragging         |   1 +<br />
+ default/admin/last_admin_action   |   1 +<br />
+ default/admin/token/parent        |   1 +<br />
+ default/admin/token/url           |   1 +<br />
+ default/html/theme.list           |   8 +++<br />
+ default/template/php/route.php    |   3 +-<br />
+ default/template/php/utils.php    |  34 ++++++++-<br />
+ default/theme/news/additional.css |  81 ++++++++++-----------<br />
+ doc/brainstorm.txt                |  75 ++++++++++++++++----<br />
+ doc/known.txt                     |   5 ++<br />
+ doc/todo.txt                      |  54 ++++++++++++++<br />
+ sqlite.pl                         |  52 +++++++++-----<br />
+ utils.pl                          | 146 ++++++++++++++++++++++++++++++++------<br />
+ 15 files changed, 369 insertions(+), 97 deletions(-)<br />
+ delete mode 100644 default/admin/admin_last_action<br />
+ create mode 100644 default/admin/js/debug.list<br />
+ create mode 100644 default/admin/js/dragging<br />
+ create mode 100644 default/admin/last_admin_action<br />
+ create mode 100644 default/admin/token/parent<br />
+ create mode 100644 default/admin/token/url<br />
+ create mode 100644 default/html/theme.list<br />
+rm -v cron.lock<br />
+removed 'cron.lock'<br />
+rm -rf cache<br />
+rm -rf html/*.html html/*/*.html html/*/*/*.html<br />
+rm -rf html/*.js html/*/*.js html/*/*/*.js<br />
+rm -rf html/*.php html/*/*.php html/*/*/*.php<br />
+rm -rf html/*.xml html/*/*.xml<br />
+rm -rf html/.htaccess<br />
+rm -rf html/*.zip<br />
+rm -rf html/rss.xml html/rss.txt<br />
+rm -rf config/template/*<br />
+rm -rf config/string/*<br />
+rm -rf config/theme/*<br />
+rm -rf config/admin/my_version<br />
+find html -type d -empty -delete<br />
+touch html/post.html<br />
+rm -v log/log.log<br />
+removed 'log/log.log'<br />
+mkdir -p html/txt<br />
+uncomment next 2 lines to restart lighttpd process<br />
+#todo turn this into a setting<br />
+1602461587 Require ./utils.pl...<br />
+,'``,.''-''-`,'.,-,,,'-,'.'',``,.`.,,,,,`,-`.-,-.`-,`,-'``'--''`,-,,'`..-'`1602461589 Calculating build times...<br />
+1602461589 Require ./access.pl...<br />
+`.-'1602461589 Require ./index.pl...<br />
+1602461589 SqliteConnect()...<br />
+,-,1602461589 SqliteMakeTables()...<br />
+,-'.'.`-,.-`.-'''`,-`--.,.'.-'-.....`',''-,.`--``'.-'.`''``,'`'.,-'`.-.,``.'``'-',.-,`,'--`.,..-1602461590 Remove cache/indexed/*<br />
+1602461590 Ensure there's /home/smdchike/hike/html and something inside...<br />
+1602461590 Looking for files...<br />
+1602461590 MakeChainIndex()...<br />
+-'`-..<br />
+1602461590 0<br />
+``,-.`<br />
+1602461590 1<br />
+'``,,<br />
+1602461590 2<br />
+----'<br />
+1602461590 3<br />
+`'`,`<br />
+1602461590 4<br />
+`-'.'<br />
+1602461590 5<br />
+,,'.,<br />
+1602461590 6<br />
+``'.`<br />
+1602461590 7<br />
+`.``-<br />
+1602461590 8<br />
+.`.`.<br />
+1602461590 9<br />
+--.,,<br />
+1602461590 10<br />
+''.`.<br />
+1602461590 11<br />
+.--`-<br />
+1602461590 12<br />
+,`-`'<br />
+1602461590 13<br />
+--',-`''`.<br />
+1602461590 14<br />
+-,,,,<br />
+1602461590 15<br />
+`,-,,<br />
+1602461590 16<br />
+-'.-,<br />
+1602461590 17<br />
+-,,',<br />
+1602461590 18<br />
+.`,.,<br />
+1602461590 19<br />
+,.`,-<br />
+1602461590 20<br />
+'`','<br />
+1602461590 21<br />
+,,`-,<br />
+1602461590 22<br />
+,'.-'<br />
+1602461590 23<br />
+--,`-<br />
+1602461590 24<br />
+.-``,<br />
+1602461590 25<br />
+',''`<br />
+1602461590 26<br />
+,,'.-.`'``<br />
+1602461590 27<br />
+`--'`<br />
+1602461590 28<br />
+-,..`<br />
+1602461590 29<br />
+'''-,<br />
+1602461590 30<br />
+-..,'<br />
+1602461590 31<br />
+,'...<br />
+1602461590 32<br />
+'''..<br />
+1602461590 33<br />
+-.-`.<br />
+1602461590 34<br />
+.-',.<br />
+1602461590 35<br />
+-'`.-<br />
+1602461590 36<br />
+-`-.,<br />
+1602461590 37<br />
+-`,,`<br />
+1602461590 38<br />
+,,'-.<br />
+1602461590 39<br />
+-`'-,``-.'<br />
+1602461590 40<br />
+--`,,<br />
+1602461590 41<br />
+'.-,-<br />
+1602461590 42<br />
+'-,--<br />
+1602461590 43<br />
+`-'``<br />
+1602461590 44<br />
+-',`.<br />
+1602461590 45<br />
+'`.'.<br />
+1602461590 46<br />
+`-,',<br />
+1602461590 47<br />
+,``..<br />
+1602461590 48<br />
+``--`<br />
+1602461590 49<br />
+--,''<br />
+1602461590 50<br />
+`..'.<br />
+1602461590 51<br />
+`-',.<br />
+1602461590 52<br />
+,--,-.-.'-<br />
+1602461590 53<br />
+.,.,`<br />
+1602461590 54<br />
+,,..`<br />
+1602461590 55<br />
+'.---<br />
+1602461590 56<br />
+-`'''<br />
+1602461590 57<br />
+.--'-<br />
+1602461590 58<br />
+.`-'`<br />
+1602461590 59<br />
+,```.<br />
+1602461590 60<br />
+-,.''<br />
+1602461590 61<br />
+`-.',<br />
+1602461590 62<br />
+',-`-<br />
+1602461590 63<br />
+'.`-.<br />
+1602461590 64<br />
+`,'-`<br />
+1602461590 65<br />
+`,``,.--`,<br />
+1602461590 66<br />
+.'--`<br />
+1602461590 67<br />
+`-,.`<br />
+1602461590 68<br />
+''``-<br />
+1602461590 69<br />
+.`'-`<br />
+1602461590 70<br />
+--..,<br />
+1602461590 71<br />
+--.-,<br />
+1602461590 72<br />
+,-''.<br />
+1602461590 73<br />
+`.'``<br />
+1602461590 74<br />
+`-..`<br />
+1602461590 75<br />
+'.'``<br />
+1602461590 76<br />
+-.,.`<br />
+1602461590 77<br />
+.,.-'<br />
+1602461590 78<br />
+`'`'`'``--<br />
+1602461590 79<br />
+'..'-<br />
+1602461590 80<br />
+-',,.<br />
+1602461590 81<br />
+.''-`<br />
+1602461590 82<br />
+-.`-,<br />
+1602461590 83<br />
+,`'..<br />
+1602461590 84<br />
+',`,-<br />
+1602461590 85<br />
+'----<br />
+1602461590 86<br />
+',`.'<br />
+1602461590 87<br />
+,',``<br />
+1602461590 88<br />
+'--..<br />
+1602461590 89<br />
+--,.`<br />
+1602461590 90<br />
+''`''<br />
+1602461590 91<br />
+.,'.--,,-,<br />
+1602461590 92<br />
+-..`.<br />
+1602461590 93<br />
+-,-``<br />
+1602461590 94<br />
+'`,,-<br />
+1602461590 95<br />
+.`---<br />
+1602461590 96<br />
+,.,.-<br />
+1602461590 97<br />
+'.,`.<br />
+1602461590 98<br />
+`.,``<br />
+1602461590 99<br />
+.'.,.<br />
+1602461590 100<br />
+-.',.<br />
+1602461590 101<br />
+'-'--<br />
+1602461590 102<br />
+``-``<br />
+1602461590 103<br />
+`.-''<br />
+1602461590 104<br />
+,`,.`',..,<br />
+1602461590 105<br />
+.`-`,<br />
+1602461590 106<br />
+-`''`<br />
+1602461590 107<br />
+.`,.`<br />
+1602461590 108<br />
+`-`'.<br />
+1602461590 109<br />
+`,'.-<br />
+1602461590 110<br />
+''..-<br />
+1602461590 111<br />
+.,.'-<br />
+1602461590 112<br />
+`.,'-<br />
+1602461590 113<br />
+,`,`'<br />
+1602461590 114<br />
+..-`'<br />
+1602461590 115<br />
+`'`',<br />
+1602461590 116<br />
+`,`-,<br />
+1602461590 117<br />
+''-''''',.<br />
+1602461590 118<br />
+-.'-.<br />
+1602461590 119<br />
+',`-.<br />
+1602461590 120<br />
+,..``<br />
+1602461590 121<br />
+,'`--<br />
+1602461590 122<br />
+.--''<br />
+1602461590 123<br />
+'-..,<br />
+1602461590 124<br />
+,'.`,<br />
+1602461590 125<br />
+,.,,`<br />
+1602461590 126<br />
+-`'--<br />
+1602461590 127<br />
+'``.,<br />
+1602461590 128<br />
+''`.-<br />
+1602461590 129<br />
+-.-,-<br />
+1602461590 130<br />
+-`--,'`-.,<br />
+1602461590 131<br />
+`,-,'<br />
+1602461590 132<br />
+...`,<br />
+1602461590 133<br />
+`-...<br />
+1602461590 134<br />
+`-`'`<br />
+1602461590 135<br />
+`--'-<br />
+1602461590 136<br />
+`.,.'<br />
+1602461590 137<br />
+.,,',<br />
+1602461590 138<br />
+`..-`<br />
+1602461590 139<br />
+`'---<br />
+1602461590 140<br />
+.-.,'<br />
+1602461590 141<br />
+`''.`<br />
+1602461590 142<br />
+.'`,`<br />
+1602461590 143<br />
+-,.``-,`-,<br />
+1602461590 144<br />
+,.`''<br />
+1602461590 145<br />
+.,`,-<br />
+1602461590 146<br />
+`,...<br />
+1602461590 147<br />
+'`-'.<br />
+1602461590 148<br />
+''-'`<br />
+1602461590 149<br />
+`..--<br />
+1602461590 150<br />
+-`,'`<br />
+1602461590 151<br />
+...''<br />
+1602461590 152<br />
+''.''<br />
+1602461590 153<br />
+`,,`,<br />
+1602461590 154<br />
+,`..-<br />
+1602461590 155<br />
+.,'``<br />
+1602461590 156<br />
+.,`-,,.`..<br />
+1602461590 157<br />
+---,.<br />
+1602461590 158<br />
+`'`.,<br />
+1602461590 159<br />
+-`.`-<br />
+1602461590 160<br />
+.`-,`<br />
+1602461590 161<br />
+`-`.-<br />
+1602461590 162<br />
+`-'`'<br />
+1602461590 163<br />
+.`-'.<br />
+1602461590 164<br />
+,'.',<br />
+1602461590 165<br />
+`'`,,<br />
+1602461590 166<br />
+-..`.<br />
+1602461590 167<br />
+,-`,,<br />
+1602461590 168<br />
+`-'.-<br />
+1602461590 169<br />
+-,---,.'''<br />
+1602461590 170<br />
+`-.'`<br />
+1602461590 171<br />
+.-,'.<br />
+1602461590 172<br />
+`'.--<br />
+1602461590 173<br />
+``-.,<br />
+1602461590 174<br />
+-''.`<br />
+1602461590 175<br />
+,''.`<br />
+1602461590 176<br />
+.`'..<br />
+1602461590 177<br />
+,,''-<br />
+1602461590 178<br />
+``'`.<br />
+1602461590 179<br />
+.--.,<br />
+1602461590 180<br />
+,``.-<br />
+1602461590 181<br />
+..'-'<br />
+1602461590 182<br />
+.,..'-.-,'<br />
+1602461590 183<br />
+`.'`-<br />
+1602461590 184<br />
+-.`''<br />
+1602461590 185<br />
+,-.-.<br />
+1602461590 186<br />
+.,`',<br />
+1602461590 187<br />
+..--.<br />
+1602461590 188<br />
+,'.'`<br />
+1602461590 189<br />
+`,,'-<br />
+1602461590 190<br />
+',`-.<br />
+1602461590 191<br />
+'.`,-<br />
+1602461590 192<br />
+.',.'<br />
+1602461590 193<br />
+....-<br />
+1602461590 194<br />
+-`'`'<br />
+1602461590 195<br />
+`-'-`-`,-,<br />
+1602461590 196<br />
+.`,.-<br />
+1602461590 197<br />
+`-`,,<br />
+1602461590 198<br />
+.`'-.<br />
+1602461590 199<br />
+.'.``<br />
+1602461590 200<br />
+-`'-.<br />
+1602461590 201<br />
+'''`,<br />
+1602461590 202<br />
+..'.,<br />
+1602461590 203<br />
+-'.`.<br />
+1602461590 204<br />
+,-''`<br />
+1602461590 205<br />
+-'.``<br />
+1602461590 206<br />
+,..-,<br />
+1602461590 207<br />
+''.-'<br />
+1602461590 208<br />
+--``.--.`,<br />
+1602461590 209<br />
+,'``'<br />
+1602461590 210<br />
+'--`,<br />
+1602461590 211<br />
+-`',-<br />
+1602461590 212<br />
+,,,.-<br />
+1602461590 213<br />
+.-`''<br />
+1602461590 214<br />
+.`,',<br />
+1602461590 215<br />
+.--,.<br />
+1602461590 216<br />
+.,'`-<br />
+1602461590 217<br />
+-,,'`<br />
+1602461590 218<br />
+-`-,,<br />
+1602461590 219<br />
+''.-.<br />
+1602461590 220<br />
+.-.-,<br />
+1602461590 221<br />
+.,.'`..`''<br />
+1602461590 222<br />
+'`-.,<br />
+1602461590 223<br />
+-'.',<br />
+1602461590 224<br />
+-`'.'<br />
+1602461590 225<br />
+.`.''<br />
+1602461590 226<br />
+.,`',<br />
+1602461590 227<br />
+``,`'<br />
+1602461590 228<br />
+```'`<br />
+1602461590 229<br />
+`....<br />
+1602461590 230<br />
+`'..`<br />
+1602461590 231<br />
+,----<br />
+1602461590 232<br />
+.``-,<br />
+1602461590 233<br />
+','`.<br />
+1602461590 234<br />
+`'`'-,,'-.<br />
+1602461590 235<br />
+`.`'-<br />
+1602461590 236<br />
+-,--,<br />
+1602461590 237<br />
+,-`.'<br />
+1602461590 238<br />
+.--`,<br />
+1602461590 239<br />
+.--,.<br />
+1602461590 240<br />
+'`.`-<br />
+1602461590 241<br />
+,.,`.<br />
+1602461590 242<br />
+`,.`.<br />
+1602461590 243<br />
+-,'``<br />
+1602461590 244<br />
+``--`<br />
+1602461590 245<br />
+'.-`.<br />
+1602461590 246<br />
+`,,.-<br />
+1602461590 247<br />
+,,.-,.'.`-<br />
+1602461590 248<br />
+`-'.'<br />
+1602461590 249<br />
+,''-,<br />
+1602461590 250<br />
+---,'<br />
+1602461590 251<br />
+.'```<br />
+1602461590 252<br />
+,`.--<br />
+1602461590 253<br />
+.,.-,<br />
+1602461590 254<br />
+,.``.<br />
+1602461590 255<br />
+',.'`<br />
+1602461590 256<br />
+-,--`<br />
+1602461590 257<br />
+`,,-`<br />
+1602461590 258<br />
+.`-``<br />
+1602461590 259<br />
+-,',-<br />
+1602461590 260<br />
+--``-''..`<br />
+1602461590 261<br />
+,`---<br />
+1602461590 262<br />
+'-.',<br />
+1602461590 263<br />
+.`'.'<br />
+1602461590 264<br />
+'`,`,<br />
+1602461590 265<br />
+''.`.<br />
+1602461590 266<br />
+`,'''<br />
+1602461590 267<br />
+'-,'`<br />
+1602461590 268<br />
+',..`<br />
+1602461590 269<br />
+,`',`<br />
+1602461590 270<br />
+-.-.,<br />
+1602461590 271<br />
+',```<br />
+1602461590 272<br />
+''--.<br />
+1602461590 273<br />
+`..-'`..-`<br />
+1602461590 274<br />
+'-..-<br />
+1602461590 275<br />
+'-'.-<br />
+1602461590 276<br />
+-,''.<br />
+1602461590 277<br />
+',,'-<br />
+1602461590 278<br />
+`-`,'<br />
+1602461590 279<br />
+','`'<br />
+1602461590 280<br />
+,-.'`<br />
+1602461590 281<br />
+,''.-<br />
+1602461590 282<br />
+.`'``<br />
+1602461590 283<br />
+-,`,'<br />
+1602461590 284<br />
+'.,`'<br />
+1602461590 285<br />
+,.`-,<br />
+1602461590 286<br />
+,--,-'.'`'<br />
+1602461590 287<br />
+`,-.-<br />
+1602461590 288<br />
+``.`,<br />
+1602461590 289<br />
+.`.`.<br />
+1602461590 290<br />
+'...-<br />
+1602461590 291<br />
+.'.`'<br />
+1602461590 292<br />
+'''`'<br />
+1602461590 293<br />
+`-,.'<br />
+1602461590 294<br />
+',''-<br />
+1602461590 295<br />
+,'`'`<br />
+1602461590 296<br />
+'.``.<br />
+1602461590 297<br />
+`..-'<br />
+1602461590 298<br />
+'-.,-<br />
+1602461590 299<br />
+,,`,```.`.<br />
+1602461590 300<br />
+'',.`<br />
+1602461590 301<br />
+,.--'<br />
+1602461590 302<br />
+,`-,.<br />
+1602461590 303<br />
+```,.<br />
+1602461590 304<br />
+-.,`.<br />
+1602461590 305<br />
+`',.`<br />
+1602461590 306<br />
+'.'--<br />
+1602461590 307<br />
+`.'''<br />
+1602461590 308<br />
+---.,<br />
+1602461590 309<br />
+.'..'<br />
+1602461590 310<br />
+.`.`.<br />
+1602461590 311<br />
+'-``-<br />
+1602461590 312<br />
+-,...,-.,-<br />
+1602461590 313<br />
+,'',`<br />
+1602461590 314<br />
+,```.<br />
+1602461590 315<br />
+.'-.,<br />
+1602461590 316<br />
+``...<br />
+1602461590 317<br />
+-`-`.<br />
+1602461590 318<br />
+.-,-.<br />
+1602461590 319<br />
+`,`',<br />
+1602461590 320<br />
+'''-.<br />
+1602461590 321<br />
+.'.`-<br />
+1602461590 322<br />
+'``'`<br />
+1602461590 323<br />
+'`'`.<br />
+1602461590 324<br />
+.``-,<br />
+1602461590 325<br />
+-.`'.'.`,.<br />
+1602461590 326<br />
+,',`,<br />
+1602461590 327<br />
+..',,<br />
+1602461590 328<br />
+',''.<br />
+1602461590 329<br />
+,-,`.<br />
+1602461590 330<br />
+.,,-'<br />
+1602461590 331<br />
+.-.`.<br />
+1602461590 332<br />
+-`''`<br />
+1602461590 333<br />
+',,.-<br />
+1602461590 334<br />
+`.``,<br />
+1602461590 335<br />
+-,``'<br />
+1602461590 336<br />
+'.-.,<br />
+1602461590 337<br />
+'.''.<br />
+1602461590 338<br />
+`.---``,',<br />
+1602461590 339<br />
+`'`..<br />
+1602461590 340<br />
+-''.`<br />
+1602461590 341<br />
+`.,``<br />
+1602461590 342<br />
+.``'.<br />
+1602461590 343<br />
+-`,,-<br />
+1602461590 344<br />
+`--.-<br />
+1602461590 345<br />
+-`-,'<br />
+1602461590 346<br />
+.`---<br />
+1602461590 347<br />
+--'-'<br />
+1602461590 348<br />
+,.`'-<br />
+1602461590 349<br />
+`,,,`<br />
+1602461590 350<br />
+'.-`.<br />
+1602461590 351<br />
+`-'-'-.'-.<br />
+1602461590 352<br />
+--..'<br />
+1602461590 353<br />
+,'`.,<br />
+1602461590 354<br />
+`.`-,<br />
+1602461590 355<br />
+.-..-<br />
+1602461590 356<br />
+`.-'`<br />
+1602461590 357<br />
+,'.,`<br />
+1602461590 358<br />
+..'-'<br />
+1602461590 359<br />
+'`-.`<br />
+1602461590 360<br />
+,-'-,<br />
+1602461590 361<br />
+..-``<br />
+1602461590 362<br />
+,.,,-<br />
+1602461590 363<br />
+..'.,<br />
+1602461590 364<br />
+``.-`',.`'<br />
+1602461590 365<br />
+`````<br />
+1602461590 366<br />
+``''-<br />
+1602461590 367<br />
+`--``<br />
+1602461590 368<br />
+`-`.'<br />
+1602461590 369<br />
+-''.,<br />
+1602461590 370<br />
+-,`..<br />
+1602461590 371<br />
+,.-,-<br />
+1602461590 372<br />
+-'.'.<br />
+1602461590 373<br />
+`'`-`<br />
+1602461590 374<br />
+,.''`<br />
+1602461590 375<br />
+,.-,'<br />
+1602461590 376<br />
+`..'.<br />
+1602461590 377<br />
+','.`-''..<br />
+1602461590 378<br />
+.'-'.<br />
+1602461590 379<br />
+-.','<br />
+1602461590 380<br />
+-``',<br />
+1602461590 381<br />
+.'.''<br />
+1602461590 382<br />
+',.,'<br />
+1602461590 383<br />
+--,-.<br />
+1602461590 384<br />
+`,`-'<br />
+1602461590 385<br />
+``,,-<br />
+1602461590 386<br />
+`''-'<br />
+1602461590 387<br />
+..-`.<br />
+1602461590 388<br />
+'-`'-<br />
+1602461590 389<br />
+,..-'<br />
+1602461590 390<br />
+---.-`.`-.<br />
+1602461590 391<br />
+--','<br />
+1602461590 392<br />
+'.,'-<br />
+1602461590 393<br />
+,'''.<br />
+1602461590 394<br />
+...'`<br />
+1602461590 395<br />
+'.,-.<br />
+1602461590 396<br />
+-.'`.<br />
+1602461590 397<br />
+''-'`<br />
+1602461590 398<br />
+.''-`<br />
+1602461590 399<br />
+`''..<br />
+1602461590 400<br />
+.--`.<br />
+1602461590 401<br />
+--,.-<br />
+1602461590 402<br />
+.',--<br />
+1602461590 403<br />
+-,---,'--.<br />
+1602461590 404<br />
+-.,..<br />
+1602461590 405<br />
+'..-'<br />
+1602461590 406<br />
+-.--'<br />
+1602461590 407<br />
+.'','<br />
+1602461590 408<br />
+','``<br />
+1602461590 409<br />
+,,-.'<br />
+1602461590 410<br />
+`,'',<br />
+1602461590 411<br />
+-.'-'<br />
+1602461590 412<br />
+--,'`<br />
+1602461590 413<br />
+-''''<br />
+1602461590 414<br />
+',-,.<br />
+1602461590 415<br />
+','',<br />
+1602461590 416<br />
+`,,,-..-.'<br />
+1602461590 417<br />
+-'`''<br />
+1602461590 418<br />
+``-`.<br />
+1602461590 419<br />
+'`,..<br />
+1602461590 420<br />
+,,.,-<br />
+1602461590 421<br />
+```.`<br />
+1602461590 422<br />
+,,`,'<br />
+1602461590 423<br />
+.`.-'<br />
+1602461590 424<br />
+-`''-<br />
+1602461590 425<br />
+'`..-<br />
+1602461590 426<br />
+,'--,<br />
+1602461590 427<br />
+--,-`<br />
+1602461590 428<br />
+`.'``<br />
+1602461590 429<br />
+`.'``',-..<br />
+1602461590 430<br />
+',,.,<br />
+1602461590 431<br />
+,.,.`<br />
+1602461590 432<br />
+'--'`<br />
+1602461590 433<br />
+---`,<br />
+1602461590 434<br />
+-``--<br />
+1602461590 435<br />
+,.``,<br />
+1602461590 436<br />
+.``-`<br />
+1602461590 437<br />
+,,'..<br />
+1602461590 438<br />
+-`.-,<br />
+1602461590 439<br />
+``-`,<br />
+1602461590 440<br />
+.-`,,<br />
+1602461590 441<br />
+,---`<br />
+1602461590 442<br />
+.'-,`.,--'<br />
+1602461590 443<br />
+'..`-<br />
+1602461590 444<br />
+-,.``<br />
+1602461590 445<br />
+'-.,`<br />
+1602461590 446<br />
+-.`,.<br />
+1602461590 447<br />
+,'`.-<br />
+1602461590 448<br />
+-``,'<br />
+1602461590 449<br />
+.,-,-<br />
+1602461590 450<br />
+-`--.<br />
+1602461590 451<br />
+'',,.<br />
+1602461590 452<br />
+',-``<br />
+1602461590 453<br />
+`'-.'<br />
+1602461590 454<br />
+`.,,,<br />
+1602461590 455<br />
+'--,'`-.``<br />
+1602461590 456<br />
+.-..`<br />
+1602461590 457<br />
+'-,,,<br />
+1602461590 458<br />
+,''.'<br />
+1602461590 459<br />
+-`',`<br />
+1602461590 460<br />
+`..,`<br />
+1602461590 461<br />
+'-.,.<br />
+1602461590 462<br />
+.'--'<br />
+1602461590 463<br />
+'`...<br />
+1602461590 464<br />
+',`-,<br />
+1602461590 465<br />
+.,`,-<br />
+1602461590 466<br />
+-`...<br />
+1602461590 467<br />
+-`,-`<br />
+1602461590 468<br />
+.,--'`--..<br />
+1602461590 469<br />
+-'`-,<br />
+1602461590 470<br />
+-,.'-<br />
+1602461590 471<br />
+``,`-<br />
+1602461590 472<br />
+-''..<br />
+1602461590 473<br />
+.'-.-<br />
+1602461590 474<br />
+,-'.`<br />
+1602461590 475<br />
+'``'-<br />
+1602461590 476<br />
+',',,<br />
+1602461590 477<br />
+,',.,<br />
+1602461590 478<br />
+.``-`<br />
+1602461590 479<br />
+..``'<br />
+1602461590 480<br />
+-'`-'<br />
+1602461590 481<br />
+'`-,',.,`.<br />
+1602461590 482<br />
+','--<br />
+1602461590 483<br />
+-','`<br />
+1602461590 484<br />
+-,`.-<br />
+1602461590 485<br />
+,,'.'<br />
+1602461590 486<br />
+.-`-.<br />
+1602461590 487<br />
+`-.`'<br />
+1602461590 488<br />
+',.`'<br />
+1602461590 489<br />
+..-`.<br />
+1602461590 490<br />
+.,,`'<br />
+1602461590 491<br />
+,-''.<br />
+1602461590 492<br />
+-.``.<br />
+1602461590 493<br />
+',`'-<br />
+1602461590 494<br />
+'`,,-'..',<br />
+1602461590 495<br />
+-,''.<br />
+1602461590 496<br />
+,.-``<br />
+1602461590 497<br />
+--.'-<br />
+1602461590 498<br />
+',''`<br />
+1602461590 499<br />
+``'`-<br />
+1602461590 500<br />
+`-','<br />
+1602461590 501<br />
+,`-,`<br />
+1602461590 502<br />
+'--.`<br />
+1602461590 503<br />
+,,,..<br />
+1602461590 504<br />
+.``,.<br />
+1602461590 505<br />
+-`...<br />
+1602461590 506<br />
+,,'--<br />
+1602461590 507<br />
+-,`''.'..,<br />
+1602461590 508<br />
+'..'.<br />
+1602461590 509<br />
+`...,<br />
+1602461590 510<br />
+.',``<br />
+1602461590 511<br />
+''``'<br />
+1602461590 512<br />
+'.`-,<br />
+1602461590 513<br />
+.--,`<br />
+1602461590 514<br />
+'-'-,<br />
+1602461590 515<br />
+`.,,`<br />
+1602461590 516<br />
+`'`,-<br />
+1602461590 517<br />
+`-.-'<br />
+1602461590 518<br />
+,`.-.<br />
+1602461590 519<br />
+.'-,.<br />
+1602461590 520<br />
+,,,'..',`.<br />
+1602461590 521<br />
+.-'.-<br />
+1602461590 522<br />
+..`,'<br />
+1602461590 523<br />
+'.,``<br />
+1602461590 524<br />
+''.`'<br />
+1602461590 525<br />
+',-',<br />
+1602461590 526<br />
+---'`<br />
+1602461590 527<br />
+',,'-<br />
+1602461590 528<br />
+'.'`.<br />
+1602461590 529<br />
+`--'`<br />
+1602461590 530<br />
+`'..,<br />
+1602461590 531<br />
+'.```<br />
+1602461590 532<br />
+``'`.<br />
+1602461590 533<br />
+-','.'-.''<br />
+1602461590 534<br />
+'.'.'<br />
+1602461590 535<br />
+''.`,<br />
+1602461590 536<br />
+''`..<br />
+1602461590 537<br />
+.'-,,<br />
+1602461590 538<br />
+-,-.-<br />
+1602461590 539<br />
+,--`,<br />
+1602461590 540<br />
+,`.`.<br />
+1602461590 541<br />
+,,,.'<br />
+1602461590 542<br />
+'`,,.<br />
+1602461590 543<br />
+`',``<br />
+1602461590 544<br />
+```-,<br />
+1602461590 545<br />
+`,`.-<br />
+1602461590 546<br />
+.'.,-.`',,<br />
+1602461590 547<br />
+`.-`'<br />
+1602461590 548<br />
+-''--<br />
+1602461590 549<br />
+`-`.-<br />
+1602461590 550<br />
+`-,.`<br />
+1602461590 551<br />
+,`..'<br />
+1602461590 552<br />
+`'-`,<br />
+1602461590 553<br />
+'-.--<br />
+1602461590 554<br />
+,-'-'<br />
+1602461590 555<br />
+''.',<br />
+1602461590 556<br />
+.-..-<br />
+1602461590 557<br />
+.,```<br />
+1602461590 558<br />
+``--`<br />
+1602461590 559<br />
+..--,-'..-<br />
+1602461590 560<br />
+,,-`.<br />
+1602461590 561<br />
+,`.',<br />
+1602461590 562<br />
+`'`,`<br />
+1602461590 563<br />
+--,.'<br />
+1602461590 564<br />
+,`''`<br />
+1602461590 565<br />
+,`--,<br />
+1602461590 566<br />
+,.,',<br />
+1602461590 567<br />
+,.,`,<br />
+1602461590 568<br />
+`''''<br />
+1602461590 569<br />
+-'.-,<br />
+1602461590 570<br />
+-,.-'<br />
+1602461590 571<br />
+,'''-<br />
+1602461590 572<br />
+`-`-`..,--<br />
+1602461590 573<br />
+'-.'`<br />
+1602461590 574<br />
+,'`--<br />
+1602461590 575<br />
+''.,'<br />
+1602461590 576<br />
+.`-,,<br />
+1602461590 577<br />
+``'`'<br />
+1602461590 578<br />
+----,<br />
+1602461590 579<br />
+..,.`<br />
+1602461590 580<br />
+``-.-<br />
+1602461590 581<br />
+'-.''<br />
+1602461590 582<br />
+-.-`-<br />
+1602461590 583<br />
+.'-``<br />
+1602461590 584<br />
+.`'.,<br />
+1602461590 585<br />
+,-'..'''.'<br />
+1602461591 586<br />
+.--,-<br />
+1602461591 587<br />
+,'``.<br />
+1602461591 588<br />
+,`'-`<br />
+1602461591 589<br />
+',.,-<br />
+1602461591 590<br />
+,`.,.<br />
+1602461591 591<br />
+`,'..<br />
+1602461591 592<br />
+',``,<br />
+1602461591 593<br />
+.'.-,<br />
+1602461591 594<br />
+,`'-'<br />
+1602461591 595<br />
+`',--<br />
+1602461591 596<br />
+.,.,.<br />
+1602461591 597<br />
+..',,<br />
+1602461591 598<br />
+,..-``,-`'<br />
+1602461591 599<br />
+'-.'`<br />
+1602461591 600<br />
+`''-'<br />
+1602461591 601<br />
+``.,-<br />
+1602461591 602<br />
+'`',`<br />
+1602461591 603<br />
+`----<br />
+1602461591 604<br />
+...,`<br />
+1602461591 605<br />
+'.,.-<br />
+1602461591 606<br />
+.,-',<br />
+1602461591 607<br />
+--`--<br />
+1602461591 608<br />
+`.`,-<br />
+1602461591 609<br />
+,-.-.<br />
+1602461591 610<br />
+',-.,<br />
+1602461591 611<br />
+-'-.`-`.-,<br />
+1602461591 612<br />
+.'`.-<br />
+1602461591 613<br />
+-`-`.<br />
+1602461591 614<br />
+-',.`<br />
+1602461591 615<br />
+,,`-.<br />
+1602461591 616<br />
+,'`'.<br />
+1602461591 617<br />
+`'`.,<br />
+1602461591 618<br />
+.,.'.<br />
+1602461591 619<br />
+-,'.`<br />
+1602461591 620<br />
+,`.,'<br />
+1602461591 621<br />
+'..`-<br />
+1602461591 622<br />
+--'..<br />
+1602461591 623<br />
+,,--'<br />
+1602461591 624<br />
+,,.-,,-.',<br />
+1602461591 625<br />
+`..-`<br />
+1602461591 626<br />
+,'''`<br />
+1602461591 627<br />
+-,`..<br />
+1602461591 628<br />
+--`.,<br />
+1602461591 629<br />
+,,--`<br />
+1602461591 630<br />
+'-,'`<br />
+1602461591 631<br />
+,`,.,<br />
+1602461591 632<br />
+'...,<br />
+1602461591 633<br />
+.`,-`<br />
+1602461591 634<br />
+'-`..<br />
+1602461591 635<br />
+-,`,-<br />
+1602461591 636<br />
+.,,''<br />
+1602461591 637<br />
+'`,','.`.`<br />
+1602461591 638<br />
+-'-..<br />
+1602461591 639<br />
+..,--<br />
+1602461591 640<br />
+`.,-.<br />
+1602461591 641<br />
+,.-'-<br />
+1602461591 642<br />
+`'`,,<br />
+1602461591 643<br />
+...,,<br />
+1602461591 644<br />
+,.',.<br />
+1602461591 645<br />
+-,`.'<br />
+1602461591 646<br />
+.-''.<br />
+1602461591 647<br />
+-,,`,<br />
+1602461591 648<br />
+`,,--<br />
+1602461591 649<br />
+.--'.<br />
+1602461591 650<br />
+`-,..`.'.-<br />
+1602461591 651<br />
+.`,`'<br />
+1602461591 652<br />
+,-,,-<br />
+1602461591 653<br />
+`'`''<br />
+1602461591 654<br />
+.`---<br />
+1602461591 655<br />
+'.'`,<br />
+1602461591 656<br />
+-,-,-<br />
+1602461591 657<br />
+'-',.<br />
+1602461591 658<br />
+-..-'<br />
+1602461591 659<br />
+.'```<br />
+1602461591 660<br />
+'.'.'<br />
+1602461591 661<br />
+',`''<br />
+1602461591 662<br />
+,`.'-<br />
+1602461591 663<br />
+'--''`-'-`<br />
+1602461591 664<br />
+-'-'`<br />
+1602461591 665<br />
+.',-.<br />
+1602461591 666<br />
+'.``-<br />
+1602461591 667<br />
+`,``,<br />
+1602461591 668<br />
+---`.<br />
+1602461591 669<br />
+''',.<br />
+1602461591 670<br />
+-`-',<br />
+1602461591 671<br />
+''..-<br />
+1602461591 672<br />
+,,`,.<br />
+1602461591 673<br />
+-`'',<br />
+1602461591 674<br />
+-,-`-<br />
+1602461591 675<br />
+,,,`.<br />
+1602461591 676<br />
+'-,`',..``<br />
+1602461591 677<br />
+-....<br />
+1602461591 678<br />
+-',`-<br />
+1602461591 679<br />
+,,',,<br />
+1602461591 680<br />
+,'`-'<br />
+1602461591 681<br />
+',--'<br />
+1602461591 682<br />
+`'-.`<br />
+1602461591 683<br />
+..,,`<br />
+1602461591 684<br />
+-,',`<br />
+1602461591 685<br />
+.,.`'<br />
+1602461591 686<br />
+-`-`.<br />
+1602461591 687<br />
+'-`-.<br />
+1602461591 688<br />
+'.-',<br />
+1602461591 689<br />
+-'`..'.`''<br />
+1602461591 690<br />
+,-`-,<br />
+1602461591 691<br />
+`,``,<br />
+1602461591 692<br />
+.''``<br />
+1602461591 693<br />
+,,``.<br />
+1602461591 694<br />
+'',.-<br />
+1602461591 695<br />
+`''.-<br />
+1602461591 696<br />
+.-`.`<br />
+1602461591 697<br />
+.`,..<br />
+1602461591 698<br />
+.`.`'<br />
+1602461591 699<br />
+`.`'.<br />
+1602461591 700<br />
+`-.-.<br />
+1602461591 701<br />
+,-.,'<br />
+1602461591 702<br />
+..-.-','''<br />
+1602461591 703<br />
+..'`,<br />
+1602461591 704<br />
+'..,`<br />
+1602461591 705<br />
+,---,<br />
+1602461591 706<br />
+'-``,<br />
+1602461591 707<br />
+'.-`'<br />
+1602461591 708<br />
+``-`,<br />
+1602461591 709<br />
+`-'-`<br />
+1602461591 710<br />
+..-,`<br />
+1602461591 711<br />
+',`,'<br />
+1602461591 712<br />
+``-`.<br />
+1602461591 713<br />
+'.,-,<br />
+1602461591 714<br />
+,,,.'<br />
+1602461591 715<br />
+-.-,`...,`<br />
+1602461591 716<br />
+,.,',<br />
+1602461591 717<br />
+.`',.<br />
+1602461591 718<br />
+,,,-`<br />
+1602461591 719<br />
+'--`.<br />
+1602461591 720<br />
+--.,.<br />
+1602461591 721<br />
+`.-''<br />
+1602461591 722<br />
+`,'-.<br />
+1602461591 723<br />
+-`-`,<br />
+1602461591 724<br />
+.,',-<br />
+1602461591 725<br />
+`'`''<br />
+1602461591 726<br />
+..-'`<br />
+1602461591 727<br />
+.,-`-<br />
+1602461591 728<br />
+``,`-``,.,<br />
+1602461591 729<br />
+`..`,<br />
+1602461591 730<br />
+'.-`,<br />
+1602461591 731<br />
+.`'.'<br />
+1602461591 732<br />
+..-,,<br />
+1602461591 733<br />
+'',..<br />
+1602461591 734<br />
+'--,-<br />
+1602461591 735<br />
+''-,-<br />
+1602461591 736<br />
+',,'-<br />
+1602461591 737<br />
+.'-,-<br />
+1602461591 738<br />
+,,.`.<br />
+1602461591 739<br />
+'',-.<br />
+1602461591 740<br />
+`...,<br />
+1602461591 741<br />
+,'-''`,,'.<br />
+1602461591 742<br />
+--.--<br />
+1602461591 743<br />
+'-.``<br />
+1602461591 744<br />
+.,.`-<br />
+1602461591 745<br />
+,`--,<br />
+1602461591 746<br />
+`-.`'<br />
+1602461591 747<br />
+'-.`-<br />
+1602461591 748<br />
+--''`<br />
+1602461591 749<br />
+,`---<br />
+1602461591 750<br />
+-''`.<br />
+1602461591 751<br />
+`'-.,<br />
+1602461591 752<br />
+--,'.<br />
+1602461591 753<br />
+.-'-'<br />
+1602461591 754<br />
+.-'--'--,,<br />
+1602461591 755<br />
+-.---<br />
+1602461591 756<br />
+.-'-,<br />
+1602461591 757<br />
+`-`.-<br />
+1602461591 758<br />
+,,''-<br />
+1602461591 759<br />
+-.,`,<br />
+1602461591 760<br />
+--.`,<br />
+1602461591 761<br />
+-`'`-<br />
+1602461591 762<br />
+-,-.-<br />
+1602461591 763<br />
+'--'`<br />
+1602461591 764<br />
+,-,..<br />
+1602461591 765<br />
+,''`-<br />
+1602461591 766<br />
+`-,-.<br />
+1602461591 767<br />
+,-`'--`-',<br />
+1602461591 768<br />
+.,-'-<br />
+1602461591 769<br />
+`,-,'<br />
+1602461591 770<br />
+,`,,'<br />
+1602461591 771<br />
+,'-,`<br />
+1602461591 772<br />
+-.`,'<br />
+1602461591 773<br />
+.`.,'<br />
+1602461591 774<br />
+`-`--<br />
+1602461591 775<br />
+.'',.<br />
+1602461591 776<br />
+.',''<br />
+1602461591 777<br />
+,,'`-<br />
+1602461591 778<br />
+.'..`<br />
+1602461591 779<br />
+-,,`.<br />
+1602461591 780<br />
+`-.,.`.-,,<br />
+1602461591 781<br />
+-,`'-<br />
+1602461591 782<br />
+`.`'-<br />
+1602461591 783<br />
+.''`-<br />
+1602461591 784<br />
+.-`'`<br />
+1602461591 785<br />
+,'`.`<br />
+1602461591 786<br />
+'`'.,<br />
+1602461591 787<br />
+,,-..<br />
+1602461591 788<br />
+'`','<br />
+1602461591 789<br />
+`.`.,<br />
+1602461591 790<br />
+.,,`-<br />
+1602461591 791<br />
+.'--`<br />
+1602461591 792<br />
+``'..<br />
+1602461591 793<br />
+`-.``',``.<br />
+1602461591 794<br />
+--.,'<br />
+1602461591 795<br />
+.,,--<br />
+1602461591 796<br />
+`-'--<br />
+1602461591 797<br />
+,-,,'<br />
+1602461591 798<br />
+`,`.'<br />
+1602461591 799<br />
+'.`-'<br />
+1602461591 800<br />
+'.-'-<br />
+1602461591 801<br />
+',.-.<br />
+1602461591 802<br />
+-,-',<br />
+1602461591 803<br />
+-`'`,<br />
+1602461591 804<br />
+,-'`.<br />
+1602461591 805<br />
+,'''-<br />
+1602461591 806<br />
+','.'.,''-<br />
+1602461591 807<br />
+.``.,<br />
+1602461591 808<br />
+'``,'<br />
+1602461591 809<br />
+,-'-'<br />
+1602461591 810<br />
+`.-`.<br />
+1602461591 811<br />
+''-`.<br />
+1602461591 812<br />
+.,```<br />
+1602461591 813<br />
+,``-,<br />
+1602461591 814<br />
+'.,`,<br />
+1602461591 815<br />
+.'-'-<br />
+1602461591 816<br />
+`-,.-<br />
+1602461591 817<br />
+-`'`,<br />
+1602461591 818<br />
+'...`<br />
+1602461591 819<br />
+,'`'`,,'''<br />
+1602461591 820<br />
+-`-`'<br />
+1602461591 821<br />
+,,.-,<br />
+1602461591 822<br />
+,''`'<br />
+1602461591 823<br />
+.-,.'<br />
+1602461591 824<br />
+--',.<br />
+1602461591 825<br />
+`.-'-<br />
+1602461591 826<br />
+'.-,'<br />
+1602461591 827<br />
+,,'.,<br />
+1602461591 828<br />
+---,'<br />
+1602461591 829<br />
+```'-<br />
+1602461591 830<br />
+,.'.'<br />
+1602461591 831<br />
+`.'`'<br />
+1602461591 832<br />
+,`'.'```''<br />
+1602461591 833<br />
+-.,,'<br />
+1602461591 834<br />
+`,,-`<br />
+1602461591 835<br />
+,.,'-<br />
+1602461591 836<br />
+'`.`,<br />
+1602461591 837<br />
+``--`<br />
+1602461591 838<br />
+,`.,`<br />
+1602461591 839<br />
+``'-`<br />
+1602461591 840<br />
+.``',<br />
+1602461591 841<br />
+'..',<br />
+1602461591 842<br />
+,',.`<br />
+1602461591 843<br />
+,.'',<br />
+1602461591 844<br />
+``.,.<br />
+1602461591 845<br />
+,''`-`...'<br />
+1602461591 846<br />
+---''<br />
+1602461591 847<br />
+,-''.<br />
+1602461591 848<br />
+,.'-,<br />
+1602461591 849<br />
+`,``,<br />
+1602461591 850<br />
+'..,`<br />
+1602461591 851<br />
+--.,'<br />
+1602461591 852<br />
+`'---<br />
+1602461591 853<br />
+.'`'.<br />
+1602461591 854<br />
+,.`-.<br />
+1602461591 855<br />
+--,-.<br />
+1602461591 856<br />
+--,--<br />
+1602461591 857<br />
+`.'-'<br />
+1602461591 858<br />
+,..---'`'`<br />
+1602461591 859<br />
+..,,,<br />
+1602461591 860<br />
+-',-`<br />
+1602461591 861<br />
+'-,''<br />
+1602461591 862<br />
+`..''<br />
+1602461591 863<br />
+'..`-<br />
+1602461591 864<br />
+..`,'<br />
+1602461591 865<br />
+,-``-<br />
+1602461591 866<br />
+-```-<br />
+1602461591 867<br />
+'.-`,<br />
+1602461591 868<br />
+,'`.'<br />
+1602461591 869<br />
+,..-,<br />
+1602461591 870<br />
+'````<br />
+1602461591 871<br />
+.-,','-```<br />
+1602461591 872<br />
+-``,'<br />
+1602461591 873<br />
+,`'.'<br />
+1602461591 874<br />
+`-'`.<br />
+1602461591 875<br />
+-.'.'<br />
+1602461591 876<br />
+-`,-`<br />
+1602461591 877<br />
+.-`''<br />
+1602461591 878<br />
+'.`'`<br />
+1602461591 879<br />
+.`'.'<br />
+1602461591 880<br />
+`-'--<br />
+1602461591 881<br />
+'.`,.<br />
+1602461591 882<br />
+,-''-<br />
+1602461591 883<br />
+.'.,-<br />
+1602461591 884<br />
+`,-,-,.'-,<br />
+1602461591 885<br />
+.'-`'<br />
+1602461591 886<br />
+--',.<br />
+1602461591 887<br />
+-'.-`<br />
+1602461591 888<br />
+.``,-<br />
+1602461591 889<br />
+,..'`<br />
+1602461591 890<br />
+-'`.'<br />
+1602461591 891<br />
+`,,..<br />
+1602461591 892<br />
+,-,--<br />
+1602461591 893<br />
+--`''<br />
+1602461591 894<br />
+`-'',<br />
+1602461591 895<br />
+.`,,-<br />
+1602461591 896<br />
+.``-`<br />
+1602461591 897<br />
+`-',.''.',<br />
+1602461591 898<br />
+'`''.<br />
+1602461591 899<br />
+.-,.-<br />
+1602461591 900<br />
+-`.-,<br />
+1602461591 901<br />
+-,.',<br />
+1602461591 902<br />
+,-'.,<br />
+1602461591 903<br />
+'``.-<br />
+1602461591 904<br />
+`,-,.<br />
+1602461591 905<br />
+-,',,<br />
+1602461591 906<br />
+'---.<br />
+1602461591 907<br />
+-.`..<br />
+1602461591 908<br />
+'`---<br />
+1602461591 909<br />
+````.<br />
+1602461591 910<br />
+``,,,,,'.-<br />
+1602461591 911<br />
+,,.-.<br />
+1602461591 912<br />
+'.''.<br />
+1602461591 913<br />
+.,`.-<br />
+1602461591 914<br />
+-..,'<br />
+1602461591 915<br />
+`-,-'<br />
+1602461591 916<br />
+',,',<br />
+1602461591 917<br />
+,`..,<br />
+1602461591 918<br />
+..`-'<br />
+1602461591 919<br />
+``,`.<br />
+1602461591 920<br />
+`,`--<br />
+1602461591 921<br />
+-`-.,<br />
+1602461591 922<br />
+,''-.<br />
+1602461591 923<br />
+-`,`,`-'`,<br />
+1602461591 924<br />
+'.,`-<br />
+1602461591 925<br />
+-`--'<br />
+1602461591 926<br />
+`..`,<br />
+1602461591 927<br />
+`-.''<br />
+1602461591 928<br />
+,`,`'<br />
+1602461591 929<br />
+,-',.<br />
+1602461591 930<br />
+''`,`<br />
+1602461591 931<br />
+.-,''<br />
+1602461591 932<br />
+,`,`.<br />
+1602461591 933<br />
+,``-'<br />
+1602461591 934<br />
+---,'<br />
+1602461591 935<br />
+-'-`,<br />
+1602461591 936<br />
+'-'.`,-'-`<br />
+1602461591 937<br />
+`,.,.<br />
+1602461591 938<br />
+.'`,,<br />
+1602461591 939<br />
+.`-,.<br />
+1602461591 940<br />
+,,.-,<br />
+1602461591 941<br />
+''..,<br />
+1602461591 942<br />
+'-.-'<br />
+1602461591 943<br />
+,'.-,<br />
+1602461591 944<br />
+.,`'`<br />
+1602461591 945<br />
+``-.`<br />
+1602461591 946<br />
+,-,,`<br />
+1602461591 947<br />
+,.'`'<br />
+1602461591 948<br />
+,.,-`<br />
+1602461591 949<br />
+,`,,`''`.`<br />
+1602461591 950<br />
+.--.,<br />
+1602461591 951<br />
+-`,``<br />
+1602461591 952<br />
+.''--<br />
+1602461591 953<br />
+.-`.'<br />
+1602461591 954<br />
+,.-.,<br />
+1602461591 955<br />
+--`',<br />
+1602461591 956<br />
+,,'--<br />
+1602461591 957<br />
+---`.<br />
+1602461591 958<br />
+.'--.<br />
+1602461591 959<br />
+''','<br />
+1602461591 960<br />
+`'-,-<br />
+1602461591 961<br />
+.--,,<br />
+1602461591 962<br />
+--.`'.``''<br />
+1602461591 963<br />
+,..,'<br />
+1602461591 964<br />
+,'-,,<br />
+1602461591 965<br />
+,,..-<br />
+1602461591 966<br />
+,.-..<br />
+1602461591 967<br />
+-,''.<br />
+1602461591 968<br />
+,,,'.<br />
+1602461591 969<br />
+,'-.'<br />
+1602461591 970<br />
+`,`',<br />
+1602461591 971<br />
+.'`-,<br />
+1602461591 972<br />
+.`-``<br />
+1602461591 973<br />
+-...,<br />
+1602461591 974<br />
+```',<br />
+1602461591 975<br />
+,-.''`,.',<br />
+1602461591 976<br />
+,'--,<br />
+1602461591 977<br />
+````.<br />
+1602461591 978<br />
+,`',-<br />
+1602461591 979<br />
+.`.,,<br />
+1602461591 980<br />
+,-.',<br />
+1602461591 981<br />
+',',`<br />
+1602461591 982<br />
+-..,,<br />
+1602461591 983<br />
+',.,.<br />
+1602461591 984<br />
+`'.'`<br />
+1602461591 985<br />
+,`,`,<br />
+1602461591 986<br />
+-`-`,<br />
+1602461591 987<br />
+'.'``<br />
+1602461591 988<br />
+'..'-',,,,<br />
+1602461591 989<br />
+,',`.<br />
+1602461591 990<br />
+-'-`,<br />
+1602461591 991<br />
+''-,'<br />
+1602461591 992<br />
+',.-`<br />
+1602461591 993<br />
+'.`''<br />
+1602461591 994<br />
+-.-''<br />
+1602461591 995<br />
+,,'',<br />
+1602461591 996<br />
+.-','<br />
+1602461591 997<br />
+.-.-`<br />
+1602461591 998<br />
+--`''<br />
+1602461591 999<br />
+`.-`'<br />
+1602461591 1000<br />
+,`.`-<br />
+1602461591 1001<br />
+``''-,.,'-<br />
+1602461591 1002<br />
+-.,''<br />
+1602461591 1003<br />
+`-'`-<br />
+1602461591 1004<br />
+--.--<br />
+1602461591 1005<br />
+..,.'<br />
+1602461591 1006<br />
+'-`,.<br />
+1602461591 1007<br />
+,`-''<br />
+1602461591 1008<br />
+``-''<br />
+1602461591 1009<br />
+.`'-,<br />
+1602461591 1010<br />
+``'`-<br />
+1602461591 1011<br />
+,`-,,<br />
+1602461591 1012<br />
+,-``'<br />
+1602461591 1013<br />
+''-'`<br />
+1602461591 1014<br />
+,,-,'--,-,<br />
+1602461591 1015<br />
+.`.''<br />
+1602461591 1016<br />
+`.,`'<br />
+1602461591 1017<br />
+'`.'`<br />
+1602461591 1018<br />
+''-``<br />
+1602461591 1019<br />
+`.`..<br />
+1602461591 1020<br />
+..-,.<br />
+1602461591 1021<br />
+`'-'`<br />
+1602461591 1022<br />
+..``.<br />
+1602461591 1023<br />
+'`-,.<br />
+1602461591 1024<br />
+'-`..<br />
+1602461591 1025<br />
+`.,.-<br />
+1602461591 1026<br />
+'``..<br />
+1602461591 1027<br />
+'`,,'`-,.'<br />
+1602461591 1028<br />
+.''.'<br />
+1602461591 1029<br />
+'',.,<br />
+1602461591 1030<br />
+,-'''<br />
+1602461591 1031<br />
+,..,-<br />
+1602461591 1032<br />
+'.-'.<br />
+1602461591 1033<br />
+--.,.<br />
+1602461591 1034<br />
+-,,,`<br />
+1602461591 1035<br />
+`--,.<br />
+1602461591 1036<br />
+,.--.<br />
+1602461591 1037<br />
+.`,--<br />
+1602461591 1038<br />
+`'`,'<br />
+1602461591 1039<br />
+..-,'<br />
+1602461591 1040<br />
+.,'`'.-'`-<br />
+1602461591 1041<br />
+,..`,<br />
+1602461591 1042<br />
+--`,,<br />
+1602461591 1043<br />
+,--,,<br />
+1602461591 1044<br />
+`-``'<br />
+1602461591 1045<br />
+',`-'<br />
+1602461591 1046<br />
+`,,-.<br />
+1602461591 1047<br />
+--'-.<br />
+1602461591 1048<br />
+-''',<br />
+1602461591 1049<br />
+-'-'`<br />
+1602461591 1050<br />
+-,-``<br />
+1602461591 1051<br />
+---`'<br />
+1602461591 1052<br />
+'--,`<br />
+1602461591 1053<br />
+..,-``.,'`<br />
+1602461591 1054<br />
+,'``.<br />
+1602461591 1055<br />
+,-'.`<br />
+1602461591 1056<br />
+`-'`,<br />
+1602461591 1057<br />
+-.-``<br />
+1602461591 1058<br />
+''','<br />
+1602461591 1059<br />
+..`.'<br />
+1602461591 1060<br />
+.'.,.<br />
+1602461591 1061<br />
+-,,.-<br />
+1602461591 1062<br />
+'`-''<br />
+1602461591 1063<br />
+`'`.`<br />
+1602461591 1064<br />
+-.,-.<br />
+1602461591 1065<br />
+.,..-<br />
+1602461591 1066<br />
+'-'',.-.-,<br />
+1602461591 1067<br />
+,.'-'<br />
+1602461591 1068<br />
+'`'.'<br />
+1602461591 1069<br />
+`,'`-<br />
+1602461591 1070<br />
+`'--'<br />
+1602461591 1071<br />
+```-,<br />
+1602461591 1072<br />
+,'---<br />
+1602461591 1073<br />
+.-.'.<br />
+1602461591 1074<br />
+-.'-.<br />
+1602461591 1075<br />
+`,'``<br />
+1602461591 1076<br />
+-.,,'<br />
+1602461591 1077<br />
+-,``'<br />
+1602461591 1078<br />
+,`'-`<br />
+1602461591 1079<br />
+`--`'',.`,<br />
+1602461591 1080<br />
+.`.,-<br />
+1602461591 1081<br />
+'.--'<br />
+1602461591 1082<br />
+'-','<br />
+1602461591 1083<br />
+-``,`<br />
+1602461591 1084<br />
+-'-'.<br />
+1602461591 1085<br />
+.-.''<br />
+1602461591 1086<br />
+,.'--<br />
+1602461591 1087<br />
+,`-,`<br />
+1602461591 1088<br />
+--'-'<br />
+1602461591 1089<br />
+''.-`<br />
+1602461591 1090<br />
+.,'``<br />
+1602461591 1091<br />
+'-.,.<br />
+1602461591 1092<br />
+.,,```,''.<br />
+1602461591 1093<br />
+.-,,'<br />
+1602461591 1094<br />
+`-',-<br />
+1602461591 1095<br />
+.-'.,<br />
+1602461591 1096<br />
+,-...<br />
+1602461591 1097<br />
+,,.'-<br />
+1602461591 1098<br />
+'``.`<br />
+1602461591 1099<br />
+.``'-<br />
+1602461591 1100<br />
+.-.`-<br />
+1602461591 1101<br />
+--..-<br />
+1602461591 1102<br />
+,'-,,<br />
+1602461591 1103<br />
+.''--<br />
+1602461591 1104<br />
+'`'-,<br />
+1602461591 1105<br />
+',.-,--,,'<br />
+1602461591 1106<br />
+-..'`<br />
+1602461591 1107<br />
+'..-`<br />
+1602461591 1108<br />
+',--,<br />
+1602461591 1109<br />
+`.,,,<br />
+1602461591 1110<br />
+`'.,,<br />
+1602461591 1111<br />
+`-.,.<br />
+1602461591 1112<br />
+--`--<br />
+1602461591 1113<br />
+,,`'-<br />
+1602461591 1114<br />
+,'-``<br />
+1602461591 1115<br />
+```..<br />
+1602461591 1116<br />
+,`,''<br />
+1602461591 1117<br />
+.-'--<br />
+1602461591 1118<br />
+'-'``,.,',<br />
+1602461591 1119<br />
+.'.''<br />
+1602461591 1120<br />
+.`-`,<br />
+1602461591 1121<br />
+--..-<br />
+1602461591 1122<br />
+'`'``<br />
+1602461591 1123<br />
+,,.`,<br />
+1602461591 1124<br />
+`--`.<br />
+1602461591 1125<br />
+,.,'`<br />
+1602461591 1126<br />
+'.`-'<br />
+1602461591 1127<br />
+.-`,`<br />
+1602461591 1128<br />
+,`,.,<br />
+1602461591 1129<br />
+,'``-<br />
+1602461591 1130<br />
+-`.-'<br />
+1602461591 1131<br />
+``--.,-.-`<br />
+1602461591 1132<br />
+-.',-<br />
+1602461591 1133<br />
+`-.',<br />
+1602461591 1134<br />
+..--,<br />
+1602461591 1135<br />
+`.`'`<br />
+1602461591 1136<br />
+`',,`<br />
+1602461591 1137<br />
+.'`,'<br />
+1602461591 1138<br />
+.`.`.<br />
+1602461591 1139<br />
+-',',<br />
+1602461591 1140<br />
+``-.`<br />
+1602461591 1141<br />
+'---.<br />
+1602461591 1142<br />
+'-',-<br />
+1602461591 1143<br />
+'',`'<br />
+1602461591 1144<br />
+,`.'`,'`..<br />
+1602461591 1145<br />
+.--`-<br />
+1602461591 1146<br />
+-,,'-<br />
+1602461591 1147<br />
+.`.''<br />
+1602461591 1148<br />
+'-''.<br />
+1602461591 1149<br />
+-.'.'<br />
+1602461591 1150<br />
+`,,'`<br />
+1602461591 1151<br />
+`-..`<br />
+1602461591 1152<br />
+,-..`<br />
+1602461591 1153<br />
+-.''.<br />
+1602461591 1154<br />
+,,,,`<br />
+1602461591 1155<br />
+`-'.`<br />
+1602461591 1156<br />
+.`'-'<br />
+1602461591 1157<br />
+--`''-.,.-<br />
+1602461591 1158<br />
+'.`'.<br />
+1602461591 1159<br />
+`,,-.<br />
+1602461591 1160<br />
+...-'<br />
+1602461591 1161<br />
+-,'',<br />
+1602461591 1162<br />
+-'--,<br />
+1602461591 1163<br />
+'-..-<br />
+1602461591 1164<br />
+`..,-<br />
+1602461591 1165<br />
+`,,.-<br />
+1602461591 1166<br />
+'.--.<br />
+1602461591 1167<br />
+`'-``<br />
+1602461591 1168<br />
+``--`<br />
+1602461591 1169<br />
+--..,<br />
+1602461591 1170<br />
+',-,-,..,-<br />
+1602461591 1171<br />
+`-.'`<br />
+1602461591 1172<br />
+''-,,<br />
+1602461591 1173<br />
+'.',.<br />
+1602461591 1174<br />
+``,..<br />
+1602461591 1175<br />
+',`-,<br />
+1602461591 1176<br />
+',-`.<br />
+1602461591 1177<br />
+',.-,<br />
+1602461591 1178<br />
+.,''.<br />
+1602461591 1179<br />
+`.--.<br />
+1602461591 1180<br />
+---',<br />
+1602461591 1181<br />
+.-.``<br />
+1602461591 1182<br />
+-'-.'<br />
+1602461591 1183<br />
+-.,-,,,,-.<br />
+1602461591 1184<br />
+-'-,'<br />
+1602461591 1185<br />
+--.',<br />
+1602461591 1186<br />
+',`'.<br />
+1602461591 1187<br />
+`-,``<br />
+1602461591 1188<br />
+,,.``<br />
+1602461591 1189<br />
+.-..'<br />
+1602461591 1190<br />
+-''`'<br />
+1602461591 1191<br />
+.`,`.<br />
+1602461591 1192<br />
+','-'<br />
+1602461591 1193<br />
+-,''.<br />
+1602461591 1194<br />
+.-..'<br />
+1602461591 1195<br />
+.``.`<br />
+1602461591 1196<br />
+',,`-..,``<br />
+1602461591 1197<br />
+'-.-,<br />
+1602461591 1198<br />
+--,-,<br />
+1602461591 1199<br />
+,-.-'<br />
+1602461591 1200<br />
+-`.-,<br />
+1602461591 1201<br />
+.-.,.<br />
+1602461591 1202<br />
+`--,.<br />
+1602461591 1203<br />
+''.`'<br />
+1602461591 1204<br />
+-`'`'<br />
+1602461591 1205<br />
+.-'-`<br />
+1602461591 1206<br />
+'..,`<br />
+1602461591 1207<br />
+-,-`-<br />
+1602461591 1208<br />
+-`.'`<br />
+1602461591 1209<br />
+-``-'.,`,.<br />
+1602461591 1210<br />
+`...-<br />
+1602461591 1211<br />
+-'..,<br />
+1602461591 1212<br />
+`,,`-<br />
+1602461591 1213<br />
+.',``<br />
+1602461591 1214<br />
+,--,'<br />
+1602461591 1215<br />
+..'.`<br />
+1602461591 1216<br />
+,'`--<br />
+1602461591 1217<br />
+`.''.<br />
+1602461591 1218<br />
+-`-,'<br />
+1602461591 1219<br />
+'``-'<br />
+1602461591 1220<br />
+--'..<br />
+1602461591 1221<br />
+`..'`<br />
+1602461591 1222<br />
+``,`,,-,.'<br />
+1602461591 1223<br />
+`,-,-<br />
+1602461591 1224<br />
+'--'`<br />
+1602461591 1225<br />
+`.-`-<br />
+1602461591 1226<br />
+`--'`<br />
+1602461591 1227<br />
+'',--<br />
+1602461591 1228<br />
+`.,--<br />
+1602461591 1229<br />
+.,.,.<br />
+1602461591 1230<br />
+`',`'<br />
+1602461591 1231<br />
+-`-,-<br />
+1602461591 1232<br />
+`'-.'<br />
+1602461591 1233<br />
+-'.,-<br />
+1602461591 1234<br />
+,,.`'<br />
+1602461591 1235<br />
+--..'.,'.-<br />
+1602461591 1236<br />
+,`-.-<br />
+1602461591 1237<br />
+'-.`-<br />
+1602461591 1238<br />
+-``,-<br />
+1602461591 1239<br />
+`,-``<br />
+1602461591 1240<br />
+-`,`,<br />
+1602461591 1241<br />
+,.-`'<br />
+1602461591 1242<br />
+'.,,`<br />
+1602461591 1243<br />
+,`,.,<br />
+1602461591 1244<br />
+`.,,'<br />
+1602461591 1245<br />
+`-,'.<br />
+1602461591 1246<br />
+','..<br />
+1602461591 1247<br />
+'-.'`<br />
+1602461591 1248<br />
+-'.--.`-',<br />
+1602461591 1249<br />
+,,`.,<br />
+1602461591 1250<br />
+''--'<br />
+1602461591 1251<br />
+'-.',<br />
+1602461591 1252<br />
+`,.,,<br />
+1602461591 1253<br />
+,'-,-<br />
+1602461591 1254<br />
+..'-'<br />
+1602461591 1255<br />
+.''-.<br />
+1602461591 1256<br />
+,.`'-<br />
+1602461591 1257<br />
+``,`-<br />
+1602461591 1258<br />
+-`,'.<br />
+1602461591 1259<br />
+.``-.<br />
+1602461591 1260<br />
+``,`.<br />
+1602461591 1261<br />
+`,`.''.,.'<br />
+1602461591 1262<br />
+.'.'`<br />
+1602461591 1263<br />
+.,`.-<br />
+1602461591 1264<br />
+-'-,-<br />
+1602461591 1265<br />
+'''-.<br />
+1602461591 1266<br />
+..`.'<br />
+1602461591 1267<br />
+.,,`.<br />
+1602461591 1268<br />
+.,.,.<br />
+1602461591 1269<br />
+..-`,<br />
+1602461591 1270<br />
+``-',<br />
+1602461591 1271<br />
+.,,,-<br />
+1602461591 1272<br />
+`,---<br />
+1602461591 1273<br />
+'`-.'<br />
+1602461591 1274<br />
+,--..-```'<br />
+1602461591 1275<br />
+,,'..<br />
+1602461591 1276<br />
+'``'`<br />
+1602461591 1277<br />
+-'-'`<br />
+1602461591 1278<br />
+-,-..<br />
+1602461591 1279<br />
+'`.--<br />
+1602461591 1280<br />
+,,`''<br />
+1602461591 1281<br />
+`.-'-<br />
+1602461591 1282<br />
+,-,,,<br />
+1602461591 1283<br />
+....`<br />
+1602461591 1284<br />
+,-,.'<br />
+1602461591 1285<br />
+.`''.<br />
+1602461591 1286<br />
+-'.-,<br />
+1602461591 1287<br />
+',`-'--```<br />
+1602461591 1288<br />
+,`.-.<br />
+1602461591 1289<br />
+,-'-'<br />
+1602461591 1290<br />
+',``'<br />
+1602461591 1291<br />
+,.-`'<br />
+1602461591 1292<br />
+,,',-<br />
+1602461591 1293<br />
+``,.-<br />
+1602461591 1294<br />
+.','.<br />
+1602461591 1295<br />
+'.,`,<br />
+1602461591 1296<br />
+`--`'<br />
+1602461591 1297<br />
+-'-.`<br />
+1602461591 1298<br />
+----`<br />
+1602461591 1299<br />
+.'`,-<br />
+1602461591 1300<br />
+`.-'`.`','<br />
+1602461591 1301<br />
+-''-'<br />
+1602461591 1302<br />
+--'-,<br />
+1602461591 1303<br />
+,`.,-<br />
+1602461591 1304<br />
+-','-<br />
+1602461591 1305<br />
+.-..`<br />
+1602461591 1306<br />
+-.`.`<br />
+1602461591 1307<br />
+,'-`'<br />
+1602461591 1308<br />
+-.-.'<br />
+1602461591 1309<br />
+'-,`.<br />
+1602461591 1310<br />
+,',.-<br />
+1602461591 1311<br />
+'`,,`<br />
+1602461591 1312<br />
+'.--'<br />
+1602461591 1313<br />
+'-`-`.-.`.<br />
+1602461591 1314<br />
+.-`..<br />
+1602461591 1315<br />
+,,'`-<br />
+1602461591 1316<br />
+,`,``<br />
+1602461591 1317<br />
+',..`<br />
+1602461591 1318<br />
+.-'.,<br />
+1602461591 1319<br />
+`-.-.<br />
+1602461591 1320<br />
+`',`-<br />
+1602461591 1321<br />
+.-,`-<br />
+1602461591 1322<br />
+-'-,,<br />
+1602461591 1323<br />
+'..'-<br />
+1602461591 1324<br />
+,,`,,<br />
+1602461591 1325<br />
+,--.-<br />
+1602461591 1326<br />
+-'',.``.``<br />
+1602461591 1327<br />
+-..`-<br />
+1602461591 1328<br />
+-`'-'<br />
+1602461591 1329<br />
+.,,'-<br />
+1602461591 1330<br />
+`'.'`<br />
+1602461591 1331<br />
+'.'.`<br />
+1602461591 1332<br />
+,',`-<br />
+1602461591 1333<br />
+.``,'<br />
+1602461591 1334<br />
+,'.',<br />
+1602461591 1335<br />
+'.,,'<br />
+1602461591 1336<br />
+.',',<br />
+1602461591 1337<br />
+'''`-<br />
+1602461591 1338<br />
+'',.-<br />
+1602461591 1339<br />
+,,'-,,.-`-<br />
+1602461591 1340<br />
+`--`-<br />
+1602461591 1341<br />
+..,--<br />
+1602461591 1342<br />
+'-`-,<br />
+1602461591 1343<br />
+.'`,,<br />
+1602461591 1344<br />
+--.''<br />
+1602461591 1345<br />
+,',``<br />
+1602461591 1346<br />
+,-`.,<br />
+1602461591 1347<br />
+`',`.<br />
+1602461591 1348<br />
+',,--<br />
+1602461591 1349<br />
+-'`',<br />
+1602461591 1350<br />
+-`..-<br />
+1602461591 1351<br />
+'..,,<br />
+1602461591 1352<br />
+.`.`,``..'<br />
+1602461591 1353<br />
+-`.`,<br />
+1602461591 1354<br />
+.-,'`<br />
+1602461591 1355<br />
+..-`,<br />
+1602461591 1356<br />
+`',.`<br />
+1602461591 1357<br />
+`-..,<br />
+1602461591 1358<br />
+--`.'<br />
+1602461591 1359<br />
+,.-`-<br />
+1602461591 1360<br />
+`'``'<br />
+1602461591 1361<br />
+.--'`<br />
+1602461591 1362<br />
+,.',,<br />
+1602461591 1363<br />
+.'```<br />
+1602461591 1364<br />
+`-`'-<br />
+1602461591 1365<br />
+-`-..'..,-<br />
+1602461591 1366<br />
+`,,,.<br />
+1602461591 1367<br />
+'-.,.<br />
+1602461591 1368<br />
+,'--,<br />
+1602461591 1369<br />
+',-'.<br />
+1602461591 1370<br />
+','..<br />
+1602461591 1371<br />
+',-'.<br />
+1602461591 1372<br />
+.'`''<br />
+1602461591 1373<br />
+.-''.<br />
+1602461591 1374<br />
+.`--,<br />
+1602461591 1375<br />
+,'--'<br />
+1602461591 1376<br />
+,,-'`<br />
+1602461591 1377<br />
+-',.,<br />
+1602461591 1378<br />
+'-,``-`'.,<br />
+1602461591 1379<br />
+.-`--<br />
+1602461591 1380<br />
+.-.,-<br />
+1602461591 1381<br />
+,''`,<br />
+1602461591 1382<br />
+-'`'`<br />
+1602461591 1383<br />
+.-'`.<br />
+1602461591 1384<br />
+.`---<br />
+1602461591 1385<br />
+.,.`,<br />
+1602461591 1386<br />
+.-'-`<br />
+1602461591 1387<br />
+-`,--<br />
+1602461591 1388<br />
+,-'..<br />
+1602461591 1389<br />
+'`.``<br />
+1602461591 1390<br />
+.`,``<br />
+1602461591 1391<br />
+,-,-`-..'`<br />
+1602461591 1392<br />
+...``<br />
+1602461591 1393<br />
+.,,-,<br />
+1602461591 1394<br />
+'-``.<br />
+1602461591 1395<br />
+`-.`'<br />
+1602461591 1396<br />
+..'.`<br />
+1602461591 1397<br />
+',,-,<br />
+1602461591 1398<br />
+.`,',<br />
+1602461591 1399<br />
+`'`-,<br />
+1602461591 1400<br />
+.,,.,<br />
+1602461591 1401<br />
+'--',<br />
+1602461591 1402<br />
+'--'-<br />
+1602461591 1403<br />
+`-...<br />
+1602461591 1404<br />
+-'-.--,,-'<br />
+1602461591 1405<br />
+--`-.<br />
+1602461591 1406<br />
+.,-,,<br />
+1602461591 1407<br />
+`.'..<br />
+1602461591 1408<br />
+-'.''<br />
+1602461591 1409<br />
+,'''-<br />
+1602461591 1410<br />
+''.,`<br />
+1602461591 1411<br />
+..,,.<br />
+1602461591 1412<br />
+.,`--<br />
+1602461591 1413<br />
+,.-',<br />
+1602461591 1414<br />
+,',`'<br />
+1602461591 1415<br />
+-`-,'<br />
+1602461591 1416<br />
+''.--<br />
+1602461591 1417<br />
+'..'-,-'',<br />
+1602461591 1418<br />
+-,'.,<br />
+1602461591 1419<br />
+',',.<br />
+1602461591 1420<br />
+.,.--<br />
+1602461591 1421<br />
+'',-,<br />
+1602461591 1422<br />
+,`.,`<br />
+1602461591 1423<br />
+``-.'<br />
+1602461591 1424<br />
+.`',,<br />
+1602461591 1425<br />
+,''''<br />
+1602461591 1426<br />
+',-'.<br />
+1602461591 1427<br />
+'''`-<br />
+1602461591 1428<br />
+'--``<br />
+1602461591 1429<br />
+'''.'<br />
+1602461591 1430<br />
+'-`,.,'.``<br />
+1602461592 1431<br />
+-`,.'<br />
+1602461592 1432<br />
+.`,'`<br />
+1602461592 1433<br />
+,`-,`<br />
+1602461592 1434<br />
+-,.-'<br />
+1602461592 1435<br />
+`,.'.<br />
+1602461592 1436<br />
+-`.-`<br />
+1602461592 1437<br />
+'.',,<br />
+1602461592 1438<br />
+,-,--<br />
+1602461592 1439<br />
+`-'.,<br />
+1602461592 1440<br />
+`--..<br />
+1602461592 1441<br />
+`-`',<br />
+1602461592 1442<br />
+.,,.'<br />
+1602461592 1443<br />
+-'-,.'`',-<br />
+1602461592 1444<br />
+''''`<br />
+1602461592 1445<br />
+.'.`.<br />
+1602461592 1446<br />
+`.,'-<br />
+1602461592 1447<br />
+.`-.`<br />
+1602461592 1448<br />
+''-``<br />
+1602461592 1449<br />
+'`-'-<br />
+1602461592 1450<br />
+--'.,<br />
+1602461592 1451<br />
+-',,`<br />
+1602461592 1452<br />
+`,'-'<br />
+1602461592 1453<br />
+-.`..<br />
+1602461592 1454<br />
+.'-,'<br />
+1602461592 1455<br />
+``,'.<br />
+1602461592 1456<br />
+-',.,.,`,,<br />
+1602461592 1457<br />
+`.`.-<br />
+1602461592 1458<br />
+,-.',<br />
+1602461592 1459<br />
+',.'`<br />
+1602461592 1460<br />
+,'`,,<br />
+1602461592 1461<br />
+.,,'`<br />
+1602461592 1462<br />
+'-'-'<br />
+1602461592 1463<br />
+..-,.<br />
+1602461592 1464<br />
+-,'''<br />
+1602461592 1465<br />
+,',,,<br />
+1602461592 1466<br />
+.-,--<br />
+1602461592 1467<br />
+`'-'`<br />
+1602461592 1468<br />
+```.`<br />
+1602461592 1469<br />
+'`''-,',`-<br />
+1602461592 1470<br />
+`,--`<br />
+1602461592 1471<br />
+-`-.`<br />
+1602461592 1472<br />
+-,-,'<br />
+1602461592 1473<br />
+,''--<br />
+1602461592 1474<br />
+'.`-.<br />
+1602461592 1475<br />
+,.`--<br />
+1602461592 1476<br />
+,'-,-<br />
+1602461592 1477<br />
+'--'.<br />
+1602461592 1478<br />
+-,-.,<br />
+1602461592 1479<br />
+-``-,<br />
+1602461592 1480<br />
+`,.,-<br />
+1602461592 1481<br />
+.`--,<br />
+1602461592 1482<br />
+,``-.`.`'`<br />
+1602461592 1483<br />
+``.-,<br />
+1602461592 1484<br />
+-,'`-<br />
+1602461592 1485<br />
+-'',,<br />
+1602461592 1486<br />
+.''-.<br />
+1602461592 1487<br />
+.``'.<br />
+1602461592 1488<br />
+--',`<br />
+1602461592 1489<br />
+,.`-`<br />
+1602461592 1490<br />
+.,,-`<br />
+1602461592 1491<br />
+,','.<br />
+1602461592 1492<br />
+````-<br />
+1602461592 1493<br />
+,-.`,<br />
+1602461592 1494<br />
+-``,,<br />
+1602461592 1495<br />
+,,,``-`','<br />
+1602461592 1496<br />
+..`-.<br />
+1602461592 1497<br />
+`-`--<br />
+1602461592 1498<br />
+-.,.`<br />
+1602461592 1499<br />
+`-,-,<br />
+1602461592 1500<br />
+-,,..<br />
+1602461592 1501<br />
+.,.'.<br />
+1602461592 1502<br />
+,`,-'<br />
+1602461592 1503<br />
+`'``'<br />
+1602461592 1504<br />
+'',`-<br />
+1602461592 1505<br />
+-.`,.<br />
+1602461592 1506<br />
+'`-'.<br />
+1602461592 1507<br />
+'-'.,<br />
+1602461592 1508<br />
+''-`-,'--`<br />
+1602461592 1509<br />
+`'''`<br />
+1602461592 1510<br />
+,,`',<br />
+1602461592 1511<br />
+','.,<br />
+1602461592 1512<br />
+--,-`<br />
+1602461592 1513<br />
+-.,.,<br />
+1602461592 1514<br />
+.-,-,<br />
+1602461592 1515<br />
+,-`-`<br />
+1602461592 1516<br />
+,``-,<br />
+1602461592 1517<br />
+.---`<br />
+1602461592 1518<br />
+.-.',<br />
+1602461592 1519<br />
+``'',<br />
+1602461592 1520<br />
+,.-..<br />
+1602461592 1521<br />
+`,'-`-'-`,<br />
+1602461592 1522<br />
+`-'-'<br />
+1602461592 1523<br />
+--..`<br />
+1602461592 1524<br />
+-.'-`<br />
+1602461592 1525<br />
+`-',-<br />
+1602461592 1526<br />
+'-'.-<br />
+1602461592 1527<br />
+-..,,<br />
+1602461592 1528<br />
+,-','<br />
+1602461592 1529<br />
+,.'.'<br />
+1602461592 1530<br />
+.`,-`<br />
+1602461592 1531<br />
+-'`..<br />
+1602461592 1532<br />
+,``.'<br />
+1602461592 1533<br />
+`,',`<br />
+1602461592 1534<br />
+-..--.,.`,<br />
+1602461592 1535<br />
+`.,',<br />
+1602461592 1536<br />
+,`-``<br />
+1602461592 1537<br />
+,.--'<br />
+1602461592 1538<br />
+'---,<br />
+1602461592 1539<br />
+-`..-<br />
+1602461592 1540<br />
+,,-'`<br />
+1602461592 1541<br />
+.,,-`<br />
+1602461592 1542<br />
+.`',-<br />
+1602461592 1543<br />
+-.`-.<br />
+1602461592 1544<br />
+--``,<br />
+1602461592 1545<br />
+'''..<br />
+1602461592 1546<br />
+`.,,.<br />
+1602461592 1547<br />
+.-,,.',-,`<br />
+1602461592 1548<br />
+``-'-<br />
+1602461592 1549<br />
+',,`,<br />
+1602461592 1550<br />
+`-,.,<br />
+1602461592 1551<br />
+-'''.<br />
+1602461592 1552<br />
+,.'`.<br />
+1602461592 1553<br />
+`,``.<br />
+1602461592 1554<br />
+---.`<br />
+1602461592 1555<br />
+.`-`-<br />
+1602461592 1556<br />
+`'`',<br />
+1602461592 1557<br />
+.-`',<br />
+1602461592 1558<br />
+,.`,-<br />
+1602461592 1559<br />
+',.,,<br />
+1602461592 1560<br />
+`,-,'--`-,<br />
+1602461592 1561<br />
+'`','<br />
+1602461592 1562<br />
+..`--<br />
+1602461592 1563<br />
+,'-`'<br />
+1602461592 1564<br />
+--.,`<br />
+1602461592 1565<br />
+-..`'<br />
+1602461592 1566<br />
+-,,,.<br />
+1602461592 1567<br />
+-`.-'<br />
+1602461592 1568<br />
+,,---<br />
+1602461592 1569<br />
+-'-,`<br />
+1602461592 1570<br />
+``,,,<br />
+1602461592 1571<br />
+'--`'<br />
+1602461592 1572<br />
+,,'''<br />
+1602461592 1573<br />
+.````.,','<br />
+1602461592 1574<br />
+'.,`,<br />
+1602461592 1575<br />
+,--,.<br />
+1602461592 1576<br />
+,,-,`<br />
+1602461592 1577<br />
+'.`'-<br />
+1602461592 1578<br />
+'--,'<br />
+1602461592 1579<br />
+,`-'`<br />
+1602461592 1580<br />
+`,,,`<br />
+1602461592 1581<br />
+,,--'<br />
+1602461592 1582<br />
+`..`'<br />
+1602461592 1583<br />
+--,.,<br />
+1602461592 1584<br />
+,...'<br />
+1602461592 1585<br />
+'-`-,<br />
+1602461592 1586<br />
+,```',.-''<br />
+1602461592 1587<br />
+--..'<br />
+1602461592 1588<br />
+`...,<br />
+1602461592 1589<br />
+-.,,.<br />
+1602461592 1590<br />
+,',.-<br />
+1602461592 1591<br />
+'-..-<br />
+1602461592 1592<br />
+,.-,'<br />
+1602461592 1593<br />
+'-`,-<br />
+1602461592 1594<br />
+,`'.-<br />
+1602461592 1595<br />
+'.`,-<br />
+1602461592 1596<br />
+,''`'<br />
+1602461592 1597<br />
+,`-.'<br />
+1602461592 1598<br />
+.,..'<br />
+1602461592 1599<br />
+-'`-,`-,.-<br />
+1602461592 1600<br />
+`.`-.<br />
+1602461592 1601<br />
+-'-'-<br />
+1602461592 1602<br />
+'.-`'<br />
+1602461592 1603<br />
+-'',-<br />
+1602461592 1604<br />
+.'`--<br />
+1602461592 1605<br />
+',-,'<br />
+1602461592 1606<br />
+`,,,`<br />
+1602461592 1607<br />
+,`,,'<br />
+1602461592 1608<br />
+-'`--<br />
+1602461592 1609<br />
+-,`,-<br />
+1602461592 1610<br />
+..,,-<br />
+1602461592 1611<br />
+,``-'<br />
+1602461592 1612<br />
+,,-'-',`'`<br />
+1602461592 1613<br />
+--,'-<br />
+1602461592 1614<br />
+.'.'-<br />
+1602461592 1615<br />
+'.--'<br />
+1602461592 1616<br />
+,''`,<br />
+1602461592 1617<br />
+-`.--<br />
+1602461592 1618<br />
+-`-.,<br />
+1602461592 1619<br />
+,`,,-<br />
+1602461592 1620<br />
+.,-,,<br />
+1602461592 1621<br />
+,'`.'<br />
+1602461592 1622<br />
+`'---<br />
+1602461592 1623<br />
+,.,-.<br />
+1602461592 1624<br />
+'-,-,<br />
+1602461592 1625<br />
+`-,.,-,'--<br />
+1602461592 1626<br />
+,..'-<br />
+1602461592 1627<br />
+'''-`<br />
+1602461592 1628<br />
+,`.-.<br />
+1602461592 1629<br />
+--','<br />
+1602461592 1630<br />
+..--`<br />
+1602461592 1631<br />
+-,-,'<br />
+1602461592 1632<br />
+.'.-`<br />
+1602461592 1633<br />
+-.'`'<br />
+1602461592 1634<br />
+''.-'<br />
+1602461592 1635<br />
+'',.`<br />
+1602461592 1636<br />
+`''.-<br />
+1602461592 1637<br />
+,..'-<br />
+1602461592 1638<br />
+`-`,,,`'`.<br />
+1602461592 1639<br />
+,-...<br />
+1602461592 1640<br />
+-``'-<br />
+1602461592 1641<br />
+-'-`,<br />
+1602461592 1642<br />
+``---<br />
+1602461592 1643<br />
+,.,,-<br />
+1602461592 1644<br />
+''-'.<br />
+1602461592 1645<br />
+,`,`'<br />
+1602461592 1646<br />
+'.,..<br />
+1602461592 1647<br />
+-,',-<br />
+1602461592 1648<br />
+`--,`<br />
+1602461592 1649<br />
+`-..,<br />
+1602461592 1650<br />
+..`..<br />
+1602461592 1651<br />
+.-.`..''.-<br />
+1602461592 1652<br />
+-,-,,<br />
+1602461592 1653<br />
+,,,'-<br />
+1602461592 1654<br />
+-.``'<br />
+1602461592 1655<br />
+.,.',<br />
+1602461592 1656<br />
+,...-<br />
+1602461592 1657<br />
+,--'`<br />
+1602461592 1658<br />
+--,''<br />
+1602461592 1659<br />
+,`,`.<br />
+1602461592 1660<br />
+``.'`<br />
+1602461592 1661<br />
+.``',<br />
+1602461592 1662<br />
+.''.`<br />
+1602461592 1663<br />
+,,'''<br />
+1602461592 1664<br />
+``-`-.`'',<br />
+1602461592 1665<br />
+,``,-<br />
+1602461592 1666<br />
+``'''<br />
+1602461592 1667<br />
+'-,-`<br />
+1602461592 1668<br />
+,,'.,<br />
+1602461592 1669<br />
+-,.-,<br />
+1602461592 1670<br />
+-,-,`<br />
+1602461592 1671<br />
+.--.`<br />
+1602461592 1672<br />
+.,-`,<br />
+1602461592 1673<br />
+-..,`<br />
+1602461592 1674<br />
+.'-`,<br />
+1602461592 1675<br />
+'`.-`<br />
+1602461592 1676<br />
+-'..`<br />
+1602461592 1677<br />
+.,,.'.'.',<br />
+1602461592 1678<br />
+.,,,.<br />
+1602461592 1679<br />
+,'-'.<br />
+1602461592 1680<br />
+,.`,`<br />
+1602461592 1681<br />
+','`.<br />
+1602461592 1682<br />
+'.`,,<br />
+1602461592 1683<br />
+`-.-`<br />
+1602461592 1684<br />
+'''`-<br />
+1602461592 1685<br />
+.-`-,<br />
+1602461592 1686<br />
+`.,.'<br />
+1602461592 1687<br />
+`'-.'<br />
+1602461592 1688<br />
+,.-'-<br />
+1602461592 1689<br />
+'```,<br />
+1602461592 1690<br />
+'.,',.`',`<br />
+1602461592 1691<br />
+-.-'-<br />
+1602461592 1692<br />
+'`'-.<br />
+1602461592 1693<br />
+,.-``<br />
+1602461592 1694<br />
+'.'.-<br />
+1602461592 1695<br />
+'-`,.<br />
+1602461592 1696<br />
+-',..<br />
+1602461592 1697<br />
+''``,<br />
+1602461592 1698<br />
+,',,'<br />
+1602461592 1699<br />
+.,'`'<br />
+1602461592 1700<br />
+'''-.<br />
+1602461592 1701<br />
+-`-.,<br />
+1602461592 1702<br />
+,''`,<br />
+1602461592 1703<br />
+,''.,-..''<br />
+1602461592 1704<br />
+',``'<br />
+1602461592 1705<br />
+,`.''<br />
+1602461592 1706<br />
+,,-,`<br />
+1602461592 1707<br />
+``'.'<br />
+1602461592 1708<br />
+..,,'<br />
+1602461592 1709<br />
+-'`,,<br />
+1602461592 1710<br />
+..-`-<br />
+1602461592 1711<br />
+,.``'<br />
+1602461592 1712<br />
+`..`,<br />
+1602461592 1713<br />
+,,-..<br />
+1602461592 1714<br />
+-.``'<br />
+1602461592 1715<br />
+-,,`.<br />
+1602461592 1716<br />
+'.`-`--`.-<br />
+1602461592 1717<br />
+'.,.`<br />
+1602461592 1718<br />
+,,`-,<br />
+1602461592 1719<br />
+...`'<br />
+1602461592 1720<br />
+-,``'<br />
+1602461592 1721<br />
+``'.`<br />
+1602461592 1722<br />
+.,-`.<br />
+1602461592 1723<br />
+,-'`.<br />
+1602461592 1724<br />
+`,.``<br />
+1602461592 1725<br />
+,.,''<br />
+1602461592 1726<br />
+`',-'<br />
+1602461592 1727<br />
+'-`,,<br />
+1602461592 1728<br />
+'.`.-<br />
+1602461592 1729<br />
+`--`--'.`'<br />
+1602461592 1730<br />
+`-,,`<br />
+1602461592 1731<br />
+,,,'.<br />
+1602461592 1732<br />
+----,<br />
+1602461592 1733<br />
+',`,,<br />
+1602461592 1734<br />
+',,--<br />
+1602461592 1735<br />
+``,.,<br />
+1602461592 1736<br />
+--''.<br />
+1602461592 1737<br />
+''-`.<br />
+1602461592 1738<br />
+-'...<br />
+1602461592 1739<br />
+''-``<br />
+1602461592 1740<br />
+'.-'.<br />
+1602461592 1741<br />
+,-.`,<br />
+1602461592 1742<br />
+---'''.`'-<br />
+1602461592 1743<br />
+`-'`,<br />
+1602461592 1744<br />
+.'-',<br />
+1602461592 1745<br />
+,--.`<br />
+1602461592 1746<br />
+,-'-`<br />
+1602461592 1747<br />
+.,``.<br />
+1602461592 1748<br />
+.`.--<br />
+1602461592 1749<br />
+,..'`<br />
+1602461592 1750<br />
+``,,`<br />
+1602461592 1751<br />
+--'`'<br />
+1602461592 1752<br />
+'.`'`<br />
+1602461592 1753<br />
+`.-,.<br />
+1602461592 1754<br />
+,-`',<br />
+1602461592 1755<br />
+,`,,.,``-'<br />
+1602461592 1756<br />
+``,'.<br />
+1602461592 1757<br />
+,`'.'<br />
+1602461592 1758<br />
+,,.'`<br />
+1602461592 1759<br />
+--.,'<br />
+1602461592 1760<br />
+`..,,<br />
+1602461592 1761<br />
+.-.,`<br />
+1602461592 1762<br />
+'''--<br />
+1602461592 1763<br />
+'.,,.<br />
+1602461592 1764<br />
+.,`'`,.,1602461592 DBAddPageTouch('summary')...<br />
+-1602461592 UpdateUpdateTime()...<br />
+',--``'`'```,'.1602461592 require('./pages.pl')...<br />
+',`.,,'.'.'',`'`'.--',`'..`,''.',`.,',',.'.'-,.`--``,'``,`'.`.,,,-`--..,-.,-.-'.-.,`..,--.,,.,,.``''`.`'``,`'.'`'`,`-`-,.',`','-'.`-`.,.`.`--.``-``,.'.'-''`',-','....--'.,,-`,.,,,`.',-`-,`,,'''-`',--'.`,'``'.--'-`'.'-`-,,..,,'-`-.`,`.'`.'-'...`,-.-.`'```'.`.-``.`''-`-,'`-`-.`,,..'-.,.',,,.-----`.,',-''.`'.,---'`,,`-`,-``-,`,..,,,..',`-,'-`.-`-`-.-`,`''`..'-`-'.``,'`'``,`,'`,-''.`.,-.`-..,-```-,.--,--'','-.,`,',`.--.,,`',``-,---``,.,`.-'-.'',,,,-,,,'```'-`--'-`''.'-`,,`.--'''',`-,`--```'.'',,--.''-''-',',-'-'-`'`--'--,.`'`-..,--'''`,'-.`.`-`,-,`...,,`'---.`,-,'`'.''-''`',-.-``--.,-,-,,',,'---.,-``.,'`.'...',.,-.--.`.',.,-'-,-...`-``-.`.,`.,'---`.``..,-'.--'-`'.'-,'`-``',`..-`.`-.`-.-''``.-''`--,''.-,.''...,,.',,.',,,,'```-.',,.`,-.'.,`-'`,-.,,,,','.''-,.``-'''`''..',-.'',.,'`-.-``,'-,.-,-.--,.`.'-`-.`',--'-''`-'--.,,,.'.'-.','`,'`..--`,--,.,`,.-.,,`.-,`-',,`-`.--.`.,,`,,,`.`-`'.-',''''.,`,','`,.-`-'',,``.,`-'''`,`-`,.-.`--.,`',```'.`-``-,``..'..--.-``'''.``-''',''`,,,-.''`'``.-'.`.-'','--,,..'`,,.``,-`..`,..',`''``,`-.-.'`'--'.---`-.`'''--`.-.,.-`-.`-`.''`.-..-``.''.`--'``.``,-.`.-`',`,,..,`--',-,,',.'-..''-,,'`''``..-`,,,--.-,'.,-..,-'`,-'-',`,'...'',-.--..,.,..,'-``,..',-,--.,-,''-',,..'``-`---'..`-.'.`.,--.''.''`-,'--..-'`-,-``.','.,',`',`-`,---`,.-,..,.,-...,-.`..`,`.-...-..--`'`'',,-`'.,-,'`-.,.'`,--'`-,.,`-,.`.'.`-.-,.,`-`-`,'-,``''.,,'`-,-`.--,,-''-``,`'-'','-,`,-.`.`'',,`,.-,`'.`',----.-,,',,'`.``,..,`''',..`-,.,'.'.`-'','``,-',`'-',,-',`,-,-'`--`'-`'--,``,-.-''''`,-'.,-`-,,-``'`-`'`.``.````.,,--.`'-`'.'-`'`.',`''...',.'-'''--,.--`-'-..`'`'.-``-',.,--'-,.-,-,`.``..,.',,'-',,`-.`''`.,.',,.,,'`.`--,..,'-'--``-'--'`,``-`''.-'''`''`-,.--''`,--`-,.`.'',``.'.`'..'',''`,'`,,,''.,.'`-.,,`-`',`.-..'..-,.`,-,--'.--`,',-`''''`'..`-`,`.'',--..`-',-'-,-`,,--,'`'...---.'-',-.'-',-....'-,-'`'-,`.`'`.-,'`,,'`'`,,.-',--,,-.,-.--.'.-,,.`-,'-''''-,,-..`..,-''-`..`,,`'-'.-.`--``-.,.`-.,``,,```.-''.'','``'``',```-'`,-,'-``,`'.,.,,,'`-.-'',.-`''.`-`'.-`,,',`-,,`..'`,-.,'`-',,,''.,,','.,-',-,.`..,-.-,.''`,`,''',,`-`--',.,,.-``-..,-....,-.-'',,,-'--``'`'`,`'----,,'-.`.--'``-`'''',-`--```--.-`-..''-'',.`-.```..','-'',--,.-.`-`-'`,`---`'.,,`'-''`'.,`.,--''`..'.-,,.'.''.`,.'`,.'`.,,-```..,-'-.`',,.,-.'''-``.`..-`,`,'-.-,,'.,--`,'..'''-`'```.,,..'.-'--..`-''``,-'.,-`',``,`'''`.'`'`'``,'``.'```-,-'`-``.-'-`-''.'.-',`'.'-.`.,,..''.,'`.'.'.'`'','`'.`.-',.,`.`---`-.,.''''..'`,...'`,,',-'`,`.,.'`-`-'`,.'`,`'-`-.``-',.,,`--`.,`.-`'`'-`',..```.``,-'`,,----,.,,--.-.``.,..-```.-`.'..-`,-`..''-.-`-,,,.'`',-,.-'.`,`'-'.`.`..`,---``'-..-,.-,`-...``,-``,,'`,,```.....'---...'`'-.-,.'.,',.-,``..,-.'.,'`-```,`.`,-'.,,`,'```,,,`''-`--.',`-`-,',-.--,'..-'`'.'.'.-`,...',,--,.',-''--'-'.-.`'`.`.-,-`-.`,.'-.`--'`,,``'--``-,.',`'-``,`'`'`.``-.-'.,,',-.,,-.,,''.-''',.``'`'',-`,.,`,''-`..`-,..`,..,``..-`''`,,``''-.,'.'``,,-,-``'`-.--`,'''```-,-``,..,.-`'-'.,,-'...'`.,`'`..',,-.-,-.,.'-`-`'..`....,--`'.''-''-,.``.-`'`,.',','-`''.'',---,,.,-.'..`.-.''`.`.`,,-'`'-,``'`,.,.---,'-..-'`.'...'-'---.,'''.-''-`-`-'``--``.-.,``,.,'-'.',`.-`.,.`,`.,.`,'-''``'```'.-`.,-,`,'.-,`,',.,,`-``.,`--.'.,..`'`.....,.'`--,,..,,'.``'--'---''.,'--``,-'',`.`.`--,.,'`,...`'`.,.```'-.'-....',--..-.`'--'.,,`'-..,,,,-`'-.,'`,.,,-,'..,`'-,...'-,,'`,.,`.,'.-','.`.'..`'.`.--,,.-,-'.,.`,-'-',,`'`,`.,`..,.`.'-`,.`.--'.`-''`,,-''-''-,,.,.-,,'`'```....`'`,,.,.',.,`,.--`,-.`',..`,,..-...-``,-,.-.--`-`'-,.,`,.',`,...,-,'''`-.`-,`.'`''`-``',,,-.,,--'.`'``....`.-,`,`'`.`-.`,..-``'-.,``,''`','.-','-..-''---,'''.,,-`'--.`-``.'.'-'.-,`..`--'-`.'',''--```.,',,'-.`-`'-'`','-,`,.-``-'...,`.,...-,'-'.--.-'.-',.,,`-',--',,-..`'-'`-,-,'.,'-``'.`,,,`,.-`'-.`'--'`''.--.,-.,,`-`--`''''...`,,.-'-''-'',-`,-.-'`.`'.,,'.`---'`..'.',,`-'.,,-``,`'``'''-,,.`--`,,','`'`'`,,,-.-.--..`--,-'`'`-``,`-`,`.'.,'-,``..-.,,'-',--'--`.``''-,'.-``'-`-'--``',..-,`.,`..,,','--''--``.,.,.'`.,,'.--.```.-`',',-`.--'.`,.`,'`.',''..'``,`.````.`--`'`'.,'.`,``.,,`.,,.'-''.,,,---.``'.'''.,`-'`.,-``'`'.-`,`'-.--'`.-,.,.''',.`..',`.,,'-,-.-..-`-,''`',`,-'-.,```---'-'-,`,'-``-,,`.`-`,,'-.,',-`',.,``''-.',.-``',..-.``'--.,-,','`,',,-''`.`'`-``'--,``'..,---``,''`-..'`,.-'-`,.',---.-```---`'``,,.`-'-.,',,..,-'-`,.,,..--'`'.-`.`-''--.,`',-,.,--,,,,`'`,'`.-.--`,``.--,'--'``-`-`,,-,--`''.-.`,.,``,.`,'-`,-`-','..--,`-.-,-,'`-``..',-,`.`,`-`-'`.`.`-,.--`.``,---.,`'``'`-,`'-'.',.,,'`,`''.-..,-,`-`-''-`-'..-,`'''''`''-`,-,`,-'.`-,.`...'..`--`-`'',.``-'`,..,',`'`'`''-,`--`',,'--'`'`-''--'.`-'-.,`,-`,`.`.'-'`.`-`','-'``.`''..`',,``'.`'```.'',-``'`,---`,```.'-`',-'.`'.----,,.,-,'.`,,.-`--'-,,.'..'''-,``.,''',,.'-''.'.`,,'`,-`.-'`,`-`'`,,,.'`-`,--``-'`.`,-,,`-`.'.-,'-,`-',,,.-.,'.'..,.``-,,-,'--',`',.-'.'``--`-.'''--.-,`''.'`,`'',.-.,.',-`,,'''.,`-,.,`','--..--,,``-'``..`.'-,`',,.`-`'.-,.`,..'``'--.'`-`.--,-..,`,.,,'-,`,'-'..-`'',```-,'..-`-.,```-'`''',-.,`-,,..-',`.-'`,'`.,'..,``-,`-,.',.``-`.'-,.'.'.--``-',,--'--`'`-,-`.--,--.'..`-`.',`'.`-.,'`..`-.''.',-,'-`,`.,-.`,.'-.'-'---'.',.,,,.,.'-'..,`,''.'.-.'.,-.--'-,--,.-`,'..'.'.,-`--',`-```.`.``-,``''`''.,.-,-''''-'-.'--..-.,,`--.',''``'-'..',,--.,-,--'`,-`,.-'-',.,-.',-'-.,''..`.'.`'`'-,`,-.-''-,``,.--.'---'..``-,-`.'-,.,,`,`''-'.-..'`..-'`.-,-.,''-,-.,,,.-`,'-,-`...-`-`,.'.,',,``..`'.-.,-,.,`.,.,.`'`.``',`,--`'.`'``',,'`,,'`,-.-..-`.`.'``-`.`-',`..'-.`,,`,-..`,'--,,,`..,`,,,`,'-.,,`'''--,,'''``,.-',..``,,,'.`..``-.-,,'..`,,.,',.-''-,-``.`--.`.'.`-.'-``.'`'`-,`..`,,,-.,'.``..`,.`.'`.-'.,-,.',,.,`-``-,'''`-'.,,',,`-.,,,-.''-''--,`'-...``'``'`'.`'''-'',,.-`,.`..',.,---``-.,,,,`.,-`,-.--`'.','-`,.-,'''--``.-`--`.'.`.'``'.,``,-,.'-'.`,''`.'--.-`-'-`-'.'``...--''-`'..-,-,,'-,`..--,..-.-,-''.,-`-.,--.'',,'-,-'``,,,.,-''.`'-..'.-`.-,.,,-'-,'``.`..,'`-'`.`'-`'`,'``',.``.``-'`,-.'-,''`--,.`'',.,`,...`,'-`',-,.-,-'...'.'-.-.,,..'''''..'``.-.,.'`,-``.`-`'-..,``-,-`-.'`-,-',-.,-,,'-'-`-'-`'-.,,`-',..','.`.,`.`''---''.'''-..`-.-',--',.,`,`',-.'.,---.'`-.'`.,.,,'`,.-...''.-.,`,-'..-`',.'-'.-.```',`.,.,.',-,''.,,'``.'..`.``-``--'.''.'..`,.,,-''--``````-',-`--``,,`,,`,,`.`'-.-'`-...--'````--`,'-.'.-``.,--`'`-`'''`'--,`'''--'`'',.`-.`'',`.-.-,,`.`',`.-`,.,,,,`.'-,-,,`-,.-'.--..,'.-',---'`'.,'','``,.-'-,,'.`'``.-'`-,'`,--,','...`'.'-`,,.,,,,`,.,`,''.-',--.-.'`'.,,,.``,`..```.``,',,.,.'``,.-'-`''-,...`'--.`'',``..,`,-`....,,..```..-.`-',-`-'',``,.`-.`'--``,'..'...--'`---'-.'-'`,'-.-,.'-`,``'`---'..',''',.'''`,,`'`.---,'-,.`.-,,```,,--`-,'.,-.`,.-.'`'.`--,,-...,.-'.,,..-,``-`..,`.'`'`-,,.,..-``,`,.`,.`---`-,`,--,`,.-.-,.``-.,.-,,,..`,.'`''-,,``-```.''-`---.`,'-,,-,..'-.-'-`-`,,,`.--,`,,..`-,.`-''--',`-,.`,-`,``.`,-.`''-,,,-`'--,-',`..`-',`-```.,`.`,`,.',,'`,''`,---,`..`,.`-`'.---``..`,',.',-'`'-.,,'`-`'`.--,,,,''..,.,.''--',-,.,',`,.-.',.-,'`,,,-`'.,.'-`-``'-`'.,-''-.'`-',,.'-,`..'..'```'`.---'',`.,.`.-'.-,`,..`.`.`,-.`.-'''--,,,`.`.`.``,`'.-`,'--'`'---',..`--''-`.-''`,-,-,,``,.'-'.',`.`,`'-,-`'`'.,`''..-,,..--,,.,-'`,``-`-,-'--.--.`,-,.'.,.`,,`-`.-`-``.,.`'`-`.-`-.`,`-.`-.-'.'..'.,''..`',.,.-''.`-`,,..,'.-.,,`-.,-`-.,-`,,`,`,-`',-`''..,',,,.-,''`'.,```-,.-.-.,,``,`-`'-```''',-,..'',,.,.``,.-.`.'-`--,'--`,`,``.-','',,,',''.,,.'--'`'--`-.'-``,.-`'-,,`..-'-`,.'',,`'',,`,'.--'.'..`--.`,-,''.-,`..``',',`,-`-'`.`-..`.'.,'-`.`,-'`,-``,,``,,`-,...-`-`-'-'.,-,--,,..--',-..-.,`-.''-`.`-`'..``,'.`.`..'`''-','`-,...''''',.,.-''.',''`'..`,'`-`'.,','`-`,-`.''``.,''',`.,-'',,.,.-`'`''''.'`'-'..','`..,.`,-,`...'`-,.'''.-'-,'',-.'`'.`'',-`,``-'..`.-'`,-'-..,``.'-.-`'--,.``'''-`-'-`-'`-.-,'.,-`--```,,-,,`.-'`','`,.-',''-`'``'-,'`,-`--''-,-,-`'`-`.`-.-`.'-,,,--,````,-.''.'-,,.,`,,,,-,'`,'.,.``,-`-..'''..',```,'-`.--`',,-`--,..-.'-,,-``,,'.-`-.-'-`'--`-,`,'',-```,.'.'.'`,`.,'..'`,.-'.-.`-'','...''`-,.--,.,-`,``,,```'''.-'.'`.-..,-``,,.`.-,.-'``.,''``'.-,',`.'.''.`,,,,-.'`,-.'``,'-..`,`'-`-..,-.---.`,.,-`-',,'-`'-,``.'-`,-`,-`'`,--`.`,,.-`-`..,,-`.`-.'-'.'.'`',.'.`-.'--'.``',``-'.'`',`-.``,`-.--``.-.-`.-`',-,--`-,-.'',`-```.'`-`'.`.-``'.,-'`.....`--,'-'-`-,-'-'`,-'',,.,``-'-`--.,,'..`.-`,'.,.,`,,','...,`'``-,`,,--.,-,'.'-`'.'',,-.'``-.'`'',-..,`,..,`',.`'.`..,'.`,`,..`-,,.`,-,-`.,'-`'-',``'`.,'.-''.-.,.-`.''--,'`,''``-.`.`-`,,'-,`..,'`,-'`,,.'.`'...,'.`',-,'--.`-,,`,`'.'``,`,-```,'`,`.'',-``,-''`,,-'.`-``-.,','.'.`'.----`--'`.-`-,`.`'`--,..'`-,.--,`.,,`-...'`,..`'`-.```.-.`-',```-'`-.,-,,,,'..`.---',-.'``.``',``.,-..'`,-'-`',--`-,'-',.`--',`,-,,.-.--,`'..`,',-'.,'``,--''-`,-.,-'.'.',-`.`',.-,-`''-.`,''--,,.``'`..---`.--',````.`-,.-.,',,''.'.`-``',,,.--`,,-,,,-.`.---`---,.```.,,,`--,.,..`-'.-``.-.``'.-,.`..`-``.,.,,.',`-.'.,'..,,'-'`'..,..`-.''`-`'```-,...--''-`'',.,'-`.,,,`-,.`,'`...'.,'..```-,'`'.-.`,',.--,.-,,``.'.,-.``-',`,,-.`.'.-'--`'`'-'-,..-`'.'`.`',.,'-''-`''```'`.'..''`,,`'-`,-,`-,..,.`-,,``-'`'`,.''',-,--`..`','-.`'.,`,'-`-'`.--,,'-'.`'.`.,``'.`''`-`-'-,-'``'.`,'-.-,``...,,,..'`.,.'..-',--``,-,'-`,''.,.','`-,.,'--.-,`--`,`.'`,``..`.--`,.-.'.,.```,..,.````...'`,''`````,',-,-`'`'',''.-..,.'`,`.,','-'`.,.-`.'`'','.,.`.,`--.'`.'','--',---''`'`',`,.,```,,,`'-,.,,''-',-``-,-,,'`--'-`,'`'`'--',.,`-','``,.`'',,'-,,,','..`,.`,`'..,.,',-'-,,`-,-,,.'`--,.'-`,'`-,,`,..,,,..`'``.-`-`,,,```',``'-',--.,`'-'.'--``.,`'-`.,'`,`.,,`-.`.'`-.-..``'..`-,`,'.,-,.-.''----`,'.``,.`.'''-,.`..'...'-`,'.-`'`-,.,.,,`',.``,`..-',...'',,'-.'''.,,,.`'.-''`-`',.`,.,'.-,``.''-`'..-,.----.,,..``''.,,,,-`.,.,,'.'','`--`,-.`..'`'`,'--``--``.,``.'-'--`-.,'--'`,'.`--..''`.,.-'-`-`'.'-'`,`,-`'',,,`,'`,.-,.,'.',,,.'''`...``-,-',`-`,,.,-....`,.''-.`'-````'``,',,',-.'`'.-'--,-'---`,'--'',..``',,,.'--,-`''.''-.,``','.,-'.`-`,-`'.`','-,'',.,.`','-`',,`..',.'`.-.`,-``-.`'`'-,,''',.'`-`-,'-.-.''.''`-',,,,`..'-,.,----,`..-,-''',-'-...'-,'`,``,`-`--`-,..`..-,,-''`'`.--.'`-`,,.-,-.-'-.-,.-...-,-,-,`'---,.-,`..-,``,.``-',..`.``,.''-,,-.-',`,`-.-`-'`...,,-.'``.,.'``,.-.'``'``','`--,.--`-.``--,`.-.`,',-`-.'`.'``'`'`.,.--`,,..'`-..,`'-,``,.``,'.,``-''-``--'.,,-'`,``.,``''',-.,'`-,``'--'-',..-,'`,--,..-''.`-`-`.'.'.``'`,.`,','-`..--.,.'``-.-'-`',''`.`-''`-,-,,`.-,-'.,`,.,-.'-',--``'-,,''.`.`'-'..`..,'.`,',,'-'`'.--.'',.''`--''.-,`-.`,'.--..-'--'-`,'-..-'`,'.``.`--.-.,..-`,`','--`.,'`-,``,.,`.,--,'`,-.,`'',`'.'.`'',',--.`-.,.--'-',,`.-``-.'`--',-,'`,,--'`.,-',`..,---,,`---'.-,.-'`'`',,'''.,,,-,..`''.'---'-`'`'..'`'-'-'.,'--..-`.-`-.`,',`--,`-`',`,,'-`,-`,',,`--.-,`,-.'````,----`'.'`'--'--'``,..,`.,.,,``-.,,'-'`-.-,-'-'',''.,'--,`..,`.'.``.,.,,,,,,'-.`-,,-`,,,,',',.''''``.''.'.'-,'-,''...-`.-,--.``.,`--`.-''..,'-`,,.'`'-,..'`.,'-`,.,`.`,'.``.-`-,'`.,',--'''``,-,'.'`-.-`-..`-`,-..-`',.'.,'-...'--.``,,`,.'`',,'`,',..'``---.'`..-````-`'`.,'`-,,'-.'.'`,,',`'`.''.,-'-.'`,-,`,''-.`'',`,-'-.'.,.-`,-',.-'.---`'-.,.-.-`.,,````''`'.``-'.-,-,`,,,-'``,.'`,,``','`--,.,.'.',.-.`''',',,`-,,,.--,.'''.,-,',,'`-,--,,`.,',`'-,`,-`'-,''.,,.``-'.`'..-`'--'..`',-`,`-'''',.,,',''-`''`---.,.--',,--.--`-,,,-'-,,-,-`',.`.--.'.,',-``-.``''-`-,-.'`.,,,``,---`'-`.--,-.,',',,,,'.---,`,-'.```.`.-',-,.,`-...-.,''-,---'',`-...'`.,.'-``.`,.'.`.-'`,.`,``.,'..,,.`'.--.`-`'.--'-.'-.-`.'.'.-`',-'``....''`'``-.'-``''.`-`'-`...'`-',`,`,-.`,-``'-`-.`,-``-.--`.,'.,-.`,.`.'`',''--'.-'.'`,`,''-.''`'`'`'-',`'.-',```..-,,-,.,,```,-.--,`'-,,,,.,,--`.,'-,'','.`,.'','''-.''','--.,-`.-`'`',`,`'-'-'-'.,,,-.-,,.,-,-``,,,.-'.''-`-,-',-''.'.,,--'',``''`'-''`.`.`-'-'.,-',,-.-`.,-'.`'',.''',-'.,,'-...-',--`-`,,.'`-,,`-',--,'``'.''--.,.``'`'-''`'-`-'-``.'.,,,,-',-'-,``-`--.'--`,-.'-..`'`.`..''-.-,`''.'.`'','-.'`-'..`,`'`.--`'.,,'.'`,.'-`'`,`,-`,.`,',.,'.'-`-``,','.''-'-'`---.``''-.--,,...---..``'-`.''`---.`.-,'`''-`.---.,'.,-',,'`.'-.'```.`.'`',`,,-''-'`'`,`'-,,.-,-''``'``-,`-`-.',-'-`,.```---'''-.-..,,,,-.--`'.-,''.-'--,`,...,,.`'.`,,..','-,-,,````'`.,-,`,-`',,'-,,''',,.-..'-.,-`,.,.'.-`',-`.','`'.,.,`-''.-'..-'.-'`,.'','-',-,'`.,,'`-`'`'`,..,--.,,,`'`.-,'',.'``-.`''.`-``--..'',-'`.`.,'`-,-,-.`,`''.,`'-.-'`--,---',,.,``-..`''.`-,'-','.-',.,''-`--`''-'''-,-,----`.`,.'.,,.-``.,.,,,'`-.`-'`-'-``-,-..'.'.`.'`.-,`'-,..'.`.'-`..-`-,'',-.-`,,-,'.`-'`-'...'`'`,'',.`,,..''`---,..'-.-,,,,,,,-'`'-','`.',.-'...,..,--.-,`.-.,'`-..'',,.-.,'',.`-'.'`.,'`,-,.-''.--`.'`'`.-.'.,,',.,,,',-``,-.-,,-,-.`''`'.'...-``-,``,.,,--`..-,.-''.'`--'-.-'.`''',-,-.``,``..`.`.--`-'.`,`-.--'`,```--``''``.,-`.'.--,`.`-'..,'`'.,,.-,`'`.```,'-`,',,.',-,`..--'.,,'',.-.,-.'.`.--'.,`-.---'`'''..`-'-,'`.'-'-.-.-'.-'`,-`.``',.-.,-`-.-,---`-,-----',`,','.`,,,.````.''.--,-'.'-`'`'--.`'..`,-.,,,-',,`',,,`''-.','.---,-.,-'--'``.`.'',''.-`-.`.`.-.`'.-```.`.`-.-.,`.'`'--,.`'``'--`.,,-'..`--`'....``'```,`-.'`...,'-``-`.--,`-',``-.`.,`'--'`,-``,`.,'`'-.'.-`',``'''`',..'-`,,,,`,-,..`'.','.'.-',,-----,'-`,.'',,,.,,-``,,,'-``'-'..--,,.-.`-'-'.`''``-.-.','.,,`'--`'`'.'.-`.,.,.-.`---.'`,.``-,,,-'.`,,`-`-,.`'`'-`,,'',``,`.-'.,`,`,'-.-,..-.-.,'.,',''.,.-,'''`','-,`-'`.,',,`-.-'..``'--'-'.,,``'.-`''...''',.-.-.,.-,`.`...,-',.``-.',-.-`-.-..''`--'`..,,.,`'.--`.-,,,,,`,-``,'-,'.`,..-,-...`''.'``,.',''`-`,-''`,.-',,``,-.'-'.,'-.,,-,'-.`....'.,''`'--..-'`-,-`.`,.,.`'.-`.-'.,-`'`,'-',-.'`.-`,.`,`,`-.,`-.,-`-`-,,,,-.,`,`,`-`'`.'--..,`-`.'`,.`,,',-''..'-''-`-'-.`-`,`---.'--,`.',`,-...`'.'-''..--'---''``'`-,',`.`.'`..---'-`.,-'-.,'-'.```-.'.-,.--``'-'.`.`,-`.-',`''-.''.''-```'`''``-`'-`-`',',,-.,,',`-,.`.-.'`.,'.-,,-..',`-'-',``.,,,``,`,.`.,'..,,,`--`,`..''',,`.-.,,`'..`.`'`',.`.`-',,',`,,,-,''`-.-`.,.-,,-''',`,`,``'.`''.'.'-`-'.',----`,'-,.`.`'',-'`''`.'.,-''`.-','',.`,','...,'...`'-.``'-..`,',``-`.`'-,,``-''---,-'.,'',-,,-,---`-,-,.-,`''`-.--.`,,-.-,,-,```.,``',,,,-`.,..'``,`'-',.,-``''.'.-'`..`.-,`,`,'`'.`,,-,'.`''..'.-`-,.'','-,-,'.---..`,'-',,`-.,`,-','.,,.-'.'-,-,-.`.`'''..'`.'`'-`,`,,-',.-'.,..,'-.-.-,,,.''.`..''`,.,.-'`.`-'','-`.`--`-',`,.`..``.,,,-,,,`'`---`'`-'`.--`.,-,-'-'`--`-,',``---,,-,..`-..`.,-,.-'.`..'..,'-'-,..,',-'-`'''.,-'-,`.`'`-`-`.''``,-''-,``..-'.`,',,.`,``,.`,-.-,,,,.`.''.`,,',--.,'`-'.--,'',.-,--'',,',,'-`',,`.`''.,,',`.-`-,.'-,'-'`-`,-'`--.-``.```,.-`,`'.,.'..,`'`,`.',,--`,-'-```,,,-`',.-`'''..`-,'--,.',.`,-''---``'',--`'',',..--.-,''`..`'''-,'-.`'`-.`,.'`,-'-'`'.`'..---'',.``,,--,`,-,``..'`-`,`---'-.''`''--`,''.,`,'-.,','.-.`'.`-,.,,--`'-.,.`-.'`.-'-'`'`,.''-',-'',`,,`.``-'.--'.--,-'',,.,-.,',,.-,.`.','''`,.,-,`,`'...`.-,'--`-`','`,.,,,'.,``...',..-`,.`---`.''-,`-`.,-,,',.'-.`,-,-,,-,-```..''..``.`'-`,,'-`'.-'','',,-''''.,-,..--,-',''.',``.``-........'.-'`.-.,-'''.-,'-.-`.`'-..`.,,'-`-.`,.'-`,`.`.''``.---'''`''.`-''`,`,.`,,.'.'-,.``..'.,,`''.-,''`'`'.,.,''.`.,..--.'-'``,..`.,..`,-.'`-.--'...'--.-''`'`-.,..`-,`,.`'.'.,`--`',-'`-`,'`'-`--'`.-``.'`.`'`-'.,.`...-,-'.,`--.-..-.'``'',,,`','`,-,'``-`'-`,''.--.-',-,.''''.'.'..-'.`.,...,-,--``-`-.`,`'.`.`-,.`,,.'-`'`.`',...-``--'--`-,'.`-`.'```'--``''`.'----`,-.`-',,.--,-.--.,.``---'`-.''.,''--`.-.,.`'''''`--'-'.'-'-.'-`,.'-,``--,,,'-`-,.-`..,,.-.`-'``,`-'.'`'-..,,,-,.`.'.`---'``.`''..''`'-...``',,.--.,`,.,-.''-..-`-'.'..,-`-''--',.,`'','`,,'.,''-.,``,-`,,`'.'`-''-..-,'``'-..',..'-`,',,-'.--',,`-,``'-`.'-`-'.--,``'`.,-'----.-.-`',-,`---'`-',.`-.''-.',.'.`-,,.,.'`,`,`.`-,,-.`-,`.''-`..,``--.`'..'...'`,.`''`-,-..,`.,`-,,-`.`'',',,,.',-.,'`.-.',.'''.'-''.,,.-,-.,,'..,'`--,.`-'.-'```,',`,,-`-.,`,`-.,'.,,`-.`,..'''``.,.`-.,'''-,`-`,``.'.'``-`''.``'`.'''--````-,-.',,,,,,'',```.,.,`,`.-`,--.'',.'--',.```.`,`,--,-'',----',,-'''.-,-,---'--',.'`-`.,---.'`..-.,-..-.'-.'.`'.``-''-'--,,`,.,.`-.''-'``-,`--`,.-`.'.`--','`'''-``,,`'..-''--``.`,-,-`,',,,..``.,,.,,,'---,,.-..'.-'-`.-,'.`,`-`-,.`-``.-.-'-,-',,`.'`,.,`.`,.-,,`--.-`,`,`.-`',`,,,''`'.`,``...,.`-`.,`'`.,.',...'-,`,-`.`,',..,`,'`,`,-,`'-',,,``-,`..'`''.',-.```',.```-...'.'`-`,''--,-,.-'..,.``,-,..`-,.,`,-,,...,'`-..-`,''`,.'.,`,',,,`'.'``'.,`',`'-'.,'.-.-.,-'`''`.-',-''-..'-''-,''``.'.-``-'``.-'-.''',--`````-,-`',`..-,`..','.'',,..-..-..'','-,-'',`'`.,.,`.,-....`---,.'','``,..',`,-`,.',`'`''`,,.`-,,.,``,-,-'`,-''-,',-..'.`,`-`',-`'.,`'-`--,-`'`,-`.,---'-`,,`,-`,,'.`.`,--`-.--`.,,',-'-'....`.'..-``,.'.'`.,`..,,''.-`,-,,.`'-,.',`'`--,,`,'````-`,`'...''.,'.`.'-`.``'-'`,`-..`,,`,','.'',`,-`.'.--,''-..-.--,`--,',--',-,--'--,`-.-'.-..``-'-,-.,',-,`,`--`.`'..','`,`',-``-',`-.---,`,```,'..`-`-,.-,'`.-`.`,.,.'.'.''''`,,-,,,'``--`.'-.,-.',,,`''.`'-`..,,,,`,,,.-''..,..-,`',,`-',,-`,''--,`-',,.--`.'```--.-``.'.``'-',,',,``'``,,--.'-`.`.`',`-`,``,.,-,``--.'`.`,'-.'-`-,'.'','-.-.,,`-,'.--'---'.`.`.,,,''-`.'.`.-.,-'.'`-`.-.,'-,-'..-,..'--'''`'-''-`-,,.`',````-`-,`-'`,.`'``-``,,`-.''``,'`-,-,,,.`-,''`,,--.,.'``.,`'',`,,-'''.`.-,',``-,'`.,,,```.',,,...,`'.``',`,`,-'.-,.``'--,-,.--`,-',`,.-,`,-`''''`'-,`.`.-'',`---`'``-'``,,`.'''.`-,.','-''--``.,--...''.`-,'-`,-,,`'``,..`,`,'--,'--,,.'`'-,`.'-,'``,`````,',,'-',-',.```--.'```,`-.,''`...``'..-,'`-,.''..,-,..`',,-.'''-',`,.,`'..''.'',',-',-`...-,..`.`-.-.-''-.,,,,'-'-'--'..,..-`-...--..-`'-``,`,''`'.'.`'-..`-.--.-,'-`.-'...,,.`-,-``'..-..',','-.-.,.-`'.',,.,'`-'-..,.`.,..-`'`.``-'-',,'.``',,--`'-,''-.'''.'--.-..'`'-'.'.`-''-`-``.,-'',-.`',`,,.-,'',.'`''`'',.',-',,.-`-,,,.'`',-.-,-,,,`..',``''-.''..,,'-',''`-''',`'-`-.'.-.'.,-.,`'`'`,`-`'.,--',',..-,,,'-`.-``','-,-'-`'`.-.''-`,--'`-..-.'`--,,-`-.,..`...``.`.,``''`,`'`-.,.`,.,`-`,`''-'.--.`,..-,-``..,.''..-'`,,`'',''''.```,'.,-`'----,.-,.'.-..`,``..`'.`.-.--`.,-.'-,.-''.-,`,---'.-'`'',',-'`.``--',.',`-,.'',..'`,.-,-'`.''.-.'--`,,```''-.-`---``,-'..,-.,-.`,,''`-`.,`-`'-`.,.`,--``'',.-.,.-.-.-`',,,`''-'`','`--,'-,.'```'-,'-.,-`,,`,-,`.`''.,..''.-,,`,`.`''-`,`,''`,',.,.'',,.'-,,'`.,',--'.,',.','`,`',,'`.'``,.-'`'.-..''-`'',..`,`'````'`,,'''`,,'`-,`-.,.,'-.,,'`-`',',`.`'.-','','`,,,`--`.`..`..`.-`.-,.-'`.`.'''`''-.`'-,,-'`,,'----`'--``'.--'.'-.`'',`,,.`.,--,.,,--'-,'.-,`..',.,`'.',',.`'`,.`,''``.,`-..`.''`-```,,-,',`,'`-.'-,-`-`-`,.',,`'```,`,.,-````,-.,,.-`.`.,.''-..'`,```.,,'-'.,``,,,'---`-.`,`,.--',--,.'.-,`,`,.''`,'.'..',-,`..,-,-`-`-''--'''`'`-'-`,.,.`.-,`,'-`',,..,,..'.`.,,-.,,.``.``..-.-...'``,.-.-,..`'`.'`.'`--```-.,'.''..`''''--`--.'',-,..`.`-'`'.`'.,'.`,..,''.-'`.-..``..`-`'-,','---`.-,`.-`,-'.-`.,-'`.'','.--,.,,,`'-..`,'-.`.``,-,-,'`.`.-`','```-,.`'-,-`,'`'`.'-.'`,'`,'`,...-,.'`.`-'.`-`..',,'--'`,.,.`,'',`,``,.,.-'`.,,,'`,,.,.'`.--,.`.',,',```.`.,.`,.'..,..`''`,''`,',,',,.''-``---.',,',,-`-`-`.,`',`..,-.`-',`-'.-.`-`'-.,,-',.-.,--,-',',`',`-```,.,`',,``-.`.',.-'.,`.,.`.'.`,',,``'.-,,'-,,-'-``..,`-.-,,'''-.`-..,'-'.-,','`,.`,.'`,``-.`.,,--.,..'-`,,--,.-`.,,`.`'.```'.,.',`'`'.-.'```.,`-'-'-'```--'```'-'',,.,``'`,'-.,.`,'.`.`''.'-.``'--'.',..-...,-,'..,-,,`-`'''`,`.,'`,.,..`-`.''..'`-``'`',.-..,--`,-``,-,''.',-`.'...-,``,'-.,,``',.`.`..',`.,.---.,,,,.,,'''.'.,,.''`,',`,`-,-,,'-'`''-.````'-`.,,`.',````'.-`.,----..'-,-..--`-,`.`,',.-',-``-,,`.-'`,-,`'`---,`'.`,'`,''``-.-.''`''`',,```',''--'.``'-'--``.-`-',.``,-,,.',`,`..'.,''-``,'.''`-'-,.`'`,,`',''''.----,..-,,..`''`.'..--''.--,````,.,``-.-,,',-'`-',-`,'-``,'-`'--.``,,-...',-.`,.`-`,--'``--.`,-,`.---,.-..,`,-''`,`''`,,.,'`'.`,`...`-''..',`.-,-'`,.-,'`'.`,,..,,--'',-.```-.,-.'`''--'',,.'..,..``.-..,`.`-`'`,`..`-,-.-`,...'`,,''`'.--',`-`,`,'`,`,'`',.-.-,,'`.,''''`..'-`..-'.'`..',``.-'.`,,`,-.--,`-,'.,.`,.,',`-`,--.'``''-,..-.'-'.`-`.,,-'--`,'.,',,,'`-',..`-.-''-`,`,'``--,'-`-`'..`-.'``-,`''`,.-.`'.',,''''--```..-``-'`.'`.,`...',..'....`-.'-'`-.-`-..'`-`',,,`''-'`'.-`.---``---`-`,,-..,-`'-`,`,-.-'---,,,`,-`.-'.-'..,--`,-,`'-,,.,.-'-'.,`-'`,','`-'.-``--.',.',--.,.`..-```',',`,-'-,,,`,..--`,'.,`.-..--,,`,.`,.,'`.`-,.'--,''',',''',-'-.-.-.,--,,`.,-.`---'.,,,,.`,',.-.,.`'-``.```,''.'.'.'',-'--',,.``'`--,```-`'`',-.``'.-.`,..'```-,'`''''`.,'-`,,..`,,`,`-..,`,--'.,.,-''---'`-.,...'',`.`,',`-,,`..'.-,'''.,`,,.`,-'-..-``'`,,,,-`.'-``'...-.,'`--'`,.'.`'-'`-,.`'.,,-'.,`---`.,''--`'`'.`',`.`'`.`'.,,',.'``'.'.,,.-,'-,..``,``-,..-'`..-.,,,`.--`-.`.,`,,-`.....''`'`,`-,`.-`''`-,.`.,,'..`',`''-'`-`-,'-'..'.,-.,-,,`-','---'`-.''.`,'.`-'-`'-``-.-'`'-'`'`.,-.```-.`..`'-`.--,.'',`...''-,'`-','``'```,-.`'`-`.'..-,``.'-'.-,.-'-.`--,'.'',.``-,,'`.`,,-,'--'.,...-..,-,'..,...-`'`.`,',,.'-.',.'-`'.`'`-````'.-,`-`''``',`-'-..,'`.,'.-.,..,---`'`.`-'`'.``-`'.-`',,`,'..,-.-.`,'''`.''.-,.-'-',.,'-,```-,.,`-.''.-'-.---`.,,.'',`--,.-.',-.',`,,`..---`.,',,''-,''''.`'`'-``.,-``'`.,-,,-'.`..','-`'-,.''..,.'..''..-'-`.,','.-,'`--`''''--'`'`-,--`'````--`.,'-`.-,.,,`'',.`,--'.,`,,--`.--'`-,'''-`,.-',..,``,-`-``.'-''``.`..',,''.'-,.-,-,'`'`,`,-,`'..-,`.----,.-'---`'`-`--'``,--`-'--.`--',.''`-'`-.`'',,`,-`.-',-.``'.`-.`'.`-'''',,`,`-.-.`,'``-.,'-`,..,''-`'''`,-',',.''-'.,-.,,`.'....`'''.'`.-,.--'-,-,.--'`''``.,``'`''`'',.`-`'.`-',`,``'`.,,,.''''.'.,.`,-.`-'``,'`',-`,,-.',..-'`',''.``,```,--','-''`'.``''-.,,`-'--''.',-,'-,.',,',-,.`,`.,-`-'''-.'`.`.--,''''','`-`---`..,--',`,-,'`-''`..''-.`-,`'`'`'-,,'.`',,`'.,``,`',,`.','.`-..`.-,.-'`--,--.``.''`--'-`,-`'''''.-,.-`'-'-`-,,`--'`-.'-`-`--.``-'`.``-``--..,.,-,-`'`.'''`''',`-'''..',.',.',-.-``,,,''`-``-,'..'''`-``'',,..`'`'-,--,',`-,.,,`.',''-`.'-'''`'`.`.-``..-.-.',`'.,-,.-`,.'.,.'.`-.`,,..`'..'-`-'`,',-.--.'-..,'.',`.,.,-`.`.'.,'-',,-.`.`.`'-,`-'-,..,.'`,.`..'..`'.,,`,,'-.-''.-..``'`,.'--`-,'-``...,`,`-`,,'`'.,..`.``..,',`-.,`-`,`-'.,'`',,`-`',,`.-''.,,`.,',-.`.'-'.,.'-```.,.'.`'`.,..`-'.``,,',`.,`.-.-``-..',.-..'--.`,-'`.``'-.-'`.-``--',`-.'.'`.'.,.,`.--``-,```..,.',`-`,,.-',.`..,.,..,`,,'.--,'`''-,,``-,-'-'',.--`-'...,'`,,'`-,-``'`,,.-,--`'.-.--.,-,.''.'-'.',,''`.'--,''-`-,,'''``-``'`.`,,,'--'.''-``.''.,,`.'-.---.,''-`.,-```',',''','.``'`-`,',,'',,-,.-`--,-'--`,'`'--`,.'--.-,-,`-.``.'-`-'.--`-'```'``,,,.'`'-,-'.-'.,,-..`,`-`,--.,-..'.`',`,.,,.-'-'.'.,..`,,`',.---,-'.,.`,..'..'-'-.'`,,,.-,.,`.,`''`,--,-`.-'-`,-,`.```-,--,-'-.,`'.'-,`.,.,'-``.-..-`.,--,.-..,,-....,.,,'-'-'.'`..''`'.,',.-'`-,,`,'.,,-'--.,','`'`',`',-'-`..,``.`-,'.''.''''-'--.,,--,-`,.``.`.,`-.--'--,-.-,--'-.'.``,-..,,'-.`,..``',`,``,,.,,`'.,-`,-`.,`-',',--'-`,'.,,,'`.,'',-,`'-`,-,,'',`-``,',.`.`.`-.',-'.`--,-.'-'''`,'`,`.``-,.'`-,-`'`..,,-`''`,-'.`'`''.`-.'``,.`..`,'',,..`-`'``,'.`-,-..`--'--`..-,-.,-`,`,-'`.`'`'-','-'...'`'.',`',,`,`'`,,````,''`--`,---,''-,`'`'-,-`-.`.,-'-.,`''.''','.-`.-```-,'',.-','`','''''-'..-'-,`.`,`--..`,``-,-,-,`,',,,-`','-`'.-.'--'`---``-'`,,'.',-,.'-....--`.`,..,--,.-,```'','.,`-,`'-''',..,,'-,`''`'.-'-.-.',,-',',--`.`.,.``',',.'',',.`,.,....``''`,-'.`,,,''-,,`..``--'',,-,`-,-`,..-,.,',-`-.`.-...`'.-`-''','--,,,-,,-,,`-,`-.'',---','-`''`'-,,,...-..-.````-,.-'-,`,'-.`-'``-'',,.,.,..-`,`-.''``,.`--.---,'`.''-,`,,.`.'-'.-`.',`'-,'..''.-`,,-.`-`'``-,',-`-`'-```,,-',`-''',,-`,,...''`'-`-,``-',,-`.'```'``'.`..,-.-.'-.``,`-'--'-`---,..-'````.`,'''`.``.``--`,'``-.-.,..,`.`'..''`,',.`'.-'`'-.`-,..`'.-.,,``''',..,-,,,-,.--,,,',-.`-.'-,-`..'-'-`.'``,'-''.,.`,`-,''..-.`,..`-'``,-'',``.'..,,`'`.`,',``-.-`'-''.,-.'`-..-.,.`-'``.,-.-,,`..'..-,'.--.-'---.,-,-'``,'.,,``..'`''-.,.....,``-',`,.'`-.`'`-,'``.'-,..`..'''..`',....,,````-.,','--,,.''.....,,``,`,--''`-`-`-'-'.-.```'.`.,..,,--'`.,',,,`,',`-'..'.`-,.,...'',.`-.``.,',,`'`,,-,.',-'-,,,--,,.,`'-`,`,..`''-.,''`'`.-''.''.',.-,`...'``'```.'--.-'``-,`.`.,.,'`',.```,``''-.'--.`'`.`.,,,`',,``,''-',.'-.,`'.`.'','-',-`',.`,--.`,,-.-`,`.,.`,`''-``--'.',,'.`.`.'-'`'.-`'-'-'`'',''`',-..',-``,-...`-..'-.-.'-`.,`-`-''''```'--'`,`,--'-'-'.,--`.--`..,-.'.-```.``',',-,-,`-'--`--.-`''-,''.-'..'',''.'-`,`..'--''.,`,,','-,`.-.'',''',',.,,''-'.`,-``',,,`'-'`,--'`',.`-'''`---,,.`--'`''',,,,,'`'-.'.,-'`,-'''-'`,-,`..-,--`.-`'.,.---,'``,`,''``',.'``.`.,-'`,```''',-`,,-,`..`-,.`,`'`-`','-'`'-.,`.-.--'.',`,'-,-,'.-`'-`-`'`-'`.-`'``.`,--..```----'--``'.``.`,,'-'-.'.`'.'..,'`,,,.,````-``.,`-.',-``,'.-''..-',`'```.-.'-`--`,``-,,`,,'---`''``````..,...-`.,.,,,-'-...-'`''-'``,-.,`.```','`.,`,.'-``.-,``-`-,-``,.`'`,```,,-..--,,`,-`',--``'-,...'-,-'..``'-,-,'-``,'-.,',`,-''-,'.`-..----'''`,,`.'.-','`,--``.-',,'...'',,.-.,.-,-..-''-.``---'`'-,--'.,,.-,'`-,,--``,``--.,--`-.``''`-.'-``'-.'``,`,.`.,.'-`.-''.,-`.''''.-,`''',.'..''.`-...,--,,.`,',-`-.'.'','.-.'-``-''--',.,---..',','--`,,.`-.,'.',,'`-.,,'-`,,`,.---.,..`.-'-',`'`'`,'--'-',`.```,-..,,...'...'''',-.-'`''-',,'`.``.'.-,,`,-`,'.',.,.,-'.-`-`.,.-`'.--``,-''`',.--',-'-,'`''`,'`,-.-'.`,.`.`.'...,-,,--.,'',-.,```-``-,...'-,..`,--..'``-.-.`.-`'`..-'`.-.```'.--.``-,.'..`'`.'..,,.'`,,-.-.'.''.``,'..',.--.----'.,`'','.,'`'-',.-.-.`'`-'-`-.,,'.`.'.'`,,',..`,'`'-'`,`...''-..'.`-.,-.-`.`',```,`--`.,`'-.-.-`,`''-',-'``.....-'-.--.`-`'`....-,'`,.,,-.,'''..--'''``..'-'.''`,''---.`,`-,,.-``'`.'`-,'.-`',`---'`,,`.-.'-.,,,,,-.,'--..,'.,,`-,`,`,-,-```.''-...,-`'-,``,`'`,'.`.`.,.'-'`,`.--,-,.,'.,,,-`-'--``,,`-`,`,.-,''.-`'`---`,--.'.-,.``,`.-,'''-````''-''..,'`',,.`-.-`-,,-.,',,',--,-.',',,..'',-'.`-...'...-`,-'-,`,,`-,-,.',-.,--`.-,,'`'.``.',',`,..`,''.--.'',``-,-``-`,-``.-'-`''.-,.'.-``,,`,-'-..-',.,.,,'-'`.,,`,`.-`-.,`''`.-.`,.,''.,-`''`-'.'.,-,`'',`.`'---,-`..-.-',,'''-',-',''.-,`,-.,-'.`,--',`.-,-,-`.'`--`,.'.'`.'-```-'-`.-'-'`,--,-.''`.'-`-'`-`-`......'`.--''``'`..-`-.'```--`-`'..''',',-'`-,`'`,--,`.'-`.`.'`-`,.-,`'...','-`,.-,.-.,--,,`--.`,'`-..','`'-',,',...',,-,.-,-.`.```.-`,`',-,'-.,-',.'`..''-`-.,`'.,.'.'.`,..`'`-.``-',.'``.`-.'-``''`,,``'''.`--.,..,``,,'-,.`.'-,,''.,-,.,-`-,-`'.```-'-``-'','--``-.`,-.-.'`.-`'--'.',''`,'-'..`-``..,.,.-`'',''.``'...,`'-`,-`-,..'.',-,'`',--'..'-``.-`,-''.'`.---'.-,,,`'`'`,``-,'-.,','-,.,-,,,.-.`-``,'`.''-`'```-.`'.-'`--',,'.,---,-.``-'--,..'-----`,'`..-..,','.'...-.'.`.``''.'.'.-..```-.-.`,'-,.,`.,.`--.-'--,''`.-.',',`-.``',,`,`-.,.`'-,`'-.,`'``,'``````',`'`',.-,,,,'``',`.',-''-.,'.,,,,.'.--...--'',,,,'.``,--,'-.,`.-'.,`,.,-,'``-,,'.-'-.....`.,---.,,---`.,-.'`,,,'-.'-,,..,`'-.,,-.``,.,---',`.,,`,',`''``-,---`-,`,,,,`,,.''-`.`''`'-'-'-.,,..,,-,`-'.`,,-,.,-''`,.''--`.``-.'.`..--''-''','`-..,`.`````-'',``-`'.--,-,-.'.,,,.`..`-'.',,'.'-'.'`,.''.```.''-`,`,.,,-,--.-``,.`,,--,,.,-`.`.``'''.',,`''-,``..,'''`'`.-,'.'-.,,-''--'.`.-,-',``--.,-..``--`',-.-',-,,,-'````..,..-.-..,,,.,,`''-``'.-,`.-,'`,,-',.'`-.-,`.-',,'-`-`-`..-,-..'''-,,`-`'.`,',,','',''.'.,.-``',`,`-.,'`,.''.,,``..'`'-,.`'`,'`,,``.,-`,``,,``,`,','-.-```'`,,-`-,-.,`,-`--...--,`-.,.```.`'''..-``-,...`.`.`-,`,''`-'`,',,'-.-`'```,`,''.``.`,.'-,,.`,.`--',``'.,',-`'`-`..,.,'-`''`.''-`--,-.',,'..``.'`,.,`.--`---..`.'`..--``.,'',-...-..'.,-,.-',`,`,,-.-..,--.`,`,'`,'`.,`-'.,,'`,.`-,.',-,'-'.'-.'``-'--`----`.-'`.',`-``,.`.,.-',,`',,`,-','`..-,`''..-,''-.,'`,..`-,--'-`.`'`'-`,-`-.'-.'```'`,--,`-'-`-.,-..,`-..'.`.,````.'`..-'`'.``'.-,`.'--.`.,',,``.....'`-`'.'''..'.``-,,-`'`.,,'-'-.--`.,,',.,``.-'.`----,--,,..'-.--,,,,.`'.-,.,,-`,,.`,,.-`.`-,-'.`-',''..,,`,.`,..,'.`-----,,.`.',-'--,'-'`,,.-``'`,.---''-,..`'--'`-..`''`--'''''``'',`,,-.'''..'``-,--'',.``-'..,'-,,.`,..,--.``--`..-..`.,-',-,...`'`'`'--,,'.,'',',,,''-.`''`..,,,.`,-`--`.,''``'--.,`,,-`'-..`,`'.`.--..,`-,`,'`,.-,,-,``.'-.,..'`,-..,,..'.,`--`',,',.`--..',''`..,````.-`-`.`,'.''.'.'--.-.-,.,`'.-,```'-`'.'-,.-'--.,-`'.,,`..,,,,,`..,-''-.,-..'-``,.-,-.``-,.'.`---'''``,'`'.-,.-.`-,.''.,,,,.--``.,--`'',','--.,--'.`---,`'....``.``,-.`..`,,'--.'`,-'-,.-.,,--`.`--`.,`'.-``'--`,-.-,`.`,.,.'.,'-,,,'--''-'-,',.,-..',.-`,.`.`-`'',,,'`,.`---,-,'',,',`...,-`.,.-..`','`-,'',.,'`-,','...`-``..,,'''-'..-.-`',,`--'.',.',-',.--.'',,-,,'..'`-..-..'..`'`'''''`.,.-'.,'.``1602461597 admin/lighttpd/enable was false<br />
+`',-.,,.``,`-.`..-,,,'..-'``''.`'..`.''-.--'''..-'``,.,.`''``',`-',`.'-'.,.-,,.-.'-,,,.,'.`,'`,--`,''.-,.,``--`.,.`.,'.`.`'`'`'--.``,`,'.','-,'',.,-''',.-,`.`-,,'...'`,,.`---'-.`'`-----,'',`.-'.-,,.'.',`-.-,...,,--,-```,'``''''-,`.-``.',`-''',',-,.``',.'`',-.,`-,``-.,,.,',,`.,.',``,''',-.`'.,,-.`-..`-``'.`-`,.'`,'.,`,.-,,--'.`,''.'',,`.-.-,--``-,,...,.,```'.,-`.`.''.``-`...-`--..`,-`,,`-`.`,-'`'``'.-.,`,',`.`--.`,''-.--''.`,'`'`-...'`'-'`-,'`.,,-,',.,.,,`.``-,',''`.-,.,,,.'```','-'``,``,`'.-.-,--``-``,,-,``-''-.`-,..,,-,'`-'---'.-``..,,'-''`-`'`,`.`-,.-,,,-'-...,,,--',.'-``.'``,,.'``'-.'',`,,.-`,..``,.-'-'',``,'`'``,.'`-..```.-'-',.'..`,-.``.-`'`.`'-`.''-,`.',-','-'',`-..`'''',..''`',-'-`.','-,'--.`'`-`-,-,-..,``-``'',',,.,.-,','.---..,`.`',,,,``,.,.--```',.-`'-.'.'.'.`-,'`-',',`,,,`,`',-`,-'.'--.``-.-``-.-`.,'`','`-,`.`''-.----,`',,-`--',.--,',``''---,..','',`,',,,..,.-`'-'-'---,--..-`,-.'.-,'-,-`.-',.-''',,---.'-.-.,'`,..`,,-,',.-,,'`.-....'.,'',`--,```-``'-',.--.'--,,-...`'.-.,`''''`-.''',,-'.`,,---`.`-`-`-.-,```-`-`''`.',`'`,.'..```..`'.`,`,',.'.,`,-``,'.'-.,'`.','``,-'--'.`''`.,..-''`,.`.```-1602461597 Done!<br />
+.-'----'`'upgrade finished at 1602461597<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/69/fc/69fc16f3.html">
+		<guid>http://localhost:2784/69/fc/69fc16f3.html</guid>
+		<pubDate>1602458108</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 887B41D54EB0791C<br />
+</title>
+		<link>http://localhost:2784/69/fc/69fc16f3.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 887B41D54EB0791C<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/08/bd/08bdd800.html">
+		<guid>http://localhost:2784/08/bd/08bdd800.html</guid>
+		<pubDate>1602294844</pubDate>
+		<title>Testuser 532 has joined.<br />
+<br />
+--<br />
+Identifier: 2C1AC3FC95498907<br />
+</title>
+		<link>http://localhost:2784/08/bd/08bdd800.html</link>
+		<description>
+				<![CDATA[
+				Testuser 532 has joined.<br />
+<br />
+--<br />
+Identifier: 2C1AC3FC95498907<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8d/19/8d193555.html">
+		<guid>http://localhost:2784/8d/19/8d193555.html</guid>
+		<pubDate>1602274426</pubDate>
+		<title>#approve</title>
+		<link>http://localhost:2784/8d/19/8d193555.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;643275c64f9cc2a59715e92f4107de45c5f07106
+<br />
+#approve
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/37/c6/37c63e3d.html">
+		<guid>http://localhost:2784/37/c6/37c63e3d.html</guid>
+		<pubDate>1602269386</pubDate>
+		<title>#flag</title>
+		<link>http://localhost:2784/37/c6/37c63e3d.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;aa8612dac2e2b29cf123a4ca75fb45be9a97c682
+<br />
+#flag
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/aa/79/aa79d81d.html">
+		<guid>http://localhost:2784/aa/79/aa79d81d.html</guid>
+		<pubDate>1602269333</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: E38FBD06A4B8D415<br />
+</title>
+		<link>http://localhost:2784/aa/79/aa79d81d.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: E38FBD06A4B8D415<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/64/32/643275c6.html">
+		<guid>http://localhost:2784/64/32/643275c6.html</guid>
+		<pubDate>1602268873</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: AF6ECEF941AA1C48<br />
+</title>
+		<link>http://localhost:2784/64/32/643275c6.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: AF6ECEF941AA1C48<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/b1/52/b152190c.html">
+		<guid>http://localhost:2784/b1/52/b152190c.html</guid>
+		<pubDate>1602089701</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2405A1E328277F3D<br />
+</title>
+		<link>http://localhost:2784/b1/52/b152190c.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2405A1E328277F3D<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8c/95/8c95f27e.html">
+		<guid>http://localhost:2784/8c/95/8c95f27e.html</guid>
+		<pubDate>1602089359</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: D96CBCD9B131C1B1<br />
+</title>
+		<link>http://localhost:2784/8c/95/8c95f27e.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: D96CBCD9B131C1B1<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/0e/73/0e73787b.html">
+		<guid>http://localhost:2784/0e/73/0e73787b.html</guid>
+		<pubDate>1602043083</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 39BB032F14D6EE5C<br />
+</title>
+		<link>http://localhost:2784/0e/73/0e73787b.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 39BB032F14D6EE5C<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/5a/2a/5a2abb35.html">
+		<guid>http://localhost:2784/5a/2a/5a2abb35.html</guid>
+		<pubDate>1602011733</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F96BAB87FE9776C3<br />
+</title>
+		<link>http://localhost:2784/5a/2a/5a2abb35.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F96BAB87FE9776C3<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/08/55/0855e8a3.html">
+		<guid>http://localhost:2784/08/55/0855e8a3.html</guid>
+		<pubDate>1602010871</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: A711999FDBA5731F<br />
+</title>
+		<link>http://localhost:2784/08/55/0855e8a3.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: A711999FDBA5731F<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/60/88/60887276.html">
+		<guid>http://localhost:2784/60/88/60887276.html</guid>
+		<pubDate>1602005237</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: BC75850782535F7D<br />
+</title>
+		<link>http://localhost:2784/60/88/60887276.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: BC75850782535F7D<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/6e/e9/6ee95b45.html">
+		<guid>http://localhost:2784/6e/e9/6ee95b45.html</guid>
+		<pubDate>1602004890</pubDate>
+		<title>Example has joined.<br />
+<br />
+--<br />
+Identifier: 11798D8E7B445579<br />
+</title>
+		<link>http://localhost:2784/6e/e9/6ee95b45.html</link>
+		<description>
+				<![CDATA[
+				Example has joined.<br />
+<br />
+--<br />
+Identifier: 11798D8E7B445579<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/26/e1/26e1635a.html">
+		<guid>http://localhost:2784/26/e1/26e1635a.html</guid>
+		<pubDate>1601992914</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2758D94103A0FD61<br />
+</title>
+		<link>http://localhost:2784/26/e1/26e1635a.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2758D94103A0FD61<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/ef/3c/ef3c793a.html">
+		<guid>http://localhost:2784/ef/3c/ef3c793a.html</guid>
+		<pubDate>1601991902</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: DFBA0B7D5F65E930<br />
+</title>
+		<link>http://localhost:2784/ef/3c/ef3c793a.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: DFBA0B7D5F65E930<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/5d/2a/5d2a2aba.html">
+		<guid>http://localhost:2784/5d/2a/5d2a2aba.html</guid>
+		<pubDate>1601991723</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: B281FD660F585413<br />
+</title>
+		<link>http://localhost:2784/5d/2a/5d2a2aba.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: B281FD660F585413<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/57/37/5737b739.html">
+		<guid>http://localhost:2784/57/37/5737b739.html</guid>
+		<pubDate>1601991001</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F1783DFE8391FFF1<br />
+</title>
+		<link>http://localhost:2784/57/37/5737b739.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F1783DFE8391FFF1<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/68/67/6867cdbf.html">
+		<guid>http://localhost:2784/68/67/6867cdbf.html</guid>
+		<pubDate>1601983810</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: AFFA9EA3512BF3DC<br />
+</title>
+		<link>http://localhost:2784/68/67/6867cdbf.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: AFFA9EA3512BF3DC<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8b/c4/8bc46f21.html">
+		<guid>http://localhost:2784/8b/c4/8bc46f21.html</guid>
+		<pubDate>1601962682</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: B85331A59485726F<br />
+</title>
+		<link>http://localhost:2784/8b/c4/8bc46f21.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: B85331A59485726F<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/65/67/6567ce03.html">
+		<guid>http://localhost:2784/65/67/6567ce03.html</guid>
+		<pubDate>1601962629</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 85C5B3EB4334CBCB<br />
+</title>
+		<link>http://localhost:2784/65/67/6567ce03.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 85C5B3EB4334CBCB<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/77/9e/779e7504.html">
+		<guid>http://localhost:2784/77/9e/779e7504.html</guid>
+		<pubDate>1601962568</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: A525B0BC8D000E2F<br />
+</title>
+		<link>http://localhost:2784/77/9e/779e7504.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: A525B0BC8D000E2F<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/bc/97/bc977083.html">
+		<guid>http://localhost:2784/bc/97/bc977083.html</guid>
+		<pubDate>1601952448</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 36F13C7B8A09097B<br />
+</title>
+		<link>http://localhost:2784/bc/97/bc977083.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 36F13C7B8A09097B<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/4e/24/4e2492a1.html">
+		<guid>http://localhost:2784/4e/24/4e2492a1.html</guid>
+		<pubDate>1601948753</pubDate>
+		<title>Operator has joined.<br />
+<br />
+--<br />
+Identifier: 075B1AFA1C174067<br />
+</title>
+		<link>http://localhost:2784/4e/24/4e2492a1.html</link>
+		<description>
+				<![CDATA[
+				Operator has joined.<br />
+<br />
+--<br />
+Identifier: 075B1AFA1C174067<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/b7/7f/b77f70a5.html">
+		<guid>http://localhost:2784/b7/7f/b77f70a5.html</guid>
+		<pubDate>1601858223</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F58977C9DAEC2A4E<br />
+</title>
+		<link>http://localhost:2784/b7/7f/b77f70a5.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F58977C9DAEC2A4E<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/c8/68/c8683e51.html">
+		<guid>http://localhost:2784/c8/68/c8683e51.html</guid>
+		<pubDate>1601858064</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: E359179C4F347D79<br />
+</title>
+		<link>http://localhost:2784/c8/68/c8683e51.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: E359179C4F347D79<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/92/65/9265e75a.html">
+		<guid>http://localhost:2784/92/65/9265e75a.html</guid>
+		<pubDate>1601857289</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F526341F04E61DDA<br />
+</title>
+		<link>http://localhost:2784/92/65/9265e75a.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: F526341F04E61DDA<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/5a/ea/5aeaae9a.html">
+		<guid>http://localhost:2784/5a/ea/5aeaae9a.html</guid>
+		<pubDate>1601854651</pubDate>
+		<title>Guest has joined.<br />
+<br />
+--<br />
+Identifier: 019E08A91014BFD0<br />
+</title>
+		<link>http://localhost:2784/5a/ea/5aeaae9a.html</link>
+		<description>
+				<![CDATA[
+				Guest has joined.<br />
+<br />
+--<br />
+Identifier: 019E08A91014BFD0<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fa/10/fa1093d5.html">
+		<guid>http://localhost:2784/fa/10/fa1093d5.html</guid>
+		<pubDate>1601847191</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 8C35F9D11389841D<br />
+</title>
+		<link>http://localhost:2784/fa/10/fa1093d5.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 8C35F9D11389841D<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/3b/c6/3bc69db7.html">
+		<guid>http://localhost:2784/3b/c6/3bc69db7.html</guid>
+		<pubDate>1601838258</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2E6F821B146E8F23<br />
+</title>
+		<link>http://localhost:2784/3b/c6/3bc69db7.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2E6F821B146E8F23<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/e0/0f/e00ffa25.html">
+		<guid>http://localhost:2784/e0/0f/e00ffa25.html</guid>
+		<pubDate>1601836828</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: AB370B95C0607CDE<br />
+</title>
+		<link>http://localhost:2784/e0/0f/e00ffa25.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: AB370B95C0607CDE<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/ee/8d/ee8dd06b.html">
+		<guid>http://localhost:2784/ee/8d/ee8dd06b.html</guid>
+		<pubDate>1601836799</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 155118F448E6242E<br />
+</title>
+		<link>http://localhost:2784/ee/8d/ee8dd06b.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 155118F448E6242E<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/9e/34/9e34b624.html">
+		<guid>http://localhost:2784/9e/34/9e34b624.html</guid>
+		<pubDate>1601836468</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 140ED881A3F630C7<br />
+</title>
+		<link>http://localhost:2784/9e/34/9e34b624.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 140ED881A3F630C7<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/3b/03/3b0334d2.html">
+		<guid>http://localhost:2784/3b/03/3b0334d2.html</guid>
+		<pubDate>1601813970</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 856FB8F22B799C32<br />
+</title>
+		<link>http://localhost:2784/3b/03/3b0334d2.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 856FB8F22B799C32<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8d/30/8d304ada.html">
+		<guid>http://localhost:2784/8d/30/8d304ada.html</guid>
+		<pubDate>1601803143</pubDate>
+		<title>#bug here, parent of self</title>
+		<link>http://localhost:2784/8d/30/8d304ada.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;f24506a00ee4c1830a30f97e5c987b70669bf2f9
+<br />
+
+<br />
+#bug here, parent of self
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/f2/45/f24506a0.html">
+		<guid>http://localhost:2784/f2/45/f24506a0.html</guid>
+		<pubDate>1601802897</pubDate>
+		<title>Boris has joined.<br />
+<br />
+--<br />
+Identifier: 970E61667D7C1B96<br />
+</title>
+		<link>http://localhost:2784/f2/45/f24506a0.html</link>
+		<description>
+				<![CDATA[
+				Boris has joined.<br />
+<br />
+--<br />
+Identifier: 970E61667D7C1B96<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/c3/08/c308b56a.html">
+		<guid>http://localhost:2784/c3/08/c308b56a.html</guid>
+		<pubDate>1601801225</pubDate>
+		<title>NewAdmin has joined.<br />
+<br />
+--<br />
+Identifier: 378635E08A31B0FE<br />
+</title>
+		<link>http://localhost:2784/c3/08/c308b56a.html</link>
+		<description>
+				<![CDATA[
+				NewAdmin has joined.<br />
+<br />
+--<br />
+Identifier: 378635E08A31B0FE<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fb/76/fb7629fc.html">
+		<guid>http://localhost:2784/fb/76/fb7629fc.html</guid>
+		<pubDate>1601794298</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 6B1E9FB9EB4560EA<br />
+</title>
+		<link>http://localhost:2784/fb/76/fb7629fc.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 6B1E9FB9EB4560EA<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/2c/36/2c363041.html">
+		<guid>http://localhost:2784/2c/36/2c363041.html</guid>
+		<pubDate>1601794152</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 5C750F176969719C<br />
+</title>
+		<link>http://localhost:2784/2c/36/2c363041.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 5C750F176969719C<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fd/bf/fdbf6bfe.html">
+		<guid>http://localhost:2784/fd/bf/fdbf6bfe.html</guid>
+		<pubDate>1601793566</pubDate>
+		<title>#approve</title>
+		<link>http://localhost:2784/fd/bf/fdbf6bfe.html</link>
+		<description>
+				<![CDATA[
+				&gt;&gt;e6283194f3dbbf97bf93c054e33ee8400f17eaf3
+<br />
+#approve
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/e6/28/e6283194.html">
+		<guid>http://localhost:2784/e6/28/e6283194.html</guid>
+		<pubDate>1601793543</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: A94C6F7F43AA226A<br />
+</title>
+		<link>http://localhost:2784/e6/28/e6283194.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: A94C6F7F43AA226A<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/05/6b/056b9f6c.html">
+		<guid>http://localhost:2784/05/6b/056b9f6c.html</guid>
+		<pubDate>1601790542</pubDate>
+		<title>&lt;script&gt;alert(3)&lt;/script&gt; has joined.<br />
+<br />
+--<br />
+Identifier: B7BE7130E2A755D1<br />
+</title>
+		<link>http://localhost:2784/05/6b/056b9f6c.html</link>
+		<description>
+				<![CDATA[
+				&lt;script&gt;alert(3)&lt;/script&gt; has joined.<br />
+<br />
+--<br />
+Identifier: B7BE7130E2A755D1<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/e9/e9/e9e97b2b.html">
+		<guid>http://localhost:2784/e9/e9/e9e97b2b.html</guid>
+		<pubDate>1601790042</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 3FDD4FE67744D887<br />
+</title>
+		<link>http://localhost:2784/e9/e9/e9e97b2b.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 3FDD4FE67744D887<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/79/61/79612d37.html">
+		<guid>http://localhost:2784/79/61/79612d37.html</guid>
+		<pubDate>1601769426</pubDate>
+		<title>Johnny has joined.<br />
+<br />
+--<br />
+Identifier: 273CE7E91CDA2B7C<br />
+</title>
+		<link>http://localhost:2784/79/61/79612d37.html</link>
+		<description>
+				<![CDATA[
+				Johnny has joined.<br />
+<br />
+--<br />
+Identifier: 273CE7E91CDA2B7C<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/1a/f1/1af14346.html">
+		<guid>http://localhost:2784/1a/f1/1af14346.html</guid>
+		<pubDate>1601767326</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: D69EB99DDF52898A<br />
+</title>
+		<link>http://localhost:2784/1a/f1/1af14346.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: D69EB99DDF52898A<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/9a/cd/9acdb2ef.html">
+		<guid>http://localhost:2784/9a/cd/9acdb2ef.html</guid>
+		<pubDate>1601766398</pubDate>
+		<title>John has joined.<br />
+<br />
+--<br />
+Identifier: 37D5EDDA559B2110<br />
+</title>
+		<link>http://localhost:2784/9a/cd/9acdb2ef.html</link>
+		<description>
+				<![CDATA[
+				John has joined.<br />
+<br />
+--<br />
+Identifier: 37D5EDDA559B2110<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/21/09/2109c68c.html">
+		<guid>http://localhost:2784/21/09/2109c68c.html</guid>
+		<pubDate>1601766165</pubDate>
+		<title>John has joined.<br />
+<br />
+--<br />
+Identifier: 808A8E4303EC9F0B<br />
+</title>
+		<link>http://localhost:2784/21/09/2109c68c.html</link>
+		<description>
+				<![CDATA[
+				John has joined.<br />
+<br />
+--<br />
+Identifier: 808A8E4303EC9F0B<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/fd/8e/fd8e7468.html">
+		<guid>http://localhost:2784/fd/8e/fd8e7468.html</guid>
+		<pubDate>1601751271</pubDate>
+		<title>tedty</title>
+		<link>http://localhost:2784/fd/8e/fd8e7468.html</link>
+		<description>
+				<![CDATA[
+				tedty
+<br />
+
+<br />
+[Solved puzzle with this prefix: 1337]
+<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/73/35/7335ac3c.html">
+		<guid>http://localhost:2784/73/35/7335ac3c.html</guid>
+		<pubDate>1601751169</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 494F8226651FA9ED<br />
+</title>
+		<link>http://localhost:2784/73/35/7335ac3c.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 494F8226651FA9ED<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/80/df/80df27b2.html">
+		<guid>http://localhost:2784/80/df/80df27b2.html</guid>
+		<pubDate>1601750930</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 70EEC75C62DAB327<br />
+</title>
+		<link>http://localhost:2784/80/df/80df27b2.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 70EEC75C62DAB327<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/e0/70/e070301a.html">
+		<guid>http://localhost:2784/e0/70/e070301a.html</guid>
+		<pubDate>1601750600</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: DB64DA2B59F505AD<br />
+</title>
+		<link>http://localhost:2784/e0/70/e070301a.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: DB64DA2B59F505AD<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/1f/ad/1fadcca2.html">
+		<guid>http://localhost:2784/1f/ad/1fadcca2.html</guid>
+		<pubDate>1601689583</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2843CDF70302516E<br />
+</title>
+		<link>http://localhost:2784/1f/ad/1fadcca2.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 2843CDF70302516E<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/60/86/6086e2c0.html">
+		<guid>http://localhost:2784/60/86/6086e2c0.html</guid>
+		<pubDate>1601674001</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 24611CFCA6E03E68<br />
+</title>
+		<link>http://localhost:2784/60/86/6086e2c0.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 24611CFCA6E03E68<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/73/70/7370b3db.html">
+		<guid>http://localhost:2784/73/70/7370b3db.html</guid>
+		<pubDate>1601673747</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 0A4C071DE1A3C365<br />
+</title>
+		<link>http://localhost:2784/73/70/7370b3db.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 0A4C071DE1A3C365<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8e/e8/8ee8441a.html">
+		<guid>http://localhost:2784/8e/e8/8ee8441a.html</guid>
+		<pubDate>1601673422</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 6B5F349464A86791<br />
+</title>
+		<link>http://localhost:2784/8e/e8/8ee8441a.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 6B5F349464A86791<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/b1/9b/b19b1c2d.html">
+		<guid>http://localhost:2784/b1/9b/b19b1c2d.html</guid>
+		<pubDate>1601673191</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 0F76B3747AF475AE<br />
+</title>
+		<link>http://localhost:2784/b1/9b/b19b1c2d.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 0F76B3747AF475AE<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/f0/79/f0791f4e.html">
+		<guid>http://localhost:2784/f0/79/f0791f4e.html</guid>
+		<pubDate>1601672903</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: DC9B44B4C4973D4A<br />
+</title>
+		<link>http://localhost:2784/f0/79/f0791f4e.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: DC9B44B4C4973D4A<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/e7/e8/e7e86cef.html">
+		<guid>http://localhost:2784/e7/e8/e7e86cef.html</guid>
+		<pubDate>1601635055</pubDate>
+		<title>test has joined.<br />
+<br />
+--<br />
+Identifier: AF07169D3071E7E6<br />
+</title>
+		<link>http://localhost:2784/e7/e8/e7e86cef.html</link>
+		<description>
+				<![CDATA[
+				test has joined.<br />
+<br />
+--<br />
+Identifier: AF07169D3071E7E6<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/03/da/03dacaaf.html">
+		<guid>http://localhost:2784/03/da/03dacaaf.html</guid>
+		<pubDate>1601310964</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 1273BAA3B3B1CF9C<br />
+</title>
+		<link>http://localhost:2784/03/da/03dacaaf.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 1273BAA3B3B1CF9C<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/8c/13/8c1304cc.html">
+		<guid>http://localhost:2784/8c/13/8c1304cc.html</guid>
+		<pubDate>1601163842</pubDate>
+		<title>BOUBA has joined.<br />
+<br />
+--<br />
+Identifier: A783089917CB9EA7<br />
+</title>
+		<link>http://localhost:2784/8c/13/8c1304cc.html</link>
+		<description>
+				<![CDATA[
+				BOUBA has joined.<br />
+<br />
+--<br />
+Identifier: A783089917CB9EA7<br />
+
+				]]>
+		</description>
+	</item>
+<item rdf:about="http://localhost:2784/00/47/00473a56.html">
+		<guid>http://localhost:2784/00/47/00473a56.html</guid>
+		<pubDate>1600962889</pubDate>
+		<title>Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 6A298E0CAC8D2FF5<br />
+</title>
+		<link>http://localhost:2784/00/47/00473a56.html</link>
+		<description>
+				<![CDATA[
+				Anonymous has joined.<br />
+<br />
+--<br />
+Identifier: 6A298E0CAC8D2FF5<br />
+
+				]]>
+		</description>
+	</item>
+
+
+</rdf:RDF>
+
+
+
+
+
+
+
 
 
                      ,

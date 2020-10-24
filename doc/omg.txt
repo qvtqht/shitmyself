@@ -1,0 +1,75 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Admins,
+
+To reduce the impact of phishing and to ease automatic PGP verification
+of mirrors, dark.fail is now defining the Onion Mirror Guidelines. (“OMG”)
+
+Admins that implement this standard show a commitment to user safety
+by proving ownership of all URLs associated with their site, and by
+committing to regularly prove control of their PGP key.
+
+Sites which do not implement these guidelines by Dec 1, 2019 will be
+marked as "unverified" on dark.fail and listed below all other sites.
+
+DarkDotFail
+
+=========
+
+Onion Mirror Guidelines ("OMG")
+Version alpha
+
+You must host these text files at all of your .onion URLs:
+
+/pgp.txt - Required - HTTP 200 text/plain
+  - A list of all PGP public keys allowed to announce your official mirrors.
+  - May contain multiple PGP keys.
+  - All keys must be ASCII armored.
+  - Do not list a key here unless it is trusted to sign official .onion URLs. 
+  - Example: http://darkfailllnkf4vf.onion/pgp.txt
+
+/mirrors.txt - Required - HTTP 200 text/plain
+  - PGP SIGNED list of all official mirrors of your site. 
+  - Mirrors must be signed by a PGP key which is in /pgp.txt hosted at all of your URLs.
+  - Any line in this file which begins with “http://“ or “https://“ 
+    is an official mirror of your site.
+  - Mirrors must all host the same content. No related forums, no link lists. 
+    Place forums, other sites in /related.txt instead.
+  - All valid mirrors must only contain a scheme and domain name, no
+    ports or paths.
+  - /pgp.txt and /mirrors.txt must have the same content on all of your URLs.
+  - Text which is not intended to be parsed as an official mirror must 
+    be commented out with a “#” as the first character on the line.
+  - Example: http://darkfailllnkf4vf.onion/mirrors.txt
+
+/canary.txt - Required - HTTP 200 text/plain
+  - PGP SIGNED message MUST be updated every 14 days. 
+  - Can be signed by any key specified in /pgp.txt
+  - The message must contain the latest Bitcoin block hash and the current 
+    date in YYYY-MM-DD format, with string “I am in control of my PGP key.”
+    and must also include the string "I will update this canary within 14 days."
+  - If you cannot do this you should not be running a darknet market. 
+  - Example: http://darkfailllnkf4vf.onion/canary.txt
+
+/related.txt - Optional - HTTP 200 text/plain
+  - PGP SIGNED list of all .onion sites related to your site. 
+  - This is where you list forums, link lists, related services.
+  - Follow the same rules as /mirrors.txt 
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEbf2uZtQ/we7OuH584uRp3H2MPaIFAl243EgACgkQ4uRp3H2M
+PaLlRw/9HS6WDRijreXW0cxHEv7l/BDnuIFiLPQmfytKUzcj5IsU+5+MkVi6riVx
+YwEvvZyx0u+f5PR8rigORmhIVm7++NBfYy41IoI9bgWSi2EOyaikUT2Hum5Wcz3m
+10qwtv/587Exd0KN1buxzjfGzeLo7h2CgCowR6msQTugx/uzFkmI0qTRpMQP19gC
+dbDPpfyK9HFNhEjWQhyWqUPE1qsD3EdUxUItOf+/VG5JZRsLy6/913Oc965cpAAC
+dUjldqlksekXrsSrAKmMsy/ZZzPsJIo8mghJLCuoiPSTj2jBoMovRlxNSHBS+w7v
+dnhalZh5E/ExCqMMrnwzJJhA5HnelVCmsNmwfXG6KhhhPhEfHETFyPXfBIjJD4wI
+28QAaMgiozBd957gdzYUzaemk71tLI/5XuhR4HqakGfGTKio6cb0Mg+KMkEg4gN1
+/nsMlIrYvbLV+pfzoveAUn2C20FYhgZR5oJtew36QDqLTRHeEEHnoBnIqGxqh6gY
++fsIybRANl+wi1Pru5FV2/wKzBO6hshyLpWQETmFCqycQLbjOO8qP2bdvpfgPr1f
+3Al2saq4R7Cm+VgxKt9C6IA/xsXChawdgTq67AfHNFq2TapXJdAXIvDVfL5S6E4y
+Y5CDH1EsBn5pPEWWzmohcTRKaf1zs/SOXnkLGV8JezuKXFzFi1U=
+=LcSi
+-----END PGP SIGNATURE-----

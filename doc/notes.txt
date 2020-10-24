@@ -1,20 +1,17 @@
+what should be on welcome page:
+
 welcome
 
 registration is not required here
 
-what is this?
+[what is this?]
 
+<some kind of picture>
 
-some kind of picture
+<recent posts>
 
+[share something important]
 
-recent posts
+[tell us about yourself]
 
-
-
-share something important
-
-tell us about yourself
-
-
-technical details & manifest
+[technical details & manifest]
