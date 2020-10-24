@@ -9,6 +9,7 @@
 					<a href="$permalinkHtml#reply"><b>reply</b></a>;
 					<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;
 					$itemFlagButton
+					<span class=more></span>
 				</span>
 			</td>
 		</tr>
