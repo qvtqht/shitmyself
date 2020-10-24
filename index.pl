@@ -703,11 +703,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									} # foreach my $itemParent (@itemParents)
 								} # has parents
 							} # #admin #approve
-							else {
+							else { # non-permissioned hashtags
 								if ($tokenFound{'param'} =~ /^[0-9a-zA-Z_]+$/) { #todo actual hashtag format
 									my $hashTag = $tokenFound{'param'};
-									if (scalar(@itemParents)) {
-										foreach my $itemParentHash (@itemParents) {
+									if (scalar(@itemParents)) { # item has parents to apply tag to
+										foreach my $itemParentHash (@itemParents) { # apply to all parents
 											if ($isSigned) {
 												# include author's key if message is signed
 												DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
@@ -723,20 +723,21 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 											DBAddPageTouch('item', $itemParentHash);
 										} # @itemParents
 									} # scalar(@itemParents)
-								}
-							}
-						}
+								} # valid hashtag
+							} # non-permissioned hashtags
+							$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+						} #hashtag
 
 					} #hashtag tokens
 				} # @tokensFound
-
 			} # not #example
 
 			$detokenedMessage = trim($detokenedMessage);
 			if ($detokenedMessage eq '') {
 				# add #notext label/tag
 				DBAddVoteRecord($fileHash, $addedTime, 'notext');
-			} else {
+			}
+			else { # has $detokenedMessage
 				{ #title
 					my $firstEol = index($detokenedMessage, "\n");
 					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
