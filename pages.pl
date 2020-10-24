@@ -2189,7 +2189,7 @@ sub GetStatsTable {
 	my $versionFull = GetMyVersion();
 	my $versionShort = substr($versionFull, 0, 8);
 
-	my $lastUpdateTime = GetConfig('system/last_update_time');
+	my $lastUpdateTime = GetCache('system/last_update_time');
 	$lastUpdateTime = GetTimestampWidget($lastUpdateTime);
 
 	my $lastBuildTime = GetConfig('admin/build_end');

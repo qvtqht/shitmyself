@@ -2637,10 +2637,10 @@ sub GetPrefixedUrl { # returns url with relative prefix
 	return $url;
 }
 
-sub UpdateUpdateTime { # updates config/system/last_update_time, which is used by the stats page
+sub UpdateUpdateTime { # updates cache/system/last_update_time, which is used by the stats page
 	my $lastUpdateTime = GetTime();
 
-	PutConfig("system/last_update_time", $lastUpdateTime);
+	PutCache("system/last_update_time", $lastUpdateTime);
 }
 
 sub RemoveEmptyDirectories { #looks for empty directories under $path and removes them
