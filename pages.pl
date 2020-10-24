@@ -1210,9 +1210,9 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 	my $url = shift;
 	# url to point the link to after the expand happens
 
-	if (!$parentCount || !$parentCount) {
+	if (!$parentCount || !$url) {
 		WriteLog('GetWidgetExpand: warning: sanity check failed');
-		return '';
+		return '(More)';
 	}
 
 	my $widgetTemplate = GetTemplate('widget/more_button.template');
@@ -1224,12 +1224,12 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 
 		if (GetConfig('admin/js/enable')) {
 			my $jsTemplate = "if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement); } else { return true; }";
-			if ($parentCount < 10 && $parentCount > 1 && !($parentCount =~ /\\D/)) {
+			if ($parentCount < 10 && $parentCount => 1 && !($parentCount =~ /\\D/)) {
 				# adjust number of times it says ".parentElement"
 				$jsTemplate = str_replace('.parentElement', str_repeat('.parentElement', $parentCount), $jsTemplate);
 			} else {
 				WriteLog('GetWidgetExpand: warning: $parentCount sanity check failed');
-				return '';
+				return '(More2)';
 			}
 
 			$widgetTemplate = AddAttributeToTag(
@@ -1243,7 +1243,7 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 		#$widgetTemplate = str_replace('/etc.html', $url, $widgetTemplate);
 	} else {
 		WriteLog('GetWidgetExpand: warning: widget/more_button template not found');
-		return '';
+		return '(More3)';
 	}
 
 	return $widgetTemplate;
@@ -1443,7 +1443,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate = str_replace(
 				'<span class=expand></span>',
 				'<span class=expand>' .
-					GetWidgetExpand(5, '$itemUrl') .
+					GetWidgetExpand(5, GetHtmlFilename($itemHash)) . #todo there is bug here
 					'</span>',
 				$itemTemplate
 			);
@@ -2004,7 +2004,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 			$topMenuTemplate,
 			'a href="/etc.html"',
 			'onclick',
-			"if (window.SetPrefs) { SetPrefs('show_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
+			"if (window.SetPrefs) { SetPrefs('show_advanced', 1); SetPrefs('highlight_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
 		);
 	}
 
