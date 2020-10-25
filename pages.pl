@@ -3059,16 +3059,16 @@ sub GetReadPage { # generates page with item listing based on parameters
 	return $txtIndex;
 } # GetReadPage()
 
-sub GetItemList { # @files(array of hashes) ; takes @files, returns html list
+sub GetItemListHtml { # @files(array of hashes) ; takes @files, returns html list
 	my $filesArrayReference = shift; # array of hash refs which contains items
 	if (!$filesArrayReference) {
 		WriteLog('GetItemList: warning: sanity check failed, missing $filesArrayReference');
-		return 'problem getting item list, my apologies.';
+		return 'problem getting item list, my apologies. (1)';
 	}
 	my @files = @$filesArrayReference; # de-reference
 	if (!scalar(@files)) {
 		WriteLog('GetItemList: warning: sanity check failed, missing @files');
-		return 'problem getting item list, my apologies.';
+		return 'problem getting item list, my apologies. (2)';
 	}
 
 	my $itemList = '';
@@ -3119,7 +3119,7 @@ sub GetItemList { # @files(array of hashes) ; takes @files, returns html list
 	$itemListTemplate = str_replace('$itemList', $itemList, $itemListTemplate);
 
 	return $itemListTemplate;
-} # GetItemList()
+} # GetItemListHtml()
 
 sub GetIndexPage { # returns html for an index page, given an array of hash-refs containing item information
 	# Called from WriteIndexPages() and generate.pl
@@ -3159,7 +3159,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	#DBAddItemPage($itemHash, 'index', $currentPageNumber); #todo
 
-	$itemList = GetItemList(\@files);
+	$itemList = GetItemListHtml(\@files);
 	#$itemList = 'sup';
 
 	$html .= $itemList;
