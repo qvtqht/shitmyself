@@ -1438,23 +1438,37 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			}
 		}
 
-		if (GetConfig('admin/js/enable')) {
-			# <span class=expand></span>
-			$itemTemplate = str_replace(
-				'<span class=expand></span>',
-				'<span class=expand>' .
-					GetWidgetExpand(5, GetHtmlFilename($itemHash)) . #todo there is bug here
-					'</span>',
-				$itemTemplate
-			);
+		# $itemTemplate = str_replace(
+		# 	'<span class=more></span>',
+		# 	GetWidgetExpand(2, '#'),
+		# 	$itemTemplate
+		# );#todo fix broken
 
-			# $itemTemplate = AddAttributeToTag(
-			# 	$itemTemplate,
-			# 	'a href="/etc.html"', #todo this should link to item itself
-			# 	'onclick',
-			# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
-			# );
-		}
+		my $widgetExpandPlaceholder = '<span class=expand></span>';
+		if (index($itemTemplate, $widgetExpandPlaceholder) != -1) {
+			WriteLog('GetItemTemplate: $widgetExpandPlaceholder found in item: ' . $widgetExpandPlaceholder);
+
+			if (GetConfig('admin/js/enable')) {
+				# js on, insert widget
+
+				my $widgetExpand = GetWidgetExpand(5, GetHtmlFilename($itemHash));
+				$itemTemplate = str_replace(
+					'<span class=expand></span>',
+					'<span class=expand>' .	$widgetExpand .	'</span>',
+					$itemTemplate
+				);
+
+				# $itemTemplate = AddAttributeToTag(
+				# 	$itemTemplate,
+				# 	'a href="/etc.html"', #todo this should link to item itself
+				# 	'onclick',
+				# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
+				# );
+			} else {
+				# js off, remove placeholder for widget
+				$itemTemplate = str_replace($widgetExpandPlaceholder, '', $itemTemplate);
+			}
+		} # $widgetExpandPlaceholder
 
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
