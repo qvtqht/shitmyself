@@ -115,10 +115,10 @@ qutebrowser
 Links
 Lynx
 w3m
-Mosaic 1, 2, 3
+Mosaic 1*, 2*, 3*
 Opera 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
-Netscape 2, 3, 4
-Internet Explorer 2, 3, 4, 5.5, 6, 7, 8, 9, 10, 11
+Netscape 2*, 3, 4
+Internet Explorer 2*, 3, 4, 5.5, 6, 7, 8, 9, 10, 11
 curl
 wget
 NetSurf
@@ -127,6 +127,7 @@ Safari iOS 7, 8, 9, 10, 11, 12, 13
 Safari Windows 1, 2, 3, 4, 5
 Some kind of in-TV browser with no monospace font!
 
+* Some browsers, marked with *, need extra setup.
 Not every feature is supported by every browser.
 Not every minor version was tested.
 Many browsers support very few features.
