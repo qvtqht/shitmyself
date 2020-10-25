@@ -2253,9 +2253,15 @@ sub GetStatsTable {
 	if (GetConfig('admin/image/enable')) {
 		if ($IMAGEDIR =~ m/^([^\s]+)$/) { #security #taint
 			$IMAGEDIR = $1;
-			my $filesImage =  GetCache('count_image') || trim(`find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`);
-			PutCache('count_image', $filesImage);
-			$filesTotal += $filesImage;
+			my $imagesFindResults = `find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`;
+			chomp $imagesFindResults;
+			if ($imagesFindResults =~ m/^[0-9]+$/) {
+				my $filesImage =  GetCache('count_image') || trim($imagesFindResults);
+				PutCache('count_image', $filesImage);
+				$filesTotal += $filesImage;
+			} else {
+				WriteLog('GetStatsTable: warning: sanity check failed getting image count');
+			}
 		} else {
 			WriteLog('GetStatsTable: warning: sanity check failed: $IMAGEDIR contains space');
 		}
