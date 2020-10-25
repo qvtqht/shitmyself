@@ -3039,6 +3039,68 @@ sub GetReadPage { # generates page with item listing based on parameters
 	return $txtIndex;
 } # GetReadPage()
 
+sub GetItemList { # @files(array of hashes) ; takes @files, returns html list
+	my $filesArrayReference = shift; # array of hash refs which contains items
+	if (!$filesArrayReference) {
+		WriteLog('GetItemList: warning: sanity check failed, missing $filesArrayReference');
+		return 'problem getting item list, my apologies.';
+	}
+	my @files = @$filesArrayReference; # de-reference
+	if (!scalar(@files)) {
+		WriteLog('GetItemList: warning: sanity check failed, missing @files');
+		return 'problem getting item list, my apologies.';
+	}
+
+	my $itemList = '';
+	my $itemComma = '';
+
+	my $itemListTemplate = '<span class=itemList>$itemList</span>'; #todo templatize
+
+	foreach my $row (@files) { # loop through each file
+		my $file = $row->{'file_path'};
+
+		if ($file && -e $file) { # file exists
+			my $itemHash = $row->{'file_hash'};
+
+			my $gpgKey = $row->{'author_key'};
+			my $isSigned;
+			if ($gpgKey) {
+				$isSigned = 1;
+			} else {
+				$isSigned = 0;
+			}
+			my $alias = '';
+			my $isAdmin = 0;
+
+			my $message;
+			if (CacheExists("message/$itemHash")) {
+				$message = GetCache("message/$itemHash");
+			} else {
+				$message = GetFile($file);
+			}
+
+			$row->{'vote_buttons'} = 1;
+			$row->{'show_vote_summary'} = 1;
+			$row->{'display_full_hash'} = 0;
+			$row->{'trim_long_text'} = 0;
+
+			my $itemTemplate;
+			$itemTemplate = GetItemTemplate($row); # GetIndexPage()
+
+			$itemList = $itemList . $itemComma . $itemTemplate;
+
+			if ($itemComma eq '') {
+				$itemComma = '<hr><br>';
+				# $itemComma = '<p>';
+			}
+		}
+	}
+
+	$itemListTemplate = str_replace('$itemList', $itemList, $itemListTemplate);
+
+	return $itemListTemplate;
+} # GetItemList()
+
 sub GetIndexPage { # returns html for an index page, given an array of hash-refs containing item information
 	# Called from WriteIndexPages() and generate.pl
 	# Should probably be replaced with GetReadPage()
@@ -3075,49 +3137,13 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	my $itemList = ''; # the "filling" part of the page, with all the items templated
 	my $itemComma = ''; # separator between items
 
-	foreach my $row (@files) { # loop through each file
-		my $file = $row->{'file_path'};
+	#DBAddItemPage($itemHash, 'index', $currentPageNumber); #todo
 
-		if ($file && -e $file) { # file exists
-			my $itemHash = $row->{'file_hash'};
-
-			DBAddItemPage($itemHash, 'index', $currentPageNumber);
-
-			my $gpgKey = $row->{'author_key'};
-			my $isSigned;
-			if ($gpgKey) {
-				$isSigned = 1;
-			} else {
-				$isSigned = 0;
-			}
-			my $alias = '';
-			my $isAdmin = 0;
-
-			my $message;
-			if (CacheExists("message/$itemHash")) {
-				$message = GetCache("message/$itemHash");
-			} else {
-				$message = GetFile($file);
-			}
-
-			$row->{'vote_buttons'} = 1;
-			$row->{'show_vote_summary'} = 1;
-			$row->{'display_full_hash'} = 0;
-			$row->{'trim_long_text'} = 0;
-
-			my $itemTemplate;
-			$itemTemplate = GetItemTemplate($row); # GetIndexPage()
-
-			$itemList = $itemList . $itemComma . $itemTemplate;
-
-			if ($itemComma eq '') {
-				$itemComma = '<hr><br>';
-				# $itemComma = '<p>';
-			}
-		}
-	}
+	$itemList = GetItemList(\@files);
+	#$itemList = 'sup';
 
 	$html .= $itemList;
+
 	$html .= '<p>';
 
 	if (defined($currentPageNumber)) {
