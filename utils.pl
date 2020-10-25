@@ -2208,8 +2208,8 @@ if ($lastVersion ne $currVersion) {
 		'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
 
 	if ($lastVersion) {
-		my $changeLogList = "Version has changed from $lastVersion to $currVersion";
-		# my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
+		#my $changeLogList = "Version has changed from $lastVersion to $currVersion";
+		my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
 		$changeLogList = trim($changeLogList);
 		$changeLogMessage .= "$changeLogList";
 	} else {
