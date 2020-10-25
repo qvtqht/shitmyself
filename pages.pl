@@ -943,7 +943,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 			{ # tags list for attributes list bolt-on
 				$itemAttributesTable .= '<tr><td>';
-				$itemAttributesTable .= 'tags_all';
+				$itemAttributesTable .= 'tags_list';
 				$itemAttributesTable .= '</td><td>';
 				$itemAttributesTable .= $file{'tags_list'};
 				$itemAttributesTable .= '</td></tr>';
