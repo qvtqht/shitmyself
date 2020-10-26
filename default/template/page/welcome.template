@@ -10,5 +10,7 @@
 </p>
 <p><a href="/top/approve.html">Read what's new</a>
 <p><a href="/manual.html">Manual</a></p>
+
+<span id=itemList></span>
 <!-- / welcome.template -->
 
