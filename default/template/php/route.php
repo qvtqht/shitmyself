@@ -956,6 +956,27 @@ if (GetConfig('admin/php/route_enable')) {
 			);
 		} // light mode
 
+		if (
+			GetConfig('admin/php/assist_show_advanced') &&
+			(
+				!isset($_COOKIE['show_advanced']) ||
+				$_COOKIE['show_advanced'] == '0'
+			)
+		) {
+			$html = str_replace(
+				'</head>',
+				"<style><!--" .
+					"\n" .
+					".advanced{ display:none }" .
+					"/* assist ShowAdvanced() in pre-hiding .advanced elements */" .
+					"\n" .
+					"--></style>" .
+					"</head>",
+				$html
+			);
+			// #todo templatify
+		}
+
 
 		////////////////////////////
 		print $html; // final output
