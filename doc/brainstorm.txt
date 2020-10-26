@@ -1,3 +1,7 @@
+cluster line lengths
+	the lines which are the shorest 10% become titles automatically
+
+
 compatibility
 	reddit
 	twitter
