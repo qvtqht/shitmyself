@@ -4358,9 +4358,9 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 	WriteLog('MakeDataPage() called');
 
 	my $zipInterval = 3600;
-	my $lastZip = GetCache('last_zip');
+	my $touchZip = GetCache('touch/zip');
 
-	if (!$lastZip || (GetTime() - $lastZip) > $zipInterval) {
+	if (!$touchZip || (GetTime() - $touchZip) > $zipInterval) {
 		WriteLog("Making zip files...");
 		
 		# zip -qr foo.zip somefile
@@ -4373,7 +4373,7 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyCacheVersion() . "/index.sqlite3");
 		rename("$HTMLDIR/index.sqlite3.zip.tmp", "$HTMLDIR/index.sqlite3.zip");
 
-		PutCache('last_zip', GetTime());
+		PutCache('touch/zip', GetTime());
 	} else {
 		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
 	}
@@ -4626,16 +4626,15 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# index pages (queue)
 	elsif ($pageType eq 'index') {
-		my $lastIndexPages = GetCache('last/index_pages');
-		if (!$lastIndexPages) {
-			$lastIndexPages = 0;
+		my $touchIndexPages = GetCache('touch/index_pages');
+		if (!$touchIndexPages) {
+			$touchIndexPages = 0;
 		}
-		if ((time() - $lastIndexPages) > 600) {
+		if ((time() - $touchIndexPages) > 300) {
 			#do nothing
 		} else {
 			WriteIndexPages();
-
-			PutCache('last/index_pages', time());
+			PutCache('touch/index_pages', time());
 		}
 	}
 	#
@@ -4678,7 +4677,7 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 
 	my $pagesProcessed = 0;
 
-	# get a list of pages that have been touched since the last git_flow
+	# get a list of pages that have been touched since touch git_flow
 	# this is from the task table
 	my $touchedPages = DBGetTouchedPages($pagesLimit);
 
