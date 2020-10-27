@@ -1,4 +1,7 @@
 /* begin theme/lisonok8/additional.css */
+.tag-approve {
+	color: #ffc0ff !important
+}
 body {
 	font-family: helvetica;
 	font-size: 14pt;
