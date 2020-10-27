@@ -255,6 +255,12 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 function SetPrefs (prefKey, prefValue) { // set prefs key prefKey to value prefValue
     //alert('DEBUG: SetPrefs(' + prefKey + ', ' + prefValue + ')');
 
+	if (prefKey == 'show_advanced') {
+		if (window.SetCookie) {
+			SetCookie('show_advanced', prefValue);
+		}
+	}
+
 	if (window.localStorage) {
 		var nameContainer = 'settings';
 		var gt = unescape('%3E');
