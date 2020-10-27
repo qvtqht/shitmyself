@@ -235,8 +235,12 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 		var prefValue = prefsObj[prefKey];
 
 		if (!prefValue && prefValue != 0) {
-			// defaults are set here currently
-			if (prefKey == 'beginner' || prefKey == 'beginner_highlight' || prefKey == 'notify_on_change') {
+			// these settings default to 1/true:
+			if (
+				prefKey == 'beginner' ||
+				prefKey == 'beginner_highlight' ||
+				prefKey == 'notify_on_change'
+			) {
 				prefValue = 1;
 			}
 		}
@@ -244,7 +248,7 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 		return prefValue;
 	}
 
-	//alert('debug: GetPrefs: returning false');
+	//alert('debug: GetPrefs: fallthrough, returning false');
 	return false;
 } // GetPrefs()
 
