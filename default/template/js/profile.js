@@ -37,7 +37,8 @@ function btnSignOut_Click(t) { // event for 'Sign Out' button's click
 		ls.removeItem('publickey');
 		ls.removeItem('fingerprint');
 		ls.removeItem('avatar');
-		ls.removeItem('prefs1');
+		ls.removeItem('settings');
+		ls.removeItem('voted');
 
 		SetPrefs('last_pubkey_ping', 0);
 	}

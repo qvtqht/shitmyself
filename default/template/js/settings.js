@@ -217,7 +217,14 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 function GetPrefs (prefKey) { // get prefs value from localstorage
 	//alert('debug: GetPrefs(' + prefKey + ')');
 	if (window.localStorage) {
-		var currentPrefs = localStorage.getItem('prefs1');
+		var nameContainer = 'settings';
+		{ // settings beginning with gtgt go into separate container
+			var gt = unescape('%3E');
+			if (prefKey.substr(0, 2) == gt+gt) {
+				nameContainer = 'voted';
+			}
+		}
+		var currentPrefs = localStorage.getItem(nameContainer);
 
 		var prefsObj;
 		if (currentPrefs) {
@@ -245,7 +252,13 @@ function SetPrefs (prefKey, prefValue) { // set prefs key prefKey to value prefV
     //alert('DEBUG: SetPrefs(' + prefKey + ', ' + prefValue + ')');
 
 	if (window.localStorage) {
-		var currentPrefs = localStorage.getItem('prefs1');
+		var nameContainer = 'settings';
+		var gt = unescape('%3E');
+		if (prefKey.substr(0, 2) == gt+gt) {
+			nameContainer = 'voted';
+		}
+
+		var currentPrefs = localStorage.getItem(nameContainer);
 		var prefsObj;
 		if (currentPrefs) {
 			prefsObj = JSON.parse(currentPrefs);
@@ -255,9 +268,7 @@ function SetPrefs (prefKey, prefValue) { // set prefs key prefKey to value prefV
 		prefsObj[prefKey] = prefValue;
 
 		var newPrefsString = JSON.stringify(prefsObj);
-
-		localStorage.setItem('prefs1', newPrefsString);
-
+		localStorage.setItem(nameContainer, newPrefsString);
 		return 0;
 	}
 
