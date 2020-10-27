@@ -3479,6 +3479,23 @@ sub MakeSimplePage { # given page name, makes page
 		$html =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
 
+	my $itemListPlaceholder = '<span id=itemList></span>';
+	if ($pageName eq 'welcome') {
+		if (index($html, $itemListPlaceholder) != -1) {
+			my %queryParams;
+			$queryParams{'where_clause'} = "WHERE item_flat.tags_list LIKE '%welcome%' AND item_flat.tags_list NOT LIKE '%flag%'"; #loose match
+			$queryParams{'order_clause'} = "ORDER BY item_flat.add_timestamp DESC"; #order by timestamp desc
+			$queryParams{'limit_clause'} = "LIMIT 100";
+			my @files = DBGetItemList(\%queryParams);
+			if (@files) {
+				my $itemListHtml = GetItemListHtml(\@files);
+				$html = str_replace($itemListPlaceholder, $itemListHtml, $html);
+			} else {
+				$html = str_replace($itemListPlaceholder, '', $html);
+			}
+		}
+	}
+
 	PutHtmlFile("$pageName.html", $html);
 
 	if ($pageName eq 'welcome') {
