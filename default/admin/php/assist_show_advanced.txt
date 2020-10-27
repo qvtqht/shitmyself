@@ -1,0 +1,5 @@
+This injects a style into pages to show/hide based on class=advanced.
+
+$html = str_replace('</head>', "<style><!--\n.advanced{display:none}\n--></style></head>", $html);
+
+It helps remediate UI jumping around after page load.
