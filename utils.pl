@@ -2209,7 +2209,14 @@ if ($lastVersion ne $currVersion) {
 
 	if ($lastVersion) {
 		#my $changeLogList = "Version has changed from $lastVersion to $currVersion";
-		my $changeLogList = `git log --oneline $lastVersion..$currVersion`;
+		if ($lastVersion =~ m/^([0-9a-f]+)$/) {
+			$lastVersion = $1;
+		}
+		if ($currVersion =~ m/^([0-9a-f]+)$/) {
+			$currVersion = $1;
+		}
+		my $changeLogListCommand = "git log --oneline $lastVersion..$currVersion";
+		my $changeLogList = `$changeLogListCommand`;
 		$changeLogList = trim($changeLogList);
 		$changeLogMessage .= "$changeLogList";
 	} else {
