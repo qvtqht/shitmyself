@@ -1,3 +1,7 @@
+
+potentially move <head> to bottom of document, especially js and stylesheet
+	this would allow actual content to be above the fold in the html source
+
 cluster line lengths
 	the lines which are the shorest 10% become titles automatically
 
