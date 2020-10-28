@@ -4671,7 +4671,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	elsif ($pageType eq 'summary') {
 		MakeSummaryPages();
 	}
-}
+} # MakePage()
 
 sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGetTouchedPages();
 # DBGetTouchedPages() means select * from task where priority > 0
