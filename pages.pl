@@ -4479,6 +4479,48 @@ sub PutStatsPages {
 	PutHtmlFile("stats-footer.html", $statsFooter);
 }
 
+sub GetPagePath { # $pageType, $pageParam ; returns path to item's html path
+# $pageType, $pageParam match parameters for MakePage()
+	my $pageType = shift;
+	my $pageParam = shift;
+
+	chomp $pageType;
+	chomp $pageParam;
+
+	if (!$pageType) {
+		return '';
+	}
+
+	my $htmlPath = '';
+
+	if ($pageType eq 'author') {
+		# /author/ABCDEF1234567890/index.html
+		$htmlPath = $pageType . '/' . $pageParam . '/index.html';
+	}
+	elsif ($pageType eq 'tag') {
+		# /top/approve.html
+		$htmlPath = 'top/' . $pageParam . '.html';
+	}
+	elsif ($pageType eq 'rss') {
+		# /rss.xml
+		$htmlPath = 'rss.xml';
+	}
+	elsif ($pageType eq 'scores') {
+		# /authors.html
+		$htmlPath = 'authors.html';
+	} else {
+		if ($pageParam) {
+			# e.g. /tag/approve.html
+			$htmlPath = $pageType . '/' . $pageParam . '.html';
+		} else {
+			# e.g. /profile.html
+			$htmlPath = $pageType . '.html';
+		}
+	}
+
+	return $htmlPath;
+} # GetPagePath()
+
 sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it into $HTMLDIR directory; $pageType, $pageParam
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
