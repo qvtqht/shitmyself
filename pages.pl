@@ -4536,34 +4536,14 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 	WriteMessage('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
-	my $lazyGen;
-	$lazyGen =
-		GetConfig('admin/pages/lazy_page_generation') &&
-		GetConfig('admin/php/enabled') &&
-		GetConfig('admin/php/rewrite');
-	if (!defined($lazyGen)) {
-		$lazyGen = 0;
-		WriteLog('MakePage: warning: $lazyGen was undefined');
-	}
-
-	WriteLog('MakePage: $lazyGen = ' . $lazyGen . '; $priority = ' . $priority);
-
 	# tag page, get the tag name from $pageParam
 	if ($pageType eq 'tag') {
 		my $tagName = $pageParam;
 		my $targetPath = "top/$tagName.html";
 
-		if ($lazyGen) {
-			WriteLog('MakePage: tag: $lazyGen is on, removing instead');
-			RemoveHtmlFile($targetPath);
-		} else {
-			WriteLog("MakePage: tag: $tagName");
-			my $tagPage = GetReadPage('tag', $tagName);
-			PutHtmlFile($targetPath, $tagPage);
-			if ($tagName eq 'image') {
-				PutHtmlFile("art.html", $tagPage);
-			}
-		}
+		WriteLog("MakePage: tag: $tagName");
+		my $tagPage = GetReadPage('tag', $tagName);
+		PutHtmlFile($targetPath, $tagPage);
 	}
 	#
 	# author page, get author's id from $pageParam
@@ -4578,17 +4558,12 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			return '';
 		}
 
-		if ($lazyGen) {
-			WriteLog('MakePage: author: lazy is on, removing instead');
-			RemoveHtmlFile($targetPath);
-		} else {
-			WriteLog('MakePage: author: ' . $authorKey);
-			my $authorPage = GetReadPage('author', $authorKey);
-			if (!-e "$HTMLDIR/author/$authorKey") {
-				mkdir ("$HTMLDIR/author/$authorKey");
-			}
-			PutHtmlFile($targetPath, $authorPage);
+		WriteLog('MakePage: author: ' . $authorKey);
+		my $authorPage = GetReadPage('author', $authorKey);
+		if (!-e "$HTMLDIR/author/$authorKey") {
+			mkdir ("$HTMLDIR/author/$authorKey");
 		}
+		PutHtmlFile($targetPath, $authorPage);
 	}
 	#
 	# if $pageType eq item, generate that item's page
@@ -4599,12 +4574,6 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		# get item page's path #todo refactor this into a function
 		#my $targetPath = $HTMLDIR . '/' . substr($fileHash, 0, 2) . '/' . substr($fileHash, 2) . '.html';
 		my $targetPath = GetHtmlFilename($fileHash);
-
-		if ($lazyGen) {
-			WriteLog('MakePage: item: lazy is on, removing instead');
-			RemoveHtmlFile($targetPath);
-			return;
-		}
 
 		# get item list using DBGetItemList()
 		# #todo clean this up a little, perhaps crete DBGetItem()
@@ -4677,7 +4646,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		if (!$touchIndexPages) {
 			$touchIndexPages = 0;
 		}
-		if ((time() - $touchIndexPages) > 300) {
+		if ((time() - $touchIndexPages) > 1) {
 			#do nothing
 		} else {
 			WriteIndexPages();
