@@ -1832,6 +1832,30 @@ sub IsImageFile { # $file ; returns 1 if image file, 0 if not
 	return 0;
 } # IsImageFile()
 
+sub IsTextFile { # $file ; returns 1 if txt file, 0 if not
+	my $file = shift;
+	if (!$file) {
+		return 0;
+	}
+	chomp $file;
+	if (!$file) {
+		return 0;
+	}
+
+	if (
+		-e $file
+			&&
+		(
+			substr(lc($file), length($file) -4, 4) eq ".txt"
+		)
+	) {
+		return 1;
+	} else {
+		return 0;
+	}
+	return 0;
+} # IsTextFile()
+
 sub IsItem { # $string ; returns 1 if parameter is in item hash format (40 or 8 lowercase hex chars), 0 otherwise
 	my $string = shift;
 
