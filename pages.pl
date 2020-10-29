@@ -4671,6 +4671,9 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	elsif ($pageType eq 'summary') {
 		MakeSummaryPages();
 	}
+
+	WriteLog("MakePage: finished, calling DBDeletePageTouch($pageType, $pageParam)");
+	DBDeletePageTouch($pageType, $pageParam);
 } # MakePage()
 
 sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGetTouchedPages();
