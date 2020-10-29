@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use utf8;
 #use POSIX qw(strftime);
 use Cwd qw(cwd);
