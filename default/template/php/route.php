@@ -211,10 +211,10 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 			$scriptTemplate = str_replace('$colorSuccessVoteUnsigned', $colorSuccessVoteUnsigned, $scriptTemplate);
 			$scriptTemplate = str_replace('$colorSuccessVoteSigned', $colorSuccessVoteSigned, $scriptTemplate);
 		}
-		// #todo finish porting this when GetAdminKey() is available in php
+		// #todo finish porting this when GetRootAdminKey() is available in php
 		//		if ($script == 'profile') {
 		//			# for profile.js we need to fill in current admin id
-		//			my $currentAdminId = GetAdminKey() || '-';
+		//			my $currentAdminId = GetRootAdminKey() || '-';
 		//
 		//			$scriptTemplate =~ s/\$currentAdminId/$currentAdminId/g;
 		//		}

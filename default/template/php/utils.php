@@ -41,7 +41,7 @@ function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 }
 
 //
-//function GetAdminKey () { // Returns admin's public key, 0 if there is none
+//function GetRootAdminKey () { // Returns root admin's public key, 0 if there is none
 //	static $adminsKey = 0;
 //
 //	if ($adminsKey) {

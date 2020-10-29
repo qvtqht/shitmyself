@@ -1682,6 +1682,7 @@ sub AuthorHasTag { # $key ; returns 1 if user is admin, otherwise 0
 } # AuthorHasTag()
 
 sub IsAdmin { # $key ; returns 1 if user is admin, otherwise 0
+	# returns 2 if user is root admin.
 	my $key = shift;
 
 	WriteLog("IsAdmin($key)");
@@ -1691,9 +1692,9 @@ sub IsAdmin { # $key ; returns 1 if user is admin, otherwise 0
 		return 0;
 	}
 
-	if ($key eq GetAdminKey()) {
-		WriteLog('IsAdmin: $key eq GetAdminKey(), return 1 ');
-		return 1; # is admin, return true;
+	if ($key eq GetRootAdminKey()) {
+		WriteLog('IsAdmin: $key eq GetRootAdminKey(), return 2 ');
+		return 2; # is admin, return true;
 	} else {
 		if (GetConfig('admin/allow_admin_permissions_tag_lookup')) {
 			WriteLog('IsAdmin: not root admin, checking tags');
@@ -1736,7 +1737,7 @@ sub GetServerKey { # Returns server's public key, 0 if there is none
 	return 0;
 } # GetServerKey()
 
-sub GetAdminKey { # Returns admin's public key, if there is none
+sub GetRootAdminKey { # Returns root admin's public key, if there is none
 	# it's located in ./admin.key as armored public key
 	# should be called GetRootAdminKey()
 	state $adminsKey;
@@ -2231,7 +2232,7 @@ if ($lastVersion ne $currVersion) {
 }
 
 my $lastAdmin = GetConfig('current_admin');
-my $currAdmin = GetAdminKey();
+my $currAdmin = GetRootAdminKey();
 
 if (!$lastAdmin) {
 	$lastAdmin = 0;

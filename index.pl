@@ -214,7 +214,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (
 			$gpgKey &&
 			$alias &&
-			!GetAdminKey() &&
+			!GetRootAdminKey() &&
 			GetConfig('admin/admin_imprint') &&
 			$alias eq 'Operator'
 		) {
