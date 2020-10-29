@@ -450,7 +450,7 @@ elsif ($arg1) {
 
 		WriteLog('File ' . $arg1 . ' exists');
 
-		if (lc(substr($arg1, length($arg1) - 4, 4)) eq '.txt') { #$arg1 =~ m/\.txt$/
+		if (IsTextFile($arg1)) { #$arg1 =~ m/\.txt$/
 			my $fileProcessed = ProcessTextFile($arg1);
 			if ($fileProcessed) {
 				IndexTextFile('flush');
