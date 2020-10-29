@@ -3812,6 +3812,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		}
 	}
 
+	WriteIndexPages();
+
 	WriteLog('MakeSummaryPages() END');
 }
 
