@@ -102,7 +102,7 @@ function EventLoop () { // (currently unused) for calling things which need to h
 	var eventLoopBegin = d.getTime();
 
 	if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
-		if (5000 < (eventLoopBegin - window.eventLoopShowTimestamps)) {
+		if (13000 < (eventLoopBegin - window.eventLoopShowTimestamps)) {
 			ShowTimestamps();
 			window.eventLoopShowTimestamps = eventLoopBegin;
 		} else {
