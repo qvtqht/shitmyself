@@ -18,13 +18,23 @@ require './sqlite.pl';
 
 WriteLog( "Using $SCRIPTDIR as install root...\n");
 
-sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute table
-	WriteLog("MakeChainIndex()\n");
+sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into item_attribute table
+	# note: this is kind of a hack, and non-importing validation should just be separate own sub
+	my $import = shift;
+	if (!defined($import)) {
+		$import = 1;
+	} else {
+		chomp $import;
+		$import = ($import ? 1 : 0);
+	}
+	WriteMessage("MakeChainIndex($import)");
 
 	if (GetConfig('admin/read_chain_log')) {
+		WriteLog('MakeChainIndex: admin/read_chain_log was TRUE');
 		my $chainLog = GetFile('html/chain.log');
 
 		if (defined($chainLog) && $chainLog) {
+			WriteLog('MakeChainIndex: $chainLog was defined');
 			my @addedRecord = split("\n", $chainLog);
 
 			my $previousLine = '';
@@ -49,8 +59,12 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 					my $moveChainMessage = 'Chain break detected. Timestamps for items may reset. #meta #warning ' . $curTime;
 					PutFile('html/txt/chain_break_' . $curTime . '.txt');
 
-					MakeChainIndex(); # recurse
-					return;
+					if ($import) {
+						MakeChainIndex($import); # recurse
+					}
+
+					WriteLog('MakeChainIndex: return 0');
+					return 0;
 				}
 
 				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
@@ -61,8 +75,21 @@ sub MakeChainIndex { # reads from log/chain.log and puts it into item_attribute 
 				$previousLine = $currentLine;
 			} # foreach $currentLine (@addedRecord)
 			DBAddItemAttribute('flush');
+			return 1;
 		} # $chainLog
+		else {
+			WriteLog('MakeChainIndex: warning: $chainLog was NOT defined');
+			WriteLog('MakeChainIndex: $chainLog = ' . $chainLog);
+			return 0;
+		}
 	} # GetConfig('admin/read_chain_log')
+	else {
+		WriteLog('MakeChainIndex: admin/read_chain_log was FALSE');
+		return 0;
+	}
+
+	WriteLog('MakeChainIndex: warning: unreachable was reached');
+	return 0;
 } # MakeChainIndex()
 
 sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
