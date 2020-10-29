@@ -197,7 +197,7 @@ if (isset($comment) && $comment) {
 				} else {
 					$profileId = 0;
 				}
-				WriteLog('post.php: $profileId = ' . profileId);
+				WriteLog('post.php: $profileId = ' . $profileId);
 				if ($profileId) {
 					$redirectUrl = '/author/' . $profileId . '/index.html';
 				} else {
