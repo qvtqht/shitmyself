@@ -963,6 +963,9 @@ if (GetConfig('admin/php/route_enable')) {
 				$_COOKIE['show_advanced'] == '0'
 			)
 		) {
+			WriteLog('route.php: ShowAdvanced() assist activated');
+			WriteLog('route.php: $_COOKIE[show_advanced] = ' . $_COOKIE['show_advanced']);
+			
 			$html = str_replace(
 				'</head>',
 				"<style><!--" .
