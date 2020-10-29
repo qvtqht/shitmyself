@@ -1657,15 +1657,6 @@ sub AuthorHasTag { # $key ; returns 1 if user is admin, otherwise 0
 	#todo $tagInQuestion sanity check
 
 	WriteLog("AuthorHasTag($key, $tagInQuestion)");
-	#
-	# state @adminUsers;
-	# if (!@adminUsers) {
-	# 	@adminUsers = ();
-	# }
-
-	#	my $adminKey = GetAdminKey();
-	#
-	#	if ($adminKey eq $key) {
 
 	my $pubKeyHash = DBGetAuthorPublicKeyHash($key);
 	if ($pubKeyHash) {
