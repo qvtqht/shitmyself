@@ -15,7 +15,7 @@
 				<fieldset class=beginner>
 					<p>Updated: $lastUpdateTime
 					<p></p>
-					<p>Operator: $admin
+					<p>Root: $admin
 				</fieldset>
 				<fieldset class=advanced>
 					<p><input type=submit name=comment value="Update">
