@@ -1257,8 +1257,15 @@ sub RemoveHtmlFile { # $file ; removes existing html file
 	}
 	my $fileProvided = $file;
 	$file = "$HTMLDIR/$file";
-	if (-e $file) {
-		unlink($file);
+
+	if ($file =~ m/^([0-9a-z\/]+)$/) {
+		$file = $1;
+		if (-e $file) {
+			unlink($file);
+		}
+	} else {
+		WriteLog('RemoveHtmlFile: warning: sanity check failed');
+		return '';
 	}
 } # RemoveHtmlFile()
 
