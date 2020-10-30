@@ -2,6 +2,9 @@
 .tag-approve {
 	color: #ffc0ff !important
 }
+.dialog, .dialog * {
+    border-radius: 5pt;
+}
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -55,4 +58,14 @@ a:focus, a:active, input:focus, input:active {
 	font-size: large;
 	font-family: digital, fixedsys, monospace;
 }
+input:focus {
+    background-color: orange;
+}
+textarea:focus {
+    border: 3pt solid orange;
+}
+textarea {
+    border: 3pt solid $colorWindow;
+}
+
 /* end theme/lisonok8/additional.css */
