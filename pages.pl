@@ -119,7 +119,7 @@ sub GetStylesheet { # returns style template based on config
 		return $styleSheet;
 	}
 
-	my $style = GetTemplate('css/default.css.template');
+	my $style = GetTemplate('css/default.css');
 	# baseline style
 
 	if (GetConfig('html/avatar_icons')) {
