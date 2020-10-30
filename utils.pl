@@ -2575,6 +2575,19 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	return $easyFindString;
 }
 
+sub GetMessageCacheName {
+	my $itemHash = shift;
+	chomp($itemHash);
+
+	if (!IsItem($itemHash)) {
+		WriteLog('GetMessageCacheName: sanity check failed');
+		return '';
+	}
+
+	my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
+	return $messageCacheName;
+}
+
 sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cache or file path
 	WriteLog('GetItemMessage()');
 
@@ -2592,7 +2605,7 @@ sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cac
 	WriteLog("GetItemMessage($itemHash)");
 
 	my $message;
-	my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
+	my $messageCacheName = GetMessageCacheName($itemHash);
 
 	if (-e $messageCacheName) {
 		$message = GetFile($messageCacheName);
