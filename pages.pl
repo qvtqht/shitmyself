@@ -760,7 +760,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 		{
 			my $voteButtons = GetItemTagButtons($file{'file_hash'});
-			$allReplies .= GetWindowTemplate($voteButtons, 'Add Tags'); #todo make class=advanced
+			$allReplies .= '<hr>'.GetWindowTemplate($voteButtons, 'Add Tags'); #todo make class=advanced
 		}
 
 		if (GetConfig('replies') && GetConfig('html/reply_form_before_reply_list')) {
@@ -892,7 +892,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 			{
 				my $voteButtons = GetItemTagButtons($file{'file_hash'});
-				$allReplies .= GetWindowTemplate($voteButtons, 'Add Tags');
+				$allReplies .= '<hr>'.GetWindowTemplate($voteButtons, 'Add Tags');
 			}
 
 
