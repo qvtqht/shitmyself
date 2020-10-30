@@ -43,7 +43,7 @@ a:focus, a:active, input:focus, input:active {
 #serverResponse {
 /* messages from server */
     background-color: $colorHighlightAlert;
-    color: cyan;
+    color: #008080;
     padding: 8pt;
     spacing: 8pt;
     position: fixed;
