@@ -1,8 +1,13 @@
 <!-- item_listing.template -->
 <tr bgcolor="$rowBgColor">
 	<td>
-		<b><a href="$link">$itemTitle</a></b> $authorAvatar;<br>
-		<span class=beginner>Last reply: </span>$itemLastTouch<br>
+		<b><a href="$link">$itemTitle</a></b><br>
+	</td>
+	<td>
+		$authorAvatar
+	</td>
+	<td>
+		$itemLastTouch
 	</td>
 </tr>
 <!-- / item_listing.template -->
