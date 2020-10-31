@@ -2987,20 +2987,18 @@ sub GetReadPage { # generates page with item listing based on parameters
 			my $alias;
 			my $isAdmin = 0;
 			my $message;
-			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
-			WriteLog('$messageCacheName (1) = ' . $messageCacheName);
+			my $messageCacheName = GetMessageCacheName($itemHash);
+
+			WriteLog('GetReadPage: $row->{file_hash} = ' . $row->{'file_hash'});
 			if ($gpgKey) {
+				WriteLog('GetReadPage: $message = GetFile('.$messageCacheName.')');
 				$message = GetFile($messageCacheName);
 			} else {
+				WriteLog('GetReadPage: $message = GetFile('.$file.')');
 				$message = GetFile($file);
 			}
 
 			#$message = FormatForWeb($message);
-
-			if ($isSigned && IsAdmin($gpgKey)) {
-				$isAdmin = 1;
-			}
-
 			my $signedCss = "";
 			if ($isSigned) {
 				if ($isAdmin) {
