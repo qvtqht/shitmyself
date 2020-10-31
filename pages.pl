@@ -2063,6 +2063,11 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	return $txtIndex;
 }
 
+sub GetItemListingHtml { # similar to GetItemListHtml(), just different version
+
+	#my $itemListingWrapper = GetTemplate('item_listing_wrapper2.template');
+}
+
 sub GetTopItemsPage { # returns page with top items listing
 	WriteLog("GetTopItemsPage()");
 
