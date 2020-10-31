@@ -3001,12 +3001,15 @@ sub GetReadPage { # generates page with item listing based on parameters
 			#$message = FormatForWeb($message);
 			my $signedCss = "";
 			if ($isSigned) {
+				if (IsAdmin($gpgKey)) {
+					$isAdmin = 1;
+				}
 				if ($isAdmin) {
 					$signedCss = "signed admin";
 				} else {
 					$signedCss = "signed";
 				}
-			}
+			} # $isSigned
 
 			# todo $alias = GetAlias($gpgKey);
 
