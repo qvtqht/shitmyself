@@ -1,3 +1,7 @@
+custom "visited link" expiration
+	keep track client-side
+	change color to unvisited when expired
+	use cautiously
 
 potentially move <head> to bottom of document, especially js and stylesheet
 	this would allow actual content to be above the fold in the html source
