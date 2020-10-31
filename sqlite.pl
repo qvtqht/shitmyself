@@ -2095,10 +2095,10 @@ sub DBGetAuthorList { # returns list of all authors' gpg keys as array
 
 sub DBGetAuthorAlias { # returns author's alias by gpg key
 	my $key = shift;
-	chomp ($key);
+	chomp $key;
 
 	if (!IsFingerprint($key)) {
-		WriteLog('DBGetAuthorAlias called with invalid parameter! returning');
+		WriteLog('DBGetAuthorAlias: warning: called with invalid parameter! returning');
 		return;
 	}
 
