@@ -586,38 +586,38 @@ sub GetHtmlAvatar { # Returns HTML avatar from cache
 	#	return 'unregistered';
 }
 
-sub GetAlias { # $gpgKey, $noCache ; Returns alias for a GPG key
-	my $gpgKey = shift;
-	chomp $gpgKey;
-	WriteLog("GetAlias($gpgKey)");
+sub GetAlias { # $fingerprint, $noCache ; Returns alias for an author
+	my $fingerprint = shift;
+	chomp $fingerprint;
+	WriteLog("GetAlias($fingerprint)");
 
 	my $noCache = shift;
 	$noCache = ($noCache ? 1 : 0);
 
 	state %aliasCache;
 	if (!$noCache) {
-		if (exists($aliasCache{$gpgKey})) {
-			return $aliasCache{$gpgKey};
+		if (exists($aliasCache{$fingerprint})) {
+			return $aliasCache{$fingerprint};
 		}
 	}
 
-	my $alias = DBGetAuthorAlias($gpgKey);
-
-	if ($alias && length($alias) > 24) {
-		$alias = substr($alias, 0, 24);
-	}
+	my $alias = DBGetAuthorAlias($fingerprint);
 
 	if ($alias) {
 		{ # remove email address, if any
 			$alias =~ s|<.+?>||g;
-			trim($alias);
+			$alias = trim($alias);
 			chomp $alias;
 		}
 
-		$aliasCache{$gpgKey} = $alias;
-		return $aliasCache{$gpgKey};
+		if ($alias && length($alias) > 24) {
+			$alias = substr($alias, 0, 24);
+		}
+
+		$aliasCache{$fingerprint} = $alias;
+		return $aliasCache{$fingerprint};
 	} else {
-		return $gpgKey;
+		return $fingerprint;
 		#		return 'unregistered';
 	}
 } # GetAlias()
