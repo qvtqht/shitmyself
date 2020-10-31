@@ -8697,9 +8697,6 @@ Uncaught TypeError: Cannot use 'in' operator to search for 'contentWindow' in nu
     at <anonymous>:2:29
 
 #meta #qutebrowser #scratch
--- 
-Cookie: 37E0171752087844
-Host: localhost:2784
 
 
 ===
@@ -8712,5 +8709,3 @@ Uncaught TypeError: Cannot use 'in' operator to search for 'contentWindow' in nu
 #meta #qutebrowser #scratch
 addtext=Meditate...
 
--- 
-Host: localhost:2784
