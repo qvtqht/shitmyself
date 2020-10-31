@@ -2427,6 +2427,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 
 		if ($script eq 'profile') {
+			#todo this should work for all admins, not just root
 			# for profile.js we need to fill in current admin id
 			my $currentAdminId = GetRootAdminKey() || '-';
 			#todo this whole thing should change to include non-root admins
@@ -2961,25 +2962,21 @@ sub GetReadPage { # generates page with item listing based on parameters
 	}
 
 	$txtIndex .= GetTemplate('maincontent.template');
-
 	if ($pageType eq 'author') {
 		# author info box
 		$txtIndex .= GetAuthorInfoBox($authorKey);
 	}
-
 	my $itemComma = '';
 
 	foreach my $row (@files) {
 		my $file = $row->{'file_path'};
 
-		WriteLog("DBAddItemPage (1)");
+		WriteLog('GetReadPage: calling DBAddItemPage (1)');
 		DBAddItemPage($row->{'file_hash'}, $pageType, $pageParam);
 
 		if ($file && -e $file) {
 			my $itemHash = $row->{'file_hash'};
-
 			my $gpgKey = $row->{'author_key'};
-
 			my $isSigned;
 			if ($gpgKey) {
 				$isSigned = 1;
@@ -2987,10 +2984,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 				$isSigned = 0;
 			}
 
-			my $alias;;
-
+			my $alias;
 			my $isAdmin = 0;
-
 			my $message;
 			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
 			WriteLog('$messageCacheName (1) = ' . $messageCacheName);
@@ -3027,8 +3022,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 				WriteLog('GetReadPage: GetItemTemplate($row)');
 
 				$itemTemplate = GetItemTemplate($row); # GetReadPage()
-			} else {
-				$itemTemplate = '<p>Problem decoding message</p>';
+			}
+			else {
+				$itemTemplate = '<p>Problem decoding message ' . (defined($row->{'file_hash'}) ? $row->{'file_hash'} : 'x') . '</p>';
 				WriteLog('GetReadPage: Something happened and there is no $message where I expected it... Oh well, moving on.');
 			}
 
@@ -3039,6 +3035,9 @@ sub GetReadPage { # generates page with item listing based on parameters
 			}
 
 			$txtIndex .= $itemTemplate;
+		} # $file
+		else {
+			WriteLog('GetReadPage: warning: file not found, $file = ' . $file);
 		}
 	}
 
@@ -4689,6 +4688,8 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 	if (!$startTime) {
 		$startTime = 0;
 	}
+
+	WriteLog("BuildTouchedPages($timeLimit, $startTime)");
 
 	my $pagesLimit = GetConfig('admin/update/limit_page');
 	if (!$pagesLimit) {
