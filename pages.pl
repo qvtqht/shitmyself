@@ -4684,7 +4684,8 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 } # MakePage()
 
 sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGetTouchedPages();
-# DBGetTouchedPages() means select * from task where priority > 0
+	# DBGetTouchedPages() means select * from task where priority > 0
+
 
 	my $timeLimit = shift;
 	if (!$timeLimit) {
@@ -4714,11 +4715,28 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 		my @touchedPagesArray = @$touchedPages;
 
 		# write number of touched pages to log
-		WriteLog('scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
+		WriteLog('BuildTouchedPages: scalar(@touchedPagesArray) = ' . scalar(@touchedPagesArray));
 
 		# this part will refresh any pages that have been "touched"
 		# in this case, 'touch' means when an item that affects the page
 		# is updated or added
+
+		my $isLazy = 0;
+		if (GetConfig('admin/pages/lazy_page_generation')) {
+			if (GetConfig('admin/php/enable')) {
+				# at this time, php is the only module which can support regrowing
+				# 404 pages and thsu lazy page gen
+				if (GetConfig('admin/php/rewrite')) {
+					# rewrite is also required for this to work
+					if (GetConfig('admin/php/regrow_404_pages')) {
+						WriteLog('BuildTouchedPages: $isLazy conditions met, setting to 1');
+						$isLazy = 1;
+					}
+				}
+			}
+		}
+		WriteLog('BuildTouchedPages: $isLazy = ' . $isLazy);
+
 		foreach my $page (@touchedPagesArray) {
 			if ($timeLimit && $startTime && ((time() - $startTime) > $timeLimit)) {
 				WriteMessage("BuildTouchedPages: Time limit reached, exiting loop");
@@ -4747,8 +4765,12 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 			WriteLog("\$pageParam = $pageParam");
 			WriteLog("\$touchTime = $touchTime");
 
-			MakePage($pageType, $pageParam);
-
+			if ($isLazy) {
+				my $pagePath = GetPagePath($pageType, $pageParam);
+				RemoveHtmlFile($pagePath);
+			} else {
+				MakePage($pageType, $pageParam);
+			}
 			DBDeletePageTouch($pageType, $pageParam);
 		}
 	} # $touchedPages
