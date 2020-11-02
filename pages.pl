@@ -932,6 +932,10 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 					if ($iaName eq 'title') {
 						$iaValue = HtmlEscape($iaValue);;
 					}
+					if ($iaName eq 'file_path') {
+						$iaValue = '<a href="' . $iaValue . '">' . $iaValue . '</a>';
+						#todo sanitizing #security
+					}
 
 					$itemAttributesTable .= '<tr><td>';
 					$itemAttributesTable .= GetString("item_attribute/$iaName") . ':';
