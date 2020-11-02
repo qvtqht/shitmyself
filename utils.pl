@@ -14,7 +14,7 @@ use Digest::MD5 qw(md5_hex);
 #use Devel::StackTrace;
 
 use File::Basename qw( fileparse );
-use File::Path qw( make_path ); ## todo replace this with own version which is not fragile
+#use File::Path qw( make_path ); ## todo replace this with own version which is not fragile
 use File::Spec;
 
 use Date::Parse;
@@ -217,6 +217,39 @@ sub ParseDate { # takes $stringDate, returns epoch time
 #	}
 #}
 
+sub MakePath { # $newPath ; ensures all subdirs for path exist
+	my $newPath = shift;
+	chomp $newPath;
+
+	WriteLog("MakePath($newPath)");
+
+	if (!$newPath) {
+		#todo add more sanity checks
+		WriteLog('MakePath: warning: failed sanity check');
+		return '';
+	}
+
+	if (-e $newPath) {
+		WriteLog('MakePath: path already exists, returning');
+		return '';
+	}
+
+	my @newPathArray = split('/', $newPath);
+	
+	my $newPathCreated = '';
+
+	while (@newPathArray) {
+		$newPathCreated .= shift @newPathArray;
+		if ($newPathCreated && !-e $newPathCreated) {
+			WriteLog('MakePath: mkdir ' . $newPathCreated);
+			mkdir $newPathCreated;
+		}
+		if (1 || $newPathCreated) {
+			$newPathCreated .= '/';
+		}
+	}
+}
+
 sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	# takes file's path as argument
 	my $fullPath = shift;
@@ -241,7 +274,8 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	if ( !-d $dirs && !-e $dirs ) {
 		if ( $dirs =~ m/^([^\s]+)$/ ) { #security #taint
 			$dirs = $1; #untaint
-			make_path $dirs or WriteLog("EnsureSubdirs: Failed to create path: $dirs");
+			MakePath($dirs);
+			#make_path $dirs or WriteLog("EnsureSubdirs: Failed to create path: $dirs");
 		}
 	}
 } # EnsureSubdirs()
