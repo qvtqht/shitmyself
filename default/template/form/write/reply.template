@@ -3,7 +3,7 @@
 <form class=reply action="/post.html" id=compose name=compose>
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<tr bgcolor="$colorTitlebar" class=titlebar>
 				<td>
 					<font color=$colorTitlebarText><b>Reply</b></font>
 				</td>

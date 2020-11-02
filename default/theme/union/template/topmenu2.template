@@ -1,7 +1,7 @@
 <!-- topmenu2.template -->
 <form action="" name="frmTopMenu">
 	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+		<tr bgcolor=$colorTitlebar class=titlebar>
 			<td><small>
 				<b>
 					<small>

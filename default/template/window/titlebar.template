@@ -1,5 +1,5 @@
 <!-- titlebar.template -->
-<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+<tr bgcolor="$colorTitlebar" class=titlebar>
 	<td colspan=$contentColumnCount>
 		<font color="$colorTitlebarText"><b>$windowTitle</b></font><br>
 	</td>

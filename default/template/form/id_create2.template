@@ -3,7 +3,7 @@
 <form id=formCreateId name=formCreateId style="display:none" onsubmit="return false;">
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+			<tr bgcolor=$colorTitlebar class=titlebar>
 				<td>
 					<font color=$colorTitlebarText><b>Create Identity</b></font>
 				</td>
