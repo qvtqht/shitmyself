@@ -4,6 +4,9 @@
 // <_<     >_>      o_O      -_-     ^_^
 header('Content-Type: text/html');
 include_once('utils.php');
+
+WriteLog('route.php begins');
+
 //
 //if (1/0) {
 //    // disabled
@@ -793,6 +796,7 @@ if (GetConfig('admin/php/route_enable')) {
 					);
 
 					if (!$lightMode && GetConfig('admin/php/server_response_attach_to_anchor')) {
+						WriteLog('server_response_attach_to_anchor');
 						// if server_response_attach_to_anchor, we will put the server message next to the anchor
 						// unless we are in light mode, because then we want the message at the top of the page
 
