@@ -33,6 +33,11 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 	}
 	//alert('DEBUG: key: ' + key);
 
+	if (e.keyCode == 13 && e.ctrlKey) {
+		// submit parent form #todo
+		// return #todo
+	}
+
 	// alt+` will toggle translit mode
 	if (e.altKey || e.ctrlKey || e.metaKey) {
 		if (e.key == 'd' || e.key == 'D') {
