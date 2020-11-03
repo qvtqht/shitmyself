@@ -24,8 +24,6 @@ button, input[type=button], input[type=submit], input[type=checkbox] {
 input[type=text], input[type=password], select, option, textarea {
 	background-color: $colorInputBackground;
 	color: $colorInputText;
-	border: 0;
-	padding: 3pt;
 }
 #txtClock {
 	border: 0;

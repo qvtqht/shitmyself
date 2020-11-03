@@ -12,7 +12,6 @@
 						href="$permalinkHtml#reply"
 						onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }"
 					>reply($replyCount)</a>;
-					<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>;
 				</span>
 				$itemFlagButton
 			</td>
