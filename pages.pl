@@ -2333,7 +2333,11 @@ sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
 
 	if ($debugType eq 'console.log') {
 		$scriptTemplate =~ s/\/\/alert\('DEBUG:/console.log('DEBUG:/gi;
-	} else {
+	}
+	elsif ($debugType eq 'document.title') {
+		$scriptTemplate =~ s/\/\/alert\('DEBUG:/document.title=('DEBUG:/gi;
+	}
+	else {
 		$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/gi;
 	}
 
