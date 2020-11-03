@@ -967,7 +967,7 @@ if (GetConfig('admin/php/route_enable')) {
 		if (
 			GetConfig('admin/php/assist_show_advanced') &&
 			(
-				!isset($_COOKIE['show_advanced']) ||
+				isset($_COOKIE['show_advanced']) &&
 				$_COOKIE['show_advanced'] == '0'
 			)
 		) {
@@ -976,7 +976,8 @@ if (GetConfig('admin/php/route_enable')) {
 			
 			$html = str_replace(
 				'</head>',
-				"<style><!--" .
+				"<!-- php/assist_show_advanced -->\n".
+				 	"<style><!--" .
 					"\n" .
 					".advanced{ display:none }" .
 					"/* assist ShowAdvanced() in pre-hiding .advanced elements */" .
