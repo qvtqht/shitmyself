@@ -1,13 +1,6 @@
 /* avatar.css */
-.avatar {
-	border: 2pt;
-}
 .avatar .icon {
 	font-weight: bold;
-	margin-right: 2pt;
-	border-radius: 3pt;
-	border: 2pt;
-	padding: 1pt;
-	font-size smaller;
+	font-size: smaller;
 }
 /* / avatar.css */
