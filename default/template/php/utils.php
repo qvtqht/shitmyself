@@ -20,6 +20,77 @@ function GetScriptDir () { // returns base script directory.
 	return $scriptDir;
 }
 
+function SqliteEscape ($text) { # Escapes supplied text for use in sqlite query
+# Just changes ' to ''
+	WriteLog("SqliteEscape($text)");
+
+	if (isset($text)) {
+		$text = str_replace("'", "''", $text);
+	} else {
+		$text = '';
+	}
+
+	WriteLog('SqliteEscape: return ' . $text);
+
+	return $text;
+}
+
+function SqliteGetValue ($query) { # Returns the first column from the first row returned by sqlite $query
+	WriteLog("SqliteGetValue($query)");
+
+	$command = "sqlite3 /home/toshiba/hike/cache/b/index.sqlite3 \"$query\"";
+	WriteLog('SqliteGetValue: $command = ' . $command);
+
+	$result = `$command`;
+	WriteLog('SqliteGetValue: $result = ' . $result);
+
+	return $result;
+}
+
+
+
+function DBGetAuthorAlias ($key) { # returns author's alias
+// 	if (!IsFingerprint($key)) {
+// 		WriteLog('DBGetAuthorAlias: warning: called with invalid parameter! returning');
+// 		return;
+// 	} #todo re-add this sanity check
+	WriteLog("DBGetAuthorAlias($key)");
+
+	$key = SqliteEscape($key);
+
+	if ($key) {
+		$query = "SELECT alias FROM author_alias WHERE key = '$key'";
+		$returnValue = SqliteGetValue($query);
+
+		WriteLog('DBGetAuthorAlias: $returnValue = ' . $returnValue);
+
+		return $returnValue;
+	} else {
+		return "";
+	}
+}
+
+
+function GetAlias($fingerprint, $noCache = 0) { # ; Returns alias for an identifier
+	WriteLog("GetAlias($fingerprint, $noCache)");
+
+	WriteLog('GetAlias: calling DBGetAuthorAlias()');
+	$alias = DBGetAuthorAlias($fingerprint);
+
+	if ($alias) {
+		$alias = trim($alias);
+		if ($alias && length($alias) > 24) {
+			$alias = substr($alias, 0, 24);
+		}
+
+		return $alias;
+	} else {
+		$alias = GetConfig('prefill_username');
+		return $alias;
+	}
+} # GetAlias()
+
+
 function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 // the debug log is stored as a static variable in this function
 // when a blank (false) argument is passed, returns entire log as html
