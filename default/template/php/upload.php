@@ -35,10 +35,10 @@ if (!empty($_FILES['uploaded_file'])) {
 			#multi
 				for ($iUploadedFile = 0; $iUploadedFile < count($_FILES['uploaded_file']['name']); $iUploadedFile++) {
 					WriteLog('$iUploadedFile = ' . $iUploadedFile);
-// 					WriteLog $_FILES['uploaded_file']['name'][$iUploadedFile] . '<br>';
-// 					WriteLog $_FILES['uploaded_file']['type'][$iUploadedFile] . '<br>';
-// 					WriteLog $_FILES['uploaded_file']['tmp_name'][$iUploadedFile] . '<br>';
-// 					WriteLog $_FILES['uploaded_file']['error'][$iUploadedFile] . '<br>';
+// 					WriteLog($_FILES['uploaded_file']['name'][$iUploadedFile] . '<br>');
+// 					WriteLog($_FILES['uploaded_file']['type'][$iUploadedFile] . '<br>');
+// 					WriteLog($_FILES['uploaded_file']['tmp_name'][$iUploadedFile] . '<br>');
+// 					WriteLog($_FILES['uploaded_file']['error'][$iUploadedFile] . '<br>');
 // 					print $_FILES['uploaded_file']['size'][$iUploadedFile] . '<br>';
 // 					print '<hr>';
 
