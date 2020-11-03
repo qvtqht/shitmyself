@@ -3,7 +3,7 @@
 	color: #008000 !important;
 }
 .dialog, .dialog * {
-    border-radius: 5pt;
+    border-radius: 8pt;
 }
 body {
 	font-family: helvetica;
@@ -51,6 +51,7 @@ a:focus, a:active, input:focus, input:active {
     left: 25%;
     width: 50%;
     border: $borderDialog;
+    border-radius: 8pt;
 }
 #txtClock {
 	background-color: #404040;
@@ -60,12 +61,6 @@ a:focus, a:active, input:focus, input:active {
 }
 input:focus {
     background-color: orange;
-}
-textarea:focus {
-    border: 3pt solid orange;
-}
-textarea {
-    border: 3pt solid $colorWindow;
 }
 
 /* end theme/lisonok8/additional.css */
