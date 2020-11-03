@@ -1,3 +1,8 @@
+warning: contains unaudicted codeplease observe basic sanitary precautions and run in virtual machine or sandboxed enviornment
+
+
+
+
 
 <?xml version="1.0" encoding="utf-8" ?>
 <rdf:RDF

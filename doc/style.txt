@@ -5,6 +5,9 @@ When declaring a function or subprocedure, I try to put a space after its name.
 	After that, I follow with a very short description of the function.
 		Examples:
 
+Netscape 4 has bug with borders on textareas
+	Don't use those
+
 sub SomePerlFunction { # $firstArgument, $argumentTheSecond ; function demonstrates code style in perl
  	my $firstArgument = shift;
 	my $argumentTheSecond = shift;

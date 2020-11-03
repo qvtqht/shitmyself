@@ -1,3 +1,9 @@
+Being all caps makes html tags stand out more in a sea of text
+
+Instrument panel
+
+test: are there any files under default/ which are not mentioned anywhere in code?
+
 improve clean process
 	instead of rm, use mv
 		create directory trash

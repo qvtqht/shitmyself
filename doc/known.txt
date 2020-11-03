@@ -1,5 +1,11 @@
 Known Issues
 ============
+
+In w3m browser, when press Enter key
+	Redirection loop detected
+	Workaround: press Ctrl+R to reload page
+		Logging in works this way
+
 When try to resubmit deleted item (exact text) get 404 page
 	Feature-bug
 		The 404 is good, but could use additional messaging
