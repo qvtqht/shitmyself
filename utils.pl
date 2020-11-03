@@ -1297,9 +1297,17 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 		$tagAttribute = $attributeName . '=' . $attributeValue . '';
 	}
 
+	my $htmlBefore = $html;
 	$html = str_ireplace('<' . $tag . ' ', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
-	$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
-	$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+	if ($html eq $htmlBefore) {
+		$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+	}
+	if ($html eq $htmlBefore) {
+		$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+	}
+	if ($html eq $htmlBefore) {
+		WriteLog('AddAttributeToTag: warning: nothing was changed');
+	}
 
 	# #todo this is sub-optimal
 	# $html =~ s/\<$tag\w/<$tag $tagAttribute /i;
