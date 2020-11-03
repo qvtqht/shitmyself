@@ -759,9 +759,22 @@ function AddAttributeToTag ($html, $tag, $attributeName, $attributeValue) { // a
 
 	WriteLog('AddAttributeToTag: $tagAttribute is ' . $tagAttribute);
 
-	$html = str_ireplace('<' . $tag . ' ', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
-	$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
-	$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+	{ #todo this is sub-optimal, and tag case is not preserved
+		$htmlBefore = $html;
+		$html = str_ireplace('<' . $tag . ' ', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+		if ($html == $htmlBefore) {
+			$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
+		}
+		if ($html == $htmlBefore) {
+			$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+		}
+		if ($html == $htmlBefore) {
+			$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
+		}
+		if ($html == $htmlBefore) {
+			WriteLog('AddAttributeToTag: warning: nothing was changed');
+		}
+	}
 
 // 	// #todo this is sub-optimal
 // 	$html = preg_replace("/\<$tag\w/i", "<$tag $tagAttribute ", $html);
