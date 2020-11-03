@@ -868,11 +868,11 @@ if (GetConfig('admin/php/route_enable')) {
 			$fingerprint = ''; // will store our fingerprint
 
 			if (isset($cookie) && $cookie) {
-				$handle = GetConfig('prefill_username');
-				if (!$handle) {
-					$handle = 'Guest';
-				}
 				$fingerprint = $cookie;
+
+				if (!$handle && GetConfig('admin/php/alias_lookup')) {
+					$handle = GetAlias($fingerprint);
+				}
 
 				// $html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
 				// #todo get this from template
