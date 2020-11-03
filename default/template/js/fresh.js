@@ -166,7 +166,8 @@ function freshCallback() { // callback for requesting HEAD for current page
 } //freshCallback()
 
 function CheckIfFresh () {
-	//alert('debug: CheckIfFresh: ' + new Date().getTime());
+	var d = new Date();
+	//alert('debug: CheckIfFresh: ' + d.getTime());
 
 	var freshCheckRecent = window.freshCheckRecent;
 	if (freshCheckRecent) {
