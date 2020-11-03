@@ -28,6 +28,33 @@ use Storable;
 #use Time::Piece;
 use Digest::SHA qw(sha1_hex);
 
+sub require_once { # $path ; use require() unless already done
+	my $path = shift;
+	chomp $path;
+
+	if (!$path) {
+		WriteLog('require_once: warning sanity check failed');
+		return '';
+	}
+
+	state %state;
+
+	if (defined($state{$path})) {
+		WriteLog('require_once: already required: ' . $path);
+		return '';
+	}
+
+	if (!-e $path) {
+		WriteLog('require_once: sanity check failed, no $path = ' . $path);
+		return '';
+	}
+
+	require $path;
+	$state{$path} = 1;
+	
+	return 1;
+} # require_once()
+
 sub GetDir {
 	my $dirName = shift;
 	if (!$dirName) {
