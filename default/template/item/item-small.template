@@ -7,8 +7,10 @@
 			<p>
 				<a href="$permalinkHtml">$addedTime</a>;
 				$authorLink;
-				<span class=advanced><a href="$permalinkHtml#reply"><b>reply</b></a>;
-				<a href="$permalinkTxt"><tt>$fileHashShort</tt></a>; $itemFlagButton</span>
+				<span class=advanced>
+					<a href="$permalinkHtml#reply"><b>reply</b></a>;
+					$itemFlagButton
+				</span>
 				<span class=more></span>
 			</p>
 
