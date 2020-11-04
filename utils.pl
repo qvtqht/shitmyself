@@ -122,13 +122,19 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 }
 
 sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/log.log
-	WriteMessage('.');
-
 	my $text = shift;
 	if (!$text) {
 		$text = '(empty string)';
 	}
 	chomp $text;
+
+	{
+		my $firstWord = substr($text, 0, index($text, ' '));
+		my $firstWordHash = md5_hex($firstWord);
+		my $firstWordHashFirstChar = substr($firstWordHash, 0, 1);
+		$firstWordHashFirstChar =~ tr/0123456789abcdef/..\-\-,,""''++``++/;
+		WriteMessage($firstWordHashFirstChar);
+	}
 
 	# Only if debug mode is enabled
 	state $debugOn;
@@ -2239,19 +2245,20 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 
 	state $lastText;
 
-	if ($text eq '.') {
+	if ($text eq '.' || length($text) == 1) {
 		$lastText = $text;
 
 		state @chars;
 		if (!@chars) {
 			#@chars = qw(, . - ' `); # may generate warning
-			@chars = (',', '.', '-', "'", '`');
+			#@chars = (',', '.', '-', "'", '`');
 			#@chars = ('.', ',');
 			#@chars = (qw(0 1 2 3 4 5 6 7 8 9 A B C D E F));
 		}
 
 		#my @chars=('a'..'f','0'..'9');
-		print $chars[rand @chars];
+		#print $chars[rand @chars];
+		print $text;
 		# my $randomString;
 		# foreach (1..40) {
 		# 	$randomString.=$chars[rand @chars];
@@ -2272,10 +2279,10 @@ sub WriteMessage { # Writes timestamped message to console (stdout)
 	WriteLog($text);
 	my $timestamp = GetTime();
 
-	if ($lastText eq '.') {
+	if ($lastText eq '.' || length($lastText) == 1) {
 		print "\n";
 	}
-	print "$timestamp $text\n";
+	print "\n$timestamp $text\n";
 
 	$lastText = $text;
 }
