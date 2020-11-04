@@ -7,6 +7,16 @@ die 'Script is not yet finished. Please comment this line to test it';
 #############
 # UTILITIES
 
+sub WriteLog {
+	my $text = shift;
+	print $text;
+	print "\n";
+}
+
+sub GetTime {
+	return time();
+}
+
 sub GetYes { # $message, $defaultYes ; print $message, and get Y response from the user
 	# $message is printed to output
 	# $defaultYes true:  allows pressing enter
@@ -29,6 +39,10 @@ sub GetYes { # $message, $defaultYes ; print $message, and get Y response from t
 	chomp $input;
 
 	if ($input eq 'Y' || $input eq 'y' || ($defaultYes && $input eq '')) {
+		print "====================================================\n";
+		print "====== Thank you for your vote of confidence! ======\n";
+		print "====================================================\n";
+
 		return 1;
 	}
 	return 0;
@@ -38,19 +52,46 @@ sub WriteConfigureMessage { # $message ; print a line to user
 	my $message = shift;
 	chomp $message;
 
-	WriteLog('Message: ' . $message);
-
 	my $timestamp = GetTime();
 
-	print "\n$timestamp . ' ' . $message";
+	print "$timestamp $message\n";
 
 	# AppendFile('html/status.txt', $message);
 }
 
+sub RunCommand {
+	my $command = shift;
+	print GetTime() . " " . $command;
+	my $return = `$command`;
+	return `$command`;
+}
+
+sub OpenBrowser {
+	my $url = shift;
+
+	my $whichXdg = RunCommand('which xdg-open');
+	if ($whichXdg) {
+		RunCommand("xdg-open \"$url\"");
+	}
+
+	my $whichW3m = `which w3m`;
+	if ($whichW3m) {
+		RunCommand("w3m \"$url\"");
+	}
+
+	# other methods suggested at https://stackoverflow.com/questions/5116473/linux-command-to-open-url-in-default-browser
+	# xdg-open $url
+	# python -m webbrowser '$url'
+	# gnome-open
+	# open $url
+	# x-www-browser $url
+}
+
+
 ##################
 # USER CAN READ?
 
-WriteConfigureMessage('=====');
+WriteConfigureMessage('======');
 WriteConfigureMessage('Hello!');
 
 my $canRead = GetYes('Can you read this text?');
@@ -71,6 +112,8 @@ my $yumPath = `which yum 2>/dev/null`;
 my $dnfPath = `which dnf 2>/dev/null`;
 my $aptPath = `which apt 2>/dev/null`;
 
+my $bedMade = 0;
+
 if ($yumPath) {
 	my $installYum = GetYes("yum is available. Install pre-requisite packages? ", 1);
 
@@ -79,8 +122,11 @@ if ($yumPath) {
 		my $yumResult = `$yumCommand`;
 
 		WriteConfigureMessage($yumResult);
+
+		$bedMade = 1;
 	}
 }
+
 if ($dnfPath) {
 	my $installYum = GetYes("dnf is available. Install pre-requisite packages? ", 1);
 
@@ -89,16 +135,23 @@ if ($dnfPath) {
 		my $dnfResult = `$dnfCommand`;
 
 		WriteConfigureMessage($dnfResult);
+
+		$bedMade = 1;
 	}
 }
 if ($aptPath) {
-	my $installApt = GetYes("apt is available. Install pre-requisite packages? ", 1);
+	my $aptCommand = 'sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 ImageMagick';
+	WriteConfigureMessage("apt is available. Install pre-requisite packages?");
+	WriteConfigureMessage("Actual Command: $aptCommand");
+	my $installApt = GetYes("Run command to install packages?", 1);
+
 
 	if ($installApt) {
-		my $aptCommand = 'sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 ImageMagick';
 		my $aptResult = `$aptCommand`;
 
 		WriteConfigureMessage($aptResult);
+
+		$bedMade = 1;
 	}
 }
 
@@ -111,12 +164,14 @@ if ($aptPath) {
 
 # ask if want to enable local lighttpd?
 
-my $enableLighttpd = GetYes('Enable lighttpd?');
+my $enableLighttpd = GetYes('Start local webserver and open browser?');
 
 if ($enableLighttpd) {
 	`echo 1 > config/admin/lighttpd/enable`;
 	WriteConfigureMessage('Set config/admin/lighttpd/enable=1');
-}
+
+	OpenBrowser("http://localhost:2784/");
+} # $enableLighttpd
 
 #####
 
