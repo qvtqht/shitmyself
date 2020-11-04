@@ -5,9 +5,9 @@ Message board for hackers and friends which aims to please.
 
 PHILOSOPHY
 ==========
-Every device is a good device, worth using and taking good care of.
-Every browser is enough, no browser or client should be turned away.
-It is important to be polite. It is important to try to please.
+Be kind and polite to all beings whenever possible.
+Readable source code for clarity and honesty.
+Aim to support every device, browser, and user.
 Do what user asks, wants, or is in their best interest.
 Don't ask or demand user to do anything they don't want.
 Try to make user comfortable. Do not bother user with trivia.
