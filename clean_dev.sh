@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# mkdir trash
+# mkdir trash.`date +%s`
+
 echo "rm -v cron.lock"
 rm -v cron.lock
 
