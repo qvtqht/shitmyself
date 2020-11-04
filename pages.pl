@@ -4567,9 +4567,6 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# author page, get author's id from $pageParam
 	elsif ($pageType eq 'author') {
-		my $authorKey = $pageParam;
-		my $targetPath = "author/$authorKey/index.html";
-
 		if ($pageParam =~ m/^([0-9A-F]{16})$/) {
 			$pageParam = $1;
 		} else {
@@ -4577,7 +4574,11 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			return '';
 		}
 
+		my $authorKey = $pageParam;
+		my $targetPath = "author/$authorKey/index.html";
+
 		WriteLog('MakePage: author: ' . $authorKey);
+
 		my $authorPage = GetReadPage('author', $authorKey);
 		if (!-e "$HTMLDIR/author/$authorKey") {
 			mkdir ("$HTMLDIR/author/$authorKey");
