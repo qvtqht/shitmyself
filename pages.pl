@@ -1233,12 +1233,16 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 
 		if (GetConfig('admin/js/enable')) {
 			my $jsTemplate = "if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement); } else { return true; }";
-			if ($parentCount < 10 && $parentCount => 1 && !($parentCount =~ /\\D/)) {
-				# adjust number of times it says ".parentElement"
-				$jsTemplate = str_replace('.parentElement', str_repeat('.parentElement', $parentCount), $jsTemplate);
-			} else {
+			if (
+				$parentCount > 10 ||
+				$parentCount < 1 ||
+				!($parentCount =~ /\\D/)
+			) {
 				WriteLog('GetWidgetExpand: warning: $parentCount sanity check failed');
 				return '(More2)';
+			} else {
+				# adjust number of times it says ".parentElement"
+				$jsTemplate = str_replace('.parentElement', str_repeat('.parentElement', $parentCount), $jsTemplate);
 			}
 
 			$widgetTemplate = AddAttributeToTag(
