@@ -346,22 +346,21 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					'mask_params' => 'mg',
 					'message' => '[Puzzle]'
 				},
-				{ # anything beginning with http:// or https:// and up to the next space character (or eof)
+				{ # anything beginning with http and up to next space character (or eof)
 					'token' => 'url',
-					'mask' => '^()()(http.+)$',
+					'mask' => '()()(http[\S]+)',
 					'mask_params' => 'mg',
-					'message' => '[URL]'
+					'message' => '[URL]',
+					'apply_to_parent' => 0
 				},
-				{
-					# hashtags, currently restricted to latin alphanumeric and underscore
+				{ # hashtags, currently restricted to latin alphanumeric and underscore
 					'token' => 'hashtag',
 					'mask'  => '(\#)()([a-zA-Z0-9_]+)',
 					'mask_params' => 'mgi',
 					'message' => '[HashTag]',
 					'apply_to_parent' => 1
 				},
-				{
-					# verify token, for third-party identification
+				{ # verify token, for third-party identification
 					# example: verify http://www.example.com/user/JohnSmith/
 					# must be child of pubkey item
 					'token' => 'verify',
@@ -370,8 +369,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					'message' => '[Verify]',
 					'apply_to_parent' => 1
 				},
-				{
-					# config token for setting configuration
+				{ # config token for setting configuration
 					# config/admin/anyone_can_config = allow anyone to config (for open-access boards)
 					# config/admin/signed_can_config = allow only signed users to config
 					# config/admin/cookied_can_config = allow any user (including cookies) to config
@@ -385,6 +383,18 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					'apply_to_parent' => 1
 				}
 			);
+
+			# \w word
+			# \W NOT word
+			# \s whitespace
+			# \S NOT whitespace
+			#
+			# REGEX MODES
+			# ===========
+			# m = multi-line
+			# s = multi-line
+			# g = all instances
+			# i = case-insensitive
 
 			# parses standard issue tokens, definitions above
 			# stores into @tokensFound
@@ -410,6 +420,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						@tokenLines = ($detokenedMessage =~ m/$tokenMask/mgi);
 					} elsif ($tokenMaskParams eq 'gi') {
 						@tokenLines = ($detokenedMessage =~ m/$tokenMask/gi);
+					} elsif ($tokenMaskParams eq 'g') {
+						@tokenLines = ($detokenedMessage =~ m/$tokenMask/g);
+					} else {
+						WriteLog('IndexTextFile: warning: sanity check failed: $tokenMaskParams unaccounted for');
 					}
 
 					WriteLog('IndexTextFile: found ' . scalar(@tokenLines));
@@ -524,8 +538,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							$tokenFound{'token'} eq 'access_log_hash' ||
 							$tokenFound{'token'} eq 'url'
 						) {
+							WriteLog('IndexTextFile: token_found: ' . $tokenFound{'recon'});
+
 							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
-								WriteLog('IndexTextFile: passed: $tokenFound{recon} && $tokenFound{message} && $tokenFound{param}');
 								if (@itemParents) {
 									foreach my $itemParent (@itemParents) {
 										DBAddItemAttribute($itemParent, $tokenFound{'token'}, $tokenFound{'param'}, $addedTime, $fileHash);
