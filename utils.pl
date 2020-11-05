@@ -111,12 +111,19 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_stderr';
 
 	# create directories that need to exist
-	foreach (@dirsThatShouldExist) {
-		if (!-d && !-e $_) {
-			mkdir $_;
+	foreach my $dir (@dirsThatShouldExist) {
+		if ($dir =~ m/^([a-zA-Z0-9_\/]+)$/) {
+			$dir = $1;
+		} else {
+			WriteLog('utils.pl: warning: sanity check failed during @dirsThatShouldExist');
+			WriteLog('utils.pl: $dir = ' . $dir);
+			next;
 		}
-		if (!-e $_ || !-d $_) {
-			die("$_ should exist, but it doesn't. aborting.");
+		if (!-d $dir && !-e $dir) {
+			mkdir $dir;
+		}
+		if (!-e $dir || !-d $dir) {
+			die("$dir should exist, but it doesn't. aborting.");
 		}
 	}
 }
@@ -1333,13 +1340,13 @@ sub RemoveHtmlFile { # $file ; removes existing html file
 	my $fileProvided = $file;
 	$file = "$HTMLDIR/$file";
 
-	if ($file =~ m/^([0-9a-z\/]+)$/) {
-		$file = $1;
+	if ($file =~ m/^([0-9a-z\/.]+)$/) {
+	 	$file = $1;
 		if (-e $file) {
 			unlink($file);
 		}
 	} else {
-		WriteLog('RemoveHtmlFile: warning: sanity check failed');
+		WriteLog('RemoveHtmlFile: warning: sanity check failed, $file = ' . $file);
 		return '';
 	}
 } # RemoveHtmlFile()
@@ -1999,10 +2006,31 @@ sub GpgParse {
 	}
 	WriteLog("GpgParse($filePath)");
 
+	if ($filePath =~ m/([a-zA-Z0-9\.\/]+)/) {
+		$filePath = $1;
+	} else {
+		WriteLog('GpgParse: sanity check failed on $filePath, returning');
+		return '';
+	}
+
 	my $fileHash = GetFileHash($filePath);
 
 	my $cachePathStderr = './cache/' . GetMyCacheVersion() . '/gpg_stderr';
 	my $cachePathMessage = './cache/' . GetMyCacheVersion() . '/gpg_message';
+
+	if ($cachePathStderr =~ m/^([a-zA-Z0-9_\/.]+)$/) {
+		$cachePathStderr = $1;
+	} else {
+		WriteLog('GpgParse: sanity check failed, $cachePathStderr = ' . $cachePathStderr);
+		return;
+	}
+
+	if ($cachePathMessage =~ m/^([a-zA-Z0-9_\/.]+)$/) {
+		$cachePathMessage = $1;
+	} else {
+		WriteLog('GpgParse: sanity check failed, $cachePathMessage = ' . $cachePathMessage);
+		return;
+	}
 
 	my $pubKeyFlag = 0;
 
@@ -2024,6 +2052,13 @@ sub GpgParse {
 		}
 		elsif (index($fileContents, $gpgEncrypted) > -1) {
 			$gpgCommand .= '--decrypt ';
+		}
+
+		if ($fileHash =~ m/^([0-9a-f]+)$/) {
+			$fileHash = $1;
+		} else {
+			WriteLog('GpgParse: sanity check failed, $fileHash = ' . $fileHash);
+			return;
 		}
 
 		$gpgCommand .= "$filePath ";
