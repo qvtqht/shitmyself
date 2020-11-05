@@ -391,7 +391,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 
 			UpdateUpdateTime();
 			MakeSummaryPages();
-			#	WriteIndexPages();
+			WriteIndexPages();
 		}
 
 		# if anything has changed, redo the abyss index pages
