@@ -179,13 +179,15 @@ if (isset($comment) && $comment) {
 
 			WriteLog('post.php: $newFileHash = ' . $newFileHash);
 
-			if (file_exists(GetHtmlFilename($newFileHash))) {
-				WriteLog('file_exists(GetHtmlFilename($newFileHash))');
+			$newFileHtmlPath = GetHtmlFilename($newFileHash);
+
+			if (file_exists($newFileHtmlPath)) {
+				WriteLog('file_exists($newFileHtmlPath)');
 
 				$profileId = preg_match(
 					'/[0-9A-F]{16}/',
 					file_get_contents(
-						GetHtmlFilename($newFileHash)
+						$newFileHtmlPath
 					),
 					$matches
 				);
@@ -199,20 +201,26 @@ if (isset($comment) && $comment) {
 				}
 				WriteLog('post.php: $profileId = ' . $profileId);
 				if ($profileId) {
+					MakePage($profileId);
 					$redirectUrl = '/author/' . $profileId . '/index.html';
 				} else {
 					$redirectUrl = $fileUrlPath;
 				}
+				WriteLog('post.php: $redirectUrl = ' . $redirectUrl);
+				
 				if (file_exists('.' . $redirectUrl)) {
 					RedirectWithResponse(
 						$redirectUrl,
 						"Success! Profile created! <small>in $finishTime"." seconds</small>"
 					);
+				} else {
+					WriteLog("post.php: getcwd() = " . getcwd());
+					WriteLog("post.php: file missing, no redirect: " . '.' . $redirectUrl);
 				}
 
 				WriteLog('post.php: ... continue after redirect? sadface');
 			} else {
-				WriteLog('post.php: file_exists(GetHtmlFilename($newFileHash)) FALSE');
+				WriteLog('post.php: file_exists($newFileHtmlPath) FALSE');
 			}
 		} # strpos($comment, 'PUBLIC KEY BLOCK')
 
