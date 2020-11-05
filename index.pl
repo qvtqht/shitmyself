@@ -810,7 +810,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		if ($message) {
 			# cache the processed message text
-			my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$fileHash";
+			my $messageCacheName = GetMessageCacheName($fileHash);
 			WriteLog("IndexTextFile: \n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
 			PutFile($messageCacheName, $message);
 		} else {
