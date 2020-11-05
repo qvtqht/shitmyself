@@ -4,14 +4,14 @@
 
 <font face=arial>
 <table cellspacing=0 bgcolor="$colorWindow" cellpadding=3 border=3 style="border: $borderDialog;" class=dialog id=mydiv>
-	<tr bgcolor=$colorTitlebar class=titlebar style="border:0">
+	<tr bgcolor=$colorTitlebar class=titlebar>
 		<td colspan=2 id=mydivheader>
 			<font color=$colorTitlebarText><b>Untitled</b></font>
 		</td>
 	</tr>
 	
 	<tr bgcolor=$colorWindow class=menubar>
-		<td colspan=2 style="border:0">
+		<td colspan=2>
 		<p>
 			<a href=#>Agree</a>;
 			<a href=#>Reply</a>;
@@ -47,7 +47,7 @@
 <form id=formCurId name=formCurId style="display:none">
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+			<tr bgcolor="$colorTitlebar" class=titlebar>
 				<td>
 					<font color=$colorTitlebarText><b></b></font>
 				</td>
