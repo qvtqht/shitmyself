@@ -3639,21 +3639,22 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $etcPage = GetEtcPage();
 	PutHtmlFile("etc.html", $etcPage);
 
-	# Target page for the submit page
-	my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
-#	$postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
-	$postPage .= GetTemplate('maincontent.template');
-	my $postTemplate = GetTemplate('page/post.template');
-	$postPage .= $postTemplate;
-	$postPage .= GetPageFooter();
-	$postPage = InjectJs($postPage, qw(settings avatar post));
-	if (GetConfig('admin/js/enable')) {
-		$postPage =~ s/<body /<body onload="makeRefLink();" /;
-		$postPage =~ s/<body>/<body onload="makeRefLink();">/;
+	{
+		# Target page for the submit page
+		my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
+		# $postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
+		$postPage .= GetTemplate('maincontent.template');
+		my $postTemplate = GetTemplate('page/post.template');
+		$postPage .= $postTemplate;
+		$postPage .= GetPageFooter();
+		$postPage = InjectJs($postPage, qw(settings avatar post));
+		if (GetConfig('admin/js/enable')) {
+			$postPage =~ s/<body /<body onload="makeRefLink();" /;
+			$postPage =~ s/<body>/<body onload="makeRefLink();">/;
+		}
+		WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
+		PutHtmlFile("post.html", $postPage);
 	}
-	WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
-	PutHtmlFile("post.html", $postPage);
-	
 	
 	# Ok page
 	my $okPage;
