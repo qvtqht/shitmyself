@@ -1,0 +1,7 @@
+<!-- js_status.template-->
+<span class=advanced id=jsStatus>
+<noscript>NoJS</noscript>
+<form name=jss id=jss>
+<input type=text name=basic id=jssBasic size=5>
+</form>
+<!-- / js_status.template -->
