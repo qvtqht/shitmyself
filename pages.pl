@@ -1239,7 +1239,11 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 				!($parentCount =~ /\\D/)
 			) {
 				WriteLog('GetWidgetExpand: warning: $parentCount sanity check failed');
-				return '(More2)';
+				if (GetConfig('admin/debug')) {
+					return '(More2)';
+				} else {
+					return '';
+				}
 			} else {
 				# adjust number of times it says ".parentElement"
 				$jsTemplate = str_replace('.parentElement', str_repeat('.parentElement', $parentCount), $jsTemplate);
