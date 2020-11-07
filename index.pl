@@ -468,7 +468,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# adding messages tagged #todo, #brainstorm, and #bug
 				# to their respective files under doc/*.txt
 
-				if ($hasToken{'meta'}) {
+				if (1 || $hasToken{'meta'}) {
 					# only if already tagged #meta
 
 					#todo this can go under tagset/meta ?????
