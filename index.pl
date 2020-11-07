@@ -538,6 +538,9 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							$tokenFound{'token'} eq 'access_log_hash' ||
 							$tokenFound{'token'} eq 'url'
 						) {
+							# these tokens are applied to:
+							# 	if item has parent, then to the parent
+							# 		otherwise: to self
 							WriteLog('IndexTextFile: token_found: ' . $tokenFound{'recon'});
 
 							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
@@ -551,7 +554,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							} else {
 								WriteLog('IndexTextFile: warning: ' . $tokenFound{'token'} . ' (generic): sanity check failed');
 							}
-						} # title, access_log_hash, url
+						} # title, access_log_hash, url, alt
 
 						if ($tokenFound{'token'} eq 'config') {
 							if (
@@ -577,7 +580,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									$configValue = trim($configValue);
 								}
 
-								if (ConfigKeyValid($configKeyActual)) {
+								if (IsAdmin($gpgKey) || ConfigKeyValid($configKeyActual)) {
+									# admins can write to any config
+									# non-admins can only write to existing config keys (and not under admin/)
+
 									# #todo create a whitelist of safe keys non-admins can change
 
 									DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
