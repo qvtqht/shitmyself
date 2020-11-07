@@ -2376,13 +2376,6 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		push @scriptNames, 'fresh';
 	}
 
-	if (GetConfig('admin/force_profile')) {
-		# if force_profile is enabled, automatically add it
-		#todo move this upwards, shouldn't be decided here
-
-		push @scriptNames, 'force_profile';
-	}
-
 	if (GetConfig('admin/js/dragging')) {
 		push @scriptNames, 'dragging'; 
 	}
@@ -2547,11 +2540,6 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
 		# if clock is enabled, automatically add it
 		push @scriptNames, 'fresh';
-	}
-
-	if (GetConfig('admin/force_profile')) {
-		# if force_profile is enabled, automatically add it
-		push @scriptNames, 'force_profile';
 	}
 
 	#output list of all the scripts we're about to include
