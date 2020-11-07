@@ -140,7 +140,7 @@ if ($dnfPath) {
 	}
 }
 if ($aptPath) {
-	my $aptCommand = 'sudo apt-get install uri-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 ImageMagick';
+	my $aptCommand = 'sudo apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick';
 	WriteConfigureMessage("apt is available. Install pre-requisite packages?");
 	WriteConfigureMessage("Actual Command: $aptCommand");
 	my $installApt = GetYes("Run command to install packages?", 1);
