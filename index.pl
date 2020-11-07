@@ -572,10 +572,15 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								my $configKeyActual = '';
 								if ($configKey && defined($configValue) && $configValue ne '') {
 									# alias 'theme' to 'html/theme'
-									$configKeyActual = $configKey;
-									if ($configKey eq 'theme') {
+									# $configKeyActual = $configKey;
+									# if ($configKey eq 'theme') {
+									# 	# alias theme to html/theme
+									# 	$configKeyActual = 'html/theme';
+									# }
+									if (!-e "default/$configKey" && -e "default/html/$configKey") {
 										# alias theme to html/theme
-										$configKeyActual = 'html/theme';
+										# todo config/admin/alias_html_config flag
+										$configKeyActual = 'html/' . $configKey;
 									}
 									$configValue = trim($configValue);
 								}
