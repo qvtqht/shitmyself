@@ -7,7 +7,7 @@ use Cwd qw(cwd);
 use File::Copy qw(copy);
 
 my $date = '';
-if (`date +%s` =~ m/^([0-9]{10})/) { #todo extend number of accepted chars #security #taint
+if (`date +%s` =~ m/^([0-9]{10})/) { #good for a few years
 	$date = $1;
 } else {
 	die "\$date should be a decimal number, but it's actually $date";
