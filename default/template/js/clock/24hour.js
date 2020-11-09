@@ -21,9 +21,21 @@ function setClock() {
                     seconds = '0' + '' + seconds;
                 }
 
-                timeValue = hours + ':' + minutes + ':' + seconds;
+                if (!window.clockLastSec || window.clockLastSec != seconds) {
+                	window.clockLastSec = seconds;
 
-                document.frmTopMenu.txtClock.value = timeValue;
+					if (window.clockColonState) {
+						timeValue = hours + ':' + minutes;
+						window.clockColonState = 0;
+					} else {
+						timeValue = hours + ' ' + minutes;
+						window.clockColonState = 1;
+					}
+
+					if (document.frmTopMenu.txtClock.value != timeValue) {
+						document.frmTopMenu.txtClock.value = timeValue;
+					}
+				}
             }
 		}
 	}

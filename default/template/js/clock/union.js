@@ -1,5 +1,4 @@
 // == begin clock/union.js
-var timeoutClock;
 function setClock() {
 	if (document.frmTopMenu) {
 		if (document.frmTopMenu.txtClock) {
@@ -50,10 +49,7 @@ function setClock() {
             }
 		}
 	}
-	timeoutClock = window.setTimeout('setClock()', 50);
-	return true;
-} // setClock()
 
-timeoutClock = window.setTimeout('setClock()', 50);
+} // setClock()
 
 // == end clock/union.js

@@ -24,6 +24,10 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 // typically called from body.onload
 	//alert('debug: OnLoadEverything() begins');
 
+	if (window.setClock) {
+		window.eventLoopSetClock = 1;
+		setClock();
+	}
 	if (window.ItsYou) {
 		ItsYou();
 	}
@@ -108,6 +112,10 @@ function EventLoop () { // (currently unused) for calling things which need to h
 		} else {
 			// do nothing
 		}
+	}
+
+	if (window.eventLoopSetClock && window.setClock) {
+		setClock();
 	}
 
 	if (window.eventLoopShowAdvanced && window.ShowAdvanced) {

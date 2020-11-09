@@ -2008,6 +2008,20 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 			# default clock
 			$clock = GetTemplate('widget/clock.template');
 			$clock =~ s/\$currentTime/$currentTime/;
+
+			my $sizeConfig = GetConfig('html/clock_format');
+			if ($sizeConfig eq '24hour') {
+				$sizeConfig = 6;
+			} elsif ($sizeConfig eq 'epoch') {
+				$sizeConfig = 11;
+			} elsif ($sizeConfig eq 'union') {
+				$sizeConfig = 15;
+			} else {
+				$sizeConfig = 15;
+			}
+			if ($sizeConfig) {
+				$clock = str_replace('size=15', "size=$sizeConfig", $clock);
+			}
 		}
 		#
 #		$currentTime = trim($currentTime);

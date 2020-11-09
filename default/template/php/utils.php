@@ -797,9 +797,10 @@ function GetClockFormattedTime () { // returns current time in appropriate forma
 		// #todo make it perl-equivalent with localtime($time)
         $hours = strftime('%H', $time);
         $minutes = strftime('%M', $time);
-        $seconds = strftime('%S', $time);
+        // $seconds = strftime('%S', $time);
 
-        $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+        // $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+        $clockFormattedTime = $hours . ':' . $minutes;
 
 		WriteLog("GetClockFormattedTime: return $clockFormattedTime");
 

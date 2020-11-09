@@ -3,8 +3,6 @@
 // NOTE: this does not work for some reason yet
 // it is not integrated either, this is an orphan file until this notice is removed
 
-var timeoutClock;
-
 function setClock() {
 	if (document.frmTopMenu) {
 		if (document.frmTopMenu.txtClock) {
@@ -16,10 +14,6 @@ function setClock() {
 			}
 		}
 	}
-
-	//timeoutClock = window.setTimeout('setClock()', 500);
 }
-
-timeoutClock = window.setTimeout('setClock()', 500);
 
 // == end clock/indicator.js

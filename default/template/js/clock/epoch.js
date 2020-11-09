@@ -1,7 +1,5 @@
 // == begin clock/epoch.js
 
-var timeoutClock;
-
 function setClock() {
 	if (document.frmTopMenu) {
 		if (document.frmTopMenu.txtClock) {

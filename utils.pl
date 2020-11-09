@@ -974,9 +974,10 @@ sub GetClockFormattedTime() { # returns current time in appropriate format from 
 
         my $hours = strftime('%H', localtime $time);
         my $minutes = strftime('%M', localtime $time);
-        my $seconds = strftime('%S', localtime $time);
+        # my $seconds = strftime('%S', localtime $time);
 
-        my $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
+        my $clockFormattedTime = $hours . ':' . $minutes;
+        # my $clockFormattedTime = $hours . ':' . $minutes . ':' . $seconds;
 
         return $clockFormattedTime;
     }
