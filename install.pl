@@ -2,7 +2,7 @@
 
 use strict;
 
-die 'Script is not yet finished. Please comment this line to test it';
+#die 'Script is not yet finished. Please comment this line to test it';
 
 #############
 # UTILITIES
