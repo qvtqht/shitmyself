@@ -1,9 +1,5 @@
 <!-- item_title_link2.template -->
-<tr bgcolor=$colorTitlebar class=titlebar style="border:0;">
-	<td>
-		<b>
-			<font color=$colorTitlebarText>$itemTitle</font>
-		</b>
-	</td>
-</tr>
+<b>
+	<font color=$colorTitlebarText>$itemTitle</font>
+</b>
 <!-- / item_title_link2.template -->

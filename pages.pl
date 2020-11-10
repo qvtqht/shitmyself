@@ -1454,25 +1454,16 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# if template_name is specified, use that as the template
 			$itemTemplate = GetTemplate($file{'template_name'});
 		} else {
-			# default template
-			if (length($message) <= 140) {
-				# for text 140 characters or fewer, use item-short.template
-				$itemTemplate = GetTemplate("item/item-short.template");
-			} else {
-				#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
-				my %windowParams;
-				$windowParams{'body'} = GetTemplate("item/item.template");
-				$windowParams{'title'} = '$itemTitleTemplate';
-				$windowParams{'headings'} = 'haedigns';
-				$windowParams{'status'} = GetTemplate("item/status_bar.template");;
-				$windowParams{'menu'} = '$quickVoteButtonGroup';
+			#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
+			my %windowParams;
+			$windowParams{'body'} = GetTemplate("item/item.template");
+			$windowParams{'title'} = '$itemTitle';
+			# $windowParams{'headings'} = 'haedigns';
+			$windowParams{'status'} = GetTemplate("item/status_bar.template");;
+			$windowParams{'menu'} = '$quickVoteButtonGroup';
 
-				$itemTemplate = GetWindowTemplate2(\%windowParams);
-				# if (GetConfig('replies')) {
-				# 	$itemTemplate .= '<replies></replies>';
-				# }
-				# $itemTemplate = GetTemplate("item/item.template");
-			}
+			$itemTemplate = GetWindowTemplate2(\%windowParams);
+			$itemTemplate .= '<replies></replies>';
 		}
 
 		# $itemTemplate = str_replace(
@@ -1554,17 +1545,13 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		my $addedTime = GetTimestampWidget(DBGetAddedTime($fileHash)); #todo optimize
 		my $itemTitle = $file{'item_title'};
 
-		if ($file{'item_title'}) {
-			my $itemTitleTemplate = GetTemplate('item_title_link2.template');
-
-			my $itemTitle = HtmlEscape($file{'item_title'});
-
-			$itemTitleTemplate =~ s/\$itemTitle/$itemTitle/g;
-			$itemTitleTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
-
-			$itemTemplate =~ s/\$itemTitleTemplate/$itemTitleTemplate/g;
-		} else {
-			$itemTemplate =~ s/\$itemTitleTemplate//g;
+		{ #todo refactor this to not have title in the template
+			if ($file{'item_title'}) {
+				my $itemTitle = HtmlEscape($file{'item_title'});
+				$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
+			} else {
+				$itemTemplate =~ s/\$itemTitle/Untitled/g;
+			}
 		}
 
 		my $itemText = '';

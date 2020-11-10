@@ -256,38 +256,32 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 // presumably a <tr> but doesn't matter really because SetElementVisible() is used
 // pretty basic, but it works.
 	if (t.innerHTML) {
-		if (t.innerHTML == 'v') {
-			t.innerHTML = 'x';
-			if (t.parentElement) {
-				var p = t;
-				while (p.nodeName != 'TABLE') {
-					p = p.parentElement;
-					alert(p.nodeName);
-					if (p.getElementsByClassName) {
-						var content = p.getElementsByClassName('content');
-						if (content.length) {
-							SetElementVisible(content[0], 'initial');
-						}
-					}
-				}
-			}
+		if (t.firstChild.nodeName == 'FONT') {
+			// small hack in case link has a font tag inside
+			// the font tag is typically used to style the link a different color for older browsers
+			t = t.firstChild;
+		}
+		var newVisible = 'initial';
+		if (t.innerHTML == 'dn') {
+			t.innerHTML = 'up';
+			// t.innerHTML = '[up]';
 		} else {
-			t.innerHTML = 'v';
-			if (t.parentElement) {
-				var p = t;
-				while (p.nodeName != 'TABLE') {
-					p = p.parentElement;
-					alert(p.nodeName);
-					if (p.getElementsByClassName) {
-						var content = p.getElementsByClassName('content');
-						if (content.length) {
-							SetElementVisible(content[0], 'none');
-						}
+			t.innerHTML = 'dn';
+			newVisible = 'none';
+		}
+		if (t.parentElement) {
+			var p = t;
+			while (p.nodeName != 'TABLE') {
+				p = p.parentElement;
+				if (p.getElementsByClassName) {
+					var content = p.getElementsByClassName('content');
+					if (content.length) {
+						SetElementVisible(content[0], newVisible);
 					}
 				}
 			}
 		}
 	}
-} # CollapseWin()
+} // CollapseWin()
 
 // == end utils.js
