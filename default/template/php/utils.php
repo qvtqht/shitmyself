@@ -1157,5 +1157,3 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 	//return $fileUrlPath;
 	return $hash;
 } // ProcessNewComment
-
-
