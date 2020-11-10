@@ -1,14 +1,4 @@
 // == begin voting.js
-//
-//function PingUrl(url) { // loads arbitrary url
-//// by creating an <img src=url on the page
-//// it ain't pretty, but it's compatible
-//	var img = document.createElement('img');
-//	img.setAttribute("src", url);
-//	document.body.appendChild(img);
-//	// todo get rid of image eventually
-//	// server-side shove an image into it as needed
-//}
 
 function PingUrlCallback () {
 	var xmlhttp = window.xmlhttp;
@@ -26,6 +16,11 @@ function PingUrlCallback () {
 function PingUrl (url) { // loads arbitrary url via image or xhr
 // compatible with most js
 	//alert('DEBUG: PingUrl() begins');
+
+	// another option below
+	// var img = document.createElement('img');
+    // img.setAttribute("src", url);
+    // document.body.appendChild(img);
 
 	if (window.XMLHttpRequest) {
 		//alert('DEBUG: PingUrl: window.XMLHttpRequest was true');
@@ -50,7 +45,6 @@ function PingUrl (url) { // loads arbitrary url via image or xhr
 
 		if (document.images) {
 			//alert('DEBUG: PingUrl: document.images was true');
-
 			if (document.images.length) {
 				// use last image on page, if possible. this should be the special pixel image.
 				var img = document.images[document.images.length - 1];
