@@ -1,7 +1,5 @@
 // == begin clock/24hour.js
 
-var timeoutClock;
-
 function setClock() {
 	if (document.frmTopMenu) {
 		if (document.frmTopMenu.txtClock) {
@@ -39,10 +37,6 @@ function setClock() {
             }
 		}
 	}
-
-	timeoutClock = window.setTimeout('setClock()', 50);
 }
-
-timeoutClock = window.setTimeout('setClock()', 50);
 
 // == end clock/24hour.js

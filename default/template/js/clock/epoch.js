@@ -17,10 +17,6 @@ function setClock() {
 			}
 		}
 	}
-
-	timeoutClock = window.setTimeout('setClock()', 500);
 }
-
-timeoutClock = window.setTimeout('setClock()', 500);
 
 // == end clock/epoch.js
