@@ -1,0 +1,10 @@
+<!-- titlebar_with_button.template -->
+<tr bgcolor="$colorTitlebar" class=titlebar style="border:0">
+	<td colspan=$contentColumnCount>
+		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
+<!--		<a href=#permalink><font color="#ffffff">#</font></a>-->
+		<a href=#collapseWin onclick="if (window.CollapseWin) { CollapseWin(this); }"><font color="#ffffff">x</font></a>
+		<br>
+	</td>
+</tr>
+<!-- / titlebar_with_button.template -->

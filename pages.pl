@@ -198,6 +198,13 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
+sub GetWindowTemplate2 {
+	my $paramHashRef = shift;
+	my %param = %$paramHashRef;
+
+	return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
+}
+
 sub GetWindowTemplate { #: body, title, headings, status, menu
 # returns template for html-table-based-"window"
 
@@ -238,15 +245,16 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 
 	# titlebar, if there is a title
 	if ($windowTitle) {
-		if (1 || $columnHeadings) {
+		my $showButtons = 1;
+		if ($showButtons) {
+			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
+			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
+			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
+			#$contentColumnCount = 2;
+		} else {
 			my $windowTitlebar = GetTemplate('window/titlebar.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
 			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
-		} else {
-			my $windowTitlebar = GetTemplate('window/titlebar_with_x.template');
-			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
-			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
-			$contentColumnCount = 2;
 		}
 	} else {
 		$windowTemplate =~ s/\$windowTitlebar//g;
@@ -1451,7 +1459,19 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				# for text 140 characters or fewer, use item-short.template
 				$itemTemplate = GetTemplate("item/item-short.template");
 			} else {
-				$itemTemplate = GetTemplate("item/item.template");
+				#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
+				my %windowParams;
+				$windowParams{'body'} = GetTemplate("item/item.template");
+				$windowParams{'title'} = '$itemTitleTemplate';
+				$windowParams{'headings'} = 'haedigns';
+				$windowParams{'status'} = GetTemplate("item/status_bar.template");;
+				$windowParams{'menu'} = '$quickVoteButtonGroup';
+
+				$itemTemplate = GetWindowTemplate2(\%windowParams);
+				# if (GetConfig('replies')) {
+				# 	$itemTemplate .= '<replies></replies>';
+				# }
+				# $itemTemplate = GetTemplate("item/item.template");
 			}
 		}
 

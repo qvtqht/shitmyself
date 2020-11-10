@@ -1,0 +1,11 @@
+<!-- status_bar.template -->
+<a href="$permalinkHtml">$addedTime</a>;
+$authorLink;
+<span class=advanced>
+	<a
+		href="$permalinkHtml#reply"
+		onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }"
+	>reply($replyCount)</a>;
+</span>
+$itemFlagButton
+<!-- status_bar.template -->
