@@ -176,11 +176,6 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 //		$scriptNames[] = 'fresh';
 //	}
 //
-//	if (GetConfig('admin/force_profile')) {
-//		// if force_profile is enabled, automatically add it
-//		$scriptNames[] = 'force_profile';
-//	}
-//
 	//output list of all the scripts we're about to include
 	$scriptNamesList = implode(' ', $scriptNames);
 
@@ -294,10 +289,11 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 
 	if (GetConfig('admin/php/regrow_404_pages')) {
 		WriteLog('HandleNotFound: admin/php/regrow_404_pages was true');
-
 		$SCRIPTDIR = GetScriptDir();
+		WriteLog('HandleNotFound: $SCRIPTDIR = ' . $SCRIPTDIR);
 
 		if (preg_match('/^\/[a-f0-9]{2}\/[a-f0-9]{2}\/([a-f0-9]{8})/', $path, $itemHashMatch)) {
+			# Item URL in the form: /ab/01/ab01cd23.html
 			WriteLog('HandleNotFound: found item hash');
 			$itemHash = $itemHashMatch[1];
 			$pagesPlArgument = $itemHash;
@@ -334,20 +330,21 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 
 		if (isset($pagesPlArgument) && $pagesPlArgument) {
+			# call pages.pl to generate the page
 			$pwd = getcwd();
 			WriteLog('$pwd = ' . $pwd);
 
-			WriteLog("cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument");
+			WriteLog("HandleNotFound: cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument");
 			WriteLog(`cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument`);
 
-			WriteLog("cd $pwd");
+			WriteLog("HandleNotFound: cd $pwd");
 			WriteLog(`cd $pwd`);
 		}
 
 		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
 
 		if ($pathRel && file_exists($pathRel)) {
-			WriteLog('route.php: $pathRel exist: ' . $pathRel);
+			WriteLog('HandleNotFound: $pathRel exist: ' . $pathRel);
 			$html = file_get_contents($pathRel);
 		}
 	}
@@ -361,17 +358,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 	}
 
-	if ((!isset($html) || !$html) && file_exists('404.html')) {
-		// something strange happened, and $html is still blank
-		// try to get 404.html into it
-		WriteLog('HandleNotFound: warning: Fallback 1 which should not happen');
-		$html = file_get_contents('404.html');
-	}
-
 	if (!isset($html) || !$html) {
+		// something strange happened, and $html is still blank
 		// evidently, 404.html didn't work, just use some hard-coded html
-		WriteLog('HandleNotFound: warning: Fallback 2 which should not happen');
-		$html = '<html><body>404</body></html>';
+		WriteLog('HandleNotFound: warning: 404.html missing, fallback');
+		$html = '<html>'.
+			'<head><title>404</title></head>'.
+			'<body><h1>404 Message Received</h1><p>Something went wrong, please try again later. Thank you.</body>'.
+			'</html>';
 	}
 
 	return $html;
