@@ -44,7 +44,7 @@ Voting on author fingerprints does not work, even though the buttons on the auth
 Lighttpd directory listings cause JS error in NN3
 	Partially remediated by forbidding directory listings, showing 404 page instead
 
-Cookie-based id is not applied to many actions #todo
+Cookie-based id is not applied to many actions
 	Fix to come
 
 Cookie-based auth and localstorage+OpenPGP-based auth are not perfectly synced up
@@ -104,7 +104,7 @@ Code Issues
 ===========
 In js, there is inconsistent capitalization, some camel, some capitalized
 
-Quite a few #todos throughout the code
+Quite a few #to\dos throughout the code
 
 
 Browser Issues

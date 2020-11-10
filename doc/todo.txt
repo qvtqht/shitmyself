@@ -1,3 +1,6 @@
+Compatible Mode
+	Rename from Accessibility Mode
+
 Being all caps makes html tags stand out more in a sea of text
 
 Instrument panel
@@ -75,7 +78,7 @@ admin imprint key
 	note: you can't burn electrons
 
 .js files can fall behind in version
-	todo:self-check against etag somehow
+	self-check against etag somehow
 
 more testing with failed db connection
 	fallback solutions
@@ -284,8 +287,6 @@ if light mode default
 			pretty mode
 			lightweight mode
 ===
-
-config/admin/force_profile is broken
 
 top menu should be refreshed based on settings
 	hide some pages if they're not possible
