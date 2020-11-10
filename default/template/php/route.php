@@ -320,10 +320,12 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/etc.html' ||
 			$path == '/events.html' ||
 			$path == '/tags.html' ||
+			$path == '/votes.html' ||
 			$path == '/settings.html' ||
 			$path == '/help.html' ||
 			$path == '/search.html' ||
-			$path == '/manual.html'
+			$path == '/manual.html' ||
+			$path == '/index0.html'
 		) {
 			WriteLog('HandleNotFound: found a summary page');
 			$pagesPlArgument = '--summary';
