@@ -55,7 +55,7 @@ a:focus, a:active {
     background-color: orange !important;
 }
 textarea:focus {
-    border: 3pt solid orange;
+    background-color: #fff0e0;
 }
 input:focus {
     background-color: orange;
