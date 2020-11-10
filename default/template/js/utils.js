@@ -247,5 +247,47 @@ function newA (href, target, innerHTML, parent) { // makes new a element and app
 	return newLink;
 }
 
+function CollapseWin (t) { // collapses or expands window based on t's caption
+// t is presumed to be clicked element's this, but can be any other element
+// if t's caption is 'v', window is re-expanded
+// if 'x' (or anything else) collapses window
+// this is done by navigating up until a table is reached
+// and then hiding the first class=content element within
+// presumably a <tr> but doesn't matter really because SetElementVisible() is used
+// pretty basic, but it works.
+	if (t.innerHTML) {
+		if (t.innerHTML == 'v') {
+			t.innerHTML = 'x';
+			if (t.parentElement) {
+				var p = t;
+				while (p.nodeName != 'TABLE') {
+					p = p.parentElement;
+					alert(p.nodeName);
+					if (p.getElementsByClassName) {
+						var content = p.getElementsByClassName('content');
+						if (content.length) {
+							SetElementVisible(content[0], 'initial');
+						}
+					}
+				}
+			}
+		} else {
+			t.innerHTML = 'v';
+			if (t.parentElement) {
+				var p = t;
+				while (p.nodeName != 'TABLE') {
+					p = p.parentElement;
+					alert(p.nodeName);
+					if (p.getElementsByClassName) {
+						var content = p.getElementsByClassName('content');
+						if (content.length) {
+							SetElementVisible(content[0], 'none');
+						}
+					}
+				}
+			}
+		}
+	}
+} # CollapseWin()
 
 // == end utils.js
