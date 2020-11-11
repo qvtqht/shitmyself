@@ -424,17 +424,17 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 			my $aref;
 			my $sth;
 
-#			try {
-#
-#			} catch {
-#				WriteMessage('SqliteQuery2: warning: error');
-#				WriteMessage('SqliteQuery2: query: ' . $query);
-#
-#				WriteLog('SqliteQuery2: warning: error');
-#				WriteLog('SqliteQuery2: query: ' . $query);
-#
-#				return;
-#			};
+			# try {
+			#
+			# } catch {
+			# 	WriteMessage('SqliteQuery2: warning: error');
+			# 	WriteMessage('SqliteQuery2: query: ' . $query);
+			#
+			# 	WriteLog('SqliteQuery2: warning: error');
+			# 	WriteLog('SqliteQuery2: query: ' . $query);
+			#
+			# 	return;
+			# };
 
 			$sth = $dbh->prepare($query);
 			$sth->execute(@queryParams);
@@ -543,7 +543,6 @@ sub SqliteQuery3 { # performs sqlite query via sqlite3 command
 #}
 
 sub DBGetVotesForItem { # Returns all votes (weighed) for item
-
 	my $fileHash = shift;
 
 	if (!IsSha1($fileHash)) {
@@ -1834,7 +1833,7 @@ sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute no
 
 	my $results = SqliteQuery($query);
 	return $results;
-} #DBGetItemAttribute()
+} # DBGetItemAttribute()
 
 sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add attribute to item
 # currently no constraints
