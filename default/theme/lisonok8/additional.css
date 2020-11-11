@@ -62,5 +62,9 @@ a:focus, a:active, input:focus, input:active {
 input:focus {
     background-color: orange;
 }
+.content {
+    border-radius: 8pt;
+    border: 1pt double $colorBackground;
+}
 
 /* end theme/lisonok8/additional.css */
