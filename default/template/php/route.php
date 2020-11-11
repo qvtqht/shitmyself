@@ -871,6 +871,8 @@ if (GetConfig('admin/php/route_enable')) {
 
 				if (!$handle && GetConfig('admin/php/alias_lookup')) {
 					$handle = GetAlias($fingerprint);
+				} else {
+					$handle = 'Guest';
 				}
 
 				// $html = str_replace('<span id=spanSignedInStatus></span>', '<span id=spanSignedInStatus class=beginner><p><b>Status: You are signed in</b></p></span>', $html);
