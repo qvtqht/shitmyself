@@ -86,6 +86,8 @@ sub SqliteMakeTables { # creates sqlite schema
 	}
 
 	# wal
+	# this switches to write-ahead log mode for sqlite
+	# reduces problems with concurrent access
 	SqliteQuery2("PRAGMA journal_mode=WAL;");
 
 	# author
