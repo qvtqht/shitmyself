@@ -1814,16 +1814,23 @@ sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute no
 	my $attribute = shift;
 
 	if ($fileHash) {
-		$fileHash =~ s/[^a-f0-9,]//g;
+		if ($fileHash =~ m/[^a-f0-9]/) {
+			WriteLog('DBGetItemAttribute: warning: sanity check failed on $fileHash');
+			return '';
+		} else {
+			$fileHash =~ s/[^a-f0-9]//g;
+		}
 	} else {
-		return;
+		return '';
 	}
 	if (!$fileHash) {
-		return;
+		WriteLog('DBGetItemAttribute: warning: where is $fileHash?');
+		return '';
 	}
 
 	if ($attribute) {
 		$attribute =~ s/[^a-zA-Z0-9_]//g;
+		#todo add sanity check
 	} else {
 		$attribute = '';
 	}
