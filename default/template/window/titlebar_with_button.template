@@ -1,8 +1,8 @@
 <!-- titlebar_with_button.template -->
 <tr bgcolor="$colorTitlebar" class=titlebar>
 	<td colspan=$contentColumnCount>
+		<a href="#" class=btnClose onclick="if (window.CollapseWin) { return CollapseWin(this); }">[hide]</a>
 		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
-		<a href="#collapseWin" style="float:right" onclick="if (window.CollapseWin) { return CollapseWin(this); }"><font color="#ffffff">[hide]</font></a>
 		<br>
 	</td>
 </tr>
