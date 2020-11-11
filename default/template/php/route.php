@@ -979,7 +979,7 @@ if (GetConfig('admin/php/route_enable')) {
 				 	"<style><!--" .
 					"\n" .
 					".advanced{ display:none }" .
-					"/* assist ShowAdvanced() in pre-hiding .advanced elements */" .
+					"/* assist ShowAdvanced() in pre-hiding elements with class=advanced */" .
 					"\n" .
 					"--></style>" .
 					"</head>",
