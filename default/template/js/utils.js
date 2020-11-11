@@ -262,11 +262,11 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 			t = t.firstChild;
 		}
 		var newVisible = 'initial';
-		if (t.innerHTML == 'dn') {
-			t.innerHTML = 'up';
+		if (t.innerHTML == '[show]') {
+			t.innerHTML = '[hide]';
 			// t.innerHTML = '[up]';
 		} else {
-			t.innerHTML = 'dn';
+			t.innerHTML = '[show]';
 			newVisible = 'none';
 		}
 		if (t.parentElement) {
@@ -277,11 +277,13 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 					var content = p.getElementsByClassName('content');
 					if (content.length) {
 						SetElementVisible(content[0], newVisible);
+						return false;
 					}
 				}
 			}
 		}
 	}
+	return true;
 } // CollapseWin()
 
 // == end utils.js

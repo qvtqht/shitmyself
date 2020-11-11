@@ -2,7 +2,7 @@
 <tr bgcolor="$colorTitlebar" class=titlebar>
 	<td colspan=$contentColumnCount>
 		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
-		<a href="#collapseWin" style="float:right" onclick="if (window.CollapseWin) { CollapseWin(this); }"><font color="#ffffff">up</font></a>
+		<a href="#collapseWin" style="float:right" onclick="if (window.CollapseWin) { return CollapseWin(this); }"><font color="#ffffff">[hide]</font></a>
 		<br>
 	</td>
 </tr>
