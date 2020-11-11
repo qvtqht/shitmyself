@@ -1323,11 +1323,6 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 		WriteLog('AddAttributeToTag: warning: nothing was changed');
 	}
 
-	# #todo this is sub-optimal
-	# $html =~ s/\<$tag\w/<$tag $tagAttribute /i;
-	# $html =~ s/\<$tag/<$tag $tagAttribute /i; #  is this right/necessary? #todo
-	# $html =~ s/\<$tag>/<$tag $tagAttribute>/i;
-
 	WriteLog('AddAttributeToTag: $html after: ' . $html);
 
 	return $html;
