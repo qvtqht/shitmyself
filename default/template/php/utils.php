@@ -719,7 +719,7 @@ function GetThemeColor ($colorName) { // returns theme color based on html/theme
 	$color = GetThemeAttribute($colorName);
 
 	if (!$color) {
-		$color = 'red';
+		$color = '#00ff00';
 		WriteLog("GetThemeColor: WARNING: Value for $colorName not found");
 	}
 
