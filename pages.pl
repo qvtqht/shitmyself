@@ -2377,19 +2377,20 @@ sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
 sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my $html = shift;     # html we're going to inject into
 
+	if (!$html || trim($html) eq '') {
+		WriteLog('InjectJs: warning: $html is missing, returning');
+		return '';
+	}
+
 	if (!GetConfig('admin/js/enable')) {
 		# if js is disabled globally, abort
-
-		WriteLog("InjectJs: WARNING: InjectJs() called, but admin/js/enable is false");
-
+		WriteLog('InjectJs: warning: InjectJs() called when admin/js/enable is false');
 		return $html;
 	}
 
 	my @scriptNames = @_; # array of names of script templates (minus the .js suffix)
-
 	my $scriptsText = '';  # will contain all the js we want to inject
 	my $scriptsComma = ''; # separator between scripts, will be set to \n\n after first script
-
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
 	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
