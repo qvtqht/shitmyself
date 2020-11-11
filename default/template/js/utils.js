@@ -70,31 +70,22 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		window.eventLoopEnabled = 1
 		EventLoop();
 	}
-	
-	var loadingIndicator;
-	if (!loadingIndicator) {
-		if (document.getElementById) {
-			loadingIndicator = document.getElementById('loadingIndicator');
-		}
-	}
 	if (window.searchOnload) {
 		searchOnload();
 	}
 	if ((window.location.href.indexOf('search') != -1) && document.search.q) {
 		document.search.q.focus();
 	}
-	if (loadingIndicator) {
-		// #todo this should go into body.onload. but we are already injecting that event somewhere else.
-		if (window.openPgpJsLoadBegin && !!window.openpgp) {
-			loadingIndicator.innerHTML = 'Finished loading page. Loading library...';
-			setTimeout('WaitForOpenPgp()', 500);
-		} else {
+
+	if (document.getElementById) {
+		var loadingIndicator = document.getElementById('loadingIndicator');
+		if (loadingIndicator) {
 			if (window.HideLoadingIndicator) {
 				HideLoadingIndicator();
 			}
 		}
 	}
-}
+} // OnLoadEverything()
 
 function EventLoop () { // (currently unused) for calling things which need to happen on a regular basis
 // sets another timeout for itself when done
