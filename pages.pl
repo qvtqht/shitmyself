@@ -1771,11 +1771,10 @@ sub GetThemeColor { # returns theme color based on html/theme
 	chomp $colorName;
 
 	$colorName = 'color/' . $colorName;
-
 	my $color = GetThemeAttribute($colorName);
 
-	if (!defined($color)) {
-		$color = 'red';
+	if (!defined($color) || $color eq '') {
+		$color = '#00ff00';
 		WriteLog("GetThemeColor: WARNING: Value for $colorName not found");
 	}
 
