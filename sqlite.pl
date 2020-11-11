@@ -484,7 +484,38 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 	my $results = `sqlite3 "$SqliteDbName" "$query"`;
 
 	return $results;
-}
+} # SqliteQuery()
+
+sub SqliteQuery3 { # performs sqlite query via sqlite3 command
+# CacheSqliteQuery { keyword
+# #todo add parsing into array?
+	my $query = shift;
+	if (!$query) {
+		WriteLog('SqliteQuery3: warning: called without $query');
+		return;
+	}
+	chomp $query;
+	$query = EscapeShellChars($query);
+	WriteLog('SqliteQuery3: $query = ' . $query);
+
+	my $cachePath = md5_hex($query);
+	if ($cachePath =~ m/^([0-9a-f]{32})$/) {
+		$cachePath = $1;
+	} else {
+		WriteLog('SqliteQuery3: warning: $cachePath sanity check failed');
+	}
+
+	WriteLog('SqliteQuery3: $cachePath = ' . $cachePath);
+	my $results = GetCache("sqlitequery3/$cachePath");
+
+	if ($results) {
+		return $results;
+	} else {
+		$results = `sqlite3 "$SqliteDbName" "$query"`;
+		PutCache('sqlitequery3/'.$cachePath, $results);
+		return $results;
+	}
+} # SqliteQuery3()
 
 #
 #sub DBGetVotesTable {
