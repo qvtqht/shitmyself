@@ -972,6 +972,11 @@ if (GetConfig('admin/php/route_enable')) {
 				$_COOKIE['show_advanced'] == '0'
 			)
 		) {
+			// insert additional style rule at </head>
+			// which sets class=advanced elements to display:none
+			// if user has respective cookie set
+			// to prevent jumpies when page loads
+
 			WriteLog('route.php: ShowAdvanced() assist activated');
 			WriteLog('route.php: $_COOKIE[show_advanced] = ' . $_COOKIE['show_advanced']);
 			
