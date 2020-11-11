@@ -79,7 +79,7 @@ sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
 }
 
 sub SqliteMakeTables { # creates sqlite schema
-	my $existingTables = SqliteQuery('.tables');
+	my $existingTables = SqliteQuery3('.tables');
 	if ($existingTables) {
 		WriteLog('SqliteMakeTables: warning: tables already exist');
 		return;
