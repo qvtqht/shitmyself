@@ -833,9 +833,11 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
 
 					if (index(','.$$subReplyItem{'tags_list'}.',', ','.'notext'.',') != -1) {
-						$$subReplyItem{'template_name'} = 'item/item-mini.template';
+						$$subReplyItem{'template_name'} = 'item/item.template';
+						# $$subReplyItem{'template_name'} = 'item/item-mini.template';
 					} else {
-						$$subReplyItem{'template_name'} = 'item/item-small.template';
+						$$subReplyItem{'template_name'} = 'item/item.template';
+						# $$subReplyItem{'template_name'} = 'item/item-small.template';
 					}
 					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
 					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
