@@ -245,7 +245,7 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 
 	# titlebar, if there is a title
 	if ($windowTitle) {
-		my $showButtons = 1;
+		my $showButtons = 0;
 		if ($showButtons) {
 			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
