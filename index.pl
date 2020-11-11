@@ -581,6 +581,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 										# alias theme to html/theme
 										# todo config/admin/alias_html_config flag
 										$configKeyActual = 'html/' . $configKey;
+									} else {
+										$configKeyActual = $configKey;
 									}
 									$configValue = trim($configValue);
 								}
