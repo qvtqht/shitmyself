@@ -244,7 +244,7 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 // if 'x' (or anything else) collapses window
 // this is done by navigating up until a table is reached
 // and then hiding the first class=content element within
-// presumably a <tr> but doesn't matter really because SetElementVisible() is used
+// presumably a TR but doesn't matter really because SetElementVisible() is used
 // pretty basic, but it works.
 	if (t.innerHTML) {
 		if (t.firstChild.nodeName == 'FONT') {
