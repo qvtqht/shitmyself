@@ -2,9 +2,9 @@
 <form id=formCurId name=formCurId style="display:none">
 	<font face=arial>
 		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor=$colorTitlebar class=titlebar>
+			<tr bgcolor="$colorTitlebar" class=titlebar>
 				<td>
-					<font color=$colorTitlebarText><b>Manage Identity</b></font>
+					<font color="$colorTitlebarText"><b>Manage Identity</b></font>
 				</td>
 			</tr>
 

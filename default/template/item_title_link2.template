@@ -1,5 +1,5 @@
 <!-- item_title_link2.template -->
 <b>
-	<font color=$colorTitlebarText>$itemTitle</font>
+	<font color="$colorTitlebarText">$itemTitle</font>
 </b>
 <!-- / item_title_link2.template -->

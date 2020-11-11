@@ -4,9 +4,9 @@
 
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor=$colorTitlebar class=titlebar>
+		<tr bgcolor="$colorTitlebar" class=titlebar>
 			<td>
-				<font color=$colorTitlebarText><b>Status</b></font>
+				<font color="$colorTitlebarText"><b>Status</b></font>
 			</td>
 		</tr>
 

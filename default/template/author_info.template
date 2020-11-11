@@ -1,9 +1,9 @@
 <!-- author_info.template -->
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor=$colorTitlebar class=titlebar>
+		<tr bgcolor="$colorTitlebar" class=titlebar>
 			<td colspan=2>
-				<font color=$colorTitlebarText><b>Author Information for $authorName</b></font>
+				<font color="$colorTitlebarText"><b>Author Information for $authorName</b></font>
 			</td>
 		</tr>
 

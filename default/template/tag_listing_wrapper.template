@@ -1,9 +1,9 @@
 <!-- tag_listing_wrapper.template -->
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor=$colorTitlebar class=titlebar>
+		<tr bgcolor="$colorTitlebar" class=titlebar>
 			<td colspan=3>
-				<p><font color=$colorTitlebarText><b>Tags</b></font>
+				<p><font color="$colorTitlebarText"><b>Tags</b></font>
 			</td>
 		</tr>
 

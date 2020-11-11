@@ -1,9 +1,9 @@
 <!-- author_listing_wrapper.template -->
 <font face=arial>
-	<table cellspacing=0 cellpadding=6 border=0 bgcolor=$colorWindow class=dialog>
-		<tr bgcolor=$colorTitlebar class=titlebar>
+	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
+		<tr bgcolor="$colorTitlebar" class=titlebar>
 			<td colspan=3>
-				<font color=$colorTitlebarText><b>Top Scores</b></font>
+				<font color="$colorTitlebarText"><b>Top Scores</b></font>
 			</td>
 		</tr>
 

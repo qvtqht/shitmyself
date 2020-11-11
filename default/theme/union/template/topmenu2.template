@@ -1,12 +1,12 @@
 <!-- topmenu2.template -->
 <form action="" name="frmTopMenu">
 	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor=$colorTitlebar class=titlebar>
+		<tr bgcolor="$colorTitlebar" class=titlebar>
 			<td><small>
 				<b>
 					<small>
-					<a tabindex=2 name=top href="#maincontent"><font color=$colorTitlebarText>Skip to main content</font></a>;
-					<a href="$selfLink?light=1" tabindex=3><font color=$colorTitlebarText>Accessibility mode</font></a>
+					<a tabindex=2 name=top href="#maincontent"><font color="$colorTitlebarText">Skip to main content</font></a>;
+					<a href="$selfLink?light=1" tabindex=3><font color="$colorTitlebarText">Accessibility mode</font></a>
 					</small>
 				</b>
 			</small><br></td>
@@ -16,7 +16,7 @@
 				$clock
 			</td>
 		</tr>
-		<tr bgcolor=$colorWindow class=menubar>
+		<tr bgcolor="$colorWindow" class=menubar>
 			<td>
 				<big>
 					<big style="padding:5pt">
