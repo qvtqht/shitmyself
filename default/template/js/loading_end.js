@@ -1,6 +1,6 @@
 // begin loading_end.js
 
-function HideLoadingIndicator() {
+function HideLoadingIndicator () {
 	if (!loadingIndicator) {
 		if (document.getElementById) {
 			loadingIndicator = document.getElementById('loadingIndicator');
