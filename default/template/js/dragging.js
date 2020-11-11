@@ -68,7 +68,7 @@ function dragElement (elmnt, header) {
 function DraggingInit() {
 	var elements = document.getElementsByClassName('dialog');
 //	for (var i = 0; i < elements.length; i++) {
-	for (var i = elements.length - 1; i >= 0; i--) {
+	for (var i = elements.length - 1; 0 <= i; i--) {
 		var allTitlebar = elements[i].getElementsByClassName('titlebar');
 		var firstTitlebar = allTitlebar[0];
 
