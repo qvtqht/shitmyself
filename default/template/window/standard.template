@@ -1,5 +1,4 @@
 <!-- window/standard.template -->
-
 <font face=arial>
 	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
 		$windowTitlebar
@@ -13,5 +12,4 @@
 		$windowStatus
 	</table>
 </font>
-
 <!-- / window/standard.template -->
