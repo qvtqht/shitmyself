@@ -598,7 +598,7 @@ if (GetConfig('admin/php/route_enable')) {
 								// only need to do it if the script is included in page
 								$md5 = md5_file($pathRel);
 								header('ETag: ' . $md5);
-								$html .= "<script><!-- window.myOwnETag = '$md5'; if (window.CheckIfFresh) { CheckIfFresh(); } // --></script>";
+								$html .= "<script><!-- window.myOwnETag = '$md5'; // --></script>";
 								// #todo this should probably be templated and added using InjectJs()
 							}
 						}
