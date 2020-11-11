@@ -109,7 +109,8 @@ function freshCallback() { // callback for requesting HEAD for current page
 								newTs.innerHTML = 'just now!';
 								a.appendChild(newTs);
 							} else {
-								if (0) { // change floatie time to new time
+								if (1) { // fresh_reuse_timestamp
+									// reuse timestamp widget instead of adding new one
 									var d = new Date();
 									var n = d.getTime();
 									n = Math.ceil(n / 1000);
