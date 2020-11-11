@@ -15,7 +15,7 @@
     -->
 </style>
 <script>
-	<!--
+<!--
 	function hi(letter) {
 		var text = letter;
 		//alert('DEBUG: "' + text + '"');
@@ -70,7 +70,6 @@
 		if (frmKbd) {
 			var kbdText = frmKbd.kbdText;
 			if (kbdText) {
-				alert(3);
 				if (text == 'Back') {
 					// backspace
 					if (kbdText.value.length) {
@@ -86,9 +85,7 @@
 
 		return false;
 	}
-
-	// todo onmousedown and onmouseup should set and clear a timeout for key repeat?
-	// -->
+// -->
 </script>
 
 <form action="/post.html" name="compose">
