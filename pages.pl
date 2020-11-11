@@ -4173,7 +4173,7 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 	return $txtIndex;
 } # GetProfilePage()
 
-sub GetAccessPage { # returns html for accessibility mode page, /access.html
+sub GetAccessPage { # returns html for compatible mode page, /access.html
 	my $html = '';
 	my $title = 'Light Mode';
 
@@ -4837,11 +4837,9 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	state %avatarCache;
 
 	my $gpgKey = shift;
-
 	if (!$gpgKey) {
 		return;
 	}
-
 	chomp $gpgKey;
 
 	WriteLog("GetAvatar($gpgKey)");
