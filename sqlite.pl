@@ -1838,7 +1838,7 @@ sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute no
 		$query .= " AND attribute = '$attribute'";
 	}
 
-	my $results = SqliteQuery($query);
+	my $results = SqliteQuery3($query);
 	return $results;
 } # DBGetItemAttribute()
 
