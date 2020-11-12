@@ -470,21 +470,15 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 #todo add caching in flat file
 #todo add parsing into array?
 	my $query = shift;
-
 	if (!$query) {
-		WriteLog("SqliteQuery called without query");
-
+		WriteLog('SqliteQuery: warning: called without $query');
 		return;
 	}
-
 	chomp $query;
-
 	$query = EscapeShellChars($query);
-
-	WriteLog( "$query\n");
+	WriteLog('SqliteQuery: $query = ' . $query);
 
 	my $results = `sqlite3 "$SqliteDbName" "$query"`;
-
 	return $results;
 } # SqliteQuery()
 
