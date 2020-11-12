@@ -500,6 +500,10 @@ sub SqliteQuery3 { # performs sqlite query via sqlite3 command
 	} else {
 		WriteLog('SqliteQuery3: warning: $cachePath sanity check failed');
 	}
+	my $cacheTime = GetTime();
+	$cacheTime = substr($cacheTime, 0, length($cacheTime) - 2);
+
+	$cachePath = "$cacheTime/$cachePath";
 
 	WriteLog('SqliteQuery3: $cachePath = ' . $cachePath);
 	my $results = GetCache("sqlitequery3/$cachePath");
