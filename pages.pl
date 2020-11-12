@@ -3209,7 +3209,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	# Close html
 	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(settings avatar voting profile timestamp));
+	$html = InjectJs($html, qw(settings avatar voting profile timestamp utils));
 
 	return $html;
 } # GetIndexPage()
@@ -3357,7 +3357,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 		$indexPage .= GetPageFooter();
 
-		$indexPage = InjectJs($indexPage, qw(profile settings avatar));
+		$indexPage = InjectJs($indexPage, qw(profile settings avatar utils));
 
 		PutHtmlFile("index0.html", $indexPage);
 		PutHtmlFile("compost.html", $indexPage);
