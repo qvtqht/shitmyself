@@ -3716,7 +3716,11 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $algoSelectMode = GetConfig('admin/gpg/algo_select_mode');
 	if ($algoSelectMode) {
 		if ($algoSelectMode eq '512' || $algoSelectMode eq 'random' || $algoSelectMode eq 'max') {
+			my $oldValue = $crypto2JsTemplate;
 			$crypto2JsTemplate = str_replace('var algoSelectMode = 0;', "var algoSelectMode = '$algoSelectMode'", $crypto2JsTemplate);
+			if ($oldValue == $crypto2JsTemplate) {
+				WriteLog('MakeSummaryPages: warning: crypto2.js algoSelectMode templating failed, value of $crypto2JsTemplate did not change as expected');
+			}
 		}
 	}
 	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
