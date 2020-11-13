@@ -198,7 +198,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 
 	if ((time()-(GetConfig('admin/access_log_last_seen')||0)) > 5) { #todo make this more configurable
 		#do not process access.log more than once per 5 seconds
-		PutConfig('admin/access_log_last_seen', time());
+		PutConfig('admin/access_log/last_seen', time());
 		WriteMessage('update.pl: Calling ProcessAllAccessLogsInConfig...');
 		$newItemCount .= ProcessAllAccessLogsInConfig();
 	} # access.log/access.pl

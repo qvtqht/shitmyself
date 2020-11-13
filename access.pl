@@ -542,7 +542,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						# 	my $addedLog = $fileHash . '|' . $addedTime;
 						# 	AppendFile('./log/added.log', $addedLog);
 						#
-						# 	if (GetConfig('admin/access_log_call_index')) {
+						# 	if (GetConfig('admin/access_log/call_index')) {
 						# 		WriteLog('ProcessAccessLog: access_log_call_index is true, therefore DBAddItemAttribute(' . $fileHash . ',add_timestamp,' . $addedTime . ')');
 						# 		DBAddItemAttribute($fileHash, 'add_timestamp', $addedTime);
 						# 	}
@@ -621,7 +621,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							DBAddItemAttribute($fileHash, 'access_log_timestamp', $addedTime);
 						}
 
-						if (GetConfig('admin/access_log_call_index')) {
+						if (GetConfig('admin/access_log/call_index')) {
 							WriteLog('access.pl: access_log_call_index is true, therefore IndexTextFile(' . $pathedFilename . ')');
 							IndexTextFile($pathedFilename);
 						}
@@ -682,7 +682,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 sub ProcessAllAccessLogsInConfig {
 	# get list of access log path(s)
 	WriteLog('ProcessAllAccessLogsInConfig()');
-	my $accessLogPathsConfig = GetConfig('admin/access_log_path_glob_list');
+	my $accessLogPathsConfig = GetConfig('admin/access_log/path_glob_list');
 	my @accessLogPaths;
 	my $newItemCount = 0; #keep score
 
