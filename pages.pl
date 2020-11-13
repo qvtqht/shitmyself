@@ -198,14 +198,24 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
+sub GetWindowTemplate {
+	my %param = ();
+
+	$param{'body'} = shift;
+	$param{'title'} = shift;
+	$param{'headings'} = shift;
+	$param{'status'} =  shift;
+	$param{'menu'} = shift;
+
+	return GetWindowTemplate2(\%param);
+} # GetWindowTemplate()
+
 sub GetWindowTemplate2 {
 	my $paramHashRef = shift;
 	my %param = %$paramHashRef;
 
-	return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
-}
+	#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
 
-sub GetWindowTemplate { #: body, title, headings, status, menu
 # returns template for html-table-based-"window"
 
 	# $windowBody
@@ -227,11 +237,11 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 
 	# NOT IMPLEMENTED $windowId = if set, id=foo parameter is added to top-level tag
 
-	my $windowBody = shift;
-	my $windowTitle = shift;
-	my $columnHeadings = shift;
-	my $windowStatus = shift;
-	my $windowMenubarContent = shift;
+	my $windowBody = $param{'body'};
+	my $windowTitle = $param{'title'};
+	my $columnHeadings = $param{'headings'};
+	my $windowStatus =  $param{'status'};
+	my $windowMenubarContent = $param{'menu'};
 
 	my $contentColumnCount = 1;
 	# stores number of columns if they exist
@@ -245,7 +255,7 @@ sub GetWindowTemplate { #: body, title, headings, status, menu
 
 	# titlebar, if there is a title
 	if ($windowTitle) {
-		my $showButtons = 0;
+		my $showButtons = 0; # #todo GetConfig('titlebar_with_button');
 		if ($showButtons) {
 			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
