@@ -1,0 +1,3 @@
+config/admin/debug=1
+config/admin/js/debug=document.title
+config/admin/php/debug=1
