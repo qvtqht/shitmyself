@@ -501,8 +501,9 @@ sub SqliteQuery3 { # performs sqlite query via sqlite3 command
 		WriteLog('SqliteQuery3: warning: $cachePath sanity check failed');
 	}
 	my $cacheTime = GetTime();
-	$cacheTime = substr($cacheTime, 0, length($cacheTime) - 2);
 
+	# this limits the cache to expiration of 1-100 seconds
+	$cacheTime = substr($cacheTime, 0, length($cacheTime) - 2);
 	$cachePath = "$cacheTime/$cachePath";
 
 	WriteLog('SqliteQuery3: $cachePath = ' . $cachePath);
