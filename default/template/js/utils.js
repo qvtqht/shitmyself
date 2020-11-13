@@ -77,11 +77,12 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		document.search.q.focus();
 	}
 
-	if (document.getElementById) {
-		var loadingIndicator = document.getElementById('loadingIndicator');
-		if (loadingIndicator) {
-			if (window.HideLoadingIndicator) {
-				HideLoadingIndicator();
+	if (document.HideLoadingIndicator) {
+		HideLoadingIndicator();
+	} else {
+		if (document.getElementById) {
+			if (document.getElementById('loadingIndicator')) {
+				//alert('debug: warning: loadingIndicator is present, but HideLoadingIndicator() is not');
 			}
 		}
 	}
