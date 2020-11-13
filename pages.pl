@@ -4402,20 +4402,25 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 	#This makes the zip file as well as the data.html page that lists its size
 	WriteLog('MakeDataPage() called');
 
-	my $zipInterval = 3600;
+	my $zipInterval = 1;
 	my $touchZip = GetCache('touch/zip');
+	if (!$touchZip) {
+		$touchZip = 0;
+	}
+	WriteLog('MakeDataPage: $zipInterval = ' . $zipInterval . '; $touchZip = ' . $touchZip);
 
 	if (!$touchZip || (GetTime() - $touchZip) > $zipInterval) {
-		WriteLog("Making zip files...");
-		
+		WriteLog('MakeDataPage: Making zip files...');
+		WriteLog('MakeDataPage: $HTMLDIR = ' . $HTMLDIR);
+
 		# zip -qr foo.zip somefile
 		# -q for quiet
 		# -r for recursive
 		#todo write zip call
-
-		rename("$HTMLDIR/hike.tmp.zip", "$HTMLDIR/hike.zip");
+		system("zip -qr $HTMLDIR/txt.tmp.zip $HTMLDIR/txt/ $HTMLDIR/chain.log");
+		rename("$HTMLDIR/txt.tmp.zip", "$HTMLDIR/txt.zip");
 		
-		system("zip -q $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyCacheVersion() . "/index.sqlite3");
+		system("zip -qr $HTMLDIR/index.sqlite3.zip.tmp cache/" . GetMyCacheVersion() . "/index.sqlite3");
 		rename("$HTMLDIR/index.sqlite3.zip.tmp", "$HTMLDIR/index.sqlite3.zip");
 
 		PutCache('touch/zip', GetTime());
@@ -4426,7 +4431,7 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 	$dataPage .= GetTemplate('maincontent.template');
 	my $dataPageContents = GetTemplate('data.template');
 
-	my $sizeHikeZip = -s "$HTMLDIR/hike.zip";
+	my $sizeHikeZip = -s "$HTMLDIR/txt.zip";
 	my $sizeSqliteZip = -s "$HTMLDIR/index.sqlite3.zip";
 
 	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
