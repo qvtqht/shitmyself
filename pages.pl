@@ -3774,7 +3774,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
 	}
 
-	{
+	{ #.htaccess
 		# .htaccess file for Apache
 		my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
 
@@ -3825,12 +3825,13 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 		if (GetConfig('admin/ssi/enable')) {
 			my $ssiConf = GetTemplate('htaccess/htaccess_ssi.template');
-
 			$HtaccessTemplate .= "\n" . $ssiConf;
 		}
 
 		PutFile("$HTMLDIR/.htaccess", $HtaccessTemplate);
-	}
+
+		# WriteDataPage();
+	} #.htaccess
 
 	PutHtmlFile("favicon.ico", '');
 
