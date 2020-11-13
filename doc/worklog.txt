@@ -1,0 +1,9 @@
+make "rollup" button into sequence id
+morph GetWindowTemplate() into shim of GWT2()
+clean up config key aliasing under html/
+	settled for just aliasing 'theme' and 'clock'
+add top_menu titlebar colors for friday29 theme
+	still seems like it would be better to fallback to main titlebar color
+add more positive tags to tagset/image
+	figure out wtf it is not updating o the page
+do some commits

@@ -22,7 +22,7 @@ echo 0 > config/admin/php/enable
 
 ===
 
-admin/access_log_path_glob_list
+admin/access_log/path_glob_list
 this is where access.pl will look for the access log from the web server.
 it's a list of file globs (paths, but with option for wildcards like *), separated by \n
 default: log/access.log

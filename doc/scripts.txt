@@ -14,7 +14,7 @@ access.pl
 	reads access log from web server and parses actions submitted by clients.
 	common log format can be symlinked to log/access.log
 	-or-
-	change the path in in config/admin/access_log_path
+	change the path in in config/admin/access_log/path_glob_list
 
 index.pl
 	generates sqlite database called index.sqlite3
