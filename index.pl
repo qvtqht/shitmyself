@@ -569,21 +569,19 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								WriteLog('IndexTextFile: $configSpacer = ' . (defined($configSpacer) ? $configSpacer : '(undefined)'));
 								WriteLog('IndexTextFile: $configValue = ' . (defined($configValue) ? $configValue : '(undefined)'));
 
-								my $configKeyActual = '';
+								my $configKeyActual = $configKey;
 								if ($configKey && defined($configValue) && $configValue ne '') {
 									# alias 'theme' to 'html/theme'
 									# $configKeyActual = $configKey;
-									# if ($configKey eq 'theme') {
-									# 	# alias theme to html/theme
-									# 	$configKeyActual = 'html/theme';
-									# }
-									if (!-e "default/$configKey" && -e "default/html/$configKey") {
+									if ($configKey eq 'theme') {
 										# alias theme to html/theme
-										# todo config/admin/alias_html_config flag
-										$configKeyActual = 'html/' . $configKey;
-									} else {
-										$configKeyActual = $configKey;
+										$configKeyActual = 'html/theme';
 									}
+									# todo merge html/clock and html/clock_format
+									# if ($configKey eq 'clock') {
+									# 	# alias theme to html/theme
+									# 	$configKeyActual = 'clock_format';
+									# }
 									$configValue = trim($configValue);
 								}
 
