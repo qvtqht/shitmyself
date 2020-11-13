@@ -612,28 +612,6 @@ if (GetConfig('admin/php/route_enable')) {
 							if (file_exists('write.php')) {
 								include('write.php');
 
-								if (isset($_GET['vouch']) && $_GET['vouch']) {
-									WriteLog('vouch request found');
-
-									$vouchValue = $_GET['vouch'];
-
-									WriteLog('$vouchValue = ' . $vouchValue);
-
-									// #todo validate $vouchValue
-									$vouchToken =
-										'vouch/' . htmlspecialchars($vouchValue) . '/31337' .
-										"\n" .
-										"\n" .
-										"I vouch for this author because ...\n\n"
-									;
-
-									WriteLog('$vouchToken = ' . $vouchToken);
-
-									$html = str_ireplace('</textarea>', $vouchToken . '</textarea>' , $html);
-								} else {
-									WriteLog('vouch request not found');
-								}
-
 								if (isset($_GET['name']) && $_GET['name']) {
 									WriteLog('name request found');
 
