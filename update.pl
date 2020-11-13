@@ -180,10 +180,6 @@ if (!defined($arg1) || $arg1 eq '--all') {
 		$lastFlow = 0;
 	}
 
-	#	# get the path of access log, usually log/access.log
-	#	my $accessLogPath = GetConfig('admin/access_log_path');
-	#	WriteLog("\$accessLogPath = $accessLogPath");
-	#
 	# this will store the new item count we get from access.log
 	my $newItemCount = 0;
 
