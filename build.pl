@@ -79,9 +79,6 @@ if (!-e $IMAGEDIR) {
 	mkdir($IMAGEDIR);
 }
 
-#my $accessLogPath = GetConfig('admin/access_log_path');
-#ProcessAccessLog($accessLogPath);
-
 BuildMessage "Looking for files...";
 
 BuildMessage "MakeChainIndex()...";
