@@ -857,16 +857,13 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 					WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
 
 					$$subReplyItem{'trim_long_text'} = 1;
-
 					my $subReplyTemplate = GetItemTemplate($subReplyItem); # GetItemPage()
-
 					if ($subReplyComma eq '') {
 						$subReplyComma = '<hr size=4>';
 					}
 					else {
 						$subReplyTemplate = $subReplyComma . $replyTemplate;
 					}
-
 					$subRepliesTemplate .= $subReplyTemplate;
 				}
 
@@ -3749,39 +3746,24 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
 	if (GetConfig('admin/php/enable')) {
-		my $postPhpTemplate = GetTemplate('php/post.php');
-		PutFile($PHPDIR . '/post.php', $postPhpTemplate);
-
-		my $test2PhpTemplate = GetTemplate('php/test2.php');
-		PutFile($PHPDIR . '/test2.php', $test2PhpTemplate);
-
-		my $adminPhpTemplate = GetTemplate('php/config.php');
-		PutFile($PHPDIR . '/config.php', $adminPhpTemplate);
-
-		my $testPhpTemplate = GetTemplate('php/test.php');
-		PutFile($PHPDIR . '/test.php', $testPhpTemplate);
-
-		my $writePhpTemplate = GetTemplate('php/write.php');
-		PutFile($PHPDIR . '/write.php', $writePhpTemplate);
-
-		my $uploadPhpTemplate = GetTemplate('php/upload.php');
-		PutFile($PHPDIR . '/upload.php', $uploadPhpTemplate);
-
-		my $searchPhpTemplate = GetTemplate('php/search.php');
-		PutFile($PHPDIR . '/search.php', $searchPhpTemplate);
-
-		my $cookiePhpTemplate = GetTemplate('php/cookie.php');
-		PutFile($PHPDIR . '/cookie.php', $cookiePhpTemplate);
-
-		my $cookieTestPhpTemplate = GetTemplate('php/cookietest.php');
-		PutFile($PHPDIR . '/cookietest.php', $cookieTestPhpTemplate);
+		# post.php
+		# test2.php
+		# config.php
+		# test.php
+		# write.php
+		# upload.php
+		# search.php
+		# cookie.php
+		# cookietest.php
+		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route);
+		for my $template (@templatePhpSimple) {
+			my $fileContent = GetTemplate("php/$template.php");
+			PutFile($PHPDIR . "/$template.php", $fileContent);
+		}
 
 		my $utilsPhpTemplate = GetTemplate('php/utils.php');
         $utilsPhpTemplate =~ s/\$scriptDirPlaceholderForTemplating/$SCRIPTDIR/g;
 		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
-
-		my $routePhpTemplate = GetTemplate('php/route.php');
-		PutFile($PHPDIR . '/route.php', $routePhpTemplate);
 	}
 
 	{
