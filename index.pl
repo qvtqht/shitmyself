@@ -792,7 +792,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			else { # has $detokenedMessage
 				{ #title
 					my $firstEol = index($detokenedMessage, "\n");
-					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 80
+					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 42
 					if ($firstEol == -1) {
 						if (length($detokenedMessage) > 1) {
 							$firstEol = length($detokenedMessage);
