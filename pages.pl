@@ -257,9 +257,11 @@ sub GetWindowTemplate2 {
 	if ($windowTitle) {
 		my $showButtons = 0; # #todo GetConfig('titlebar_with_button');
 		if ($showButtons) {
+			my $btnCloseCaption = '[hide]';
 			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
 			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
+			$windowTemplate =~ s/\$btnCloseCaption/$btnCloseCaption/g;
 			#$contentColumnCount = 2;
 		} else {
 			my $windowTitlebar = GetTemplate('window/titlebar.template');
