@@ -1824,7 +1824,7 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	my $html = shift;
 	chomp($html);
 
-	my @colors = qw(primary secondary background text link vlink window);
+my @colors = qw(primary secondary background text link vlink window);
 	for my $color (@colors) {
 		my $templateToken = '$color' . ucfirst($color);
 		$html = str_replace($templateToken, GetThemeColor($color), $html);
