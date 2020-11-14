@@ -31,7 +31,6 @@ textarea:focus {
     color: $colorText;
     padding: 5pt;
     spacing: 5pt;
-    border: $borderDialog;
 }
 #aBackToTop {
 	background-color: $colorHighlightBeginner;
