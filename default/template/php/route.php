@@ -16,11 +16,9 @@ if (GetConfig('admin/php/route_random_update') && rand(1, 17) == 1) {
 	DoUpdate(); #todo if (function exists etc)
 }
 
-function SetHtmlClock ($html) { // #todo sets html clock on page if present
+function SetHtmlClock ($html) { // sets html clock on page if present
 	WriteLog('SetHtmlClock()');
-
 	$html = preg_replace('/id=txtClock value=\".+\"/', 'id=txtClock value="' . GetClockFormattedTime() . '"', $html);
-
     return $html;
 }
 
