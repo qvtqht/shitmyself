@@ -1891,7 +1891,6 @@ my @colors = qw(primary secondary background text link vlink window);
 sub WriteMenuList { # writes config/list/menu based on site configuration
 	#todo this function is not obvious, overrides obvious list/menu
 	my @menu;
-
 	push @menu, 'read';
 	push @menu, 'write';
 
@@ -1915,7 +1914,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 
 	my $menuList = join("\n", @menu);
 
-	PutConfig('list/menu', $menuList);
+	#PutConfig('list/menu', $menuList);
 	# PutConfig('list/menu_advanced', $menuList);
 
 	GetConfig('list/menu', 'unmemo');
@@ -1948,6 +1947,8 @@ sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns 
 	chomp $templateName;
 
 	my $listText = GetConfig('list/' . $listName); #list/menu
+	$listText = str_replace(' ', "\n", $listText);
+	$listText = str_replace("\n\n", "\n", $listText);
 	my @menuList = split("\n", $listText);
 
 	my $menuItems = ''; # output html which will be returned
