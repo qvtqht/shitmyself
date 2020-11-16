@@ -988,10 +988,7 @@ Rename "beginner" to "hint" or something even better
 
 Resolve issues with missing modules. Add everything to lib/ dir
 
-#todo #bug IE4 voting buttons do not work
-
-#todo #bug IE4 pages have js errors:
-	Settings
+#IE4 has too many redirect dialogs when Enter is pressed to sign in
 
 Create token which allows a new item to "overwrite" an item
 	Perhaps only admin or original author?
