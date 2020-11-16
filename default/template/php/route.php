@@ -13,7 +13,11 @@ WriteLog('route.php begins');
 //}
 
 if (GetConfig('admin/php/route_random_update') && rand(1, 17) == 1) {
-	DoUpdate(); #todo if (function exists etc)
+# randomly call DoUpdate() on page load
+# may slow down user's experience, but site is more likely to be up to date
+	if (function_exists('DoUpdate')) {
+	    DoUpdate();
+    }
 }
 
 function SetHtmlClock ($html) { // sets html clock on page if present
