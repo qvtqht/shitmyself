@@ -504,6 +504,7 @@ sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from 
 
 
 sub GetFileHash { # $fileName ; returns hash of file contents
+# // GetItemHash GetHash
 	WriteLog("GetFileHash()");
 
 	my $fileName = shift;

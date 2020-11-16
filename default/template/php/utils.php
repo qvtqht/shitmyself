@@ -196,6 +196,7 @@ function GpgParsePubkey ($filePath) { // #todo parse file with gpg public key
 }
 
 function GetFileHash ($fileName) { // returns hash of file contents
+// GetItemHash GetHash
 	WriteLog("GetFileHash($fileName)");
 
 	if ((strtolower(substr($fileName, length($fileName) - 4, 4)) == '.txt')) {
