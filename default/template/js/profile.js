@@ -575,7 +575,7 @@ function ProfileOnLoad () { // onload event for profile page
 					lblSigningIndicator = document.getElementById('lblSigningIndicator');
 					if (lblSigningIndicator) {
 						// display value of "algorithm" which openpgp gives us
-						// #todo in reality, this only give us rsa/not-rsa, and formatted poorly
+						// in reality, this only give us rsa/not-rsa, and formatted poorly
 						// there's the bit count and the actual algo for non-rsa which needs
 						// to be displayed more nicely here
 						var privKeyObj = openpgp.key.readArmored(pk);
