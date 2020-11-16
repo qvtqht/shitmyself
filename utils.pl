@@ -510,27 +510,22 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 	my $fileName = shift;
 	chomp $fileName;
 	WriteLog("GetFileHash($fileName)");
-
     #todo normalize path (static vs full)
 	state %memoFileHash;
 	if ($memoFileHash{$fileName}) {
 		WriteLog('GetFileHash: memo hit ' . $memoFileHash{$fileName});
 		return $memoFileHash{$fileName};
 	}
-
 	WriteLog('GetFileHash: memo miss');
 
 	if (-e $fileName) {
 		if ((lc(substr($fileName, length($fileName) - 4, 4)) eq '.txt')) {
 			my $fileContent = GetFile($fileName);
-
 			if (index($fileContent, "\n-- \n") > -1) {
 				# exclude footer content from hashing
 				$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
 			}
-
 			$memoFileHash{$fileName} = sha1_hex($fileContent);
-
 			return $memoFileHash{$fileName};
 		} else {
 		    $memoFileHash{$fileName} = sha1_hex(GetFile($fileName));
@@ -540,7 +535,7 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 	} else {
 		return;
 	}
-}
+} #GetFileHash()
 
 sub GetRandomHash { # returns a random sha1-looking hash, lowercase
 	my @chars=('a'..'f','0'..'9');
