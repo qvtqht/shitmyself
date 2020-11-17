@@ -1922,12 +1922,12 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 
 	my $menuList = join("\n", @menu);
 
-	#PutConfig('list/menu', $menuList);
+	PutConfig('list/menu', $menuList);
 	# PutConfig('list/menu_advanced', $menuList);
 
 	GetConfig('list/menu', 'unmemo');
 	# GetConfig('list/menu_advanced', 'uncache');
-}
+} # WriteMenuList()
 
 sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns html menu based on referenced list
 # $listName is reference to a list in config/list, e.g. config/list/menu
