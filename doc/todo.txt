@@ -1540,8 +1540,8 @@ FEEDBACK FROM L.F.
 it might be helpful to have the tags right on the home page, so that it's not landing on a jumble of messages.
 Other things can be used to categorize these textboxes and give them more meaning to the user, such as titles, dates, etc.
 It might be somewhat counter-intuitive to have the pages going from 14-0 on the top, maybe consider adding a "go back" alongside/instead of these.
-Underlining 'publicly and right now' may be confused as a hyperlink, maybe can be left un-underlined. but if you want to emphasize this consider bold or italics
-Also, as a personal preference I think the ellipse around the numbers can be removed or made into a rectangle
+xUnderlining 'publicly and right now' may be confused as a hyperlink, maybe can be left un-underlined. but if you want to emphasize this consider bold or italics
+xAlso, as a personal preference I think the ellipse around the numbers can be removed or made into a rectangle
 And consider adding a title/informative header to the page in general, to give more context to what this page is.
    It could be something like "hike.qdb.us" on the very top, a very short description underneath it, and then tabs (home, write, tags, manual) go underneath that
 
