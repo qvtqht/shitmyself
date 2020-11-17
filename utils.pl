@@ -14,7 +14,6 @@ use Digest::MD5 qw(md5_hex);
 #use Devel::StackTrace;
 
 use File::Basename qw( fileparse );
-#use File::Path qw( make_path ); ## todo replace this with own version which is not fragile
 use File::Spec;
 
 use Date::Parse;
@@ -315,7 +314,6 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 		if ( $dirs =~ m/^([^\s]+)$/ ) { #security #taint
 			$dirs = $1; #untaint
 			MakePath($dirs);
-			#make_path $dirs or WriteLog("EnsureSubdirs: Failed to create path: $dirs");
 		}
 	}
 } # EnsureSubdirs()
