@@ -777,7 +777,11 @@ sub DBGetItemReplies { # Returns replies for item (actually returns all child it
 		WriteLog('DBGetItemReplies: warning: sanity check failed, returning');
 		return '';
 	}
-	$itemHash = SqliteEscape($itemHash);
+	if ($itemHash ne SqliteEscape($itemHash)) {
+		WriteLog('DBGetItemReplies: warning: $itemHash contains escapable characters');
+		return '';
+	}
+	WriteLog("DBGetItemReplies($itemHash)");
 
 	my %queryParams;
 	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash') AND ','||tags_list||',' NOT LIKE '%,meta,%'";
