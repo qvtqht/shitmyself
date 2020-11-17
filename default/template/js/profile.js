@@ -643,13 +643,18 @@ function ProfileOnLoad () { // onload event for profile page
 	return true;
 }
 
-function SetCookie(cname, cvalue, exdays) { // set cookie
-// #todo this is untested and unused at this time
+function SetCookie (cname, cvalue, exdays) { // set cookie
 	var d = new Date();
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
 	var expires = "expires="+d.toUTCString();
 	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
+	var testSetCookie = GetCookie(cname);
+	if (cvalue == testSetCookie) {
+		return 1;
+	} else {
+		return 0;
+	}
+} // SetCookie()
 
 function GetCookie (cname) { // get cookie value
 	// in js, cookies are accessed via one long string of the form
