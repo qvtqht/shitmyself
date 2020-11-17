@@ -278,4 +278,18 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 	return true;
 } // CollapseWin()
 
+function ConvertSubmitsToButtonsWithAccessKey (parent) {
+	if (!parent) {
+		//alert('DEBUG: ConvertSubmitsToButtons: warning: sanity check failed');:
+		return "";
+	}
+
+	if (parent.getElementsByClassName) {
+		var buttons = parent.getElementsByClassName('btnSubmit');
+		// convert each submit to button with accesskey
+	} else {
+		//todo
+	}
+} // ConvertSubmitsToButtonsWithAccessKey()
+
 // == end utils.js
