@@ -33,9 +33,24 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 	}
 	//alert('DEBUG: key: ' + key);
 
-	if (e.keyCode == 13 && e.ctrlKey) {
-		// submit parent form #todo
-		// return #todo
+	if (0 && e.keyCode == 13 && e.ctrlKey) {
+		// #todo finish debugging this
+		if (t.parentElement) {
+			var formElement = t.parentElement;
+			while (formElement && formElement.nodeName != 'FORM') {
+				formElement = formElement.parentElement;
+			}
+			if (formElement.nodeName == 'FORM') {
+				var submitButton = formElement.getElementsByTagName('submit');
+				if (submitButton && submitButton[0]) {
+					// submitButton[0].focus();
+					// #todo this doesn't work
+					return submitButton[0].click();
+				} else {
+					return formElement.submit();
+				}
+			}
+		}
 	}
 
 	// alt+` will toggle translit mode
