@@ -785,7 +785,7 @@ sub DBGetItemReplies { # Returns replies for item (actually returns all child it
 
 	my %queryParams;
 	$queryParams{'where_clause'} = "WHERE file_hash IN(SELECT item_hash FROM item_parent WHERE parent_hash = '$itemHash') AND ','||tags_list||',' NOT LIKE '%,meta,%'";
-	$queryParams{'order_clause'} = "ORDER BY add_timestamp";
+	$queryParams{'order_clause'} = "ORDER BY (tags_list NOT LIKE '%hastext%'), add_timestamp";
 
 	return DBGetItemList(\%queryParams);
 }
