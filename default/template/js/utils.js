@@ -52,14 +52,13 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	}
 	if (
 		(
-			window.location.href.indexOf('write') != -1 || // write is in location
-			window.location.hash.indexOf('reply') != -1 // #reply hash at end of url
+			window.location.href.indexOf('write') != -1 ||
+			window.location.hash.indexOf('reply') != -1
 		) &&
 		document.compose &&
 		document.compose.comment &&
 		document.compose.comment.focus
 	) {
-		//#todo only if url ends with #reply
 		document.compose.comment.focus();
 	}
 
@@ -127,7 +126,6 @@ function EventLoop () { // (currently unused) for calling things which need to h
 		//document.title = eventLoopDuration; // for debugging performance
 
 		if (window.timeoutEventLoop) {
-			// #todo does this work?
 			clearTimeout(window.timeoutEventLoop);
 		}
 
