@@ -30,7 +30,6 @@ function WaitForOpenPgp () {
 	} else {
 		setTimeout('if (window.WaitForOpenPgp) { WaitForOpenPgp() }', 500);
 	}
-}
-
+} // WaitForOpenPgp()
 
 // end loading_end.js
