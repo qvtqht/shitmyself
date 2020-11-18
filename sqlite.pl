@@ -37,8 +37,8 @@ sub SqliteConnect { # Establishes connection to sqlite db
 			(
 				$dbh = DBI->connect(
 					"dbi:SQLite:dbname=$SqliteDbName",
-					"", #todo what is this?
-					"", #and this?
+					"", # username
+					"", # password
 					{
 						AutoCommit => 1
 					}
@@ -467,7 +467,6 @@ sub EscapeShellChars { # escapes string for including as parameter in shell comm
 }
 
 sub SqliteQuery { # performs sqlite query via sqlite3 command
-#todo add caching in flat file
 #todo add parsing into array?
 	my $query = shift;
 	if (!$query) {
@@ -1963,32 +1962,6 @@ sub DBGetAddedTime { # return added time for item specified
 		WriteLog('DBGetAddedTime: warning: $dbh was missing, returning empty-handed');
 	}
 }
-
-# sub DBGetItemsForTag {
-# 	my $tag = shift;
-# 	chomp($tag);
-#
-# 	$tag = SqliteEscape($tag);
-#
-# 	my $query = "
-# 		SELECT file_hash FROM (
-# 			SELECT
-# 				file_hash,
-# 				COUNT(file_hash) AS vote_count
-# 			FROM vote
-# 			WHERE
-# 				vote_value = '$tag'
-# 			GROUP BY file_hash
-# 			ORDER BY vote_count DESC
-# 		) AS item_tag
-# 	"; #todo rewrite this query
-#
-# 	my $result = SqliteQuery($query);
-#
-# 	my @itemsArray = split("\n", $result);
-#
-# 	return @itemsArray;
-# }
 
 sub DBGetItemListByTagList { #get list of items by taglist (as array)
 # uses DBGetItemList()
