@@ -78,6 +78,9 @@ div.txt {
 	font-size: smaller;
 	font-weight: bold;
 }
+#loadingIndicator a {
+	/* style for links in loading indicator */
+}
 .notification {
 	color: $colorText;
 	background-color: $colorHighlightBeginner;
@@ -85,9 +88,6 @@ div.txt {
 	font-size: smaller;
 	font-weight: bold;
 }
-#loadingIndicator a {
-}
-/* end css/default.css */
 noscript {
 	color: red;
 }
@@ -95,3 +95,4 @@ noscript {
 	text-decoration: none;
 	color: $colorText;
 }
+/* end css/default.css */
