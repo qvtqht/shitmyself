@@ -2366,7 +2366,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage .= GetPageFooter();
 
-	$statsPage = InjectJs($statsPage, qw(settings avatar timestamp pingback profile));
+	$statsPage = InjectJs($statsPage, qw(utils settings avatar timestamp pingback profile));
 
 	return $statsPage;
 }
@@ -2763,7 +2763,7 @@ sub GetScoreboardPage { #returns html for /authors.html
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar timestamp profile voting));
+	$txtIndex = InjectJs($txtIndex, qw(utils settings avatar timestamp profile voting));
 
 	return $txtIndex;
 } # GetScoreboardPage()
@@ -3233,7 +3233,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 
 	# Close html
 	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(settings avatar voting profile timestamp utils));
+	$html = InjectJs($html, qw(utils settings avatar voting profile timestamp));
 
 	return $html;
 } # GetIndexPage()
@@ -3981,7 +3981,7 @@ sub GetUploadPage { # returns html for upload page
 		$html .= GetPageFooter();
 
 		if (GetConfig('admin/js/enable')) {
-			$html = InjectJs($html, qw(settings avatar profile upload));
+			$html = InjectJs($html, qw(utils settings avatar profile upload));
 		}
 	} else {
 		$html .= GetPageHeader($title, $title, 'upload');
@@ -3989,7 +3989,7 @@ sub GetUploadPage { # returns html for upload page
 		$html .= GetWindowTemplate('<p>Upload feature is not available. Apologies.</p>', $title);
 		$html .= GetPageFooter();
 		if (GetConfig('admin/js/enable')) {
-			$html = InjectJs($html, qw(settings avatar profile));
+			$html = InjectJs($html, qw(utils settings avatar profile));
 		}
 	}
 
@@ -4251,7 +4251,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex .= GetPageFooter();
 
-	$txtIndex = InjectJs($txtIndex, qw(settings avatar profile));
+	$txtIndex = InjectJs($txtIndex, qw(utils clock settings avatar profile));
 
 #	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
