@@ -1169,7 +1169,7 @@ sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons f
 			}
 
 			if ($doVoteButtonStyles) {
-				# this is a hack, eventually should be replaced by config/tag_color #todo
+				# this is a hack, think about replace with config/tag_color
 				if (index($styleSheet, "tag-$quickTagValue") > -1) {
 					$tagButton =~ s/\$class/tag-$quickTagValue/g;
 				}
@@ -1392,13 +1392,12 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		if ($file{'remove_token'}) {
 			# if remove_token is specified, remove it from the message
-
 			WriteLog('$file{\'remove_token\'} = ' . $file{'remove_token'});
 
 			$message =~ s/$file{'remove_token'}//g;
 			$message = trim($message);
 
-			#todo there is a bug here, but it is less significant than the majority of cases
+			#todo there is a #bug here, but it is less significant than the majority of cases
 			#  the bug is that it removes the token even if it is not by itself on a single line
 			#  this could potentially be mis-used to join together two pieces of a forbidden string
 			#todo make it so that post does not need to be trimmed, but extra \n\n after the token is removed
@@ -1450,8 +1449,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
 		# so that we don't end up with broken links
-#		$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
-#		$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
+		# can be done here or in the function (return original text if no item)?
+		#$message =~ s/([a-f0-9]{40})/GetItemHtmlLink($1)/eg;
+		#$message =~ s/([a-f0-9]{40})/GetItemTemplateFromHash($1)/eg;
 
 		# if format_avatars flag is set, replace author keys with avatars
 		if ($file{'format_avatars'}) {
@@ -1670,26 +1670,20 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$replyCount/0/g;
 		}
 
-		my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
-		#todo this call is only needed if show_vote_summary or show_qiuck_vote
-
 		# if show_vote_summary is set, show a count of all the tags the item has
 		if ($file{'show_vote_summary'}) {
-			#todo templatize this
 			#this displays the vote summary (tags applied and counts)
+			my %voteTotals = DBGetItemVoteTotals($file{'file_hash'});
 			my $votesSummary = '';
-
 			foreach my $voteTag (keys %voteTotals) {
+				#todo templatize this
 				$votesSummary .= "$voteTag (" . $voteTotals{$voteTag} . ")\n";
 			}
 			if ($votesSummary) {
-				$votesSummary = $votesSummary . '<br>';
+				$votesSummary .= '<br>';
 				#todo templatize
 			}
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
-
-			#
-			#end of tag summary display
 		} else {
 			$itemTemplate =~ s/\$votesSummary//g;
 		}
@@ -2693,6 +2687,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 }
 
 sub GetScoreboardPage { #returns html for /authors.html
+# GetAuthorsPage {
 	#todo rewrite this more pretty
 	my $txtIndex = "";
 
