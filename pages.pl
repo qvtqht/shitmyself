@@ -32,11 +32,13 @@ use File::Copy;
 # use File::Copy qw(copy);
 use Cwd qw(cwd);
 
-
 my $SCRIPTDIR = cwd();
-
-if ($SCRIPTDIR =~ m/^([^\s]+)$/) { #todo security less permissive and untaint at top of file #security #taint
+if ($SCRIPTDIR =~ m/^([a-z\/_0-9]+)$/) {
+	# $SCRIPTDIR can't have spaces at this time
+	# this sanity check is restrictive
 	$SCRIPTDIR = $1;
+} else {
+	die('pages.pl: warning: $SCRIPTDIR sanity check failed');
 }
 
 my $HTMLDIR = $SCRIPTDIR . '/html';
