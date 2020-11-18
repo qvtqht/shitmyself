@@ -641,12 +641,11 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 	my $voteItems = '';
 
+	my $voteItemTemplate = GetTemplate('tag_listing.template');
 	while (@voteCountsArray) {
-		my $voteItemTemplate = GetTemplate('tag_listing.template');
-		#todo don't need to do this every time
+		my $voteItemOutput = $voteItemTemplate;
 
 		my $tag = shift @voteCountsArray;
-
 		my $tagName = @{$tag}[0]; #todo assoc-array
 		my $tagCount = @{$tag}[1];
 
@@ -659,12 +658,12 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 		my $voteItemLink = "/top/" . $tagName . ".html";
 
-		$voteItemTemplate =~ s/\$link/$voteItemLink/g;
-		$voteItemTemplate =~ s/\$tagName/$tagName/g;
-		$voteItemTemplate =~ s/\$tagCount/$tagCount/g;
-		$voteItemTemplate =~ s/\$tagInfo/$tagInfo/g;
+		$voteItemOutput =~ s/\$link/$voteItemLink/g;
+		$voteItemOutput =~ s/\$tagName/$tagName/g;
+		$voteItemOutput =~ s/\$tagCount/$tagCount/g;
+		$voteItemOutput =~ s/\$tagInfo/$tagInfo/g;
 
-		$voteItems .= $voteItemTemplate;
+		$voteItems .= $voteItemOutput;
 	}
 
 	if (!$voteItems) {
