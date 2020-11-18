@@ -951,18 +951,27 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			foreach my $itemAttribute (split("\n", $itemAttributes)) {
 				if ($itemAttribute) {
 					my ($iaName, $iaValue) = split('\|', $itemAttribute);
-					if ($iaName =~ m/_timestamp/) {
-						$iaValue = $iaValue . ' (' . GetTimestampWidget($iaValue) . ')';
-					}
-					if ($iaName eq 'author_key') {
-						$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
-					}
-					if ($iaName eq 'title') {
-						$iaValue = HtmlEscape($iaValue);;
-					}
-					if ($iaName eq 'file_path') {
-						$iaValue = '<a href="' . $iaValue . '">' . $iaValue . '</a>';
-						#todo sanitizing #security
+
+					{
+						# this part formats some values for output
+						if ($iaName =~ m/_timestamp/) {
+							# timestamps
+							$iaValue = $iaValue . ' (' . GetTimestampWidget($iaValue) . ')';
+						}
+						if ($iaName eq 'author_key') {
+							# turn author key into avatar
+							$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
+						}
+						if ($iaName eq 'title') {
+							# title needs to be escaped
+							$iaValue = HtmlEscape($iaValue);
+						}
+						if ($iaName eq 'file_path') {
+							# link file path to file
+							$iaValue = HtmlEscape($iaValue);
+							$iaValue = '<a href="' . $iaValue . '">' . $iaValue . '</a>';
+							#todo sanitizing #security
+						}
 					}
 
 					$itemAttributesTable .= '<tr><td>';
@@ -980,13 +989,6 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 				$itemAttributesTable .= $file{'tags_list'};
 				$itemAttributesTable .= '</td></tr>';
 			}
-
-			# # #todo turn it into a loop and turn plain epoch timestamps into timestamp elements
-			# my $trTr = '</td></tr><tr><td>';
-			# $itemAttributes =~ s/\n/$trTr/gi;
-			# my $tdTd = '</td><td>';
-			# $itemAttributes =~ s/\|/$tdTd/gi;
-			# $itemAttributes = '<tr><td>' . $itemAttributes . '</td></tr>';
 
 			my $itemAttributesWindow = GetWindowTemplate($itemAttributesTable, 'Item Attributes', 'attribute,value');
 			$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
