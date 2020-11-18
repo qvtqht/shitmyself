@@ -921,7 +921,7 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	# get components of new line: hash, timestamp, and previous line
 	my $newAddedTime = GetTime();
 	my $logLine = $fileHash . '|' . $newAddedTime;
-	my $lastLineAddedLog = `tail -n 1 $logFilePath`; #todo remove fork
+	my $lastLineAddedLog = `tail -n 1 $logFilePath`; #note the backticks
 	if (!$lastLineAddedLog) {
 		$lastLineAddedLog = '';
 	}
