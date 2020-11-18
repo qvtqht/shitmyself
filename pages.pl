@@ -4619,6 +4619,10 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			mkdir ("$HTMLDIR/author/$authorKey");
 		}
 		PutHtmlFile($targetPath, $authorPage);
+
+		if (IsAdmin($authorKey) == 2) {
+			MakeSummaryPages();
+		}
 	}
 	#
 	# if $pageType eq item, generate that item's page
