@@ -250,10 +250,18 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# go ahead and make this user admin
 			# and announce it via a new .txt file
 			PutFile('./admin.key', $txt);
-
 			my $newAdminMessage = $TXTDIR . '/' . GetTime() . '_newadmin.txt';
-			PutFile($newAdminMessage, "Server Message:\n\nThere was no admin, and $gpgKey came passing through, so I made them admin.\n\n(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n" . GetTime());
+			PutFile(
+				$newAdminMessage,
+				"Server Message:\n\n".
+				"There was no admin, and $gpgKey came passing through, so I made them admin.\n\n".
+				"(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n".
+				"Timestamp: " . GetTime()
+			);
 			ServerSign($newAdminMessage);
+
+			RemoveHtmlFile('stats.html');
+			RemoveHtmlFile('stats-footer.html');
 		} # admin_imprint
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
