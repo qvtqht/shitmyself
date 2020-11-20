@@ -108,6 +108,7 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg';
 	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_message';
 	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_stderr';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/response';
 
 	# create directories that need to exist
 	foreach my $dir (@dirsThatShouldExist) {
