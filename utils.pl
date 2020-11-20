@@ -292,6 +292,7 @@ sub MakePath { # $newPath ; ensures all subdirs for path exist
 
 sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	# takes file's path as argument
+	# returns 0 for failure, 1 for success
 	my $fullPath = shift;
 	chomp $fullPath;
 
@@ -307,14 +308,20 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	# todo remove requirement of external module
 	my ( $file, $dirs ) = fileparse $fullPath;
 	if ( !$file ) {
-		return; #todo what's going on here?
-		$fullPath = File::Spec->catfile($fullPath, $file);
+		WriteLog('EnsureSubdirs: warning: $file was not set, returning');
+		WriteLog('EnsureSubdirs: $file = ' . $file);
+		return 0;
+		#$fullPath = File::Spec->catfile($fullPath, $file);
 	}
 
 	if ( !-d $dirs && !-e $dirs ) {
 		if ( $dirs =~ m/^([^\s]+)$/ ) { #security #taint
 			$dirs = $1; #untaint
 			MakePath($dirs);
+			return 1;
+		} else {
+			WriteLog('EnsureSubdirs: warning: $dirs failed sanity check, returning');
+			return 0;
 		}
 	}
 } # EnsureSubdirs()
