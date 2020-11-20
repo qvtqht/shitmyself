@@ -2196,10 +2196,10 @@ sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-b
 
 	if (GetConfig('admin/html/allow_tag/code')) {
 		$text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>$1<\/code>/msgi;
-		# m = multi-line
-		# s = multi-line
-		# g = all instances
-		# i = case-insensitive
+		# /s = single-line (changes behavior of . metacharacter to match newlines)
+		# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+		# /g = global (all instances)
+		# /i = case-insensitive
 	}
 
 	return $text;

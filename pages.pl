@@ -1422,10 +1422,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		if (GetConfig('html/hide_dashdash_signatures')) {
 			if (index($message, "<br>-- <br>") != -1) {
 				$message =~ s/(.+)<br>-- <br>(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/smi;
-				# m = multi-line
-				# s = multi-line
-				# g = all instances
-				# i = case-insensitive
+				# /s = single-line (changes behavior of . metacharacter to match newlines)
+				# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+				# /g = global (all instances)
+				# /i = case-insensitive
 			}
 		}
 

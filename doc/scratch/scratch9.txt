@@ -32,10 +32,10 @@
 			# looks for lines beginning with AccessLogHash: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
 			my @lines = ($message =~ m/^(SHA512)(\W+)(.+)$/mig); #todo format instead of .+
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
+			# /s = single-line (changes behavior of . metacharacter to match newlines)
+			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+			# /g = global (all instances)
+			# /i = case-insensitive
 
 			WriteLog('@lines = ' . scalar(@lines));
 
@@ -150,10 +150,10 @@
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
 			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
+			# /s = single-line (changes behavior of . metacharacter to match newlines)
+			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+			# /g = global (all instances)
+			# /i = case-insensitive
 
 			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
@@ -227,10 +227,10 @@
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
 			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
+			# /s = single-line (changes behavior of . metacharacter to match newlines)
+			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+			# /g = global (all instances)
+			# /i = case-insensitive
 
 			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
@@ -308,10 +308,10 @@
 			# looks for lines beginning with AccessLogHash: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
 			my @lines = ($message =~ m/^(SHA512)(\W+)(.+)$/mig); #todo format instead of .+
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
+			# /s = single-line (changes behavior of . metacharacter to match newlines)
+			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+			# /g = global (all instances)
+			# /i = case-insensitive
 
 			WriteLog('@lines = ' . scalar(@lines));
 
@@ -364,10 +364,10 @@
 			# looks for lines beginning with title: and text after
 			# only these characters are currently allowed: a-z, A-Z, 0-9, _, and space.
 			my @setTitleToLines = ($message =~ m/^(title)(\W+)(.+)$/mig);
-			# m = multi-line
-			# s = multi-line
-			# g = all instances
-			# i = case-insensitive
+			# /s = single-line (changes behavior of . metacharacter to match newlines)
+			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+			# /g = global (all instances)
+			# /i = case-insensitive
 
 			WriteLog('@setTitleToLines = ' . scalar(@setTitleToLines));
 
