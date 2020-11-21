@@ -6,6 +6,13 @@
 	<span id=spanImagePreview></span>
 	<p>Allowed files: $allowFiles</p>
 	<p>Only images supported, video support later</p>
-	<p><a href="/upload_multi.html">Multiple upload if browser supports</a></p>
+	<span id=spanStripMetaData class=advanced>
+		<label for=chkStripMetaData>
+			<input type=checkbox name=chkStripMetaData id=chkStripMetaData checked>
+			Strip image metadata (doesn't work yet)
+		</label>
+	</span>
+	<hr>
+	<p><a href="/upload_multi.html">Multiple upload is <font color=yellow>under construction</font></a></p>
 </form>
 <!-- / form/upload.template -->
