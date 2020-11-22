@@ -3793,10 +3793,11 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 		# here, we inject the contents of 401.template into .htaccess
 		# this is a kludge until i figure out how to do it properly
-		# 401.template should not contain any " characters
+		# 401.template should not contain any " characters (will be removed)
 		#
 		my $text401 = GetTemplate('401.template');
 		$text401 =~ s/\n//g;
+		$text401 =~ s/"//g;
 		$text401 = '"' . $text401 . '"';
 		$HtaccessTemplate =~ s/\/error\/error-401\.html/$text401/g;
 
