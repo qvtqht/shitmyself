@@ -113,12 +113,14 @@
 					WriteLog('IndexTextFile: once exists');
 					$profileHtml = GetFile("once/$valueHash");
 				} else {
-					#todo #bug #security
 					my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value) .'.json"';
 					WriteLog('IndexTextFile: #verify once needed, doing curl');
-					WriteLog('IndexTextFile: #verify "'.$curlCommand.'"');
+					WriteLog('IndexTextFile: #verify "' . $curlCommand . '"');
 
-					PutFile("once/$valueHash", `$curlCommand`); # runs the curl command, note the backticks
+					my $curlResult = `$curlCommand`; #note the backticks
+					# this could be dangerous, but the url is sanitized above
+
+					PutFile("once/$valueHash", $curlResult);
 					$profileHtml = GetFile("once/$valueHash");
 				}
 
@@ -154,13 +156,15 @@
 					WriteLog('IndexTextFile: once exists');
 					$profileHtml = GetFile("once/$valueHash");
 				} else {
-					#todo #bug #security
 					my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value);
 
 					WriteLog('IndexTextFile: #verify once needed, doing curl');
 					WriteLog('IndexTextFile: #verify "' . $curlCommand . '"');
 
-					PutFile("once/$valueHash", `$curlCommand`); # runs the curl command, note the backticks
+					my $curlResult = `$curlCommand`; #note the backticks
+					# should be safe because url is sanitized above
+
+					PutFile("once/$valueHash", $curlResult);
 					$profileHtml = GetFile("once/$valueHash");
 				}
 
@@ -195,12 +199,15 @@
 					WriteLog('IndexTextFile: once exists');
 					$profileHtml = GetFile("once/$valueHash");
 				} else {
-					#todo #bug #security
 					my $curlCommand = 'curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" "' . EscapeShellChars($value) . '"';
+
 					WriteLog('IndexTextFile: #verify once needed, doing curl');
 					WriteLog('IndexTextFile: #verify "'.$curlCommand.'"');
 
-					PutFile("once/$valueHash", `$curlCommand`); # runs the curl command, note the backticks
+					my $curlResult = `$curlCommand`; #note backticks
+					# should be safe because url is sanitized above
+
+					PutFile("once/$valueHash", $curlResult); # runs the curl command, note the backticks
 					$profileHtml = GetFile("once/$valueHash");
 				}
 
