@@ -3787,7 +3787,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
 	}
 
-	{ #.htaccess
+	if (GetConfig('admin/htaccess/enable')) { #.htaccess
 		# .htaccess file for Apache
 		my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
 
