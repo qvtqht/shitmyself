@@ -1,33 +1,88 @@
 OPERATOR'S MANUAL
+=================
+Introduction:
+Designed to be easily maintainable from console on any POSIX system.
+Content is stored in ./html/txt/ and ./html/image/
+text files -> sqlite database -> html frontend
+
    * * *
-INSTALLATION (See README for details.)
+DEPENDENCIES
 ============
-sudo apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick php-cgi
-sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick php-cgi
-git clone https://www.github.com/gulkily/shitmyself
-cd shitmyself
-time ./build.pl
-echo 1 > config/admin/lighttpd/enable
-time ./build.pl
-lynx http://admin:admin@localhost:2784/
+# sudo apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick
+# sudo yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick php-cgi
+
+imagemagick can be excluded if image module will not be used
+php can be excluded if php module will not be used
+
+BUILD
+=====
+$ git clone https://www.github.com/qvtqht/shitmyself hike
+$ cd hike
+$ ./build.pl
+
+APACHE
+======
+$ echo 1 > config/admin/htaccess/enable
+$ ln -s /var/log/apache/access.log log/access.log
+$ ln -s /var/www/html ./html
+-OR-
+# ln -s ./html /var/www/html
+
+LIGHTTPD (DEV)
+==============
+$ echo 1 > config/admin/lighttpd/enable
+$ ./build.pl
+$ ./lighttpd.pl
+$ lynx http://admin:admin@localhost:2784/
+
+(see also: install.pl, README)
+
    * * *
-SETTING ROOT KEY
-================
-The Root Operator key points to the "authority source".
+ROOT USER
+=========
+The Root Operator key is the "authority source".
 This user has full privileges, and can #admin other users.
 Path: ./admin.key
 Format: -----BEGIN PGP PUBLIC KEY BLOCK-----
-Example: gpg --armor --export > ./admin.key
+
+SETTING ROOT KEY
+================
+Put ASCII-armored PGP key into admin.key:
+$ gpg --armor --export > ./admin.key
+
+GIVING ANOTHER USER #ADMIN TAG
+==============================
+Comment #admin under the user's join item.
+
+$ gpg --armor --export Bobob > ./html/txt/bobob.txt
+$ md5sum ./html/txt/bobob.txt > ./html/txt/bobob_admin.txt
+$ echo "#admin" > ./html/txt/bobob_admin.txt
+$ gpg --clearsign ./html/txt/bobob_admin.txt
+$ mv ./html/txt/bobob_admin.txt.asc ./html/txt/bobob_admin.txt
+$ time ./update.pl --all
+
    * * *
 COMMON TASKS
 ============
 Scripts:
-./rebuild_dev.sh ; #Rebuild entire site, useful during dev
-./generate.pl    ; #Regenerate entire frontend
-./index.pl --all ; #Index all unindexed files in ./html/txt
-./clean_dev.sh   ; #Remove cache and non-default templates.
-./pages.pl --all ; #Build all touched pages
-./query/touch_all.sh ; #Touch all pages in index
+./rebuild_dev.sh
+#Rebuild entire site and reimport data, useful during dev
+
+./generate.pl
+#Regenerate entire frontend from index database
+
+./index.pl --all
+#Index all unindexed files in ./html/txt and ./html/image
+
+./clean_dev.sh
+#Remove cache and non-default templates.
+
+./pages.pl --all
+#Build all touched pages
+
+./query/touch_all.sh
+#Touch all pages in index
+
    * * *
 CONFIGURATION
 =============

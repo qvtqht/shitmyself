@@ -7,3 +7,12 @@ add top_menu titlebar colors for friday29 theme
 add more positive tags to tagset/image
 	figure out wtf it is not updating o the page
 do some commits
+16058: problem: server response message is not appearing after post submission
+16058: set config/admin/php/debug=1 to show php debug messages. redo submission
+16058: see that StoreServerResponse is called, but not written to cache/rb/response
+16058: Writing operator's manual (1337.txt)
+16058: Issue with SSR was that subdir under cache was not created, add to @dirsThatShouldExist
+16058: Started adding [x] strip metadata checkbox to upload form
+16058: Fixed regex cheatsheet throughout project
+16058: Added untaint in file counter
+16058: Fixed caching issue with file count
