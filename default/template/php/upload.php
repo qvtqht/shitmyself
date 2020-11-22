@@ -1,7 +1,16 @@
 <?php
 
 include_once('utils.php');
-	
+
+$optStripMetaData = 0; // option to strip meta data
+if (GetConfig('admin/php/upload/strip_exif')) {
+    if (isset($_POST) && isset($_POST['chkStripMetaData'])) {
+        $optStripMetaData = 1;
+    } else {
+        $optStripMetaData = 0;
+    }
+}
+
 if (!empty($_FILES['uploaded_file'])) {
 	$basePath = "image/";
 	WriteLog('$basePath = ' . $basePath);
@@ -60,6 +69,9 @@ if (!empty($_FILES['uploaded_file'])) {
                 			WriteLog('$scriptDir = ' . $scriptDir);
 
                 			if (GetConfig('admin/php/post/index_file_on_post') && defined($path) && $path && file_exists($path)) {
+                			    if ($optStripMetaData) {
+                			        WriteLog('$optStripMetaData: here would call convert $file1 -strip $file2');
+                                }
                 				IndexImageFile($path);
 							}
 
