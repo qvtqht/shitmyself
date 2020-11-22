@@ -278,7 +278,7 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 
 function ConvertSubmitsToButtonsWithAccessKey (parent) {
 	if (!parent) {
-		//alert('DEBUG: ConvertSubmitsToButtons: warning: sanity check failed');:
+		//alert('DEBUG: ConvertSubmitsToButtons: warning: sanity check failed');
 		return "";
 	}
 
