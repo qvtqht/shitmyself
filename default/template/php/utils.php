@@ -354,11 +354,9 @@ function GetConfig ($configKey, $token = 0) { // get value for config value $con
 		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} elseif (file_exists($defaultDir . '/' . $configKey)) {
 		WriteLog('GetConfig: not found in config/, but found in default/');
-
 		WriteLog("GetConfig: copy ($defaultDir/$configKey, $configDir/$configKey);"); // copy to config/
 		copy ($defaultDir . '/' . $configKey, $configDir . '/' . $configKey); // copy to config/
 		//#todo this copy should be copy_with_dir_creation
-
 		$configValue = file_get_contents($configDir . '/' . $configKey);
 	} else {
 		// otherwise return empty string
@@ -372,9 +370,8 @@ function GetConfig ($configKey, $token = 0) { // get value for config value $con
 	WriteLog('GetConfig: $configValue: ' . $configValue);
 	$configValue = trim($configValue); // remove trailing \n and any other whitespace
 	WriteLog('GetConfig: $configValue after trim: ' . $configValue);
-	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '") final answer');
+	WriteLog('GetConfig("' . $configKey . '") = "' . $configValue . '"), returning');
 	// notify log of what we found
-
 	return $configValue;
 } // GetConfig()
 
@@ -471,48 +468,38 @@ function CacheExists ($cacheName) { // Check whether specified cache entry exist
 
 function StoreServerResponse ($message) { // adds server response message and returns message id
 // stores message in cache/sm[message_id]
-// returns message id which can be passed to next page load via ?message=
-
+// returns message id which can be passed to next page load via ?message= parameter
 	WriteLog("StoreServerResponse($message)");
-
-    // #todo static $messages array
-    // #todo push message to array
-
 	$message = trim($message);
-
     if ($message == '') {
     	return;
     }
 
-    $messageId = md5($message . time()); // #todo can be better?
+    $messageId = md5($message . time() . rand());
     $messageId = substr($messageId, 0, 8);
 
-	PutCache('sm' . $messageId, $message);
-
+	PutCache('response/' . $messageId, $message);
 	WriteLog("StoreServerResponse: $messageId, cache written");
-
 	return $messageId;
-}
+} # StoreServerResponse()
 
 function RetrieveServerResponse ($messageId) { // retrieves response message for display by client and deletes it
 	WriteLog("RetrieveServerResponse($messageId)");
-
-	$message = GetCache('sm' . $messageId);
+	$message = GetCache('response/' . $messageId);
 	if ($message) {
 		if (!GetConfig('admin/php/debug')) {
 			WriteLog("RetrieveServerResponse: Message found, removing.");
 			// message was found, remove it
 			// remove stored message if not in debug mode
-			UnlinkCache('sm' . $messageId);
+			UnlinkCache('response/' . $messageId);
 		} else {
 			WriteLog("RetrieveServerResponse: Message found, not deleting because debug mode.");
 		}
 	} else {
 		WriteLog('RetrieveServerResponse: warning: message not found!');
 	}
-
 	return $message;
-}
+} # RetrieveServerResponse()
 
 function GetHtmlFilename ($hash) { // gets html filename based on hash
 	// path for new html file
