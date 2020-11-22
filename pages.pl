@@ -2310,9 +2310,13 @@ sub GetStatsTable {
 
 	if ($TXTDIR =~ m/^([^\s]+)$/) { #security #taint
 		$TXTDIR = $1;
-		my $filesTxt = GetCache('count_txt') || trim(`find $TXTDIR -name \\\*.txt | wc -l`);
-		PutCache('count_txt', $filesTxt);
-		$filesTotal += $filesTxt;
+		my $findResult = `find $TXTDIR -name \\\*.txt | wc -l`;
+		if ($findResult =~ m/(.+)/) { # todo add actual check of some kind
+			$findResult = $1;
+			my $filesTxt = trim($findResult); #todo cache GetCache('count_txt')
+			PutCache('count_txt', $filesTxt);
+			$filesTotal += $filesTxt;
+		}
 	} else {
 		WriteLog('GetStatsTable: warning: sanity check failed: $TXTDIR contains space');
 	}
