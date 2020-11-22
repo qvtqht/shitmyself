@@ -1478,7 +1478,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		} else {
 			#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
 			my %windowParams;
-			$windowParams{'body'} = GetTemplate("item/item.template");
+			$windowParams{'body'} = GetTemplate('item/item.template');
 			$windowParams{'title'} = '$itemTitle';
 			# $windowParams{'headings'} = 'haedigns';
 			$windowParams{'status'} = GetTemplate("item/status_bar.template");;
