@@ -287,6 +287,7 @@ function InjectJs ($html, $scriptNames, $injectMode = 'before', $htmlTag = '</bo
 }
 
 function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing the missing page
+// Handle404 (
 	WriteLog("HandleNotFound($path, $pathRel)");
 
 	if (GetConfig('admin/php/regrow_404_pages')) {
@@ -328,6 +329,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/search.html' ||
 			$path == '/manual.html' ||
 			$path == '/index0.html' ||
+			$path == '/stats.html' ||
 			$path == '/crypto.js' ||
 			$path == '/crypto2.js' ||
 			$path == '/openpgp.js'
