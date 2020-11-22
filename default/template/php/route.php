@@ -554,11 +554,10 @@ if (GetConfig('admin/php/route_enable')) {
 								}
 								if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
-
 									PutConfig('admin/admin_last_action', 0);
-
 									if (file_exists('../admin.key')) {
 										unlink('../admin.key');
+										MakePage('--summary');
 										WriteLog('Overthrow successful');
 										RedirectWithResponse('/settings.html', 'Register to become operator.');
 									} else {
@@ -566,8 +565,7 @@ if (GetConfig('admin/php/route_enable')) {
 										RedirectWithResponse('/settings.html', 'Register to become operator.');
 									}
 								} else {
-									WriteLog('Overthrow conditions not met, overthrow unsuccessful');
-
+									WriteLog('Overthrow conditions not met, unsuccessful');
 									RedirectWithResponse('/settings.html', 'Conditions not met. This incident will be reported.');
 								}
 							} else {
