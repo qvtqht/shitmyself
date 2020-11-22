@@ -207,10 +207,11 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 		//SettingsOnload();
 
 	} else {
-		//alert('DEBUG: ShowAdvanced: feature check FAILED! window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
+		//alert('DEBUG: ShowAdvanced: feature check FAILED!');
+		//alert('DEBUG: window.localStorage: ' + window.localStorage + '; document.getElementsByClassName: ' + document.getElementsByClassName);
 	}
 
-	//alert('debug: ShowAdvanced: returning false');
+	//alert('DEBUG: ShowAdvanced: returning false');
 	return false;
 } // ShowAdvanced()
 
