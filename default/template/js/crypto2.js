@@ -286,8 +286,11 @@ function setPrivateKeyFromTxt (newKey) { // set the current private key and refr
 }
 
 function getUsername () { // returns pgp username
-// #todo cache it
-    var openpgp = window.openpgp;
+	var openpgp = window.openpgp;
+
+    if (window.getUsernameReturn) {
+    	return window.getUsernameReturn;
+	}
 
     if (openpgp) {
 		// read it into pgp object
@@ -296,6 +299,9 @@ function getUsername () { // returns pgp username
 		// get the public key out of it
 		var pubKeyObj = privKeyObj.keys[0].toPublic();
 		var myUsername = pubKeyObj.users[0].userId.userid;
+
+		window.getUsernameReturn = myUsername;
+
 		return myUsername;
 	}
 
