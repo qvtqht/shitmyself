@@ -2159,8 +2159,13 @@ sub DBGetAuthorItemCount { # returns number of items attributed to author identi
 	chomp ($key);
 
 	if (!IsFingerprint($key)) {
-		WriteLog('Problem! DBGetAuthorScore called with invalid parameter! returning');
-		return;
+		WriteLog('DBGetAuthorItemCount: warning: called with non-fingerprint parameter, returning');
+		return 0;
+	}
+	if ($key != SqliteEscape($key)) {
+		# should be redundant, but what the heck
+		WriteLog('DBGetAuthorItemCount: warning: $key != SqliteEscape($key)');
+		return 0;
 	}
 
 	state %scoreCache;
@@ -2168,16 +2173,17 @@ sub DBGetAuthorItemCount { # returns number of items attributed to author identi
 		return $scoreCache{$key};
 	}
 
-	$key = SqliteEscape($key);
-
-	if ($key) { #todo fix non-param sql
-		my $query = "SELECT COUNT(file_hash) item_count FROM item_flat WHERE author_key = '$key'";
-		$scoreCache{$key} = SqliteGetValue($query);
+	if ($key) {
+		my $query = "SELECT COUNT(file_hash) file_hash_count FROM (SELECT DISTINCT file_hash FROM item_flat WHERE author_key = ?)";
+		$scoreCache{$key} = SqliteGetValue($query, $key);
 		return $scoreCache{$key};
 	} else {
-		return "";
+		return 0;
 	}
-}
+
+	WriteLog('DBGetAuthorItemCount: warning: unreachable reached');
+	return 0;
+} # DBGetAuthorItemCount()
 
 sub DBGetAuthorLastSeen { # return timestamp of last item attributed to author
 # $key = author's gpg key
