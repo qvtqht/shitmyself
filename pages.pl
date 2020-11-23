@@ -1009,11 +1009,6 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		$txtIndex = InjectJs($txtIndex, qw(settings avatar voting utils profile translit timestamp));
 	}
 
-	if (GetConfig('admin/js/enable')) {
-		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
-	}
-
 	#	my $scriptsInclude = '<script src="/openpgp.js"></script><script src="/crypto2.js"></script>';
 #	$txtIndex =~ s/<\/body>/$scriptsInclude<\/body>/;
 
@@ -2240,10 +2235,6 @@ sub GetTopItemsPage { # returns page with top items listing
 	if (GetConfig('admin/js/enable')) {
 		# add necessary js
 		$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar utils));
-		$htmlOutput =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$htmlOutput =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
-
-		# $htmlOutput = InjectJs($htmlOutput, qw(settings));
 	}
 
 	return $htmlOutput;
@@ -3142,11 +3133,6 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 	}
 
-	if (GetConfig('admin/js/enable')) {
-		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
-	}
-
 	return $txtIndex;
 } # GetReadPage()
 
@@ -3564,11 +3550,6 @@ sub MakeSimplePage { # given page name, makes page
 	$html .= $contentWindow;
 	$html .= GetPageFooter();
 	$html = InjectJs($html, qw(avatar settings profile utils));
-
-	if (GetConfig('admin/js/enable')) {
-		$html =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$html =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
-	}
 
 	my $itemListPlaceholder = '<span id=itemList></span>';
 	if ($pageName eq 'welcome') {
@@ -4038,8 +4019,6 @@ sub GetSearchPage { # returns html for search page
 
 	if (GetConfig('admin/js/enable')) {
 		$html = InjectJs($html, qw(settings avatar profile puzzle));
-		$html =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$html =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
 	return $html;
 } # GetSearchPage()
