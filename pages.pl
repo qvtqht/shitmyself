@@ -678,8 +678,6 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex = InjectJs($txtIndex, qw(settings avatar profile utils fresh));
-		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
 
 	return $txtIndex;
@@ -2541,6 +2539,15 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		$scriptsText .= $scriptTemplate;
 	}
 
+	my $needOnload = 0; # remember if we need to add <body onload attribute later
+	{
+		# if script we are injecting contains "OnLoadEverything",
+		# we will need to add it to the <body onload attribute later
+		if (index($scriptsText, 'OnLoadEverything') != -1) {
+			$needOnload = 1;
+		}
+	}
+
 	# get the wrapper, i.e. <script>$javascript</script>
 	my $scriptInject = GetTemplate('html/utils/scriptinject.template');
 	# fill in the wrapper with our scripts from above
@@ -2555,6 +2562,25 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		# if there was no </body> tag, just append at the end
 		$html .= "\n\n" . $scriptInject;
 		WriteLog('InjectJs(): warning: $html does not contain </body>');
+	}
+
+	if ($needOnload) {
+		# remember, we need to add <body onload event
+		if ($html =~ m/<body.*?onload.*?>/i) {
+			# <body already has onload, forget about it
+		} else {
+			if (index($html, '<body') != -1) {
+				# add onload attribute to body tag
+				$html = AddAttributeToTag(
+					$html,
+					'body',
+					'onload',
+					'if (window.OnLoadEverything) { OnLoadEverything(); }'
+				);
+			} else {
+				WriteLog('InjectJs(): warning: wanted to $html does not contain <body');
+			}
+		}
 	}
 
 	return $html;
@@ -4072,16 +4098,6 @@ sub GetWritePage { # returns html for write page
 		$writePageHtml = InjectJs($writePageHtml, @js);
 	}
 
-	if (GetConfig('admin/js/enable')) {
-		# add call to WriteOnload() to page
-		$writePageHtml = AddAttributeToTag(
-			$writePageHtml,
-			'body',
-			'onload',
-			'if (window.OnLoadEverything) { OnLoadEverything(); }'
-		);
-	}
-
 	return $writePageHtml;
 } # GetWritePage()
 
@@ -4163,10 +4179,6 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 
 		if (GetConfig('admin/js/enable')) {
 			$txtIndex = InjectJs($txtIndex, qw(settings utils profile timestamp));
-
-			# these two lines are different, regex is hard sometimes
-			$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /;
-			$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/;
 		} else {
 			# js is disabled
 		}
@@ -4226,8 +4238,6 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	if (GetConfig('admin/js/enable')) {
 		$txtIndex = InjectJs($txtIndex, qw(settings avatar profile timestamp pingback utils));
-		$txtIndex =~ s/<body /<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }" /i;
-		$txtIndex =~ s/<body>/<body onload="if (window.OnLoadEverything) { OnLoadEverything(); }">/i;
 	}
 
 	return $txtIndex;
