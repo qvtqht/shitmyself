@@ -397,7 +397,7 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 	}
 
 	return true;
-}
+} // signMessage()
 
 function cryptoJs() { // used for checking if crypto2.js has been loaded
 	return 1;
