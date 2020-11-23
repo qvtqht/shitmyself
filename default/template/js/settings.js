@@ -409,7 +409,7 @@ function SettingsOnload () { // onload function for settings page
 } // SettingsOnload()
 
 if (window.EventLoop) {
-	EventLoop(); // #todo replace with body.onload ?
+	window.eventLoopShowAdvanced = 1;
 } else {
 	ShowAdvanced();
 }
