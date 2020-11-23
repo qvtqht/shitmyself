@@ -2162,7 +2162,7 @@ sub DBGetAuthorItemCount { # returns number of items attributed to author identi
 		WriteLog('DBGetAuthorItemCount: warning: called with non-fingerprint parameter, returning');
 		return 0;
 	}
-	if ($key != SqliteEscape($key)) {
+	if ($key ne SqliteEscape($key)) {
 		# should be redundant, but what the heck
 		WriteLog('DBGetAuthorItemCount: warning: $key != SqliteEscape($key)');
 		return 0;
