@@ -3753,7 +3753,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		if ($algoSelectMode eq '512' || $algoSelectMode eq 'random' || $algoSelectMode eq 'max') {
 			my $oldValue = $crypto2JsTemplate;
 			$crypto2JsTemplate = str_replace('var algoSelectMode = 0;', "var algoSelectMode = '$algoSelectMode'", $crypto2JsTemplate);
-			if ($oldValue == $crypto2JsTemplate) {
+			if ($oldValue eq $crypto2JsTemplate) {
 				WriteLog('MakeSummaryPages: warning: crypto2.js algoSelectMode templating failed, value of $crypto2JsTemplate did not change as expected');
 			}
 		}
