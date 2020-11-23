@@ -1328,7 +1328,7 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 	WriteLog('AddAttributeToTag: $html after: ' . $html);
 
 	return $html;
-}
+} # AddAttributeToTag()
 
 sub RemoveHtmlFile { # $file ; removes existing html file
 	my $file = shift;
