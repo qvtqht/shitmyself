@@ -174,16 +174,13 @@ if (isset($comment) && $comment) {
 			// #todo this is a very naive way to figure out user id
 
 			$finishTime = time() - $postPhpStartTime;
-
-			// #todo trigger index.pl?
-
 			WriteLog('post.php: $newFileHash = ' . $newFileHash);
-
 			$newFileHtmlPath = GetHtmlFilename($newFileHash);
 
 			if (file_exists($newFileHtmlPath)) {
 				WriteLog('file_exists($newFileHtmlPath)');
 
+                // naive
 				$profileId = preg_match(
 					'/[0-9A-F]{16}/',
 					file_get_contents(
