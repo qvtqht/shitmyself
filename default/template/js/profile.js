@@ -434,23 +434,20 @@ function StripToFilename (text) { // strips provided text to only filename-valid
 }
 
 function getUsername2 () { // returns pgp username
-// #todo cache it
+// can be optimized with caching, but would also need to be
+// un-cached when it changes. at this time, caching seems
+// like over-optimization here
     var openpgp = window.openpgp;
-
     if (openpgp) {
 		// read it into pgp object
 		var privKeyObj = openpgp.key.readArmored(getPrivateKey());
-
 		// get the public key out of it
 		var pubKeyObj = privKeyObj.keys[0].toPublic();
-
 		var myUsername = pubKeyObj.users[0].userId.userid;
-
 		return myUsername;
 	}
-
 	return '';
-}
+} // getUsername2()
 
 function SavePrivateKeyAsTxt() { // initiates "download" of private key as text file
 	var myFp = getUserFp();
