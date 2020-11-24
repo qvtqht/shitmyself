@@ -2,7 +2,7 @@
 
 function LongAgo(seconds) { // returns string with time units
 // takes seconds as parameter
-// returns a string like
+// returns a string like "3 days ago" or "3 days from now"
 	var flip = 0;
 	if (seconds < 0) {
 		flip = 1;
@@ -34,13 +34,40 @@ function LongAgo(seconds) { // returns string with time units
 					seconds = seconds + ' hour';
 				}
 			} else {
-			// #todo weeks, years, etc.
 				seconds = Math.floor(seconds / 24);
 
-				if (seconds != 1) {
-					seconds = seconds + ' days';
+				if (seconds < 7) {
+					if (seconds != 1) {
+						seconds = seconds + ' days';
+					} else {
+						seconds = seconds + ' day';
+					}
 				} else {
-					seconds = seconds + ' day';
+					if (seconds < 30) {
+						seconds = Math.floor(seconds / 7);
+						if (seconds != 1) {
+							seconds = seconds + ' weeks';
+						} else {
+							seconds = seconds + ' week';
+						}
+					} else {
+						if (seconds < 365) {
+							seconds = Math.floor(seconds / 30);
+
+							if (seconds != 1) {
+								seconds = seconds + ' months';
+							} else {
+								seconds = seconds + ' month';
+							}
+						} else {
+							seconds = Math.floor(seconds / 365);
+							if (seconds != 1) {
+								seconds = seconds + ' years';
+							} else {
+								seconds = seconds + ' year';
+							}
+						}
+					}
 				}
 			}
 		}
@@ -97,6 +124,7 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 		if (window.EventLoop) {
 			// do nothing
 		} else {
+			// allows ShowTimestamps() to run decoupled from main EventLoop
 			if (changeLogged) {
 				setTimeout('ShowTimestamps()', 5000);
 			} else {
@@ -104,7 +132,7 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 			}
 		}
 	}
-}
+} // ShowTimestamps()
 
 if (window.EventLoop) {
 	// do nothing
