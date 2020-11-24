@@ -33,24 +33,31 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 	}
 	//alert('DEBUG: key: ' + key);
 
-	if (0 && e.keyCode == 13 && e.ctrlKey) {
-		// #todo finish debugging this
+	if (e.keyCode == 13 && e.ctrlKey) {
+		//alert('DEBUG: found ctrl+enter');
 		if (t.parentElement) {
+			//alert('DEBUG: found t.parentElement');
 			var formElement = t.parentElement;
-			while (formElement && formElement.nodeName != 'FORM') {
+			while (formElement && formElement.parentElement && formElement.nodeName != 'FORM') {
 				formElement = formElement.parentElement;
 			}
 			if (formElement.nodeName == 'FORM') {
-				var submitButton = formElement.getElementsByTagName('submit');
-				if (submitButton && submitButton[0]) {
-					// submitButton[0].focus();
-					// #todo this doesn't work
-					return submitButton[0].click();
-				} else {
-					return formElement.submit();
+				//alert('DEBUG: formElement.nodeName = FORM')
+				var inputElements = formElement.getElementsByTagName('input');
+				//alert('DEBUG: inputElements.length = ' + inputElements.length);
+				if (inputElements.length) {
+					var iElement = 0;
+					for (iElement = 0; iElement < inputElements.length; iElement++) {
+						if (inputElements[iElement].getAttribute('type').toLowerCase() == 'submit') {
+							inputElements[iElement].click();
+							return '';
+						}
+					}
 				}
 			}
 		}
+	} else {
+		//alert('DEBUG: e.keyCode = ' + e.keyCode + '; e.ctrlKey = ' + e.ctrlKey);
 	}
 
 	// alt+` will toggle translit mode
