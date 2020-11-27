@@ -219,9 +219,26 @@ sub PushItemsToHost { #pushes items to $host which have not already been pushed
 	}
 } # PushItemsToHost()
 
-my @hostsToPull = split("\n", GetConfig('pull_hosts'));
+sub PushFileToHosts { #pushes item to all hosts in config
+	my $file = shift;
+	chomp $file;
+	if (!-e $file) {
+		WriteLog("PushItemToHosts: warning: sanity check failed, file no exist");
+		return 0;
+	}
 
-foreach my $host (@hostsToPull) {
-	#PullFeedFromHost($host);
-	PushItemsToHost($host);
+	WriteLog("PushFileToHosts($file)");
+	my @hosts= split("\n", GetConfig('pull_hosts'));
+	foreach my $host (@hosts) {
+		#PullFeedFromHost($host);
+		PushItemToHost($host, $file);
+	}
+} # PushFileToHosts()
+
+while (my $fileToPush = shift) {
+	if ($fileToPush) {
+		WriteMessage('Pushing ' . $fileToPush);
+		chomp $fileToPush;
+		PushFileToHosts($fileToPush);
+	}
 }
