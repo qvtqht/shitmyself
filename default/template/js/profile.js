@@ -49,22 +49,13 @@ function btnSignOut_Click(t) { // event for 'Sign Out' button's click
 function btnRegister_Click (t) { // event for 'Register' button's click
 // t is clicked button's "this" object
 	//alert('DEBUG: btnRegister_Click() begin');
-
 	if (window.localStorage) {
-		// minimum features check
-		// #todo resolve conflict with ie11 vs opera 12
-
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
-
 		if (window.MakeKey) {
 			//alert('DEBUG: btnRegister_Click: window.MakeKey exists, calling MakeKey()');
-
 			var intKeyGenResult = MakeKey();
-
 			//alert('DEBUG: btnRegister_Click: intKeyGenResult = ' + intKeyGenResult);
-
 			SetPrefs('last_pubkey_ping', 0);
-
 			if (intKeyGenResult) {
 				//alert('DEBUG: calling PubKeyPing()');
 				if (window.addLoadingIndicator) {
@@ -74,9 +65,7 @@ function btnRegister_Click (t) { // event for 'Register' button's click
 			} else {
 				//alert('DEBUG: NOT calling PubKeyPing(), because intKeyGenResult was false');
 			}
-
 			//alert('DEBUG: returning intKeyGenResult = ' + intKeyGenResult);
-
 			return intKeyGenResult;
 		}
 	} else {
