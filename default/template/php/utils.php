@@ -295,9 +295,11 @@ function DoFlush () {
 // 	}
 }
 
-function PutConfig ($configKey, $configValue) { # writes config value to config storage
+function SetConfig ($configKey, $configValue) { # writes config value to config storage
+# SetConfig {
+# PutConfig {
 	WriteLog("PutConfig($configKey, $configValue)");
-	$configDir = '../config'; // config is stored here
+	$configDir = '../config'; // config is stored here #todo unhardcode
 	$putFileResult = PutFile("$configDir/$configKey", $configValue);
 	GetConfig($configKey, 'unmemo');
 	return $putFileResult;
