@@ -3721,10 +3721,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# Blank page
 	PutHtmlFile("blank.html", "");
 
-
 	# Zalgo javascript
 	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js'));
-
 
 	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
 		# OpenPGP javascript
@@ -3733,7 +3731,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	}
 
 	PutHtmlFile("sha512.js", GetTemplate('js/sha512.js'));
-
 
 	if (GetConfig('admin/php/enable')) {
 	#if php/enabled, then use post.php instead of post.html
@@ -4680,6 +4677,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# topitems page
 	elsif ($pageType eq 'read') {
+	#todo this is never called, apparently
 		my $topItemsPage = GetTopItemsPage();
 		PutHtmlFile("read.html", $topItemsPage);
 
