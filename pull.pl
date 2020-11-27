@@ -171,27 +171,25 @@ sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 	my $url = $host . $fileName;
 
 	#print $url;
+	$url = EscapeShellChars($url);
 
 	my $curlCommand = $curlPrefix . 'curl';
-
-	WriteLog("$curlCommand -s $url");
+	WriteLog('PullItemFromHost: $curlCommand = ' . $curlCommand . ' (-s "$url")');
+	WriteLog('PullItemFromHost: $url = ' . $url);
 
 	#my $remoteFileContents = '';#####`curl -A useragent -s $url`;
-	my $remoteFileContents = `$curlCommand -s $url`;
-
+	my $remoteFileContents = `$curlCommand -s "$url"`;
 	my $localPath = '.' . $fileName;
-
 	my $localDir = dirname($localPath);
 
 	#todo refactor into a utils function
 	if (!-d "$localDir") {
+		WriteLog("PullItemFromHost: mkdir -p $localDir");
 		system("mkdir -p $localDir");
 	}
-
-	WriteLog("PutFile($localPath)");
-
+	WriteLog("PullItemFromHost: PutFile($localPath)");
 	PutFile($localPath, $remoteFileContents);
-}
+} # PullItemFromHost()
 
 
 sub PushItemsToHost { #pushes items to $host which have not already been pushed
