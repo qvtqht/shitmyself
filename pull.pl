@@ -9,12 +9,6 @@ use URI::Encode qw(uri_encode);
 use Digest::SHA qw(sha1_hex);
 use URI::Escape qw(uri_escape);
 
-use lib 'lib';
-
-# We'll use pwd for for the install root dir
-my $SCRIPTDIR = `pwd`;
-chomp $SCRIPTDIR;
-
 require './utils.pl';
 require './sqlite.pl';
 
