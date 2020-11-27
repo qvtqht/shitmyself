@@ -2502,7 +2502,7 @@ sub GetTimestampWidget { # $time ; returns timestamp widget
 
 	if (!$time =~ m/^[0-9]+$/) {
 		WriteLog('GetTimestampWidget: warning: sanity check failed!');
-		return '(TS)';
+		return '';
 	}
 
 	my $widget = '';
