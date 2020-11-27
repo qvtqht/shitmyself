@@ -195,6 +195,7 @@ sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 sub PushItemsToHost { #pushes items to $host which have not already been pushed
 	my $host = shift;
 	chomp($host);
+	WriteLog("PushItemsToHost($host)");
 
 	my %queryParams;
 	my @files = DBGetItemList(\%queryParams);
@@ -216,7 +217,7 @@ sub PushItemsToHost { #pushes items to $host which have not already been pushed
 			last;
 		}
 	}
-}
+} # PushItemsToHost()
 
 my @hostsToPull = split("\n", GetConfig('pull_hosts'));
 
