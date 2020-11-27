@@ -89,27 +89,37 @@ sub PullFeedFromHost { # connects to $host with http and downloads any new items
 # my $DIR = dirname($FILE);
 # print $DIR, "\n";
 
-sub PushItemToHost { #pushes an item to host via /post.html
+sub PushItemToHost { # $host, $fileName, [$fileHash] ;  pushes an item to host via /post.html
 	my $host = shift;
 	my $fileName = shift;
-	my $fileHash = shift;
+	my $fileHash = shift; # optional, calculated from $fileName if missing
+
+	if (!$host || !$fileName) {
+		WriteLog('PushItemToHost: warning: sanity check failed');
+		return '';
+	}
+	chomp $host;
+	chomp $fileName;
 
 	if (IsFileDeleted($fileName, $fileHash)) {
 		WriteLog("PushItemToHost: IsFileDeleted() returned true, skipping");
 		return;
 	}
 
-	chomp $host;
-	chomp $fileName;
+	if (!$fileHash) {
+		$fileHash = GetFileHash($fileName);
+		WriteLog('PushItemToHost: $fileHash was not specified, GetFileHash($fileName) returned: ' . $fileHash);
+	}
 	chomp $fileHash;
 
 	my $curlPrefix = '';
 	if ($host =~ /\.onion$/ || $host =~ /\.onion:.+/) {
+		#todo feature-check for torify and onions
+		WriteLog('PushItemToHost: adding torify prefix');
 		$curlPrefix = 'torify ';
 	}
 
 	my $pushHash = sha1_hex($host . '|' . $fileHash);
-
 	WriteLog("PushItemToHost($host, $fileName, $fileHash");
 
 	my $pushLog = "./log/push.log";
@@ -132,9 +142,10 @@ sub PushItemToHost { #pushes an item to host via /post.html
 	WriteLog("$curlCommand \"$url\"");
 
 	my $curlResult = `$curlCommand \"$url\"`;
+	PutFile("once/$pushHash", $curlResult);
 
 	return $curlResult;
-}
+} # PushItemToHost()
 
 sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 	my $host = shift;
