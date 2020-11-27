@@ -325,7 +325,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					'mask_params' => 'mg',
 					'message' => '[Parent]'
 				},
-				{ # title of item, either self or parent. used for display when title is needed
+				{ # title of item, either self or parent. used for display when title is needed #title title:
 					'token'   => 'title',
 					'mask'    => '^(title)(\W+)(.+)$',
 					'mask_params'    => 'mg',
@@ -798,7 +798,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				DBAddVoteRecord($fileHash, $addedTime, 'notext');
 			}
 			else { # has $detokenedMessage
-				{ #title
+				{ #title:
 					my $firstEol = index($detokenedMessage, "\n");
 					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 42
 					if ($firstEol == -1) {
