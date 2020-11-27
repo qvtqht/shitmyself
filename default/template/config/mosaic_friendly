@@ -1,0 +1,3 @@
+config admin/php/enable 0
+config admin/js/enable 0
+
