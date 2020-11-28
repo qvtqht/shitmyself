@@ -340,15 +340,31 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 
 		if (isset($pagesPlArgument) && $pagesPlArgument) {
-			# call pages.pl to generate the page
-			$pwd = getcwd();
-			WriteLog('$pwd = ' . $pwd);
+			# here we will issue a pages.pl call but first
+			# we will check if it's been done in last 60s because
+			# we want to keep from calling it too often, for example
+			# in a case when the call does not result in
+			# the page being built for whatever reason
 
-			WriteLog("HandleNotFound: cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument");
-			WriteLog(`cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument`);
+			$mostRecentCacheName = 'pages/' . md5($pagesPlArgument);
+			$mostRecentCall = intval(GetConfig($mostRecentCacheName));
 
-			WriteLog("HandleNotFound: cd $pwd");
-			WriteLog(`cd $pwd`);
+			if (time() - $mostRecentCall > 60) {
+				WriteLog('HandleNotFound: pages.pl was called more than 60 seconds ago, trying to grow page');
+				# call pages.pl to generate the page
+				$pwd = getcwd();
+				WriteLog('$pwd = ' . $pwd);
+
+				WriteLog("HandleNotFound: cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument");
+				WriteLog(`cd $SCRIPTDIR ; ./pages.pl $pagesPlArgument`);
+
+				WriteLog("HandleNotFound: cd $pwd");
+				WriteLog(`cd $pwd`);
+
+				PutCache($mostRecentCacheName, time());
+			} else {
+				WriteLog('HandleNotFound: warning: pages.pl was called LESS THAN 60 seconds ago, NOT trying to grow page');
+			}
 		}
 
 		$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
