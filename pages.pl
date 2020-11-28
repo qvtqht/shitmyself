@@ -1434,7 +1434,17 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		if ($itemHash) {
+			# what this does is replace [[example]] with
+			# tag buttons for all the tags contained in
+			# tagset/example
 			$message =~ s/\[\[([a-z]+)\]\]/GetItemTagButtons($itemHash, $1)/ge;
+			# REGEX cheatsheet
+			# ================
+			# /s = single-line (changes behavior of . metacharacter to match newlines)
+			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+			# /g = global (all instances)
+			# /i = case-insensitive
+			# /e = eval
 		}
 
 		WriteLog('GetItemTemplate: $message is: ' . $message);
@@ -2416,6 +2426,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	}
 
 	if (GetConfig('admin/js/dragging')) {
+		# include dragging.js script if dragging is enabled
 		push @scriptNames, 'dragging'; 
 	}
 
