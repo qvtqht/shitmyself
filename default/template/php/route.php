@@ -27,6 +27,7 @@ function SetHtmlClock ($html) { // sets html clock on page if present
 }
 
 function TrimPath ($string) { // Trims the directories AND THE FILE EXTENSION from a file path
+# Should really be called GetFileNameWithoutPathAndExtension()
 	while (index($string, "/") >= 0) {
 		$string = substr($string, index($string, "/") + 1);
 	}
@@ -36,7 +37,7 @@ function TrimPath ($string) { // Trims the directories AND THE FILE EXTENSION fr
 	}
 
 	return $string;
-}
+} # TrimPath()
 
 function TranslateEmoji ($html) { // replaces emoji with respective text
 	WriteLog('TranslateEmoji()');
