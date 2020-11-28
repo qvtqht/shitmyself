@@ -397,12 +397,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# \s whitespace
 			# \S NOT whitespace
 			#
-			# REGEX cheatshee
-			# ===========
+			# REGEX cheatsheet
+			# ================
 			# /s = single-line (changes behavior of . metacharacter to match newlines)
 			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
 			# /g = global (all instances)
 			# /i = case-insensitive
+			# /e = eval
 
 			# parses standard issue tokens, definitions above
 			# stores into @tokensFound
