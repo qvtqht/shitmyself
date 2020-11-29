@@ -30,5 +30,5 @@
 		<tr><td>friends:</td><td>$authorFriends</td></tr>
 	</table>
 </font>
-<p>
+<p><hr>
 <!-- / author_info.template -->
