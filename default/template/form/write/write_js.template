@@ -1,5 +1,4 @@
 <!-- write_js.template ; additional controls for js-enhanced write form -->
-<p align=right id=pMoreLink></p>
 <hr class=advanced>
 <span id=spanInputOptions class=advanced>
 	<p>

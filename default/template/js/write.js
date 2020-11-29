@@ -45,9 +45,7 @@ function WriteOnload () { // onload handler for write page
 						// this checkbox being checked means signMessage() is called in writeSubmit()
 
 						lblSignAs.innerHTML = 'Sign as ' + getAvatar();
-
 						lblSignAs.appendChild(chkSignAs);
-
 						spanSignAs.appendChild(lblSignAs);
 //					}
 
@@ -74,16 +72,19 @@ function WriteOnload () { // onload handler for write page
 				} // window.getAvatar
 			} // document.getElementById('spanSignAs')
 
-			var pMoreLink = document.getElementById('pMoreLink');
-			if (pMoreLink) {
-				var aMore = document.createElement('a');
-				aMore.setAttribute('href', '#');
-				aMore.setAttribute(
-					'onclick',
-					'if (window.ShowAll) { ShowAll(this, this.parentElement.parentElement); this.parentElement.remove(); }'
-				);
-				aMore.innerHTML = 'More';
-				pMoreLink.appendChild(aMore);
+			if (0) {
+				// config/admin/js/write_more_link
+				var pMoreLink = document.getElementById('pMoreLink');
+				if (pMoreLink) {
+					var aMore = document.createElement('a');
+					aMore.setAttribute('href', '#');
+					aMore.setAttribute(
+						'onclick',
+						'if (window.ShowAll) { ShowAll(this, this.parentElement.parentElement); this.parentElement.remove(); }'
+					);
+					aMore.innerHTML = 'More';
+					pMoreLink.appendChild(aMore);
+				}
 			}
 //
 //			if (document.getElementById('addtext')) {
