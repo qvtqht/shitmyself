@@ -6,7 +6,7 @@ input    { font-family:monospace; font-size:10pt; }
 input[type=\"submit\"] { font-family:Verdana, Geneva, sans-serif; }
 textarea { font-family:monospace; font-size:10pt; }
 a:link    { color:#000000; text-decoration:none; }
-a:visited { color:#828282; text-decoration:none; }
+a:visited { color:$colorVlink; text-decoration:none; }
 
 @media only screen and (min-width : 300px) and (max-width : 389px) {
   .txt { max-width: 270px; overflow: hidden }
