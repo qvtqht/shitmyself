@@ -66,13 +66,12 @@ function dragElement (elmnt, header) {
 }
 
 function DraggingInit() {
+// initializes all class=dialog elements on the page to be draggable
 	var elements = document.getElementsByClassName('dialog');
 //	for (var i = 0; i < elements.length; i++) {
 	for (var i = elements.length - 1; 0 <= i; i--) {
 		var allTitlebar = elements[i].getElementsByClassName('titlebar');
 		var firstTitlebar = allTitlebar[0];
-
-	//	alert(firstTitlebar.innerHTML);
 
 		dragElement(elements[i], firstTitlebar);
 
@@ -85,9 +84,9 @@ function DraggingInit() {
 				elmnt.style.top = elTop;
 			}
 		} else {
-			//alert('debug: dragging.js: warning: elements[i].id && window.GetPrefs was false');
+			//alert('DEBUG: dragging.js: warning: id and/or GetPrefs missing');
 		}
 	}
-}
+} // DraggingInit()
 
 /* / dragging.js */
