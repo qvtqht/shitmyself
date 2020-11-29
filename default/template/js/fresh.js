@@ -142,7 +142,6 @@ function freshCallback() { // callback for requesting HEAD for current page
 							}
 
 							if (window.freshTimeoutId) {
-								// #todo does this work?
 								clearTimeout(window.freshTimeoutId);
 							}
 						} // NOT window.freshUserWantsReload
