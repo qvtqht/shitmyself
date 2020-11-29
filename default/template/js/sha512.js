@@ -52,7 +52,7 @@ function rstr_sha512(s)
 function rstr_hmac_sha512(key, data)
 {
   var bkey = rstr2binb(key);
-  if(bkey.length > 32) bkey = binb_sha512(bkey, key.length * 8);
+  if(32 < bkey.length) bkey = binb_sha512(bkey, key.length * 8);
 
   var ipad = Array(32), opad = Array(32);
   for(var i = 0; i < 32; i++)
