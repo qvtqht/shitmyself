@@ -1305,3 +1305,17 @@ if there is a list format it like this
 this will stand up to both instagram and markdown rejanking
 
 keyboards: onmousedown and onmouseup could set and clear a timeout for key repeat?
+
+
+===
+
+#brainstorm #meta maybe we can checksum the default and/or config tree and rebuild relevant parts automatically if changes detected?
+
+can also piggyback on fossil or git
+
+===
+
+secret cookie + file md5 = proof checksum
+
+#meta #brainstorm
+

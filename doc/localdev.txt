@@ -11,9 +11,10 @@ Recently, I have used the following distros:
 Fedora LXDE
 Linux Mint XFCE
 
-I have also installed IntelliJ IDEA Community Edition, with most of the install
-options disabled, except for Git and GitHub support.
-I let it install the Perl support plugin (many thanks to Alexandr Evstigneev).
+I have also installed IntelliJ IDEA, with most of the install
+options disabled, except for Git support.
+On faster machine, I let it install the Perl support plugin (many thanks to Alexandr Evstigneev).
+	Lately, this plugin has caused me some issues
 
 I have found it wise to exclude html/ config/ log/ cache/ from my project.
 Otherwise I get many unwanted results in global search.

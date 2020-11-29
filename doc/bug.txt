@@ -121,3 +121,25 @@ addtext=Meditate...
 
 -- 
 Host: 10.0.2.2:2784
+
+
+===
+
+#meta #bug strange behavior after git init: 
+
+`"--"--"+-++""+-+"++-++DBD::SQLite::db prepare failed: no such table: item_attribute at ./sqlite.pl line 1950.
+Can't call method "execute" on an undefined value at ./sqlite.pl line 1951.
+"+++++""--fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+.--`+'+"+"--recognized --all
+DBD::SQLite::db prepare failed: no such table: task at ./sqlite.pl line 441.
+Can't call method "execute" on an undefined value at ./sqlite.pl line 442.
+,`--'+,,--all
+"--fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+.--`+'+"+,"-,.------"---.++,"-,.------`--+`--+--',.-,.------+---+
+
+1606626458 update.pl: Calling ProcessAllAccessLogsInConfig...
+

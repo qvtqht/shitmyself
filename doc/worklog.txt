@@ -16,3 +16,9 @@ do some commits
 16058: Fixed regex cheatsheet throughout project
 16058: Added untaint in file counter
 16058: Fixed caching issue with file count
+16060: Add option for htaccess writing
+16060: Fix that annoying js error in js debug message
+16060: Mentally yell at IntelliJ for stealing focus
+16060: Do some commits
+16061: Fix/finish ctrl+enter hook in translit.js
+

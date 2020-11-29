@@ -246,9 +246,8 @@ flush
 add 404 --> new item to route.php
 
 when only mouse click and no scrollbar, no way to move down page
-	todo
-		button to move to end of section
-		potentially javascript scrollbars?
+	button to move to end of section
+	potentially javascript scrollbars?
 
 
 write form
@@ -1921,3 +1920,16 @@ require profile mode is janky and locks out links and any non-cookie users
 ===
 
 #todo #meta replying by non-advanced users is not discoverable 
+
+
+===
+
+#todo #meta get rid of "requires javascript" messages on write form
+
+plan: use document.write to output the extra things
+
+verify document write is pretty compatible
+
+possibly make it a flag
+-- 
+Cookie: 7AD94E26FCDAB1A7
