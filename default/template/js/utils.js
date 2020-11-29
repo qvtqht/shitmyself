@@ -1,7 +1,7 @@
 // == begin utils.js
 
 // begin html escape hack (credit stacko)
-// todo make this work without createElement
+// only works with createElement #backlog
 if (document.createElement) {
 	var escapeTA = document.createElement('textarea');
 }
@@ -90,8 +90,8 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 function EventLoop () { // (currently unused) for calling things which need to happen on a regular basis
 // sets another timeout for itself when done
 // replaces several independent timeouts
-// #todo add accounting for different intervals?
-// #todo add secondary EventLoopRestore timer which ensures this one runs when needed
+// #backlog add accounting for different intervals?
+// #backlog add secondary EventLoopWatcher timer which ensures this one runs when needed
 	//alert('debug: EventLoop');
 	var d = new Date();
 	var eventLoopBegin = d.getTime();
