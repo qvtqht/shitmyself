@@ -169,20 +169,21 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 
 	//alert('DEBUG: AddPrivateKeyLinks() begin');
 	if (document.getElementById && window.getPrivateKey) {
+		//alert('DEBUG: AddPrivateKeyLinks: document.getElementById && window.getPrivateKey');
 		var privateKey = getPrivateKey();
 		var fieldset = document.getElementById('fldRegistration');
 
 		if (fieldset && document.createElement) {
-			//alert('DEBUG: AddPrivateKeyLinks: checks pass');
+			//alert('DEBUG: AddPrivateKeyLinks: fieldset && document.createElement');
 
 			if (privateKey) {
 				//alert('DEBUG: AddPrivateKeyLinks: privateKey: true');
 
-				// add horizontal rule
+				// hr
 				var hrDivider = document.createElement('hr');
 				fieldset.appendChild(hrDivider);
 
-				// add [go to profile] link
+				// [go to profile]
 				var pProfileLink = document.getElementById('spanProfileLink');
 				if (pProfileLink && pProfileLink.innerHTML) {
 					// profile link already there, and contains profile link
@@ -194,8 +195,9 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 					}
 
 					// ATTENTION!
-					// THERE IS A GOTCHA HERE: THIS LINK MAY BE ADDED BY PHP
-					// IF SO, THEN THIS CODE WILL NOT EXECUTE!
+					// THERE IS A GOTCHA HERE: THIS LINK MAY ALSO BE
+					// ADDED BY PHP; THEN THIS CODE WILL NOT EXECUTE!
+					// BECAUSE pProfileLink WILL ALREADY BE TRUE ABOVE
 
 					// "Go to profile" link
 					var aProfile = document.createElement('a');
@@ -280,7 +282,7 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
 				fileLoadKeyFromText.setAttribute(
 					'onchange',
-					 'if (window.openFile) { openFile(event) } else { alert("openFile missing"); }'
+					 'if (window.openFile) { openFile(event) } else { alert("i am so sorry, openFile() function was missing!"); }'
 				);
 				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
 				// fileLoadKeyFromText.setAttribute('style', 'display: none');
@@ -290,7 +292,7 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 				// hint for [load from file]
 				var hintLoadFromFile = document.createElement('span');
 				hintLoadFromFile.setAttribute('class', 'beginner');
-				hintLoadFromFile.innerHTML = 'Use this if have saved key';
+				hintLoadFromFile.innerHTML = 'Use this if you have a saved key';
 
 
 				// pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
@@ -309,12 +311,14 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 			}
 		} // if (fieldset && document.createElement)
 		else {
-			//alert('DEBUG: AddPrivateKeyLinks: checks FAILED');
+			//alert('DEBUG: AddPrivateKeyLinks: checks FAILED (fieldset && document.createElement)');
 		}
+	} else {
+		//alert('DEBUG: AddPrivateKeyLinks: checks FAILED (document.getElementById && window.getPrivateKey)');
 	}
 
 	return true;
-}
+} // AddPrivateKeyLinks()
 
 function ShowPrivateKey() { // displays private key in textarea
 	//alert('DEBUG: ShowPrivateKey() begin');
@@ -560,6 +564,7 @@ function ProfileOnLoad () { // onload event for profile page
 					// span used to indicate whether openpgp signing is available
 					lblSigningIndicator = document.getElementById('lblSigningIndicator');
 					if (lblSigningIndicator) {
+						//alert('DEBUG: lblSigningIndicator TRUE');
 						// display value of "algorithm" which openpgp gives us
 						// in reality, this only give us rsa/not-rsa, and formatted poorly
 						// there's the bit count and the actual algo for non-rsa which needs
@@ -574,7 +579,10 @@ function ProfileOnLoad () { // onload event for profile page
 							lblSigningIndicator.innerHTML = 'Yes';
 						}
 						AddPrivateKeyLinks();
+					} else {
+						//alert('DEBUG: lblSigningIndicator FALSE');
 					}
+
 
 					lblHandle = document.getElementById('lblHandle');
 
@@ -602,19 +610,21 @@ function ProfileOnLoad () { // onload event for profile page
 					if (lblSigningIndicator) {
 						//alert('DEBUG: lblSigningIndicator check passed');
 						if (window.openpgp) {
+							// #todo why is window.openpgp false here??
 							//alert('DEBUG: window.openpgp check passed, setting no (available)');
 
 							lblSigningIndicator.innerHTML = 'Available';
 
 							AddPrivateKeyLinks();
 						} else {
-							//alert('DEBUG: window.openpgp check passed, setting nope');
+							//alert('DEBUG: warning: window.openpgp check FAILED');
 
 							lblSigningIndicator.innerHTML = 'Nope';
 						}
 					} else {
 						//alert('DEBUG: lblSigningIndicator check FAILED');
 					}
+					AddPrivateKeyLinks();
 				}
 			} else {
 				//alert('DEBUG: ProfileOnLoad: window.localStorage check FAILED');
