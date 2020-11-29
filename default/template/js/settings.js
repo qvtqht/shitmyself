@@ -58,7 +58,24 @@ function ShowAll (t, container) { // shows all elements, overriding settings
 		container = document;
 	}
 
-    if (container.getElementsByClassName) {
+	var isMore = 1;
+	if (t.innerHTML == 'Less') {
+		t.innerHTML = 'More';
+		isMore = 0;
+	}
+	if (t.innerHTML == 'Less (<u>O</u>)') {
+		t.innerHTML = 'M<u>o</u>re';
+		isMore = 0;
+	}
+
+    if (isMore && container.getElementsByClassName) {
+		if (t.innerHTML == 'More') {
+			t.innerHTML = 'Less';
+		}
+		if (t.innerHTML == 'M<u>o</u>re') {
+			t.innerHTML = 'Less (<u>O</u>)';
+		}
+
         var display;
         display = 'initial';
 
@@ -79,13 +96,17 @@ function ShowAll (t, container) { // shows all elements, overriding settings
             clearTimeout(timerShowAdvanced);
         }
 //        timerShowAdvanced = setTimeout('ShowAdvanced(1);', 10000);
-
-		if (t && t.getAttribute('onclick')) {
-			t.setAttribute('onclick', '');
-		}
+//
+//		if (t && t.getAttribute('onclick')) {
+//			t.setAttribute('onclick', '');
+//		}
 
         return false;
-    }
+    } else {
+    	ShowAdvanced(1);
+
+    	return false;
+	}
 
     return true;
 } // ShowAll()
