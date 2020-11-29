@@ -7,25 +7,47 @@
 // 4 = dvorak
 // REMOVED 1 = russian phonetic optimized
 
+function GetDvorakKey(ekey) {
+	// lookup lists, each char in keysEn
+	// corresponds to the same position in keysRu
+	var gt = unescape('%3E');
+
+	var keysQwerty = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
+	var keysDvorak = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
+
+	if (keysQwerty.length != keysDvorak.length) {
+		//alert('DEBUG: dvorakKey: warning: length mismatch keysEn and keysRu');
+	}
+
+	if (ekey && ekey.length == 1) {
+		// if e.key, then try to find it in the lookup list
+		for (var i = 0; i < keysQwerty.length; i++) {
+			if (ekey == keysQwerty.substr(i, 1)) {
+				return keysDvorak.substr(i, 1);
+			}
+		}
+	}
+
+	return '';
+} // GetDvorakKey()
+
 function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 // called via textarea or input's onkeydown event
 // e is event object passed by onkeydown event
 // t is the text field's "this"
-
 	//alert('DEBUG: translitKey() begins');
 	var nl; // new letter
 	var key; // pressed key
 
 	if (e.key) {
-	// for browsers which return event.key
+		// for browsers which return event.key
 		//alert('DEBUG: translitKey: e.key is TRUE, and equal to ' + e.key);
 		key = e.key;
 	} else if (e.keyCode) {
 		// older browsers only return event.keyCode
-		//alert('DEBUG: translitKey: e.key is FALSE');
-
-		// magic, not sure if this actually works
-		// what browsers is this for?
+		//alert('DEBUG: translitKey: e.key is FALSE, but e.keyCode is TRUE');
+		// this doesn't work yet becaue there's no way to
+		// switch into different modes using this method
 		key = String.fromCharCode((96 <= e.keyCode && e.keyCode <= 105)? (e.keyCode - 48) : (e.keyCode));
 	} else if (key.toString && key.toString.length == 1) {
 		//should check that it's a string and only 1 char
@@ -60,7 +82,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 		//alert('DEBUG: e.keyCode = ' + e.keyCode + '; e.ctrlKey = ' + e.ctrlKey);
 	}
 
-	// alt+` will toggle translit mode
+	// alt+ ctrl+ meta+` will toggle translit mode
 	if (e.altKey || e.ctrlKey || e.metaKey) {
 		if (e.key == 'd' || e.key == 'D') {
 			// ctrl+d for dvorak
@@ -76,6 +98,37 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			// we're doing it, we're overriding the user's keypress
 			if (e.preventDefault) {
 				e.preventDefault();
+			}
+
+//			var asdf = window.frames;
+//			var asdf = parent.frames;
+			if (window.parent) {
+				if (window.parent.frames) {
+					var framesRef = window.parent.frames;
+					if (framesRef.length) {
+						if (framesRef['kbd']) {
+							var kDoc = framesRef['kbd'].document;
+							if (kDoc.getElementsByTagName) {
+								var kbdKeys = kDoc.getElementsByTagName('a');
+								if (kbdKeys && kbdKeys.length) {
+									for (kbdKeysI = 0; kbdKeysI < kbdKeys.length; kbdKeysI++) {
+										if (!kbdKeys[kbdKeysI].getAttribute('origIH')) {
+											kbdKeys[kbdKeysI].setAttribute('origIH', kbdKeys[kbdKeysI].innerHTML);
+										}
+										if (window.translitKeyState == 4) {
+											var nlTemp = GetDvorakKey(kbdKeys[kbdKeysI].getAttribute('origIH'));
+											if (nlTemp.length) {
+												kbdKeys[kbdKeysI].innerHTML = nlTemp.toUpperCase();
+											}
+										} else {
+											kbdKeys[kbdKeysI].innerHTML = kbdKeys[kbdKeysI].getAttribute('origIH');
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			return false;
@@ -164,7 +217,6 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 					if (e.key == keysEn.substr(i, 1)) {
 						//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
 						nl = keysRu.substr(i, 1);
-
 						break;
 					}
 				}
@@ -178,25 +230,9 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			// alt key combinations
 			return true;
 		} else {
-			// lookup lists, each char in keysEn
-			// corresponds to the same position in keysRu
-			var gt = unescape('%3E');
-
-			var keysQwerty = "abcdefghijklmnopqrstuvwxyz;'\",./ABCDEFGHIJKLMNOPQRSTUVWXYZ<"+gt+"?:[]{}-_=+";
-			var keysDvorak = "axje.uidchtnmbrl'poygk,qf;s-_wvzAXJE"+gt+"UIDCHTNMBRL\"POYGK<QF:WVZS/=?+[{]}";
-
-			if (keysQwerty.length != keysDvorak.length) {
-				//alert('debug: dvorakKey: Warning: length mismatch keysEn and keysRu');
-			}
-
-			if (e.key) {
-				// if e.key, then try to find it in the lookup list
-				for (var i = 0; i < keysQwerty.length; i++) {
-					if (e.key == keysQwerty.substr(i, 1)) {
-						nl = keysDvorak.substr(i, 1);
-						break;
-					}
-				}
+			var nlTemp = GetDvorakKey(e.key);
+			if (nlTemp.length) {
+				nl = nlTemp;
 			}
 		}
 	} // if (translitKeyState == 4) (dvorak)
