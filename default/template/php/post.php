@@ -171,7 +171,7 @@ if (isset($comment) && $comment) {
 			// #todo relative url support
 			// #todo better flow for registration -> profile page
 			// #todo sometimes $newFileHash doesn't exist
-			// #todo this is a very naive way to figure out user id
+			// #todo improve on this very naive way to figure out user id
 
 			$finishTime = time() - $postPhpStartTime;
 			WriteLog('post.php: $newFileHash = ' . $newFileHash);
