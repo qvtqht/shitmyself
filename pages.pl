@@ -4880,7 +4880,8 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 
 	my $gpgKey = shift;
 	if (!$gpgKey) {
-		return;
+		WriteLog('GetAvatar: warning: $gpgKey is false, returning empty string');
+		return '';
 	}
 	chomp $gpgKey;
 
@@ -4889,22 +4890,24 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	my $noCache = shift;
 	$noCache = ($noCache ? 1 : 0);
 
-	if (!$noCache) {
+	if (! $noCache) {
+		# $noCache is FALSE, so use cache!
 		if ($avatarCache{$gpgKey}) {
 			WriteLog('GetAvatar: found in %avatarCache');
 			return $avatarCache{$gpgKey};
 		}
 		my $avCacheFile = GetCache("$avatarCacheDir/$gpgKey");
 		if ($avCacheFile) {
-			WriteLog('GetAvatar: continuing with disk cache');
 			$avatarCache{$gpgKey} = $avCacheFile;
-			return $avCacheFile;
+			WriteLog('GetAvatar: found cache, returning: $avatarCache{$gpgKey} = ' . $avatarCache{$gpgKey});
+			return $avatarCache{$gpgKey};
 		}
 	} else {
 		WriteLog('GetAvatar: $noCache is true, ignoring cache');
 	}
 
 	my $avatar = GetTemplate($avatarTemplate);
+	WriteLog('GetAvatar: $avatar = ' . $avatar . '; $avatarTemplate = ' . $avatarTemplate);
 
 	{ # trim whitespace from avatar template
 		#this trims extra whitespace from avatar template
