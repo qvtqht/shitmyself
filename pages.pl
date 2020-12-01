@@ -2098,7 +2098,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 			$topMenuTemplate,
 			'a href="/etc.html"',
 			'onclick',
-			"if (window.SetPrefs) { SetPrefs('show_advanced', 1); SetPrefs('highlight_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
+			"if (window.ShowAll) { return ShowAll(this); } else { return true; }"
+			#"if (window.SetPrefs) { SetPrefs('show_advanced', 1); SetPrefs('highlight_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
 		);
 	}
 
@@ -3950,14 +3951,14 @@ sub GetWriteForm { # returns write form (for composing text message)
 			$writeForm = str_replace($targetElement, $targetElement . $writeLongMessage, $writeForm);
 		}
 
-		if (GetConfig('admin/js/enable')) {
-			$writeForm = AddAttributeToTag(
-				$writeForm,
-				'a href="/etc.html"', #todo this should link to item itself
-				'onclick',
-				"if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement.parentElement); } else { return true; }"
-			);
-		}
+		#if (GetConfig('admin/js/enable')) {
+		#	$writeForm = AddAttributeToTag(
+		#		$writeForm,
+		#		'a href="/etc.html"', #todo this should link to item itself
+		#		'onclick',
+		#		"if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement.parentElement); } else { return true; }"
+		#	);
+		#}
 
 		## changing the form target is no longer necessary thanks to mod_rewrite
 		## this code may have to be reused later when we want to adapt to an environment
