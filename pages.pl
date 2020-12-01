@@ -1848,32 +1848,6 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	my $html = shift;
 	chomp($html);
 
-my @colors = qw(primary secondary background text link vlink window);
-	for my $color (@colors) {
-		my $templateToken = '$color' . ucfirst($color);
-		$html = str_replace($templateToken, GetThemeColor($color), $html);
-	}
-	# there are two issues with replacing below with above
-	# a) searching for template token in code wouldn't find this section
-	# b)
-	# my $colorPrimary = GetThemeColor('primary');
-	# $html =~ s/\$colorPrimary/$colorPrimary/g;
-	#
-	# my $colorSecondary = GetThemeColor('secondary');
-	# $html =~ s/\$colorSecondary/$colorSecondary/g;
-	#
-	# my $colorBackground = GetThemeColor('background');
-	# $html =~ s/\$colorBackground/$colorBackground/g;
-	#
-	# my $colorText = GetThemeColor('text');
-	# $html =~ s/\$colorText/$colorText/g;
-	#
-	# my $colorLink = GetThemeColor('link');
-	# $html =~ s/\$colorLink/$colorLink/g;
-	#
-	# my $colorVlink = GetThemeColor('vlink');
-	# $html =~ s/\$colorVlink/$colorVlink/g;
-
 	my $colorInputBackground = GetThemeColor('input_background');
 	$html =~ s/\$colorInputBackground/$colorInputBackground/g;
 
@@ -1906,6 +1880,33 @@ my @colors = qw(primary secondary background text link vlink window);
 
 	my $colorDialogHeading = GetThemeColor('dialog_heading');
 	$html =~ s/\$colorDialogHeading/$colorDialogHeading/g;
+
+	my @colors = qw(primary secondary background text link vlink window);
+	for my $color (@colors) {
+		#todo my @array1 = map ucfirst, @array;
+		my $templateToken = '$color' . ucfirst($color);
+		$html = str_replace($templateToken, GetThemeColor($color), $html);
+	}
+	# there are two issues with replacing below with above
+	# a) searching for template token in code wouldn't find this section
+	# b)
+	# my $colorPrimary = GetThemeColor('primary');
+	# $html =~ s/\$colorPrimary/$colorPrimary/g;
+	#
+	# my $colorSecondary = GetThemeColor('secondary');
+	# $html =~ s/\$colorSecondary/$colorSecondary/g;
+	#
+	# my $colorBackground = GetThemeColor('background');
+	# $html =~ s/\$colorBackground/$colorBackground/g;
+	#
+	# my $colorText = GetThemeColor('text');
+	# $html =~ s/\$colorText/$colorText/g;
+	#
+	# my $colorLink = GetThemeColor('link');
+	# $html =~ s/\$colorLink/$colorLink/g;
+	#
+	# my $colorVlink = GetThemeColor('vlink');
+	# $html =~ s/\$colorVlink/$colorVlink/g;
 
 	return $html;
 } # FillThemeColors()
