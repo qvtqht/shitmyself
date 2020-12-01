@@ -29,8 +29,7 @@ if ($arg1) {
 require './utils.pl';
 
 sub GetTime2 () { # returns epoch time
-	# this is identical to GetTime() in utils.pl
-	# #todo replace at some point
+	# this should be identical to GetTime() in utils.pl
 	#	return (time() + 2207520000);
 	return (time());
 }
