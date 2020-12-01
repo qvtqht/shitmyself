@@ -455,7 +455,7 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 	}
 }
 
-sub EscapeShellChars { # escapes string for including as parameter in shell command
+sub EscapeShellChars { # $string ; escapes string for including as parameter in shell command
 	#todo this is still probably not safe and should be improved upon #security
 	my $string = shift;
 	chomp $string;
@@ -464,7 +464,7 @@ sub EscapeShellChars { # escapes string for including as parameter in shell comm
 	# chars are: " | $ ` \
 
 	return $string;
-}
+} # EscapeShellChars()
 
 sub SqliteQuery { # performs sqlite query via sqlite3 command
 #todo add parsing into array?
