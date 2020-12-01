@@ -453,6 +453,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						$newTokenFound{'recon'} = $reconLine;
 						$newTokenFound{'message'} = $tokenMessage;
 						push(@tokensFound, \%newTokenFound);
+
+						if ($tokenName eq 'hashtag') {
+							$hasToken{$foundTokenParam} = 1;
+						}
 					}
 				} # GetConfig("admin/token/$tokenName") && $detokenedMessage
 			} # @tokenDefs
@@ -477,7 +481,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				# adding messages tagged #todo, #brainstorm, and #bug
 				# to their respective files under doc/*.txt
 
-				if (1 || $hasToken{'meta'}) {
+				if ($hasToken{'meta'}) {
 					# only if already tagged #meta
 
 					#todo this can go under tagset/meta ?????
@@ -534,7 +538,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			}
 
-			if (!$hasToken{'example'}) { #example token negates most other tokens.
+			if (!$hasToken{'example'} || !$hasToken{'notice'}) { #example token negates most other tokens.
 				# second pass, after parents and user established
 
 				foreach my $tokenFoundRef (@tokensFound) {
