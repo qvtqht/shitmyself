@@ -63,7 +63,7 @@ Change redirect behavior, providing a link at the top instead of redirecting
 
 JavaScript
 ==========
-onfig/admin/js/debug=1
+config/admin/js/debug=1
 ======================
 Any JS injected into pages will have debug output enabled by InjectJS() function.
 Works by uncommenting any statements beginning with "alert('DEBUG:"
