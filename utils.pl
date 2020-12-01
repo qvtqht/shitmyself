@@ -2849,29 +2849,23 @@ sub RemoveOldItems {
 	";
 }
 
-sub GetFileHashPath { # Returns text file's standardized path given its filename
+sub GetFileHashPath { # $file ; Returns text file's standardized path given its filename
 	# e.g. /01/23/0123abcdef0123456789abcdef0123456789a.txt
-	# also creates its subdirectories, #todo fixme
-
 	my $file = shift;
-	# take parameter
-
-	WriteLog("GetFileHashPath(\$file = $file)");
 
 	# file should exist and not be a directory
 	if (!-e $file || -d $file) {
-		WriteLog("GetFileHashPath(): Validation failed for $file");
-		return;
+		WriteLog('GetFileHashPath: warning: $file sanity check failed, $file = ' . $file);
+		return '';
 	}
+	WriteLog("GetFileHashPath($file)");
 
 	if ($file) {
 		my $fileHash = GetFileHash($file);
-
 		my $fileHashPath = GetPathFromHash($fileHash);
-
 		return $fileHashPath;
 	}
-}
+} # GetFileHashPath()
 
 sub GetPathFromHash { # gets path of text file based on hash
 	# relies on config/admin/organize_files = 1
