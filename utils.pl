@@ -261,11 +261,8 @@ sub MakePath { # $newPath ; ensures all subdirs for path exist
 	my $newPath = shift;
 	chomp $newPath;
 
-	WriteLog("MakePath($newPath)");
-
-	if (!$newPath) {
-		#todo add more sanity checks
-		WriteLog('MakePath: warning: failed sanity check');
+	if (! $newPath) {
+		WriteLog('MakePath: warning: failed sanity check, $newPath missing');
 		return '';
 	}
 
@@ -274,8 +271,14 @@ sub MakePath { # $newPath ; ensures all subdirs for path exist
 		return '';
 	}
 
+	if (! $newPath =~ m/^[0-9a-zA-Z\/]+$/) {
+		WriteLog('MakePath: warning: failed sanity check');
+		return '';
+	}
+
+	WriteLog("MakePath($newPath)");
+
 	my @newPathArray = split('/', $newPath);
-	
 	my $newPathCreated = '';
 
 	while (@newPathArray) {
@@ -288,7 +291,7 @@ sub MakePath { # $newPath ; ensures all subdirs for path exist
 			$newPathCreated .= '/';
 		}
 	}
-}
+} # MakePath()
 
 sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	# takes file's path as argument
