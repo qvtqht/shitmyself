@@ -1379,6 +1379,10 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		return;
 	}
 
+	if ($file eq 'welcome.html') {
+		PutHtmlFile('index.html', $content);
+	}
+
 	WriteLog("PutHtmlFile($file)");
 
 	if ($HTMLDIR && !-e $HTMLDIR) {
