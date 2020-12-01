@@ -1495,7 +1495,8 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
 			my %windowParams;
 			$windowParams{'body'} = GetTemplate('item/item.template');
-			$windowParams{'title'} = '$itemTitle';
+			$windowParams{'title'} = $file{'item_title'};
+			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
 			# $windowParams{'headings'} = 'haedigns';
 			$windowParams{'status'} = GetTemplate("item/status_bar.template");;
 			$windowParams{'menu'} = '$quickVoteButtonGroup';
