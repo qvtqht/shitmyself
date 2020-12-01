@@ -1,8 +1,11 @@
 <!-- titlebar_with_button.template -->
 <tr bgcolor="$colorTitlebar" class=titlebar>
 	<td colspan=$contentColumnCount>
-		<a href="#" class=btnClose onclick="if (window.CollapseWin) { return CollapseWin(this); }">$btnCloseCaption</a>
 		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
+		<span class=advanced>
+			<a href="#" class=btnClose onclick="if (window.CollapseWin) { return CollapseWin(this); }">$btnCloseCaption</a>
+			<a href="#$itemEndAnchor" class=btnSkip>[skip]</a>
+		</span>
 		<br>
 	</td>
 </tr>
