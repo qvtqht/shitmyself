@@ -353,8 +353,11 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 	if ($showButtons) {
 		my $windowGuid = md5_hex($windowTemplate);
 		if (defined($param{'guid'})) {
-			#todo sanity check
-			$windowGuid = $param{'guid'};
+			if ($param{'guid'} =~ m/^[0-9a-f]{8}$/) {
+				$windowGuid = $param{'guid'};
+			} else {
+				WriteLog('GetWindowTemplate2: warning: $param{guid} failed sanity check');
+			}
 		}
 
 		my $itemEndAnchor = substr($windowGuid, 0, 8);
