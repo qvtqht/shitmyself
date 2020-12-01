@@ -290,7 +290,6 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
 	} else {
 		$windowTemplate =~ s/\$windowMenubar//g;
-		#todo currently results in an empty menubar
 	}
 
 	# column headings
@@ -1309,7 +1308,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 	# file_path = file path including filename
 	# file_hash = git's hash of the file's contents
 	# author_key = gpg key of author (if any)
-	# add_timestamp = time file was added as unix_time #todo
+	# add_timestamp = time file was added as unix_time
 	# child_count = number of replies
 	# display_full_hash = display full hash for file
 	# template_name = item/item.template by default
@@ -1647,7 +1646,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 			$itemText = $imageContainer;
 
-			$itemClass = "image";
+			$itemClass = 'image';
 		} # $itemType eq 'image'
 		elsif ($itemType eq 'image') {
 		    $itemText = 'itemType eq image, but images disabled';
