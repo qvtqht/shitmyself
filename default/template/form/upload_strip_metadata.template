@@ -1,0 +1,4 @@
+		<label for=chkStripMetaData>
+			<input type=checkbox name=chkStripMetaData id=chkStripMetaData checked>
+			Strip image metadata
+		</label>
