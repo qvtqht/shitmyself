@@ -67,6 +67,7 @@ my $IMAGEDIR = $HTMLDIR . '/image';
 
 	print("copy($HTMLDIR/chain.log, $ARCHIVE_DATE_DIR/html/chain.log)\n");
 	copy("$HTMLDIR/chain.log", "$ARCHIVE_DATE_DIR/html/chain.log");
+	unlink("$HTMLDIR/chain.log");
 
 	print("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\"\n");
 	system("cp -r \"$CONFIGDIR\" \"$ARCHIVE_DATE_DIR/config\""); #fast enough
