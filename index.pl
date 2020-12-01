@@ -255,7 +255,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				$newAdminMessage,
 				"Server Message:\n\n".
 				"There was no admin, and $gpgKey came passing through, so I made them admin.\n\n".
-				"(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta\n\n".
+				"(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta #notice\n\n".
 				"Timestamp: " . GetTime()
 			);
 			ServerSign($newAdminMessage);
