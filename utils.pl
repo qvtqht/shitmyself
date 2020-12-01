@@ -756,6 +756,14 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 	#		overridden value is stored in local sub memo
 	#			this means all subsequent lookups now return $parameter
 	#
+	state $devMode;
+	if (!defined($devMode)) {
+		if (-e 'config/admin/dev_mode') {
+			$devMode = 1;
+		} else {
+			$devMode = 0;
+		}
+	}
 
 	my $configName = shift;
 	chomp $configName;
@@ -859,17 +867,17 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 
-			#if (-e 'config/admin/debug') {
+			if (!$devMode) {
 				# this preserves default settings, so that even if defaults change in the future
 				# the same value will remain for current instance
+				# this also saves much time not having to run ./clean_dev when developing
 				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
 				PutConfig($configName, $configValue);
-			#} #todo this will save much file io if disabled
+			}
 
 			return $configValue;
 		} else {
-			WriteLog("GetConfig: warning: Tried to get value of config with no default value: $configName");
-
+			WriteLog("GetConfig: warning: Tried to get undefined config with no default: $configName");
 			return;
 		}
 	}
