@@ -220,7 +220,7 @@ sub GetWindowTemplate {
 	return GetWindowTemplate2(\%param);
 } # GetWindowTemplate()
 
-sub GetWindowTemplate2 {
+sub GetWindowTemplate2 { # \%paramHash ; returns window template
 	my $paramHashRef = shift;
 	my %param = %$paramHashRef;
 
@@ -264,8 +264,8 @@ sub GetWindowTemplate2 {
 	my $windowTemplate = GetTemplate('window/standard.template');
 
 	# titlebar, if there is a title
+	my $showButtons = 0; # titlebar hide and skip buttons; #todo GetConfig('titlebar_with_button');
 	if ($windowTitle) {
-		my $showButtons = 0; # #todo GetConfig('titlebar_with_button');
 		if ($showButtons) {
 			my $btnCloseCaption = '[hide]';
 			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
@@ -351,8 +351,21 @@ sub GetWindowTemplate2 {
 		$windowTemplate =~ s/\ colspan=\$contentColumnCount//g;
 	}
 
+	if ($showButtons) {
+		my $windowGuid = md5_hex($windowTemplate);
+		if (defined($param{'guid'})) {
+			#todo sanity check
+			$windowGuid = $param{'guid'};
+		}
+
+		my $itemEndAnchor = substr($windowGuid, 0, 8);
+		WriteLog('GetWindowTemplate2: length($windowTemplate) = ' . length($windowTemplate) . '; $windowGuid = ' . $windowGuid);
+		$windowTemplate =~ s/\$itemEndAnchor/$itemEndAnchor/g;
+		$windowTemplate .= "<a name=$itemEndAnchor></a>";
+	}
+
 	return $windowTemplate;
-}
+} # GetWindowTemplate2()
 
 sub InjectBodyOnload { #injects <body onload event into supplied html
 	my $html = shift; #page event is to be added to
