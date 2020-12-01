@@ -406,6 +406,7 @@ sub CacheExists { # Check whether specified cache entry exists, return 1 (exists
 # }
 
 sub GetMyVersion { # Get the currently checked out version (current commit's hash from git)
+	# sub GetVersion {
 	state $myVersion;
 
 	my $ignoreSaved = shift;
@@ -416,9 +417,13 @@ sub GetMyVersion { # Get the currently checked out version (current commit's has
 	}
 
 	$myVersion = `git rev-parse HEAD`;
+	if (!$myVersion) {
+		WriteLog('GetMyVersion: warning: sanity check failed, returning default');
+		$myVersion = sha1_hex('hello, world!');
+	}
 	chomp($myVersion);
 	return $myVersion;
-}
+} # GetMyVersion()
 
 sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from config/string/en/
 # $stringKey = 'menu/top'
