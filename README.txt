@@ -207,11 +207,11 @@ No third-party package manager should be necessary.
 
 Ubuntu, Debian, Mint, Trisquel, Ubuntu, and other apt-based
 ==========================================================================
-# apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 lighttpd gnupg gnupg2 imagemagick php-cgi
+# apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 gnupg gnupg2 imagemagick php-cgi
 
 Redhat, CentOS, Fedora, and other yum-based
 ============================================================
-# yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite lighttpd gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick php-cgi
+# yum install perl-Digest-MD5 perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite perl-URI-Encode perl-Digest-SHA1 sqlite gnupg gnupg2 perl-Devel-StackTrace perl-Digest-SHA perl-HTML-Parser perl-DBD-SQLite lighttpd-fastcgi ImageMagick php-cgi
 
    * * *
 
@@ -222,12 +222,6 @@ $ git clone ...
 $ cd ~/shitmyself
 $ ./install_os_packages
 $ ./build.pl
-
-Enable Local Server (lighttpd)
-==============================
-$ echo 1 > config/admin/lighttpd/enable
-$ ./build.pl
-$ firefox http://localhost:2784/
 
 TROUBLESHOOTING
 ===============

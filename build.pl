@@ -97,30 +97,6 @@ require './pages.pl';
 MakeSummaryPages();
 #PutHtmlFile("/index.html", GetFile('html/help.html'));
 
-if (GetConfig('admin/lighttpd/enable')) {
-	BuildMessage("admin/lighttpd/enable was true");
-	
-	BuildMessage('$lighttpdConf = GetLighttpdConfig()');
-	my $lighttpdConf = GetLighttpdConfig();
-	
-	WriteLog('===== beg $lighttpdConf =====');
-	WriteLog($lighttpdConf);
-	WriteLog('===== end $lighttpdConf =====');
-	
-	BuildMessage('PutFile(\'config/lighttpd.conf\', $lighttpdConf);');
-	PutFile('config/lighttpd.conf', $lighttpdConf);
-
-	if (GetConfig('admin/http_auth/enable')) {
-		my $basicAuthUserFile = GetTemplate('lighttpd/lighttpd_password.template');
-		PutFile('config/lighttpd_password.conf', $basicAuthUserFile);
-
-		my $htpasswdAuthUserFile = GetConfig('admin/http_auth/htpasswd');
-		PutFile('config/lighttpd_htpasswd.conf', $htpasswdAuthUserFile);
-	}
-} else {
-	BuildMessage("admin/lighttpd/enable was false");
-}
-
 if (GetConfig('admin/build/generate_after')) {
 	BuildMessage "require('./generate.pl')...";
 	require('./generate.pl');
