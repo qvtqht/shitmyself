@@ -3542,6 +3542,30 @@ sub MakeSimplePage { # given page name, makes page
 	}
 }
 
+sub MakePhpPages {
+	WriteLog('MakePhpPages() begin');
+
+	if (GetConfig('admin/php/enable')) {
+		# post.php
+		# test2.php
+		# config.php
+		# test.php
+		# write.php
+		# upload.php
+		# search.php
+		# cookie.php
+		# cookietest.php
+		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route);
+		for my $template (@templatePhpSimple) {
+			my $fileContent = GetTemplate("php/$template.php");
+			PutFile($PHPDIR . "/$template.php", $fileContent);
+		}
+
+		my $utilsPhpTemplate = GetTemplate('php/utils.php');
+        $utilsPhpTemplate =~ s/\$scriptDirPlaceholderForTemplating/$SCRIPTDIR/g;
+		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
+	}
+} # MakePhpPages()
 
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages StaticPages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
