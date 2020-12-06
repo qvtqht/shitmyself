@@ -182,11 +182,7 @@ sub PullItemFromHost { #pulls item from host by downloading it via its .txt url
 	my $localPath = '.' . $fileName;
 	my $localDir = dirname($localPath);
 
-	#todo refactor into a utils function
-	if (!-d "$localDir") {
-		WriteLog("PullItemFromHost: mkdir -p $localDir");
-		system("mkdir -p $localDir");
-	}
+	EnsureSubDirs($localDir);
 	WriteLog("PullItemFromHost: PutFile($localPath)");
 	PutFile($localPath, $remoteFileContents);
 } # PullItemFromHost()
