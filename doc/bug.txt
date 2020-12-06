@@ -143,3 +143,11 @@ Use '--' to separate paths from revisions, like this:
 
 1606626458 update.pl: Calling ProcessAllAccessLogsInConfig...
 
+
+
+===
+
+#meta #bug
+
+child admin's avatar does not turn red.
+
