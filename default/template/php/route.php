@@ -580,9 +580,12 @@ if (GetConfig('admin/php/route_enable')) {
 								if (!$overthrowInterval) {
 									$overthrowInterval = 1;
 								}
-								if (time() - GetConfig('admin/admin_last_action') > $overthrowInterval) {
+								my $currentTime = time();
+								my $lastAction = intval(GetConfig('admin/admin_last_action'));
+
+								if ($currentTime - $lastAction > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
-									PutConfig('admin/admin_last_action', 0);
+									SetConfig('admin/admin_last_action', 0);
 									if (file_exists('../admin.key')) {
 										#todo this stuff should be somewhere else
 										unlink('../admin.key');
