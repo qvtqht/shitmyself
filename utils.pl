@@ -2122,6 +2122,15 @@ sub GpgParse {
 			my $name = $returnValues{'alias'};
 			my $fingerprint = $returnValues{'key'};
 
+			if (!$name) {
+				WriteLog('GpgParse: warning: no name/alias from file ' . $filePath);
+				$name = '(name)';
+			}
+			if (!$fingerprint) {
+				WriteLog('GpgParse: warning: no fingerprint/key from file ' . $filePath);
+				$fingerprint = '(fingerprint)';
+			}
+
 			my $message;
 			$message = GetTemplate('message/user_reg.template');
 			$message =~ s/\$name/$name/g;
