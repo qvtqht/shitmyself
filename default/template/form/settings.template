@@ -30,6 +30,13 @@
 						</p>
 
 						<p class=advanced>
+							<label for=chkEnhance>
+								<input type=checkbox id=chkEnhance name=chkEnhance onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_ui'); }">
+								Enable interface enhancements
+							</label>
+						</p>
+
+						<p class=advanced>
 							<label for=chkShowAdmin>
 								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
 								Show operator controls
