@@ -308,7 +308,7 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 
 	WriteLog("EnsureSubdirs($fullPath)");
 
-	# todo remove requirement of external module
+	#todo remove requirement of external module
 	my ( $file, $dirs ) = fileparse $fullPath;
 	if ( !$file ) {
 		WriteLog('EnsureSubdirs: warning: $file was not set, returning');
@@ -1370,7 +1370,7 @@ sub RemoveHtmlFile { # $file ; removes existing html file
 sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, with special rules; parameters: $file, $content
 	# the special rules are:
 	# * if config/admin/html/ascii_only is set, all non-ascii characters are stripped from output to file
-	# * if $file matches config/home_page, the output is also written to index.html
+	# * if $file matches config/html/home_page, the output is also written to index.html
 	#   also keeps track of whether home page has been written, and returns the status of it
 	#   if $file is 'check_homepage'
 
@@ -1505,7 +1505,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	$content =~ s/\$colorTitlebar/$colorTitlebar/g;#
 
 	my $borderDialog = GetThemeAttribute('color/border_dialog');
-	# todo rename it in all themes and then here
+	#todo rename it in all themes and then here
 	# not actually a color, but the entire border definition
 	$content =~ s/\$borderDialog/$borderDialog/g;
 
@@ -1539,17 +1539,17 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		}
 	}
 
-	if ($fileProvided eq GetConfig('home_page') || "$fileProvided.html" eq GetConfig('home_page')) {
-		# this is a special hook for generating index.html, aka the home page
-		# if the current file matches config/home_page, write index.html
-		# change the title to home_title while at it
-
-		my $homePageTitle = GetConfig('home_title');
-		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle<\/title>/;
-		PutFile($HTMLDIR . '/index.html', $content);
-		$homePageWritten = 1;
-	}
-
+#	if ($fileProvided eq GetConfig('html/home_page') || "$fileProvided.html" eq GetConfig('html/home_page')) {
+#		# this is a special hook for generating index.html, aka the home page
+#		# if the current file matches config/html/home_page, write index.html
+#		# change the title to home_title while at it
+#
+#		my $homePageTitle = GetConfig('home_title');
+#		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle<\/title>/;
+#		PutFile($HTMLDIR . '/index.html', $content);
+#		$homePageWritten = 1;
+#	}
+#
 	# if ($itemHash) {
 	# 	# filling in 404 pages, using 404.log
 	#
