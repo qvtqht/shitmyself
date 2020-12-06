@@ -11,4 +11,4 @@ RewriteRule ^post\.html??(.+)? /post.php [QSA]
 # giving users direct access to static html files
 
 RewriteRule ^(.+\.html)\?(.+)$ /route.php?path=/$1&$2 [QSA]
-
+RewriteRule ^(.*)\/\?(.+)$ /route.php?path=$1/index.html&$2 [QSA]

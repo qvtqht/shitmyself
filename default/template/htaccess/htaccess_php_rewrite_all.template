@@ -9,5 +9,4 @@ RewriteRule ^post\.html??(.+)? /post.php [QSA]
 # this mode is useful if you require registration
 
 RewriteRule ^(.+\.html)$ /route.php?path=/$1 [QSA]
-RewriteRule ^(.+)\/$ /route.php?path=$1/index.html [QSA]
-RewriteRule ^$ /route.php?path=/index.html [QSA]
+RewriteRule ^(.*)\/$ /route.php?path=$1/index.html [QSA]
