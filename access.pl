@@ -349,11 +349,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 		}
 
 		my $addTo404Log = 0;
+		my $fileWithoutParams = $file;
 		if (GetConfig('admin/accept_404_url_text')) {
 			WriteLog("ProcessAccessLog: admin/accept_404_url_text...");
 			#If the request was met with a 404
-			my $fileWithoutParams = $file;
-
 			if (index($fileWithoutParams, '?') > 0 && index($fileWithoutParams, '?') != -1) { # for clarity
 				# there is a question mark in the request
 				# and it is not the first character
