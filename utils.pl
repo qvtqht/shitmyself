@@ -1669,7 +1669,7 @@ sub GetSecondsHtml {# takes number of seconds as parameter, returns the most rea
 	}
 }
 
-sub GetFileSizeHtml { # takes file size as number, and returns html-formatted human-readable size
+sub GetFileSizeWidget { # takes file size as number, and returns html-formatted human-readable size
 	my $fileSize = shift;
 
 	if (!$fileSize) {

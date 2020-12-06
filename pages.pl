@@ -4393,12 +4393,12 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 	my $sizeHikeZip = -s "$HTMLDIR/txt.zip";
 	my $sizeSqliteZip = -s "$HTMLDIR/index.sqlite3.zip";
 
-	$sizeHikeZip = GetFileSizeHtml($sizeHikeZip);
+	$sizeHikeZip = GetFileSizeWidget($sizeHikeZip);
 	if (!$sizeHikeZip) {
 		$sizeHikeZip = 0;
 	}
 
-	$sizeSqliteZip = GetFileSizeHtml($sizeSqliteZip);
+	$sizeSqliteZip = GetFileSizeWidget($sizeSqliteZip);
 	if (!$sizeSqliteZip) {
 		$sizeSqliteZip = 0;
 	}
