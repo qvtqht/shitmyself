@@ -345,7 +345,7 @@
 									if ($configKeyActual eq 'html/theme') {
 										# unlink cache/avatar.plain
 										# remove/rebuild all html
-										# todo
+										#todo
 									}
 								} # if ($canConfig)
 								else {

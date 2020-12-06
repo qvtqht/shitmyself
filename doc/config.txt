@@ -73,7 +73,7 @@ logo_text
 text logo, displayed next to title on pages
 default: *
 
-page_limit
+html/page_limit
 number of items to display per page in listings
 default: 100
 
@@ -116,7 +116,7 @@ admin/sha_length #todo
 length to which sha hashes are shortened
 #todo maybe think of a better name for this
 
-home_page
+html/home_page
 sets the home page, uses the file path from PutHtmlFile()
 default: html/write.html
 
@@ -131,10 +131,6 @@ default: 1024
 logo_text
 text logo, displayed next to title on pages
 default: *
-
-page_limit
-number of items to display per page in listings
-default: 100
 
 prefill_username
 username to pre-fill for people who are not signed in

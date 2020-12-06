@@ -1,0 +1,27 @@
+.vottak {
+	background-color:#ddd;
+	background:linear-gradient(180deg, #eee 0%, #e1e1e1 49%, #c4c4c4 51%, #b0b0b0 100%);
+	box-shadow:1px 1px 2px 0 #555;
+	border:1px
+	solid #ccc;
+	margin:1px
+	2px;
+	display:inline-block;
+	cursor:pointer;
+}
+.vottak {
+	border-radius:3px;
+	height:19px;
+	width:87px;
+	font-size:13px !important;
+}
+.tellbutton_ {
+	font-size:12px;
+	border-radius:2px;
+	height:17px;
+	width:121px;
+}
+.vottak:hover {
+	background-color:#ccc;
+	background:linear-gradient(180deg, #ddd 0%, #d1d1d1 49%, #b4b4b4 51%, #a0a0a0 100%);
+}
