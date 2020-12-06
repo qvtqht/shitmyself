@@ -10,3 +10,4 @@ RewriteRule ^post\.html??(.+)? /post.php [QSA]
 
 RewriteRule ^(.+\.html)$ /route.php?path=/$1 [QSA]
 RewriteRule ^(.*)\/$ /route.php?path=$1/index.html [QSA]
+RewriteRule ^$ /route.php?path=/index.html [QSA]
