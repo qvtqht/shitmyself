@@ -994,7 +994,7 @@ if (GetConfig('admin/php/route_enable')) {
 				"<!-- php/assist_show_advanced -->\n".
 				 	"<style><!--" .
 					"\n" .
-					".advanced{ display:none }" .
+					".advanced, .admin{ display:none }" .
 					"/* assist ShowAdvanced() in pre-hiding elements with class=advanced */" .
 					"\n" .
 					"--></style>" .
