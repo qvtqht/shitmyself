@@ -2790,6 +2790,8 @@ sub GetScoreboardPage { #returns html for /authors.html
 #
 		if ($authorLastSeen) {
 			$authorLastSeen = GetTimestampWidget($authorLastSeen);
+		} else {
+			$authorLastSeen = '(no record)';
 		}
 		#$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 
