@@ -316,7 +316,6 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/' ||
 			$path == '/index.html' ||
 			$path == '/read.html' ||
-			$path == '/write.html' ||
 			$path == '/upload.html' ||
 			$path == '/upload_multi.html' ||
 			$path == '/authors.html' ||
@@ -337,6 +336,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		) {
 			WriteLog('HandleNotFound: found a summary page');
 			$pagesPlArgument = '--summary';
+		}
+
+		if (
+			$path == '/write.html' ||
+			$path == '/write_post.html'
+		) {
+			WriteLog('HandleNotFound: found write page');
+			$pagesPlArgument = '--write';
 		}
 
 		if (isset($pagesPlArgument) && $pagesPlArgument) {
@@ -395,7 +402,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 	}
 
 	return $html;
-}
+} # HandleNotFound()
 
 if (GetConfig('admin/php/route_enable')) {
 // admin/php/route_enable is true
