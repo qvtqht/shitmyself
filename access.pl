@@ -359,24 +359,24 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 				# and it is not the first character
 				$fileWithoutParams = substr($fileWithoutParams, 0, index($fileWithoutParams, '?'));
 			}
+		}
 
-			if ($status eq '404' || (GetConfig('admin/lighttpd/enable') && !-e ('html' . $fileWithoutParams))) {
-				# this workaround is for lighttpd,
-				# which returns 200 instead of 404 when handler is specified
+		if ($status eq '404' || (GetConfig('admin/lighttpd/enable') && !-e ('html' . $fileWithoutParams))) {
+			# this workaround is for lighttpd,
+			# which returns 200 instead of 404 when handler is specified
 
-				if (!GetConfig('admin/accept_404_url_text_reduce_spam') || index(substr($file, 1), '/') == -1) {
-					# This check is to reduce spam from clients trying to access deleted pages
+			if (!GetConfig('admin/accept_404_url_text_reduce_spam') || index(substr($file, 1), '/') == -1) {
+				# This check is to reduce spam from clients trying to access deleted pages
 
-					if (!defined($submitPrefix)) {
-						# If there is no $submitPrefix found already
-						WriteLog("No submitPrefix found, but a 404 was...");
-						# Just add the whole URL text as an item, as long as admin_accept_url_text is on
-						$submitPrefix = '/';
+				if (!defined($submitPrefix)) {
+					# If there is no $submitPrefix found already
+					WriteLog("No submitPrefix found, but a 404 was...");
+					# Just add the whole URL text as an item, as long as admin_accept_url_text is on
+					$submitPrefix = '/';
 
-						WriteLog('$submitPrefix = /');
+					WriteLog('$submitPrefix = /');
 
-						$addTo404Log = 1;
-					}
+					$addTo404Log = 1;
 				}
 			}
 		}
