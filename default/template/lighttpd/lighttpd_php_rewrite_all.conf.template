@@ -1,0 +1,21 @@
+# php rewrites
+
+# this template is used when:
+# # config/admin/lighttpd/enabled=1
+# # config/admin/php/enabled=1
+# # config/admin/php/rewrite=all
+
+url.rewrite = (
+	# always for post.html
+	"^/post.html\??(.+)?" => "/post.php?$1",
+
+	########################
+	# php supported on all html urls
+	# BUT less accessible static failover
+	# includes urls without query in route.php requests
+	# this mode is useful if you require registration
+	
+	"^(.+\.html)\??(.+)?" => "/route.php?path=$1&$2",
+	"^(.+)\/$" => "/route.php?path=$1/index.html"
+)
+

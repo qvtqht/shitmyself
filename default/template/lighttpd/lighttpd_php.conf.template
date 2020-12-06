@@ -1,0 +1,9 @@
+# php fastcgi connector
+fastcgi.server = (
+	".php" => (
+		(
+			"bin-path" => "/bin/php-cgi",
+			"socket" => "/tmp/php.socket"
+		)
+	)
+)
