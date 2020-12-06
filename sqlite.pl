@@ -1193,7 +1193,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 
 	if ($pageName eq 'author') {
 		# cascade refresh items which are by this author
-		# todo probably put this in another function
+		#todo probably put this in another function
 		# could also be done as
 		# foreach (author's items) { DBAddPageTouch('item', $item); }
 		#todo this is kind of a hack, sould be refactored, probably
@@ -1218,7 +1218,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 	#
 	# if ($pageName eq 'item') {
 	# 	# cascade refresh items which are by this author
-	# 	# todo probably put this in another function
+	# 	#todo probably put this in another function
 	# 	# could also be done as
 	# 	# foreach (author's items) { DBAddPageTouch('item', $item); }
 	#
@@ -1271,7 +1271,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 
 sub DBGetVoteCounts { # Get total vote counts by tag value
 # Takes $orderBy as parameter, with vote_count being default;
-# todo can probably be converted to parameterized query
+#todo can probably be converted to parameterized query
 	my $orderBy = shift;
 	if ($orderBy) {
 	} else {
