@@ -3737,27 +3737,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	#PutHtmlFile("settings.js", GetTemplate('js/settings.js'));
 	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
-	if (GetConfig('admin/php/enable')) {
-		# post.php
-		# test2.php
-		# config.php
-		# test.php
-		# write.php
-		# upload.php
-		# search.php
-		# cookie.php
-		# cookietest.php
-		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route);
-		for my $template (@templatePhpSimple) {
-			my $fileContent = GetTemplate("php/$template.php");
-			PutFile($PHPDIR . "/$template.php", $fileContent);
-		}
-
-		my $utilsPhpTemplate = GetTemplate('php/utils.php');
-        $utilsPhpTemplate =~ s/\$scriptDirPlaceholderForTemplating/$SCRIPTDIR/g;
-		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
-	}
-
 	if (GetConfig('admin/htaccess/enable')) { #.htaccess
 		# .htaccess file for Apache
 		my $HtaccessTemplate = GetTemplate('htaccess/htaccess.template');
@@ -3836,8 +3815,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	WriteIndexPages();
 
+	if (GetConfig('admin/php/enable')) {
+		MakePhpPages();
+	}
+
 	WriteLog('MakeSummaryPages() END');
-}
+} # MakeSummaryPages()
 
 sub GetUploadWindow { # upload window for upload page
 	my $template = shift;
@@ -5018,6 +5001,30 @@ while (my $arg1 = shift) {
 			print ("recognized --summary\n");
 			MakeSummaryPages();
 		}
+		elsif ($arg1 eq '--php') {
+			print ("recognized --php\n");
+			MakePhpPages();
+		}
+		elsif ($arg1 eq '--write') {
+			print ("recognized --write\n");
+			my $submitPage = GetWritePage();
+			PutHtmlFile("write.html", $submitPage);
+
+			if (GetConfig('admin/php/enable')) {
+				# create write_post.html for longer messages if admin/php/enable
+
+				$submitPage =~ s/method=get/method=post/g;
+				if (index(lc($submitPage), 'method=post') == -1) {
+					$submitPage =~ s/\<form /<form method=post /g;
+				}
+				if (index(lc($submitPage), 'method=post') == -1) {
+					$submitPage =~ s/\<form/<form method=post /g;
+				}
+				$submitPage =~ s/please click here/you're in the right place/g;
+				PutHtmlFile("write_post.html", $submitPage);
+			}
+
+		}
 		elsif ($arg1 eq '--index' || $arg1 eq '-i') {
 			print ("recognized --index\n");
 			WriteIndexPages();
@@ -5026,13 +5033,15 @@ while (my $arg1 = shift) {
 			print ("recognized --data\n");
 			WriteDataPage();
 		}
-		elsif ($arg1 eq '--all' || $arg1 eq '-i') {
-			print ("recognized --all\n");
+		elsif ($arg1 eq '--queue' || $arg1 eq '-Q') {
+			print ("recognized --queue\n");
 			BuildTouchedPages();
 		}
 		else {
 			print ("Available arguments:\n");
-			print ("--summary or -s for all summary pages\n");
+			print ("--summary or -s for all summary or system pages\n");
+			print ("--php for all php pages\n");
+			print ("--queue or -Q for all pages in queue\n");
 			print ("--index or -i for all index pages\n");
 			print ("item id for one item's page\n");
 			print ("author fingerprint for one item's page\n");
