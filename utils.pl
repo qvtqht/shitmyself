@@ -1198,12 +1198,14 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 	my $with_this  = shift;
 	my $string   = shift;
 
+	my $stringLength = length($string);
+
 	if (!defined($string) || !$string) {
 		WriteLog('str_replace: warning: $string not supplied');
 		return "";
 	}
 
-	WriteLog("str_replace($replace_this, $with_this, $string)");
+	WriteLog("str_replace($replace_this, $with_this, ($stringLength))");
 
 	if (!defined($replace_this) || !defined($with_this)) {
 		WriteLog('str_replace: warning: sanity check failed, missing $replace_this or $with_this');
@@ -1234,7 +1236,7 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 		}
 	}
 
-	WriteLog("str_replace: result: $string");
+	WriteLog("str_replace: result: ($stringLength)");
 
 	return $string;
 } # str_replace()
