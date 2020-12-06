@@ -584,6 +584,7 @@ if (GetConfig('admin/php/route_enable')) {
 									WriteLog('Overthrow conditions met');
 									PutConfig('admin/admin_last_action', 0);
 									if (file_exists('../admin.key')) {
+										#todo this stuff should be somewhere else
 										unlink('../admin.key');
 										MakePage('--summary');
 										WriteLog('Overthrow successful');
