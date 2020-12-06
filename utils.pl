@@ -3022,7 +3022,7 @@ sub VerifyThirdPartyAccount {
 sub ProcessTextFile { # $file ; add new text file to index
 	my $file = shift;
 	if ($file eq 'flush') {
-		IndexTextFile('flush');
+		IndexFile('flush');
 	}
 	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
 	if ($file ne $relativePath) {
@@ -3061,10 +3061,10 @@ sub ProcessTextFile { # $file ; add new text file to index
 	}
 
 	if (!GetCache('indexed/' . $fileHash)) {
-		WriteLog('ProcessTextFile: ProcessTextFile(' . $file . ') not in cache/indexed, calling IndexTextFile');
+		WriteLog('ProcessTextFile: ProcessTextFile(' . $file . ') not in cache/indexed, calling IndexFile');
 
-		IndexTextFile($file);
-		IndexTextFile('flush');
+		IndexFile($file);
+		IndexFile('flush');
 
 		PutCache('indexed/' . $fileHash, '1');
 	} else {

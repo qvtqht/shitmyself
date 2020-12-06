@@ -1121,9 +1121,9 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 		$currentFile++;
 		my $percent = $currentFile / $filesCount * 100;
 		WriteMessage("*** MakeIndex: $currentFile/$filesCount ($percent %) $file");
-		IndexTextFile($file);
+		IndexFile($file);
 	}
-	IndexTextFile('flush');
+	IndexFile('flush');
 
 	WriteIndexedConfig();
 

@@ -622,8 +622,8 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						}
 
 						if (GetConfig('admin/access_log/call_index')) {
-							WriteLog('access.pl: access_log_call_index is true, therefore IndexTextFile(' . $pathedFilename . ')');
-							IndexTextFile($pathedFilename);
+							WriteLog('access.pl: access_log_call_index is true, therefore IndexFile(' . $pathedFilename . ')');
+							IndexFile($pathedFilename);
 						}
 					}
 					else {
