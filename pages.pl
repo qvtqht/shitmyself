@@ -1002,7 +1002,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 			{ # bolt on tags list as an attribute
 				$itemAttributesTable .= '<tr><td>';
-				$itemAttributesTable .= GetString('attribute/tags_list');
+				$itemAttributesTable .= GetString('item_attribute/tags_list');
 				$itemAttributesTable .= '</td><td>';
 				$itemAttributesTable .= $file{'tags_list'};
 				$itemAttributesTable .= '</td></tr>';
