@@ -399,10 +399,38 @@ function GetFile ($file) { // gets file contents
 }
 
 function PutFile ($file, $content) { // puts file contents
-	return file_put_contents($file, $content);
-	// #todo account for non-existing sub-dirs
-	// return file_force_contents($file, $content);
-}
+	WriteLog("PutFile($file, (\$content)");
+
+	if (index($file, '..') == -1) {
+		WriteLog('PutFile: warning: sanity check failed, $file contains ..');
+		return '';
+	}
+
+	$pathArray = explode('/', $file);
+	$filePathComma = '';
+	$filePath = '';
+	while ($pathArray) {
+		WriteLog('PutFile: $pathArray = ' . print_r($pathArray, 1));
+		$filePath .= $filePathComma . array_shift($pathArray);
+		WriteLog('PutFile: $filePath = ' . $filePath);
+
+		if ($pathArray) {
+			if (! file_exists($filePath)) {
+				WriteLog("PutFile: mkdir($filePath)");
+				mkdir($filePath);
+			}
+		}
+
+		$filePath .= $filePathComma;
+		WriteLog('PutFile: $filePathComma = ' . $filePathComma);
+		$filePathComma = '/';
+	}
+
+
+	$putFileResult = file_put_contents($file, $content);
+	WriteLog('PutFile: $putFileResult = ' . $putFileResult);
+	return $putFileResult;
+} # PutFile()
 
 function GetCache ($cacheName) { // get cache contents by key/name
 	// comes from cache/ directory, under current git commit
