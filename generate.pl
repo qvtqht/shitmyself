@@ -47,9 +47,8 @@ MakeSummaryPages();
 
 print `query/touch_all.sh`;
 
-print "pages.pl --all ...\n";
-
-print `time ./pages.pl --all`;
+print "pages.pl --queue ...\n";
+print `time ./pages.pl --queue`;
 
 #
 #
@@ -258,7 +257,7 @@ if (GetConfig('tag_cloud_page')) {
 # } else {
 # 	WriteLog("warning: Home Page has not been written! Fixing that");
 #
-# 	if (-e $HTMLDIR.'/'.GetConfig('home_page')) {
+# 	if (-e $HTMLDIR.'/'.GetConfig('html/home_page')) {
 # 		PutHtmlFile('index.html', GetFile($HTMLDIR . '/' . GetConfig('home_page')));
 # 	} elsif (-e $HTMLDIR.'/read.html') {
 # 		PutHtmlFile('index.html', GetFile($HTMLDIR.'/read.html'));
