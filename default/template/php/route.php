@@ -580,8 +580,8 @@ if (GetConfig('admin/php/route_enable')) {
 								if (!$overthrowInterval) {
 									$overthrowInterval = 1;
 								}
-								my $currentTime = time();
-								my $lastAction = intval(GetConfig('admin/admin_last_action'));
+								$currentTime = time();
+								$lastAction = intval(GetConfig('admin/admin_last_action'));
 
 								if ($currentTime - $lastAction > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
