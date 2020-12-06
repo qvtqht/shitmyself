@@ -1534,6 +1534,8 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	my $htmlDir = GetDir('html');
 	$filePathRelative =~ s/$htmlDir\//\//;
 
+	WriteLog('DBAddItem: $filePathRelative = ' . $filePathRelative . '; $htmlDir = ' . $htmlDir);
+
 	if ($authorKey) {
 		DBAddItemAttribute($fileHash, 'author_key', $authorKey);
 	}
@@ -1891,7 +1893,6 @@ sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add 
 		WriteLog('DBAddItemAttribute: warning: called without $value');
 	}
 
-
 	chomp $fileHash;
 	chomp $attribute;
 	chomp $value;
@@ -1905,6 +1906,8 @@ sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add 
 
 	chomp $epoch;
 	chomp $source;
+
+	WriteLog("DBAddItemAttribute($fileHash, $attribute, $value, $epoch, $source)");
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO item_attribute(file_hash, attribute, value, epoch, source) VALUES ";
