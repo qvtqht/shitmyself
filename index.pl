@@ -114,7 +114,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddLocationRecord('flush');
 		DBAddBrcRecord('flush');
 
-		return;
+		return 1;
 	}
 
 	WriteLog("IndexTextFile($file)");
@@ -130,7 +130,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	$fileHash = GetFileHash($file);                # hash
 
 	if (GetCache('indexed/'.$fileHash)) {
-		return;
+		return $fileHash;
 	}
 
 	# file's attributes
@@ -212,7 +212,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 		if (!$file || !$fileHash) {
 			WriteLog('IndexTextFile: warning: $file or $fileHash missing; returning');
-			return;
+			return 0;
 		}
 
 		# debug output
@@ -221,8 +221,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		# if the file is present in deleted.log, get rid of it and its page, return
 		if (IsFileDeleted($file, $fileHash)) {
 			WriteLog('IndexTextFile: IsFileDeleted() returned true, returning');
-
-			return;
+			return 0;
 		}
 
 		# debug output
@@ -437,6 +436,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					WriteLog('IndexTextFile: found ' . scalar(@tokenLines));
 
+					if (scalar(@tokensFound) + scalar(@tokenLines) > 64) { #todo config/admin/index/tokens_limit
+						WriteLog('IndexTextFile: warning: found too many tokens, skipping');
+						return 0;
+					}
+
 					while (@tokenLines) {
 						my $foundTokenName = shift @tokenLines;
 						my $foundTokenSpacer = shift @tokenLines;
@@ -462,6 +466,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			} # @tokenDefs
 
 			# TOKEN FIRST PASS PARSING ENDS HERE
+			# @tokensFound now has all the found tokens
+			WriteLog('IndexTextFile: scalar(@tokensFound) = ' . scalar(@tokensFound));
 			###################################################
 		}
 
@@ -582,35 +588,39 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								WriteLog('IndexTextFile: $configSpacer = ' . (defined($configSpacer) ? $configSpacer : '(undefined)'));
 								WriteLog('IndexTextFile: $configValue = ' . (defined($configValue) ? $configValue : '(undefined)'));
 
-								my $configKeyActual = $configKey;
-								if ($configKey && defined($configValue) && $configValue ne '') {
-									# alias 'theme' to 'html/theme'
-									# $configKeyActual = $configKey;
-									if ($configKey eq 'theme') {
-										# alias theme to html/theme
-										$configKeyActual = 'html/theme';
-									}
-									#todo merge html/clock and html/clock_format
-									# if ($configKey eq 'clock') {
-									# 	# alias theme to html/theme
-									# 	$configKeyActual = 'clock_format';
-									# }
-									$configValue = trim($configValue);
-								}
-
-								if (IsAdmin($gpgKey) || ConfigKeyValid($configKeyActual)) {
-									# admins can write to any config
-									# non-admins can only write to existing config keys (and not under admin/)
-
-									# #todo create a whitelist of safe keys non-admins can change
-
-									DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
-									$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
-									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+								if (!defined($configKey) || !$configKey || !defined($configValue)) {
+									WriteLog('IndexTextFile: warning: $configKey or $configValue missing from $tokenFound token');
 								} else {
-									# token tried to pass unacceptable config key
-									$message = str_replace($tokenFound{'recon'}, "[Not Accepted: $configKeyActual]", $message);
-									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+									my $configKeyActual = $configKey;
+									if ($configKey && defined($configValue) && $configValue ne '') {
+										# alias 'theme' to 'html/theme'
+										# $configKeyActual = $configKey;
+										if ($configKey eq 'theme') {
+											# alias theme to html/theme
+											$configKeyActual = 'html/theme';
+										}
+										#todo merge html/clock and html/clock_format
+										# if ($configKey eq 'clock') {
+										# 	# alias theme to html/theme
+										# 	$configKeyActual = 'clock_format';
+										# }
+										$configValue = trim($configValue);
+									}
+
+									if (IsAdmin($gpgKey) || ConfigKeyValid($configKeyActual)) {
+										# admins can write to any config
+										# non-admins can only write to existing config keys (and not under admin/)
+
+										# #todo create a whitelist of safe keys non-admins can change
+
+										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
+										$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
+										$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+									} else {
+										# token tried to pass unacceptable config key
+										$message = str_replace($tokenFound{'recon'}, "[Not Accepted: $configKeyActual]", $message);
+										$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+									}
 								}
 							}
 						}
@@ -883,7 +893,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	}
 
 	PutCache('indexed/'.$fileHash, 1);
-	return 1;
+	return $fileHash;
 } # IndexTextFile()
 
 sub AddToChainLog { # $fileHash ; add line to log/chain.log
@@ -970,12 +980,12 @@ sub IndexImageFile { # $file ; indexes one image file into database
 	WriteLog("IndexImageFile($file)");
 
 	if ($file eq 'flush') {
-		WriteLog("IndexTextFile(flush)");
+		WriteLog("IndexImageFile(flush)");
 		DBAddItemAttribute('flush');
 		DBAddItem('flush');
 		DBAddVoteRecord('flush');
 		DBAddPageTouch('flush');
-		return;
+		return 1;
 	}
 
 	my $addedTime;          # time added, epoch format
@@ -985,7 +995,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		my $fileHash = GetFileHash($file);
 
 		if (GetCache('indexed/'.$fileHash)) {
-			return;
+			return $fileHash;
 		}
 
 		WriteLog('IndexImageFile: $fileHash = ' . ($fileHash ? $fileHash : '--'));
@@ -1002,7 +1012,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		if (IsFileDeleted($file, $fileHash)) {
 			# write to log
 			WriteLog('IndexImageFile: IsFileDeleted() returned true, returning');
-			return;
+			return 0;
 		}
 
 		if (!$addedTime) {
@@ -1076,7 +1086,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		DBAddPageTouch('flush');
 
 		PutCache('indexed/'.$fileHash, 1);
-		return 1;
+		return $fileHash;
 	}
 } # IndexImageFile()
 
@@ -1160,11 +1170,13 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 		return;
 	}
 
+	my $indexSuccess = 0;
+
 	my $ext = lc(GetFileExtension($file));
 
 	if ($ext eq 'txt') {
 		WriteLog('IndexFile: calling IndexTextFile()');
-		return IndexTextFile($file);
+		$indexSuccess = IndexTextFile($file);
 	}
 
 	if (
@@ -1177,12 +1189,28 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 		$ext eq 'jfif'
 	) {
 		WriteLog('IndexFile: calling IndexImageFile()');
-		return IndexImageFile($file);
+		$indexSuccess = IndexImageFile($file);
 	}
 
-	WriteLog('IndexFile: warning: fallthrough, no suitable handler found');
-	return;
-}
+	WriteLog('IndexFile: $indexSuccess = ' . $indexSuccess);
+
+	if (GetConfig('admin/index/stat_file') && $indexSuccess) {
+		if (-e $file) {
+			my @fileStat = stat($file);
+			my $fileSize =    $fileStat[7];
+			my $fileModTime = $fileStat[9];
+			WriteLog('IndexFile: $fileModTime = ' . $fileModTime . '; $fileSize = ' . $fileSize);
+			if ($fileModTime) {
+				if (IsItem($indexSuccess)) {
+					DBAddItemAttribute($indexSuccess, 'file_m_timestamp', $fileModTime);
+					DBAddItemAttribute($indexSuccess, 'file_size', $fileSize);
+				}
+			}
+		}
+	}
+
+	return $indexSuccess;
+} # IndexFile()
 
 my $arg1 = shift;
 if ($arg1) {

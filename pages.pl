@@ -971,6 +971,10 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 							# timestamps
 							$iaValue = $iaValue . ' (' . GetTimestampWidget($iaValue) . ')';
 						}
+						if ($iaName =~ m/file_size/) {
+							# timestamps
+							$iaValue = $iaValue . ' (' . GetFileSizeWidget($iaValue) . ')';
+						}
 						if ($iaName eq 'author_key') {
 							# turn author key into avatar
 							$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
