@@ -3591,7 +3591,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	if (GetConfig('admin/php/enable')) {
 		# create write_post.html for longer messages if admin/php/enable
-		
 		$submitPage =~ s/method=get/method=post/g;
 		if (index(lc($submitPage), 'method=post') == -1) {
 			$submitPage =~ s/\<form /<form method=post /g;
@@ -4653,10 +4652,6 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#todo this is never called, apparently
 		my $topItemsPage = GetTopItemsPage();
 		PutHtmlFile("read.html", $topItemsPage);
-
-		if (GetConfig('home_page') eq 'read') {
-			PutHtmlFile("index.html", $topItemsPage);
-		}
 	}
 	#
 	# stats page
