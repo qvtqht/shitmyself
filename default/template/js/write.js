@@ -24,30 +24,20 @@ function WriteOnload () { // onload handler for write page
 				var gt = unescape('%3E');
 				if (window.getAvatar) {
 					var spanSignAs = document.getElementById('spanSignAs');
-//					if (!GetPrefs('sign_by_default')) {
-//						var btnSignAs = document.createElement('input');
-//						btnSignAs.setAttribute('onclick', 'if(window.signMessage){signMessage();}this.value="Meditate...";');
-//						btnSignAs.setAttribute('type', 'submit');
-//						btnSignAs.setAttribute('value', 'Sign as ' + getAvatar());
-//						//btnSignAs.innerHTML = 'Sign as ' + getAvatar(); // use this if it is a GTbuttonLT
-//						spanSignAs.appendChild(btnSignAs);
-//
-//					}
-//					else { // this is for the sign yes/no checkbox
-						var lblSignAs = document.createElement('label');
-						lblSignAs.setAttribute('for', 'chkSignAs');
 
-						var chkSignAs = document.createElement('input');
-						//chkSignAs.setAttribute('name', 'signAs');
-						chkSignAs.setAttribute('id', 'chkSignAs');
-						chkSignAs.setAttribute('type', 'checkbox');
-						chkSignAs.setAttribute('checked', 1);
-						// this checkbox being checked means signMessage() is called in writeSubmit()
+					var lblSignAs = document.createElement('label');
+					lblSignAs.setAttribute('for', 'chkSignAs');
 
-						lblSignAs.innerHTML = 'Sign as ' + getAvatar();
-						lblSignAs.appendChild(chkSignAs);
-						spanSignAs.appendChild(lblSignAs);
-//					}
+					var chkSignAs = document.createElement('input');
+					//chkSignAs.setAttribute('name', 'signAs');
+					chkSignAs.setAttribute('id', 'chkSignAs');
+					chkSignAs.setAttribute('type', 'checkbox');
+					chkSignAs.setAttribute('checked', 1);
+					// this checkbox being checked means signMessage() is called in writeSubmit()
+
+					lblSignAs.innerHTML = 'Sign as ' + getAvatar();
+					lblSignAs.appendChild(chkSignAs);
+					spanSignAs.appendChild(lblSignAs);
 
 					if (window.solvePuzzle) {
 						var spanWriteAdvanced = document.getElementById('spanWriteAdvanced');
@@ -73,6 +63,11 @@ function WriteOnload () { // onload handler for write page
 			} // document.getElementById('spanSignAs')
 
 			if (0) {
+				// this would inactivate the more link after the first click
+				// and turn it into a link pointing to /etc.html
+				// inactivated because More link now becomes Less link
+				// when clicked, and vice versa
+
 				// config/admin/js/write_more_link
 				var pMoreLink = document.getElementById('pMoreLink');
 				if (pMoreLink) {
@@ -86,11 +81,6 @@ function WriteOnload () { // onload handler for write page
 					pMoreLink.appendChild(aMore);
 				}
 			}
-//
-//			if (document.getElementById('addtext')) {
-//				document.getElementById('addtext').value = 'Sign Message and Send';
-//			}
-
         }
 
         if (pubKey) {
@@ -106,7 +96,7 @@ function WriteOnload () { // onload handler for write page
                 //alert('DEBUG: #inspubkey found');
 				if (pubKey) {
 					//alert('DEBUG: pubKey is true, inserting it into comment');
-					var comment = document.getElementById('comment'); // #todo no-gebi compat
+					var comment = document.getElementById('comment');
 					if (comment) {
 						comment.value = pubKey;
 					}
@@ -115,7 +105,32 @@ function WriteOnload () { // onload handler for write page
                 }
             }
         }
-    } else {
+
+        if (window.GetPrefs) {
+			//alert('DEBUG: window.GetPrefs = TRUE');
+
+        	if (GetPrefs('enhance_ui')) {
+				//alert('DEBUG: enhance_ui = TRUE');
+
+				var comment = document.getElementById('comment');
+				if (comment) {
+					comment.style.backgroundColor = '#000080';
+					comment.style.color = 'ffffff';
+					comment.style.width = '95%';
+					comment.style.height = '50%';
+					comment.style.padding = '1em';
+					comment.setAttribute('cols', 80);
+					comment.setAttribute('rows', 24);
+				}
+			} else {
+				//alert('DEBUG: enhance_ui = FALSE');
+			}
+		} else {
+			//alert('DEBUG: window.GetPrefs = FALSE');
+		}
+
+    } // document.getElementById
+    else {
         //alert('DEBUG: WriteOnload: document.getElementById was FALSE');
     }
 
