@@ -307,7 +307,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 			my $findCommand;
 			my @files;
 
-			# todo figure out why we're not here already #bug
+			#todo figure out why we're not here already #bug
 			WriteLog('update.pl: ImageProcessing: pwd = ' . `pwd`);
 
 			WriteLog("update.pl: ImageProcessing: cd $SCRIPTDIR");
