@@ -54,10 +54,11 @@ require './utils.pl';
 require './sqlite.pl';
 
 if (!-e "$HTMLDIR/index.html") {
-# #todo fix bug which causes index.html to go missing
+	WriteLog('pages.pl: warning: index.html was missing!');
+	# this is a last-resort fallback for missing index.html file
+	# this should never be triggered, but sometimes is ...
 	if (-e "$HTMLDIR/welcome.html") {
-	#todo copy instead of move (how?)
-		WriteLog('pages.pl: warning: index.html was missing,, replacing it with welcome.html');
+		WriteLog('pages.pl: warning: index.html was missing, replacing with welcome.html!');
 		rename("$HTMLDIR/welcome.html", "$HTMLDIR/index.html");
 	}
 }
