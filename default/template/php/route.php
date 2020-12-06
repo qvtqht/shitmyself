@@ -409,7 +409,7 @@ if (GetConfig('admin/php/route_enable')) {
 	$redirectUrl = '';
 	if ($_GET) {
 		// there is a get request
-		WriteLog(print_r($_GET, 1));
+		WriteLog('route.php: $_GET = ' . print_r($_GET, 1));
 
 		if (isset($_GET['path'])) {
 			$serverResponse = '';
@@ -418,6 +418,8 @@ if (GetConfig('admin/php/route_enable')) {
 			$path = $_GET['path'];
 			WriteLog('$path = ' . $path);
 			$pathFull = realpath('.'.$path);
+
+			WriteLog('route.php: $pathFull = ' . $pathFull);
 
 			if ($path == '/profile.html') {
 				// if profile, leave it alone
@@ -434,7 +436,9 @@ if (GetConfig('admin/php/route_enable')) {
 
 					if (!$clientHasCookie) {
 						RedirectWithResponse('/profile.html', 'Please create profile to continue.');
-						#todo is it still printing the page? shouldn't.
+						if (! GetConfig('admin/force_profile_fallthrough')) {
+							exit;
+						}
 					}
 				}
 			}
