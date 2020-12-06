@@ -590,7 +590,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 										# alias theme to html/theme
 										$configKeyActual = 'html/theme';
 									}
-									# todo merge html/clock and html/clock_format
+									#todo merge html/clock and html/clock_format
 									# if ($configKey eq 'clock') {
 									# 	# alias theme to html/theme
 									# 	$configKeyActual = 'clock_format';
@@ -912,7 +912,7 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 		WriteLog("AddToChainLog: $findExistingCommand returned $findExistingResult");
 		if ($findExistingResult) { #todo remove fork
 			# hash already exists in chain, return
-			# todo return timestamp
+			#todo return timestamp
 			my ($exHash, $exTime, $exChecksum) = split('|', $findExistingResult);
 
 			if ($exTime) {

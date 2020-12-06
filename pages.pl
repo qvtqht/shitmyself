@@ -85,7 +85,7 @@ sub GetDialogPage { # returns html page with dialog
 
 			$windowContents = GetTemplate('404.template');
 
-			# todo choose random item from list/looking_for
+			#todo choose random item from list/looking_for
 			my $lookingFor = 'mittens';
 			$windowContents =~ s/looking for mittens/looking for $lookingFor/;
 
@@ -716,7 +716,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 	#	}
 
 	# we're expecting a reference to a hash as the first parameter
-	# todo sanity checks here, it will probably break if anything else is supplied
+	#todo sanity checks here, it will probably break if anything else is supplied
 	# keyword: ItemInfo {
 	my %file = %{shift @_};
 
@@ -748,7 +748,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 	}
 
 	if (defined($file{'author_key'}) && $file{'author_key'}) {
-		# todo the .txt extension should not be hard-coded
+		#todo the .txt extension should not be hard-coded
 		my $alias = GetAlias($file{'author_key'});
 		$alias = HtmlEscape($alias);
 
@@ -1558,7 +1558,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			# set up $permalinkTxt, which links to the .txt version of the file
 
 			# strip the 'html/' prefix on the file's path, replace with /
-			# todo relative links
+			#todo relative links
 			$permalinkTxt =~ s/$HTMLDIR\//\//;
 			$permalinkTxt =~ s/^html\//\//;
 		}
@@ -2328,7 +2328,7 @@ sub GetStatsTable {
 	if ($TXTDIR =~ m/^([^\s]+)$/) { #security #taint
 		$TXTDIR = $1;
 		my $findResult = `find $TXTDIR -name \\\*.txt | wc -l`;
-		if ($findResult =~ m/(.+)/) { # todo add actual check of some kind
+		if ($findResult =~ m/(.+)/) { #todo add actual check of some kind
 			$findResult = $1;
 			my $filesTxt = trim($findResult); #todo cache GetCache('count_txt')
 			PutCache('count_txt', $filesTxt);
@@ -2607,7 +2607,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 }
 
 sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js template(s) before </body> ;
-# todo, once i figure out how to pass an array and/or need this in perl:
+#todo, once i figure out how to pass an array and/or need this in perl:
 # to copy php version
 # $injectMode: before, after, append
 # $htmlTag: e.g. </body>, only used with before/after
@@ -3117,7 +3117,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 				}
 			} # $isSigned
 
-			# todo $alias = GetAlias($gpgKey);
+			#todo $alias = GetAlias($gpgKey);
 
 			$alias = HtmlEscape($alias);
 
