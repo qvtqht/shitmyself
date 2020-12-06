@@ -84,7 +84,7 @@ function DraggingInit() {
 				elmnt.style.top = elTop;
 			}
 		} else {
-			//alert('DEBUG: dragging.js: warning: id and/or GetPrefs missing');
+			//alert('DEBUG: dragging.js: warning: id and/or GetPrefs() missing');
 		}
 	}
 } // DraggingInit()
