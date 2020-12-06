@@ -109,16 +109,35 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 						if (framesRef['kbd']) {
 							var kDoc = framesRef['kbd'].document;
 							if (kDoc.getElementsByTagName) {
+								var replaceMode;
 								var kbdKeys = kDoc.getElementsByTagName('a');
+								if (kbdKeys.length) {
+									replaceMode = 1;
+								}
+								if (!kbdKeys.length) {
+									kbdKeys = kDoc.getElementsByTagName('td');
+									if (kbdKeys) {
+										replaceMode = 1;
+									}
+								}
+								if (!kbdKeys.length) {
+									kbdKeys = kDoc.getElementsByTagName('input');
+									if (kbdKeys) {
+										replaceMode = 2;
+									}
+								}
+
 								if (kbdKeys && kbdKeys.length) {
 									for (kbdKeysI = 0; kbdKeysI < kbdKeys.length; kbdKeysI++) {
 										if (!kbdKeys[kbdKeysI].getAttribute('origIH')) {
 											kbdKeys[kbdKeysI].setAttribute('origIH', kbdKeys[kbdKeysI].innerHTML);
 										}
 										if (window.translitKeyState == 4) {
-											var nlTemp = GetDvorakKey(kbdKeys[kbdKeysI].getAttribute('origIH'));
+											var orig = kbdKeys[kbdKeysI].getAttribute('origIH').trim();
+											var nlTemp = GetDvorakKey(kbdKeys[kbdKeysI].getAttribute('origIH').trim());
 											if (nlTemp.length) {
-												kbdKeys[kbdKeysI].innerHTML = nlTemp.toUpperCase();
+												var nlCaption = orig.replace(orig.trim(), nlTemp);
+												kbdKeys[kbdKeysI].innerHTML = nlCaption.toUpperCase();
 											}
 										} else {
 											kbdKeys[kbdKeysI].innerHTML = kbdKeys[kbdKeysI].getAttribute('origIH');
