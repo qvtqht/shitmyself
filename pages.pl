@@ -187,7 +187,7 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	my $pageNumber = shift;
 	my $itemCount = shift;
 
-	my $pageLimit = GetConfig('page_limit');
+	my $pageLimit = GetConfig('html/page_limit');
 
 	my $pageStart = $pageNumber * $pageLimit;
 	my $pageEnd = $pageNumber * $pageLimit + $pageLimit;
@@ -387,7 +387,7 @@ sub GetPageLinks { # $currentPageNumber ; returns html for pagination links with
 
 	state $pageLinks; # stores generated links html in case we need them again
 
-	my $pageLimit = GetConfig('page_limit'); # number of items per page
+	my $pageLimit = GetConfig('html/page_limit'); # number of items per page
 	my $itemCount = DBGetItemCount(); # item count
 
 	WriteLog("GetPageLinks($currentPageNumber)");
@@ -3347,7 +3347,7 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	# sub MakeIndexPages {
 
-	my $pageLimit = GetConfig('page_limit');
+	my $pageLimit = GetConfig('html/page_limit');
 	if (!$pageLimit) {
 		$pageLimit = 250;
 	}
