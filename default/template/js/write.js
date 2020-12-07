@@ -82,26 +82,6 @@ function WriteOnload () { // onload handler for write page
 					} // window.solvePuzzle
 				} // window.getAvatar
 			} // document.getElementById('spanSignAs')
-
-			if (0) {
-				// this would inactivate the more link after the first click
-				// and turn it into a link pointing to /etc.html
-				// inactivated because More link now becomes Less link
-				// when clicked, and vice versa
-
-				// config/admin/js/write_more_link
-				var pMoreLink = document.getElementById('pMoreLink');
-				if (pMoreLink) {
-					var aMore = document.createElement('a');
-					aMore.setAttribute('href', '#');
-					aMore.setAttribute(
-						'onclick',
-						'if (window.ShowAll) { ShowAll(this, this.parentElement.parentElement); this.parentElement.remove(); }'
-					);
-					aMore.innerHTML = 'More';
-					pMoreLink.appendChild(aMore);
-				}
-			}
         }
 
         if (pubKey) {
