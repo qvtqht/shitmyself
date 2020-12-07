@@ -2061,7 +2061,7 @@ sub GpgParse {
 		my $gpgMessage = '-----BEGIN PGP SIGNED MESSAGE-----';
 		my $gpgEncrypted = '-----BEGIN PGP MESSAGE-----';
 
-		my $gpgCommand = 'gpg ';
+		my $gpgCommand = 'gpg --pinentry-mode=loopback --batch ';
 
 		if (index($fileContents, $gpgPubkey) > -1) {
 			$gpgCommand .= '--import ';
