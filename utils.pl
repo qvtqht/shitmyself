@@ -2937,7 +2937,6 @@ sub GetPasswordLine { # $username, $password ; returns line for .htpasswd file
 sub OrganizeFile { # $file ; renames file based on hash of its contents
 	# returns new filename
 	# filename is obtained using GetFileHashPath()
-	
 	my $file = shift;
 	chomp $file;
 
@@ -2955,6 +2954,11 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	if ($file eq "$TXTDIR/server.key.txt" || $file eq $TXTDIR || -d $file) {
 		# $file should not be server.key, the txt directory, or a directory
 		WriteLog('OrganizeFile: file is on ignore list, ignoring.');
+		return $file;
+	}
+
+	if (GetConfig('admin/dev_mode')) {
+		WriteLog('OrganizeFile: dev_mode is on, returning');
 		return $file;
 	}
 
