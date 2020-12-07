@@ -53,6 +53,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 
 function ShowAll (t, container) { // shows all elements, overriding settings
 // admin elements are excluded. only beginner, advanced class elements are shown
+	var gt = unescape('%3E');
 
 	if (!container) {
 		container = document;
@@ -63,8 +64,8 @@ function ShowAll (t, container) { // shows all elements, overriding settings
 		t.innerHTML = 'More';
 		isMore = 0;
 	}
-	if (t.innerHTML == 'Less (<u>O</u>)') {
-		t.innerHTML = 'M<u>o</u>re';
+	if (t.innerHTML == 'Less (<u' + gt + 'O</u' + gt + ')') {
+		t.innerHTML = 'M<u' + gt + 'o</u' + gt + 're';
 		isMore = 0;
 	}
 
@@ -72,8 +73,8 @@ function ShowAll (t, container) { // shows all elements, overriding settings
 		if (t.innerHTML == 'More') {
 			t.innerHTML = 'Less';
 		}
-		if (t.innerHTML == 'M<u>o</u>re') {
-			t.innerHTML = 'Less (<u>O</u>)';
+		if (t.innerHTML == 'M<u' + gt + 'o</u' + gt + 're') {
+			t.innerHTML = 'Less (<u' + gt + 'O</u' + gt + ')';
 		}
 
         var display;
