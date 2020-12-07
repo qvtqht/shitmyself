@@ -265,7 +265,7 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 	my $windowTemplate = GetTemplate('window/standard.template');
 
 	# titlebar, if there is a title
-	my $showButtons = 0; # titlebar hide and skip buttons; #todo GetConfig('titlebar_with_button');
+	my $showButtons = GetConfig('html/window_titlebar_buttons'); # titlebar hide and skip buttons; #todo GetConfig('titlebar_with_button');
 	if ($windowTitle) {
 		if ($showButtons) {
 			my $btnCloseCaption = '[hide]';
@@ -3583,7 +3583,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
 
-	MakeJsTestPages();
+	if (GetConfig('admin/dev_mode')) {
+		MakeJsTestPages();
+	}
 
 	# Submit page
 	my $submitPage = GetWritePage();
