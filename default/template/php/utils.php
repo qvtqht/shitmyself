@@ -612,18 +612,24 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		}
 	}
 
-	if (GetConfig('admin/php/debug') || GetConfig('admin/php/debug_server_response') || headers_sent()) {
-		// #warning, this is not a good pattern, don't copy this code. the html will be printed unescaped.
-		// doing it in this case because we want to make a clickable link
-		WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug is true)</font>', 1);
+	if (GetConfig('admin/php/debug') || GetConfig('admin/php/debug_server_response')) {
+		if (!headers_sent()) {
+			// #warning, this is not a good pattern, don't copy this code. the html will be printed unescaped.
+			// doing it in this case because we want to make a clickable link
+			WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug is true)</font>', 1);
 
-		// #todo template the html
-		print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a><br>Message: '.htmlspecialchars($message).'</div><hr>';
+			// #todo template the html
+			print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a><br>Message: '.htmlspecialchars($message).'</div><hr>';
+		}
 	} else {
 		// do the redirect
-		header('Location: ' . $redirectUrl);
+		if (!headers_sent()) {
+			header('Location: ' . $redirectUrl);
+		} else {
+			WriteLog('RedirectWithResponse: warning: wanted to send Location header, but headers already sent');
+		}
 	}
-}
+} # RedirectWithResponse()
 
 function GetWindowTemplate ( # body, title, headings, status, menu
 	$windowBody,
