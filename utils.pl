@@ -366,10 +366,13 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 
 	my $cacheFile = './cache/' . $myVersion . '/' . $cacheName;
 
-	if (-e $cacheFile) {
-		unlink($cacheFile);
+	my @cacheFiles = glob($cacheFile);
+
+	if (scalar(@cacheFiles)) {
+		WriteLog('UnlinkCache: scalar(@cacheFiles) = ' . scalar(@cacheFiles));
+		unlink(@cacheFiles);
 	}
-}
+} # UnlinkCache()
 
 sub CacheExists { # Check whether specified cache entry exists, return 1 (exists) or 0 (not)
 	my $cacheName = shift;
@@ -2673,12 +2676,11 @@ sub file_exists { # $file ; port of php file_exists()
 }
 
 sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
-	# DeleteAvatarCache ExpireAvatarCache
-	WriteLog('ExpireAliasCache: warning: function not yet implemented');
+	# DeleteAvatarCache ExpireAvatarCache ExpireAliasCache {
 
 	my $key = shift;
 	WriteLog("ExpireAvatarCache($key)");
-	if (!IsFingerprint($key)) {
+	if (!IsFingerprint($key) && $key ne '*') {
 		WriteLog('ExpireAvatarCache: warning: sanity check failed');
 		return 0;
 	}
