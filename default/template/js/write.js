@@ -6,6 +6,27 @@ function WriteOnload () { // onload handler for write page
 	if (document.getElementById) {
 	    //alert('DEBUG: WriteOnload: document.getElementById is true');
 
+        if (window.GetPrefs) {
+			//alert('DEBUG: window.GetPrefs = TRUE');
+
+        	if (GetPrefs('enhance_ui')) {
+				//alert('DEBUG: enhance_ui = TRUE');
+
+				var comment = document.getElementById('comment');
+				if (comment) {
+					if (window.location.href.indexOf('write') != -1) {
+						CommentMakeWp(comment);
+					} else {
+						comment.setAttribute('onfocus', 'CommentMakeWp(this)');
+					}
+				}
+			} else {
+				//alert('DEBUG: enhance_ui = FALSE');
+			}
+		} else {
+			//alert('DEBUG: window.GetPrefs = FALSE');
+		}
+
         var pubKey = '';
         if (window.getPublicKey) {
         	//alert('DEBUG: window.getPublicKey exists');
@@ -105,36 +126,26 @@ function WriteOnload () { // onload handler for write page
                 }
             }
         }
-
-        if (window.GetPrefs) {
-			//alert('DEBUG: window.GetPrefs = TRUE');
-
-        	if (GetPrefs('enhance_ui')) {
-				//alert('DEBUG: enhance_ui = TRUE');
-
-				var comment = document.getElementById('comment');
-				if (comment) {
-					comment.style.backgroundColor = '#000080';
-					comment.style.color = 'ffffff';
-					comment.style.width = '95%';
-					comment.style.height = '50%';
-					comment.style.padding = '1em';
-					comment.setAttribute('cols', 80);
-					comment.setAttribute('rows', 24);
-				}
-			} else {
-				//alert('DEBUG: enhance_ui = FALSE');
-			}
-		} else {
-			//alert('DEBUG: window.GetPrefs = FALSE');
-		}
-
     } // document.getElementById
     else {
         //alert('DEBUG: WriteOnload: document.getElementById was FALSE');
     }
 
     return true;
+}
+
+function CommentMakeWp(comment) {
+	if (!comment) {
+		// #todo more sanity checks here
+		return;
+	}
+	comment.style.backgroundColor = '#000080';
+	comment.style.color = 'ffffff';
+	comment.style.width = '95%';
+	comment.style.height = '50%';
+	comment.style.padding = '1em';
+	comment.setAttribute('cols', 80);
+	comment.setAttribute('rows', 24);
 }
 
 function writeSubmit (t) { // called when user submits write form
