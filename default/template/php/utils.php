@@ -95,6 +95,8 @@ function WriteLog ($text, $dontEscape = 0) { // writes to debug log if enabled
 // the debug log is stored as a static variable in this function
 // when a blank (false) argument is passed, returns entire log as html
 // $dontEscape means don't escape html entities
+	#file_put_contents('/home/toshiba/hike/log/log.log', time() . ':php:' . $text . "\n", FILE_APPEND);
+
 	static $logText; # stores log
 	if (!$logText) {
 		# initialize
