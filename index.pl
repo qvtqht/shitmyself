@@ -261,6 +261,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 			RemoveHtmlFile('stats.html');
 			RemoveHtmlFile('stats-footer.html');
+			ExpireAvatarCache('*'); # expire avatar cache
+
 		} # admin_imprint
 
 		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
