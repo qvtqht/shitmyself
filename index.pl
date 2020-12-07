@@ -766,6 +766,15 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 											WriteLog('IndexTextFile: #admin: Found seemingly valid request');
 											DBAddVoteRecord($itemParent, $addedTime, $hashTag, $gpgKey, $fileHash);
 											my $authorGpgFingerprint = DBGetItemAttribute($itemParent, 'gpg_fingerprint');
+											if ($authorGpgFingerprint =~ m/([0-9A-F]{16})/) {
+												#todo this is dirty, dirty hack
+												$authorGpgFingerprint = $1;
+											} else {
+												$authorGpgFingerprint = '';
+											}
+
+											WriteLog('IndexTextFile: #admin: $authorGpgFingerprint = ' . $authorGpgFingerprint);
+
 											if ($authorGpgFingerprint) {
 												WriteLog('IndexTextFile: #admin: found $authorGpgFingerprint');
 												ExpireAvatarCache($authorGpgFingerprint);
