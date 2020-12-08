@@ -399,7 +399,7 @@ function GetTemplate ($templateKey) { // get template from config tree
 function GetFile ($file) { // gets file contents
 	$file = trim($file);
 
-	if (!$file || file_exists($file)) {
+	if (!$file || !file_exists($file)) {
 		WriteLog('GetFile: warning: $file was not provided');
 		return '';
 	}
