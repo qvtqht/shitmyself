@@ -14,7 +14,7 @@
 					<fieldset>
 						<span id=writeintro></span>
 
-						<label for="comment" class=beginner>Share with Everyone:<br></label>
+						<span class=beginner><label for="comment" class=beginner>Share with Everyone:</label><br></span>
 
 						<textarea
 							class=txtarea
