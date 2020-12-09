@@ -79,7 +79,6 @@ sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into it
 		} # $chainLog
 		else {
 			WriteLog('MakeChainIndex: warning: $chainLog was NOT defined');
-			WriteLog('MakeChainIndex: $chainLog = ' . $chainLog);
 			return 0;
 		}
 	} # GetConfig('admin/read_chain_log')
