@@ -763,13 +763,20 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 	#			this means all subsequent lookups now return $parameter
 	#
 	state $devMode;
-	if (!defined($devMode)) {
-		if (-e 'config/admin/dev_mode') {
-			$devMode = 1;
-		} else {
-			$devMode = 0;
-		}
-	}
+	$devMode = 0;
+#	this is janky, and doesn't work as expected
+#	eventually, it will be nice for dev mode to not rewrite
+#	the entire config tree on every rebuild
+#	and also not require a rebuild after a default change
+#	#todo
+#	if (!defined($devMode)) {
+#		if (-e 'config/admin/dev_mode') {
+#			WriteLog('GetConfig: attention: setting $devMode = 1');
+#			$devMode = 1;
+#		} else {
+#			$devMode = 0;
+#		}
+#	}
 
 	my $configName = shift;
 	chomp $configName;
@@ -879,6 +886,8 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 				# this also saves much time not having to run ./clean_dev when developing
 				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
 				PutConfig($configName, $configValue);
+			} else {
+				WriteLog('GetConfig: $devMode is TRUE, not calling PutConfig()');
 			}
 
 			return $configValue;
