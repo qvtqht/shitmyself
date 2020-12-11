@@ -1927,6 +1927,8 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 		push @menu, 'upload';
 	}
 
+	push @menu, 'stats';
+
 	#profile
 	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
 		# one of these is required for profile to work
@@ -3481,11 +3483,6 @@ sub MakeJsTestPages {
 	my $jsTest4Page = GetTemplate('js/test4.js');
 	PutHtmlFile("jstest4.html", $jsTest4Page);
 
-
-	my $jsTest1 = GetTemplate('test/jstest1/jstest1.template');
-	$jsTest1 = InjectJs($jsTest1, qw(jstest1));
-	PutHtmlFile("jstest1.html", $jsTest1);
-
 	my $jsTest2 = GetTemplate('test/jstest1/jstest2.template');
 	$jsTest2 = InjectJs($jsTest2, qw(jstest2));
 	PutHtmlFile("jstest2.html", $jsTest2);
@@ -3583,6 +3580,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	if (GetConfig('admin/dev_mode')) {
 		MakeJsTestPages();
 	}
+
+	my $jsTest1 = GetTemplate('test/jstest1/jstest1.template');
+	$jsTest1 = InjectJs($jsTest1, qw(jstest1));
+	PutHtmlFile("jstest1.html", $jsTest1);
+
+
 
 	# Submit page
 	my $submitPage = GetWritePage();
