@@ -1,6 +1,4 @@
 <!-- access.template ; for letting user switch accessibility mode -->
-<h3>Do you want to enable Light Mode?</h3>
-
 <h3><a href="/access.html?light=1">Turn On</a></h3>
 
 <h3><a href="/access.html?light=0">Turn Off</a></h3>
