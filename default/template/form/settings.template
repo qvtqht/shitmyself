@@ -10,44 +10,45 @@
 
 			<tr class=body>
 				<td class=content>
-					<noscript><fieldset>
-						<legend>Notice About JavaScript<br></legend>
+					<noscript>
+						<legend><b>JavaScript Information</b><br></legend>
+						<p>
+							Enhancements marked with star below (<b>*</b>) <br>
+							require modern <b>JavaScript</b>.
+						</p>
 
-						<b>JavaScript</b> is optional on this site.<br>
-						However, settings marked * won't work without it.<br>
-					</fieldset></noscript>
-
-					<p></p>
+						<p><hr></p>
+					</noscript>
 
 					<fieldset>
-						<legend>Interface and Appearance<noscript>*</noscript><br></legend>
+						<legend><b>Interface and Appearance</b><br></legend>
 
 						<p>
 							<input type=submit name=ui value="Beginner" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('beginner'); }">
 							<input type=submit name=ui value="Intermediate" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('intermediate'); }">
 							<input type=submit name=ui value="Expert" class=advanced onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('expert'); }">
-							<span class=beginner><br>Use these buttons to adjust interface</span>
+							<span class=beginner><br>Use these buttons to adjust interface<noscript><b>*</b></noscript></span>
 						</p>
 
 						<p class=advanced>
-							<label for=chkEnhance>
-								<input type=checkbox id=chkEnhance name=chkEnhance onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_ui'); }">
-								Enable interface enhancements
+							<label for=chkEnhanceWrite>
+								<input type=checkbox id=chkEnhanceWrite name=chkEnhanceWrite onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_ui'); }">
+								Enable interface enhancements<noscript><b>*</b></noscript>
 							</label>
 						</p>
 
 						<p class=advanced>
 							<label for=chkShowAdmin>
 								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
-								Show operator controls
+								Show operator controls<noscript><b>*</b></noscript>
 							</label>
 						</p>
 					</fieldset>
 
-					<p></p>
+					<p><hr></p>
 
 					<fieldset class=admin>
-						<legend>Controls</legend>
+						<legend><b>Operator Controls Console</b></legend>
 						<p>
 							<span class=beginner>
 								To activate, check box, then press button.<br>
@@ -85,10 +86,10 @@
 						</p>
 					</fieldset>
 
-					<p></p>
+					<p><hr></p>
 
 					<fieldset class=admin>
-						<legend>Content Filter<br></legend>
+						<legend><b>Content Filter</b><br></legend>
 						<span class=beginner>(This doesn't do anything at the moment.)<br></span>
 						<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
 						<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label><br>
