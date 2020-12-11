@@ -328,6 +328,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/help.html' ||
 			$path == '/search.html' ||
 			$path == '/manual.html' ||
+			$path == '/manual_advanced.html' ||
 			$path == '/index0.html' ||
 			$path == '/stats.html' ||
 			$path == '/frame.html' ||
