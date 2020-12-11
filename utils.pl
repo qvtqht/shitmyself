@@ -1408,7 +1408,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		return;
 	}
 
-	if ($file eq 'welcome.html') {
+	if ($file eq 'profile.html') {
 		PutHtmlFile('index.html', $content);
 	}
 
