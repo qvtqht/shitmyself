@@ -96,6 +96,10 @@ function EventLoop () { // (currently unused) for calling things which need to h
 	var d = new Date();
 	var eventLoopBegin = d.getTime();
 
+	// return;
+	// uncomment to disable event loop
+	// makes js debugging easier
+
 	if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
 		if (13000 < (eventLoopBegin - window.eventLoopShowTimestamps)) {
 			ShowTimestamps();
