@@ -700,6 +700,15 @@ if (GetConfig('admin/php/route_enable')) {
 			$html = SetHtmlClock($html);
 		}
 
+		if ($path == '/jstest1.html' && GetConfig('admin/js/enable')) {
+			WriteLog('inject $userAgentValue into /jstest1.html');
+			$userAgentValue = $_SERVER['HTTP_USER_AGENT'];
+			$userAgentValue = htmlspecialchars($userAgentValue);
+			$html = AddAttributeToTag($html, 'input name=txtNetworkUserAgent', 'value', $userAgentValue);
+		} else {
+			WriteLog('xxx $path = ' . $path . '; admin/js/enable = ' . GetConfig('admin/js/enable'));
+		}
+
 		if (isset($_GET['mode'])) {
 			if ($_GET['mode'] == 'light') {
 				$_GET['light'] = 1;
