@@ -70,7 +70,7 @@ if (!empty($_FILES['uploaded_file'])) {
 
                 			if (GetConfig('admin/php/post/index_file_on_post') && defined($path) && $path && file_exists($path)) {
                 			    if ($optStripMetaData) {
-                			        WriteLog('$optStripMetaData: here would call convert $file1 -strip $file2');
+                			        WriteLog('StoreServerResponse: $optStripMetaData: here would call convert $file1 -strip $file2');
                                 }
                 				IndexImageFile($path);
 							}
