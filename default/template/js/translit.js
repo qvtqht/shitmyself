@@ -227,7 +227,9 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			;
 
 			if (keysEn.length != keysRu.length) {
-				//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn and keysRu');
+				//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn ' + keysEn.length + ' and keysRu ' + keysRu.length);
+				//alert('DEBUG: keysEn = ' + keysEn);
+				//alert('DEBUG: keysRu = ' + keysRu);
 			}
 
 			if (e.key) {
