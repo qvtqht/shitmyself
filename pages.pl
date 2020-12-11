@@ -4112,6 +4112,13 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 		$txtIndex .= GetTemplate('maincontent.template');
 
 		my $profileWindowContents = GetTemplate('form/profile.template');
+		my $tosText = GetString('tos');
+		$tosText = str_replace("\n", '<br>', $tosText);
+		$profileWindowContents = str_replace(
+			'<p id=tos></p>',
+			'<p id=tos>' . $tosText . '</p>',
+			$profileWindowContents
+		);
 
 		if (GetConfig('admin/gpg/use_gpg2')) {
 			my $gpg2Choices = GetTemplate('gpg2.choices.template');
