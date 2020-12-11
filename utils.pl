@@ -2133,7 +2133,7 @@ sub GpgParse {
 
 		if ($pubKeyFlag) {
 			# parse gpg's output as public key
-			if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>\@.()\\\/]+)\"/) {
+			if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>&\@.()\\\/]+)\"/) {
 				# we found something which looks like a name
 				my $aliasReturned = $1;
 				$aliasReturned =~ s/\<(.+\@.+?)\>//g; # if has something which looks like an email, remove it
