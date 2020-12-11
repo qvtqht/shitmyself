@@ -19,6 +19,7 @@
 				</fieldset>
 				<fieldset class=advanced>
 					<p><input type=submit name=comment value="Update">
+					<input type=submit name=comment value="Flush">
 					<p>Built: $lastBuildTime
 					<p><a href="/index0.html">$itemsIndexed items</a>
 					<p><a href="/data.html">$filesTotal files</a>
