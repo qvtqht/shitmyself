@@ -24,23 +24,39 @@
             <p>
                 <font color=#ff8000>
                     <b>JavaScript</b> appears to be turned off or unsupported.<br>
-                    These tests will not work without it.
+                    Please skip Step 1 and go straight to Step 2.
                 </font>
             </p>
         </noscript>
 
         <form name=frmTest id=frmTest action="/post.html">
+            <p>
+                To help site better itself, please follow steps below:
+            </p>
+
             <input
                 type=button
-                onclick="if(window.RunTest || RunTest) { return RunTest() } else { alert('window.RunTest was false'); return false; }"
-                value="Run Tests"
+                onclick="if(window.RunTest || RunTest) { return RunTest() } else { alert('window.RunTest was FALSE. You may be using Netscape 2.01?'); return false; }"
+                value="1. Run Tests"
             >
 
-            <input type=submit value="Upload Results" onclick="this.value='Meditate...'; return true;">
+            <input type=submit value="2. Share With Operator" onclick="this.value='Meditate...'; return true;">
+
+            <p>
+                Comment on what happened:
+                <input name= type=text size=80>
+            </p>
+
+            <p>
+                User Agent Seen By Server:<br>
+                <input name=txtNetworkUserAgent type=text size=80>
+            </p>
+
+            <hr>
 
             <p>
                 navigator.userAgent:<br>
-                <input type=text name=txtNavigatorUserAgent size=80>
+                <input name=txtNavigatorUserAgent type=text size=80>
             </p>
 
             <p>
