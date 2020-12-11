@@ -2,6 +2,7 @@
 <a href="$permalinkHtml">$addedTime</a>;
 $authorLink;
 <span class=advanced>
+	$fileHashShort;
 	<a
 		href="$permalinkHtml#reply"
 		onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }"
