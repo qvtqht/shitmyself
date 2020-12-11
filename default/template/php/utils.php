@@ -297,7 +297,7 @@ function DoFlush () {
 // 	}
 }
 
-function SetConfig ($configKey, $configValue) { # writes config value to config storage
+function PutConfig ($configKey, $configValue) { # writes config value to config storage
 # SetConfig {
 # PutConfig {
 	WriteLog("PutConfig($configKey, $configValue)");

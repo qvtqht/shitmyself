@@ -530,9 +530,9 @@ if (GetConfig('admin/php/route_enable')) {
 							// call processor
 
 							//
-							// this quick hack doesn't work yet for lack of SetConfig() in php code
+							// this quick hack doesn't work yet for lack of PutConfig() in php code
 							//
-							//SetConfig('html/theme', $newTheme);
+							//PutConfig('html/theme', $newTheme);
 							//file_put_contents('../config/html/theme', $newTheme);
 							//
 
@@ -588,7 +588,7 @@ if (GetConfig('admin/php/route_enable')) {
 
 								if ($currentTime - $lastAction > $overthrowInterval) {
 									WriteLog('Overthrow conditions met');
-									SetConfig('admin/latest_admin_action', 0);
+									PutConfig('admin/latest_admin_action', 0);
 									if (file_exists('../admin.key')) {
 										#todo this stuff should be somewhere else
 										unlink('../admin.key');
