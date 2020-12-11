@@ -1361,14 +1361,26 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 } # AddAttributeToTag()
 
 sub RemoveHtmlFile { # $file ; removes existing html file
+# returns 1 if file was removed
 	my $file = shift;
 	if (!$file) {
-		return;
+		return 0;
+	}
+	if ($file eq 'index.html') {
+		# do not remove index.html
+		# temporary measure until caching is fixed
+		# also needs a fix for lazy html, because htaccess rewrite rule doesn't catch it
+		return 0;
 	}
 	my $fileProvided = $file;
 	$file = "$HTMLDIR/$file";
 
-	if ($file =~ m/^([0-9a-z\/.]+)$/) {
+	if (
+		$file =~ m/^([0-9a-z\/.]+)$/
+			&&
+		index($file, '..') == -1
+	) {
+		# sanity check
 	 	$file = $1;
 		if (-e $file) {
 			unlink($file);
