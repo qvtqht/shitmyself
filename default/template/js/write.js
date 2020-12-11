@@ -9,8 +9,8 @@ function WriteOnload () { // onload handler for write page
         if (window.GetPrefs) {
 			//alert('DEBUG: window.GetPrefs = TRUE');
 
-        	if (GetPrefs('enhance_ui')) {
-				//alert('DEBUG: enhance_ui = TRUE');
+        	if (GetPrefs('enhance_write')) {
+				//alert('DEBUG: enhance_write = TRUE');
 
 				var comment = document.getElementById('comment');
 				if (comment) {
@@ -21,7 +21,7 @@ function WriteOnload () { // onload handler for write page
 					}
 				}
 			} else {
-				//alert('DEBUG: enhance_ui = FALSE');
+				//alert('DEBUG: enhance_write = FALSE');
 			}
 		} else {
 			//alert('DEBUG: window.GetPrefs = FALSE');
