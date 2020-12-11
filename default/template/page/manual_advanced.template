@@ -2,17 +2,19 @@
 
 <h2>Introduction</h2>
 
-<p>Please enjoy this manual, and report any inaccuracies or potential for improvement. It helps if you use #meta tag.</p>
+<p>
+	Please enjoy this manual, and report any inaccuracies or potential for improvement.
+	When reporting, please use both <code>#meta</code> and <code>#manual</code> tags.
+</p>
 
 <h3>These Features May Be Confusing At First</h3>
 
 <ul>
 	<li>Your profile key lives on your device, not on this website or server.</li>
 	<li>This means that you own your profile, not this website or server.</li>
-	<li>This entire forum can be exported, migrated, cloned, and forked, without restriction.</li>
+	<li>Forum can be exported, migrated, cloned, and forked, without restriction.</li>
 	<li>Your profile stays on your device, and you can use it between any other forums.</li>
-	<li>Using the same profile on multiple devices and/or backing it up requires copying and pasting of a large blob of text.</li>
-	<li>"JavaScript Enabled", meaning JS is not required. Accessible with any browser. Yes, really, try Mosaic 1.0.</li>
+	<li>Profile management must be done with your hands and taught to others.</li>
 </ul>
 
 <!-- -->
@@ -154,6 +156,8 @@
 
 <h4>Server Key</h4>
 
+<p>The server key functionality is currently not functional.</p>
+<!--
 <p>The Server key is set by first generating or importing the whole key into the server's keychain.</p>
 
 <p>The Server key is used for signing (and in the process also timestamping) various events that happen on the server.</p>
@@ -167,36 +171,62 @@
 <p>Version changed. Server-signed "changelog" is posted, which includes the comment from the current version's commit, as well as all the previous commits that came before it, up to the most recent commit included in a changelog.</p>
 
 <p>Client fingerprint and timestamp for items that are posted where the user requests this.</p>
-
+-->
 <!-- -->
 
 <a name=admin><h3>Admin Stuff</h3></a>
 
-<p>There is planned support in the near future for roles, multiple admins, etc. in the near future.</p>
+<h4>Root Operator / Root Admin / Root Key</h4>
 
-<p>That said, this software currently supports two roles: Admin, and Server. Both are optional.</p>
+<p>The root key is set by putting the public key, ASCII-armored, into <code>./admin.key</code>.
 
-<h4>Admin User</h4>
-
-<p>The Admin key is set by putting the admin's public key, ASCII-armored, into <code>hike/admin.key</code>.
-
-<p>This user currently holds the following special powers:</p>
-
-<h5>Vouch</h5>
-
-<p>The <code>vouch</code> token can only be used by the admin.</p>
+<p>This gives the user unlimited powers.</p>
 
 <h5>Remove</h5>
 
-<p>The <code>remove</code> tag, when applied by the admin user, will cause an item to be removed at the nearest opportunity.</p>
+<p>
+	The <code>#remove</code> tag, when applied by Admin,
+	will cause an item to be removed at the nearest opportunity,
+	usually within seconds.
+</p>
 
-<p>All of the tokens in the removed item are undone at the next rebuild.</p>
+<h5>Approve</h5>
+
+<p>
+	When Admin uses <code>#approve</code> tag,
+	item is displayed in Approved Threads pages.
+</p>
+
+<h5>Admin</h5>
+
+<p>
+	When Admin uses <code>#admin</code> tag on a user's registration,
+	that user also becomes Admin.
+
+	This setting must be enabled using <code>config/admin/allow_admin_permissions_tag_lookup</code>
+</p>
 
 <h5>#config</h5>
 
-<p>The <code>#config</code> token can always be applied by the admin.</p>
+<p>
+	The <code>#config</code> token can always be applied by Admin.
+</p>
 
-<p>Settings under the <code>config/admin/</code> directory can only be set by the admin user.</p>
+<p>
+	Settings under the <code>config/admin/</code> directory can only be set by Admin user.
+</p>
+
+<p>
+	To allow non-admin users to change configuration,
+	which should only be enabled in a trusted environment,
+	use the following settings:
+</p>
+
+<p>
+	<code>config/admin/signed_can_config</code>
+	<code>config/admin/cookied_can_config</code>
+	<code>config/admin/anyone_can_config</code>
+</p>
 
 <!-- -->
 
@@ -232,7 +262,7 @@
 
 <p>You can post your messages anonymously. Anonymous posting is very easy. Why even bother creating a profile?</p>
 
-<h3>Benefits and Explanation of Account System</h3>
+<h3>Benefits and Explanation of Registration and Signatures</h3>
 
 <ul>
 	<li>All your posts will appear on your author page.</li>
@@ -241,12 +271,21 @@
 	<li>You will get a colorful avatar that will appear with all your posts.</li>
 </ul>
 
-<p>You will need to create a key pair. Look for this option in your software and use it. (More detailed guides to come.)</p>
+<p>
+	You will need to create a key pair.
+	Look for this option in your software and use it.
+</p>
 
-<p>GPG is traditionally used for email, but <b>you do not have to provide your address</b> for this forum.
+<p>
+	GPG is traditionally used for email,
+	but <b>you do not have to provide your address</b> for this forum.
 	In fact, we recommend that you either leave the field blank.
-	Otherwise, your email address will be accessible by anyone, including spambots.</p>
+	Otherwise, your email address will be accessible to spambots.
+</p>
 
-<p>The key pair is stored on your device. If it is important to you, keep it safe, and back it up.</p>
+<p>
+	The key pair is stored on your device.
+	If it is important to you, keep it safe, and back it up.
+</p>
 
 <!-- -->
