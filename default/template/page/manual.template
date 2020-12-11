@@ -6,55 +6,61 @@
 
 <a name=profile><h3>Profile</h3></a>
 
-<p>The Profile page is where you can create an <u>identity</u> for yourself.</p>
+<p>Profile allows you extra features.</p>
 
-<p>To create a profile, press the Enter button. You may be prompted for a user name.</p>
+<p>To create profile, press Enter button.</p>
 
-<p>To publish and/or view profile, press "Go to profile".</p>
+<p>To share your profile, press "Publish profile".</p>
+
+<p>Advanced: To choose a name, use "my name is ..." command.</p>
 
 <p>To sign out, use the Exit button.</p>
 
-<p>If you want to use the profile again later, use "Save as file" button. (Technical note: JavaScript is required.)</p>
+<p>Advanced: To save profile, use "Save as file" button. (uses JavaScript)</p>
 
-<p>
-	For privacy, the top menu interface shows no indication of your signed-in status.<br>
-	<br>
-	Some other pages may reflect signed-in status, such as the Write page.
-</p>
+<p>Privacy Help: The top of the page will not show your signed in status.</p>
 
 <!-- -->
 
-<a name=write><h3>Write</h3></a>
+<a name=write><h3>Write/Read</h3></a>
 
-<p>The Write page allows you to share your writing, favorite quotes and passages, learning materials.</p>
+<p>The Write page allows you to share with others.</p>
 
-<p>If you are signed in, other options may become available.</p>
+<p>Privacy Note: Please ensure your own privacy.</p>
 
-<p>Press Send to submit it to the message board.</p>
+<p>If you are using profile, your message may be signed with cookie and/or signature.</p>
 
-<p>Your message may not be visible immediately, depending on community preferences.</p>
+<p>Your message may be moderated and/or filtered.</p>
+
+<p>No guarantees of message delivery are provided by this resource.</p>
+
+<p>Do not get distracted, press Send button to submit to message board.</p>
+
+<p>Advanced: Use message identifier and profile fingerprint numbers to verify message delivery via separate channel.</p>
+
+<p>Expert: Validate message tree in your favorite language.</p>
 
 <!-- -->
 
-<a name=topics><h3>Topics</h3></a>
+<a name=topics><h3>Finding Newest Information</h3></a>
 
-<p>Topics/Top page displays the currently active discussion topics.</p>
+<p>Go to the "Read" page. Newest moderated posts are here.</p>
 
-<p>You can start your own by posting a message and tagging approve.</p>
+<p>Advanced: To see unmoderated content, go to Index0 page.</p>
 
 <!-- -->
 
-<a name=status><h3>Status</h3></a>
+<a name=status><h3>Advanced</h3></a>
 	
 <p>Status page has basic information about forum.</p>
 
-<p>Press Update button to refresh pages with any new material.</p>
+<p>Advanced: Press Update button and wait.</p>
 
-<!-- -->
+<p><a href="manual_advanced.html">Technical Details</a></p>
 
-<a name=advanced><h3>Advanced</h3></a>
+<p><a href="manual_advanced.html">Advanced Manual</a></p>
 
-<p><a href="manual_advanced.html">Advanced users can go here to see technical details.</a></p>
+<p><a href="manual_advanced.html">Expert Mode</a></p>
 
 
 <!-- / manual.template -->
