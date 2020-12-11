@@ -1309,6 +1309,24 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 	return $widgetTemplate;
 } # GetWidgetExpand() @16019xxxxx
 
+sub GetQuickVoteButtonGroup {
+	my $fileHash = shift;
+	my $returnTo = shift;
+
+	my $quickVotesButtons = '';
+	if ($returnTo) {
+		WriteLog('GetQuickVoteButtonGroup: $returnTo = ' . $returnTo);
+		$quickVotesButtons = GetItemTagButtons($fileHash, $returnTo); #todo refactor to take vote totals directly
+	} else {
+		$quickVotesButtons = GetItemTagButtons($fileHash); #todo refactor to take vote totals directly
+	}
+
+	my $quickVoteButtonGroup = GetTemplate('vote/votequick2.template');
+	$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
+
+	return $quickVoteButtonGroup;
+}
+
 sub GetItemTemplate { # returns HTML for outputting one item
 	WriteLog("GetItemTemplate() begin");
 
@@ -1505,8 +1523,14 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$windowParams{'title'} = $file{'item_title'};
 			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
 			# $windowParams{'headings'} = 'haedigns';
-			$windowParams{'status'} = GetTemplate("item/status_bar.template");;
-			$windowParams{'menu'} = '$quickVoteButtonGroup';
+
+			my $statusBar = GetTemplate("item/status_bar.template");
+
+			$windowParams{'status'} = $statusBar;
+
+			if (defined($file{'show_quick_vote'})) {
+				$windowParams{'menu'} = GetQuickVoteButtonGroup($file{'file_hash'}, $file{'vote_return_to'});
+			}
 
 			$itemTemplate = GetWindowTemplate2(\%windowParams);
 			$itemTemplate .= '<replies></replies>';
@@ -1710,33 +1734,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$itemTemplate =~ s/\$votesSummary/$votesSummary/g;
 		} else {
 			$itemTemplate =~ s/\$votesSummary//g;
-		}
-
-		if (defined($file{'show_quick_vote'})) {
-			WriteLog('GetItemTemplate: $file{\'show_quick_vote\'} = ' . $file{'show_quick_vote'});
-	
-			if ($file{'show_quick_vote'}) {
-				my $quickVotesButtons = '';
-				if (defined($file{'vote_return_to'}) && $file{'vote_return_to'}) {
-					WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
-
-					$quickVotesButtons = GetItemTagButtons($file{'file_hash'}, 0, $file{'vote_return_to'}); #todo refactor to take vote totals directly
-				} else {
-					# WriteLog('GetItemTemplate: $file{\'vote_return_to\'} = ' . $file{'vote_return_to'});
-
-					$quickVotesButtons = GetItemTagButtons($file{'file_hash'}); #todo refactor to take vote totals directly
-				}
-
-				my $quickVoteButtonGroup = GetTemplate('vote/votequick2.template');
-				$quickVoteButtonGroup =~ s/\$quickVotesButtons/$quickVotesButtons/g;
-	
-				$itemTemplate =~ s/\$quickVoteButtonGroup/$quickVoteButtonGroup/;
-				$itemTemplate =~ s/\$infoBox/$quickVoteButtonGroup/;
-			} else {
-				$itemTemplate =~ s/\$quickVoteButtonGroup//g;
-			}
-		} else {
-			$itemTemplate =~ s/\$quickVoteButtonGroup//g;
 		}
 
 		my $itemFlagButton = '';
