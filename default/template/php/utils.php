@@ -624,7 +624,12 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 	} else {
 		// do the redirect
 		if (!headers_sent()) {
-			header('Location: ' . $redirectUrl);
+			if (0 & $message == 'Goodbye!') {
+				header('WWW-Authenticate: Basic realm="Goodbye!"');
+				header('HTTP/1.0 401 Unauthorized');
+			} else {
+				header('Location: ' . $redirectUrl);
+			}
 		} else {
 			WriteLog('RedirectWithResponse: warning: wanted to send Location header, but headers already sent');
 		}
