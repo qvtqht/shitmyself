@@ -8,6 +8,11 @@
 <p><a href="/settings.html">Settings</a>: To adjust how it works.</p>
 <p><a href="/access.html">Accessibility Mode</a>: Make site easier to use.</p>
 
+<p>
+    <a href="/jstest1.html">Browser Test</a>:
+    Help us help you in just two clicks! <br>
+</p>
+
 <hr>
 
 <form action="/post.html">
