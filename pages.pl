@@ -1598,7 +1598,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#		$permalinkTxt =~ s/^\.//;
 
 		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
-		my $fileHashShort = substr($fileHash, 0, 8) . '..';
+		my $fileHashShort = substr($fileHash, 0, 8);
 		my $itemAnchor = substr($fileHash, 0, 8);
 		my $itemName; # item's 'name'
 
