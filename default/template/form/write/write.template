@@ -30,7 +30,7 @@
 						<p>
 							<input
 								type=submit
-								onclick="this.value = 'Meditate...'; if (window.writeSubmit) { return writeSubmit(this); }"
+								onclick="this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
 								value="Send Now"
 								name=addtext
 								id=addtext
