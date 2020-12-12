@@ -32,7 +32,7 @@
 
 						<p class=advanced>
 							<label for=chkEnhanceWrite>
-								<input type=checkbox id=chkEnhanceWrite name=chkEnhanceWrite onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_ui'); }">
+								<input type=checkbox id=chkEnhanceWrite name=chkEnhanceWrite onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_write'); }">
 								Enable interface enhancements<noscript><b>*</b></noscript>
 							</label>
 						</p>

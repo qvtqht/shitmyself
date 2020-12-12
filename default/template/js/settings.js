@@ -410,7 +410,7 @@ function SettingsOnload () { // onload function for settings page
 		//LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
 		//LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
 		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
-		LoadCheckbox(document.getElementById('chkEnhance'), 'enhance_write');
+		LoadCheckbox(document.getElementById('chkEnhanceWrite'), 'enhance_write');
 
 		//if (GetPrefs('sign_by_default') == 1) {
 		//	var cbM = document.getElementById('chkSignByDefault');
