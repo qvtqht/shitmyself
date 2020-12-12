@@ -542,6 +542,7 @@ sub GetFileHash { # $fileName ; returns hash of file contents
 				# exclude footer content from hashing
 				$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
 			}
+			$fileContent = trim($fileContent);
 			$memoFileHash{$fileName} = sha1_hex($fileContent);
 			return $memoFileHash{$fileName};
 		} else {

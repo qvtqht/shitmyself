@@ -209,6 +209,8 @@ function GetFileHash ($fileName) { // returns hash of file contents
 			$fileContent = substr($fileContent, 0, index($fileContent, "\n-- \n"));
 		}
 
+		$fileContent = trim($fileContent);
+
 		return sha1($fileContent);
 	} else {
 		return sha1_file($fileName);
