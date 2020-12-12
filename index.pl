@@ -748,7 +748,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								} # has parents
 							} # #remove
 							elsif (
-								$tokenFound{'param'} eq 'admin'
+								$tokenFound{'param'} eq 'admin' ||
+								$tokenFound{'param'} eq 'approve'
 							) { # #admin #approve tokens which need permissions
 								my $hashTag = $tokenFound{'param'};
 								if (scalar(@itemParents)) {
