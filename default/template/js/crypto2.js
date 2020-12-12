@@ -24,7 +24,7 @@ function SimpleBenchmark() { // simple benchmark
     return (i / time());
 }
 
-function MakeKey () { //makes key using default settings
+function MakeKey (t) { //makes key using default settings
 // once key is generated, store it to localStorage
 
 	//alert('DEBUG: MakeKey() begin');
@@ -144,6 +144,10 @@ function MakeKey () { //makes key using default settings
 					//alert('DEBUG: about to share public key');
 
 					window.location = '/profile.html?' + myFingerprint;
+//					if (window.addLoadingIndicator) {
+//						addLoadingIndicator('Creating profile...');
+//					}
+//					PubKeyPing();
 
 					//	if (window.sharePubKey) {
 					//		//alert('DEBUG: window.sharePubKey exists. calling');
@@ -159,14 +163,15 @@ function MakeKey () { //makes key using default settings
 				}
 			);
 
-			return false;
-
+			return false; // return false, cancel form submit to allow for signing
 		}
+
+		return true; // signing wasn't scheduled, allow form to submit
 
 	}
 
-	return true;
-}
+	return true; // signing wasn't scheduled, allow form to submit
+} // MakeKey()
 
 function getPrivateKey() { // get private key from local storage
 // returns null otherwise
