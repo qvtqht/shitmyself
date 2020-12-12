@@ -5033,6 +5033,11 @@ while (my $arg1 = shift) {
 			print ("recognized --php\n");
 			MakePhpPages();
 		}
+		elsif ($arg1 eq '--settings') {
+			print ("recognized --settings\n");
+			my $settingsPage = GetSettingsPage();
+			PutHtmlFile('settings.html', $settingsPage);
+		}
 		elsif ($arg1 eq '--write') {
 			print ("recognized --write\n");
 			my $submitPage = GetWritePage();
@@ -5040,7 +5045,6 @@ while (my $arg1 = shift) {
 
 			if (GetConfig('admin/php/enable')) {
 				# create write_post.html for longer messages if admin/php/enable
-
 				$submitPage =~ s/method=get/method=post/g;
 				if (index(lc($submitPage), 'method=post') == -1) {
 					$submitPage =~ s/\<form /<form method=post /g;
