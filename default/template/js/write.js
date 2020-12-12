@@ -114,7 +114,8 @@ function WriteOnload () { // onload handler for write page
     return true;
 }
 
-function CommentMakeWp(comment) {
+function CommentMakeWp(comment) { // makes editor textarea larger and gives it wp color scheme
+// called when enhance_write is on
 	if (!comment) {
 		// #todo more sanity checks here
 		return;
@@ -126,7 +127,7 @@ function CommentMakeWp(comment) {
 	comment.style.padding = '1em';
 	comment.setAttribute('cols', 80);
 	comment.setAttribute('rows', 24);
-}
+} // CommentMakeWp()
 
 function writeSubmit (t) { // called when user submits write form
 	//alert('DEBUG: writeSubmit() begin');
