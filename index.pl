@@ -327,7 +327,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				},
 				{ # title of item, either self or parent. used for display when title is needed #title title:
 					'token'   => 'title',
-					'mask'    => '^(title)(\W+)(.+)$',
+					'mask'    => '^(title)(\W)(.+)$',
 					'mask_params'    => 'mg',
 					'apply_to_parent' => 1,
 					'message' => '[Title]'
