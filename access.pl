@@ -46,6 +46,7 @@ foreach (@submitReceivers) {
 	s/$/\?comment=/;
 	chomp;
 }
+#push @submitReceivers, '/post.html?txtNetworkUserAgent='; #todo
 
 ##################
 
@@ -260,8 +261,9 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 			next;
 		}
 
-		if ($hostname) {
-			AddHost($hostname, 1);
+		if ($logName) {
+			#todo fix this
+			AddHost($logName, 1);
 		}
 
 		# Split $date into $time and $date
