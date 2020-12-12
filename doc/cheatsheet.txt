@@ -11,3 +11,10 @@
 # \s whitespace
 # \S NOT whitespace
 #
+
+LocalStorage cheatsheet
+=======================
+var ls = window.localStorage;
+ls.setItem('key', value);
+var retrieve = ls.getItem('key');
+ls.removeItem('key');
