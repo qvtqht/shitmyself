@@ -28,20 +28,14 @@
 						>$initText</textarea><br>
 
 						<p>
-							<input
-								type=submit
-								onclick="this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
-								value="Send Now"
-								name=addtext
-								id=addtext
-							>
+							<input type=submit value="Send Now" name=addtext id=addtext>
 
 							<span id=spanSignAs class=advanced></span>
 
 							<p id=spanWriteAdvanced class=advanced></p>
 						</p>
 
-						$writeJs
+						<span id=write_js></span>
 						
 					</fieldset>
 				</td>

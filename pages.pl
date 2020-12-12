@@ -1058,7 +1058,8 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 			$replyForm,
 			'input type=submit',
 			'onclick',
-			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
+#			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
+			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
 		);
 
 		if (GetConfig('admin/php/enable')) {
@@ -3884,11 +3885,11 @@ sub GetWriteForm { # returns write form (for composing text message)
 	if (GetConfig('admin/js/enable')) {
 		WriteLog('GetWriteForm: js is on, adding write_js.template');
 		my $writeJs = GetTemplate('form/write/write_js.template');
-		$writeForm =~ s/\$writeJs/$writeJs/g;
+		$writeForm = str_replace('<span id=write_js></span>', $writeJs, $writeForm);
 	}
 	else {
 		WriteLog('GetWriteForm: js is off, removing $writeJs');
-		$writeForm =~ s/\$writeJs//g;
+		$writeForm = str_replace('<span id=write_js></span>', '', $writeForm);
 	}
 
 	if (GetConfig('admin/php/enable')) {
@@ -3942,6 +3943,15 @@ sub GetWriteForm { # returns write form (for composing text message)
 		if (GetConfig('admin/js/translit')) {
 			$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
 		}
+
+		$writeForm = AddAttributeToTag(
+			$writeForm,
+			'input type=submit',
+			'onclick',
+#			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
+			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
+		);
+
 		#$writeForm = AddAttributeToTag($writeForm, 'a href="/frame.html"', 'onclick', 'if (window.showKeyboard) { return showKeyboard(); }');
 	}
 
