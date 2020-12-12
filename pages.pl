@@ -2093,6 +2093,15 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
 
+	if (GetConfig('admin/offline/enable')) {
+		$htmlStart = AddAddtributeToTag(
+			$htmlStart,
+			'html',
+			'manifest',
+			'/cache.manifest'
+		);
+	}
+
 	#top menu
 						  
 	my $identityLink = '<span id="signin"><a href="/profile.html">Profile</a></span> <span class="myid" id=myid></span> ';
@@ -3576,7 +3585,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("frame2.html", GetTemplate('keyboard/keyboard_frame2.template'));
 	PutHtmlFile("frame3.html", GetTemplate('keyboard/keyboard_frame3.template'));
 
-	#PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template'));
+	if (GetConfig('admin/offline/enable')) {
+		PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template') . "\n" . time() . ".html"); # config/admin/offline/enable
+	}
 
 	if (GetConfig('admin/dev_mode')) {
 		MakeJsTestPages();
