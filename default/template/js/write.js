@@ -5,13 +5,10 @@ function WriteOnload () { // onload handler for write page
 
 	if (document.getElementById) {
 	    //alert('DEBUG: WriteOnload: document.getElementById is true');
-
         if (window.GetPrefs) {
 			//alert('DEBUG: window.GetPrefs = TRUE');
-
         	if (GetPrefs('enhance_write')) {
 				//alert('DEBUG: enhance_write = TRUE');
-
 				var comment = document.getElementById('comment');
 				if (comment) {
 					if (window.location.href.indexOf('write') != -1) {
@@ -26,7 +23,6 @@ function WriteOnload () { // onload handler for write page
 		} else {
 			//alert('DEBUG: window.GetPrefs = FALSE');
 		}
-
         var pubKey = '';
         if (window.getPublicKey) {
         	//alert('DEBUG: window.getPublicKey exists');
@@ -37,10 +33,8 @@ function WriteOnload () { // onload handler for write page
             //alert('DEBUG: window.getPrivateKey exists');
             privKey = getPrivateKey();
         }
-
         if (privKey) {
             //alert('DEBUG: privKey was true, adding options...');
-
 			if (document.getElementById('spanSignAs')) {
 				var gt = unescape('%3E');
 				if (window.getAvatar) {
