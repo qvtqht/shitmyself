@@ -2214,10 +2214,10 @@ sub GetTopItemsPage { # returns page with top items listing
 				if ($authorLink) {
 					$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
 				} else {
-					$authorAvatar = '';
+					$authorAvatar = 'Author Unspecified';
 				}
 			} else {
-				$authorAvatar = '';
+				$authorAvatar = 'Author Unspecified';
 			}
 
 			$itemLastTouch = GetTimestampWidget($itemLastTouch);
