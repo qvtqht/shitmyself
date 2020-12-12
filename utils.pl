@@ -1633,12 +1633,12 @@ sub trim { # trims whitespace from beginning and end of $string
 	my $s = shift;
 
 	if (defined($s)) {
-		$s =~ s/^\s+|\s+$//g;
-		$s =~ s/^\n+|\n+$//g;
-		chomp $s;
-
+		$s =~ s/\s+$//g;
+		$s =~ s/^\s+//g;
 		return $s;
 	}
+
+	return;
 };
 
 sub GetSecondsHtml {# takes number of seconds as parameter, returns the most readable approximate time unit
