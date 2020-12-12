@@ -109,6 +109,15 @@ function EventLoop () { // (currently unused) for calling things which need to h
 		}
 	}
 
+	if (window.eventLoopDoAutoSave && window.DoAutoSave) {
+		if (5000 < (eventLoopBegin - window.eventLoopDoAutoSave)) { // autosave interval
+			DoAutoSave();
+			window.eventLoopDoAutoSave = eventLoopBegin;
+		} else {
+			// do nothing
+		}
+	}
+
 	if (window.eventLoopSetClock && window.setClock) {
 		setClock();
 	}
