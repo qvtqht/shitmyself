@@ -128,6 +128,9 @@ function writeSubmit (t) { // called when user submits write form
 
 	if (window.localStorage) {
 		//alert('DEBUG: window.localStorage');
+		if (window.ClearAutoSave) {
+			ClearAutoSave();
+		}
 	} else {
 		//alert('DEBUG: no window.localStorage');
 	}
@@ -140,6 +143,7 @@ function writeSubmit (t) { // called when user submits write form
 			if (document.getElementById) {
 				var chkSignAs = document.getElementById('chkSignAs');
 				if (!chkSignAs || (chkSignAs && chkSignAs.checked)) {
+					// if there's a "sign as" checkbox, it should be checked
 					if (window.signMessage) {
 						var signMessageResult = signMessage();
 						if (!signMessageResult) {
@@ -161,6 +165,59 @@ function writeSubmit (t) { // called when user submits write form
 	window.eventLoopFresh = 0; // disables fresh.js. may not be a wise move here.
 
 	return true;
+} // writeSubmit()
+
+function DoAutoSave() {
+	var initDone = window.autoSaveInitDone;
+	if (!initDone) {
+		window.autoSaveInitDone = 1;
+
+		var ls = window.localStorage;
+		var storedValue = ls.getItem('autosave');
+
+		if (storedValue) {
+			var comment = document.getElementById('comment');
+			if (comment) {
+				comment.value += storedValue;
+			}
+		}
+
+		return 0;
+	}
+
+	if (document.getElementById) {
+		//alert('DEBUG: DoAutoSave: document.getElementById is true');
+
+		if (window.GetPrefs) {
+			//alert('DEBUG: DoAutoSave: window.GetPrefs = TRUE');
+
+			if (GetPrefs('enhance_write')) {
+				//alert('DEBUG: DoAutoSave: enhance_write = TRUE');
+
+				var comment = document.getElementById('comment');
+				if (comment) {
+					if (window.localStorage) {
+						var ls = window.localStorage;
+						ls.setItem('autosave', comment.value);
+					}
+				}
+			} else {
+				//alert('DEBUG: enhance_write = FALSE');
+			}
+		} else {
+			//alert('DEBUG: window.GetPrefs = FALSE');
+		}
+	}
 }
+
+function ClearAutoSave () {
+	var ls = window.localStorage;
+	if (ls) {
+		window.eventLoopDoAutoSave = 0;
+		ls.removeItem('autosave');
+	}
+} // ClearAutoSave()
+
+window.eventLoopDoAutoSave = 1;
 
 // == end write.js
