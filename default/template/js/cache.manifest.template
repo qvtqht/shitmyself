@@ -1,9 +1,21 @@
 CACHE MANIFEST
+read.html
+write.html
+stats.html
+profile.html
+help.html
+authors.html
+tags.html
+settings.html
+index0.html
+manual.html
+manual_advanced.html
+etc.html
 index.html
 compost.html
-help.html
-profile.html
-settings.html
+openpgp.js
+crypto2.js
+openpgp.worker.js
 
 NETWORK:
 post.html
