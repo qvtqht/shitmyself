@@ -151,3 +151,8 @@ Use '--' to separate paths from revisions, like this:
 
 child admin's avatar does not turn red.
 
+
+===
+
+cookie auth doesn't work without php, but still pretends to work
+

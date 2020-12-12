@@ -1,3 +1,10 @@
+If user signs out with cookie and later tries to sign in with localstorage,
+	Either sign them out
+		or
+	Prompt to re-sign in?
+		or
+	Welcome back message?
+
 Add sub to fill template with hash of variables
 
 Compatible Mode
