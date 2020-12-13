@@ -13,6 +13,8 @@ function RunTest() {
 		document.frmTest.txtNavigatorLanguage.value = navigator.language;
 	}
 
+	var d = new Date();
+	document.frmTest.comment.value += (' E' + d.getTime()) + ' ';
 
 	// this is the most basic syntax for this file
 	// for brevity, the rest of the tests are done with !!foo.bar syntax
@@ -81,6 +83,8 @@ function RunTest() {
 
 	//alert('DEBUG: Looking for window.opener...');
 	document.frmTest.txtWindowOpener.value = window.opener;
+
+	document.frmTest.comment.value += (' E' + d.getTime()) + ' ';
 
 	//alert('DEBUG: Finished, returning.');
 	return false;

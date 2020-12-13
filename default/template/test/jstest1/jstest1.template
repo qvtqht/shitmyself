@@ -43,8 +43,8 @@
             <input type=submit value="2. Share With Operator" onclick="this.value='Meditate...'; return true;">
 
             <p>
-                Comment on what happened:
-                <input name= type=text size=80>
+                Comments:<br>
+                <input name=comment type=text size=80>
             </p>
 
             <p>
