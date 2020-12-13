@@ -209,7 +209,8 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	return $pageLink;
 }
 
-sub GetWindowTemplate {
+sub GetWindowTemplate { # body title headings status menu ; returns html
+# calls GetWindowTemplate2()
 	my %param = ();
 
 	$param{'body'} = shift;
