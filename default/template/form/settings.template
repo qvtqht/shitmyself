@@ -45,9 +45,9 @@
 						</p>
 					</fieldset>
 
-					<p><hr></p>
-
 					<fieldset class=admin>
+						<p><hr></p>
+
 						<legend><b>Operator's Console</b></legend>
 						<p>
 							<span class=beginner>
@@ -86,9 +86,9 @@
 						</p>
 					</fieldset>
 
-					<p><hr></p>
-
 					<fieldset class=admin>
+						<p><hr></p>
+
 						<legend><b>Content Filter</b><br></legend>
 						<span class=beginner>(This doesn't do anything at the moment.)<br></span>
 						<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
