@@ -202,8 +202,14 @@ function CheckIfFresh () {
 		}
 
 		freshClient = xhr;
-		//freshClient.open("HEAD", mypath + '?' + new Date().getTime(), true);
-		freshClient.open("HEAD", mypath, true);
+
+		if (0 && mypath.toString().indexOf('?') == -1) {
+			// this ensures no caching, but may cause other problems
+			freshClient.open("HEAD", mypath + '?' + d.getTime(), true);
+		} else {
+			freshClient.open("HEAD", mypath, true);
+		}
+
     	//freshClient.timeout = 5000; //#xhr.timeout
 		freshClient.setRequestHeader('Cache-Control', 'no-cache');
 		freshClient.onreadystatechange = freshCallback;
