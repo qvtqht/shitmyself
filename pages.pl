@@ -1451,9 +1451,9 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		}
 
 		#if (index($message, "<br>\n--\n<br>\n") > -1) {
-		if (GetConfig('html/hide_dashdash_signatures')) {
+		if (GetConfig('html/hide_dashdash_signatures')) { # -- \n
 			if (index($message, "<br>-- <br>") != -1) {
-				$message =~ s/(.+)<br>-- <br>(.+)/$1<span class=advanced><br>\n-- <br>\n$2<\/span>/smi;
+				$message =~ s/(.+)<br>-- <br>(.+)/$1<span class=admin><br>\n-- <br>\n$2<\/span>/smi;
 				# /s = single-line (changes behavior of . metacharacter to match newlines)
 				# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
 				# /g = global (all instances)
