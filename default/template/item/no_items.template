@@ -16,14 +16,13 @@
 		<tr class=body>
 			<td class=content>
 				<p class=beginner>
-
 					There are no approved topics.<br><br>
-
+					This website may be having technical issues.<br><br>
 					Please post something or come back later.<br><br>
-
-					You could also try <a href=/index0.html>looking in the compost heap...</a>
+					<span class=advanced>
+						<a href=/compost.html>Compost</a>
+					</span>
 				</p>
-
 				<p class=advanced>No matches.</p>
 			</td>
 		</tr>
