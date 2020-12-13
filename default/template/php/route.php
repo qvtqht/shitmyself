@@ -322,8 +322,6 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/profile.html' ||
 			$path == '/etc.html' ||
 			$path == '/events.html' ||
-			$path == '/tags.html' ||
-			$path == '/votes.html' ||
 			$path == '/settings.html' ||
 			$path == '/help.html' ||
 			$path == '/search.html' ||
@@ -348,6 +346,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		) {
 			WriteLog('HandleNotFound: found write page');
 			$pagesPlArgument = '--write';
+		}
+
+		if (
+			$path == '/tags.html' ||
+			$path == '/votes.html'
+		) {
+			WriteLog('HandleNotFound: found tags page');
+			$pagesPlArgument = '--tags';
 		}
 
 		if (isset($pagesPlArgument) && $pagesPlArgument) {
