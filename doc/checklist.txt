@@ -1,0 +1,30 @@
+Roles Checklist
+===============
+Sysop
+Operator
+Moderator(s)
+Treasurer
+Hardware
+
+Ethics Committee
+================
+Animal Relations
+Plant Relations
+Human Relations
+Karmic Relations
+Water Relations
+
+Deployment Checklist
+====================
+Seed content
+Day of week
+Operator
+Blockers
+Notes
+
+Operator Checklist
+==================
+Launch date
+Domain
+Host
+Notes
