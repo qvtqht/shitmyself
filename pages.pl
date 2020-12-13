@@ -3586,7 +3586,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("frame3.html", GetTemplate('keyboard/keyboard_frame3.template'));
 
 	if (GetConfig('admin/offline/enable')) {
-		PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template') . "\n" . time() . ".html"); # config/admin/offline/enable
+		PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template') . "#" . time()); # config/admin/offline/enable
 	}
 
 	if (GetConfig('admin/dev_mode')) {
