@@ -3643,8 +3643,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $topItemsPage = GetTopItemsPage();
 	PutHtmlFile('read.html', $topItemsPage);
 
-	my $tagsPage = GetTagsPage('Tags', 'Tags', '');
-	PutHtmlFile("tags.html", $tagsPage);
+	MakePage('tags', 0);
 
 	PutStatsPages();
 	#
@@ -5058,6 +5057,10 @@ while (my $arg1 = shift) {
 			print ("recognized --settings\n");
 			my $settingsPage = GetSettingsPage();
 			PutHtmlFile('settings.html', $settingsPage);
+		}
+		elsif ($arg1 eq '--tags') {
+			print ("recognized --tags\n");
+			MakePage('tags');
 		}
 		elsif ($arg1 eq '--write') {
 			print ("recognized --write\n");
