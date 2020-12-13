@@ -12,7 +12,5 @@
 			Strip image metadata (doesn't work yet)
 		</label>
 	</span>
-	<hr>
-	<p><a href="/upload_multi.html">Multiple upload is <font color=yellow>under construction</font></a></p>
 </form>
 <!-- / form/upload.template -->
