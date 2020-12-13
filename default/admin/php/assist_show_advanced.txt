@@ -1,5 +1,20 @@
-This injects a style into pages to show/hide based on class=advanced.
+This is to assist the modular UI, which consists of three groups:
+beginner
+advanced
+admin
 
-$html = str_replace('</head>', "<style><!--\n.advanced{display:none}\n--></style></head>", $html);
+Each of these groups may be hidden depending on user settings. In order to prevent page elements from jumping around, we can pre-set their visibility with an injected style.
+
+This setting enables such injection. Based on the following three cookies, the respective element groups will be hidden when the cookie is set to 0.
+
+beginner
+show_advanced
+show_admin
+
+Styles like this will be inserted into the page when cookie is set to 0:
+
+.beginner { display: none; }
+.advanced { display: none; }
+.admin { display: none; }
 
 It helps remediate UI jumping around after page load.
