@@ -30,15 +30,7 @@
 <p><a href="/manual_advanced.html">Advanced Manual</a></p>
 <p><a href="/manual_tokens.html">Tokens Reference</a></p>
 <p><a href="/data.html">Data</a></p>
-<p>
-    Bookmarklet!
-    <a
-        rel="nofollow"
-        href="javascript:window.location=%22http://shitmyself.com/post.php%3Fcomment=%22+encodeURIComponent(document.location)"
-    >
-        sHiTMyseLf.com
-    </a>
-</p>
+<span id=bookmarklet></span>
 
 <p>Thanks for reading the help page!</p>
 
