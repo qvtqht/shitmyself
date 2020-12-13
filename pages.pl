@@ -1929,16 +1929,16 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 		push @menu, 'upload';
 	}
 
-	push @menu, 'stats';
-
-	#profile
-	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
-		# one of these is required for profile to work
-		push @menu, 'profile';
-	} else {
-		#todo make it disabled or something
-		push @menu, 'profile';
-	}
+	#push @menu, 'stats';
+#
+#	#profile
+#	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
+#		# one of these is required for profile to work
+#		push @menu, 'profile';
+#	} else {
+#		#todo make it disabled or something
+#		push @menu, 'profile';
+#	}
 	push @menu, 'help';
 
 	###
