@@ -2094,7 +2094,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	# and substitute $title with the title
 
 	if (GetConfig('admin/offline/enable')) {
-		$htmlStart = AddAddtributeToTag(
+		$htmlStart = AddAttributeToTag(
 			$htmlStart,
 			'html',
 			'manifest',
