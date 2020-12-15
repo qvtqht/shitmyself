@@ -1,5 +1,8 @@
+<!-- author_listing.template -->
 <tr>
-	<td>$authorLink($authorScore)</td>
+	<td>$authorLink</td>
+	<td>$authorScore</td>
 	<td>$authorLastSeen</td>
 	<td>$authorVoteButtons</td>
 </tr>
+<!-- / author_listing.template -->
