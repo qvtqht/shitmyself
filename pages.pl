@@ -2751,27 +2751,11 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	return $html;
 }
 
-sub GetScoreboardPage { #returns html for /authors.html
-# GetAuthorsPage {
-	#todo rewrite this more pretty
-	my $txtIndex = "";
-
-	my $title = 'Top Scores';
-	my $titleHtml = 'Top Scores';
-
-	my $currentTime = GetTime();
-
-	$txtIndex = GetPageHeader($title, $titleHtml, 'scoreboard');
-
-	$txtIndex .= GetTemplate('maincontent.template');
+sub GetTopAuthorsListAsHtml {
+	WriteLog('GetTopAuthorsListAsHtml() begin');
 
 	my @topAuthors = DBGetTopAuthors();
-
-	my $authorListingWrapper = GetTemplate('author_listing_wrapper.template');
-
 	my $authorListings = '';
-
-	my $authorCount = scalar(@topAuthors);
 
 	while (@topAuthors) {
 		# get the friend's key
@@ -2792,16 +2776,13 @@ sub GetScoreboardPage { #returns html for /authors.html
 		}
 
 		my $authorLink = GetAuthorLink($authorKey) || '(blank)';
-
 #		my $authorFriendKey = $authorFriend->{'author_key'};
-
 		my $authorItemTemplate = GetTemplate('author_listing.template');
-		#todo don't need to do this every time
 #
 		if ($authorLastSeen) {
 			$authorLastSeen = GetTimestampWidget($authorLastSeen);
 		} else {
-			$authorLastSeen = '(no record)';
+			$authorLastSeen = '(unknown)';
 		}
 		#$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 
@@ -2816,24 +2797,58 @@ sub GetScoreboardPage { #returns html for /authors.html
 		$authorListings .= $authorItemTemplate;
 	}
 
-	my $authorCountMessage = '';
-	if ($authorCount == 1) {
-		$authorCountMessage = '1 author';
-	} else {
-		$authorCountMessage = $authorCount . ' authors';
-	}
+	return $authorListings;
+} # GetTopAuthorsListAsHtml()
 
-	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
-	$authorListingWrapper =~ s/\$authorCountMessage/$authorCountMessage/;
+sub GetScoreboardPage2 {
+	WriteLog('GetScoreboardPage2() begin');
 
-	$txtIndex .= $authorListingWrapper;
+	my $html = '';
+	my $title = 'Top Scores';
 
-	$txtIndex .= GetPageFooter();
+	$html .= GetPageHeader($title, $title, 'scoreboard');
+	my $topAuthors = GetTopAuthorsListAsHtml();
 
-	$txtIndex = InjectJs($txtIndex, qw(utils settings avatar timestamp profile voting));
+	$html .= GetTemplate('maincontent.template');
 
-	return $txtIndex;
-} # GetScoreboardPage()
+	my $window = GetWindowTemplate($topAuthors, $title, 'name,score,seen,action', '', '');
+
+	$html .= $window;
+
+	$html .= GetPageFooter();
+
+	return $html;
+}
+#
+#sub GetScoreboardPage { #returns html for /authors.html
+## GetAuthorsPage {
+#	#todo rewrite this more pretty
+#	my $txtIndex = "";
+#
+#	my $title = 'Top Scores';
+#	my $titleHtml = 'Top Scores';
+#
+#	my $currentTime = GetTime();
+#
+#	$txtIndex = GetPageHeader($title, $titleHtml, 'scoreboard');
+#	$txtIndex .= GetTemplate('maincontent.template');
+#	my @topAuthors = DBGetTopAuthors();
+#	my $authorListingWrapper = GetTemplate('author_listing_wrapper.template');
+#	my $authorListings = '';
+#	my $authorCount = scalar(@topAuthors);
+#
+#
+#
+#
+#	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
+#	$authorListingWrapper =~ s/\$authorCountMessage/$authorCountMessage/;
+#
+#	$txtIndex .= $authorListingWrapper;
+#	$txtIndex .= GetPageFooter();
+#	$txtIndex = InjectJs($txtIndex, qw(utils settings avatar timestamp profile voting));
+#
+#	return $txtIndex;
+#} # GetScoreboardPage()
 
 sub GetAuthorInfoBox {
 	my $authorKey = shift;
@@ -3637,12 +3652,10 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	my $eventsPage = GetEventsPage();
 	PutHtmlFile("events.html", $eventsPage);
 
-	# Add Event page
-	my $authorsPage = GetScoreboardPage();
-	PutHtmlFile("authors.html", $authorsPage);
+	# Add Authors page
+	MakePage('authors', 0);
 
-	my $topItemsPage = GetTopItemsPage();
-	PutHtmlFile('read.html', $topItemsPage);
+	MakePage('read', 0);
 
 	MakePage('tags', 0);
 
@@ -4581,6 +4594,10 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 
 	#todo sanity checks
 
+	if (!defined($pageParam)) {
+		$pageParam = 0;
+	}
+
 	WriteMessage('MakePage(' . $pageType . ', ' . $pageParam . ')');
 
 	# tag page, get the tag name from $pageParam
@@ -4673,7 +4690,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# scores page
 	elsif ($pageType eq 'scores') {
-		my $scoresPage = GetScoreboardPage();
+		my $scoresPage = GetScoreboardPage2();
 		PutHtmlFile("authors.html", $scoresPage);
 	}
 	#
@@ -5093,6 +5110,17 @@ while (my $arg1 = shift) {
 		elsif ($arg1 eq '--queue' || $arg1 eq '-Q') {
 			print ("recognized --queue\n");
 			BuildTouchedPages();
+		}
+		elsif ($arg1 eq '-M') {
+			print ("recognized -M\n");
+			my $makePageArg = shift;
+			#todo sanity check of $makePageArg
+			if ($makePageArg) {
+				print ("calling MakePage($makePageArg)\n");
+				MakePage($makePageArg);
+			} else {
+				print("missing argument for -M\n");
+			}
 		}
 		else {
 			print ("Available arguments:\n");
