@@ -173,12 +173,14 @@ function DoAutoSave() {
 		window.autoSaveInitDone = 1;
 
 		var ls = window.localStorage;
-		var storedValue = ls.getItem('autosave');
+		if (window.localStorage && ls) {
+			var storedValue = ls.getItem('autosave');
 
-		if (storedValue) {
-			var comment = document.getElementById('comment');
-			if (comment) {
-				comment.value += storedValue;
+			if (storedValue) {
+				var comment = document.getElementById('comment');
+				if (comment) {
+					comment.value += storedValue;
+				}
 			}
 		}
 
@@ -198,7 +200,9 @@ function DoAutoSave() {
 				if (comment) {
 					if (window.localStorage) {
 						var ls = window.localStorage;
-						ls.setItem('autosave', comment.value);
+						if (window.localStorage && ls) {
+							ls.setItem('autosave', comment.value);
+						}
 					}
 				}
 			} else {
@@ -212,7 +216,7 @@ function DoAutoSave() {
 
 function ClearAutoSave () {
 	var ls = window.localStorage;
-	if (ls) {
+	if (window.localStorage && ls) {
 		window.eventLoopDoAutoSave = 0;
 		ls.removeItem('autosave');
 	}
