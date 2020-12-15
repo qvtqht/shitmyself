@@ -315,7 +315,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				},
 				{ # allows cookied user to set own name
 					'token'   => 'my_name_is',
-					'mask'    => '^(my name is)(\W+)([A-Za-z0-9\'_\. ]+)\r?$',
+					'mask'    => '^(my name is)(\W+)([A-Za-z0-9\'_\., ]+)\r?$',
 					'mask_params'    => 'mgi',
 					'message' => '[MyNameIs]'
 				},
@@ -363,7 +363,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				},
 				{ # hashtags, currently restricted to latin alphanumeric and underscore
 					'token' => 'hashtag',
-					'mask'  => '(\#)()([a-zA-Z0-9_]+)',
+					'mask'  => '(\#)()([a-zA-Z0-9_]{1,32})',
 					'mask_params' => 'mgi',
 					'message' => '[HashTag]',
 					'apply_to_parent' => 1
