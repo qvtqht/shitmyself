@@ -30,7 +30,7 @@
 						<p>
 							<input type=submit value="Send Now" name=addtext id=addtext>
 
-							<span id=spanSignAs class=advanced></span>
+							<span id=spanSignAs></span>
 
 							<p id=spanWriteAdvanced class=advanced></p>
 						</p>
