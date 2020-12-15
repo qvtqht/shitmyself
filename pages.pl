@@ -3575,7 +3575,9 @@ sub MakePhpPages {
 		# search.php
 		# cookie.php
 		# cookietest.php
-		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route);
+		# route.php
+		# quick.php
+		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route quick);
 		for my $template (@templatePhpSimple) {
 			my $fileContent = GetTemplate("php/$template.php");
 			PutFile($PHPDIR . "/$template.php", $fileContent);
