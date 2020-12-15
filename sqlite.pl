@@ -2269,6 +2269,8 @@ sub DBGetItemFields { # Returns fields we typically need to request from item_fl
 }
 
 sub DBGetTopAuthors { # Returns top-scoring authors from the database
+	WriteLog('DBGetTopAuthors() begin');
+
 	my $query = "
 		SELECT
 			author_key,
