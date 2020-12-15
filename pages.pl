@@ -1522,7 +1522,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
 			my %windowParams;
 			$windowParams{'body'} = GetTemplate('item/item.template');
-			$windowParams{'title'} = $file{'item_title'};
+			$windowParams{'title'} = HtmlEscape($file{'item_title'});
 			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
 			# $windowParams{'headings'} = 'haedigns';
 
