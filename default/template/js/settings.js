@@ -265,7 +265,15 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 			) {
 				prefValue = 1;
 			}
+			if (
+				prefKey == 'show_advanced' ||
+				prefKey == 'show_admin'
+			) {
+				prefValue = 0;
+			}
 		}
+
+		SetPrefs(prefKey, prefValue);
 
 		return prefValue;
 	}
@@ -277,9 +285,10 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 function SetPrefs (prefKey, prefValue) { // set prefs key prefKey to value prefValue
     //alert('DEBUG: SetPrefs(' + prefKey + ', ' + prefValue + ')');
 
-	if (prefKey == 'show_advanced') {
+	if (prefKey == 'show_advanced' || prefKey == 'beginner' || prefKey == 'show_admin') {
+		//alert('DEBUG: SetPrefs: setting cookie to match LocalStorage');
 		if (window.SetCookie) {
-			SetCookie('show_advanced', prefValue);
+			SetCookie(prefKey, (prefValue ? 1 : 0));
 		}
 	}
 
