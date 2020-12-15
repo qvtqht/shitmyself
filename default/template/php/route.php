@@ -318,7 +318,6 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/read.html' ||
 			$path == '/upload.html' ||
 			$path == '/upload_multi.html' ||
-			$path == '/authors.html' ||
 			$path == '/profile.html' ||
 			$path == '/etc.html' ||
 			$path == '/events.html' ||
@@ -338,6 +337,13 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		) {
 			WriteLog('HandleNotFound: found a summary page');
 			$pagesPlArgument = '--summary';
+		}
+
+		if (
+			$path == '/authors.html'
+		) {
+			WriteLog('HandleNotFound: found authors page');
+			$pagesPlArgument = '-M scores';
 		}
 
 		if (
