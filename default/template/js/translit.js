@@ -5,9 +5,9 @@
 // 2 = off/passthrough (touched)
 // 3 = russian phonetic
 // 4 = dvorak
-// REMOVED 1 = russian phonetic optimized
+// 1 = russian phonetic optimized
 
-function GetDvorakKey(ekey) {
+function GetDvorakKey (ekey) {
 	// lookup lists, each char in keysEn
 	// corresponds to the same position in keysRu
 	var gt = unescape('%3E');
@@ -30,6 +30,133 @@ function GetDvorakKey(ekey) {
 
 	return '';
 } // GetDvorakKey()
+
+function GetCyrillicKey (e) {
+	if (e && !e.key) {
+		// dirty, dirty hack
+		var temp = e;
+		e = new Object();
+		e.key = temp;
+	}
+
+	var nl = '';
+	if (e.altKey) {
+		// alt key combinations
+
+		if (e.key == 'e') {
+			nl = "ё";
+		} else if (e.key == 'E') {
+			nl = 'Ё';
+		} else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
+			nl = e.key;
+		} else {
+			return true;
+		}
+	} else {
+		// lookup lists, each char in keysEn
+		// corresponds to the same position in keysRu
+		var keysEn =
+			"`-=" +
+			"~_+" +
+			"qwertyuiop[]\\" +
+			"QWERTYUIOP{}|" +
+			"asdfghjkl" +
+			"ASDFGHJKL" +
+			"zxcvbnm" +
+			"ZXCVBNM"
+		;
+
+		var keysRu =
+			"щьъ" +
+			"Щ-=" +
+			"яшертыуиопюжэ" +
+			"ЯШЕРТЫУИОПЮЖЭ" +
+			"асдфгчйкл" +
+			"АСДФГЧЙКЛ" +
+			"зхцвбнм" +
+			"ЗХЦВБНМ"
+		;
+
+		if (keysEn.length != keysRu.length) {
+			//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn ' + keysEn.length + ' and keysRu ' + keysRu.length);
+			//alert('DEBUG: keysEn = ' + keysEn);
+			//alert('DEBUG: keysRu = ' + keysRu);
+		}
+
+		if (e.key) {
+			// if e.key, then try to find it in the lookup list
+			for (var i = 0; i < keysEn.length; i++) {
+				if (e.key == keysEn.substr(i, 1)) {
+					//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
+					nl = keysRu.substr(i, 1);
+					break;
+				}
+			}
+		}
+	}
+	return nl;
+}
+
+function UpdateOnscreenKeyboard () {
+//			var asdf = window.frames;
+//			var asdf = parent.frames;
+	//alert('DEBUG: UpdateOnscreenKeyboard()');
+
+	if (window.parent) {
+		if (window.parent.frames) {
+			var framesRef = window.parent.frames;
+			if (framesRef.length) {
+				if (framesRef['kbd']) {
+					var kDoc = framesRef['kbd'].document;
+					if (kDoc.getElementsByTagName) {
+						var replaceMode;
+						var kbdKeys = kDoc.getElementsByTagName('a');
+						if (kbdKeys.length) {
+							replaceMode = 1;
+						}
+						if (!kbdKeys.length) {
+							kbdKeys = kDoc.getElementsByTagName('td');
+							if (kbdKeys) {
+								replaceMode = 1;
+							}
+						}
+						if (!kbdKeys.length) {
+							kbdKeys = kDoc.getElementsByTagName('input');
+							if (kbdKeys) {
+								replaceMode = 2;
+							}
+						}
+
+						if (kbdKeys && kbdKeys.length) {
+							for (kbdKeysI = 0; kbdKeysI < kbdKeys.length; kbdKeysI++) {
+								if (!kbdKeys[kbdKeysI].getAttribute('origIH')) { // original inner html = origIH
+									kbdKeys[kbdKeysI].setAttribute('origIH', kbdKeys[kbdKeysI].innerHTML);
+								}
+								if (window.translitKeyState == 4) {
+									var orig = kbdKeys[kbdKeysI].getAttribute('origIH').trim();
+									var nlTemp = GetDvorakKey(kbdKeys[kbdKeysI].getAttribute('origIH').trim());
+									if (nlTemp.length) {
+										var nlCaption = orig.replace(orig.trim(), nlTemp);
+										kbdKeys[kbdKeysI].innerHTML = nlCaption.toUpperCase();
+									}
+								} else if (window.translitKeyState == 1) {
+									var orig = kbdKeys[kbdKeysI].getAttribute('origIH').trim();
+									var nlTemp = GetCyrillicKey(kbdKeys[kbdKeysI].getAttribute('origIH').trim());
+									if (nlTemp.length) {
+										var nlCaption = orig.replace(orig.trim(), nlTemp);
+										kbdKeys[kbdKeysI].innerHTML = nlCaption.toUpperCase();
+									}
+								} else {
+									kbdKeys[kbdKeysI].innerHTML = kbdKeys[kbdKeysI].getAttribute('origIH');
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 // called via textarea or input's onkeydown event
@@ -100,59 +227,11 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 				e.preventDefault();
 			}
 
-//			var asdf = window.frames;
-//			var asdf = parent.frames;
-			if (window.parent) {
-				if (window.parent.frames) {
-					var framesRef = window.parent.frames;
-					if (framesRef.length) {
-						if (framesRef['kbd']) {
-							var kDoc = framesRef['kbd'].document;
-							if (kDoc.getElementsByTagName) {
-								var replaceMode;
-								var kbdKeys = kDoc.getElementsByTagName('a');
-								if (kbdKeys.length) {
-									replaceMode = 1;
-								}
-								if (!kbdKeys.length) {
-									kbdKeys = kDoc.getElementsByTagName('td');
-									if (kbdKeys) {
-										replaceMode = 1;
-									}
-								}
-								if (!kbdKeys.length) {
-									kbdKeys = kDoc.getElementsByTagName('input');
-									if (kbdKeys) {
-										replaceMode = 2;
-									}
-								}
-
-								if (kbdKeys && kbdKeys.length) {
-									for (kbdKeysI = 0; kbdKeysI < kbdKeys.length; kbdKeysI++) {
-										if (!kbdKeys[kbdKeysI].getAttribute('origIH')) {
-											kbdKeys[kbdKeysI].setAttribute('origIH', kbdKeys[kbdKeysI].innerHTML);
-										}
-										if (window.translitKeyState == 4) {
-											var orig = kbdKeys[kbdKeysI].getAttribute('origIH').trim();
-											var nlTemp = GetDvorakKey(kbdKeys[kbdKeysI].getAttribute('origIH').trim());
-											if (nlTemp.length) {
-												var nlCaption = orig.replace(orig.trim(), nlTemp);
-												kbdKeys[kbdKeysI].innerHTML = nlCaption.toUpperCase();
-											}
-										} else {
-											kbdKeys[kbdKeysI].innerHTML = kbdKeys[kbdKeysI].getAttribute('origIH');
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			UpdateOnscreenKeyboard();
 
 			return false;
 		}
-		
+
 		if (e.key == '`' || e.key == 'r' || e.key == 'R') {
 			// ctrl+r or ctrl+` for russian
 			if (window.translitKeyState == 1) {
@@ -168,6 +247,7 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 			if (e.preventDefault) {
 				e.preventDefault();
 			}
+			UpdateOnscreenKeyboard();
 
 			return false;
 		} else {
@@ -189,61 +269,18 @@ function translitKey(e, t) { // replaces pressed qwerty key with russian letter
 	}
 
 	if (translitKeyState == 1) {
+		// cyrillic
 		if (e.altKey) {
 			// alt key combinations
-
-			if (e.key == 'e') {
-				nl = "ё";
-			} else if (e.key == 'E') {
-				nl = 'Ё';
-			} else if (e.key == '-' || e.key == '_' || e.key == '=' || e.key == '+') {
-				nl = e.key;
-			} else {
-				return true;
-			}
+			return true;
 		} else {
-			// lookup lists, each char in keysEn
-			// corresponds to the same position in keysRu
-			var keysEn =
-				"`-=" +
-				"~_+" +
-				"qwertyuiop[]\\" +
-				"QWERTYUIOP{}|" +
-				"asdfghjkl" +
-				"ASDFGHJKL" +
-				"zxcvbnm" +
-				"ZXCVBNM"
-			;
-
-			var keysRu =
-				"щьъ" +
-				"Щ-=" +
-				"яшертыуиопюжэ" +
-				"ЯШЕРТЫУИОПЮЖЭ" +
-				"асдфгчйкл" +
-				"АСДФГЧЙКЛ" +
-				"зхцвбнм" +
-				"ЗХЦВБНМ"
-			;
-
-			if (keysEn.length != keysRu.length) {
-				//alert('DEBUG: onKeyDown(e) Warning: length mismatch keysEn ' + keysEn.length + ' and keysRu ' + keysRu.length);
-				//alert('DEBUG: keysEn = ' + keysEn);
-				//alert('DEBUG: keysRu = ' + keysRu);
-			}
-
-			if (e.key) {
-				// if e.key, then try to find it in the lookup list
-				for (var i = 0; i < keysEn.length; i++) {
-					if (e.key == keysEn.substr(i, 1)) {
-						//alert('DEBUG: i = ' + i + ' keysEn.substr(i, 1): ' + keysEn.substr(i, 1) + ' ; keysRu.substr(i, 1): ' + keysRu.substr(i, 1));
-						nl = keysRu.substr(i, 1);
-						break;
-					}
-				}
+			var nlTemp = GetCyrillicKey(e);
+			if (nlTemp.length) {
+				nl = nlTemp;
 			}
 		}
-	} // if (translitKeyState == 1)
+	} // if (translitKeyState == 1) (cyrillic)
+
 
 	if (translitKeyState == 4) {
 		// dvorak
