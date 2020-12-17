@@ -3577,7 +3577,10 @@ sub MakePhpPages {
 		# cookietest.php
 		# route.php
 		# quick.php
-		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route quick);
+		my @templatePhpSimple = qw(post test2 config test write upload search cookie cookietest utils route);
+		if (GetConfig('admin/php/quickchat')) {
+			push @templatePhpSimple, 'quick';
+		}
 		for my $template (@templatePhpSimple) {
 			my $fileContent = GetTemplate("php/$template.php");
 			PutFile($PHPDIR . "/$template.php", $fileContent);
