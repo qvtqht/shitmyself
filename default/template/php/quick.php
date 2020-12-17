@@ -7,10 +7,20 @@
 		$comment = $_GET['comment'];
 		$comment = trim($comment);
 
+		$handle = '';
+		if (isset($_GET) && isset($_GET['handle'])) {
+			$handle = trim($_GET['handle']);
+		}
+
 		if ($comment) {
 			#todo sanitize #security
 			$comment = str_replace("'", "", $comment);
 			$comment = str_replace("\\", "\\\\", $comment);
+			if ($handle) {
+				$handle = str_replace("'", "", $handle);
+				$handle = str_replace("\\", "\\\\", $handle);
+				$comment .= ' --' . $handle;
+			}
 			system('echo \''.$comment.'\' >> ./chat.txt');
 		}
 
