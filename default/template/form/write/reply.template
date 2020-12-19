@@ -1,31 +1,16 @@
 <!-- reply.template -->
-<p><a name=reply></a>
+<a name=reply></a>
 <form class=reply action="/post.html" id=compose name=compose>
-	<font face=arial>
-		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor="$colorTitlebar" class=titlebar>
-				<td>
-					<font color="$colorTitlebarText"><b>Reply</b></font>
-				</td>
-			</tr>
-
-			<tr class=body>
-				<td class=content>
-					<p>
-					<textarea
-						wrap=soft
-						rows=7
-						cols=32
-						style="min-width: 360px; height: 80px;"
-						id=comment
-						name=comment
-					></textarea><br>
-					<input type=submit value="Send Reply">
-					<span id=replySignedContainer></span>
-					<input type=hidden name=replyto id=replyto value="$replyTo">
-				</td>
-			</tr>
-		</table>
-	</font>
+	<textarea
+		wrap=soft
+		rows=7
+		cols=32
+		style="min-width: 360px; height: 80px;"
+		id=comment
+		name=comment
+	></textarea>
+	<br>
+	<input type=submit value="Send Reply">
+	<input type=hidden name=replyto id=replyto value="$replyTo">
 </form>
 <!-- / reply.template -->

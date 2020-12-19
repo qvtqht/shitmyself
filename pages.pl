@@ -1078,9 +1078,9 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
 			);
 		}
-
-		return $replyForm;
 	}
+
+	$replyForm = GetWindowTemplate($replyForm, 'Reply');
 
 	return $replyForm;
 } # GetReplyForm();
