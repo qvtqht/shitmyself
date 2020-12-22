@@ -1054,10 +1054,10 @@ sub IndexImageFile { # $file ; indexes one image file into database
 
 			my $fileShellEscaped = EscapeShellChars($file); #todo this is still a hack, should rename file if it has shell chars?
 
-			# make 420x420 thumbnail
+			# make 800x800 thumbnail
 			if (!-e "$HTMLDIR/thumb/thumb_800_$fileHash.gif") {
 			# if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
-				my $convertCommand = "convert \"$fileShellEscaped\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
+				my $convertCommand = "convert \"$fileShellEscaped\" -thumbnail 800x800 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
 				# my $convertCommand = "convert \"$file\" -thumbnail 420x420 -strip $HTMLDIR/thumb/thumb_420_$fileHash.gif";
 				WriteLog('IndexImageFile: ' . $convertCommand);
 
