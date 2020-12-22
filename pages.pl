@@ -2257,7 +2257,7 @@ sub GetTopItemsPage { # returns page with top items listing
 		}
 
 #		my $columnHeadings = 'Title,Score,Replied,Author';
-		my $columnHeadings = 'title,author,last reply';
+		my $columnHeadings = 'title,author,activity';
 
 		$itemListingWrapper = GetWindowTemplate(
 			$itemListings,
