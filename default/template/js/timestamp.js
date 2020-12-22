@@ -94,6 +94,13 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 		var d = new Date();
 		var curTime = Math.floor(d.getTime() / 1000);
 		var changeLogged = 0;
+		var showAdvancedMode = 0;
+
+		if (window.GetPrefs) {
+			if (GetPrefs('show_advanced') && !GetPrefs('beginner')) {
+				showAdvancedMode = 1;
+			}
+		}
 	
 		// find elements with class=timestamp
 		var te = document.getElementsByClassName("timestamp");
@@ -105,7 +112,13 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 				// element also has an attribute called 'epoch', and it is
 				// a number, which would represent epoch seconds
 				var secs = 0 - (curTime - te[i].getAttribute('epoch')); // number of seconds since epoch begin
-				var longAgo = LongAgo(secs); // what the element's displayed value should be
+				var longAgo = '';
+				if (!showAdvancedMode) {
+					longAgo = LongAgo(secs); // what the element's displayed value should be
+				} else {
+					longAgo = secs;
+				}
+
 				if (te[i].innerHTML != longAgo) {
 					// element's content does not already equal what it should equal
 					te[i].innerHTML = longAgo;
