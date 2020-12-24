@@ -46,7 +46,6 @@ rm -rf config/admin/my_version
 echo "find html -type d -empty -delete"
 find html -type d -empty -delete
 
-
 echo "touch html/post.html"
 touch html/post.html
 
@@ -55,9 +54,3 @@ rm -v log/log.log
 
 echo "mkdir -p html/txt"
 mkdir -p html/txt
-
-echo "uncomment next 2 lines to restart lighttpd process"
-echo "#todo turn this into a setting"
-
-# echo "killall lighttpd"
-# killall lighttpd
