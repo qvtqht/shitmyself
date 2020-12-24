@@ -317,7 +317,6 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 // if message is already signed or is a public key, exit
 // relies on getElementById and localStorage
 // submits the form when finished
-// #todo maybe some of these things can/should be decoupled?
 
 	//alert('DEBUG: signMessage() begin');
 
