@@ -448,7 +448,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						WriteLog('IndexTextFile: warning: found too many tokens, skipping');
 						return 0;
 					} else {
-						WriteLog('IndexTextFile: sanity check passed, token count: ' . scalar(@tokensFound) + scalar(@tokenLines));
+						WriteLog('IndexTextFile: sanity check passed');
 					}
 
 					while (@tokenLines) {
