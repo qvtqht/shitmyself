@@ -72,6 +72,9 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	if (window.searchOnload) {
 		searchOnload();
 	}
+	if (window.UploadAddImagePreviewElement) {
+		UploadAddImagePreviewElement();
+	}
 	if ((window.location.href.indexOf('search') != -1) && document.search.q) {
 		document.search.q.focus();
 	}
