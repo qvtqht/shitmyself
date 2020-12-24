@@ -2817,6 +2817,8 @@ sub GetScoreboardPage2 {
 
 	$html .= GetPageFooter();
 
+	$html = InjectJs($html, qw(utils settings avatar timestamp profile voting));
+
 	return $html;
 }
 #
