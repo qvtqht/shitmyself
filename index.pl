@@ -430,7 +430,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					my @tokenLines;
 
 					if ($tokenMaskParams eq 'mg') {
-						# #todo probably easier way to do this
+						# probably an easier way to do this, but i haven't found it yet
 						@tokenLines = ($detokenedMessage =~ m/$tokenMask/mg);
 					} elsif ($tokenMaskParams eq 'mgi') {
 						@tokenLines = ($detokenedMessage =~ m/$tokenMask/mgi);
