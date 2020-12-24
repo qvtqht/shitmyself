@@ -444,9 +444,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 					WriteLog('IndexTextFile: found ' . scalar(@tokenLines));
 
-					if (scalar(@tokensFound) + scalar(@tokenLines) > 64) { #todo config/admin/index/tokens_limit
+					if (scalar(@tokensFound) + scalar(@tokenLines) > $limitTokensPerFile) {
 						WriteLog('IndexTextFile: warning: found too many tokens, skipping');
 						return 0;
+					} else {
+						WriteLog('IndexTextFile: sanity check passed, token count: ' . scalar(@tokensFound) + scalar(@tokenLines));
 					}
 
 					while (@tokenLines) {
