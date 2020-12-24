@@ -46,7 +46,6 @@ foreach (@submitReceivers) {
 	s/$/\?comment=/;
 	chomp;
 }
-#push @submitReceivers, '/post.html?txtNetworkUserAgent='; #todo
 
 ##################
 
