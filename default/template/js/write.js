@@ -111,7 +111,6 @@ function WriteOnload () { // onload handler for write page
 function CommentMakeWp(comment) { // makes editor textarea larger and gives it wp color scheme
 // called when enhance_write is on
 	if (!comment) {
-		// #todo more sanity checks here
 		return;
 	}
 	comment.style.backgroundColor = '#000080';
