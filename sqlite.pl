@@ -900,12 +900,18 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 		@queryParams = ();
 	}
 
-	#todo sanity checks
-
 	my $value = shift;
 	my $timestamp = shift;
 	my $resetFlag = shift;
 	my $sourceItem = shift;
+
+	if ($key =~ m/^([a-z0-9_\/.]+)$/) {
+		# sanity success
+		$key = $1;
+	} else {
+		WriteLog('DBAddConfigValue: warning: sanity check failed on $key = ' . $key);
+		return '';
+	}
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO config(key, value, timestamp, reset_flag, file_hash) VALUES ";
