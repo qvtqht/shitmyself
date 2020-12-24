@@ -408,6 +408,13 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# parses standard issue tokens, definitions above
 			# stores into @tokensFound
 
+			my $limitTokensPerFile = int(GetConfig('admin/index/limit_tokens_per_file'));
+			if (!$limitTokensPerFile) {
+				$limitTokensPerFile = 100;
+			}
+
+			#todo sanity check on $limitTokensPerFile;
+
 			foreach my $tokenDefRef (@tokenDefs) {
 				my %tokenDef = %$tokenDefRef;
 				my $tokenName = $tokenDef{'token'};
