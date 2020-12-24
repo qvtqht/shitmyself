@@ -11,6 +11,7 @@
 	></textarea>
 	<br>
 	<input type=submit value="Send Reply">
+	<span id=spanSignAs></span>
 	<input type=hidden name=replyto id=replyto value="$replyTo">
 </form>
 <!-- / reply.template -->
