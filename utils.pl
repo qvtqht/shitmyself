@@ -2089,7 +2089,7 @@ sub GpgParse {
 		my $gpgCommand = 'gpg --pinentry-mode=loopback --batch ';
 
 		if (index($fileContents, $gpgPubkey) > -1) {
-			$gpgCommand .= '--import ';
+			$gpgCommand .= '--import --ignore-time-conflict --ignore-valid-from ';
 			$pubKeyFlag = 1;
 		}
 		elsif (index($fileContents, $gpgMessage) > -1) {
