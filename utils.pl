@@ -1,11 +1,12 @@
 #!/usr/bin/perl -T
+
 $ENV{PATH}="/bin:/usr/bin";
 
 use strict;
 use warnings;
 use utf8;
 use 5.010;
-use POSIX;
+
 use POSIX 'strftime';
 use Data::Dumper;
 use Cwd qw(cwd);
@@ -21,21 +22,15 @@ sub require_once { # $path ; use require() unless already done
 	my $path = shift;
 	chomp $path;
 
-	if (!$path) {
+	if (!$path || !-e $path) {
 		WriteLog('require_once: warning sanity check failed');
-		return '';
+		return 0;
 	}
 
 	state %state;
-
 	if (defined($state{$path})) {
 		WriteLog('require_once: already required: ' . $path);
-		return '';
-	}
-
-	if (!-e $path) {
-		WriteLog('require_once: sanity check failed, no $path = ' . $path);
-		return '';
+		return 0;
 	}
 
 	require $path;
@@ -44,15 +39,21 @@ sub require_once { # $path ; use require() unless already done
 	return 1;
 } # require_once()
 
-sub GetDir {
+sub GetDir { # $dirName ; returns path to special directory specified
+# 'html' = html root
+
 	my $dirName = shift;
 	if (!$dirName) {
-		return;
+		WriteLog('GetDir: warning: $dirName missing');
+		return '';
 	}
 	my $scriptDir = cwd();
 	if ($dirName eq 'html') {
 		return $scriptDir . '/html';
 	}
+
+	WriteLog('GetDir: warning: fallthrough on $dirName = ' . $dirName);
+	return '';
 }
 
 my $SCRIPTDIR = cwd();
@@ -60,7 +61,10 @@ if (!$SCRIPTDIR) {
 	die ('Sanity check failed: $SCRIPTDIR is false!');
 }
 
-sub GetMyCacheVersion {
+sub GetMyCacheVersion { # returns "version" of cache
+# this is used to prevent cache conflicts between different software versions
+# used to return git commit identifier, looking for a better alternative now
+# todo make this return something other than hard-coded string
 	return 'b';
 }
 
@@ -69,7 +73,7 @@ my $TXTDIR = $HTMLDIR . '/txt';
 my $IMAGEDIR = $HTMLDIR . '/txt';
 my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 
-{
+sub EnsureDirsThatShouldExist { # creates directories expected later
 	# make a list of some directories that need to exist
 	my @dirsThatShouldExist = (
 		"log",
@@ -118,6 +122,8 @@ my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
 	}
 }
 
+EnsureDirsThatShouldExist();
+
 sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/log.log
 	my $text = shift;
 	if (!$text) {
@@ -142,62 +148,19 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 	}
 } # WriteLog()
 
-
-#sub GitPipe { # runs git with proper prefix, suffix, and post-command pipe
-## $gitCommand = git command (excluding the 'git' part)
-## $commandsFollowing = what follows after the git command (and after the command suffix)
-#
-#	my $gitCommand = shift;
-#
-#	if (!$gitCommand) {
-#		return;
-#	}
-#
-#	WriteLog('GitPipe: $gitCommand = ' . $gitCommand);
-#
-#	my $commandsFollowing = shift;
-#	if (!$commandsFollowing) {
-#		$commandsFollowing = '';
-#	} else {
-#		$commandsFollowing = ' ' . $commandsFollowing;
-#	}
-#
-#	my $gitCommandPrefix = 'git --git-dir=' . $TXTDIR . '/.git --work-tree=' . $TXTDIR . ' ';
-#	my $gitCommandSuffix = ' 2>&1';
-#
-#	my $gitCommandFull = $gitCommandPrefix . $gitCommand . $gitCommandSuffix . $commandsFollowing;
-#
-#	WriteLog('GitPipe: $gitCommandFull = ' . $gitCommandFull);
-#
-#	my $gitCommandResult = `$gitCommandFull`;
-#
-#	WriteLog('GitPipe: $gitCommandResult = ' . $gitCommandResult);
-#
-#	if ($gitCommandResult =~ m/^fatal:/) {
-#		if ($gitCommand ne 'init') {
-#			GitPipe('init');
-#		}
-#
-#		return;
-#	}
-#
-#	return $gitCommandResult;
-#}
-
-
 sub GetCache { # get cache by cache key
-	# comes from cache/ directory, under current git commit
-	# this keeps cache version-specific
+	# comes from cache/ directory
 
 	my $cacheName = shift;
 	chomp($cacheName);
 
-	if (!$cacheName =~ m/^[\/[a-z0-9A-Z_]$/i) {
-		# asnity check
-		WriteLog('GetCache: warning: sanity check failed');
-		return;
+	if ($cacheName =~ m/^([\/[a-z0-9A-Z_])$/i) {
+		# sanity check passed
+		$cacheName = $1;
+		WriteLog('GetCache: sanity check passed');
 	} else {
-		WriteLog('GetCache: sanity check passed!');
+		WriteLog('GetCache: sanity check failed on $cacheName = ' . $cacheName);
+		return '';
 	}
 
 	state $myVersion;
@@ -211,41 +174,11 @@ sub GetCache { # get cache by cache key
 	if (-e $cacheName) {
 		# return contents of file at that path
 		return GetFile($cacheName);
-	} else {
+	}
+	else {
 		return;
 	}
-}
-
-sub ParseDate { # takes $stringDate, returns epoch time
-	my $stringDate = shift;
-
-	my $time = str2time($stringDate);
-
-	return $time;
-}
-
-#sub LookForDate {
-## looks for date in string
-## and returns it as epoch
-## not finished yet
-#	my @formats = ( '%Y/%m/%d %H:%M:%S', '%d %b %y');
-#
-#	my $dateString = shift;
-#	chomp $dateString;
-#
-#	my $timestamp;
-#	foreach my $format (@formats) {
-#		if ( not defined $timestamp
-#			and $timestamp =
-#			eval {
-#				localtime->strptime( $dateString, $format )
-#			}
-#		)
-#		{
-#			WriteLog("LookForDate: $dateString converted to $timestamp using $format");
-#		}
-#	}
-#}
+} # GetCache()
 
 sub MakePath { # $newPath ; ensures all subdirs for path exist
 	my $newPath = shift;
@@ -381,25 +314,6 @@ sub CacheExists { # Check whether specified cache entry exists, return 1 (exists
 		return 0;
 	}
 }
-
-# sub GetGpgMajorVersion { # get the first number of the version which 'gpg --version' returns
-# 	# expecting 1 or 2
-#
-# 	state $gpgVersion;
-#
-# 	if ($gpgVersion) {
-# 		return $gpgVersion;
-# 	}
-#
-# 	$gpgVersion = `gpg --version`;
-# 	WriteLog('GetGpgMajorVersion: gpgVersion = ' . $gpgVersion);
-#
-# 	$gpgVersion =~ s/\n.+//g;
-# 	$gpgVersion =~ s/gpg \(GnuPG\) ([0-9]+).[0-9]+.[0-9]+/$1/;
-# 	$gpgVersion =~ s/[^0-9]//g;
-#
-# 	return $gpgVersion;
-# }
 
 sub GetMyVersion { # Get the currently checked out version (current commit's hash from git)
 	# sub GetVersion {
@@ -3042,7 +2956,7 @@ sub ProcessTextFile { # $file ; add new text file to index
 	if ($file eq 'flush') {
 		IndexFile('flush');
 	}
-	my $relativePath = File::Spec->abs2rel ($file,  $SCRIPTDIR);
+	my $relativePath = File::Spec->abs2rel($file, $SCRIPTDIR);
 	if ($file ne $relativePath) {
 		$file = $relativePath;
 	}
