@@ -62,13 +62,6 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		document.compose.comment.focus();
 	}
 
-	if (window.EventLoop) {
-		if (window.CheckIfFresh) {
-			window.eventLoopFresh = 1;
-		}
-		window.eventLoopEnabled = 1
-		EventLoop();
-	}
 	if (window.searchOnload) {
 		searchOnload();
 	}
@@ -81,12 +74,17 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 
 	if (document.HideLoadingIndicator) {
 		HideLoadingIndicator();
-	} else {
-		if (document.getElementById) {
-			if (document.getElementById('loadingIndicator')) {
-				//alert('debug: warning: loadingIndicator is present, but HideLoadingIndicator() is not');
-			}
+	}
+
+	// everything is set now, start event loop
+	//
+
+	if (window.EventLoop) {
+		if (window.CheckIfFresh) {
+			window.eventLoopFresh = 1;
 		}
+		window.eventLoopEnabled = 1
+		EventLoop();
 	}
 } // OnLoadEverything()
 
