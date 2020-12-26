@@ -9,23 +9,13 @@ use POSIX;
 use POSIX 'strftime';
 use Data::Dumper;
 use Cwd qw(cwd);
-use Digest::MD5 qw(md5_hex);
-
-#use Devel::StackTrace;
-
+use Digest::MD5 qw( md5_hex );
 use File::Basename qw( fileparse );
-use File::Spec;
-
-use Date::Parse;
-
-use lib 'lib';
-
-use URI::Encode qw(uri_decode);
+use URI::Encode qw( uri_decode );
 use URI::Escape;
-#use HTML::Entities qw(encode_entities);
 use Storable;
-#use Time::Piece;
-use Digest::SHA qw(sha1_hex);
+use Digest::SHA qw( sha1_hex );
+use File::Spec qw( abs2rel );
 
 sub require_once { # $path ; use require() unless already done
 	my $path = shift;
