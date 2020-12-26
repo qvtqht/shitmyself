@@ -1,13 +1,15 @@
 #!/usr/bin/perl
 
+# indexes one file or all files eligible for indexing
+# --all .... all eligible files
+# [path] ... index specified file
+# --chain .. chain.log file (contains timestamps)
+
 use strict;
 use warnings;
 use utf8;
-#use POSIX qw(strftime);
 use Cwd qw(cwd);
 use Digest::SHA qw(sha512_hex);
-
-#use Encode qw( encode_utf8 );
 
 my $SCRIPTDIR = cwd(); # where the perl scripts live
 my $HTMLDIR = $SCRIPTDIR . '/html'; # web root
@@ -16,7 +18,7 @@ my $TXTDIR = $HTMLDIR . '/txt'; # text files root
 require './utils.pl';
 require './sqlite.pl';
 
-WriteLog( "Using $SCRIPTDIR as install root...\n");
+WriteMessage( "Using $SCRIPTDIR as install root...");
 
 sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into item_attribute table
 	# note: this is kind of a hack, and non-importing validation should just be separate own sub
@@ -1232,24 +1234,21 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 	return $indexSuccess;
 } # IndexFile()
 
-my $arg1 = shift;
-if ($arg1) {
-	if ($arg1 eq '--all') {
-		print "index.pl: --all\n";
-
-		MakeIndex();
-
-	}
-
-	if ($arg1 eq '--chain') {
-		# html/chain.log
-		print "index.pl: --chain\n";
-		MakeChainIndex();
-	}
-
-	if (-e $arg1) {
-		IndexFile($arg1);
-		IndexFile('flush');
+while (my $arg1 = shift) {
+	if ($arg1) {
+		if ($arg1 eq '--all') {
+			print "index.pl: --all\n";
+			MakeIndex();
+		}
+		if ($arg1 eq '--chain') {
+			# html/chain.log
+			print "index.pl: --chain\n";
+			MakeChainIndex();
+		}
+		if (-e $arg1) {
+			IndexFile($arg1);
+			IndexFile('flush');
+		}
 	}
 }
 
