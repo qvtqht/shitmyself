@@ -8,6 +8,7 @@
 url.rewrite = (
 	# always for post.html
 	"^/post.html\??(.+)?" => "/post.php?$1",
+	"^/chat.html\??(.+)?" => "/quick.php?$1",
 
 	########################
 	# php supported on all html urls

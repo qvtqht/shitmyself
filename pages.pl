@@ -1920,8 +1920,13 @@ sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 sub WriteMenuList { # writes config/list/menu based on site configuration
 	#todo this function is not obvious, overrides obvious list/menu
 	my @menu;
+
 	push @menu, 'read';
 	push @menu, 'write';
+
+	if (GetConfig('admin/php/quickchat')) {
+		push @menu, 'chat';
+	}
 
 	#upload
 	if (GetConfig('admin/php/enable') && GetConfig('admin/image/enable')) {

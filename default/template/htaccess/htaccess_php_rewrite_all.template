@@ -1,5 +1,6 @@
 RewriteEngine On
 RewriteRule ^post\.html??(.+)? /post.php [QSA]
+RewriteRule ^chat\.html??(.+)? /quick.php [QSA]
 
 # config/php/rewrite=all
 ########################

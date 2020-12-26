@@ -2,6 +2,7 @@
 # php rewrites
 url.rewrite = (
 	"^/post.html\??(.+)?" => "/post.php?$1",
+	"^/chat.html\??(.+)?" => "/quick.php?$1",
 	#"^write.html\??(.+)?" => "/write.php?$1",
 
 	# more accessible static failover
