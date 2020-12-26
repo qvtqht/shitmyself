@@ -476,13 +476,6 @@ if (GetConfig('admin/php/route_enable')) {
 					if ($path != '/404.html' && file_exists($pathRel)) {
 						WriteLog("file_exists($pathRel) was true");
 
-						if ($path == '/settings.html') {
-							if (isset($_GET['chkWantToVote']) && isset($_GET['query']) && $_GET['query'] == 'ui=Admin') {
-								include_once('cookie.php');
-								WriteLog('$cookie = ' . $cookie);
-							}
-						}
-
 						if (isset($_GET['txtClock'])) {
 							$_GET['message'] = 'test';
 							WriteLog('setting message = test');
