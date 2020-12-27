@@ -26,7 +26,7 @@ use 5.010;
 use lib qw(lib);
 #use HTML::Entities qw(encode_entities);
 use Digest::MD5 qw(md5_hex);
-use POSIX qw(strftime);
+use POSIX qw(strftime ceil);
 use Data::Dumper;
 use File::Copy;
 # use File::Copy qw(copy);
