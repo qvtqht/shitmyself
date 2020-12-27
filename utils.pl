@@ -7,6 +7,7 @@ use warnings;
 use utf8;
 use 5.010;
 
+use lib qw(lib); #needed for when we use included libs, such as on dreamhost
 use POSIX 'strftime';
 use Data::Dumper;
 use Cwd qw(cwd);
