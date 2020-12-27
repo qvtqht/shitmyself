@@ -1,8 +1,6 @@
 #!/usr/bin/perl -T
 
 use strict;
-#use warnings FATAL => 'all'; #only if debugging
-#use threads;
 use utf8;
 use Cwd qw(cwd);
 
@@ -11,9 +9,8 @@ sub BuildMessage { # prints timestamped message to output
 	print ' ';
 	print shift;
 	print "\n";
-}
+} # BuildMessage()
 
-#my $SCRIPTDIR = `pwd`; chomp $SCRIPTDIR;
 my $SCRIPTDIR = cwd();
 my $HTMLDIR = $SCRIPTDIR . '/html';
 my $TXTDIR = $HTMLDIR . '/txt';
@@ -23,36 +20,12 @@ BuildMessage "Require ./utils.pl...";
 require './utils.pl';
 
 BuildMessage "Calculating build times...";
-#
-# my $prevBuildStart = trim(GetFile('config/admin/build_begin'));
-# my $prevBuildFinish = trim(GetFile('config/admin/build_end'));
-#
-# BuildMessage "\$prevBuildStart = " . $prevBuildStart;
-# BuildMessage "\$prevBuildFinish = " . $prevBuildFinish;
-#
-# my $prevBuildDuration;
-#
-# if ($prevBuildFinish && $prevBuildStart && $prevBuildFinish > $prevBuildStart) {
-# 	$prevBuildDuration = ($prevBuildFinish - $prevBuildStart);
-# 	PutFile('config/admin/prev_build_duration', $prevBuildDuration);
-# }
-#
-# PutFile('config/admin/build_begin', GetTime());
-# PutFile('config/admin/build_end', '');
 
 BuildMessage "Require ./access.pl...";
 require './access.pl';
 
 BuildMessage "Require ./index.pl...";
 require './index.pl';
-
-# BuildMessage "Upgrade stuff...";
-# if (GetConfig('upgrade_now') ne 'no') {
-#	PutConfig('last_upgrade', 'no');
-#	exec('./upgrade.sh &');
-#	die();
-#}
-#
 
 { # build the sqlite db if not available
 	# BuildMessage "SqliteUnlinkDB()...";
@@ -120,12 +93,10 @@ if (GetConfig('admin/build/update_after')) {
 }
 	
 BuildMessage("Done!");
-
 WriteLog( "Finished!");
 
 if (GetConfig('admin/build/loop_after')) {
 	WriteLog('Starting loop.pl...');
-
 	system('perl ./loop.pl');
 }
 
