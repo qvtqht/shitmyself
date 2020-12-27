@@ -724,9 +724,9 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 	}
 
 	if (exists($configLookup{$configName})) {
+		# found in memo
 		WriteLog('GetConfig: $configLookup already contains value, returning that...');
 		WriteLog('GetConfig: $configLookup{$configName} is ' . $configLookup{$configName});
-
 		return $configLookup{$configName};
 	}
 
@@ -750,22 +750,20 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 	}
 
 	if (-e "config/$configName") {
+		# found a match in config directory
 		WriteLog("GetConfig: -e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
-
 		my $configValue = GetFile("config/$configName");
-
 		if (substr($configName, 0, 9) eq 'template/') {
-			# don't trim
+			# do not trim templates
 		} else {
+			# trim() resulting value (removes whitespace)
 			$configValue = trim($configValue);
 		}
-
 		$configLookup{$configValue} = $configValue;
-
 		if ($acceptableValues) {
 			# there is a list of acceptable values
 			# check to see if value is in that list
-			# if not, return 0
+			# if not, issue warning and return 0
 			if (index($configValue, $acceptableValues)) {
 				return $configValue;
 			} else {
@@ -775,12 +773,13 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 		} else {
 			return $configValue;
 		}
-	} else {
+	} # found in config/
+	else {
 		WriteLog("GetConfig: -e config/$configName returned false, looking in defaults...");
 
 		if (-e "default/$configName") {
+			# found default, return that
 			WriteLog("GetConfig: -e default/$configName returned true, proceeding to GetFile(), etc...");
-
 			my $configValue = GetFile("default/$configName");
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
@@ -796,11 +795,12 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 			}
 
 			return $configValue;
-		} else {
+		} # return default/
+		else {
 			WriteLog("GetConfig: warning: Tried to get undefined config with no default: $configName");
 			return;
 		}
-	}
+	} # not found in config/
 
 	WriteLog('GetConfig: warning: reached end of function, which should not happen');
 	return;
