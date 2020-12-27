@@ -12,6 +12,3 @@
 
 ./index.pl --all
 
-./pages.pl --queue
-
-./update.pl --all
