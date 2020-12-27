@@ -3426,7 +3426,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	if (defined($itemCount) && $itemCount && $itemCount > 0) {
 		my $i;
 
-		WriteLog("\$itemCount = $itemCount");
+		WriteLog('WriteIndexPages: $itemCount = ' . $itemCount);
 
 		my $lastPage = ceil($itemCount / $pageLimit);
 
@@ -3951,28 +3951,14 @@ sub GetWriteForm { # returns write form (for composing text message)
 			$writeForm = str_replace($targetElement, $targetElement . $writeLongMessage, $writeForm);
 		}
 
-		#if (GetConfig('admin/js/enable')) {
-		#	$writeForm = AddAttributeToTag(
-		#		$writeForm,
-		#		'a href="/etc.html"', #todo this should link to item itself
-		#		'onclick',
-		#		"if (window.ShowAll && this.removeAttribute) { if (this.style) { this.style.display = 'none'; } return ShowAll(this, this.parentElement.parentElement); } else { return true; }"
-		#	);
-		#}
+		if (GetConfig('admin/php/enable') && !GetConfig('admin/php/rewrite')) {
+			# if php is enabled but rewrite is disabled
+			# change submit target to post.php
+			my $postHtml = 'post\\.html'; # post.html
+			$writeForm =~ s/$postHtml/post.php/;
+		}
 
-		## changing the form target is no longer necessary thanks to mod_rewrite
-		## this code may have to be reused later when we want to adapt to an environment
-		## without mod_rewrite
-
-		#if php module is enabled, change the form target to post.php
-		#		my $postHtml = 'post.html';
-		# on a separate line because
-		# putting it into the regex would require escaping the period,
-		# and searching for "post.html" in the codebase would not find this line
-
-		#		$submitForm =~ s/$postHtml/post.php/;
-
-		# this is how autosave would work
+		# this is how auto-save to server would work (with privacy implications)
 		# $submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
 	}
 
@@ -3983,15 +3969,10 @@ sub GetWriteForm { # returns write form (for composing text message)
 	$writeForm =~ s/\$initText/$initText/g;
 
 	if (GetConfig('admin/js/enable')) {
-		# $replyForm = AddAttributeToTag($replyForm, 'textarea', 'style', 'background-color: red important!; border: 10pt solid red; width: 1000px;');
-		# $replyForm = AddAttributeToTag($replyForm, 'textarea', 'badse', 'ternefojf adfa');
-
-		# onchange="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
-		# onkeyup="if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }"
-		# onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"
-		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onchange', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
-		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeyup', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
-
+		# javascript is enabled, add event hooks
+		my $writeOnChange = "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }";
+		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onchange', $writeOnChange);
+		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeyup', $writeOnChange);
 		if (GetConfig('admin/js/translit')) {
 			$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
 		}
@@ -4000,13 +3981,9 @@ sub GetWriteForm { # returns write form (for composing text message)
 			$writeForm,
 			'input type=submit',
 			'onclick',
-#			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
 			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
 		);
-
-		#$writeForm = AddAttributeToTag($writeForm, 'a href="/frame.html"', 'onclick', 'if (window.showKeyboard) { return showKeyboard(); }');
-	}
-
+	} # js stuff in write form
 
 	return $writeForm;
 } # GetWriteForm()
