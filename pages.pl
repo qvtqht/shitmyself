@@ -1016,6 +1016,8 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		}
 	}
 
+	$txtIndex .= GetMenuTemplate();
+
 	# end page with footer
 	$txtIndex .= GetPageFooter();
 
@@ -2019,43 +2021,7 @@ sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns 
 	return $menuItems;
 }
 
-sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
-	my $title = shift; # page title
-	my $titleHtml = shift; # formatted page title
-	my $pageType = shift; # type of page
-
-	if (!$pageType) {
-		$pageType = 'default';
-	}
-
-	WriteLog("GetPageHeader($title, $titleHtml, $pageType)");
-
-	if (defined($title) && defined($titleHtml)) {
-		chomp $title;
-		chomp $titleHtml;
-	} else {
-		$title="";
-		$titleHtml="";
-	}
-
-	state $logoText;
-	if (!defined($logoText)) {
-		$logoText = GetConfig('logo_text');
-		if (!$logoText) {
-			$logoText = '';
-		}
-	}
-
-	my $txtIndex = "";
-
-	my $styleSheet = GetStylesheet();
-
-	my $patternName = trim(GetConfig('header_pattern'));
-	my $introText = trim(GetString('page_intro/' . $pageType));
-	if (!$introText) {
-		$introText = trim(GetString('page_intro/default'));
-	}
-
+sub GetClockTemplate {
 	my $clock = '';
 	if (GetConfig('html/clock')) {
 		WriteLog('GetPageHeader: html/clock is enabled');
@@ -2095,7 +2061,78 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 		$clock = '+';
 	}
 
-	WriteLog('GetPageHeader: $clock = ' . $clock);
+	WriteLog('GetClockTemplate: $clock = ' . $clock);
+
+	return $clock;
+}
+
+sub GetMenuTemplate { # returns menubar
+	my $topMenuTemplate = GetTemplate('topmenu2.template');
+	if (GetConfig('admin/js/enable')) {
+		$topMenuTemplate = AddAttributeToTag(
+			$topMenuTemplate,
+			'a href="/etc.html"',
+			'onclick',
+			"if (window.ShowAll) { return ShowAll(this); } else { return true; }"
+			#"if (window.SetPrefs) { SetPrefs('show_advanced', 1); SetPrefs('highlight_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
+		);
+	}
+
+	my $selfLink = '/access.html';
+	my $clock = GetClockTemplate();
+	my $menuItems = GetMenuFromList('menu');
+	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
+
+	state $logoText;
+	if (!defined($logoText)) {
+		$logoText = GetConfig('logo_text');
+		if (!$logoText) {
+			$logoText = '';
+		}
+	}
+	if (GetConfig('logo_enabled')) {
+		$topMenuTemplate =~ s/\$logoText/$logoText/g;
+	} else {
+		$topMenuTemplate =~ s/\$logoText//g;
+	}
+
+	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
+	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
+	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
+	$topMenuTemplate =~ s/\$clock/$clock/g;
+
+	return $topMenuTemplate;
+} # GetMenuTemplate()
+
+sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page header
+	my $title = shift; # page title
+	my $titleHtml = shift; # formatted page title
+	my $pageType = shift; # type of page
+
+	if (!$pageType) {
+		$pageType = 'default';
+	}
+
+	WriteLog("GetPageHeader($title, $titleHtml, $pageType)");
+
+	if (defined($title) && defined($titleHtml)) {
+		chomp $title;
+		chomp $titleHtml;
+	} else {
+		$title="";
+		$titleHtml="";
+	}
+
+	my $txtIndex = "";
+
+	my $styleSheet = GetStylesheet();
+
+	my $patternName = trim(GetConfig('header_pattern'));
+	my $introText = trim(GetString('page_intro/' . $pageType));
+	if (!$introText) {
+		$introText = trim(GetString('page_intro/default'));
+	}
+
 	# Get the HTML page template
 	my $htmlStart = GetTemplate('htmlstart.template');
 	# and substitute $title with the title
@@ -2115,41 +2152,19 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 #	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
 
-	my $topMenuTemplate = GetTemplate('topmenu2.template');
-	if (GetConfig('admin/js/enable')) {
-		$topMenuTemplate = AddAttributeToTag(
-			$topMenuTemplate,
-			'a href="/etc.html"',
-			'onclick',
-			"if (window.ShowAll) { return ShowAll(this); } else { return true; }"
-			#"if (window.SetPrefs) { SetPrefs('show_advanced', 1); SetPrefs('highlight_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
-		);
+	my $topMenuTemplate = GetMenuTemplate();
+
+	if ($pageType ne 'item') {
+		$htmlStart =~ s/\$topMenu/$topMenuTemplate/g;
+	} else {
+		$htmlStart =~ s/\$topMenu//g;
 	}
-
-	my $menuItems = GetMenuFromList('menu');
-	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
-	#todo move html to template
-
-	my $selfLink = '/access.html';
-
-	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
-	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
-	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
-	$topMenuTemplate =~ s/\$clock/$clock/g;
-
-	$htmlStart =~ s/\$topMenu/$topMenuTemplate/g;
 
 	$htmlStart =~ s/\$styleSheet/$styleSheet/g;
 	$htmlStart =~ s/\$titleHtml/$titleHtml/g;
 	$htmlStart =~ s/\$title/$title/g;
 
 	$htmlStart =~ s/\$introText/$introText/g;
-
-	if (GetConfig('logo_enabled')) {
-		$htmlStart =~ s/\$logoText/$logoText/g;
-	} else {
-		$htmlStart =~ s/\$logoText//g;
-	}
 
 	if (GetConfig('admin/js/enable') && GetConfig('admin/js/loading')) {
 		$htmlStart = InjectJs2($htmlStart, 'after', '<body>', qw(loading_begin));
