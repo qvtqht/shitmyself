@@ -1,8 +1,6 @@
 #!/usr/bin/perl
 use strict;
 
-#require './utils.pl';
-
 sub GetHtpasswdLine {
 	my $username = shift;
 	my $password = shift;

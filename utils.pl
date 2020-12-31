@@ -42,88 +42,68 @@ sub require_once { # $path ; use require() unless already done
 
 sub GetDir { # $dirName ; returns path to special directory specified
 # 'html' = html root
-
+# 'script'
+# 'txt'
+# 'image
 	my $dirName = shift;
 	if (!$dirName) {
 		WriteLog('GetDir: warning: $dirName missing');
 		return '';
 	}
+	WriteLog('GetDir: $dirName = ' . $dirName);
+
 	my $scriptDir = cwd();
+	if ($scriptDir =~ m/^([0-9a-zA-Z\/]+)/) {
+		$scriptDir = $1;
+		WriteLog('GetDir: $scriptDir sanity check passed');
+	} else {
+		WriteLog('GetDir: warning: sanity check failed on $scriptDir');
+		return '';
+	}
+	WriteLog('GetDir: $scriptDir = ' . $scriptDir);
+
+	if ($dirName eq 'script') {
+		WriteLog('GetDir: return ' . $scriptDir);
+		return $scriptDir;
+	}
+
 	if ($dirName eq 'html') {
+		WriteLog('GetDir: return ' . $scriptDir . '/html');
 		return $scriptDir . '/html';
+	}
+
+	if ($dirName eq 'php') {
+		WriteLog('GetDir: return ' . $scriptDir . '/html');
+		return $scriptDir . '/html';
+	}
+
+	if ($dirName eq 'txt') {
+		WriteLog('GetDir: return ' . $scriptDir . '/html/txt');
+		return $scriptDir . '/html/txt';
+	}
+
+	if ($dirName eq 'image') {
+		WriteLog('GetDir: return ' . $scriptDir . '/html/image');
+		return $scriptDir . '/html/image';
+	}
+
+	if ($dirName eq 'cache') {
+		WriteLog('GetDir: return ' . $scriptDir . '/cache/' . GetMyCacheVersion());
+		return $scriptDir . '/cache/' . GetMyCacheVersion();
 	}
 
 	WriteLog('GetDir: warning: fallthrough on $dirName = ' . $dirName);
 	return '';
-}
+} # GetDir()
 
 my $SCRIPTDIR = cwd();
 if (!$SCRIPTDIR) {
 	die ('Sanity check failed: $SCRIPTDIR is false!');
 }
 
-sub GetMyCacheVersion { # returns "version" of cache
-# this is used to prevent cache conflicts between different software versions
-# used to return git commit identifier, looking for a better alternative now
-# todo make this return something other than hard-coded string
-	return 'b';
-}
-
-my $HTMLDIR = $SCRIPTDIR . '/html';
-my $TXTDIR = $HTMLDIR . '/txt';
-my $IMAGEDIR = $HTMLDIR . '/txt';
-my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
-
-sub EnsureDirsThatShouldExist { # creates directories expected later
-	# make a list of some directories that need to exist
-	my @dirsThatShouldExist = (
-		"log",
-		"$HTMLDIR",
-		"$HTMLDIR/txt",
-		"$HTMLDIR/image",
-		"$HTMLDIR/thumb", #thumbnails
-		"cache", #ephemeral data
-		"$HTMLDIR/author",
-		"$HTMLDIR/action",
-		"$HTMLDIR/top", #top items for tags
-		"config",
-		"config/admin",
-		"config/admin/php",
-		"config/admin/php/post",
-		"$HTMLDIR/upload", #uploaded files go here
-		"$HTMLDIR/error", #error pages
-		"once" #used for registering things which should only happen once e.g. scraping
-	);
-
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion();
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/key';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/file';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/avatar';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/message';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_message';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_stderr';
-	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/response';
-
-	# create directories that need to exist
-	foreach my $dir (@dirsThatShouldExist) {
-		if ($dir =~ m/^([a-zA-Z0-9_\/]+)$/) {
-			$dir = $1;
-		} else {
-			WriteLog('utils.pl: warning: sanity check failed during @dirsThatShouldExist');
-			WriteLog('utils.pl: $dir = ' . $dir);
-			next;
-		}
-		if (!-d $dir && !-e $dir) {
-			mkdir $dir;
-		}
-		if (!-e $dir || !-d $dir) {
-			die("$dir should exist, but it doesn't. aborting.");
-		}
-	}
-}
-
-EnsureDirsThatShouldExist();
+#my $HTMLDIR = $SCRIPTDIR . '/html';
+#my $TXTDIR = $HTMLDIR . '/txt';
+#my $IMAGEDIR = $HTMLDIR . '/txt';
 
 sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/log.log
 	my $text = shift;
@@ -149,37 +129,53 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 	}
 } # WriteLog()
 
-sub GetCache { # get cache by cache key
-	# comes from cache/ directory
+sub WriteMessage { # Writes timestamped message to console (stdout)
+	my $text = shift;
+	chomp $text;
 
-	my $cacheName = shift;
-	chomp($cacheName);
+	state $lastText;
 
-	if ($cacheName =~ m/^([\/[a-z0-9A-Z_])$/i) {
-		# sanity check passed
-		$cacheName = $1;
-		WriteLog('GetCache: sanity check passed');
-	} else {
-		WriteLog('GetCache: sanity check failed on $cacheName = ' . $cacheName);
-		return '';
-	}
+	if ($text eq '.' || length($text) == 1) {
+		$lastText = $text;
 
-	state $myVersion;
-	if (!$myVersion) {
-		$myVersion = GetMyCacheVersion();
-	}
+		state @chars;
+		if (!@chars) {
+			#@chars = qw(, . - ' `); # may generate warning
+			#@chars = (',', '.', '-', "'", '`');
+			#@chars = ('.', ',');
+			#@chars = (qw(0 1 2 3 4 5 6 7 8 9 A B C D E F));
+		}
 
-	# cache name prefixed by current version
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
+		#my @chars=('a'..'f','0'..'9');
+		#print $chars[rand @chars];
+		print $text;
+		# my $randomString;
+		# foreach (1..40) {
+		# 	$randomString.=$chars[rand @chars];
+		# }
+		# return $randomString;
 
-	if (-e $cacheName) {
-		# return contents of file at that path
-		return GetFile($cacheName);
-	}
-	else {
 		return;
 	}
-} # GetCache()
+
+	# just an idea
+	# doesn't seem to work well because the console freezes up if there's no \n coming
+	# if ($text =~ m/^[0-9]+$/) {
+	# 	$lastText = $text;
+	# 	print $text . " ";
+	# 	return;
+	# }
+
+	WriteLog($text);
+	my $timestamp = GetTime();
+
+	if ($lastText eq '.' || length($lastText) == 1) {
+		print "\n";
+	}
+	print "\n$timestamp $text\n";
+
+	$lastText = $text;
+}
 
 sub MakePath { # $newPath ; ensures all subdirs for path exist
 	my $newPath = shift;
@@ -227,7 +223,7 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 		WriteLog('EnsureSubdirs: warning: $fullPath should not begin with a / ' . $fullPath);
 	}
 	if (index($fullPath, '..')) {
-		WriteLog('EnsureSubdirs: warning: $fullPath contains ..');
+		WriteLog('EnsureSubdirs: warning: $fullPath contains ..' . $fullPath);
 	}
 
 	WriteLog("EnsureSubdirs($fullPath)");
@@ -253,73 +249,9 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	}
 } # EnsureSubdirs()
 
-sub PutCache { # $cacheName, $content; stores value in cache
-	#todo sanity checks
-	my $cacheName = shift;
-	chomp($cacheName);
-
-	my $content = shift;
-
-	if (!defined($content)) {
-		WriteLog('PutCache: warning: sanity check failed, no $content');
-		return 0;
-	}
-	
-	chomp($content);
-
-	state $myVersion;
-	if (!$myVersion) {
-		$myVersion = GetMyCacheVersion();
-	}
-
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
-
-	return PutFile($cacheName, $content);
-} # PutCache()
-
-sub UnlinkCache { # removes cache by unlinking file it's stored in
-	my $cacheName = shift;
-	chomp($cacheName);
-
-	WriteLog("UnlinkCache($cacheName)");
-
-	state $myVersion;
-	if (!$myVersion) {
-		$myVersion = GetMyCacheVersion();
-	}
-
-	my $cacheFile = './cache/' . $myVersion . '/' . $cacheName;
-
-	my @cacheFiles = glob($cacheFile);
-
-	if (scalar(@cacheFiles)) {
-		WriteLog('UnlinkCache: scalar(@cacheFiles) = ' . scalar(@cacheFiles));
-		unlink(@cacheFiles);
-	}
-} # UnlinkCache()
-
-sub CacheExists { # Check whether specified cache entry exists, return 1 (exists) or 0 (not)
-	my $cacheName = shift;
-	chomp($cacheName);
-
-	state $myVersion;
-	if (!$myVersion) {
-		$myVersion = GetMyCacheVersion();
-	}
-
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName;
-
-	if (-e $cacheName) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 sub GetMyVersion { # Get the currently checked out version (current commit's hash from git)
-	# sub GetVersion {
+	# GetVersion {
 	state $myVersion;
-
 	my $ignoreSaved = shift;
 
 	if (!$ignoreSaved && $myVersion) {
@@ -335,94 +267,6 @@ sub GetMyVersion { # Get the currently checked out version (current commit's has
 	chomp($myVersion);
 	return $myVersion;
 } # GetMyVersion()
-
-sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from config/string/en/
-# $stringKey = 'menu/top'
-# $language = 'en'
-# $noSubstitute = returns empty string if no exact match
-	my $defaultLanguage = 'en';
-
-	my $stringKey = shift;
-	my $language = shift;
-	my $noSubstitute = shift;
-
-	if (!$stringKey) {
-		WriteLog('GetString: warning: called without $stringKey, exiting');
-		return;
-	}
-	if (!$language) {
-		$language = GetConfig('language');
-	}
-	if (!$language) {
-		$language = $defaultLanguage;
-	}
-
-	# this will store all looked up values so that we don't have to look them up again
-    state %strings; #memo
-    my $memoKey = $stringKey . '/' . $language . '/' . ($noSubstitute ? 1 : 0);
-
-	if (defined($strings{$memoKey})) {
-	    #memo match
-		return $strings{$memoKey};
-	}
-
-	my $string = GetConfig('string/' . $language . '/'.$stringKey);
-	if ($string) {
-	    # exact match
-		chomp ($string);
-
-		$strings{$memoKey} = $string;
-	} else {
-	    # no match, dig deeper...
-		if ($noSubstitute) {
-			$strings{$memoKey} = '';
-			return '';
-		} else {
-			if ($language ne $defaultLanguage) {
-				$string = GetString($stringKey, $defaultLanguage);
-			}
-
-			if (!$string) {
-				$string = TrimPath($stringKey);
-				# if string is not found, display string key
-				# trin string key's path to make it less confusing
-			}
-
-			chomp($string);
-
-			$strings{$memoKey} = $string;
-
-			return $string;
-		}
-	}
-}
-
-
-#sub GetString {
-#	my $stringKey = shift;
-#
-#	state %strings;
-#
-#	if (!%strings) {
-#		# get them from language/en
-#
-#		my $stringsFile = GetFile('language/en');
-#
-#		my @results = split("\n", $stringsFile);
-#
-#		foreach (@results) {
-#			chomp;
-#
-#			my ($key, $value) = split(/\|/, $_);
-#
-#			$strings{$key} = $value;
-#		}
-#	}
-#
-#	if (defined($strings{$stringKey})) {
-#		return $strings{$stringKey};
-#	}
-#}
 
 
 sub GetFileHash { # $fileName ; returns hash of file contents
@@ -660,237 +504,6 @@ sub GetFile { # Gets the contents of file $fileName
 	#todo do something for a file which is missing
 }
 
-sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value based for $key
-	# $token eq 'uncache'
-	#    removes it from %configLookup
-	# $token eq 'override'
-	# 	instead of regular lookup, overrides value
-	#		overridden value is stored in local sub memo
-	#			this means all subsequent lookups now return $parameter
-	#
-	state $devMode;
-	$devMode = 0;
-#	this is janky, and doesn't work as expected
-#	eventually, it will be nice for dev mode to not rewrite
-#	the entire config tree on every rebuild
-#	and also not require a rebuild after a default change
-#	#todo
-#	if (!defined($devMode)) {
-#		if (-e 'config/admin/dev_mode') {
-#			WriteLog('GetConfig: attention: setting $devMode = 1');
-#			$devMode = 1;
-#		} else {
-#			$devMode = 0;
-#		}
-#	}
-
-	my $configName = shift;
-	chomp $configName;
-
-	WriteLog("GetConfig($configName)");
-
-	#	if ($configName =~ /^[a-z0-9_\/]{1,255}$/) {
-	#		WriteLog("GetConfig: warning: Sanity check failed!");
-	#		WriteLog("\$configName = $configName");
-	#		return;
-	#	}
-	#
-	state %configLookup;
-
-	if ($configName && $configName eq 'unmemo') {
-		undef %configLookup;
-	}
-
-	my $token = shift;
-	if ($token) {
-		chomp $token;
-	}
-
-	if ($token && $token eq 'unmemo') {
-		WriteLog('GetConfig: unmemo requested, complying');
-		# unmemo token to remove memoized value
-		if (exists($configLookup{$configName})) {
-			delete($configLookup{$configName});
-		}
-	}
-
-	if ($token && $token eq 'override') {
-		my $parameter = shift;
-		if ($parameter) {
-			$configLookup{$configName} = $parameter;
-		} else {
-			WriteLog('GetConfig: warning: $token was override, but no parameter. sanity check failed.');
-			return '';
-		}
-	}
-
-	if (exists($configLookup{$configName})) {
-		# found in memo
-		WriteLog('GetConfig: $configLookup already contains value, returning that...');
-		WriteLog('GetConfig: $configLookup{$configName} is ' . $configLookup{$configName});
-		return $configLookup{$configName};
-	}
-
-	WriteLog("GetConfig: Looking for config value in config/$configName ...");
-
-	my $acceptableValues;
-	if ($configName eq 'html/clock_format') {
-		if (substr($configName, -5) ne '.list') {
-			my $configList = GetConfig("$configName.list");
-			if ($configList) {
-				$acceptableValues = $configList;
-			}
-		}
-	} else {
-		$acceptableValues = 0;
-	}
-
-	if (-d "config/$configName") {
-		WriteLog('GetConfig: warning: $configName was a directory, returning');
-		return;
-	}
-
-	if (-e "config/$configName") {
-		# found a match in config directory
-		WriteLog("GetConfig: -e config/$configName returned true, proceeding to GetFile(), set \$configLookup{}, and return \$configValue");
-		my $configValue = GetFile("config/$configName");
-		if (substr($configName, 0, 9) eq 'template/') {
-			# do not trim templates
-		} else {
-			# trim() resulting value (removes whitespace)
-			$configValue = trim($configValue);
-		}
-		$configLookup{$configValue} = $configValue;
-		if ($acceptableValues) {
-			# there is a list of acceptable values
-			# check to see if value is in that list
-			# if not, issue warning and return 0
-			if (index($configValue, $acceptableValues)) {
-				return $configValue;
-			} else {
-				WriteLog('GetConfig: warning: $configValue was not in $acceptableValues');
-				return 0; #todo should return default, perhaps via $param='default'
-			}
-		} else {
-			return $configValue;
-		}
-	} # found in config/
-	else {
-		WriteLog("GetConfig: -e config/$configName returned false, looking in defaults...");
-
-		if (-e "default/$configName") {
-			# found default, return that
-			WriteLog("GetConfig: -e default/$configName returned true, proceeding to GetFile(), etc...");
-			my $configValue = GetFile("default/$configName");
-			$configValue = trim($configValue);
-			$configLookup{$configName} = $configValue;
-
-			if (!$devMode) {
-				# this preserves default settings, so that even if defaults change in the future
-				# the same value will remain for current instance
-				# this also saves much time not having to run ./clean_dev when developing
-				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
-				PutConfig($configName, $configValue);
-			} else {
-				WriteLog('GetConfig: $devMode is TRUE, not calling PutConfig()');
-			}
-
-			return $configValue;
-		} # return default/
-		else {
-			WriteLog("GetConfig: warning: Tried to get undefined config with no default: $configName");
-			return;
-		}
-	} # not found in config/
-
-	WriteLog('GetConfig: warning: reached end of function, which should not happen');
-	return;
-} # GetConfig()
-
-sub ConfigKeyValid { #checks whether a config key is valid 
-	# valid means passes character sanitize
-	# and exists in default/
-	my $configName = shift;
-
-	if (!$configName) {
-		WriteLog('ConfigKeyValid: warning: $configName parameter missing');
-		return 0;
-	}
-
-	WriteLog("ConfigKeyValid($configName)");
-
-	if (! ($configName =~ /^[a-z0-9_\/]{1,64}$/) ) {
-		WriteLog("ConfigKeyValid: warning: sanity check failed!");
-		return 0;
-	}
-
-	WriteLog('ConfigKeyValid: $configName sanity check passed:');
-
-	if (-e "default/$configName") {
-		WriteLog("ConfigKeyValid: default/$configName exists");
-		return 1;
-	} else {
-		WriteLog("ConfigKeyValid: default/$configName NOT exist!");
-		return 0;
-	}
-} # ConfigKeyValid()
-
-sub GetHtmlFilename { # get the HTML filename for specified item hash
-	# GetItemUrl GetItemHtmlLink { #keywords
-	# Returns 'ab/cd/abcdef01234567890[...].html'
-	my $hash = shift;
-
-	WriteLog("GetHtmlFilename()");
-
-	if (!defined($hash) || !$hash) {
-		if (WriteLog("GetHtmlFilename: warning: called without parameter")) {
-
-			#my $trace = Devel::StackTrace->new;
-			#print $trace->as_string; # like carp
-		}
-
-		return;
-	}
-
-	WriteLog("GetHtmlFilename($hash)");
-
-	if (!IsItem($hash)) {
-		WriteLog("GetHtmlFilename: warning: called with parameter that isn't a SHA-1. Returning.");
-		WriteLog("$hash");
-		#
-		# my $trace = Devel::StackTrace->new;
-		# print $trace->as_string; # like carp
-
-		return;
-	}
-
-	#	my $htmlFilename =
-	#		substr($hash, 0, 2) .
-	#		'/' .
-	#		substr($hash, 2, 8) .
-	#		'.html';
-	#
-
-
-	# my $htmlFilename =
-	# 	substr($hash, 0, 2) .
-	# 	'/' .
-	# 	substr($hash, 2, 2) .
-	# 	'/' .
-	# 	$hash .
-	# 	'.html';
-	#
-	#
-	my $htmlFilename =
-		substr($hash, 0, 2) .
-			'/' .
-			substr($hash, 2, 2) .
-			'/' .
-			substr($hash, 0, 8) .
-			'.html';
-
-	return $htmlFilename;
-}
 
 sub GetTime () { # Returns time in epoch format.
 	# Just returns time() for now, but allows for converting to 1900-epoch time
@@ -982,50 +595,6 @@ sub GetClockFormattedTime() { # returns current time in appropriate format from 
 
 	return GetTime();
 }
-
-sub GetTitle { # Gets title for file (incomplete, currently does nothing)
-	my $text = shift;
-
-	if (!$text) {
-		return;
-	}
-
-}
-
-sub ResetConfig { # Resets $configName to default by removing the config/* file
-	# Does a ConfigKeyValid() sanity check first
-	my $configName = shift;
-
-	if (ConfigKeyValid($configName)) {
-		unlink("config/$configName");
-	}
-}
-
-sub PutConfig { # $configName, $configValue ; writes config value to config storage
-	# $configName = config name/key (file path)
-	# $configValue = value to write for key
-	# Uses PutFile()
-	#
-	my $configName = shift;
-	my $configValue = shift;
-
-	WriteLog("PutConfig($configName, $configValue)");
-
-	if (index($configName, '..') != -1) {
-		WriteLog('PutConfig: warning: sanity check failed: $configName contains ".."');
-		WriteLog('PutConfig: warning: sanity check failed: $configName contains ".."');
-		return '';
-	}
-
-	chomp $configValue;
-
-	my $putFileResult = PutFile("config/$configName", $configValue);
-
-	# ask GetConfig() to remove memo-ized value it stores inside
-	GetConfig($configName, 'unmemo');
-
-	return $putFileResult;
-} # PutConfig()
 
 sub PutFile { # Writes content to a file; $file, $content, $binMode
 	# $file = file path
@@ -1231,72 +800,6 @@ sub ReplaceStrings {
 sub IsUrl { # add basic isurl()
 	return 1;
 } # IsUrl()
-
-sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds attr=value to html tag;
-	my $html = shift; # chunk of html to work with
-	my $tag = shift; # tag we'll be modifying
-	my $attributeName = shift; # name of attribute
-	my $attributeValue = shift; # value of attribute
-
-	WriteLog("AddAttributeToTag(\$html, $tag, $attributeName, $attributeValue)");
-	WriteLog('AddAttributeToTag: $html before: ' . $html);
-
-	my $tagAttribute = '';
-	if ($attributeValue =~ m/\w/) {
-		# attribute value contains whitespace, must be enclosed in double quotes
-		$tagAttribute = $attributeName . '="' . $attributeValue . '"';
-	} else {
-		$tagAttribute = $attributeName . '=' . $attributeValue . '';
-	}
-
-	my $htmlBefore = $html;
-	$html = str_ireplace('<' . $tag . ' ', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
-	if ($html eq $htmlBefore) {
-		$html = str_ireplace('<' . $tag . '', '<' . $tag . ' ' . $tagAttribute . ' ', $html);
-	}
-	if ($html eq $htmlBefore) {
-		$html = str_ireplace('<' . $tag . '>', '<' . $tag . ' ' . $tagAttribute . '>', $html);
-	}
-	if ($html eq $htmlBefore) {
-		WriteLog('AddAttributeToTag: warning: nothing was changed');
-	}
-
-	WriteLog('AddAttributeToTag: $html after: ' . $html);
-
-	return $html;
-} # AddAttributeToTag()
-
-sub RemoveHtmlFile { # $file ; removes existing html file
-# returns 1 if file was removed
-	my $file = shift;
-	if (!$file) {
-		return 0;
-	}
-	if ($file eq 'index.html') {
-		# do not remove index.html
-		# temporary measure until caching is fixed
-		# also needs a fix for lazy html, because htaccess rewrite rule doesn't catch it
-		return 0;
-	}
-	my $fileProvided = $file;
-	$file = "$HTMLDIR/$file";
-
-	if (
-		$file =~ m/^([0-9a-z\/.]+)$/
-			&&
-		index($file, '..') == -1
-	) {
-		# sanity check
-	 	$file = $1;
-		if (-e $file) {
-			unlink($file);
-		}
-	} else {
-		WriteLog('RemoveHtmlFile: warning: sanity check failed, $file = ' . $file);
-		return '';
-	}
-} # RemoveHtmlFile()
-
 #
 
 sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, with special rules; parameters: $file, $content
@@ -1320,7 +823,10 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 
 	WriteLog("PutHtmlFile($file)");
 
+	my $HTMLDIR = GetDir('html');
+
 	if ($HTMLDIR && !-e $HTMLDIR) {
+		WriteLog('PutHtmlFile: warning: $HTMLDIR was missing, trying to mkdir(' . $HTMLDIR . ')');
 		mkdir($HTMLDIR);
 	}
 
@@ -1523,7 +1029,6 @@ sub GetFileAsHashKeys { # returns file as hash of lines
 	return %hash;
 }
 
-
 sub AppendFile { # appends something to a file; $file, $content to append
 	# mainly used for writing to log files
 	my $file = shift;
@@ -1533,111 +1038,6 @@ sub AppendFile { # appends something to a file; $file, $content to append
 		say $fileHandle $content;
 		close $fileHandle;
 	}
-}
-
-sub trim { # trims whitespace from beginning and end of $string
-	my $s = shift;
-
-	if (defined($s)) {
-		$s =~ s/\s+$//g;
-		$s =~ s/^\s+//g;
-		return $s;
-	}
-
-	return;
-};
-
-sub GetSecondsHtml {# takes number of seconds as parameter, returns the most readable approximate time unit
-	# 5 seconds = 5 seconds
-	# 65 seconds = 1 minute
-	# 360 seconds = 6 minutes
-	# 3600 seconds = 1 hour
-	# etc
-
-	my $seconds = shift;
-
-	if (!$seconds) {
-		return;
-	}
-
-	chomp $seconds;
-
-	my $secondsString = $seconds;
-
-	if ($secondsString >= 60) {
-		$secondsString = $secondsString / 60;
-
-		if ($secondsString >= 60 ) {
-			$secondsString = $secondsString / 60;
-
-			if ($secondsString >= 24) {
-				$secondsString = $secondsString / 24;
-
-				if ($secondsString >= 365) {
-					$secondsString = $secondsString / 365;
-
-					$secondsString = floor($secondsString) . ' years';
-				}
-				elsif ($secondsString >= 30) {
-					$secondsString = $secondsString / 30;
-
-					$secondsString = floor($secondsString) . ' months';
-				}
-				else {
-					$secondsString = floor($secondsString) . ' days';
-				}
-			}
-			else {
-				$secondsString = floor($secondsString) . ' hours';
-			}
-		}
-		else {
-			$secondsString = floor($secondsString) . ' minutes';
-		}
-	} else {
-		$secondsString = floor($secondsString) . ' seconds';
-	}
-}
-
-sub GetFileSizeWidget { # takes file size as number, and returns html-formatted human-readable size
-	my $fileSize = shift;
-
-	if (!$fileSize) {
-		return;
-	}
-
-	chomp ($fileSize);
-
-	my $fileSizeString = $fileSize;
-
-	if ($fileSizeString > 1024) {
-		$fileSizeString = $fileSizeString / 1024;
-
-		if ($fileSizeString > 1024) {
-			$fileSizeString = $fileSizeString / 1024;
-
-			if ($fileSizeString > 1024) {
-				$fileSizeString = $fileSizeString / 1024;
-
-				if ($fileSizeString > 1024) {
-					$fileSizeString = $fileSizeString / 1024;
-
-					$fileSizeString = ceil($fileSizeString) . ' <abbr title="terabytes">TB</abbr>';
-				} else {
-
-					$fileSizeString = ceil($fileSizeString) . ' <abbr title="gigabytes">GB</abbr>';
-				}
-			} else {
-				$fileSizeString = ceil($fileSizeString) . ' <abbr title="megabytes">MB</abbr>';
-			}
-		} else {
-			$fileSizeString = ceil($fileSizeString) . ' <abbr title="kilobytes">KB</abbr>';
-		}
-	} else {
-		$fileSizeString .= " bytes";
-	}
-
-	return $fileSizeString;
 }
 
 sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwise returns 0
@@ -1715,17 +1115,21 @@ sub AuthorHasTag { # $key ; returns 1 if user is admin, otherwise 0
 
 sub IsAdmin { # $key ; returns 1 if user is admin, otherwise 0
 	# returns 2 if user is root admin.
+
 	my $key = shift;
-
-	WriteLog("IsAdmin($key)");
-
-	if (!IsFingerprint($key)) {
+	if (!$key || !IsFingerprint($key)) {
 		WriteLog('IsAdmin: warning: $key failed sanity check, returning 0');
 		return 0;
 	}
+	WriteLog("IsAdmin($key)");
 
-	if ($key eq GetRootAdminKey()) {
-		WriteLog('IsAdmin: $key eq GetRootAdminKey(), return 2 ');
+	my $rootAdminKey = GetRootAdminKey();
+	if (!$rootAdminKey) {
+		$rootAdminKey = '';
+	}
+
+	if ($key eq $rootAdminKey) {
+		WriteLog('IsAdmin: $key eq $rootAdminKey, return 2 ');
 		return 2; # is admin, return true;
 	} else {
 		if (GetConfig('admin/allow_admin_permissions_tag_lookup')) {
@@ -1746,6 +1150,8 @@ sub GetServerKey { # Returns server's public key, 0 if there is none
 	if ($serversKey) {
 		return $serversKey;
 	}
+
+	my $TXTDIR = GetDir('txt');
 
 	if (-e "$TXTDIR/server.key.txt") { #server's pub key should reside here
 		my %adminsInfo = GpgParse("$TXTDIR/server.key.txt");
@@ -1772,26 +1178,7 @@ sub GetServerKey { # Returns server's public key, 0 if there is none
 sub GetRootAdminKey { # Returns root admin's public key, if there is none
 	# it's located in ./admin.key as armored public key
 	# should be called GetRootAdminKey()
-	state $adminsKey;
-	if ($adminsKey) {
-		return $adminsKey;
-	}
-	if (-e "$SCRIPTDIR/admin.key") {
-		my %adminsInfo = GpgParse("$SCRIPTDIR/admin.key");
-		if ($adminsInfo{'isSigned'}) {
-			if ($adminsInfo{'key'}) {
-				$adminsKey = $adminsInfo{'key'};
-				return $adminsKey;
-			} else {
-				return 0;
-			}
-		} else {
-			return 0;
-		}
-	} else {
-		return 0;
-	}
-	return 0;
+	return GetConfig('config/admin/root_admin_key');
 }
 
 sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a file path
@@ -1805,20 +1192,6 @@ sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a f
 	return $string;
 }
 
-sub htmlspecialchars { # $text, encodes supplied string for html output
-	# port of php built-in
-	my $text = shift;
-	$text = encode_entities2($text);
-	return $text;
-}
-
-sub HtmlEscape { # encodes supplied string for html output
-	my $text = shift;
-
-	$text = encode_entities2($text);
-
-	return $text;
-}
 
 sub IsSha1 { # returns 1 if parameter is in sha1 hash format, 0 otherwise
 	my $string = shift;
@@ -1934,162 +1307,6 @@ sub IsFingerprint { # returns 1 if parameter is a user fingerprint, 0 otherwise
 	}
 }
 
-sub GpgParse {
-	# $filePath = path to file containing the text
-	#
-	# $returnValues{'isSigned'} = whether the message has a valid signature: 0 or 1 for valid signature
-	# $returnValues{'signTimestamp'} = timestamp of gpg signature, if any
-	# $returnValues{'text'} = original text
-	# $returnValues{'message'} = message text without framing
-	# $returnValues{'key'} = fingerprint of signer
-	# $returnValues{'alias'} = alias of signer, if they've added one by submitting their public key
-	# $returnValues{'keyExpired'} = whether the key has expired: 0 for not expired, 1 for expired
-	# $returnValues{'gitHash'} = git's hash of the file's contents
-	# $returnValues{'verifyError'} = whether there was an error with parsing the message
-
-	my %returnValues;
-
-	my $filePath = shift;
-	if (!$filePath || !-e $filePath || -d $filePath) {
-		WriteLog('GpgParse: warning: $filePath missing, non-existent, or a directory');
-		return;
-	}
-	WriteLog("GpgParse($filePath)");
-
-	if ($filePath =~ m/([a-zA-Z0-9\.\/]+)/) {
-		$filePath = $1;
-	} else {
-		WriteLog('GpgParse: sanity check failed on $filePath, returning');
-		return '';
-	}
-
-	my $fileHash = GetFileHash($filePath);
-
-	my $cachePathStderr = './cache/' . GetMyCacheVersion() . '/gpg_stderr';
-	my $cachePathMessage = './cache/' . GetMyCacheVersion() . '/gpg_message';
-
-	if ($cachePathStderr =~ m/^([a-zA-Z0-9_\/.]+)$/) {
-		$cachePathStderr = $1;
-	} else {
-		WriteLog('GpgParse: sanity check failed, $cachePathStderr = ' . $cachePathStderr);
-		return;
-	}
-
-	if ($cachePathMessage =~ m/^([a-zA-Z0-9_\/.]+)$/) {
-		$cachePathMessage = $1;
-	} else {
-		WriteLog('GpgParse: sanity check failed, $cachePathMessage = ' . $cachePathMessage);
-		return;
-	}
-
-	my $pubKeyFlag = 0;
-
-	if (!-e "$cachePathStderr/$fileHash.txt") {
-		my $fileContents = GetFile($filePath);
-
-		my $gpgPubkey = '-----BEGIN PGP PUBLIC KEY BLOCK-----';
-		my $gpgMessage = '-----BEGIN PGP SIGNED MESSAGE-----';
-		my $gpgEncrypted = '-----BEGIN PGP MESSAGE-----';
-
-		my $gpgCommand = 'gpg --pinentry-mode=loopback --batch ';
-
-		if (index($fileContents, $gpgPubkey) > -1) {
-			$gpgCommand .= '--import --ignore-time-conflict --ignore-valid-from ';
-			$pubKeyFlag = 1;
-		}
-		elsif (index($fileContents, $gpgMessage) > -1) {
-			$gpgCommand .= '--decrypt ';
-		}
-		elsif (index($fileContents, $gpgEncrypted) > -1) {
-			$gpgCommand .= '--decrypt ';
-		}
-
-		if ($fileHash =~ m/^([0-9a-f]+)$/) {
-			$fileHash = $1;
-		} else {
-			WriteLog('GpgParse: sanity check failed, $fileHash = ' . $fileHash);
-			return;
-		}
-
-		$gpgCommand .= "$filePath ";
-		$gpgCommand .= ">$cachePathMessage/$fileHash.txt ";
-		$gpgCommand .= "2>$cachePathStderr/$fileHash.txt ";
-
-		WriteLog('GpgParse: $gpgCommand = ' . $gpgCommand);
-
-		system($gpgCommand);
-	}
-
-	my $gpgStderrOutput = GetCache("gpg_stderr/$fileHash.txt");
-
-	WriteLog('GpgParse: $gpgStderrOutput: ' . "\n" . $gpgStderrOutput);
-
-	if ($gpgStderrOutput) {
-		if ($gpgStderrOutput =~ /([0-9A-F]{40})/) {
-			$returnValues{'key_long'} = $1;
-		}
-		if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
-			$returnValues{'isSigned'} = 1;
-			$returnValues{'key'} = $1;
-		}
-		if ($gpgStderrOutput =~ /Signature made (.+)/) {
-			# my $gpgDateEpoch = #todo convert to epoch time
-			$returnValues{'signTimestamp'} = $1;
-		}
-
-		if ($pubKeyFlag) {
-			# parse gpg's output as public key
-			if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>&\@.()\\\/]+)\"/) {
-				# we found something which looks like a name
-				my $aliasReturned = $1;
-				$aliasReturned =~ s/\<(.+\@.+?)\>//g; # if has something which looks like an email, remove it
-
-				$returnValues{'alias'} = $aliasReturned;
-			} else {
-				$returnValues{'alias'} = '?????';
-			}
-
-			my $name = $returnValues{'alias'};
-			my $fingerprint = $returnValues{'key'};
-
-			if (!$name) {
-				WriteLog('GpgParse: warning: no name/alias from file ' . $filePath);
-				$name = '(name)';
-			}
-			if (!$fingerprint) {
-				WriteLog('GpgParse: warning: no fingerprint/key from file ' . $filePath);
-				$fingerprint = '(fingerprint)';
-			}
-
-			my $message;
-			$message = GetTemplate('message/user_reg.template');
-			$message =~ s/\$name/$name/g;
-			$message =~ s/\$fingerprint/$fingerprint/g;
-			$returnValues{'message'} = $message;
-		} # $pubKeyFlag
-		else {
-			# not a pubkey, just take whatever pgp output for us
-			$returnValues{'message'} = GetFile("$cachePathMessage/$fileHash.txt");
-		}
-	} # $gpgStderrOutput
-	# else {
-	# 	# for some reason gpg didn't output anything, so just put the original message
-	# 	$returnValues{'message'} = GetFile("$cachePathMessage/$fileHash.txt");
-	# }
-	$returnValues{'text'} = GetFile($filePath);
-	$returnValues{'verifyError'} = 0;
-
-	return %returnValues;
-} # GpgParse()
-
-sub EncryptMessage { # Encrypts message for target key (doesn't do anything yet)
-	my $targetKey = shift;
-	# file path
-	chomp($targetKey);
-
-	#todo
-}
-
 sub AddItemToConfigList { # Adds a line to a list stored in config
 	# $configPath = reference to setting stored in config
 	# $item = item to add to the list (appended to the file)
@@ -2132,231 +1349,92 @@ sub AddItemToConfigList { # Adds a line to a list stored in config
 	PutConfig($configPath, $configList);
 }
 
-sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
-	my $text = shift;
+sub CheckForInstalledVersionChange {
+	WriteLog('CheckForInstalledVersionChange() begin');
 
-	if (!$text) {
-		return '';
+	my $lastVersion = GetConfig('current_version');
+	my $currVersion = GetMyVersion();
+
+	if (!$lastVersion) {
+		$lastVersion = 0;
 	}
 
-	$text = HtmlEscape($text);
+	if ($lastVersion ne $currVersion) {
+		WriteLog("$lastVersion ne $currVersion, posting changelog");
 
-	# these have been moved to format for textart
-	#	$text =~ s/\n /<br>&nbsp;/g;
-	#	$text =~ s/^ /&nbsp;/g;
-	#	$text =~ s/  / &nbsp;/g;
+		#my $serverKey = `gpg --list-keys hikeserver`;
 
-	$text =~ s/\n\n/<p>/g;
-	$text =~ s/\n/<br>/g;
+		#WriteLog("gpg --list-keys CCEA3752");
+		#WriteLog($serverKey);
 
-	# this is more flexible than \n but may cause problems with unicode
-	# for example, it recognizes second half of russian "x" as \R
-	# #regexbugX
-	# $text =~ s/\R\R/<p>/g;
-	# $text =~ s/\R/<br>/g;
+		my $changeLogFilename = 'changelog_' . GetTime() . '.txt';
+		#todo this should be a template;
+		my $changeLogMessage =
+			'Software Updated to Version ' . substr($currVersion, 0, 8) . '..' . "\n\n" .
+			'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
 
-	if (GetConfig('admin/html/allow_tag/code')) {
-		$text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>$1<\/code>/msgi;
-		# /s = single-line (changes behavior of . metacharacter to match newlines)
-		# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
-		# /g = global (all instances)
-		# /i = case-insensitive
-	}
-
-	return $text;
-}
-
-sub FormatForRss { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
-	my $text = shift;
-
-	if (!$text) {
-		return '';
-	}
-
-	$text = HtmlEscape($text);
-	$text =~ s/\n/<br \/>\n/g;
-
-	return $text;
-}
-
-sub TextartForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
-	my $text = shift;
-
-	if (!$text) {
-		return '';
-	}
-
-	$text = HtmlEscape($text);
-	$text =~ s/\n /<br>&nbsp;/g;
-	$text =~ s/^ /&nbsp;/g;
-	$text =~ s/  / &nbsp;/g;
-	$text =~ s/\n/<br>\n/g;
-
-	#htmlspecialchars(
-	## nl2br(
-	## str_replace(
-	## '  ', ' &nbsp;',
-	# htmlspecialchars(
-	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
-	#));?><?=$tt_c?></description>
-
-	return $text;
-}
-
-sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
-	my $text = shift;
-
-	if (!$text) {
-		return '';
-	}
-
-	my $i = 0;
-
-	$text = HtmlEscape($text);
-	# $text =~ s/\n /<br>&nbsp;/g;
-	$text =~ s/^ /&nbsp;/g;
-	$text =~ s/  / &nbsp;/g;
-	# $text =~ s/\n/<br>\n/g;
-	# $text =~ s/<br>/'<br><input type=text size=80 name=txt'.$i++.'><br>'/ge;
-	# $text =~ s/<br>/<br><br>/g;
-	$text = '<textarea wrap=wrap cols=80 rows=24>'.$text.'</textarea>';
-	$text = '<form action=/post.html>'.$text.'<br><input type=submit value=Send></form>';
-
-	#htmlspecialchars(
-	## nl2br(
-	## str_replace(
-	## '  ', ' &nbsp;',
-	# htmlspecialchars(
-	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
-	#));?><?=$tt_c?></description>
-
-	return $text;
-}
-
-sub WriteMessage { # Writes timestamped message to console (stdout)
-	my $text = shift;
-	chomp $text;
-
-	state $lastText;
-
-	if ($text eq '.' || length($text) == 1) {
-		$lastText = $text;
-
-		state @chars;
-		if (!@chars) {
-			#@chars = qw(, . - ' `); # may generate warning
-			#@chars = (',', '.', '-', "'", '`');
-			#@chars = ('.', ',');
-			#@chars = (qw(0 1 2 3 4 5 6 7 8 9 A B C D E F));
+		if ($lastVersion) {
+			#my $changeLogList = "Version has changed from $lastVersion to $currVersion";
+			if ($lastVersion =~ m/^([0-9a-f]+)$/) {
+				$lastVersion = $1;
+			}
+			if ($currVersion =~ m/^([0-9a-f]+)$/) {
+				$currVersion = $1;
+			}
+			my $changeLogListCommand = "git log --oneline $lastVersion..$currVersion";
+			my $changeLogList = `$changeLogListCommand`;
+			$changeLogList = trim($changeLogList);
+			$changeLogMessage .= "$changeLogList";
+		} else {
+			$changeLogMessage .= 'No changelog will be generated because $lastVersion is false';
 		}
 
-		#my @chars=('a'..'f','0'..'9');
-		#print $chars[rand @chars];
-		print $text;
-		# my $randomString;
-		# foreach (1..40) {
-		# 	$randomString.=$chars[rand @chars];
-		# }
-		# return $randomString;
+		$changeLogMessage .= "\n\n#changelog";
 
-		return;
+		my $TXTDIR = GetDir('txt');
+
+		PutFile("$TXTDIR/$changeLogFilename", $changeLogMessage);
+
+		ServerSign("$TXTDIR/$changeLogFilename");
+
+		PutConfig('current_version', $currVersion);
+	}
+} # CheckForInstalledVersionChange()
+
+sub CheckForRootAdminChange {
+	my $lastAdmin = GetConfig('current_admin');
+	my $currAdmin = GetRootAdminKey();
+
+	if (!$lastAdmin) {
+		$lastAdmin = 0;
 	}
 
-	# just an idea
-	# doesn't seem to work well because the console freezes up if there's no \n coming
-	# if ($text =~ m/^[0-9]+$/) {
-	# 	$lastText = $text;
-	# 	print $text . " ";
-	# 	return;
-	# }
+	if ($currAdmin) {
+		if ($lastAdmin ne $currAdmin) {
+			WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
 
-	WriteLog($text);
-	my $timestamp = GetTime();
+			my $changeAdminFilename = 'changeadmin_' . GetTime() . '.txt';
+			my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
 
-	if ($lastText eq '.' || length($lastText) == 1) {
-		print "\n";
-	}
-	print "\n$timestamp $text\n";
+			my $TXTDIR = GetDir('txt');
 
-	$lastText = $text;
-}
+			PutFile("$TXTDIR/$changeAdminFilename", $changeAdminMessage);
 
-my $lastVersion = GetConfig('current_version');
-my $currVersion = GetMyVersion();
+			ServerSign("$TXTDIR/$changeAdminFilename");
 
-if (!$lastVersion) {
-	$lastVersion = 0;
-}
+			PutConfig("current_admin", $currAdmin);
 
-if ($lastVersion ne $currVersion) {
-	WriteLog("$lastVersion ne $currVersion, posting changelog");
+			require('./sqlite.pl');
 
-	#my $serverKey = `gpg --list-keys hikeserver`;
-
-	#WriteLog("gpg --list-keys CCEA3752");
-	#WriteLog($serverKey);
-
-	my $changeLogFilename = 'changelog_' . GetTime() . '.txt';
-	#todo this should be a template;
-	my $changeLogMessage =
-		'Software Updated to Version ' . substr($currVersion, 0, 8) . '..' . "\n\n" .
-		'Installed software version has changed from ' . $lastVersion . ' to ' . $currVersion . "\n\n";
-
-	if ($lastVersion) {
-		#my $changeLogList = "Version has changed from $lastVersion to $currVersion";
-		if ($lastVersion =~ m/^([0-9a-f]+)$/) {
-			$lastVersion = $1;
-		}
-		if ($currVersion =~ m/^([0-9a-f]+)$/) {
-			$currVersion = $1;
-		}
-		my $changeLogListCommand = "git log --oneline $lastVersion..$currVersion";
-		my $changeLogList = `$changeLogListCommand`;
-		$changeLogList = trim($changeLogList);
-		$changeLogMessage .= "$changeLogList";
-	} else {
-		$changeLogMessage .= 'No changelog will be generated because $lastVersion is false';
-	}
-
-	$changeLogMessage .= "\n\n#changelog";
-
-	PutFile("$TXTDIR/$changeLogFilename", $changeLogMessage);
-
-	ServerSign("$TXTDIR/$changeLogFilename");
-
-	PutConfig('current_version', $currVersion);
-}
-
-my $lastAdmin = GetConfig('current_admin');
-my $currAdmin = GetRootAdminKey();
-
-if (!$lastAdmin) {
-	$lastAdmin = 0;
-}
-
-if ($currAdmin) {
-	if ($lastAdmin ne $currAdmin) {
-		WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
-
-		my $changeAdminFilename = 'changeadmin_' . GetTime() . '.txt';
-		my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
-
-		PutFile("$TXTDIR/$changeAdminFilename", $changeAdminMessage);
-
-		ServerSign("$TXTDIR/$changeAdminFilename");
-
-		PutConfig("current_admin", $currAdmin);
-
-		require('./sqlite.pl');
-
-		if ($lastAdmin) {
-			DBAddPageTouch('author', $lastAdmin);
-		}
-		if ($currAdmin) {
-			DBAddPageTouch('author', $currAdmin);
+			if ($lastAdmin) {
+				DBAddPageTouch('author', $lastAdmin);
+			}
+			if ($currAdmin) {
+				DBAddPageTouch('author', $currAdmin);
+			}
 		}
 	}
-}
+} # CheckForRootAdminChange()
 
 sub ServerSign { # Signs a given file with the server's key
 	# If config/admin/server_key_id exists
@@ -2394,7 +1472,10 @@ sub ServerSign { # Signs a given file with the server's key
 	WriteLog($serverKey);
 
 	# if public key has not been published yet, do it
+	my $TXTDIR = GetDir('txt');
+
 	if (!-e "$TXTDIR/server.key.txt") {
+		#todo move to gpgp.pl
 		WriteLog("gpg --batch --yes --armor --export $serverKeyId");
 		my $gpgOutput = `gpg --batch --yes --armor --export $serverKeyId`;
 
@@ -2422,84 +1503,8 @@ sub ServerSign { # Signs a given file with the server's key
 	}
 }
 
-sub FormatDate { # $epoch ; formats date depending on how long ago it was
-	my $epoch = shift;
-
-	my $time = GetTime();
-
-	my $difference = $time - $epoch;
-
-	my $formattedDate = '';
-
-	if ($difference < 86400) {
-	# less than a day, return 24-hour time
-		$formattedDate = strftime '%H:%M', localtime $epoch;
-	} elsif ($difference < 86400 * 30) {
-	# less than a month, return short date
-		$formattedDate = strftime '%m/%d', localtime $epoch;
-	} else {
-	# more than a month, return long date
-		$formattedDate = strftime '%a, %d %b %Y', localtime $epoch;
-		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
-	}
-
-	return $formattedDate;
-}
-
-sub GetTimestampWidget { # $time ; returns timestamp widget
-	#todo format on server-side for no-js clients
-	my $time = shift;
-	if ($time) {
-		chomp $time;
-	} else {
-		$time = 0;
-	}
-	WriteLog('GetTimestampWidget("' . $time . '")');
-
-	state $epoch; # state of config
-	if (!defined($epoch)) {
-		$epoch = GetConfig('html/timestamp_epoch');
-	}
-
-	if (!$time =~ m/^[0-9]+$/) {
-		WriteLog('GetTimestampWidget: warning: sanity check failed!');
-		return '';
-	}
-
-	my $widget = '';
-	if ($epoch) {
-		# epoch-formatted timestamp, simpler template
-		$widget = GetTemplate('widget/timestamp_epoch.template');
-		$widget =~ s/\$timestamp/$time/;
-	} else {
-		WriteLog('GetTimestampWidget: $epoch = false');
-		$widget = GetTemplate('widget/timestamp.template');
-
-		$widget = str_replace("\n", '', $widget);
-		# if we don't do this, the link has an extra space
-
-		my $timeDate = $time;
-		$timeDate = FormatDate($time);
-		# Alternative formats tried
-		# my $timeDate = strftime '%c', localtime $time;
-		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
-
-		# replace into template
-		$widget =~ s/\$timestamp/$time/g;
-		$widget =~ s/\$timeDate/$timeDate/g;
-	}
-
-	chomp $widget;
-	return $widget;
-} # GetTimestampWidget()
-
-sub DeleteFile { # $fileHash ; delete file with specified file hash (incomplete)
-	my $fileHash = shift;
-	if ($fileHash) {
-	}
-} # DeleteFile()
-
 sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log and removes it if found
+#todo rename to IsFileMarkedAsDeleted()
 # only one or the other is required
     my $file = shift;
 	WriteLog("IsFileDeleted($file)");
@@ -2533,8 +1538,8 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
 			my $htmlFilename = GetHtmlFilename($fileHash);
 
 			if ($htmlFilename) {
-				$htmlFilename = $HTMLDIR . '/' . $htmlFilename;
-
+				my $HTMLDIR = GetDir('html');
+				$htmlFilename = $HTMLDIR . '/' . $htmlFilename; #todo this could be a sub?
 				if (-e $htmlFilename) {
 					unlink($htmlFilename);
 				}
@@ -2573,6 +1578,7 @@ sub IsFileDeleted { # $file, $fileHash ; checks for file's hash in deleted.log a
 			my $htmlFilename = GetHtmlFilename($fileHash);
 
 			if ($htmlFilename) {
+				my $HTMLDIR = GetDir('html');
 				$htmlFilename = $HTMLDIR . '/' . $htmlFilename;
 
 				if (-e $htmlFilename) {
@@ -2602,22 +1608,6 @@ sub file_exists { # $file ; port of php file_exists()
 	return 0; #unreachable code
 }
 
-sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
-	# DeleteAvatarCache ExpireAvatarCache ExpireAliasCache {
-
-	my $key = shift;
-	WriteLog("ExpireAvatarCache($key)");
-	if (!IsFingerprint($key) && $key ne '*') {
-		WriteLog('ExpireAvatarCache: warning: sanity check failed');
-		return 0;
-	}
-
-	my $themeName = GetConfig('html/theme');
-	UnlinkCache('avatar/' . $themeName . '/' . $key);
-	UnlinkCache('avatar.color/' . $themeName . '/' . $key);
-	UnlinkCache('avatar.plain/' . $themeName . '/' . $key);
-} # ExpireAvatarCache()
-
 sub GetItemEasyFind { #returns Easyfind strings for item
 	WriteLog('GetItemEasyFind()');
 
@@ -2644,19 +1634,6 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	my $easyFindString = join(' ', @easyFindArray);
 
 	return $easyFindString;
-}
-
-sub GetMessageCacheName {
-	my $itemHash = shift;
-	chomp($itemHash);
-
-	if (!IsItem($itemHash)) {
-		WriteLog('GetMessageCacheName: sanity check failed');
-		return '';
-	}
-
-	my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash";
-	return $messageCacheName;
 }
 
 sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cache or file path
@@ -2740,53 +1717,25 @@ sub GetItemMeta { # retrieves item's metadata
 	}
 } # GetItemMeta
 
-sub AppendItemMeta { # appends to item's metadata
-	# $
-}
-
 sub GetPrefixedUrl { # returns url with relative prefix 
 	my $url = shift;
 	chomp $url;
-
 	return $url;
 }
 
 sub UpdateUpdateTime { # updates cache/system/last_update_time, which is used by the stats page
 	my $lastUpdateTime = GetTime();
-
 	PutCache("system/last_update_time", $lastUpdateTime);
 }
 
 sub RemoveEmptyDirectories { #looks for empty directories under $path and removes them
 	my $path = shift;
-
 	#todo probably more sanitizing
-
 	$path = trim($path);
 	if (!$path) {
 		return;
 	}
-
 	#system('find $path -type d -empty -delete'); #todo uncomment when bugs fixed
-}
-
-sub RemoveOldItems {
-	my $query = "
-		SELECT * FROM item_flat WHERE file_hash NOT IN (
-			SELECT file_hash FROM item_flat
-			WHERE
-				',' || tags_list || ',' like '%approve%'
-					OR
-				file_hash IN (
-					SELECT item_hash
-					FROM item_parent
-					WHERE parent_hash IN (
-						SELECT file_hash FROM item_flat WHERE ',' || tags_list || ',' LIKE '%approve%'
-					)
-				)
-		)
-		ORDER BY add_timestamp
-	";
 }
 
 sub GetFileHashPath { # $file ; Returns text file's standardized path given its filename
@@ -2816,7 +1765,18 @@ sub GetPathFromHash { # gets path of text file based on hash
 		return;
 	}
 
+	my $TXTDIR = 'html/txt'; #todo #todo
+#	my $TXTDIR = GetDir('txt');
+	if ($fileHash =~ m/^([0-9a-f]+)$/) { #todo should this be unlimited length?
+		$fileHash = $1;
+		WriteLog('GetPathFromHash: $fileHash sanity check passed: ' . $fileHash);
+	} else {
+		WriteLog('GetPathFromHash: warning: $fileHash sanity check failed!');
+		return '';
+	}
+
 	if (!-e $TXTDIR . '/' . substr($fileHash, 0, 2)) {
+		WriteLog('GetPathFromHash: mkdir ' . $TXTDIR . '/' . substr($fileHash, 0, 2));
 		system('mkdir ' . $TXTDIR . '/' . substr($fileHash, 0, 2));
 	}
 
@@ -2837,17 +1797,11 @@ sub GetPathFromHash { # gets path of text file based on hash
 
 sub Sha1Test {
 	print "\n";
-
 	print GetFileHash('utils.pl');
-
 	print "\n";
-
 	print(`sha1sum utils.pl | cut -f 1 -d ' '`);
-
 	# print "\n";
-
 	print(`php -r "print(sha1_file('utils.pl'));"`);
-
 	print "\n";
 }
 
@@ -2861,92 +1815,6 @@ sub GetPasswordLine { # $username, $password ; returns line for .htpasswd file
 	return $username.":".crypt($password,$username)."\n";
 } # GetPasswordLine()
 
-sub OrganizeFile { # $file ; renames file based on hash of its contents
-	# returns new filename
-	# filename is obtained using GetFileHashPath()
-	my $file = shift;
-	chomp $file;
-
-	if (!-e $file) {
-		#file does not exist.
-		WriteLog('OrganizeFile: warning: called on non-existing file: ' . $file);
-		return '';
-	}
-
-	if (!GetConfig('admin/organize_files')) {
-		WriteLog('OrganizeFile: warning: admin/organize_files was false, returning.');
-		return $file;
-	}
-
-	if ($file eq "$TXTDIR/server.key.txt" || $file eq $TXTDIR || -d $file) {
-		# $file should not be server.key, the txt directory, or a directory
-		WriteLog('OrganizeFile: file is on ignore list, ignoring.');
-		return $file;
-	}
-
-	if (GetConfig('admin/dev_mode')) {
-		WriteLog('OrganizeFile: dev_mode is on, returning');
-		return $file;
-	}
-
-	# organize files aka rename to hash-based path
-	my $fileHashPath = GetFileHashPath($file);
-
-	# turns out this is actually the opposite of what needs to happen
-	# but this code snippet may come in handy
-	# if (index($fileHashPath, $SCRIPTDIR) == 0) {
-	# 	WriteLog('IndexTextFile: hash path begins with $SCRIPTDIR, removing it');
-	# 	$fileHashPath = str_replace($SCRIPTDIR . '/', '', $fileHashPath);
-	# } # index($fileHashPath, $SCRIPTDIR) == 0
-	# else {
-	# 	WriteLog('IndexTextFile: hash path does NOT begin with $SCRIPTDIR, leaving it alone');
-	# }
-
-	if ($fileHashPath) {
-		if ($file eq $fileHashPath) {
-			# Does it match? No action needed
-			WriteLog('OrganizeFile: hash path matches, no action needed');
-		}
-		elsif ($file ne $fileHashPath) {
-			# It doesn't match, fix it
-			WriteLog('OrganizeFile: hash path does not match, organize');
-			WriteLog('OrganizeFile: Before: ' . $file);
-			WriteLog('OrganizeFile: After: ' . $fileHashPath);
-
-			if (-e $fileHashPath) {
-				# new file already exists, rename only if not larger
-				WriteLog("OrganizeFile: warning: $fileHashPath already exists!");
-
-				if (-s $fileHashPath > -s $file) {
-					unlink ($file);
-				} else {
-					rename ($file, $fileHashPath);
-				}
-			} # -e $fileHashPath
-			else {
-				# new file does not exist, safe to rename
-				rename ($file, $fileHashPath);
-			}
-
-			# if new file exists
-			if (-e $fileHashPath) {
-				$file = $fileHashPath; #don't see why not... is it a problem for the calling function?
-			} else {
-				WriteLog("Very strange... \$fileHashPath doesn't exist? $fileHashPath");
-			}
-		} # $file ne $fileHashPath
-		else {
-			WriteLog('IndexTextFile: it already matches, next!');
-			WriteLog('$file: ' . $file);
-			WriteLog('$fileHashPath: ' . $fileHashPath);
-		}
-	} # $fileHashPath
-
-	WriteLog("OrganizeFile: returning $file");
-	return $file;
-} # OrganizeFile()
-
-
 sub VerifyThirdPartyAccount {
 	my $fileHash = shift;
 	my $thirdPartyUrl = shift;
@@ -2957,7 +1825,7 @@ sub ProcessTextFile { # $file ; add new text file to index
 	if ($file eq 'flush') {
 		IndexFile('flush');
 	}
-	my $relativePath = File::Spec->abs2rel($file, $SCRIPTDIR);
+	my $relativePath = File::Spec->abs2rel($file, $SCRIPTDIR); #todo this shouldn't have a ::
 	if ($file ne $relativePath) {
 		$file = $relativePath;
 	}
@@ -3025,5 +1893,75 @@ sub ProcessTextFile { # $file ; add new text file to index
 	#		WriteLog("Count of new items for $fileHash : " . scalar(@files));
 
 } # ProcessTextFile()
+
+require './string.pl';
+require './cache.pl';
+require './config.pl';
+require './string.pl';
+require './html.pl';
+require './file.pl';
+#require './access.pl';
+
+sub EnsureDirsThatShouldExist { # creates directories expected later
+	WriteLog('EnsureDirsThatShouldExist() begin');
+	# make a list of some directories that need to exist
+	my $HTMLDIR = GetDir('html');
+	#todo this should be ... improved upon
+	my @dirsThatShouldExist = (
+		"log",
+		"$HTMLDIR",
+		"$HTMLDIR/txt",
+		"$HTMLDIR/image",
+		"$HTMLDIR/thumb", #thumbnails
+		"cache", #ephemeral data
+		"$HTMLDIR/author",
+		"$HTMLDIR/action",
+		"$HTMLDIR/top", #top items for tags
+		"config",
+		"config/admin",
+		"config/admin/php",
+		"config/admin/php/post",
+		"$HTMLDIR/upload", #uploaded files go here
+		"$HTMLDIR/error", #error pages
+		"once" #used for registering things which should only happen once e.g. scraping
+	);
+
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion();
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/key';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/file';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/avatar';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/message';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_message';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/gpg_stderr';
+	push @dirsThatShouldExist, 'cache/' . GetMyCacheVersion() . '/response';
+
+	# create directories that need to exist
+	foreach my $dir (@dirsThatShouldExist) {
+		if ($dir =~ m/^([a-zA-Z0-9_\/]+)$/) {
+			$dir = $1;
+		} else {
+			WriteLog('utils.pl: warning: sanity check failed during @dirsThatShouldExist');
+			WriteLog('utils.pl: $dir = ' . $dir);
+			next;
+		}
+		if (!-d $dir && !-e $dir) {
+			mkdir $dir;
+		}
+		if (!-e $dir || !-d $dir) {
+			die("$dir should exist, but it doesn't. aborting.");
+		}
+	}
+}
+
+#EnsureDirsThatShouldExist();
+
+#CheckForInstalledVersionChange();
+
+#CheckForRootAdminChange();
+
+my $utilsPl = 1;
+
+require './sqlite.pl';
 
 1;

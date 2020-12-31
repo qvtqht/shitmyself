@@ -8,14 +8,17 @@ use DBI;
 use Data::Dumper;
 use 5.010;
 
-require './utils.pl';
-
-my $SqliteDbName = './cache/' . GetMyCacheVersion() . '/index.sqlite3'; # path to sqlite db
-#my $SqliteDbName = './cache/' . GetMyCacheVersion() . '.sqlite3'; # path to sqlite db
+sub GetSqliteDbName {
+	my $cacheDir = GetDir('cache');
+	my $SqliteDbName = "$cacheDir/index.sqlite3"; # path to sqlite db
+	return $SqliteDbName;
+}
 
 my $dbh; # handle for sqlite interface
 
 sub SqliteConnect { # Establishes connection to sqlite db
+	my $SqliteDbName = GetSqliteDbName();
+	EnsureSubdirs($SqliteDbName);
 	if (!
 		(
 			(
@@ -71,6 +74,7 @@ sub DBMaxQueryParams { # Returns max number of parameters to allow in sqlite que
 }
 
 sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
+	my $SqliteDbName = GetSqliteDbName();
 	if ($dbh) {
 		$dbh->disconnect();
 	}
@@ -404,6 +408,8 @@ sub SqliteMakeTables { # creates sqlite schema
 			author.key, author_alias.alias, author_alias.file_hash
 	");
 
+	my $SqliteDbName = GetSqliteDbName();
+
 	my $schemaHash = `sqlite3 "$SqliteDbName" ".schema" | sha1sum | awk '{print \$1}' > config/sqlite3_schema_hash`;
 	# this can be used as cache "version"
 	# only problem is first time it changes, now cache must be regenerated
@@ -477,6 +483,8 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 	$query = EscapeShellChars($query);
 	WriteLog('SqliteQuery: $query = ' . $query);
 
+	my $SqliteDbName = GetSqliteDbName();
+
 	my $results = `sqlite3 "$SqliteDbName" "$query"`;
 	return $results;
 } # SqliteQuery()
@@ -511,6 +519,8 @@ sub SqliteQuery3 { # performs sqlite query via sqlite3 command
 	if ($results) {
 		return $results;
 	} else {
+
+		my $SqliteDbName = GetSqliteDbName();
 		$results = `sqlite3 "$SqliteDbName" "$query"`;
 		PutCache('sqlitequery3/'.$cachePath, $results);
 		return $results;
@@ -1970,7 +1980,7 @@ sub DBGetAddedTime { # return added time for item specified
 	} else {
 		WriteLog('DBGetAddedTime: warning: $dbh was missing, returning empty-handed');
 	}
-}
+} # DBGetAddedTime()
 
 sub DBGetItemListByTagList { #get list of items by taglist (as array)
 # uses DBGetItemList()
@@ -2407,5 +2417,7 @@ sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash 
 
 	return %voteTotals;
 } # DBGetItemVoteTotals()
+
+
 
 1;

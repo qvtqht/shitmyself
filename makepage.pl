@@ -1,6 +1,20 @@
 #!/usr/bin/perl -T
 
+use strict;
+use warnings;
+use utf8;
+
+my @argsFound;
+while (my $argFound = shift) {
+	push @argsFound, $argFound;
+}
+
+#require('./utils.pl');
+#require('./pages.pl');
+
 sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it into $HTMLDIR directory; $pageType, $pageParam
+	my $HTMLDIR = GetDir('html');
+
 	# $pageType = author, item, tags, etc.
 	# $pageParam = author_id, item_hash, etc.
 	my $pageType = shift;

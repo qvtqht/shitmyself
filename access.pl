@@ -2,7 +2,7 @@
 
 # access.pl
 # Parses access.log
-# Posts new messages to $TXTDIR
+# Posts new messages to $TXTDIR -- GetDir('txt');
 my $arg1 = shift;
 
 use strict;
@@ -21,17 +21,16 @@ use Cwd qw(cwd);
 use Date::Parse;
 #use POSIX::strptime qw( strptime );
 
-my $SCRIPTDIR = cwd();
-my $HTMLDIR = $SCRIPTDIR . '/html';
-my $TXTDIR = $HTMLDIR . '/txt';
-my $IMAGEDIR = $HTMLDIR . '/txt';
-
 ## CONFIG AND SANITY CHECKS ##
 if (!-e './utils.pl') {
-	die ("Sanity check failed, can't find ./utils.pl in $SCRIPTDIR");
+	die ('Sanity check failed, no utils.pl');
 }
-require './utils.pl';
 require './index.pl';
+
+#my $SCRIPTDIR = GetDir('scrpt');
+#my $HTMLDIR = $SCRIPTDIR . '/html';
+#my $TXTDIR = GetDir('txt');
+#my $IMAGEDIR = $HTMLDIR . '/txt';
 
 ##################
 
@@ -84,21 +83,28 @@ sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
 	my $filename;
 	my $filenameDir;
 
-	my $dateYear = shift;
-	my $dateMonth = shift;
-	my $dateDay = shift;
-	my $timeHour = shift;
-	my $timeMinute = shift;
-	my $timeSecond = shift;
+	my $dateYear = shift; #yyyy
+	my $dateMonth = shift; # Sep
+	my $dateDay = shift; # 01
+	my $timeHour = shift; #23
+	my $timeMinute = shift; #37
+	my $timeSecond = shift; # 59
 
 	# Get the directory name
-	$filenameDir = $TXTDIR;
+	$filenameDir = GetDir('txt');
+
+	WriteLog('GenerateFilenameFromTime: $filenameDir = ' . $filenameDir);
 
 	# The filename will be placed in sub-dirs based on date
 	$filename = "$dateYear/$dateMonth/$dateDay";
 
 	# Make any necessary directories
+	$filename = 'asdffdsfadsf';
+	my $TXTDIR = GetDir('txt');
+
 	if (!-d "$TXTDIR$filename") {
+		my $TXTDIR = GetDir('txt');
+		WriteLog('GenerateFilenameFromTime: mkdir -p $TXTDIR$filename');
 		system("mkdir -p $TXTDIR$filename");
 	}
 
@@ -121,6 +127,8 @@ sub GenerateFilenameFromTime { # generates a .txt filename based on timestamp
 }
 
 sub LogError {
+	my $TXTDIR = GetDir('txt');
+
 	my $errorText = shift;
 
 	my $debugInfo = '#error #meta ' . $errorText;
@@ -481,6 +489,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					WriteLog("I'm going to put $filename\n");
 
 					# hardcoded path
+					my $TXTDIR = GetDir('txt');
 					my $pathedFilename = $TXTDIR . '/' . $filename;
 
 					if (GetConfig('admin/logging/record_http_host')) {
@@ -560,6 +569,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							$debugInfo .= $userAgent;
 
 							my $debugFilename = 'debug_' . $fileHash . '.txt';
+							my $TXTDIR = GetDir('txt');
 							$debugFilename = $TXTDIR . '/' . $debugFilename;
 
 							WriteLog('ProcessAccessLog: PutFile($debugFilename = ' . $debugFilename . ', $debugInfo = ' . $debugInfo . ');');

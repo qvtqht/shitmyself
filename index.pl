@@ -8,17 +8,14 @@
 use strict;
 use warnings;
 use utf8;
-use Cwd qw(cwd);
-use Digest::SHA qw(sha512_hex);
 
-my $SCRIPTDIR = cwd(); # where the perl scripts live
-my $HTMLDIR = $SCRIPTDIR . '/html'; # web root
-my $TXTDIR = $HTMLDIR . '/txt'; # text files root
+my @argsFound;
+while (my $argFound = shift) {
+	push @argsFound, $argFound;
+}
 
-require './utils.pl';
-require './sqlite.pl';
-
-WriteMessage( "Using $SCRIPTDIR as install root...");
+require('./utils.pl');
+require('./pgpg.pl');
 
 sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into item_attribute table
 	# note: this is kind of a hack, and non-importing validation should just be separate own sub
@@ -97,6 +94,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush'), flushes any queued queries
 # Also sets appropriate task entries
+	my $SCRIPTDIR = GetDir('script');
+	my $HTMLDIR = GetDir('html');
+	my $TXTDIR = GetDir('txt');
+
 	my $file = shift;
 	chomp($file);
 
@@ -935,6 +936,8 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 		return;
 	}
 
+	my $HTMLDIR = GetDir('html');
+
 	my $logFilePath = "$HTMLDIR/chain.log"; #public
 
 	{
@@ -1066,6 +1069,8 @@ sub IndexImageFile { # $file ; indexes one image file into database
 			my $fileShellEscaped = EscapeShellChars($file); #todo this is still a hack, should rename file if it has shell chars?
 
 			# make 800x800 thumbnail
+			my $HTMLDIR = GetDir('html');
+
 			if (!-e "$HTMLDIR/thumb/thumb_800_$fileHash.gif") {
 			# if (!-e "$HTMLDIR/thumb/thumb_420_$fileHash.gif") {
 				my $convertCommand = "convert \"$fileShellEscaped\" -thumbnail 800x800 -strip $HTMLDIR/thumb/thumb_800_$fileHash.gif";
@@ -1146,6 +1151,9 @@ sub WriteIndexedConfig { # writes config indexed in database into config/
 sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteLog( "MakeIndex()...\n");
 
+	my $TXTDIR = GetDir('txt');
+	WriteLog('MakeIndex: $TXTDIR = ' . $TXTDIR);
+
 	my @filesToInclude = split("\n", `find $TXTDIR -name \\\*.txt`);
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
@@ -1160,6 +1168,8 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	WriteIndexedConfig();
 
 	if (GetConfig('admin/image/enable')) {
+		my $HTMLDIR = GetDir('html');
+
 		my @imageFiles = split("\n", `find $HTMLDIR/image`);
 		my $imageFilesCount = scalar(@imageFiles);
 		my $currentImageFile = 0;
@@ -1234,11 +1244,13 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 	return $indexSuccess;
 } # IndexFile()
 
-while (my $arg1 = shift) {
+while (my $arg1 = shift @argsFound) {
+	WriteLog('index.pl: $arg1 = ' . $arg1);
 	if ($arg1) {
 		if ($arg1 eq '--all') {
 			print "index.pl: --all\n";
 			MakeIndex();
+			MakeChainIndex();
 		}
 		if ($arg1 eq '--chain') {
 			# html/chain.log

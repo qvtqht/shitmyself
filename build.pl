@@ -11,21 +11,17 @@ sub BuildMessage { # prints timestamped message to output
 	print "\n";
 } # BuildMessage()
 
-my $SCRIPTDIR = cwd();
-my $HTMLDIR = $SCRIPTDIR . '/html';
-my $TXTDIR = $HTMLDIR . '/txt';
-my $IMAGEDIR = $HTMLDIR . '/txt';
-
 BuildMessage "Require ./utils.pl...";
 require './utils.pl';
 
-BuildMessage "Calculating build times...";
+EnsureDirsThatShouldExist();
 
-BuildMessage "Require ./access.pl...";
-require './access.pl';
+CheckForInstalledVersionChange();
 
-BuildMessage "Require ./index.pl...";
+CheckForRootAdminChange();
+
 require './index.pl';
+
 
 { # build the sqlite db if not available
 	# BuildMessage "SqliteUnlinkDB()...";
@@ -40,6 +36,12 @@ require './index.pl';
 	BuildMessage "Remove cache/indexed/*";
 	system('rm cache/*/indexed/*');
 }
+
+
+my $SCRIPTDIR = cwd();
+my $HTMLDIR = $SCRIPTDIR . '/html';
+my $TXTDIR = $HTMLDIR . '/txt';
+my $IMAGEDIR = $HTMLDIR . '/txt';
 
 BuildMessage "Ensure there's $HTMLDIR and something inside...";
 if (!-e $TXTDIR) {
@@ -86,12 +88,6 @@ UpdateUpdateTime();
 
 PutStatsPages();
 
-if (GetConfig('admin/build/update_after')) {
-	BuildMessage("system('perl update.pl --all')...");
-	
-	system('perl update.pl --all');
-}
-	
 BuildMessage("Done!");
 WriteLog( "Finished!");
 

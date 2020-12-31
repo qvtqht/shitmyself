@@ -36,12 +36,6 @@ require './utils.pl';
 require './sqlite.pl';
 require './pages.pl';
 
-my $SCRIPTDIR = cwd();
-my $HTMLDIR = $SCRIPTDIR . '/html';
-my $PHPDIR = $SCRIPTDIR . '/html';
-my $TXTDIR = $HTMLDIR . '/txt';
-my $IMAGEDIR = $HTMLDIR . '/image';
-
 print "MakeSummaryPages()...\n";
 MakeSummaryPages();
 

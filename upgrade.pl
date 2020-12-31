@@ -4,8 +4,6 @@ use strict;
 use utf8;
 use warnings;
 
-require './utils.pl';
-
 my $versionBefore = GetMyVersion();
 
 my $time = time();

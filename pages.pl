@@ -5,6 +5,12 @@
 
 use strict;
 use warnings;
+
+my @foundArgs;
+while (my $argFound = shift) {
+	push @foundArgs, $argFound;
+}
+
 #use warnings FATAL => 'all';
 #
 # $SIG{__WARN__} = sub {
@@ -32,37 +38,32 @@ use File::Copy;
 # use File::Copy qw(copy);
 use Cwd qw(cwd);
 
-my $SCRIPTDIR = cwd();
-if ($SCRIPTDIR =~ m/^([a-z\/_0-9]+)$/) {
-	# $SCRIPTDIR can't have spaces at this time
-	# this sanity check is restrictive
-	$SCRIPTDIR = $1;
-} else {
-	die('pages.pl: warning: $SCRIPTDIR sanity check failed');
-}
-
-my $HTMLDIR = $SCRIPTDIR . '/html';
-my $PHPDIR = $SCRIPTDIR . '/html';
-my $TXTDIR = $HTMLDIR . '/txt';
-my $IMAGEDIR = $HTMLDIR . '/image';
+require './utils.pl';
+require './makepage.pl';
+#
+#my $SCRIPTDIR = cwd();
+#if ($SCRIPTDIR =~ m/^([a-z\/_0-9]+)$/) {
+#	# $SCRIPTDIR can't have spaces at this time
+#	# this sanity check is restrictive
+#	$SCRIPTDIR = $1;
+#} else {
+#	die('pages.pl: warning: $SCRIPTDIR sanity check failed');
+#}
 
 #use List::Uniq ':all';
 
 #use Acme::RandomEmoji qw(random_emoji);
 
-require './utils.pl';
-require './sqlite.pl';
-require './makepage.pl';
-
-if (!-e "$HTMLDIR/index.html") {
-	WriteLog('pages.pl: warning: index.html was missing!');
-	# this is a last-resort fallback for missing index.html file
-	# this should never be triggered, but sometimes is ...
-	if (-e "$HTMLDIR/welcome.html") {
-		WriteLog('pages.pl: warning: index.html was missing, replacing with welcome.html!');
-		rename("$HTMLDIR/welcome.html", "$HTMLDIR/index.html");
-	}
-}
+##todo
+#if (!-e "$HTMLDIR/index.html") {
+#	WriteLog('pages.pl: warning: index.html was missing!');
+#	# this is a last-resort fallback for missing index.html file
+#	# this should never be triggered, but sometimes is ...
+#	if (-e "$HTMLDIR/welcome.html") {
+#		WriteLog('pages.pl: warning: index.html was missing, replacing with welcome.html!');
+#		rename("$HTMLDIR/welcome.html", "$HTMLDIR/index.html");
+#	}
+#}
 
 sub GetDialogPage { # returns html page with dialog
 	# #todo:
@@ -1112,122 +1113,6 @@ sub GetItemHtmlLink { # $hash, [link caption], [#anchor] ; returns <a href=...
 	}
 } # GetItemHtmlLink()
 
-sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
-	my $fileHash = shift; # item's file hash
-	my $tagSet = shift;   # (optional) use a particular tagset instead of item's default
-	my $returnTo = shift; # (optional) what page to return to instead of current (for use by post.php)
-	WriteLog('GetItemTagButtons(' . ($fileHash ? $fileHash : '-') . ', ' . ($tagSet ? $tagSet : '-') . ')');
-
-	if (!IsItem($fileHash)) {
-		WriteLog('GetItemTagButtons: warning: sanity check failed, returning');
-		return '';
-	}
-
-	my @quickVotesList; # this will hold all the tag buttons we want to display
-	my %voteTotals = DBGetItemVoteTotals($fileHash);
-	WriteLog('GetItemTagButtons: scalar(%voteTotals) = ' . scalar(%voteTotals));
-
-	if ($tagSet) {
-		# if $tagSet is specified, just use that list of tags
-		my $quickVotesForTagSet = GetConfig('tagset/' . $tagSet);
-		if ($quickVotesForTagSet) {
-			push @quickVotesList, split("\n", $quickVotesForTagSet);
-		}
-		else {
-			# no tagset?
-			WriteLog('GetItemTagButtons: warning: tagset not found: ' . $tagSet);
-			return '';
-		}
-	} # $tagSet
-	else {
-		# need to look up item's default tagset
-		my $quickVotesForTags;
-		foreach my $voteTag (keys %voteTotals) {
-			$quickVotesForTags = GetConfig('tagset/' . $voteTag);
-			if ($quickVotesForTags) {
-				push @quickVotesList, split("\n", $quickVotesForTags);
-			}
-		}
-
-		# all items will have a 'flag' button
-		push @quickVotesList, 'flag';
-
-		# remove duplicates
-		my %dedupe = map {$_, 1} @quickVotesList;
-		@quickVotesList = keys %dedupe;
-	}
-
-	my $styleSheet = GetStylesheet(); # for looking up which vote buttons need a class=
-	# if they're listed in the stylesheet, add a class= below
-	# the class name is tag-foo, where foo is tag
-
-	my $tagButtons = '';
-	my $doVoteButtonStyles = GetConfig('style_vote_buttons');
-	my $jsEnabled = GetConfig('admin/js/enable');
-
-	WriteLog('GetItemTagButtons: @quickVotesList = ' . scalar(@quickVotesList));
-
-	foreach my $quickTagValue (@quickVotesList) {
-		my $ballotTime = GetTime();
-
-		if ($fileHash && $ballotTime) {
-			my $tagButton = GetTemplate('vote/vote_button.template');
-
-			if ($jsEnabled) {
-				$tagButton = AddAttributeToTag(
-					$tagButton,
-					'a', 'onclick',
-					trim("
-						if (window.SignVote) {
-							var gt = unescape('%3E');
-							return SignVote(this, gt+gt+'\$fileHash\\n#\$voteValue');
-						}
-					")
-				);
-			}
-
-			if ($doVoteButtonStyles) {
-				# this is a hack, think about replace with config/tag_color
-				if (index($styleSheet, "tag-$quickTagValue") > -1) {
-					$tagButton =~ s/\$class/tag-$quickTagValue/g;
-				}
-				else {
-					$tagButton =~ s/class="\$class"//g;
-				}
-			}
-
-			my $quickTagCaption = GetString($quickTagValue);
-			WriteLog('GetItemTagButtons: $$$ ' . $quickTagCaption . ' $ ' . $quickTagValue);
-			if ($voteTotals{$quickTagCaption}) {
-				# $voteTotals{$quickTagCaption} is the number of tags of this type item has
-
-				$quickTagCaption .= '(' . $voteTotals{$quickTagCaption} . ')';
-				# $quickTagCaption = '<b><big>' . $quickTagCaption . '</big></b>';
-			}
-
-			if ($returnTo) {
-				# set value for $returnTo placeholder
-				$tagButton =~ s/\$returnTo/$returnTo/g;
-			}
-			else {
-				# remove entire returnto= parameter
-				$tagButton =~ s/&returnto=\$returnTo//g;
-			}
-
-			$tagButton =~ s/\$fileHash/$fileHash/g;
-			$tagButton =~ s/\$ballotTime/$ballotTime/g;
-			$tagButton =~ s/\$voteValue/$quickTagValue/g;
-			$tagButton =~ s/\$voteCaption/$quickTagCaption/g;
-
-			$tagButtons .= $tagButton;
-		} # if ($fileHash && $ballotTime)
-	} # foreach my $quickTagValue (@quickVotesList)
-
-	WriteLog('GetItemTagButtons returning: ' . $tagButtons);
-
-	return $tagButtons;
-} # GetItemTagButtons()
-
 sub GetItemTagsSummary { # returns html with list of tags applied to item, and their counts
 	my $fileHash = shift;
 
@@ -1249,14 +1134,6 @@ sub GetItemTagsSummary { # returns html with list of tags applied to item, and t
 	}
 
 	return $votesSummary;
-}
-
-sub str_repeat {
-	my $string = shift;
-	my $count = shift;
-	WriteLog('str_repeat: $string = ' . $string . '; $count = ' . $count);
-	WriteLog('str_repeat: ' . $string x $count); #todo performance?
-	return $string x $count;
 }
 
 sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpandWidget
@@ -1593,6 +1470,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 			# strip the 'html/' prefix on the file's path, replace with /
 			#todo relative links
+            my $HTMLDIR = GetDir('html');
 			$permalinkTxt =~ s/$HTMLDIR\//\//;
 			$permalinkTxt =~ s/^html\//\//;
 		}
@@ -2361,6 +2239,8 @@ sub GetStatsTable {
 	# count total number of files
 	my $filesTotal = 0;
 
+	my $TXTDIR = GetDir('txt');
+
 	if ($TXTDIR =~ m/^([^\s]+)$/) { #security #taint
 		$TXTDIR = $1;
 		my $findResult = `find $TXTDIR -name \\\*.txt | wc -l`;
@@ -2375,6 +2255,7 @@ sub GetStatsTable {
 	}
 
 	if (GetConfig('admin/image/enable')) {
+		my $IMAGEDIR = GetDir('image');
 		if ($IMAGEDIR =~ m/^([^\s]+)$/) { #security #taint
 			$IMAGEDIR = $1;
 			my $imagesFindResults = `find $IMAGEDIR -name \\\*.png -o -name \\\*.jpg -o -name \\\*.gif -o -name \\\*.bmp -o -name \\\*.jfif -o -name \\\*.webp -o -name \\\*.svg | wc -l`;
@@ -2452,7 +2333,7 @@ sub EnableJsDebug { # $scriptTemplate ; enables javascript debug mode
 	}
 
 	return $scriptTemplate;
-}
+} # EnableJsDebug()
 
 sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my $html = shift;     # html we're going to inject into
@@ -2842,36 +2723,6 @@ sub GetScoreboardPage2 {
 
 	return $html;
 }
-#
-#sub GetScoreboardPage { #returns html for /authors.html
-## GetAuthorsPage {
-#	#todo rewrite this more pretty
-#	my $txtIndex = "";
-#
-#	my $title = 'Top Scores';
-#	my $titleHtml = 'Top Scores';
-#
-#	my $currentTime = GetTime();
-#
-#	$txtIndex = GetPageHeader($title, $titleHtml, 'scoreboard');
-#	$txtIndex .= GetTemplate('maincontent.template');
-#	my @topAuthors = DBGetTopAuthors();
-#	my $authorListingWrapper = GetTemplate('author_listing_wrapper.template');
-#	my $authorListings = '';
-#	my $authorCount = scalar(@topAuthors);
-#
-#
-#
-#
-#	$authorListingWrapper =~ s/\$authorListings/$authorListings/;
-#	$authorListingWrapper =~ s/\$authorCountMessage/$authorCountMessage/;
-#
-#	$txtIndex .= $authorListingWrapper;
-#	$txtIndex .= GetPageFooter();
-#	$txtIndex = InjectJs($txtIndex, qw(utils settings avatar timestamp profile voting));
-#
-#	return $txtIndex;
-#} # GetScoreboardPage()
 
 sub GetAuthorInfoBox {
 	my $authorKey = shift;
@@ -3157,6 +3008,11 @@ sub GetReadPage { # generates page with item listing based on parameters
 			} else {
 				WriteLog('GetReadPage: $message = GetFile('.$file.')');
 				$message = GetFile($file);
+			}
+			if (!$message) {
+				WriteLog('GetReadPage: warning: $message is false!');
+			} else {
+				WriteLog('GetReadPage: $message is true!');
 			}
 
 			#$message = FormatForWeb($message);
@@ -3606,10 +3462,13 @@ sub MakePhpPages {
 		}
 		for my $template (@templatePhpSimple) {
 			my $fileContent = GetTemplate("php/$template.php");
+            my $PHPDIR = GetDir('php');
 			PutFile($PHPDIR . "/$template.php", $fileContent);
 		}
 
 		my $utilsPhpTemplate = GetTemplate('php/utils.php');
+		my $SCRIPTDIR = GetDir('script');
+		my $PHPDIR = GetDir('php');
         $utilsPhpTemplate =~ s/\$scriptDirPlaceholderForTemplating/$SCRIPTDIR/g;
 		PutFile($PHPDIR . '/utils.php', $utilsPhpTemplate);
 	}
@@ -3743,6 +3602,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 			$postPage =~ s/<body /<body onload="makeRefLink();" /;
 			$postPage =~ s/<body>/<body onload="makeRefLink();">/;
 		}
+		my $HTMLDIR = GetDir('html');
 		WriteLog('MakeSummaryPages: ' . "$HTMLDIR/post.html");
 		PutHtmlFile("post.html", $postPage);
 	}
@@ -3769,6 +3629,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# Zalgo javascript
 	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js'));
 
+	my $HTMLDIR = GetDir('html');
 	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
 		# OpenPGP javascript
 		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js'));
@@ -4089,7 +3950,6 @@ sub GetWritePage { # returns html for write page
 
 	return $writePageHtml;
 } # GetWritePage()
-
 
 sub GetEventAddPage { # get html for /event.html
 	# $txtIndex stores html page output
@@ -4431,6 +4291,7 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 
 	if (!$touchZip || (GetTime() - $touchZip) > $zipInterval) {
 		WriteLog('MakeDataPage: Making zip files...');
+		my $HTMLDIR = GetDir('html');
 		WriteLog('MakeDataPage: $HTMLDIR = ' . $HTMLDIR);
 
 		# zip -qr foo.zip somefile
@@ -4451,6 +4312,7 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 	$dataPage .= GetTemplate('maincontent.template');
 	my $dataPageContents = GetTemplate('data.template');
 
+	my $HTMLDIR = GetDir('html');
 	my $sizeHikeZip = -s "$HTMLDIR/txt.zip";
 	my $sizeSqliteZip = -s "$HTMLDIR/index.sqlite3.zip";
 
@@ -4503,7 +4365,7 @@ sub GetItemPageFromHash { # $fileHash, returns html
 
 		return $filePage;
 	} else {
-		WriteLog("pages.pl: \@files loop: warning: Asked to index file $fileHash, but it is not in the database! Returning.");
+		WriteLog("GetItemPageFromHash: \@files loop: warning: Asked to index file $fileHash, but it is not in the database! Returning.");
 		return '';
 	}
 }
@@ -4684,7 +4546,6 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 
 	return $pagesProcessed;
 } # BuildTouchedPages
-
 
 sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, using avatar.template
 	# affected by config/html/avatar_icons
@@ -4885,7 +4746,272 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	return $avatar;
 } # GetAvatar()
 
-while (my $arg1 = shift) {
+sub GetTimestampWidget { # $time ; returns timestamp widget
+	#todo format on server-side for no-js clients
+	my $time = shift;
+	if ($time) {
+		chomp $time;
+	} else {
+		$time = 0;
+	}
+	WriteLog('GetTimestampWidget("' . $time . '")');
+
+	state $epoch; # state of config
+	if (!defined($epoch)) {
+		$epoch = GetConfig('html/timestamp_epoch');
+	}
+
+	if (!$time =~ m/^[0-9]+$/) {
+		WriteLog('GetTimestampWidget: warning: sanity check failed!');
+		return '';
+	}
+
+	my $widget = '';
+	if ($epoch) {
+		# epoch-formatted timestamp, simpler template
+		$widget = GetTemplate('widget/timestamp_epoch.template');
+		$widget =~ s/\$timestamp/$time/;
+	} else {
+		WriteLog('GetTimestampWidget: $epoch = false');
+		$widget = GetTemplate('widget/timestamp.template');
+
+		$widget = str_replace("\n", '', $widget);
+		# if we don't do this, the link has an extra space
+
+		my $timeDate = $time;
+		$timeDate = FormatDate($time);
+		# Alternative formats tried
+		# my $timeDate = strftime '%c', localtime $time;
+		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
+
+		# replace into template
+		$widget =~ s/\$timestamp/$time/g;
+		$widget =~ s/\$timeDate/$timeDate/g;
+	}
+
+	chomp $widget;
+	return $widget;
+} # GetTimestampWidget()
+
+sub FormatDate { # $epoch ; formats date depending on how long ago it was
+# FormatDateForDisplay()
+	my $epoch = shift;
+	my $time = GetTime();
+	my $difference = $time - $epoch;
+	my $formattedDate = '';
+
+	if ($difference < 86400) {
+		# less than a day, return 24-hour time
+		$formattedDate = strftime '%H:%M', localtime $epoch;
+	} elsif ($difference < 86400 * 30) {
+		# less than a month, return short date
+		$formattedDate = strftime '%m/%d', localtime $epoch;
+	} else {
+		# more than a month, return long date
+		$formattedDate = strftime '%a, %d %b %Y', localtime $epoch;
+		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
+	}
+	return $formattedDate;
+}
+
+sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
+
+	if (!$text) {
+		return '';
+	}
+
+	my $i = 0;
+
+	$text = HtmlEscape($text);
+	# $text =~ s/\n /<br>&nbsp;/g;
+	$text =~ s/^ /&nbsp;/g;
+	$text =~ s/  / &nbsp;/g;
+	# $text =~ s/\n/<br>\n/g;
+	# $text =~ s/<br>/'<br><input type=text size=80 name=txt'.$i++.'><br>'/ge;
+	# $text =~ s/<br>/<br><br>/g;
+	$text = '<textarea wrap=wrap cols=80 rows=24>'.$text.'</textarea>';
+	$text = '<form action=/post.html>'.$text.'<br><input type=submit value=Send></form>';
+
+	#htmlspecialchars(
+	## nl2br(
+	## str_replace(
+	## '  ', ' &nbsp;',
+	# htmlspecialchars(
+	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
+	#));?><?=$tt_c?></description>
+
+	return $text;
+}
+
+sub TextartForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
+
+	if (!$text) {
+		return '';
+	}
+
+	$text = HtmlEscape($text);
+	$text =~ s/\n /<br>&nbsp;/g;
+	$text =~ s/^ /&nbsp;/g;
+	$text =~ s/  / &nbsp;/g;
+	$text =~ s/\n/<br>\n/g;
+
+	#htmlspecialchars(
+	## nl2br(
+	## str_replace(
+	## '  ', ' &nbsp;',
+	# htmlspecialchars(
+	## $quote->quote))))?><? if ($quote->comment) echo(htmlspecialchars('<br><i>Comment:</i> '.htmlspecialchars($quote->comment)
+	#));?><?=$tt_c?></description>
+
+	return $text;
+}
+
+sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
+
+	if (!$text) {
+		return '';
+	}
+
+	$text = HtmlEscape($text);
+
+	# these have been moved to format for textart
+	#	$text =~ s/\n /<br>&nbsp;/g;
+	#	$text =~ s/^ /&nbsp;/g;
+	#	$text =~ s/  / &nbsp;/g;
+
+	$text =~ s/\n\n/<p>/g;
+	$text =~ s/\n/<br>/g;
+
+	# this is more flexible than \n but may cause problems with unicode
+	# for example, it recognizes second half of russian "x" as \R
+	# #regexbugX
+	# $text =~ s/\R\R/<p>/g;
+	# $text =~ s/\R/<br>/g;
+
+	if (GetConfig('admin/html/allow_tag/code')) {
+		$text =~ s/&lt;code&gt;(.*?)&lt;\/code&gt;/<code>$1<\/code>/msgi;
+		# /s = single-line (changes behavior of . metacharacter to match newlines)
+		# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+		# /g = global (all instances)
+		# /i = case-insensitive
+	}
+
+	return $text;
+}
+
+sub FormatForRss { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
+	my $text = shift;
+
+	if (!$text) {
+		return '';
+	}
+
+	$text = HtmlEscape($text);
+	$text =~ s/\n/<br \/>\n/g;
+
+	return $text;
+} # FormatForRss()
+
+sub GetFileSizeWidget { # takes file size as number, and returns html-formatted human-readable size
+	my $fileSize = shift;
+
+	if (!$fileSize) {
+		return;
+	}
+
+	chomp ($fileSize);
+
+	my $fileSizeString = $fileSize;
+
+	if ($fileSizeString > 1024) {
+		$fileSizeString = $fileSizeString / 1024;
+
+		if ($fileSizeString > 1024) {
+			$fileSizeString = $fileSizeString / 1024;
+
+			if ($fileSizeString > 1024) {
+				$fileSizeString = $fileSizeString / 1024;
+
+				if ($fileSizeString > 1024) {
+					$fileSizeString = $fileSizeString / 1024;
+
+					$fileSizeString = ceil($fileSizeString) . ' <abbr title="terabytes">TB</abbr>';
+				} else {
+
+					$fileSizeString = ceil($fileSizeString) . ' <abbr title="gigabytes">GB</abbr>';
+				}
+			} else {
+				$fileSizeString = ceil($fileSizeString) . ' <abbr title="megabytes">MB</abbr>';
+			}
+		} else {
+			$fileSizeString = ceil($fileSizeString) . ' <abbr title="kilobytes">KB</abbr>';
+		}
+	} else {
+		$fileSizeString .= " bytes";
+	}
+
+	return $fileSizeString;
+} # GetFileSizeWidget()
+
+sub GetSecondsHtml {# takes number of seconds as parameter, returns the most readable approximate time unit
+	# 5 seconds = 5 seconds
+	# 65 seconds = 1 minute
+	# 360 seconds = 6 minutes
+	# 3600 seconds = 1 hour
+	# etc
+
+	my $seconds = shift;
+
+	if (!$seconds) {
+		return;
+	}
+
+	chomp $seconds;
+
+	my $secondsString = $seconds;
+
+	if ($secondsString >= 60) {
+		$secondsString = $secondsString / 60;
+
+		if ($secondsString >= 60 ) {
+			$secondsString = $secondsString / 60;
+
+			if ($secondsString >= 24) {
+				$secondsString = $secondsString / 24;
+
+				if ($secondsString >= 365) {
+					$secondsString = $secondsString / 365;
+
+					$secondsString = floor($secondsString) . ' years';
+				}
+				elsif ($secondsString >= 30) {
+					$secondsString = $secondsString / 30;
+
+					$secondsString = floor($secondsString) . ' months';
+				}
+				else {
+					$secondsString = floor($secondsString) . ' days';
+				}
+			}
+			else {
+				$secondsString = floor($secondsString) . ' hours';
+			}
+		}
+		else {
+			$secondsString = floor($secondsString) . ' minutes';
+		}
+	} else {
+		$secondsString = floor($secondsString) . ' seconds';
+	}
+} # GetSecondsHtml()
+
+require './widget.pl';
+
+while (my $arg1 = shift @foundArgs) {
+	print $arg1;
 	# go through all the arguments one at a time
 	if ($arg1) {
 		if ($arg1 eq '--theme') {
