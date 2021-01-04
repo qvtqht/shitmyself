@@ -14,6 +14,8 @@ while (my $argFound = shift) {
 	push @argsFound, $argFound;
 }
 
+use Digest::SHA qw(sha512_hex);
+
 require('./utils.pl');
 require('./pgpg.pl');
 
