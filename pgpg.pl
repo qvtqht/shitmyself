@@ -81,10 +81,10 @@ sub GpgParse {
 			$pubKeyFlag = 1;
 		}
 		elsif (index($fileContents, $gpgMessage) > -1) {
-			$gpgCommand .= '--verify ';
+			$gpgCommand .= '--verify -o - ';
 		}
 		elsif (index($fileContents, $gpgEncrypted) > -1) {
-			$gpgCommand .= '--decrypt ';
+			$gpgCommand .= '--decrypt -o - ';
 		}
 
 		if ($fileHash =~ m/^([0-9a-f]+)$/) {
