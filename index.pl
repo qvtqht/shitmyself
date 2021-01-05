@@ -288,6 +288,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			DBAddAuthor($gpgKey);
 			DBAddPageTouch('author', $gpgKey);
 
+			DBAddItemAttribute($fileHash, 'normalized_hash', trim(sha1_hex($message)));
+
 			if ( ! ($gpgKey =~ m/\s/)) {
 				# no spaces in gpg key; \s is whitespace
 				ExpireAvatarCache($gpgKey); # expire avatar cache
