@@ -1,5 +1,9 @@
 <!-- welcome.template -->
-<p>Welcome to the welcome page. Thank you for stopping by.</p>
+<p>
+	Hello, there, being!<br>
+	Welcome to the welcome page.<br>
+	Make yourself at home.
+</p>
 <p>
     Say hello:
     <form action="/post.html" method=get>
@@ -8,8 +12,6 @@
         <input type=submit value=Send>
     </form>
 </p>
-<p><a href="/top/approve.html">Read what's new</a>
-<p><a href="/manual.html">Manual</a></p>
 
 <span id=itemList></span>
 <!-- / welcome.template -->
