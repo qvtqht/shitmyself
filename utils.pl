@@ -838,7 +838,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	# controls whether linked urls are converted to relative format
 	# meaning they go from e.g. /write.html to ./write.html
 	# this breaks the 404 page links so disable that for now
-	my $relativizeUrls = GetConfig('html/relativize_urls');
+	my $relativizeUrls = (GetConfig('html/relativize_urls') ? 1 : 0);
 	if (TrimPath($file) eq '404') {
 		$relativizeUrls = 0;
 	}
