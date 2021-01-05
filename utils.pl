@@ -327,11 +327,11 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 
 	WriteLog("GetTemplate($filename)");
 
-	state %templateCache; #stores local memo cache of template
+	state %templateMemo; #stores local memo cache of template
 
-	if ($templateCache{$filename}) {
+	if ($templateMemo{$filename}) {
 		#if already been looked up, return memo version
-		return $templateCache{$filename};
+		return $templateMemo{$filename};
 	}
 
 	if (!-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
@@ -364,14 +364,14 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 
 	if ($template) {
 		#if template contains something, cache it
-		$templateCache{$filename} = $template;
+		$templateMemo{$filename} = $template;
 		return $template;
 	} else {
 		#if result is blank, report it
 		WriteLog("GetTemplate: warning: GetTemplate() returning empty string for $filename.");
 		return '';
 	}
-}
+} # GetTemplate()
 
 sub encode_entities2 { # returns $string with html entities <>"& encoded
 	my $string = shift;
