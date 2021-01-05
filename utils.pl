@@ -448,17 +448,23 @@ sub GetFileExtension { # $fileName ; returns file extension, naively
 
 sub GetFile { # Gets the contents of file $fileName
 	my $fileName = shift;
-
 	if (!$fileName) {
-		if (-e 'config/admin/debug') {
-			#die('attempting GetFile() without $fileName');
-		}
-		return;
+		WriteLog('GetFile: warning: $fileName missing or false');
+		return '';
+	}
+
+	if ($fileName =~ m/^([0-9a-zA-Z\/._]+)$/) {
+		$fileName = $1;
+		WriteLog('GetFile: $fileName passed sanity check: ' . $fileName);
+	} else {
+		WriteLog('GetFile: warning: $fileName failed sanity check');
+		return '';
 	}
 
 	my $length = shift || 209715200;
 	# default to reading a max of 2MB of the file. #scaling #bug
 
+	WriteLog('GetFile: trying to open file...');
 	if (
 		-e $fileName # file exists
 			&&
@@ -466,16 +472,16 @@ sub GetFile { # Gets the contents of file $fileName
 			&&
 		open (my $file, "<", $fileName) # opens successfully
 	) {
+		WriteLog('GetFile: opened successfully, trying to read...');
 		my $return;
-
 		read ($file, $return, $length);
-
+		WriteLog('GetFile: read success, returning.');
 		return $return;
 	}
 
 	return;
 	#todo do something for a file which is missing
-}
+} # GetFile()
 
 
 sub GetTime () { # Returns time in epoch format.
