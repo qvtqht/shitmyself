@@ -489,7 +489,7 @@ sub GetFile { # Gets the contents of file $fileName
 		return '';
 	}
 
-	if ($fileName =~ m/^([0-9a-zA-Z\/._]+)$/) {
+	if ($fileName =~ m/^([0-9a-zA-Z\/._-]+)$/) {
 		$fileName = $1;
 		WriteLog('GetFile: $fileName passed sanity check: ' . $fileName);
 	} else {
