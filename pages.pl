@@ -792,7 +792,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 	# if this item has a child_count, we want to print all the child items below
 	# keywords: reply replies subitems child parent
-	# REPLIES #replies #reply
+	# REPLIES #replies #reply GetItemPage()
 	######################################
 	if ($file{'child_count'}) {
 		# get item's children (replies) and store in @itemReplies
@@ -855,7 +855,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
 
 			# output it to debug
-			WriteLog('$replyTemplate');
+			WriteLog('$replyTemplate for ' . $$replyItem{'template_name'} . ':');
 			WriteLog($replyTemplate);
 
 			# if the reply item has children also, output the children
@@ -1647,15 +1647,14 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
 
-		WriteLog('GetItemTemplate() return $itemTemplate');
+		WriteLog('GetItemTemplate: return $itemTemplate');
 
 		return $itemTemplate;
 	} else {
-		WriteLog('GetItemTemplate() return empty string');
-
+		WriteLog('GetItemTemplate: warning: return empty string');
 		return '';
 	}
-} #GetItemTemplate
+} # GetItemTemplate()
 
 sub GetPageFooter { # returns html for page footer
 	WriteLog('GetPageFooter()');
