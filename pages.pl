@@ -1151,7 +1151,7 @@ sub GetItemTagsSummary { # returns html with list of tags applied to item, and t
 	return $votesSummary;
 }
 
-sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpandWidget
+sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpandWidget #more
 	my $parentCount = shift; # how many levels of parents to go up
 	# for example, for <table><tr><td><a>here it would be 3 layers instead of 1
 	# accepts integers 1-10
@@ -1438,32 +1438,32 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		# 	GetWidgetExpand(2, '#'),
 		# 	$itemTemplate
 		# );#todo fix broken
-
-		my $widgetExpandPlaceholder = '<span class=expand></span>';
-		if (index($itemTemplate, $widgetExpandPlaceholder) != -1) {
-			WriteLog('GetItemTemplate: $widgetExpandPlaceholder found in item: ' . $widgetExpandPlaceholder);
-
-			if (GetConfig('admin/js/enable')) {
-				# js on, insert widget
-
-				my $widgetExpand = GetWidgetExpand(5, GetHtmlFilename($itemHash));
-				$itemTemplate = str_replace(
-					'<span class=expand></span>',
-					'<span class=expand>' .	$widgetExpand .	'</span>',
-					$itemTemplate
-				);
-
-				# $itemTemplate = AddAttributeToTag(
-				# 	$itemTemplate,
-				# 	'a href="/etc.html"', #todo this should link to item itself
-				# 	'onclick',
-				# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
-				# );
-			} else {
-				# js off, remove placeholder for widget
-				$itemTemplate = str_replace($widgetExpandPlaceholder, '', $itemTemplate);
-			}
-		} # $widgetExpandPlaceholder
+#
+#		my $widgetExpandPlaceholder = '<span class=expand></span>';
+#		if (index($itemTemplate, $widgetExpandPlaceholder) != -1) {
+#			WriteLog('GetItemTemplate: $widgetExpandPlaceholder found in item: ' . $widgetExpandPlaceholder);
+#
+#			if (GetConfig('admin/js/enable')) {
+#				# js on, insert widget
+#
+#				my $widgetExpand = GetWidgetExpand(5, GetHtmlFilename($itemHash));
+#				$itemTemplate = str_replace(
+#					'<span class=expand></span>',
+#					'<span class=expand>' .	$widgetExpand .	'</span>',
+#					$itemTemplate
+#				);
+#
+#				# $itemTemplate = AddAttributeToTag(
+#				# 	$itemTemplate,
+#				# 	'a href="/etc.html"', #todo this should link to item itself
+#				# 	'onclick',
+#				# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
+#				# );
+#			} else {
+#				# js off, remove placeholder for widget
+#				$itemTemplate = str_replace($widgetExpandPlaceholder, '', $itemTemplate);
+#			}
+#		} # $widgetExpandPlaceholder
 
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
@@ -5102,6 +5102,12 @@ while (my $arg1 = shift @foundArgs) {
 		}
 		elsif ($arg1 eq '--queue' || $arg1 eq '-Q') {
 			print ("recognized --queue\n");
+			BuildTouchedPages();
+		}
+		elsif ($arg1 eq '--all' || $arg1 eq '-a') {
+			print ("recognized --all\n");
+			print `query/touch_all.sh`;
+			MakeSummaryPages();
 			BuildTouchedPages();
 		}
 		elsif ($arg1 eq '-M') {
