@@ -326,11 +326,13 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 	#	$filename = "$SCRIPTDIR/template/$filename";
 
 	WriteLog("GetTemplate($filename)");
-
 	state %templateMemo; #stores local memo cache of template
-
 	if ($templateMemo{$filename}) {
 		#if already been looked up, return memo version
+		WriteLog('GetTemplate: returning from memo for ' . $filename);
+		if (trim($templateMemo{$filename}) eq '') {
+			WriteLog('GetTemplate: warning: returning empty string');
+		}
 		return $templateMemo{$filename};
 	}
 
@@ -368,7 +370,7 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		return $template;
 	} else {
 		#if result is blank, report it
-		WriteLog("GetTemplate: warning: GetTemplate() returning empty string for $filename.");
+		WriteLog("GetTemplate: warning: GetTemplate returning empty string for $filename.");
 		return '';
 	}
 } # GetTemplate()
