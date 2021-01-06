@@ -13,9 +13,7 @@
 				<td class=content>
 					<fieldset>
 						<span id=writeintro></span>
-
 						<span class=beginner><label for="comment" class=beginner>Share with Everyone:</label><br></span>
-
 						<textarea
 							class=txtarea
 							id=comment
@@ -26,17 +24,12 @@
 							autofocus
 							wrap=soft
 						>$initText</textarea><br>
-
 						<p>
 							<input type=submit value="Send Now" name=addtext id=addtext>
-
 							<span id=spanSignAs></span>
-
 							<p id=spanWriteAdvanced class=advanced></p>
 						</p>
-
 						<span id=write_js></span>
-						
 					</fieldset>
 				</td>
 			</tr>

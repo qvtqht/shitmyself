@@ -9,7 +9,6 @@ use URI::Encode qw(uri_encode);
 use Digest::SHA qw(sha1_hex);
 use URI::Escape qw(uri_escape);
 
-require './utils.pl';
 require './sqlite.pl';
 
 sub PullFeedFromHost { # connects to $host with http and downloads any new items posted

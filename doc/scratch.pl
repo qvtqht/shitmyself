@@ -389,3 +389,24 @@
 			}
 			#DBAddItemAttribute($fileHash, 'x_author_tags', join(',', keys %authorHasTag));
 		}
+
+
+
+sub RemoveOldItems {
+	my $query = "
+		SELECT * FROM item_flat WHERE file_hash NOT IN (
+			SELECT file_hash FROM item_flat
+			WHERE
+				',' || tags_list || ',' like '%approve%'
+					OR
+				file_hash IN (
+					SELECT item_hash
+					FROM item_parent
+					WHERE parent_hash IN (
+						SELECT file_hash FROM item_flat WHERE ',' || tags_list || ',' LIKE '%approve%'
+					)
+				)
+		)
+		ORDER BY add_timestamp
+	";
+}

@@ -2003,7 +2003,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	}
 
 	my $txtIndex = "";
-
 	my $styleSheet = GetStylesheet();
 
 	my $patternName = trim(GetConfig('header_pattern'));
@@ -3272,7 +3271,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 		}
 	}
 
-	my $overlapPage = GetConfig('overlap_page');
+	my $overlapPage = GetConfig('html/overlap_page');
 	#in order to keep both the "last" and the "first" page the same length
 	#and avoid having mostly-empty pages with only a few items
 	#we introduce an overlap on page 5, where some items are displayed
@@ -3302,9 +3301,13 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 			# the downside is that when the page links are item numbers
 			# the link for last page may not match the items on the page
 			#
-			# if ($overlapPage && $lastPage > $overlapPage && $i > $overlapPage) {
-			# 	$offset = $offset - ($itemCount % $pageLimit);
-			# }
+			if (
+				$overlapPage &&
+				$lastPage > $overlapPage &&
+				$i > $overlapPage
+			) {
+				$offset = $offset - ($itemCount % $pageLimit);
+			}
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
@@ -3340,8 +3343,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar utils));
 
-		PutHtmlFile("index0.html", $indexPage);
-		PutHtmlFile("compost.html", $indexPage);
+		PutHtmlFile("index0.html", $indexPage); #empty/no items
+		PutHtmlFile("compost.html", $indexPage); #empty/no items
 	}
 } # WriteIndexPages()
 
@@ -3836,14 +3839,19 @@ sub GetWriteForm { # returns write form (for composing text message)
 		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onchange', $writeOnChange);
 		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeyup', $writeOnChange);
 		if (GetConfig('admin/js/translit')) {
-			$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
+			$writeForm = AddAttributeToTag(
+				$writeForm,
+				'textarea',
+				'onkeydown',
+				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
+			);
 		}
 
 		$writeForm = AddAttributeToTag(
 			$writeForm,
 			'input type=submit',
 			'onclick',
-			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
+			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); return true; } else { return true; }"
 		);
 	} # js stuff in write form
 
@@ -3902,11 +3910,11 @@ sub GetWritePage { # returns html for write page
 	my $title = "Write";
 	my $titleHtml = "Write";
 
-	my $itemCount = DBGetItemCount();
-	my $itemLimit = GetConfig('number/item_limit');
-	if (!$itemLimit) {
-		$itemLimit = 9000;
-	}
+#	my $itemCount = DBGetItemCount();
+#	my $itemLimit = GetConfig('number/item_limit');
+#	if (!$itemLimit) {
+#		$itemLimit = 9000;
+#	}
 
 	$writePageHtml = GetPageHeader($title, $titleHtml, 'write');
 	$writePageHtml .= GetTemplate('maincontent.template');
@@ -3914,12 +3922,12 @@ sub GetWritePage { # returns html for write page
 	my $writeForm = GetWriteForm();
 	$writePageHtml .= $writeForm;
 
-	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
-		my $itemCounts = GetTemplate('form/itemcount.template');
-		$itemCounts =~ s/\$itemCount/$itemCount/g;
-		$itemCounts =~ s/\$itemLimit/$itemLimit/g;
-	}
-
+#	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
+#		my $itemCounts = GetTemplate('form/itemcount.template');
+#		$itemCounts =~ s/\$itemCount/$itemCount/g;
+#		$itemCounts =~ s/\$itemLimit/$itemLimit/g;
+#	}
+#
 	$writePageHtml .= GetPageFooter();
 
 	if (GetConfig('admin/js/enable')) {
@@ -4334,9 +4342,7 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 
 	my $dataPageWindow = GetWindowTemplate(
 		$dataPageContents,
-		'Data',
-		'',
-		'Ready'
+		'Data'
 	);
 
 	$dataPage .= $dataPageWindow;
