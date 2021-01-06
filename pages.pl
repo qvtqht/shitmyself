@@ -792,7 +792,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 	# if this item has a child_count, we want to print all the child items below
 	# keywords: reply replies subitems child parent
-	# REPLIES
+	# REPLIES #replies #reply
 	######################################
 	if ($file{'child_count'}) {
 		# get item's children (replies) and store in @itemReplies
@@ -989,6 +989,20 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 						}
 						if ($iaName eq 'file_path') {
 							# link file path to file
+							my $HTMLDIR = GetDir('html'); #todo
+							WriteLog('attr: $HTMLDIR = ' . $HTMLDIR); #todo
+							#problem here is getdir returns full path, but here we already have relative path
+							#currently we assume html dir is 'html'
+
+							WriteLog('attr: $iaValue = ' . $iaValue); #todo
+							if (GetConfig('html/relativize_urls')) {
+								$iaValue =~ s/^html\//.\//;
+							} else {
+								$iaValue =~ s/^html\//\//;
+							}
+							WriteLog('attr: $iaValue = ' . $iaValue); #todo
+
+
 							$iaValue = HtmlEscape($iaValue);
 							$iaValue = '<a href="' . $iaValue . '">' . $iaValue . '</a>';
 							#todo sanitizing #security
@@ -2026,7 +2040,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	#top menu
 						  
-	my $identityLink = '<span id="signin"><a href="/profile.html">Profile</a></span> <span class="myid" id=myid></span> ';
+	my $identityLink = '<span id="signin"><a href="/profile.html">Go to profile</a></span> <span class="myid" id=myid></span> ';
 #	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
 
@@ -2201,6 +2215,7 @@ sub GetStatsTable {
 	my $versionFull = GetMyVersion();
 	my $versionShort = substr($versionFull, 0, 8);
 
+	UpdateUpdateTime();
 	my $lastUpdateTime = GetCache('system/last_update_time');
 	$lastUpdateTime = GetTimestampWidget($lastUpdateTime);
 
@@ -3310,7 +3325,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 			}
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
-			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+			$queryParams{'order_clause'} = 'ORDER BY child_count ASC, file_hash DESC';
+			#$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 			# if ($whereClause) {
 			# 	$queryParams{'where_clause'} = $whereClause;
 			# }
