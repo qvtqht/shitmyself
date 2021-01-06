@@ -326,11 +326,13 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 	#	$filename = "$SCRIPTDIR/template/$filename";
 
 	WriteLog("GetTemplate($filename)");
-
 	state %templateMemo; #stores local memo cache of template
-
 	if ($templateMemo{$filename}) {
 		#if already been looked up, return memo version
+		WriteLog('GetTemplate: returning from memo for ' . $filename);
+		if (trim($templateMemo{$filename}) eq '') {
+			WriteLog('GetTemplate: warning: returning empty string');
+		}
 		return $templateMemo{$filename};
 	}
 
@@ -368,7 +370,7 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		return $template;
 	} else {
 		#if result is blank, report it
-		WriteLog("GetTemplate: warning: GetTemplate() returning empty string for $filename.");
+		WriteLog("GetTemplate: warning: GetTemplate returning empty string for $filename.");
 		return '';
 	}
 } # GetTemplate()
@@ -387,6 +389,40 @@ sub encode_entities2 { # returns $string with html entities <>"& encoded
 	$string =~ s/"/&quot;/g;
 
 	return $string;
+}
+
+sub GetHtmlAvatar { # Returns HTML avatar from cache 
+	state %avatarCache;
+
+	# returns avatar suitable for comments
+	my $key = shift;
+	if (!$key) {
+		return;
+	}
+
+	if (!IsFingerprint($key)) {
+		return;
+	}
+
+	if ($avatarCache{$key}) {
+		WriteLog("GetHtmlAvatar: found in hash");
+		return $avatarCache{$key};
+	}
+
+	my $avatar = GetAvatar($key);
+	if ($avatar) {
+		if (-e 'html/author/' . $key) {
+			my $avatarLink = GetAuthorLink($key);
+			$avatarCache{$key} = $avatar;
+			return $avatarLink;
+		}
+	} else {
+		return $key;
+		#		return 'unregistered';
+	}
+
+	return $key;
+	#	return 'unregistered';
 }
 
 sub GetAlias { # $fingerprint, $noCache ; Returns alias for an author
@@ -453,7 +489,7 @@ sub GetFile { # Gets the contents of file $fileName
 		return '';
 	}
 
-	if ($fileName =~ m/^([0-9a-zA-Z\/._]+)$/) {
+	if ($fileName =~ m/^([0-9a-zA-Z\/._-]+)$/) {
 		$fileName = $1;
 		WriteLog('GetFile: $fileName passed sanity check: ' . $fileName);
 	} else {

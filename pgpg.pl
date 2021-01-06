@@ -67,15 +67,16 @@ sub GpgParse {
 
 	if (!-e "$cachePathStderr/$fileHash.txt") {
 		WriteLog('GpgParse: found stderr output: ' . "$cachePathStderr/$fileHash.txt");
-
 		my $fileContents = GetFile($filePath);
-
 		my $gpgPubkey = '-----BEGIN PGP PUBLIC KEY BLOCK-----';
 		my $gpgMessage = '-----BEGIN PGP SIGNED MESSAGE-----';
 		my $gpgEncrypted = '-----BEGIN PGP MESSAGE-----';
 
+		# this is the base gpg command
+		# these flags help prevent stalling due to password prompts
 		my $gpgCommand = 'gpg --pinentry-mode=loopback --batch ';
 
+		# basic message classification covering only three cases, exclusively
 		if (index($fileContents, $gpgPubkey) > -1) {
 			$gpgCommand .= '--import --ignore-time-conflict --ignore-valid-from ';
 			$pubKeyFlag = 1;
@@ -84,7 +85,7 @@ sub GpgParse {
 			$gpgCommand .= '--verify -o - ';
 		}
 		elsif (index($fileContents, $gpgEncrypted) > -1) {
-			$gpgCommand .= '--decrypt -o - ';
+			$gpgCommand .= '-o - --decrypt ';
 		}
 
 		if ($fileHash =~ m/^([0-9a-f]+)$/) {
