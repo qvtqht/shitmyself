@@ -3306,7 +3306,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 			# }
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
-			$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
+			$queryParams{'order_clause'} = 'ORDER BY child_count, add_timestamp DESC';
 			# if ($whereClause) {
 			# 	$queryParams{'where_clause'} = $whereClause;
 			# }
