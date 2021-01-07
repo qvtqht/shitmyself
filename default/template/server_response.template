@@ -1,20 +1,20 @@
 <!-- server_response.template -->
 
 <table
-    width="99%"
-    id=serverResponse
-    bgcolor="$colorHighlightAlert"
-    cellpadding=5
-    cellspacing=0
+	width="99%"
+	id=serverResponse
+	bgcolor="$colorHighlightAlert"
+	cellpadding=5
+	cellspacing=0
 ><tr><td align=center><font size=5>
-    <b role=status>$serverResponse</b>
-    <a href=#maincontent
-        tabindex=1
-        id=sro
-        title="Hide Message"
-    ><b><i>Thanks</i></b></a>
-    <!-- must begin with <a href=#maincontent for templating reasons -->
-    <br>
+	<b role=status>$serverResponse</b>
+	<!-- must begin with <a href=#maincontent for templating reasons -->
+	<a href=#maincontent
+		tabindex=1
+		id=sro
+		title="Hide Message"
+	><b><i>Thanks</i></b></a>
+	<br>
 </font></td></tr></table>
 
 <!-- / server_response.template -->
