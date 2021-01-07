@@ -5038,7 +5038,7 @@ while (my $arg1 = shift @foundArgs) {
 	if ($arg1) {
 		if ($arg1 eq '--theme') {
 			print ("recognized token --theme");
-			my $themeArg = shift;
+			my $themeArg = shift @foundArgs;
 			chomp $themeArg;
 			GetConfig('html/theme', 'override', $themeArg);
 		}
@@ -5111,7 +5111,7 @@ while (my $arg1 = shift @foundArgs) {
 		}
 		elsif ($arg1 eq '-M') {
 			print ("recognized -M\n");
-			my $makePageArg = shift;
+			my $makePageArg = shift @foundArgs;
 			#todo sanity check of $makePageArg
 			if ($makePageArg) {
 				print ("calling MakePage($makePageArg)\n");
