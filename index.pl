@@ -668,7 +668,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									(substr($hash, 0, $puzzlePrefixLength) eq $puzzlePrefix) && # hash matches
 									($authorKey eq $gpgKey || $authorKey eq $hasCookie) # key matches cookie or fingerprint
 								) {
-									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
+									$message =~ s/$tokenFound{'recon'}/[$puzzlePrefix]/g;
+#									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
 									DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
 									DBAddVoteRecord($fileHash, $mintedAt, 'puzzle');
 									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
