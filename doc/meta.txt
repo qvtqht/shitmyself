@@ -173,8 +173,6 @@ very nice
 
 #meta #bug #testing
 
-<<<<<<< Updated upstream
-=======
 1600920213
 
 
@@ -391,4 +389,3 @@ Host: sm.chg.pw
 >>8e28a656e3a31807291b17531531803fb5dc9859
 -- 
 Host: www.shitmyself.com
->>>>>>> Stashed changes

@@ -25,3 +25,23 @@
 	background-color:#ccc;
 	background:linear-gradient(180deg, #ddd 0%, #d1d1d1 49%, #b4b4b4 51%, #a0a0a0 100%);
 }
+
+
+
+
+
+@keyframes shimmerBackground {
+    0% {background-position:-5000px 0}
+    100% {background-position:5000px 0}
+}
+.titlebar {
+	background-image: -moz-linear-gradient(160deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 25%, rgba(255,255,255,0.85) 60%, rgba(255,255,255,0) 100%);
+	background-image: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(25%,rgba(255,255,255,0)), color-stop(60%,rgba(255,255,255,0.85)), color-stop(100%,rgba(255,255,255,0)));
+	background-image: -webkit-linear-gradient(160deg, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 25%,rgba(255,255,255,0.85) 60%,rgba(255,255,255,0) 100%);
+	background-image: -o-linear-gradient(160deg, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 25%,rgba(255,255,255,0.85) 60%,rgba(255,255,255,0) 100%);
+	background-image: -ms-linear-gradient(160deg, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 25%,rgba(255,255,255,0.85) 60%,rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(160deg, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 25%,rgba(255,255,255,0.85) 60%,rgba(255,255,255,0) 100%);
+	background-repeat: repeat-y;
+	background-position:-5000px 0;
+	animation: shimmerBackground 8s linear 2;
+}
