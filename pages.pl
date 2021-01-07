@@ -2135,12 +2135,13 @@ sub GetTopItemsPage { # returns page with top items listing
 #				$authorAvatar = GetPlainAvatar($authorKey);
 				my $authorLink = GetAuthorLink($authorKey, 1);
 				if ($authorLink) {
-					$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
+					$authorAvatar = GetAuthorLink($authorKey, 1);
+#					$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
 				} else {
-					$authorAvatar = 'Author Unspecified';
+					$authorAvatar = 'Unsigned';
 				}
 			} else {
-				$authorAvatar = 'Author Unspecified';
+				$authorAvatar = 'Unsigned';
 			}
 
 			$itemLastTouch = GetTimestampWidget($itemLastTouch);
