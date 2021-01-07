@@ -746,19 +746,6 @@ sub DBGetItemCount { # Returns item count.
 	return $itemCount;
 }
 
-sub DBGetReplyCount { # Returns reply (child) count for an item 
-	my $parentHash = shift;
-
-	if (!IsSha1($parentHash)) {
-		WriteLog('WARNING: DBGetReplyCount() called with invalid parameter');
-	}
-
-	my $itemCount = SqliteGetValue("SELECT COUNT(*) AS reply_count FROM item_parent WHERE parent_hash = '$parentHash'");
-	chomp($itemCount);
-
-	return $itemCount;
-}
-
 sub DBGetItemParents {# Returns all item's parents
 # $itemHash = item's hash/identifier
 # Sets up parameters and calls DBGetItemList
