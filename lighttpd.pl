@@ -4,6 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 
 require './utils.pl';
+`killall lighttpd`;
 
 sub StartLighttpd {
 	if (!-e './log') {

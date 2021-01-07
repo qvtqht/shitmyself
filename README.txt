@@ -207,7 +207,7 @@ No third-party package manager should be necessary.
 
 Ubuntu, Debian, Mint, Trisquel, Ubuntu, and other apt-based
 ==========================================================================
-# apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 gnupg gnupg2 imagemagick php-cgi
+# apt-get install liburi-encode-perl libany-uri-escape-perl libhtml-parser-perl libdbd-sqlite3-perl libdigest-sha-perl sqlite3 gnupg gnupg2 imagemagick php-cgi zip
 
 Redhat, CentOS, Fedora, and other yum-based
 ============================================================

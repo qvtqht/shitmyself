@@ -792,7 +792,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 	# if this item has a child_count, we want to print all the child items below
 	# keywords: reply replies subitems child parent
-	# REPLIES
+	# REPLIES #replies #reply GetItemPage()
 	######################################
 	if ($file{'child_count'}) {
 		# get item's children (replies) and store in @itemReplies
@@ -855,7 +855,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			my $replyTemplate = GetItemTemplate($replyItem); # GetItemPage()
 
 			# output it to debug
-			WriteLog('$replyTemplate');
+			WriteLog('$replyTemplate for ' . $$replyItem{'template_name'} . ':');
 			WriteLog($replyTemplate);
 
 			# if the reply item has children also, output the children
@@ -989,6 +989,20 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 						}
 						if ($iaName eq 'file_path') {
 							# link file path to file
+							my $HTMLDIR = GetDir('html'); #todo
+							WriteLog('attr: $HTMLDIR = ' . $HTMLDIR); #todo
+							#problem here is getdir returns full path, but here we already have relative path
+							#currently we assume html dir is 'html'
+
+							WriteLog('attr: $iaValue = ' . $iaValue); #todo
+							if (GetConfig('html/relativize_urls')) {
+								$iaValue =~ s/^html\//.\//;
+							} else {
+								$iaValue =~ s/^html\//\//;
+							}
+							WriteLog('attr: $iaValue = ' . $iaValue); #todo
+
+
 							$iaValue = HtmlEscape($iaValue);
 							$iaValue = '<a href="' . $iaValue . '">' . $iaValue . '</a>';
 							#todo sanitizing #security
@@ -1064,8 +1078,9 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 			'input type=submit',
 			'onclick',
 #			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
-			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
+			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); return false; } else { return true; }"
 		);
+		#todo the return value can be changed from false to true to issue two submissions, one signed and one not
 
 		if (GetConfig('admin/php/enable')) {
 			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onchange', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
@@ -1136,7 +1151,7 @@ sub GetItemTagsSummary { # returns html with list of tags applied to item, and t
 	return $votesSummary;
 }
 
-sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpandWidget
+sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpandWidget #more
 	my $parentCount = shift; # how many levels of parents to go up
 	# for example, for <table><tr><td><a>here it would be 3 layers instead of 1
 	# accepts integers 1-10
@@ -1423,32 +1438,32 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		# 	GetWidgetExpand(2, '#'),
 		# 	$itemTemplate
 		# );#todo fix broken
-
-		my $widgetExpandPlaceholder = '<span class=expand></span>';
-		if (index($itemTemplate, $widgetExpandPlaceholder) != -1) {
-			WriteLog('GetItemTemplate: $widgetExpandPlaceholder found in item: ' . $widgetExpandPlaceholder);
-
-			if (GetConfig('admin/js/enable')) {
-				# js on, insert widget
-
-				my $widgetExpand = GetWidgetExpand(5, GetHtmlFilename($itemHash));
-				$itemTemplate = str_replace(
-					'<span class=expand></span>',
-					'<span class=expand>' .	$widgetExpand .	'</span>',
-					$itemTemplate
-				);
-
-				# $itemTemplate = AddAttributeToTag(
-				# 	$itemTemplate,
-				# 	'a href="/etc.html"', #todo this should link to item itself
-				# 	'onclick',
-				# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
-				# );
-			} else {
-				# js off, remove placeholder for widget
-				$itemTemplate = str_replace($widgetExpandPlaceholder, '', $itemTemplate);
-			}
-		} # $widgetExpandPlaceholder
+#
+#		my $widgetExpandPlaceholder = '<span class=expand></span>';
+#		if (index($itemTemplate, $widgetExpandPlaceholder) != -1) {
+#			WriteLog('GetItemTemplate: $widgetExpandPlaceholder found in item: ' . $widgetExpandPlaceholder);
+#
+#			if (GetConfig('admin/js/enable')) {
+#				# js on, insert widget
+#
+#				my $widgetExpand = GetWidgetExpand(5, GetHtmlFilename($itemHash));
+#				$itemTemplate = str_replace(
+#					'<span class=expand></span>',
+#					'<span class=expand>' .	$widgetExpand .	'</span>',
+#					$itemTemplate
+#				);
+#
+#				# $itemTemplate = AddAttributeToTag(
+#				# 	$itemTemplate,
+#				# 	'a href="/etc.html"', #todo this should link to item itself
+#				# 	'onclick',
+#				# 	"if (window.ShowAll && this.removeAttribute) { this.removeAttribute('onclick'); return ShowAll(this, this.parentElement.parentElement.parentElement.parentElement.parentElement); } else { return true; }"
+#				# );
+#			} else {
+#				# js off, remove placeholder for widget
+#				$itemTemplate = str_replace($widgetExpandPlaceholder, '', $itemTemplate);
+#			}
+#		} # $widgetExpandPlaceholder
 
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
@@ -1632,15 +1647,14 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		$itemTemplate =~ s/\$itemFlagButton/$itemFlagButton/g;
 
-		WriteLog('GetItemTemplate() return $itemTemplate');
+		WriteLog('GetItemTemplate: return $itemTemplate');
 
 		return $itemTemplate;
 	} else {
-		WriteLog('GetItemTemplate() return empty string');
-
+		WriteLog('GetItemTemplate: warning: return empty string');
 		return '';
 	}
-} #GetItemTemplate
+} # GetItemTemplate()
 
 sub GetPageFooter { # returns html for page footer
 	WriteLog('GetPageFooter()');
@@ -2002,7 +2016,6 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	}
 
 	my $txtIndex = "";
-
 	my $styleSheet = GetStylesheet();
 
 	my $patternName = trim(GetConfig('header_pattern'));
@@ -2026,7 +2039,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 	#top menu
 						  
-	my $identityLink = '<span id="signin"><a href="/profile.html">Profile</a></span> <span class="myid" id=myid></span> ';
+	my $identityLink = '<span id="signin"><a href="/profile.html">Go to profile</a></span> <span class="myid" id=myid></span> ';
 #	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
 
@@ -2201,6 +2214,7 @@ sub GetStatsTable {
 	my $versionFull = GetMyVersion();
 	my $versionShort = substr($versionFull, 0, 8);
 
+	UpdateUpdateTime();
 	my $lastUpdateTime = GetCache('system/last_update_time');
 	$lastUpdateTime = GetTimestampWidget($lastUpdateTime);
 
@@ -3271,7 +3285,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 		}
 	}
 
-	my $overlapPage = GetConfig('overlap_page');
+	my $overlapPage = GetConfig('html/overlap_page');
 	#in order to keep both the "last" and the "first" page the same length
 	#and avoid having mostly-empty pages with only a few items
 	#we introduce an overlap on page 5, where some items are displayed
@@ -3301,12 +3315,17 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 			# the downside is that when the page links are item numbers
 			# the link for last page may not match the items on the page
 			#
-			# if ($overlapPage && $lastPage > $overlapPage && $i > $overlapPage) {
-			# 	$offset = $offset - ($itemCount % $pageLimit);
-			# }
+			if (
+				$overlapPage &&
+				$lastPage > $overlapPage &&
+				$i > $overlapPage
+			) {
+				$offset = $offset - ($itemCount % $pageLimit);
+			}
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
-			$queryParams{'order_clause'} = 'ORDER BY child_count, add_timestamp DESC';
+			$queryParams{'order_clause'} = 'ORDER BY child_count ASC, add_timestamp DESC';
+			#$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
 			# if ($whereClause) {
 			# 	$queryParams{'where_clause'} = $whereClause;
 			# }
@@ -3339,8 +3358,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar utils));
 
-		PutHtmlFile("index0.html", $indexPage);
-		PutHtmlFile("compost.html", $indexPage);
+		PutHtmlFile("index0.html", $indexPage); #empty/no items
+		PutHtmlFile("compost.html", $indexPage); #empty/no items
 	}
 } # WriteIndexPages()
 
@@ -3835,14 +3854,19 @@ sub GetWriteForm { # returns write form (for composing text message)
 		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onchange', $writeOnChange);
 		$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeyup', $writeOnChange);
 		if (GetConfig('admin/js/translit')) {
-			$writeForm = AddAttributeToTag($writeForm, 'textarea', 'onkeydown', 'if (window.translitKey) { translitKey(event, this); } else { return true; }');
+			$writeForm = AddAttributeToTag(
+				$writeForm,
+				'textarea',
+				'onkeydown',
+				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
+			);
 		}
 
 		$writeForm = AddAttributeToTag(
 			$writeForm,
 			'input type=submit',
 			'onclick',
-			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); }"
+			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); return true; } else { return true; }"
 		);
 	} # js stuff in write form
 
@@ -3901,11 +3925,11 @@ sub GetWritePage { # returns html for write page
 	my $title = "Write";
 	my $titleHtml = "Write";
 
-	my $itemCount = DBGetItemCount();
-	my $itemLimit = GetConfig('number/item_limit');
-	if (!$itemLimit) {
-		$itemLimit = 9000;
-	}
+#	my $itemCount = DBGetItemCount();
+#	my $itemLimit = GetConfig('number/item_limit');
+#	if (!$itemLimit) {
+#		$itemLimit = 9000;
+#	}
 
 	$writePageHtml = GetPageHeader($title, $titleHtml, 'write');
 	$writePageHtml .= GetTemplate('maincontent.template');
@@ -3913,12 +3937,12 @@ sub GetWritePage { # returns html for write page
 	my $writeForm = GetWriteForm();
 	$writePageHtml .= $writeForm;
 
-	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
-		my $itemCounts = GetTemplate('form/itemcount.template');
-		$itemCounts =~ s/\$itemCount/$itemCount/g;
-		$itemCounts =~ s/\$itemLimit/$itemLimit/g;
-	}
-
+#	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
+#		my $itemCounts = GetTemplate('form/itemcount.template');
+#		$itemCounts =~ s/\$itemCount/$itemCount/g;
+#		$itemCounts =~ s/\$itemLimit/$itemLimit/g;
+#	}
+#
 	$writePageHtml .= GetPageFooter();
 
 	if (GetConfig('admin/js/enable')) {
@@ -4333,9 +4357,7 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 
 	my $dataPageWindow = GetWindowTemplate(
 		$dataPageContents,
-		'Data',
-		'',
-		'Ready'
+		'Data'
 	);
 
 	$dataPage .= $dataPageWindow;
@@ -5079,6 +5101,12 @@ while (my $arg1 = shift @foundArgs) {
 		}
 		elsif ($arg1 eq '--queue' || $arg1 eq '-Q') {
 			print ("recognized --queue\n");
+			BuildTouchedPages();
+		}
+		elsif ($arg1 eq '--all' || $arg1 eq '-a') {
+			print ("recognized --all\n");
+			print `query/touch_all.sh`;
+			MakeSummaryPages();
 			BuildTouchedPages();
 		}
 		elsif ($arg1 eq '-M') {

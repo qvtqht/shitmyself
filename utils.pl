@@ -326,12 +326,14 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 	#	$filename = "$SCRIPTDIR/template/$filename";
 
 	WriteLog("GetTemplate($filename)");
-
-	state %templateCache; #stores local memo cache of template
-
-	if ($templateCache{$filename}) {
+	state %templateMemo; #stores local memo cache of template
+	if ($templateMemo{$filename}) {
 		#if already been looked up, return memo version
-		return $templateCache{$filename};
+		WriteLog('GetTemplate: returning from memo for ' . $filename);
+		if (trim($templateMemo{$filename}) eq '') {
+			WriteLog('GetTemplate: warning: returning empty string');
+		}
+		return $templateMemo{$filename};
 	}
 
 	if (!-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
@@ -364,14 +366,14 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 
 	if ($template) {
 		#if template contains something, cache it
-		$templateCache{$filename} = $template;
+		$templateMemo{$filename} = $template;
 		return $template;
 	} else {
 		#if result is blank, report it
-		WriteLog("GetTemplate: warning: GetTemplate() returning empty string for $filename.");
+		WriteLog("GetTemplate: warning: GetTemplate returning empty string for $filename.");
 		return '';
 	}
-}
+} # GetTemplate()
 
 sub encode_entities2 { # returns $string with html entities <>"& encoded
 	my $string = shift;
@@ -425,7 +427,14 @@ sub GetHtmlAvatar { # Returns HTML avatar from cache
 
 sub GetAlias { # $fingerprint, $noCache ; Returns alias for an author
 	my $fingerprint = shift;
+
+	if (!$fingerprint) {
+		WriteLog('GetAlias: warning: $fingerprint was missing');
+		return '';
+	}
+
 	chomp $fingerprint;
+
 	WriteLog("GetAlias($fingerprint)");
 
 	my $noCache = shift;
@@ -475,17 +484,23 @@ sub GetFileExtension { # $fileName ; returns file extension, naively
 
 sub GetFile { # Gets the contents of file $fileName
 	my $fileName = shift;
-
 	if (!$fileName) {
-		if (-e 'config/admin/debug') {
-			#die('attempting GetFile() without $fileName');
-		}
-		return;
+		WriteLog('GetFile: warning: $fileName missing or false');
+		return '';
+	}
+
+	if ($fileName =~ m/^([0-9a-zA-Z\/._-]+)$/) {
+		$fileName = $1;
+		WriteLog('GetFile: $fileName passed sanity check: ' . $fileName);
+	} else {
+		WriteLog('GetFile: warning: $fileName failed sanity check');
+		return '';
 	}
 
 	my $length = shift || 209715200;
 	# default to reading a max of 2MB of the file. #scaling #bug
 
+	WriteLog('GetFile: trying to open file...');
 	if (
 		-e $fileName # file exists
 			&&
@@ -493,16 +508,16 @@ sub GetFile { # Gets the contents of file $fileName
 			&&
 		open (my $file, "<", $fileName) # opens successfully
 	) {
+		WriteLog('GetFile: opened successfully, trying to read...');
 		my $return;
-
 		read ($file, $return, $length);
-
+		WriteLog('GetFile: read success, returning.');
 		return $return;
 	}
 
 	return;
 	#todo do something for a file which is missing
-}
+} # GetFile()
 
 
 sub GetTime () { # Returns time in epoch format.
@@ -859,7 +874,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	# controls whether linked urls are converted to relative format
 	# meaning they go from e.g. /write.html to ./write.html
 	# this breaks the 404 page links so disable that for now
-	my $relativizeUrls = GetConfig('html/relativize_urls');
+	my $relativizeUrls = (GetConfig('html/relativize_urls') ? 1 : 0);
 	if (TrimPath($file) eq '404') {
 		$relativizeUrls = 0;
 	}
