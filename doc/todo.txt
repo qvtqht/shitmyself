@@ -1,3 +1,6 @@
+automatically adjust timestamp highlight threshold
+	based on spread of item timestamps
+
 merge sqlite junk into two layers -- via shell and via dbi
 
 server response message should have adjustable button caption
