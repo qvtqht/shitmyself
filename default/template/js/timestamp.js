@@ -1,6 +1,6 @@
 // == begin timestamp.js
 
-function LongAgo(seconds) { // returns string with time units
+function LongAgo (seconds) { // returns string with time units
 // takes seconds as parameter
 // returns a string like "3 days ago" or "3 days from now"
 	var flip = 0;
@@ -141,6 +141,7 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 
 		if (window.EventLoop) {
 			// do nothing, EventLoop() will call us when needed
+			return changeLogged;
 		} else {
 			// allow ShowTimestamps() to run decoupled from EventLoop()
 			if (changeLogged) {
@@ -151,12 +152,12 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 		}
 	}
 } // ShowTimestamps()
-
-if (window.EventLoop) {
-	// do nothing, EventLoop() will take care of us
-} else {
-	// if no EventLoop(), we do it ourselves
-	ShowTimestamps();
-}
+//
+//if (window.EventLoop) {
+//	// do nothing, EventLoop() will take care of us
+//} else {
+//	// if no EventLoop(), we do it ourselves
+//	ShowTimestamps();
+//}
 
 // == end timestamp.js
