@@ -5110,7 +5110,7 @@ while (my $arg1 = shift @foundArgs) {
 			MakeSummaryPages();
 			BuildTouchedPages();
 		}
-		elsif ($arg1 eq '-M') {
+		elsif ($arg1 eq '-M') { # makepage
 			print ("recognized -M\n");
 			my $makePageArg = shift @foundArgs;
 			#todo sanity check of $makePageArg
