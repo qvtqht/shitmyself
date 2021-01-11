@@ -228,13 +228,17 @@ function DownloadAsTxt(filename, text) {
 }
 
 
-function displayNotification (strMessage, thisButton) { // adds loading indicator bar (to top of page, depending on style)
+function displayNotification (strMessage, thisButton) { // adds notificatin to page
+// used for loading indicator bar (to top of page, depending on style)
+// also used for "creating profile" and "already voted" notifications
 	var spanNotification = document.createElement('span');
 	spanNotification.setAttribute('class', 'notification');
+	spanNotification.setAttribute('role', 'alert');
+	spanNotification.setAttribute('onclick', 'if (this.remove) { this.remove() } return false;');
 	spanNotification.innerHTML = strMessage;
 
 	if (thisButton) {
-		thisButton.parentNode.appendChild(spanNotification); //#todo figure out why this doesn't actually work
+		thisButton.parentNode.appendChild(spanNotification);
 		thisButton.after(spanNotification);
 	} else {
 		document.body.appendChild(spanNotification);
