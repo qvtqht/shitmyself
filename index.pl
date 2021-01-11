@@ -409,13 +409,14 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				}
 			);
 
+			# REGEX cheatsheet
+			# ================
+			#
 			# \w word
 			# \W NOT word
 			# \s whitespace
 			# \S NOT whitespace
 			#
-			# REGEX cheatsheet
-			# ================
 			# /s = single-line (changes behavior of . metacharacter to match newlines)
 			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
 			# /g = global (all instances)
@@ -870,21 +871,25 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			else { # has $detokenedMessage
 				{ #title:
 					my $firstEol = index($detokenedMessage, "\n");
-					my $titleLengthCutoff = GetConfig('title_length_cutoff'); #default = 42
+					my $titleLength = GetConfig('title_length'); #default = 255
+					if (!$titleLength) {
+						$titleLength = 255;
+						WriteLog('#todo: warning: $titleLength was false');
+					}
 					if ($firstEol == -1) {
 						if (length($detokenedMessage) > 1) {
 							$firstEol = length($detokenedMessage);
 						}
 					}
-					# if ($firstEol > $titleLengthCutoff) {
-					# 	$firstEol = $titleLengthCutoff;
+					# if ($firstEol > $titleLength) {
+					# 	$firstEol = $titleLength;
 					# }
 					if ($firstEol > 0) {
 						my $title = '';
-						if ($firstEol <= $titleLengthCutoff) {
+						if ($firstEol <= $titleLength) {
 							$title = substr($detokenedMessage, 0, $firstEol);
 						} else {
-							$title = substr($detokenedMessage, 0, $titleLengthCutoff) . '...';
+							$title = substr($detokenedMessage, 0, $titleLength) . '...';
 						}
 
 						DBAddItemAttribute($fileHash, 'title', $title, $addedTime);
