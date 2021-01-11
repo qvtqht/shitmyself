@@ -2,19 +2,18 @@
 <hr class=advanced>
 <span id=spanInputOptions class=advanced>
 	<p>
-		Input Options: <noscript>(requires JavaScript.)</noscript><br>
+		Input Options: <noscript>(JavaScript enhanced)</noscript><br>
 		<a href="/frame.html" target=_top>Keyboard</a><br>
-		<a href="/frame2.html" target=_top>Keyboard for Android/iOS</a><br>
-		<a href="/frame3.html" target=_top>Keyboard for Netscape</a><br>
-		<span class=beginner>On-screen keyboards allow text entry.</span>
+		<a href="/frame2.html" target=_top>Android</a><br>
+		<a href="/frame2.html" target=_top>iPhone</a><br>
+		<a href="/frame2.html" target=_top>iPad</a><br>
+		<a href="/frame3.html" target=_top>Netscape</a><br>
 	</p>
-</span>
-<span id=spanInputTranslit class=advanced>
+
 	<p>
-		Translit: <noscript>(requires JavaScript.)</noscript><br>
-		Russian: Ctrl+R, Alt+R, or Meta+R<br>
-		Dvorak: Ctrl+D, Alt+D, or Meta+D<br>
-		<span class=beginner>Translit provides alternative keyboard layout.</span>
+		Keyboard Layouts: <noscript>(requires JavaScript)</noscript><br>
+		Russian: Ctrl+R, Alt+R, Meta+R<br>
+		Dvorak: Ctrl+D, Alt+D, Meta+D
 	</p>
 </span>
 <!-- / write_js.template -->
