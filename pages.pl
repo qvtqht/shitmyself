@@ -2767,13 +2767,6 @@ sub GetAuthorInfoBox {
 	}
 	my $authorMessageLink = GetItemHtmlLink($publicKeyHash, 'Contact Them', '#reply');
 
-	if (IsServer($authorKey)) {
-		if ($authorDescription) {
-			$authorDescription .= '<br>';
-		}
-		$authorDescription .= '<b>Server signing key.</b>';
-	}
-
 	if (IsAdmin($authorKey)) {
 		if ($authorDescription) {
 			$authorDescription .= '<br>';
@@ -3433,10 +3426,6 @@ sub MakeSimplePage { # given page name, makes page
 		$pageContent,
 		ucfirst($pageName)
 	);
-	$html .= $contentWindow;
-	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(avatar settings profile utils));
-
 	my $itemListPlaceholder = '<span id=itemList></span>';
 	if ($pageName eq 'welcome') {
 		if (index($html, $itemListPlaceholder) != -1) {
@@ -3447,12 +3436,14 @@ sub MakeSimplePage { # given page name, makes page
 			my @files = DBGetItemList(\%queryParams);
 			if (@files) {
 				my $itemListHtml = GetItemListHtml(\@files);
-				$html = str_replace($itemListPlaceholder, $itemListHtml, $html);
-			} else {
-				$html = str_replace($itemListPlaceholder, '', $html);
+				$contentWindow = $itemListHtml;
 			}
 		}
 	}
+
+	$html .= $contentWindow;
+	$html .= GetPageFooter();
+	$html = InjectJs($html, qw(avatar settings profile utils));
 
 	PutHtmlFile("$pageName.html", $html);
 
@@ -3637,11 +3628,11 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	$okPage = InjectJs($okPage, qw(settings));
 	PutHtmlFile("action/event.html", $okPage);
 
-	MakeSimplePage('manual'); # manual.html
-	MakeSimplePage('help'); # help.html
-	MakeSimplePage('welcome'); # welcome.html
-	MakeSimplePage('manual_advanced'); # manual_advanced.html
-	MakeSimplePage('manual_tokens'); # manual_tokens.html
+	MakeSimplePage('manual'); # manual.html manual.template
+	MakeSimplePage('help'); # help.html help.template
+	MakeSimplePage('welcome'); # welcome.html welcome.template
+	MakeSimplePage('manual_advanced'); # manual_advanced.html manual_advanced.template
+	MakeSimplePage('manual_tokens'); # manual_tokens.html manual_tokens.template
 
 	# Blank page
 	PutHtmlFile("blank.html", "");
