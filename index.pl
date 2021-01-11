@@ -844,6 +844,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				{ #title:
 					my $firstEol = index($detokenedMessage, "\n");
 					my $titleLength = GetConfig('title_length'); #default = 255
+					if (!$titleLength) {
+						$titleLength = 255;
+						WriteLog('#todo: warning: $titleLength was false');
+					}
 					if ($firstEol == -1) {
 						if (length($detokenedMessage) > 1) {
 							$firstEol = length($detokenedMessage);
