@@ -1875,32 +1875,12 @@ Host: 10.0.2.2:2784
 ===
 
 #meta #todo need even better keyboard which ie3 and nn2 can use.
-addtext=Send+Now
-
--- 
-Host: 10.0.2.2:2784
 
 
 ===
 
 require profile mode is janky and locks out links and any non-cookie users
-
 #todo #meta
-
-
-===
-
-require profile mode is janky and locks out links and any non-cookie users
-
-#todo #meta
-
-===
-
-require profile mode is janky and locks out links and any non-cookie users
-
-#todo #meta
-
-
 
 ===
 
@@ -1940,11 +1920,7 @@ require profile mode is janky and locks out links and any non-cookie users
 ===
 
 #todo #meta get rid of "requires javascript" messages on write form
-
-plan: use document.write to output the extra things
-
-verify document write is pretty compatible
-
-possibly make it a flag
--- 
-Cookie: 7AD94E26FCDAB1A7
+	plan: use document.write to output the extra things
+	verify document write is pretty compatible
+		it works!
+	make it a flag
