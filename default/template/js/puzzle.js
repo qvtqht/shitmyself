@@ -95,9 +95,9 @@ function solvePuzzle (t) { // t = button pressed ; begins puzzle solving process
 	}
 
 	// set timeout to solve puzzle
-	var timeoutSolvePuzzle = setTimeout('doSolvePuzzle()', 50);
+	var timeoutSolvePuzzle = setTimeout('doSolvePuzzle()', 500);
 
-	return false; // do not let the form submit
+	return false; // do not let the calling form submit, doSolvePuzzle() will do it
 } // solvePuzzle()
 
 // / puzzle.js

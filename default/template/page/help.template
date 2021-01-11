@@ -18,6 +18,7 @@
 <form action="/post.html">
     <p>Send a message:<br>
     <input type=text size=38 name=comment>
+    <input name=tag value=help type=hidden>
     <br>
     <input type=submit value=Send>
 </form>

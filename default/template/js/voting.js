@@ -119,9 +119,7 @@ function SignVote (t, token) { // signs a vote from referenced vote button
 
 		if (GetPrefs(token)) {
 			// don't let user vote twice basic
-
 			if (window.displayNotification) {
-				// #todo make it go away after a few seconds and/or on click
 				window.duplicateVoteTries ? window.duplicateVoteTries++ : window.duplicateVoteTries = 1;
 				if (3 <= window.duplicateVoteTries) {
 					displayNotification('Hey!', t);

@@ -313,6 +313,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		{
 			###################################################
 			# TOKEN FIRST PASS PARSING BEGINS HERE
+			# token: identifier
+			# mask: token string, separator, parameter
+			# params: parameters for regex matcher
+			# message: what's displayed in place of token for user
 			my @tokenDefs = (
 				{ # cookie of user who posted the message
 					'token'   => 'cookie',
@@ -332,6 +336,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					'mask_params' => 'mg',
 					'message' => '[Parent]'
 				},
+#				{ # reference to item
+#					'token'   => 'itemref',
+#					'mask'    => '(\W?)([0-9a-f]{8})(\W?)',
+#					'mask_params' => 'mg',
+#					'message' => '[Reference]'
+#				}, #todo make it ensure item exists before parsing
 				{ # title of item, either self or parent. used for display when title is needed #title title:
 					'token'   => 'title',
 					'mask'    => '^(title)(\W)(.+)$',
@@ -558,6 +568,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								WriteLog('IndexTextFile: warning: parent: sanity check failed');
 							}
 						} # parent
+
+						if (0 && $tokenFound{'token'} eq 'itemref') {
+							#todo this is broken currently, because
+							#item value is actually stored in whitespace placeholder
+
+							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+								WriteLog('IndexTextFile: DBAddItemParent(' . $fileHash . ',' . $tokenFound{'param'} . ')');
+
+#								DBAddItemParent($fileHash, $tokenFound{'param'});
+#								push(@itemParents, $tokenFound{'param'});
+
+								$message = str_replace($tokenFound{'recon'}, '##' . $tokenFound{'param'}, $message); #hacky
+								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+							} else {
+								WriteLog('IndexTextFile: warning: parent: sanity check failed');
+							}
+						} # parent
 					} # parametrized token
 				}
 			}
@@ -669,7 +696,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									(substr($hash, 0, $puzzlePrefixLength) eq $puzzlePrefix) && # hash matches
 									($authorKey eq $gpgKey || $authorKey eq $hasCookie) # key matches cookie or fingerprint
 								) {
-									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
+									$message =~ s/$tokenFound{'recon'}/[$puzzlePrefix]/g;
+#									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
 									DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
 									DBAddVoteRecord($fileHash, $mintedAt, 'puzzle');
 									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
@@ -844,6 +872,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				{ #title:
 					my $firstEol = index($detokenedMessage, "\n");
 					my $titleLength = GetConfig('title_length'); #default = 255
+					if (!$titleLength) {
+						$titleLength = 255;
+						WriteLog('#todo: warning: $titleLength was false');
+					}
 					if ($firstEol == -1) {
 						if (length($detokenedMessage) > 1) {
 							$firstEol = length($detokenedMessage);

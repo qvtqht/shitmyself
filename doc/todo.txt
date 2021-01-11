@@ -1,3 +1,13 @@
+automatically adjust timestamp highlight threshold
+	based on spread of item timestamps
+
+merge sqlite junk into two layers -- via shell and via dbi
+
+server response message should have adjustable button caption
+	goodbye message
+
+#accessibility #todo need alternative way to handle http realm for chrome (chrome does not display it in auth dialog)
+
 If user signs out with cookie and later tries to sign in with localstorage,
 	Either sign them out
 		or
@@ -1721,7 +1731,7 @@ timestamp=1601009222
 -- 
 Authorization: admin
 Cookie: EB8132749B4913F4
-<<<<<<< Updated upstream
+
 no more templates outside of a subdir in template/
 
 eventually html/ template subdir?
@@ -1785,13 +1795,11 @@ tag permissions ... so close!
 upload menu button: attach SpawnUploadForm()
    which will create upload form, with file filed, click the field, and then perhaps even start upload?
 
-=======
 todo disable fresh.js if 4xx response #meta #todo
 
 >>8b63e10cf06028ff34a8e9e421fdc9d804bcc253
 -- 
 Host: shitmyself.com
->>>>>>> Stashed changes
 
 
 ===
@@ -1867,32 +1875,12 @@ Host: 10.0.2.2:2784
 ===
 
 #meta #todo need even better keyboard which ie3 and nn2 can use.
-addtext=Send+Now
-
--- 
-Host: 10.0.2.2:2784
 
 
 ===
 
 require profile mode is janky and locks out links and any non-cookie users
-
 #todo #meta
-
-
-===
-
-require profile mode is janky and locks out links and any non-cookie users
-
-#todo #meta
-
-===
-
-require profile mode is janky and locks out links and any non-cookie users
-
-#todo #meta
-
-
 
 ===
 
@@ -1932,11 +1920,7 @@ require profile mode is janky and locks out links and any non-cookie users
 ===
 
 #todo #meta get rid of "requires javascript" messages on write form
-
-plan: use document.write to output the extra things
-
-verify document write is pretty compatible
-
-possibly make it a flag
--- 
-Cookie: 7AD94E26FCDAB1A7
+	plan: use document.write to output the extra things
+	verify document write is pretty compatible
+		it works!
+	make it a flag
