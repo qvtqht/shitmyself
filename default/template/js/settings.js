@@ -21,7 +21,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 			bgColor = '$colorWindow';
 		}
 		element.style.backgroundColor = bgColor;
-		// #todo this may cause issues in some themes
+		// this may cause issues in some themes
 	}
 
 	// depending on element type, we set different display style
@@ -34,7 +34,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 		if (element.innerHTML != '') {
 			element.style.display = 'table-cell';
 		} else {
-			element.style.display = 'none'; // empty table cells display = none #todo explain why?
+			element.style.display = 'none'; // empty table cells display = none #why?
 		}
 	} else {
 		if (displayValue == 'initial') {
@@ -115,7 +115,6 @@ function ShowAll (t, container) { // shows all elements, overriding settings
 function ShowAdvanced (force, container) { // show or hide controls based on preferences
 //handles class=advanced based on 'show_advanced' preference
 //handles class=beginner based on 'beginner' preference
-//handles class=tag-abuse based on 'show_meanies' preference
 //force parameter
 // 1 = does not re-do setTimeout (called this way from checkboxes)
 // 0 = previous preference values are remembered, and are not re-done (called by timer)
@@ -128,21 +127,6 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 
 	if (window.localStorage && container.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
-		///////////
-
-		var displayMeanies = 'none'; // no voting controls by default
-		if (GetPrefs('show_meanies') == 1) {
-		    // check value of show_meanies preference
-			displayMeanies = 'initial'; // display
-		} // #todo this section has no frontend toggle
-		if (force || showMeaniesLastAction != displayMeanies) {
-			var elemMeanies = container.getElementsByClassName('item-abuse');
-			for (var i = 0; i < elemMeanies.length; i++) {
-				SetElementVisible(elemMeanies[i], displayMeanies, 0, 0);
-			}
-			showMeaniesLastAction = displayMeanies;
-		}
-
 		///////////
 
 		var displayAdmin = 'none'; // not voting by default
@@ -351,7 +335,6 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
 			SetPrefs('enhance_write', 0);
-			SetPrefs('show_meanies', 0);
 //			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);
@@ -376,7 +359,6 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 // //            SetPrefs('show_admin', 0);
 // 		} else if (ab == 'operator') {
 //             SetPrefs('show_admin', 1);
-//             SetPrefs('show_meanies', 1);
 		}
 
 		ShowAdvanced(1);
@@ -416,7 +398,6 @@ function SettingsOnload () { // onload function for settings page
 	// based on settings state
 		var pane;
 
-		//LoadCheckbox(document.getElementById('chkShowMeanies'), 'show_meanies');
 		//LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
 		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
 		LoadCheckbox(document.getElementById('chkEnhanceWrite'), 'enhance_write');

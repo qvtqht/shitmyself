@@ -1,3 +1,17 @@
+if user clicks thanks, what can happen?
+	acknowledgement of user's having seen their action was successful
+		"and here is your receipt for my receipt"
+
+if user = cookie + useragent + ip
+cookie = 1/3 user
+useragent = 1/3 user
+ip = 1/3 user
+
+
+
+./once will eventually need to be cleaned or archived
+	how to do that without triggering once actions again?
+
 custom "visited link" expiration
 	keep track client-side
 	change color to unvisited when expired
@@ -23,7 +37,7 @@ compatibility
 vote button
 ---->
     item html
-    (via pages.pl --window [item] #todo)
+    (via pages.pl --window [item])
      <-----
 replace innerHTML
 
@@ -71,7 +85,7 @@ day checklist
 =============
 	check-inx
 	new line of codex
-	todo reviewed
+	todos reviewed
 	contacted developer
 	
 "adopt style" functionality
@@ -1178,7 +1192,6 @@ Thanks for the feedback! Votes cast by those with less than 125 reputation are r
 
 ===
 
-<<<<<<< Updated upstream
 #brainstorm
 
 so maybe beginner mode has no more links at all
@@ -1192,7 +1205,7 @@ expert hides the hints
 operator separately toggled, beginner still has operator options
 
 operator shold enable by default if user is admin
-=======
+
 #brainstorm #meta
 
 javascript can set a "pre-render" cookie
@@ -1202,13 +1215,11 @@ what this would do is ask php to set certain elements like beginner and advanced
 this would avoid the jump after pageload which currently happens
 
 [coin: 1337]
->>>>>>> Stashed changes
 
 
 
 ===
 
-<<<<<<< Updated upstream
 #brainstorm
 
 Each time page changes, a small timestamp element could be added to the indicator.
@@ -1225,7 +1236,6 @@ maybe urls could be /parent/child ?
 for limited cases
 
 #meta #brainstorm
->>>>>>> Stashed changes
 
 
 
@@ -3057,7 +3067,6 @@ timestamp=1601009222
 -- 
 Authorization: admin
 Cookie: EB8132749B4913F4
-<<<<<<< Updated upstream
 no more templates outside of a subdir in template/
 
 eventually html/ template subdir?
@@ -3121,18 +3130,15 @@ tag permissions ... so close!
 upload menu button: attach SpawnUploadForm()
    which will create upload form, with file filed, click the field, and then perhaps even start upload?
 
-=======
 todo disable fresh.js if 4xx response #meta #todo
 
 >>8b63e10cf06028ff34a8e9e421fdc9d804bcc253
 -- 
 Host: shitmyself.com
->>>>>>> Stashed changes
 
 
 ===
 
-<<<<<<< Updated upstream
 profile page should be not cached?
 
 somehow needs to do a better job of getting rid of old logged in displayed status after logout
@@ -3674,5 +3680,4 @@ Host: sm.chg.pw
 >>8e28a656e3a31807291b17531531803fb5dc9859
 -- 
 Host: www.shitmyself.com
->>>>>>> Stashed changes
 

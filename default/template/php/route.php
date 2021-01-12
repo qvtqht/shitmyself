@@ -326,7 +326,6 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/search.html' ||
 			$path == '/manual.html' ||
 			$path == '/manual_advanced.html' ||
-			$path == '/index0.html' ||
 			$path == '/stats.html' ||
 			$path == '/frame.html' ||
 			$path == '/frame2.html' ||
@@ -344,6 +343,14 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		) {
 			WriteLog('HandleNotFound: found authors page');
 			$pagesPlArgument = '-M scores';
+		}
+
+		if (
+			$path == '/index0.html' ||
+			$path == '/compost.html'
+		) {
+			WriteLog('HandleNotFound: found compost or index page');
+			$pagesPlArgument = '--summary';
 		}
 
 		if (
@@ -927,9 +934,9 @@ if (GetConfig('admin/php/route_enable')) {
 
 			if (isset($cookie) && $cookie) {
 				if (GetConfig('admin/js/enable')) {
-					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html" onclick="if (window.sharePubKey) { return sharePubKey(this); }">Profile</a></p></span>', $html);
+					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html" onclick="if (window.sharePubKey) { return sharePubKey(this); }">Go to profile</a></p></span>', $html);
 				} else {
-					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Profile</a></p></span>', $html);
+					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
 				}
 			}
 		}

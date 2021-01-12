@@ -147,11 +147,12 @@ sub RemoveHtmlFile { # $file ; removes existing html file
 	$file = "$HTMLDIR/$file";
 
 	if (
-		$file =~ m/^([0-9a-z\/.]+)$/
+		$file =~ m/^([0-9A-Za-z\/.]+)$/
 			&&
 		index($file, '..') == -1
 	) {
-		# sanity check
+		# sanity check passed
+		WriteLog('RemoveHtmlFile: sanity check passed for $file = ' . $file);
 	 	$file = $1;
 		if (-e $file) {
 			unlink($file);

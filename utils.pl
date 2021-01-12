@@ -847,24 +847,12 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 
 	if (!$HTMLDIR || !-e $HTMLDIR) {
 		WriteLog('PutHtmlFile: $HTMLDIR is missing: ' . $HTMLDIR);
-		return;
+		return '';
 	}
 
 	if (!$content) {
+		WriteLog('PutHtmlFile: warning: $content missing');
 		$content = '';
-	}
-
-	# keeps track of whether home page has been written at some point
-	# this value is returned if $file is 'check_homepage'
-	# then we can write the default homepage in its place
-	state $homePageWritten;
-	if (!defined($homePageWritten)) {
-		$homePageWritten = 0;
-	}
-	if ($file eq 'check_homepage') {
-		# this is a special flag which returns the value of $homePageWritten
-		# allows caller to know whether home page has already been written
-		return $homePageWritten;
 	}
 
 	# remember what the filename provided is, so that we can use it later
@@ -901,12 +889,13 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 	# if $stripNonAscii is on, strip all non-ascii characters from the output
 	# in the future, this can, perhaps, for example, convert unicode-cyrillic to ascii-cyrillic
 	if ($stripNonAscii == 1) {
-		WriteLog( '$stripNonAscii == 1');
+		WriteLog('PutHtmlFile: $stripNonAscii == 1, removing non-ascii characters');
 		$content =~ s/[^[:ascii:]]//g;
 	}
 
 	# convert urls to relative if $relativizeUrls is set
 	if ($relativizeUrls == 1) {
+		WriteLog('PutHtmlFile: $relativizeUrls == 1, relativizing urls');
 		# only the following *exact* formats are converted
 		# thus it is important to maintain this exact format throughout the html and js templates
 		# src="/
@@ -983,64 +972,27 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		#$content =~ s/\<\!--(.+)--\>/<p class=advanced>$1<\/p>/g;
 	#}
 
+	#########################
 	PutFile($file, $content);
+	#########################
 
 	if (index($content, '$') > -1) {
 		# test for $ character in html output, warn/crash if it is there
 		if (!($fileProvided eq 'openpgp.js')) {
+			# except for openpgp.js, most files should not have $ characters
 			WriteLog('PutHtmlFile: warning: $content contains $ symbol! $file = ' . ($file ? $file : '-'));
 		}
 	}
-
-#	if ($fileProvided eq GetConfig('html/home_page') || "$fileProvided.html" eq GetConfig('html/home_page')) {
-#		# this is a special hook for generating index.html, aka the home page
-#		# if the current file matches config/html/home_page, write index.html
-#		# change the title to home_title while at it
-#
-#		my $homePageTitle = GetConfig('home_title');
-#		$content =~ s/\<title\>(.+)\<\/title\>/<title>$homePageTitle<\/title>/;
-#		PutFile($HTMLDIR . '/index.html', $content);
-#		$homePageWritten = 1;
-#	}
-#
-	# if ($itemHash) {
-	# 	# filling in 404 pages, using 404.log
-	#
-	# 	# clean up the log file
-	# 	system ('sort log/404.log | uniq > log/404.log.uniq ; mv log/404.log.uniq log/404.log');
-	#
-	# 	# store log file in static variable for future
-	# 	state $log404;
-	# 	if (!$log404) {
-	# 		$log404 = GetFile('log/404.log');
-	# 	}
-	#
-	# 	# if hash is found in 404 log, we will fill in the html page
-	# 	# pretty sure this code doesn't work #todo
-	# 	if ($log404 =~ m/$itemHash/) {
-	# 		my $aliasUrl = GetItemMessage($itemHash); # url is stored inside message
-	#
-	# 		if ($aliasUrl =~ m/\.html$/) {
-	# 			if (!-e "$HTMLDIR/$aliasUrl") { # don't clobber existing files
-	# 				PutHtmlFile($aliasUrl, $content); # put html file in place (#todo replace with ln -s)
-	# 			}
-	# 		}
-	# 	}
-	# }
 } # PutHtmlFile()
 
 sub GetFileAsHashKeys { # returns file as hash of lines
 	# currently not used, can be used for detecting matching lines later
 	my $fileName = shift;
-
 	my @lines = split('\n', GetFile($fileName));
-
 	my %hash;
-
 	foreach my $line (@lines) {
 		$hash{$line} = 0;
 	}
-
 	return %hash;
 }
 
@@ -1052,37 +1004,6 @@ sub AppendFile { # appends something to a file; $file, $content to append
 	if (open (my $fileHandle, ">>", $file)) {
 		say $fileHandle $content;
 		close $fileHandle;
-	}
-}
-
-sub IsServer { # Returns 1 if supplied parameter equals GetServerKey(), otherwise returns 0
-	my $key = shift;
-
-	if (!$key) {
-		WriteLog("IsServer() called without key!");
-		return 0;
-	}
-
-	WriteLog("IsServer($key)");
-	#
-	#	if (!IsFingerprint($key)) {
-	#		WriteLog("IsServer() failed due to IsFingerprint() returning falsee!");
-	#
-	#		return 0;
-	#	}
-
-	WriteLog("IsServer($key)");
-
-	my $serverKey = GetServerKey();
-
-	WriteLog("... \$serverKey = $serverKey");
-
-	if ($serverKey eq $key) {
-		WriteLog("... 1");
-		return 1;
-	} else {
-		WriteLog("... 0");
-		return 0;
 	}
 }
 
@@ -1113,10 +1034,10 @@ sub AuthorHasTag { # $key ; returns 1 if user is admin, otherwise 0
 		WriteLog('AuthorHasTag: join(",", keys(%pubKeyVoteTotals)) = ' . join(",", keys(%pubKeyVoteTotals)));
 
 		if ($pubKeyVoteTotals{$tagInQuestion}) {
-			WriteLog('IsAdmin: $tagInQuestion FOUND, return 1');
+			WriteLog('AuthorHasTag: $tagInQuestion FOUND, return 1');
 			return 1;
 		} else {
-			WriteLog('IsAdmin: $tagInQuestion NOT found, return 0');
+			WriteLog('AuthorHasTag: $tagInQuestion NOT found, return 0');
 			return 0;
 		}
 	} else {
@@ -1277,6 +1198,7 @@ sub IsTextFile { # $file ; returns 1 if txt file, 0 if not
 } # IsTextFile()
 
 sub IsItem { # $string ; returns 1 if parameter is in item hash format (40 or 8 lowercase hex chars), 0 otherwise
+# todo more validation
 	my $string = shift;
 
 	if (!$string) {
