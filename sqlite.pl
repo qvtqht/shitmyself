@@ -2320,8 +2320,9 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 
 	$whereClause = "
 		WHERE 
-			(',' || tags_list || ',' LIKE '%,approve,%' OR ',' || tags_list || ',' LIKE '%,puzzle,%')
-			AND (',' || tags_list || ',' NOT LIKE '%,flag,%')
+			(',' || tags_list || ',' NOT LIKE '%,notext,%')
+			AND
+			(',' || tags_list || ',' NOT LIKE '%,hasparent,%')
 
 	"; #todo remove hardcoding here
 
