@@ -1891,11 +1891,9 @@ sub EnsureDirsThatShouldExist { # creates directories expected later
 	}
 }
 
-#EnsureDirsThatShouldExist();
+EnsureDirsThatShouldExist();
 
-#CheckForInstalledVersionChange();
-
-#CheckForRootAdminChange();
+CheckForInstalledVersionChange();
 
 my $utilsPl = 1;
 
