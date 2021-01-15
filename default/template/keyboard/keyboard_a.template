@@ -16,7 +16,7 @@
 </style>
 <script>
 <!--
-	function hi(letter) {
+	function hi (letter) {
 		var text = letter;
 		//alert('DEBUG: "' + text + '"');
 
