@@ -1804,7 +1804,6 @@ Host: shitmyself.com
 
 ===
 
-<<<<<<< Updated upstream
 profile page should be not cached?
 
 somehow needs to do a better job of getting rid of old logged in displayed status after logout
@@ -1813,25 +1812,8 @@ maybe as simple as another setTimeout
 
 #meta #todo
 
-
-
 ===
 
-bigg todo: #todo #meta
-
-make some kind of thingy to put all the setTimeouts together so that it's neater
-
-
-
-===
-
->>7cdc85f2d5bbb327916b4edc101ed332a8c21c4a
-
-#todo #meta
-
-PRAGMA journal_mode=WAL;
-
-=======
 #meta #todo textart is jacked on bromite
 
 >>7c9731d0e87e24368d11da7941ba2b7dfb8d4944
