@@ -832,7 +832,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
 
 			# use item-small template to display the reply items
-			$$replyItem{'template_name'} = 'item/item-mini.template';
+			$$replyItem{'template_name'} = 'item/item.template';
 
 			# if the child item contains a reply token for our parent item
 			# we want to remove it, to reduce redundant information on the page
@@ -846,9 +846,9 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 			$$replyItem{'trim_long_text'} = 1;
 
 			if (index(','.$$replyItem{'tags_list'}.',', ','.'notext'.',') != -1) {
-				$$replyItem{'template_name'} = 'item/item-mini.template';
+				$$replyItem{'template_name'} = 'item/item.template';
 			} else {
-				$$replyItem{'template_name'} = 'item/item-small.template';
+				$$replyItem{'template_name'} = 'item/item.template';
 			}
 
 			# Get the reply template
