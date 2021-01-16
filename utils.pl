@@ -1205,12 +1205,35 @@ sub IsItem { # $string ; returns 1 if parameter is in item hash format (40 or 8 
 		return 0;
 	}
 
-	if ($string =~ m/^[0-9a-f]{40}$/) {
-		return 1;
+	if ($string =~ m/^([0-9a-f]{40})$/) {
+		return $1;
 	}
 
-	if ($string =~ m/^[0-9a-f]{8}$/) {
-		return 1;
+	if ($string =~ m/^([0-9a-f]{8})$/) {
+		return $1;
+	}
+
+	return 0;
+} # IsItem()
+
+sub IsItemPrefix { # $string ; returns sanitized value if parameter is in item prefix format (4 lowercase hex chars), 0 otherwise
+# todo more validation
+	WriteLog('IsItemPrefix()');
+
+	my $string = shift;
+
+	if (!$string) {
+		return 0;
+	}
+
+	chomp $string;
+
+	WriteLog('IsItemPrefix: $string = ' . $string);
+
+	if ($string =~ m/^([0-9a-f]{4})$/) {
+		WriteLog('IsItemPrefix: returning $1 = ' . $1);
+
+		return $1; # returned sanitized value, in case it is needed
 	}
 
 	return 0;
