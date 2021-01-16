@@ -422,6 +422,12 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 					foreach my $urlParam (@messageItems) {
 						my ($paramName, $paramValue) = split('=', $urlParam);
 
+						if (!defined($paramValue)) {
+							next;
+						}
+
+						WriteLog('ProcessAccessLog: urlParam: $paramName = ' . $paramValue);
+
 						if ($paramName eq 'replyto') {
 							if (IsItem($urlParam)) {
 								my $replyToId = $paramValue;
