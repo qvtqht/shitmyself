@@ -1407,13 +1407,12 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		# escape the alias name for outputting to page
 		$alias = HtmlEscape($alias);
+		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
+
 
 		# initialize $itemTemplate for storing item output
 		my $itemTemplate = '';
-		if ($file{'template_name'}) {
-			# if template_name is specified, use that as the template
-			$itemTemplate = GetTemplate($file{'template_name'});
-		} else {
+		{
 			#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
 			my %windowParams;
 			$windowParams{'body'} = GetTemplate('item/item.template');
@@ -1421,9 +1420,23 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
 			# $windowParams{'headings'} = 'haedigns';
 
-			my $statusBar = GetTemplate("item/status_bar.template");
+			{
+				my $statusBar = GetTemplate("item/status_bar.template");
 
-			$windowParams{'status'} = $statusBar;
+				my $fileHashShort = substr($fileHash, 0, 8);
+				$statusBar =~ s/\$fileHashShort/$fileHashShort/g;
+
+				if ($gpgKey) {
+					# get author link for this gpg key
+					my $authorLink = trim(GetAuthorLink($gpgKey));
+#					$statusBar =~ s/\$authorLink/$authorLink/g;
+				} else {
+					# if no author, no $authorLink
+#					$statusBar =~ s/\$authorLink;//g;
+				}
+
+				$windowParams{'status'} = $statusBar;
+			}
 
 			if (defined($file{'show_quick_vote'})) {
 				$windowParams{'menu'} = GetQuickVoteButtonGroup($file{'file_hash'}, $file{'vote_return_to'});
@@ -1467,16 +1480,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		my $authorUrl; # author's profile url
 		my $authorAvatar; # author's avatar
-		my $authorLink; # author's link
-
-		if ($gpgKey) {
-			# get author link for this gpg key
-			$authorLink = GetAuthorLink($gpgKey);
-		} else {
-			# if no author, no $authorLink
-			$authorLink = ''; #todo put it into GetItemTemplate() logic instead
-		}
-		$authorLink = trim($authorLink);
 		my $permalinkTxt = $file{'file_path'};
 
 		{
@@ -1495,8 +1498,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 		#		my $permalinkHtml = '/' . substr($itemHash, 0, 2) . '/' . substr($itemHash, 2) . ".html";
 		#		$permalinkTxt =~ s/^\.//;
 
-		my $fileHash = GetFileHash($file{'file_path'}); # get file's hash
-		my $fileHashShort = substr($fileHash, 0, 8);
 		my $itemAnchor = substr($fileHash, 0, 8);
 		my $itemName; # item's 'name'
 
@@ -1593,18 +1594,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 
 		$itemTemplate =~ s/\$borderColor/$borderColor/g;
 		$itemTemplate =~ s/\$itemClass/$itemClass/g;
-		if ($authorLink) {
-			$itemTemplate =~ s/\$authorLink/$authorLink/g;
-		} else {
-			$itemTemplate =~ s/\$authorLink;//g;
-			# if there is no authorlink needed,
-			# get rid of the semicolon after the placeholder as well
-		}
 		$itemTemplate =~ s/\$itemName/$itemName/g;
 		$itemTemplate =~ s/\$permalinkTxt/$permalinkTxt/g;
 		$itemTemplate =~ s/\$permalinkHtml/$permalinkHtml/g;
 		$itemTemplate =~ s/\$itemText/$itemText/g;
-		$itemTemplate =~ s/\$fileHashShort/$fileHashShort/g;
 		$itemTemplate =~ s/\$fileHash/$fileHash/g;
 		$itemTemplate =~ s/\$addedTime/$addedTime/g;
 		$itemTemplate =~ s/\$replyLink/$replyLink/g;
