@@ -12,6 +12,13 @@
 	<br>
 	<input type=submit value="Send Reply">
 	<span id=spanSignAs></span>
-	<input type=hidden name=replyto id=replyto value="$replyTo">
+	<span class=advanced>
+		<hr>
+		<span class=beginner>
+			<label for=replyto>In reply to:</label>
+			<br>
+		</span>
+		<input type=text name=replyto id=replyto value="$replyTo" size=45>
+	</span>
 </form>
 <!-- / reply.template -->
