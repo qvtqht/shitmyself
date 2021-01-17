@@ -28,6 +28,12 @@
 							<input type=submit value="Send Now" name=addtext id=addtext>
 							<span id=spanSignAs></span>
 							<p id=spanWriteAdvanced class=advanced></p>
+							<span class=advanced>
+								<label for=recfing>
+									<input name=recfing id=recfing type=checkbox>
+									Record fingerprint (doesn't work yet)
+								</label>
+							</span>
 						</p>
 						<span id=write_js></span>
 					</fieldset>
