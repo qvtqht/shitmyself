@@ -423,6 +423,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						my ($paramName, $paramValue) = split('=', $urlParam);
 
 						if (!defined($paramValue)) {
+							WriteLog('ProcessAccessLog: warning: urlParam: $paramValue missing');
 							next;
 						}
 
@@ -513,12 +514,21 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 							
 							if ($hashFilename) {
 								if ($pathedFilename ne $hashFilename) {
+									if ($pathedFilename =~ m/^(.+)$/) {
+										$pathedFilename = $1;
+									}
+									if ($hashFilename =~ m/^(.+)$/) {
+										$hashFilename = $1;
+									}
+
+									WriteLog('ProcessAccessLog: $pathedFilename = ' . $pathedFilename . '; $hashFilename = ' . $hashFilename);
+
 									if (-e $hashFilename) {
 										# if $hashFilename already exists and it's larger,
 										# leave it alone, and remove file we just created instead
 										#
 										if (-s $hashFilename > -s $pathedFilename) {
-											unlink ($pathedFilename);
+											unlink($pathedFilename);
 											$pathedFilename = $hashFilename;
 										} else {
 											rename($pathedFilename, $hashFilename);
