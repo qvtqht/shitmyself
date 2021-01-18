@@ -1059,7 +1059,7 @@ sub IsAdmin { # $key ; returns 1 if user is admin, otherwise 0
 	}
 	WriteLog("IsAdmin($key)");
 
-	my $rootAdminKey = GetRootAdminKey();
+	my $rootAdminKey = ''; #GetRootAdminKey();
 	if (!$rootAdminKey) {
 		$rootAdminKey = '';
 	}
