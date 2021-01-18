@@ -16,11 +16,13 @@ while (my $argFound = shift) {
 
 use Digest::SHA qw(sha512_hex);
 
-require('./utils.pl');
 require('./pgpg.pl');
+require('./utils.pl');
 
 sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into item_attribute table
 	# note: this is kind of a hack, and non-importing validation should just be separate own sub
+	# note: this hack seems to work ok
+
 	my $import = shift;
 	if (!defined($import)) {
 		$import = 1;
@@ -244,7 +246,8 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if (
 			$gpgKey &&
 			$alias &&
-			!GetRootAdminKey() &&
+#			!GetRootAdminKey() &&
+			0 &&
 			GetConfig('admin/admin_imprint') &&
 			$alias eq 'Operator'
 		) {
