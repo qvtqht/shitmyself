@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use utf8;
+use 5.010;
 
 my @argsFound;
 while (my $argFound = shift) {
@@ -181,6 +182,70 @@ sub GpgParse {
 
 	return %returnValues;
 } # GpgParse()
+
+#
+#sub GetRootAdminKey { # Returns root admin's public key, if there is none
+#	# it's located in ./admin.key as armored public key
+#	# should be called GetRootAdminKey()
+#	# it's located in ./admin.key as armored public key
+#	# should be called GetRootAdminKey()
+#	state $adminsKey;
+#	if ($adminsKey) {
+#		return $adminsKey;
+#	}
+#
+#	my $SCRIPTDIR = GetDir('script');
+#
+#	if (-e "$SCRIPTDIR/admin.key") {
+#		my %adminsInfo = GpgParse("$SCRIPTDIR/admin.key");
+#		if ($adminsInfo{'isSigned'}) {
+#			if ($adminsInfo{'key'}) {
+#				$adminsKey = $adminsInfo{'key'};
+#				return $adminsKey;
+#			} else {
+#				return 0;
+#			}
+#		} else {
+#			return 0;
+#		}
+#	} else {
+#		return 0;
+#	}
+#	return 0;
+##	return GetConfig('config/admin/root_admin_key');
+#}
+#
+#sub CheckForRootAdminChange {
+#	my $lastAdmin = GetConfig('current_admin');
+#	my $currAdmin = '';#GetRootAdminKey();
+#
+#	if (!$lastAdmin) {
+#		$lastAdmin = 0;
+#	}
+#
+#	if ($currAdmin) {
+#		if ($lastAdmin ne $currAdmin) {
+#			WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
+#
+#			my $changeAdminFilename = 'changeadmin_' . GetTime() . '.txt';
+#			my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
+#
+#			my $TXTDIR = GetDir('txt');
+#			PutFile("$TXTDIR/$changeAdminFilename", $changeAdminMessage);
+#			ServerSign("$TXTDIR/$changeAdminFilename");
+#			PutConfig("current_admin", $currAdmin);
+#
+#			require('./sqlite.pl');
+#
+#			if ($lastAdmin) {
+#				DBAddPageTouch('author', $lastAdmin);
+#			}
+#			if ($currAdmin) {
+#				DBAddPageTouch('author', $currAdmin);
+#			}
+#		}
+#	}
+#} # CheckForRootAdminChange()
 
 while (my $arg1 = shift @argsFound) {
 	WriteLog('index.pl: $arg1 = ' . $arg1);
