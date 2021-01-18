@@ -472,10 +472,15 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 	my @queryParams = @_;
 
 	if ($query) {
-		WriteLog('SqliteQuery2: $query = ' . $query);
+		my $queryOneLine = $query;
+		$queryOneLine =~ s/\s+/ /g;
+
+		WriteLog('SqliteQuery2: $query = ' . $queryOneLine);
 		WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
 
 		if ($dbh) {
+			WriteLog('SqliteQuery2: $dbh was found, proceeding...');
+
 			my $aref;
 			my $sth;
 
@@ -492,7 +497,9 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 			# };
 
 			$sth = $dbh->prepare($query);
-			$sth->execute(@queryParams);
+			my $execResult = $sth->execute(@queryParams);
+
+			WriteLog('SqliteQuery2: $execResult = ' . $execResult);
 
 			$aref = $sth->fetchall_arrayref();
 			$sth->finish();
@@ -526,9 +533,12 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 		WriteLog('SqliteQuery: warning: called without $query');
 		return;
 	}
+	my $queryOneLine = $query;
+	$queryOneLine =~ s/\s+/ /g;
+
 	chomp $query;
 	$query = EscapeShellChars($query);
-	WriteLog('SqliteQuery: $query = ' . $query);
+	WriteLog('SqliteQuery: $query = ' . $queryOneLine);
 
 	my $SqliteDbName = GetSqliteDbName();
 
@@ -2094,8 +2104,7 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 	
 	#todo bind params and use hash of parameters
 
-	WriteLog("DBGetItemList");
-	WriteLog("$query");
+	WriteLog('DBGetItemList: $query = ' . $query);
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
@@ -2107,7 +2116,7 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 	}
 
 	return @resultsArray;
-}
+} # DBGetItemList()
 
 sub DBGetAllAppliedTags { # return all tags that have been used at least once
 	my $query = "
