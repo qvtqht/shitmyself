@@ -2358,15 +2358,29 @@ sub DBGetTopAuthors { # Returns top-scoring authors from the database
 }
 
 sub DBGetTopItems { # get top items minus flag (hard-coded for now)
+	WriteLog('DBGetTopItems()');
+
+	my %queryParams;
+	$queryParams{'where_clause'} = "WHERE item_score > 0";
+	$queryParams{'order_clause'} = "ORDER BY add_timestamp DESC";
+	$queryParams{'limit_clause'} = "LIMIT 100";
+	my @resultsArray = DBGetItemList(\%queryParams);
+
+	return @resultsArray;
+}
+
+sub DBGetItemsByPrefix { # $prefix ; get items whose hash begins with $prefix
+	my $prefix = shift;
+	if (!IsItemPrefix($prefix)) {
+		WriteLog('DBGetItemsByPrefix: warning: $prefix sanity check failed');
+		return '';
+	}
+
 	my $itemFields = DBGetItemFields();
-
 	my $whereClause;
-
 	$whereClause = "
-		WHERE 
-			(',' || tags_list || ',' NOT LIKE '%,notext,%')
-			AND
-			(',' || tags_list || ',' NOT LIKE '%,hasparent,%')
+		WHERE
+			(file_hash LIKE '%$prefix')
 
 	"; #todo remove hardcoding here
 
@@ -2381,23 +2395,21 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 		LIMIT 50;
 	";
 
-	WriteLog('DBGetTopItems()');
-
-	WriteLog($query);
-
+	WriteLog('DBGetItemsByPrefix: $query = ' . $query);
 	my @queryParams;
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@queryParams);
 
 	my @resultsArray = ();
-
 	while (my $row = $sth->fetchrow_hashref()) {
 		push @resultsArray, $row;
 	}
 
+	WriteLog('DBGetItemsByPrefix: scalar(@resultsArray) = ' . @resultsArray);
+
 	return @resultsArray;
-}
+} # DBGetItemsByPrefix()
 
 sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash of [tag] -> count
 	my $fileHash = shift;
