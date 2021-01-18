@@ -6,7 +6,7 @@ sub GetMyCacheVersion { # returns "version" of cache
 # this is used to prevent cache conflicts between different software versions
 # used to return git commit identifier, looking for a better alternative now
 # todo make this return something other than hard-coded string
-	my $cacheVersion = 'a';
+	my $cacheVersion = 'b';
 
 	state $dirChecked;
 	if (!$dirChecked) {
