@@ -1029,6 +1029,14 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 				$itemAttributesTable .= '</td></tr>';
 			}
 
+			{ # bolt on item score
+				$itemAttributesTable .= '<tr><td>';
+				$itemAttributesTable .= GetString('item_attribute/item_score');
+				$itemAttributesTable .= '</td><td>';
+				$itemAttributesTable .= $file{'item_score'};
+				$itemAttributesTable .= '</td></tr>';
+			}
+
 			my $itemAttributesWindow = GetWindowTemplate($itemAttributesTable, 'Item Attributes', 'attribute,value');
 			$itemAttributesWindow = '<span class=advanced>' . $itemAttributesWindow . '</span>';
 			$txtIndex .= $itemAttributesWindow;
