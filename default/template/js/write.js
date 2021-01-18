@@ -44,7 +44,7 @@ function WriteOnload () { // onload handler for write page
 					lblSignAs.setAttribute('for', 'chkSignAs');
 
 					var chkSignAs = document.createElement('input');
-					//chkSignAs.setAttribute('name', 'signAs');
+					chkSignAs.setAttribute('name', 'chkSignAs');
 					chkSignAs.setAttribute('id', 'chkSignAs');
 					chkSignAs.setAttribute('type', 'checkbox');
 					chkSignAs.setAttribute('checked', 1);
