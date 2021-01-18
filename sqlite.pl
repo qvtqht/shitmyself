@@ -676,11 +676,9 @@ sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged a
 # Looks for vote_value = 'friend' and items that contain 'pubkey' tag
 	my $authorKey = shift;
 	chomp $authorKey;
-
 	if (!$authorKey) {
 		return;
 	}
-
 	if (!IsFingerprint($authorKey)) {
 		return;
 	}
@@ -1018,12 +1016,12 @@ sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
 	push @queryParams, $key;
 
 	DBAddPageTouch('author', $key);
-	DBAddPageTouch('scores');
+	DBAddPageTouch('authors');
 	DBAddPageTouch('stats');
 }
 
 sub DBGetTouchedPages { # Returns items from task table, used for prioritizing which pages need rebuild
-# index, rss, scores, stats, tags, and top are returned first
+# index, rss, authors, stats, tags, and top are returned first
 
 	my $touchedPageLimit = shift;
 
@@ -2191,7 +2189,8 @@ sub DBGetAuthorAlias { # returns author's alias by gpg key
 	}
 }
 
-sub DBGetAuthorScore { # returns author's total score, or the sum of all the author's items' scores
+sub DBGetAuthorScore { # returns author's total score
+# score is the sum of all the author's items' scores
 # $key = author's gpg key  
 	my $key = shift;
 	chomp ($key);
@@ -2371,22 +2370,6 @@ sub DBGetTopItems { # get top items minus flag (hard-coded for now)
 
 	"; #todo remove hardcoding here
 
-	#
-	# $whereClause = "
-	# 	WHERE
-	# 		(item_title != '' OR ',' || tags_list || ',' LIKE '%,approve,%') AND
-	# 		parent_count = 0 AND
-	# 		',' || tags_list || ',' NOT LIKE '%,meta,%' AND
-	# 		',' || tags_list || ',' NOT LIKE '%,changelog,%' AND
-	# 		',' || tags_list || ',' NOT LIKE '%,flag,%'
-	# "; #todo remove hardcoding here
-	#
-	# not sure what this is supposed to be for...
-#	my $additionalWhereClause = shift;
-#	if ($additionalWhereClause) {
-#		$whereClause .= ' AND ' . $additionalWhereClause;
-#	}
-
 	my $query = "
 		SELECT
 			$itemFields
@@ -2463,7 +2446,5 @@ sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash 
 
 	return %voteTotals;
 } # DBGetItemVoteTotals()
-
-
 
 1;
