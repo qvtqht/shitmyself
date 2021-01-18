@@ -987,6 +987,10 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 							# title needs to be escaped
 							$iaValue = HtmlEscape($iaValue);
 						}
+						if ($iaName eq 'gpg_alias') {
+							# aka signature / username, needs to be escaped
+							$iaValue = HtmlEscape($iaValue);
+						}
 						if ($iaName eq 'file_path') {
 							# link file path to file
 							my $HTMLDIR = GetDir('html'); #todo
