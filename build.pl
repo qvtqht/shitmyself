@@ -12,13 +12,14 @@ sub BuildMessage { # prints timestamped message to output
 } # BuildMessage()
 
 BuildMessage "Require ./utils.pl...";
+require './pgpg.pl';
 require './utils.pl';
 
 EnsureDirsThatShouldExist();
 
 CheckForInstalledVersionChange();
 
-CheckForRootAdminChange();
+#CheckForRootAdminChange();
 
 require './index.pl';
 
