@@ -43,6 +43,8 @@ sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into it
 			my $previousLine = '';
 			my $sequenceNumber = 0;
 
+			my %return;
+
 			foreach my $currentLine (@addedRecord) {
 				WriteLog("MakeChainIndex: $currentLine");
 				WriteMessage("Verifying Chain: $sequenceNumber");
@@ -72,11 +74,20 @@ sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into it
 
 				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
 				DBAddItemAttribute($fileHash, 'chain_sequence', $sequenceNumber);
+				DBAddItemAttribute($fileHash, 'chain_next', $previousLine);
 				WriteLog('MakeChainIndex: $sequenceNumber = ' . $sequenceNumber);
+				WriteLog('MakeChainIndex: (next item stub/aka checksum) $previousLine = ' . $previousLine);
+
+				$return{'chain_sequence'} = $sequenceNumber;
+				$return{'chain_next'} = $previousLine;
+				$return{'chain_timestamp'} = $addedTime;
 
 				$sequenceNumber = $sequenceNumber + 1;
 				$previousLine = $currentLine;
 			} # foreach $currentLine (@addedRecord)
+
+			return %return;
+
 			DBAddItemAttribute('flush');
 			return 1;
 		} # $chainLog
