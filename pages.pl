@@ -2449,7 +2449,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		if ($script eq 'profile') {
 			#todo this should work for all admins, not just root
 			# for profile.js we need to fill in current admin id
-			my $currentAdminId = GetRootAdminKey() || '-';
+			my $currentAdminId = '';#GetRootAdminKey() || '-';
 			#todo this whole thing should change to include non-root admins
 			$scriptTemplate =~ s/\$currentAdminId/$currentAdminId/g;
 		}
