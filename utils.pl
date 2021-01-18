@@ -1111,12 +1111,6 @@ sub GetServerKey { # Returns server's public key, 0 if there is none
 	return 0;
 } # GetServerKey()
 
-sub GetRootAdminKey { # Returns root admin's public key, if there is none
-	# it's located in ./admin.key as armored public key
-	# should be called GetRootAdminKey()
-	return GetConfig('config/admin/root_admin_key');
-}
-
 sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a file path
 	my $string = shift;
 	while (index($string, "/") >= 0) {
@@ -1360,41 +1354,6 @@ sub CheckForInstalledVersionChange {
 		PutConfig('current_version', $currVersion);
 	}
 } # CheckForInstalledVersionChange()
-
-sub CheckForRootAdminChange {
-	my $lastAdmin = GetConfig('current_admin');
-	my $currAdmin = GetRootAdminKey();
-
-	if (!$lastAdmin) {
-		$lastAdmin = 0;
-	}
-
-	if ($currAdmin) {
-		if ($lastAdmin ne $currAdmin) {
-			WriteLog("$lastAdmin ne $currAdmin, posting change-admin");
-
-			my $changeAdminFilename = 'changeadmin_' . GetTime() . '.txt';
-			my $changeAdminMessage = 'Admin has changed from ' . $lastAdmin . ' to ' . $currAdmin;
-
-			my $TXTDIR = GetDir('txt');
-
-			PutFile("$TXTDIR/$changeAdminFilename", $changeAdminMessage);
-
-			ServerSign("$TXTDIR/$changeAdminFilename");
-
-			PutConfig("current_admin", $currAdmin);
-
-			require('./sqlite.pl');
-
-			if ($lastAdmin) {
-				DBAddPageTouch('author', $lastAdmin);
-			}
-			if ($currAdmin) {
-				DBAddPageTouch('author', $currAdmin);
-			}
-		}
-	}
-} # CheckForRootAdminChange()
 
 sub ServerSign { # Signs a given file with the server's key
 	# If config/admin/server_key_id exists
