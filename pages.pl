@@ -1728,10 +1728,6 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 
 	#WriteLog('GetThemeAttribute(' . $attributeName . ')');
 
-	# default theme
-	#	my $themeName = 'theme.dark';
-	#	my $themeName = 'theme.win95';
-
 	my $themeName = GetConfig('html/theme');
 	if (substr($themeName, 0, 6) eq 'theme.') {
 		# compatibility
@@ -1740,15 +1736,20 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 		}
 	}
 
+	if (!ConfigKeyValid("theme/$themeName")) {
+		WriteLog('GetThemeAttribute: warning: ConfigKeyValid("theme/$themeName") was false');
+		$themeName = 'chicago';
+	}
+
 	my $attributePath = 'theme/' . $themeName . '/' . $attributeName;
+
 	#todo sanity checks
 
 	my $attributeValue = GetConfig($attributePath) || '';
-
 	WriteLog('GetThemeAttribute: ' . $attributeName . ' -> ' . $attributePath . ' -> ' . $attributeValue);
 
 	return trim($attributeValue);
-}
+} # GetThemeAttribute()
 
 sub FillThemeColors { # $html ; fills in templated theme colors in provided html
 	my $html = shift;
