@@ -435,6 +435,26 @@ sub SqliteMakeTables { # creates sqlite schema
 			author.key, author_alias.alias, author_alias.file_hash
 	");
 
+
+    	#todo deconfusify
+    	SqliteQuery2("
+    		CREATE VIEW
+    			item_score
+    		AS
+    			SELECT
+    				item.file_hash AS file_hash,
+    				IFNULL(SUM(vote_value.value), 0) AS item_score
+    			FROM
+    				vote
+    				LEFT JOIN item
+    					ON (vote.file_hash = item.file_hash)
+    				LEFT JOIN vote_value
+    					ON (vote.vote_value = vote_value.vote)
+    			GROUP BY
+    				item.file_hash
+    	");
+
+
 	my $SqliteDbName = GetSqliteDbName();
 
 	my $schemaHash = `sqlite3 "$SqliteDbName" ".schema" | sha1sum | awk '{print \$1}' > config/sqlite3_schema_hash`;
