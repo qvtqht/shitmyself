@@ -291,20 +291,47 @@ sub SqliteMakeTables { # creates sqlite schema
 			item_hash
 	");
 
-	SqliteQuery2("
-		CREATE VIEW
-			item_score
-		AS
-			SELECT
-				item.file_hash AS file_hash,
-				COUNT(vote.vote_value) AS item_score
-			FROM
-				vote
-				LEFT JOIN item
-					ON (vote.file_hash = item.file_hash)
-			GROUP BY
-				item.file_hash
-	");
+	{ #todo clean up
+		SqliteQuery2("
+			create table vote_value(vote, value);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('good', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('textart', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('meta', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('textart', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('noise', -1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('funny', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('approve', 10);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('stop', -1023);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('report', -1023);
+		");
+	}
 
 	SqliteQuery2("
 		CREATE VIEW
