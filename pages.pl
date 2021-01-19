@@ -1441,10 +1441,10 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				if ($gpgKey) {
 					# get author link for this gpg key
 					my $authorLink = trim(GetAuthorLink($gpgKey));
-#					$statusBar =~ s/\$authorLink/$authorLink/g;
+					$statusBar =~ s/\$authorLink/$authorLink/g;
 				} else {
 					# if no author, no $authorLink
-#					$statusBar =~ s/\$authorLink;//g;
+					$statusBar =~ s/\$authorLink;//g;
 				}
 
 				$windowParams{'status'} = $statusBar;
