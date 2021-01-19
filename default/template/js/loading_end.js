@@ -1,6 +1,12 @@
 // begin loading_end.js
 
 function HideLoadingIndicator () {
+	if (!document.getElementById) {
+		return '';
+	}
+
+	var loadingIndicator = window.loadingIndicator;
+
 	if (!loadingIndicator) {
 		if (document.getElementById) {
 			loadingIndicator = document.getElementById('loadingIndicator');
@@ -11,15 +17,16 @@ function HideLoadingIndicator () {
 		clearTimeout(loadingIndicatorShowTimeout);
 	}
 
-	loadingIndicator.innerHTML = 'Finished!';
-	loadingIndicator.style.backgroundColor = '#00ff00';
+	loadingIndicator.innerHTML = 'Ready.';
+	loadingIndicator.style.backgroundColor = '$colorHighlightAdvanced';
 
 	window.loadingIndicator = loadingIndicator;
 
-	setTimeout('if (window.loadingIndicator) { window.loadingIndicator.style.display = "none"; }', 3000);
+	setTimeout('if (window.loadingIndicator) { window.loadingIndicator.style.display = "none"; }', 3000); //#todo
 	// } else {
 	// 	if (loadingIndicator) { loadingIndicator.style.display = 'none' }
 	// }
+	return '';
 } // HideLoadingIndicator()
 
 function WaitForOpenPgp () {
@@ -31,5 +38,9 @@ function WaitForOpenPgp () {
 		setTimeout('if (window.WaitForOpenPgp) { WaitForOpenPgp() }', 500);
 	}
 } // WaitForOpenPgp()
+
+if (!window.OnLoadEverything && window.HideLoadingIndicator) {
+	HideLoadingIndicator();
+}
 
 // end loading_end.js

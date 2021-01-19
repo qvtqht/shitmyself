@@ -72,7 +72,7 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		document.search.q.focus();
 	}
 
-	if (document.HideLoadingIndicator) {
+	if (window.HideLoadingIndicator) {
 		HideLoadingIndicator();
 	}
 
