@@ -1,4 +1,7 @@
 #!/usr/bin/perl -T
+#
+
+die "File needs fixing and debugging";
 
 use strict;
 use utf8;
