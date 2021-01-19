@@ -291,7 +291,7 @@ sub SqliteMakeTables { # creates sqlite schema
 			item_hash
 	");
 
-	{ #todo clean up
+	{ #todo clean up vote_value #scaffold
 		SqliteQuery2("
 			create table vote_value(vote, value);
 		");
@@ -318,6 +318,10 @@ sub SqliteMakeTables { # creates sqlite schema
 
 		SqliteQuery2("
 			insert into vote_value(vote, value) values('funny', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('puzzle', 5);
 		");
 
 		SqliteQuery2("
