@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+# update.pl
 # the purpose of this script is to
 #   find new items
 #   run IndexTextFile() on them

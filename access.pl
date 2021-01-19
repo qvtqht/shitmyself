@@ -1,6 +1,7 @@
 #!/usr/bin/perl -T
 
 # access.pl
+# #todo rename to accesslog.pl?
 # Parses access.log
 # Posts new messages to $TXTDIR -- GetDir('txt');
 my $arg1 = shift;

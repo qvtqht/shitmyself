@@ -1,4 +1,9 @@
 #!/usr/bin/perl -T
+#
+# widget.pl
+# returns widget html 
+# GetItemTagButtons: voting buttons for an item
+# to come: clock, etc
 
 use strict;
 use 5.010;

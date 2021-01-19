@@ -1,8 +1,8 @@
 #!/usr/bin/perl -T
 
-# validator stub
-
-# so far, validates continuity of chain.log
+# validate.pl
+# validates continuity of chain.log
+# returns stub for next item, chain length, and timestamp of most recent item
 
 use strict;
 use warnings;
@@ -28,3 +28,5 @@ if (GetConfig('admin/read_chain_log')) {
 		WriteMessage('WARNING! Chain validation FAILURE!');
 	}
 }
+
+1;

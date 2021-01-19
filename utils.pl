@@ -1,4 +1,10 @@
 #!/usr/bin/perl -T
+#
+# utils.pl
+# utilities which haven't found their own file yet
+# typically used by another file
+# performs basic state validation whenever run
+# 
 
 $ENV{PATH}="/bin:/usr/bin";
 
