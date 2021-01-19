@@ -33,7 +33,7 @@
 						<p class=advanced>
 							<label for=chkEnhanceWrite>
 								<input type=checkbox id=chkEnhanceWrite name=chkEnhanceWrite onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_write'); }">
-								Write form enhancements<noscript><b>*</b></noscript>
+								Make write box big and blue<noscript><b>*</b></noscript>
 							</label>
 						</p>
 
@@ -52,7 +52,7 @@
 						<p>
 							<span class=beginner>
 								To activate, check box, then press button.<br>
-								This helps prevent accidental activation.
+								This helps prevent accidental activation.<br>
 							</span>
 						</p>
 						<p>
@@ -66,7 +66,8 @@
 						</p>
 						<p>
 							<span class=beginner>
-								Archive uninteresting content
+								Use Flush to make space for new content<br>
+								Existing content may become inaccessible.<br>
 							</span>
 
 							<label for=chkFlush>
@@ -77,7 +78,10 @@
 							<input type=submit name=btnFlush id=btnFlush value=Flush>
 						</p>
 						<p>
-							<span class=beginner>Remove current operator/top moderator:<br></span>
+							<span class=beginner>
+								Overthrow button removes current administrator.<br>
+								Remember, unsuccessful overthrow is insurrection.<br>
+							</span>
 
 							<label for=chkOverthrow>
 								<input type=checkbox id=chkOverthrow name=chkOverthrow>
