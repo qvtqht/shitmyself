@@ -65,7 +65,9 @@
 							<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
 						</p>
 						<p>
-							<span class=beginner>Flush everything and clear board for new content:<br></span>
+							<span class=beginner>
+								Archive uninteresting content
+							</span>
 
 							<label for=chkFlush>
 								<input type=checkbox id=chkFlush name=chkFlush>
