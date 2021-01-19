@@ -1,6 +1,9 @@
 <!-- form/upload.template ; file upload form -->
 <form enctype="multipart/form-data" action="/upload.php" method="POST" name=upload id=upload>
 	<p>Upload one picture.</p>
+	<p class=beginner>
+		Remember to press Upload button.
+	</p>
 	<p><input name=uploaded_file type=file id=uploaded_file></p>
 	<p><input name=submit type=submit value=Upload id=submit></p>
 	<span id=spanImagePreview></span>
