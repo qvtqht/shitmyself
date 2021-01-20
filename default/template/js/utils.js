@@ -270,11 +270,11 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 			t = t.firstChild;
 		}
 		var newVisible = 'initial';
-		if (t.innerHTML == '[show]') {
-			t.innerHTML = '[hide]';
+		if (t.innerHTML == '}{') {
+			t.innerHTML = '{}'; // needs to match one other place in pages.pl #collapseButton
 			// t.innerHTML = '[up]';
 		} else {
-			t.innerHTML = '[show]';
+			t.innerHTML = '}{';
 			newVisible = 'none';
 		}
 		if (t.parentElement) {

@@ -271,7 +271,7 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 	my $showButtons = GetConfig('html/window_titlebar_buttons'); # titlebar hide and skip buttons; #todo GetConfig('titlebar_with_button');
 	if ($windowTitle) {
 		if ($showButtons) {
-			my $btnCloseCaption = '[hide]';
+			my $btnCloseCaption = '{}'; # needs to match one other place in utils.js #collapseButton
 			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
 			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
