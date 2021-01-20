@@ -127,6 +127,7 @@ function EventLoop () { // for calling things which need to happen on a regular 
 	}
 
 	if (window.eventLoopFresh && window.CheckIfFresh) {
+		//window.eventLoopFresh = eventLoopBegin;
 		if (GetPrefs('notify_on_change')) {
 			CheckIfFresh();
 		}
