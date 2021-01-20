@@ -39,11 +39,16 @@ sub GpgParse {
 	if ($filePath =~ m/([a-zA-Z0-9\.\/]+)/) {
 		$filePath = $1;
 	} else {
-		WriteLog('GpgParse: sanity check failed on $filePath, returning');
+		WriteLog('GpgParse: warning: sanity check failed on $filePath, returning');
 		return '';
 	}
 
 	my $fileHash = GetFileHash($filePath);
+
+	if (!$fileHash || !IsItem($fileHash)) {
+		WriteLog('GpgParse: warning: sanity check failed on $fileHash, returning');
+		return '';
+	}
 
 	my $CACHEPATH = GetDir('cache');
 	my $cachePathStderr = "$CACHEPATH/gpg_stderr";
