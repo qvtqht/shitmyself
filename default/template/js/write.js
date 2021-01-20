@@ -122,9 +122,8 @@ function CommentMakeWp(comment) { // makes editor textarea larger and gives it w
 	comment.setAttribute('rows', 24);
 } // CommentMakeWp()
 
-function writeSubmit (t) { // called when user submits write form
+function writeSubmit (t) { // called when user submits write form //signMessage (
 	//alert('DEBUG: writeSubmit() begin');
-
 	if (window.localStorage) {
 		//alert('DEBUG: window.localStorage');
 		if (window.ClearAutoSave) {
@@ -149,12 +148,15 @@ function writeSubmit (t) { // called when user submits write form
 							signMessageResult = 0;
 						}
 						// once the message is signed, callback will submit the form
+						return true;
 					}
 				} else {
+					// user choose not to sign
 					return true;
 				}
 			}
 		} else {
+			// no private key
 			//alert('DEBUG: no private key, basic submit');
 		}
 	} else {
