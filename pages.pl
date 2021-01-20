@@ -2211,9 +2211,13 @@ sub GetStatsTable {
 	state $itemsIndexed; $itemsIndexed = $itemsIndexed || DBGetItemCount();
 	my $authorCount = DBGetAuthorCount();
 
-	my $adminId = GetRootAdminKey();
-	my $adminUsername = GetAlias($adminId);
-	my $adminLink = GetAuthorLink($adminId);
+#	my $adminId = GetRootAdminKey();
+#	my $adminUsername = GetAlias($adminId);
+#	my $adminLink = GetAuthorLink($adminId);
+
+	my $adminId = '';#GetRootAdminKey();
+	my $adminUsername = '';#GetAlias($adminId);
+	my $adminLink = '';#GetAuthorLink($adminId);
 
 	my $serverId = GetServerKey();
 	my $serverLink = GetAuthorLink($serverId);
