@@ -58,8 +58,13 @@ function RunTest() {
 	//alert('DEBUG: Looking for window.history...');
 	document.frmTest.txtWindowHistory.value = !!window.history;
 
-	//alert('DEBUG: Looking for window.setTimeout...');
-	document.frmTest.txtWindowSetTimeout.value = !!window.setTimeout;
+	if (navigator.userAgent.indexOf('compatible; MSIE 3.0') != -1) {
+		//alert('DEBUG: Skipping String.fromCharCode, compatible; MSIE 3.0;');
+		document.frmTest.txtWindowSetTimeout.value = 'skipped';
+	} else {
+		//alert('DEBUG: Looking for window.setTimeout...');
+		document.frmTest.txtWindowSetTimeout.value = !!window.setTimeout;
+	}
 
 	//alert('DEBUG: Testing window.setTimeout(...)...');
 	document.frmTest.txtWindowSetTimeoutReturn.value = 'false';
