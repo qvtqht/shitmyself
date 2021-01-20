@@ -3,7 +3,6 @@
 	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog width="95%">
 		<tr bgcolor="$colorTopMenuTitlebar" class=titlebar>
 			<td colspan=2>
-				$logoText
 				<small>
 				<b>
 					<a tabindex=2 href="#maincontent" name=top><font color="$colorTopMenuTitlebarText">Skip to main content</font></a>;

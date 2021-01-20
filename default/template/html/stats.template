@@ -16,6 +16,7 @@
 					<p>Updated: $lastUpdateTime
 					<p></p>
 					<p>Root: $admin
+					<p id=diagnostics></p>
 				</fieldset>
 				<fieldset class=advanced>
 					<p><input type=submit name=comment value="Update">
