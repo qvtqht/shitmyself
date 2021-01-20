@@ -87,5 +87,5 @@ server.http-parseopts = (
 # enable caching
 # set to 1 minute because it doesn't work that well yet, but it's better than nothing.
 expire.url = (
-	"/" => "access plus 1 minutes"
+	"/" => "access plus 10 minutes"
 )
