@@ -18,7 +18,7 @@ function HideLoadingIndicator () {
 	}
 
 	loadingIndicator.innerHTML = 'Ready.';
-	loadingIndicator.style.backgroundColor = '$colorHighlightAdvanced';
+//	loadingIndicator.style.backgroundColor = '$colorHighlightAdvanced';
 
 	window.loadingIndicator = loadingIndicator;
 
