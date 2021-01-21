@@ -266,7 +266,7 @@ if (!defined($arg1) || $arg1 eq '--all') {
 			$findCommand = "find $TXTDIR | grep -i \.txt\$";
 			push @files, split("\n", `$findCommand`);
 
-			if (GetConfig('admin/dev_mode')) {
+			if (GetConfig('admin/dev/index_doc')) {
 				# add doc
 				$findCommand = "find ./doc | grep -i \.txt\$";
 				push @files, split("\n", `$findCommand`);
