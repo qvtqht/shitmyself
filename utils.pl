@@ -349,7 +349,7 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		# report the issue
 		WriteLog("GetTemplate: warning: template $filename missing");
 
-		if (GetConfig('admin/dev_mode')) {
+		if (GetConfig('admin/dev/die_on_missing_template')) {
 			die("GetTemplate: warning: template $filename missing, exiting");
 		}
 	}
