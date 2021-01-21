@@ -2236,6 +2236,12 @@ sub GetItemPrefixPage { # returns page with top items listing
 		my $colorRow0Bg = GetThemeColor('row_0'); # color 0
 		my $colorRow1Bg = GetThemeColor('row_1'); # color 1
 
+		if (scalar(@topItems)) {
+			WriteLog('GetItemPrefixPage: scalar(@topItems) was true');
+		} else {
+			WriteLog('GetItemPrefixPage: warning: scalar(@topItems) was false');
+		}
+
 		while (@topItems) {
 			my $itemTemplate = GetTemplate('html/item_listing.template');
 			# it's ok to do this every time because GetTemplate() already stores it in a static
@@ -2394,6 +2400,7 @@ sub GetStatsTable {
 
 	# count total number of files
 	my $filesTotal = 0;
+	WriteLog('GetStatsTable: $filesTotal = 0');
 
 	my $TXTDIR = GetDir('txt');
 
@@ -2404,6 +2411,7 @@ sub GetStatsTable {
 			$findResult = $1;
 			my $filesTxt = trim($findResult); #todo cache GetCache('count_txt')
 			PutCache('count_txt', $filesTxt);
+			WriteLog('GetStatsTable: $filesTotal (' . $filesTotal . ') += $filesTxt (' . $filesTxt . ');');
 			$filesTotal += $filesTxt;
 		}
 	} else {
@@ -2419,6 +2427,7 @@ sub GetStatsTable {
 			if ($imagesFindResults =~ m/^[0-9]+$/) {
 				my $filesImage =  GetCache('count_image') || trim($imagesFindResults);
 				PutCache('count_image', $filesImage);
+				WriteLog('GetStatsTable: $filesTotal (' . $filesTotal . ') += $filesImage (' . $filesImage . ');');
 				$filesTotal += $filesImage;
 			} else {
 				WriteLog('GetStatsTable: warning: sanity check failed getting image count');
@@ -2929,7 +2938,7 @@ sub GetAuthorInfoBox {
 
 	my $profileVoteButtons = GetItemTagButtons($publicKeyHash, 'pubkey');
 
-	$authorLastSeen = GetTimestampWidget($authorLastSeen);
+	$authorLastSeen = GetTimestampWidget($authorLastSeen) || '*';
 
 	if (!$authorDescription) {
 		$authorDescription = '*';
@@ -3192,7 +3201,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 			}
 			else {
 				$itemTemplate = '<p>Problem decoding message ' . (defined($row->{'file_hash'}) ? $row->{'file_hash'} : 'x') . '</p>';
-				WriteLog('GetReadPage: Something happened and there is no $message where I expected it... Oh well, moving on.');
+				WriteLog('GetReadPage: warning: Something happened and there is no $message where I expected it... Oh well, moving on.');
 			}
 
 			if ($itemComma eq '') {
@@ -3652,8 +3661,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	$jsTest1 = InjectJs($jsTest1, qw(jstest1));
 	PutHtmlFile("jstest1.html", $jsTest1);
 
-
-
 	# Submit page
 	my $submitPage = GetWritePage();
 	PutHtmlFile("write.html", $submitPage);
@@ -3682,14 +3689,14 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# Search page
 	my $searchPage = GetSearchPage();
 	PutHtmlFile("search.html", $searchPage);
-
-	# Add Event page
-	my $eventAddPage = GetEventAddPage();
-	PutHtmlFile("event.html", $eventAddPage);
-
-	# Add Event page
-	my $eventsPage = GetEventsPage();
-	PutHtmlFile("events.html", $eventsPage);
+#
+#	# Add Event page
+#	my $eventAddPage = GetEventAddPage();
+#	PutHtmlFile("event.html", $eventAddPage);
+#
+#	# Add Event page
+#	my $eventsPage = GetEventsPage();
+#	PutHtmlFile("events.html", $eventsPage);
 
 	# Add Authors page
 	MakePage('authors', 0);
@@ -4587,7 +4594,7 @@ sub GetPagePath { # $pageType, $pageParam ; returns path to item's html path
 		# /rss.xml
 		$htmlPath = 'rss.xml';
 	}
-	elsif ($pageType eq 'scores') {
+	elsif ($pageType eq 'authors') {
 		# /authors.html
 		$htmlPath = 'authors.html';
 	} else {
@@ -5073,8 +5080,9 @@ sub FormatForRss { # replaces some spaces with &nbsp; to preserve text-based lay
 sub GetFileSizeWidget { # takes file size as number, and returns html-formatted human-readable size
 	my $fileSize = shift;
 
-	if (!$fileSize) {
-		return;
+	#todo more sanity checks, and 0 should be a valid filesize
+	if (!$fileSize && $fileSize != 0) {
+		return '';
 	}
 
 	chomp ($fileSize);
