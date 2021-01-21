@@ -149,8 +149,8 @@ sub GetStylesheet { # returns style template based on config
 	return $styleSheet;
 }
 
-sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author id
-	my $gpgKey = shift; # author's fingerprint
+sub GetAuthorLink { # $fingerprint, $showPlain ; returns avatar'ed link for an author id
+	my $fingerprint = shift; # author's fingerprint
 	my $showPlain = shift; # 1 to display avatar without colors
 
 	# sanitize $showPlain
@@ -160,19 +160,19 @@ sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author
 		$showPlain = 1;
 	}
 
-	# verify $gpgKey is valid 
-	if (!IsFingerprint($gpgKey)) {
-		WriteLog("WARNING: GetAuthorLink() called with invalid parameter!");
-		return;
+	# verify $fingerprint is valid
+	if (!IsFingerprint($fingerprint)) {
+		WriteLog('GetAuthorLink: warning: sanity check failed on $fingerprint = ' . $fingerprint);
+		return '';
 	}
 
-	my $authorUrl = "/author/$gpgKey/index.html";
+	my $authorUrl = "/author/$fingerprint/index.html";
 
 	my $authorAvatar = '';
 	if ($showPlain) {
-		$authorAvatar = GetAvatar($gpgKey);
+		$authorAvatar = GetAvatar($fingerprint);
 	} else {
-		$authorAvatar = GetAvatar($gpgKey);
+		$authorAvatar = GetAvatar($fingerprint);
 	}
 
 	my $authorLink = GetTemplate('html/authorlink.template');
@@ -183,7 +183,7 @@ sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author
 	$authorLink =~ s/\$authorAvatar/$authorAvatar/g;
 
 	return $authorLink;
-}
+} # GetAuthorLink()
 
 sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 	my $pageNumber = shift;
