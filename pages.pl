@@ -1980,19 +1980,6 @@ sub GetMenuTemplate { # returns menubar
 	my $menuItems = GetMenuFromList('menu');
 	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
 
-	state $logoText;
-	if (!defined($logoText)) {
-		$logoText = GetConfig('logo_text');
-		if (!$logoText) {
-			$logoText = '';
-		}
-	}
-	if (GetConfig('logo_enabled')) {
-		$topMenuTemplate =~ s/\$logoText/$logoText/g;
-	} else {
-		$topMenuTemplate =~ s/\$logoText//g;
-	}
-
 	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
@@ -2047,6 +2034,19 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	my $identityLink = '<span id="signin"><a href="/profile.html">Go to profile</a></span> <span class="myid" id=myid></span> ';
 #	my $noJsIndicator = '<noscript><a href="/profile.html">Profile</a></noscript>';
 	#todo profile link should be color-underlined like other menus
+	{
+		if (GetConfig('logo_enabled')) {
+			state $logoText;
+			if (!defined($logoText)) {
+				$logoText = GetConfig('logo_text');
+				if (!$logoText) {
+					$logoText = '';
+				}
+			}
+			my $logoTemplate = GetWindowTemplate('<a href="/" class=logo>' . $logoText . '</a>', 'Welcome');
+			$htmlStart .= $logoTemplate;
+		}
+	}
 
 	my $topMenuTemplate = GetMenuTemplate();
 
