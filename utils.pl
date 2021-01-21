@@ -226,10 +226,11 @@ sub EnsureSubdirs { # $fullPath ; ensures that subdirectories for a file exist
 	chomp $fullPath;
 
 	if (substr($fullPath, 0, 1) eq '/') {
-		WriteLog('EnsureSubdirs: warning: $fullPath should not begin with a / ' . $fullPath);
+		WriteLog('EnsureSubdirs: warning: $fullPath begins with / ' . $fullPath);
+		#todo not sure if this should be a warning? what else would fullpath contain?
 	}
-	if (index($fullPath, '..')) {
-		WriteLog('EnsureSubdirs: warning: $fullPath contains ..' . $fullPath);
+	if (index($fullPath, '..') != -1 ) {
+		WriteLog('EnsureSubdirs: warning: $fullPath contains .. ' . $fullPath);
 	}
 
 	WriteLog("EnsureSubdirs($fullPath)");
