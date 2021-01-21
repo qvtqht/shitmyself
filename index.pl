@@ -86,10 +86,9 @@ sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into it
 				$previousLine = $currentLine;
 			} # foreach $currentLine (@addedRecord)
 
-			return %return;
-
 			DBAddItemAttribute('flush');
-			return 1;
+
+			return %return;
 		} # $chainLog
 		else {
 			WriteLog('MakeChainIndex: warning: $chainLog was NOT defined');
@@ -176,7 +175,14 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 	my @itemParents;
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
-		my %gpgResults = GpgParse($file);
+		my %gpgResults = GpgParse($file); #todo bug here somehow... maybe use hashref?
+
+		if (!!%gpgResults) {
+			WriteLog('GpgParse: %gpgResults is TRUE');
+			WriteLog('GpgParse: scalar(keys(%gpgResults)) = ' . scalar(keys(%gpgResults)));
+		} else {
+			WriteLog('GpgParse: %gpgResults is FALSE');
+		}
 
 		# see what gpg says about the file.
 		# if there is no gpg content, the attributes are still populated as possible
@@ -185,7 +191,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
 		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
 		$gpgTimestamp = $gpgResults{'signTimestamp'} || '';        # signature timestamp
-		$gpgKeyLong = $gpgResults{'key_long'};
+		$gpgKeyLong = $gpgResults{'keyLong'};
 
 		if (!$isSigned && !$message) {
 			$message = GetFile($file);
@@ -919,7 +925,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		if ($message) {
 			# cache the processed message text
 			my $messageCacheName = GetMessageCacheName($fileHash);
-			WriteLog("IndexTextFile: \n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n");
+			WriteLog("IndexTextFile: \n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n"); #known issue may cause warning
 			PutFile($messageCacheName, $message);
 		} else {
 			WriteLog('IndexTextFile: I was going to save $messageCacheName, but $message is blank!');
@@ -954,10 +960,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		}
 		if ($isSigned) {
 			DBAddPageTouch('author', $gpgKey);
-			DBAddPageTouch('scores');
+			DBAddPageTouch('authors');
 		} elsif ($hasCookie) {
 			DBAddPageTouch('author', $hasCookie);
-			DBAddPageTouch('scores');
+			DBAddPageTouch('authors');
 		}
 		DBAddPageTouch('stats');
 		DBAddPageTouch('events');
@@ -980,21 +986,30 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 	# if success, returns timestamp of item (epoch seconds)
 
 	my $fileHash = shift;
+
+	if (!$fileHash) {
+		WriteLog('AddToChainLog: warning: sanity check failed');
+		return;
+	}
+
+
 	chomp $fileHash;
 
-	if (!$fileHash || !IsItem($fileHash)) {
+	if (!IsItem($fileHash)) {
 		WriteLog('AddToChainLog: warning: sanity check failed');
 		return;
 	}
 
 	my $HTMLDIR = GetDir('html');
-
 	my $logFilePath = "$HTMLDIR/chain.log"; #public
+
+	$fileHash = IsItem($fileHash);
 
 	{
 		#look for existin entry, exit if found
 		my $findExistingCommand = "grep ^$fileHash $logFilePath";
 		my $findExistingResult = `$findExistingCommand`;
+
 		WriteLog("AddToChainLog: $findExistingCommand returned $findExistingResult");
 		if ($findExistingResult) { #todo remove fork
 			# hash already exists in chain, return
