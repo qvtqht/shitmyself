@@ -86,7 +86,7 @@ sub GetDialogPage { # returns html page with dialog
 		if ($pageName eq '404') {
 			$pageTitle = '404 Message Received';
 
-			$windowContents = GetTemplate('404.template');
+			$windowContents = GetTemplate('html/404.template');
 
 			#todo choose random item from list/looking_for
 			my $lookingFor = 'mittens';
@@ -95,8 +95,8 @@ sub GetDialogPage { # returns html page with dialog
 			my $pageTemplate;
 			$pageTemplate = '';
 
-			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('htmlstart.template');
-			$pageTemplate .= GetTemplate('maincontent.template');
+			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '404'); #GetTemplate('html/htmlstart.template');
+			$pageTemplate .= GetTemplate('html/maincontent.template');
 			$pageTemplate .= GetWindowTemplate($windowContents, $pageTitle);
 			#: $windowTitle, $windowMenubar, $columnHeadings, $windowBody, $windowStatus
 			$pageTemplate .= GetPageFooter();
@@ -109,13 +109,13 @@ sub GetDialogPage { # returns html page with dialog
 		if ($pageName eq '401') {
 			$pageTitle = '401 Welcome to Access Denied';
 
-			$windowContents = GetTemplate('401.template');
+			$windowContents = GetTemplate('html/401.template');
 
 			my $pageTemplate;
 			$pageTemplate = '';
 
-			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '401'); #GetTemplate('htmlstart.template');
-			$pageTemplate .= GetTemplate('maincontent.template');
+			$pageTemplate .= GetPageHeader($pageTitle, $pageTitle, '401'); #GetTemplate('html/htmlstart.template');
+			$pageTemplate .= GetTemplate('html/maincontent.template');
 			$pageTemplate .= GetWindowTemplate($windowContents, $pageTitle);
 			$pageTemplate .= GetPageFooter();
 
@@ -175,7 +175,7 @@ sub GetAuthorLink { # $gpgKey, $showPlain ; returns avatar'ed link for an author
 		$authorAvatar = GetAvatar($gpgKey);
 	}
 
-	my $authorLink = GetTemplate('authorlink.template');
+	my $authorLink = GetTemplate('html/authorlink.template');
 
 	$authorAvatar = trim($authorAvatar);
 
@@ -200,7 +200,7 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 
 	state $pageLinkTemplate;
 	if (!defined($pageLinkTemplate)) {
-		$pageLinkTemplate = GetTemplate('pagelink.template');
+		$pageLinkTemplate = GetTemplate('html/pagelink.template');
 	}
 
 	my $pageLink = $pageLinkTemplate;
@@ -458,7 +458,7 @@ sub GetPageLinks { # $currentPageNumber ; returns html for pagination links with
 			}
 		}
 
-		my $frame = GetTemplate('pagination.template');
+		my $frame = GetTemplate('html/pagination.template');
 
 		$frame =~ s/\$paginationLinks/$pageLinks/;
 
@@ -481,7 +481,7 @@ sub GetEventsPage { # returns html for events page
 
 	$txtPage = GetPageHeader($title, $titleHtml, 'events');
 
-	$txtPage .= GetTemplate('maincontent.template');
+	$txtPage .= GetTemplate('html/maincontent.template');
 
 	my @eventsArray = DBGetEvents();
 
@@ -595,11 +595,11 @@ sub GetTagLinks { # $tagSelected ; returns html-formatted tags list
 	$voteCounts = DBGetVoteCounts();
 	my @voteCountsArray = @{$voteCounts};
 
-	my $voteItemsWrapper = GetTemplate('tag_wrapper.template');
+	my $voteItemsWrapper = GetTemplate('html/tag_wrapper.template');
 
 	my $voteItems = '';
 
-	my $voteItemTemplateTemplate = GetTemplate('tag.template');
+	my $voteItemTemplateTemplate = GetTemplate('html/tag.template');
 	while (@voteCountsArray) {
 		my $voteItemTemplate = $voteItemTemplateTemplate;
 
@@ -623,7 +623,7 @@ sub GetTagLinks { # $tagSelected ; returns html-formatted tags list
 	}
 
 	if (!$voteItems) {
-		# $voteItems = GetTemplate('tag_listing_empty.template');
+		# $voteItems = GetTemplate('html/tag_listing_empty.template');
 	}
 
 	$voteItemsWrapper =~ s/\$tagLinks/$voteItems/g;
@@ -649,18 +649,18 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'tags');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$txtIndex .= GetTemplate('html/maincontent.template');
 
 	my $voteCounts;
 	$voteCounts = DBGetVoteCounts($orderBy);
 
 	my @voteCountsArray = @{$voteCounts};
 
-	my $voteItemsWrapper = GetTemplate('tag_listing_wrapper.template');
+	my $voteItemsWrapper = GetTemplate('html/tag_listing_wrapper.template');
 
 	my $voteItems = '';
 
-	my $voteItemTemplate = GetTemplate('tag_listing.template');
+	my $voteItemTemplate = GetTemplate('html/tag_listing.template');
 	while (@voteCountsArray) {
 		my $voteItemOutput = $voteItemTemplate;
 
@@ -686,7 +686,7 @@ sub GetTagsPage { # returns html for tags listing page (sorted by number of uses
 	}
 
 	if (!$voteItems) {
-		$voteItems = GetTemplate('tag_listing_empty.template');
+		$voteItems = GetTemplate('html/tag_listing_empty.template');
 	}
 
 	$voteItemsWrapper =~ s/\$tagListings/$voteItems/g;
@@ -764,7 +764,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 
 	$txtIndex .= $htmlStart;
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$txtIndex .= GetTemplate('html/maincontent.template');
 
 	$file{'display_full_hash'} = 1;
 	$file{'show_vote_summary'} = 1;
@@ -956,7 +956,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 	}
 
 	{
-		#my $itemInfoTemplate = GetTemplate('item_info.template');
+		#my $itemInfoTemplate = GetTemplate('html/item_info.template');
 		my $itemInfoTemplate;
 		WriteLog('GetItemPage: my $itemInfoTemplate; ');
 
@@ -1074,7 +1074,7 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 		WriteLog('GetReplyForm: warning: sanity check failed');
 		return '';
 	}
-	my $replyTag = GetTemplate('replytag.template');
+	my $replyTag = GetTemplate('html/replytag.template');
 	my $replyForm = GetTemplate('form/write/reply.template');
 
 	$replyTag =~ s/\$parentPost/$replyTo/g;
@@ -1364,7 +1364,6 @@ sub GetItemTemplate { # returns HTML for outputting one item
 				$message =~ s/(.+)<br>-- <br>(.+)/$1<span class=admin><br>\n-- <br>\n$2<\/span>/smi;
 				# /s = single-line (changes behavior of . metacharacter to match newlines)
 				# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
-				# /g = global (all instances)
 				# /i = case-insensitive
 			}
 		}
@@ -1664,7 +1663,7 @@ sub GetItemTemplate { # returns HTML for outputting one item
 sub GetPageFooter { # returns html for page footer
 	WriteLog('GetPageFooter()');
 
-	my $txtFooter = GetTemplate('htmlend.template');
+	my $txtFooter = GetTemplate('html/htmlend.template');
 
 	my $disclaimer = GetString('disclaimer');
 
@@ -1678,7 +1677,7 @@ sub GetPageFooter { # returns html for page footer
 
 	if (GetConfig('html/back_to_top_button')) {
 		# add back to top button to the bottom of the page, right before </body>
-		my $backToTopTemplate = GetTemplate('html/back_to_top_button.template');
+		my $backToTopTemplate = GetTemplate('html/widget/back_to_top_button.template');
 		$backToTopTemplate = FillThemeColors($backToTopTemplate);
 		$txtFooter =~ s/\<\/body>/$backToTopTemplate<\/body>/i;
 
@@ -1858,7 +1857,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 	# GetConfig('list/menu_advanced', 'uncache');
 } # WriteMenuList()
 
-sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns html menu based on referenced list
+sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; returns html menu based on referenced list
 # $listName is reference to a list in config/list, e.g. config/list/menu
 # $separator is what is inserted between menu items
 
@@ -1879,7 +1878,7 @@ sub GetMenuFromList { # $listName, $templateName = 'menuitem.template'; returns 
 
 	my $templateName = shift;
 	if (!$templateName) {
-		$templateName = 'menuitem.template';
+		$templateName = 'html/menuitem.template';
 	}
 	chomp $templateName;
 
@@ -1965,7 +1964,7 @@ sub GetClockTemplate {
 }
 
 sub GetMenuTemplate { # returns menubar
-	my $topMenuTemplate = GetTemplate('topmenu2.template');
+	my $topMenuTemplate = GetTemplate('html/topmenu2.template');
 	if (GetConfig('admin/js/enable')) {
 		$topMenuTemplate = AddAttributeToTag(
 			$topMenuTemplate,
@@ -2031,7 +2030,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	}
 
 	# Get the HTML page template
-	my $htmlStart = GetTemplate('htmlstart.template');
+	my $htmlStart = GetTemplate('html/htmlstart.template');
 	# and substitute $title with the title
 
 	if (GetConfig('admin/offline/enable')) {
@@ -2076,7 +2075,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 
 sub GetItemListingHtml { # similar to GetItemListHtml(), just different version
 
-	#my $itemListingWrapper = GetTemplate('item_listing_wrapper2.template');
+	#my $itemListingWrapper = GetTemplate('html/item_listing_wrapper2.template');
 }
 
 sub GetTopItemsPage { # returns page with top items listing
@@ -2088,7 +2087,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	my $titleHtml = 'Topics';
 
 	$htmlOutput = GetPageHeader($title, $titleHtml, 'read'); # <html><head>...</head><body>
-	$htmlOutput .= GetTemplate('maincontent.template'); # where "skip to main content" goes
+	$htmlOutput .= GetTemplate('html/maincontent.template'); # where "skip to main content" goes
 
 	my @topItems = DBGetTopItems(); # get top items from db
 
@@ -2097,7 +2096,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	if ($itemCount) {
 	# at least one item returned
 
-		my $itemListingWrapper = GetTemplate('item_listing_wrapper2.template');
+		my $itemListingWrapper = GetTemplate('html/item_listing_wrapper2.template');
 
 		my $itemListings = '';
 
@@ -2106,7 +2105,7 @@ sub GetTopItemsPage { # returns page with top items listing
 		my $colorRow1Bg = GetThemeColor('row_1'); # color 1
 
 		while (@topItems) {
-			my $itemTemplate = GetTemplate('item_listing.template');
+			my $itemTemplate = GetTemplate('html/item_listing.template');
 			# it's ok to do this every time because GetTemplate() already stores it in a static
 			# alternative is to store it in another variable above
 
@@ -2124,7 +2123,139 @@ sub GetTopItemsPage { # returns page with top items listing
 			my $itemScore = $item{'item_score'};
 			my $authorKey = $item{'author_key'};
 
-			my $itemLastTouch = DBGetItemLatestAction($itemKey);
+			my $itemLastTouch = DBGetItemLatestAction($itemKey); #todo add to itemfields
+
+			my $itemTitle = $item{'item_title'};
+			if (trim($itemTitle) eq '') {
+				# if title is empty, use the item's hash
+				# $itemTitle = '(' . $itemKey . ')';
+				$itemTitle = 'Untitled';
+			}
+			$itemTitle = HtmlEscape($itemTitle);
+
+			my $itemLink = GetHtmlFilename($itemKey);
+
+			my $authorAvatar;
+			if ($authorKey) {
+#				$authorAvatar = GetPlainAvatar($authorKey);
+				my $authorLink = GetAuthorLink($authorKey, 1);
+				if ($authorLink) {
+					$authorAvatar = GetAuthorLink($authorKey, 1);
+#					$authorAvatar = 'by ' . GetAuthorLink($authorKey, 1);
+				} else {
+					$authorAvatar = 'Unsigned';
+				}
+			} else {
+				$authorAvatar = 'Unsigned';
+			}
+
+			$itemLastTouch = GetTimestampWidget($itemLastTouch);
+
+			# populate item template
+			$itemTemplate =~ s/\$link/$itemLink/g;
+			$itemTemplate =~ s/\$itemTitle/$itemTitle/g;
+			$itemTemplate =~ s/\$itemScore/$itemScore/g;
+			$itemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
+			$itemTemplate =~ s/\$itemLastTouch/$itemLastTouch/g;
+			$itemTemplate =~ s/\$rowBgColor/$rowBgColor/g;
+
+			# add to main html
+			$itemListings .= $itemTemplate;
+		}
+
+		$itemListingWrapper =~ s/\$itemListings/$itemListings/;
+
+		my $statusText = '';
+		if ($itemCount == 0) {
+			$statusText = 'No threads found.';
+		} elsif ($itemCount == 1) {
+			$statusText = '1 thread';
+		} elsif ($itemCount > 1) {
+			$statusText = $itemCount . ' threads';
+		}
+
+#		my $columnHeadings = 'Title,Score,Replied,Author';
+		my $columnHeadings = 'title,author,activity';
+
+		$itemListingWrapper = GetWindowTemplate(
+			$itemListings,
+			'Top Approved Threads',
+			$columnHeadings,
+			$statusText,
+			''
+		);
+
+		$htmlOutput .= $itemListingWrapper;
+	} else {
+	# no items returned, use 'no items' template
+		$htmlOutput .= GetTemplate('item/no_items.template');
+	}
+
+	$htmlOutput .= GetPageFooter(); # </body></html>
+
+	if (GetConfig('admin/js/enable')) {
+		# add necessary js
+		$htmlOutput = InjectJs($htmlOutput, qw(settings voting timestamp profile avatar utils));
+	}
+
+	return $htmlOutput;
+} #GetTopItemsPage
+
+sub GetItemPrefixPage { # returns page with top items listing
+	WriteLog("GetItemPrefixPage()");
+
+	my $prefix = shift;
+	if (!IsItemPrefix($prefix)) {
+		WriteLog('GetItemPrefixPage: warning: $prefix sanity check failed');
+		return '';
+	}
+
+	WriteLog('GetItemPrefixPage: $prefix = ' . $prefix);
+
+	my $htmlOutput = ''; # stores the html
+
+	my $title = 'Items matching ' . $prefix;
+	my $titleHtml = 'Items matching ' . $prefix;
+
+	$htmlOutput = GetPageHeader($title, $titleHtml, 'prefix'); # <html><head>...</head><body>
+	$htmlOutput .= GetTemplate('html/maincontent.template'); # where "skip to main content" goes
+
+	my @topItems = DBGetItemsByPrefix($prefix); # get top items from db
+
+	my $itemCount = scalar(@topItems);
+
+	WriteLog('GetItemPrefixPage: $itemCount = ' . $itemCount);
+
+	if ($itemCount) {
+	# at least one item returned
+		my $itemListingWrapper = GetTemplate('html/item_listing_wrapper2.template');
+
+		my $itemListings = '';
+
+		my $rowBgColor = ''; # stores current value of alternating row color
+		my $colorRow0Bg = GetThemeColor('row_0'); # color 0
+		my $colorRow1Bg = GetThemeColor('row_1'); # color 1
+
+		while (@topItems) {
+			my $itemTemplate = GetTemplate('html/item_listing.template');
+			# it's ok to do this every time because GetTemplate() already stores it in a static
+			# alternative is to store it in another variable above
+
+			#alternate row color
+			if ($rowBgColor eq $colorRow0Bg) {
+				$rowBgColor = $colorRow1Bg;
+			} else {
+				$rowBgColor = $colorRow0Bg;
+			}
+
+			my $itemRef = shift @topItems; # reference to hash containing item
+			my %item = %{$itemRef}; # hash containing item data
+
+			my $itemKey = $item{'file_hash'};
+			my $itemScore = $item{'item_score'};
+			my $authorKey = $item{'author_key'};
+
+			my $itemLastTouch = DBGetItemLatestAction($itemKey); #todo add to itemfields
 
 			my $itemTitle = $item{'item_title'};
 			if (trim($itemTitle) eq '') {
@@ -2205,7 +2336,7 @@ sub GetTopItemsPage { # returns page with top items listing
 sub GetStatsTable {
 	my $templateName = shift;
 	if (!$templateName) {
-		$templateName = 'stats.template';
+		$templateName = 'html/stats.template';
 	}
 
 	state $itemsIndexed; $itemsIndexed = $itemsIndexed || DBGetItemCount();
@@ -2239,7 +2370,7 @@ sub GetStatsTable {
 	my $statsTable = GetTemplate($templateName);
 
 	if ($adminId) {
-		if ($adminUsername eq 'Operator' && $templateName eq 'stats-horizontal.template') {
+		if ($adminUsername eq 'Operator' && $templateName eq 'html/stats-horizontal.template') {
 			# harmless hack
 			$statsTable =~ s/\<span class=beginner>Operator: <\/span>\$admin/$adminLink/;
 		} else {
@@ -2323,7 +2454,7 @@ sub GetStatsPage { # returns html for stats page
 
 	$statsPage = GetPageHeader('Stats', 'Stats', 'stats');
 
-	$statsPage .= GetTemplate('maincontent.template');
+	$statsPage .= GetTemplate('html/maincontent.template');
 	my $statsTable = GetStatsTable();
 	$statsPage .= $statsTable;
 
@@ -2704,7 +2835,7 @@ sub GetTopAuthorsListAsHtml {
 
 		my $authorLink = GetAuthorLink($authorKey) || '(blank)';
 #		my $authorFriendKey = $authorFriend->{'author_key'};
-		my $authorItemTemplate = GetTemplate('author_listing.template');
+		my $authorItemTemplate = GetTemplate('html/author_listing.template');
 #
 		if ($authorLastSeen) {
 			$authorLastSeen = GetTimestampWidget($authorLastSeen);
@@ -2727,16 +2858,16 @@ sub GetTopAuthorsListAsHtml {
 	return $authorListings;
 } # GetTopAuthorsListAsHtml()
 
-sub GetScoreboardPage2 {
-	WriteLog('GetScoreboardPage2() begin');
+sub GetAuthorsPage {
+	WriteLog('GetAuthorsPage() begin');
 
 	my $html = '';
-	my $title = 'Top Scores';
+	my $title = 'Authors';
 
 	$html .= GetPageHeader($title, $title, 'scoreboard');
 	my $topAuthors = GetTopAuthorsListAsHtml();
 
-	$html .= GetTemplate('maincontent.template');
+	$html .= GetTemplate('html/maincontent.template');
 
 	my $window = GetWindowTemplate($topAuthors, $title, 'name,score,seen,action', '', '');
 
@@ -2757,7 +2888,7 @@ sub GetAuthorInfoBox {
 		return '';
 	}
 
-	my $authorInfoTemplate = GetTemplate('author_info.template');
+	my $authorInfoTemplate = GetTemplate('html/author_info.template');
 	$authorInfoTemplate = FillThemeColors($authorInfoTemplate);
 
 	my $authorAliasHtml = GetAlias($authorKey);
@@ -2991,7 +3122,7 @@ sub GetReadPage { # generates page with item listing based on parameters
 		}
 	}
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$txtIndex .= GetTemplate('html/maincontent.template');
 	if ($pageType eq 'author') {
 		# author info box
 		$txtIndex .= GetAuthorInfoBox($authorKey);
@@ -3187,7 +3318,7 @@ sub GetIndexPage { # returns html for an index page, given an array of hash-refs
 	$html .= GetTagLinks();
 
 	$html .= '<p>';
-	$html .= GetTemplate('maincontent.template');
+	$html .= GetTemplate('html/maincontent.template');
 
 	my $itemList = ''; # the "filling" part of the page, with all the items templated
 	my $itemComma = ''; # separator between items
@@ -3429,7 +3560,7 @@ sub MakeSimplePage { # given page name, makes page
 	my $html = '';
 
 	$html .= GetPageHeader(ucfirst($pageName), ucfirst($pageName), $pageName);
-	$html .= GetTemplate('maincontent.template');
+	$html .= GetTemplate('html/maincontent.template');
 
 	my $pageContent = GetTemplate("page/$pageName.template");
 	my $contentWindow = GetWindowTemplate(
@@ -3500,7 +3631,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 # js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
 
-	PutHtmlFile("test.html", GetTemplate('test.template'));
+	PutHtmlFile("test.html", GetTemplate('html/test.template'));
 	PutHtmlFile("keyboard.html", GetTemplate('keyboard/keyboard.template'));
 	PutHtmlFile("keyboard_netscape.html", GetTemplate('keyboard/keyboard_netscape.template'));
 	PutHtmlFile("keyboard_android.html", GetTemplate('keyboard/keyboard_a.template'));
@@ -3545,7 +3676,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("upload.html", $uploadPage);
 
 	# Upload page
-	my $uploadMultiPage = GetUploadPage('upload_multi.template');
+	my $uploadMultiPage = GetUploadPage('html/upload_multi.template');
 	PutHtmlFile("upload_multi.html", $uploadMultiPage);
 
 	# Search page
@@ -3579,7 +3710,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# }
 
 	{
-		my $fourOhFourPage = GetDialogPage('404'); #GetTemplate('404.template');
+		my $fourOhFourPage = GetDialogPage('404'); #GetTemplate('html/404.template');
 		if (GetConfig('html/clock')) {
 			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock fresh)); #todo this causes duplicate clock script
 		}
@@ -3588,7 +3719,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	}
 
 	{
-		my $accessDeniedPage = GetDialogPage('401'); #GetTemplate('401.template');
+		my $accessDeniedPage = GetDialogPage('401'); #GetTemplate('html/401.template');
 		PutHtmlFile("error/error-401.html", $accessDeniedPage);
 	}
 
@@ -3614,7 +3745,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		# Target page for the submit page
 		my $postPage = GetPageHeader("Thank You", "Thank You", 'post');
 		# $postPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
-		$postPage .= GetTemplate('maincontent.template');
+		$postPage .= GetTemplate('html/maincontent.template');
 		my $postTemplate = GetTemplate('page/post.template');
 		$postPage .= $postTemplate;
 		$postPage .= GetPageFooter();
@@ -3631,7 +3762,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# Ok page
 	my $okPage;
 	$okPage .= GetPageHeader('OK', 'OK', 'default');
-	my $windowContents = GetTemplate('action_ok.template');
+	my $windowContents = GetTemplate('html/action_ok.template');
 	$okPage .= GetWindowTemplate($windowContents, 'Data Received', '', 'Ready');
 	$okPage .= GetPageFooter();
 	$okPage =~ s/<\/head>/<meta http-equiv="refresh" content="10; url=\/"><\/head>/;
@@ -3705,7 +3836,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		# this is a kludge until i figure out how to do it properly
 		# 401.template should not contain any " characters (will be removed)
 		#
-		my $text401 = GetTemplate('401.template');
+		my $text401 = GetTemplate('html/401.template');
 		$text401 =~ s/\n//g;
 		$text401 =~ s/"//g;
 		$text401 = '"' . $text401 . '"';
@@ -3885,7 +4016,7 @@ sub GetUploadPage { # returns html for upload page
 			$template = 'upload.template';
 		}
 		$html .= GetPageHeader($title, $title, 'upload');
-		$html .= GetTemplate('maincontent.template');
+		$html .= GetTemplate('html/maincontent.template');
 		$html .= GetUploadWindow($template);
 		$html .= GetPageFooter();
 
@@ -3894,7 +4025,7 @@ sub GetUploadPage { # returns html for upload page
 		}
 	} else {
 		$html .= GetPageHeader($title, $title, 'upload');
-		$html .= GetTemplate('maincontent.template');
+		$html .= GetTemplate('html/maincontent.template');
 		$html .= GetWindowTemplate('<p>Upload feature is not available. Apologies.</p>', $title);
 		$html .= GetPageFooter();
 		if (GetConfig('admin/js/enable')) {
@@ -3910,7 +4041,7 @@ sub GetSearchPage { # returns html for search page
 	my $title = 'Search';
 
 	$html .= GetPageHeader($title, $title, 'search');
-	$html .= GetTemplate('maincontent.template');
+	$html .= GetTemplate('html/maincontent.template');
 	$html .= GetSearchWindow();
 	$html .= GetPageFooter();
 
@@ -3934,7 +4065,7 @@ sub GetWritePage { # returns html for write page
 #	}
 
 	$writePageHtml = GetPageHeader($title, $titleHtml, 'write');
-	$writePageHtml .= GetTemplate('maincontent.template');
+	$writePageHtml .= GetTemplate('html/maincontent.template');
 
 	my $writeForm = GetWriteForm();
 	$writePageHtml .= $writeForm;
@@ -3986,7 +4117,7 @@ sub GetEventAddPage { # get html for /event.html
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'event_add');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$txtIndex .= GetTemplate('html/maincontent.template');
 	
 
 	my $eventAddForm = GetTemplate('form/event_add.template');
@@ -4034,7 +4165,7 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 
 	if (GetConfig('admin/js/enable') || GetConfig('admin/php/enable')) {
 		$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
-		$txtIndex .= GetTemplate('maincontent.template');
+		$txtIndex .= GetTemplate('html/maincontent.template');
 
 		my $profileWindowContents = GetTemplate('form/profile.template');
 		my $tosText = GetString('tos');
@@ -4046,7 +4177,7 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 		);
 
 		if (GetConfig('admin/gpg/use_gpg2')) {
-			my $gpg2Choices = GetTemplate('gpg2.choices.template');
+			my $gpg2Choices = GetTemplate('html/gpg2.choices.template');
 			$profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
 		} else {
 			$profileWindowContents =~ s/\$gpg2Algochoices//;
@@ -4066,7 +4197,7 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 		}
 	} else {
 		$txtIndex = GetPageHeader($title, $titleHtml, 'identity');
-		$txtIndex .= GetTemplate('maincontent.template');
+		$txtIndex .= GetTemplate('html/maincontent.template');
 
 		my $profileWindowContents = GetTemplate('form/profile_no.template');
 		my $profileWindow = GetWindowTemplate(
@@ -4091,8 +4222,8 @@ sub GetAccessPage { # returns html for compatible mode page, /access.html
 	my $title = 'Light Mode';
 
 	$html = GetPageHeader($title, $title, 'access');
-	$html .= GetTemplate('maincontent.template');
-	my $accessTemplate = GetTemplate('access.template');
+	$html .= GetTemplate('html/maincontent.template');
+	my $accessTemplate = GetTemplate('html/access.template');
 	$accessTemplate = GetWindowTemplate(
 		$accessTemplate,
 		'Light Mode'
@@ -4111,7 +4242,7 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'settings');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$txtIndex .= GetTemplate('html/maincontent.template');
 
 	my $settingsTemplate = GetTemplate('form/settings.template');
 	$txtIndex .= $settingsTemplate;
@@ -4133,12 +4264,12 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'etc');
 
-	$txtIndex .= GetTemplate('maincontent.template');
+	$txtIndex .= GetTemplate('html/maincontent.template');
 
-	my $menuItems = GetMenuFromList('menu', 'menuitem-p.template');
-	$menuItems .= GetMenuFromList('menu_advanced', 'menuitem-p.template');
+	my $menuItems = GetMenuFromList('menu', 'html/menuitem-p.template');
+	$menuItems .= GetMenuFromList('menu_advanced', 'html/menuitem-p.template');
 
-	my $etcPageContent = GetTemplate('etc.template');
+	my $etcPageContent = GetTemplate('html/etc.template');
 
 	$etcPageContent =~ s/\$etcMenuItems/$menuItems/;
 
@@ -4287,9 +4418,9 @@ sub GetVersionPage { # returns html with version information for $version (git c
 
 	$txtPageHtml .= $htmlStart;
 
-	$txtPageHtml .= GetTemplate('maincontent.template');
+	$txtPageHtml .= GetTemplate('html/maincontent.template');
 
-	my $versionInfo = GetTemplate('versioninfo.template');
+	my $versionInfo = GetTemplate('html/versioninfo.template');
 	my $shortVersion = substr($version, 0, 8);
 
 	$versionInfo =~ s/\$version/$version/g;
@@ -4335,8 +4466,8 @@ sub WriteDataPage { # writes /data.html (and zip files if needed)
 		WriteLog("Zip file was made less than $zipInterval ago, too lazy to do it again");
 	}
 	my $dataPage = GetPageHeader("Data", "Data", 'data');
-	$dataPage .= GetTemplate('maincontent.template');
-	my $dataPageContents = GetTemplate('data.template');
+	$dataPage .= GetTemplate('html/maincontent.template');
+	my $dataPageContents = GetTemplate('html/data.template');
 
 	my $HTMLDIR = GetDir('html');
 	my $sizeHikeZip = -s "$HTMLDIR/txt.zip";
