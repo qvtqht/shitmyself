@@ -132,9 +132,7 @@ sub GpgParse {
 			$returnValues{'signTimestamp'} = $1;
 		}
 
-		WriteLog('GpgParse: ' . $fileHash . '; $pubKeyFlag = ' . $pubKeyFlag);
-		if ($pubKeyFlag) {
-			if ($gpgStderrOutput =~ /\"([ a-zA-Z0-9<>&\@.()\\\/]+)\"/) {
+			if ($gpgStderrOutput =~ m/"([ a-zA-Z0-9<>&\@.()_]+)"/) { # username allowed characters chars filter is here
 				# we found something which looks like a name
 				my $aliasReturned = $1;
 				$aliasReturned =~ s/\<(.+\@.+?)\>//g; # if has something which looks like an email, remove it
