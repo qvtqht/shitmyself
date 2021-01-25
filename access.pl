@@ -639,10 +639,10 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 								PutFile($addedFilename, $addedMessage);
 
 								WriteLog('ProcessAccessLog: $addedMessage = ' . $addedMessage);
-
-								if (GetServerKey()) {
-									ServerSign($addedFilename);
-								}
+#
+#								if (GetServerKey()) {
+#									ServerSign($addedFilename);
+#								}
 							}
 
 							DBAddItemAttribute($fileHash, 'access_log_timestamp', $addedTime);
