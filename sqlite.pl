@@ -249,18 +249,6 @@ sub SqliteMakeTables { # creates sqlite schema
 		);
 	");
 
-	# brc
-	SqliteQuery2("
-		CREATE TABLE brc(
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			item_hash,
-			author_key,
-			hours,
-			minutes,
-			street
-		);
-	");
-
 	SqliteQuery2("
 		CREATE TABLE user_agent(
 			user_agent_string
@@ -1137,7 +1125,7 @@ sub DBDeleteItemReferences { # delete all references to item from tables
 	}
 
 	#item_hash
-	my @tables2 = qw(brc event item_page item_parent location);
+	my @tables2 = qw(event item_page item_parent location);
 	foreach (@tables2) {
 		my $query = "DELETE FROM $_ WHERE item_hash = '$hash'";
 		SqliteQuery2($query);
@@ -1704,70 +1692,6 @@ sub DBAddLocationRecord { # $itemHash, $latitude, $longitude, $signedBy ; Adds n
 
 	$query .= '(?, ?, ?, ?)';
 	push @queryParams, $fileHash, $latitude, $longitude, $signedBy;
-}
-
-sub DBAddBrcRecord { # $fileHash, $hours, $minutes, $street, $signedBy ; adds record to brc table
-	state $query;
-	state @queryParams;
-
-	WriteLog("DBAddBrcRecord()");
-
-	my $fileHash = shift;
-
-	if ($fileHash eq 'flush') {
-		WriteLog("DBAddBrcRecord(flush)");
-
-		if ($query) {
-			$query .= ';';
-
-			SqliteQuery2($query, @queryParams);
-
-			$query = '';
-			@queryParams = ();
-		}
-
-		return;
-	}
-
-	if (
-		$query
-			&&
-			(
-				length($query) >= DBMaxQueryLength()
-					||
-				scalar(@queryParams) > DBMaxQueryParams()
-			)
-	) {
-		DBAddBrcRecord('flush');
-		$query = '';
-		@queryParams = ();
-	}
-
-	my $hours = shift;
-	my $minutes = shift;
-	my $street = shift;
-	my $signedBy = shift;
-
-	#todo sanity check here
-
-	chomp $hours;
-	chomp $minutes;
-	chomp $street;
-
-	if ($signedBy) {
-		chomp $signedBy;
-	} else {
-		$signedBy = '';
-	}
-
-	if (!$query) {
-		$query = "INSERT OR REPLACE INTO brc(item_hash, hours, minutes, street, author_key) VALUES ";
-	} else {
-		$query .= ",";
-	}
-
-	$query .= '(?, ?, ?, ?, ?)';
-	push @queryParams, $fileHash, $hours, $minutes, $street, $signedBy;
 }
 
 ###
