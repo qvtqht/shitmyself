@@ -1683,6 +1683,7 @@ sub GetFileHashPath { # $file ; Returns text file's standardized path given its 
 } # GetFileHashPath()
 
 sub GetPathFromHash { # gets path of text file based on hash
+#GetFilePath {
 	# relies on config/admin/organize_files = 1
 	my $fileHash = shift;
 	chomp $fileHash;
