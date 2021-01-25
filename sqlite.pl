@@ -1492,6 +1492,13 @@ sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 	DBAddPageTouch('item', $parentHash);
 }
 
+sub DBAddItem2 {
+	my $filePath = shift;
+	my $fileHash = shift;
+	my $itemType = shift;
+	return DBAddItem($filePath, '', '', $fileHash, $itemType, 0);
+}
+
 sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError ; Adds a new item to database
 # $filePath = path to text file
 # $itemName = item's 'name' (currently hash)
