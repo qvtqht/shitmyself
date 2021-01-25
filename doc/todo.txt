@@ -1,3 +1,8 @@
+ensure all js functions
+	a) return a value
+	b) have a closing comment
+
+
 automatically adjust timestamp highlight threshold
 	based on spread of item timestamps
 
@@ -1906,3 +1911,6 @@ require profile mode is janky and locks out links and any non-cookie users
 	verify document write is pretty compatible
 		it works!
 	make it a flag
+
+#todo #todo #todo
+config/list/menu_bytag
