@@ -106,20 +106,21 @@ function WriteOnload () { // onload handler for write page
     }
 
     return true;
-}
+} // WriteOnload()
 
 function CommentMakeWp(comment) { // makes editor textarea larger and gives it wp color scheme
 // called when enhance_write is on
-	if (!comment) {
-		return;
+	if (comment) {
+		comment.style.backgroundColor = '#000080';
+		comment.style.color = 'ffffff';
+		comment.style.width = '95%';
+		comment.style.height = '50%';
+		comment.style.padding = '1em';
+		comment.setAttribute('cols', 80);
+		comment.setAttribute('rows', 24);
 	}
-	comment.style.backgroundColor = '#000080';
-	comment.style.color = 'ffffff';
-	comment.style.width = '95%';
-	comment.style.height = '50%';
-	comment.style.padding = '1em';
-	comment.setAttribute('cols', 80);
-	comment.setAttribute('rows', 24);
+
+	return '';
 } // CommentMakeWp()
 
 function writeSubmit (t) { // called when user submits write form //signMessage (
@@ -213,7 +214,9 @@ function DoAutoSave() {
 			//alert('DEBUG: window.GetPrefs = FALSE');
 		}
 	}
-}
+
+	return '';
+} // DoAutoSave()
 
 function ClearAutoSave () {
 	var ls = window.localStorage;

@@ -149,6 +149,7 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 			} else {
 				setTimeout('ShowTimestamps()', 15000);
 			}
+			return changeLogged;
 		}
 	}
 } // ShowTimestamps()
