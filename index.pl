@@ -16,7 +16,7 @@ while (my $argFound = shift) {
 
 use Digest::SHA qw(sha512_hex);
 
-require('./pgpg.pl');
+require('./gpgpg.pl');
 require('./utils.pl');
 
 sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into item_attribute table

@@ -12,7 +12,7 @@ sub BuildMessage { # prints timestamped message to output
 } # BuildMessage()
 
 BuildMessage "Require ./utils.pl...";
-require './pgpg.pl';
+require './gpgpg.pl';
 require './utils.pl';
 
 EnsureDirsThatShouldExist();
