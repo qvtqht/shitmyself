@@ -1086,37 +1086,37 @@ sub IsAdmin { # $key ; returns 1 if user is admin, otherwise 0
 
 	WriteLog('IsAdmin: warning: unreachable reached'); #should never reach here
 } # IsAdmin()
-
-sub GetServerKey { # Returns server's public key, 0 if there is none
-	state $serversKey;
-
-	if ($serversKey) {
-		return $serversKey;
-	}
-
-	my $TXTDIR = GetDir('txt');
-
-	if (-e "$TXTDIR/server.key.txt") { #server's pub key should reside here
-		my %adminsInfo = GpgParse("$TXTDIR/server.key.txt");
-
-		if ($adminsInfo{'isSigned'}) {
-			if ($adminsInfo{'key'}) {
-				$serversKey = $adminsInfo{'key'};
-
-				return $serversKey;
-			} else {
-				return 0;
-			}
-		} else {
-			return 0;
-		}
-	} else {
-		return 0;
-	}
-
-	WriteLog('GetServerKey: warning: fallthrough!');
-	return 0;
-} # GetServerKey()
+#
+#sub GetServerKey { # Returns server's public key, 0 if there is none
+#	state $serversKey;
+#
+#	if ($serversKey) {
+#		return $serversKey;
+#	}
+#
+#	my $TXTDIR = GetDir('txt');
+#
+#	if (-e "$TXTDIR/server.key.txt") { #server's pub key should reside here
+#		my %adminsInfo = GpgParse("$TXTDIR/server.key.txt");
+#
+#		if ($adminsInfo{'isSigned'}) {
+#			if ($adminsInfo{'key'}) {
+#				$serversKey = $adminsInfo{'key'};
+#
+#				return $serversKey;
+#			} else {
+#				return 0;
+#			}
+#		} else {
+#			return 0;
+#		}
+#	} else {
+#		return 0;
+#	}
+#
+#	WriteLog('GetServerKey: warning: fallthrough!');
+#	return 0;
+#} # GetServerKey()
 
 sub TrimPath { # $string ; Trims the directories AND THE FILE EXTENSION from a file path
 	my $string = shift;
