@@ -5,6 +5,8 @@
 
 use strict;
 use warnings;
+use utf8;
+use 5.010;
 
 my @foundArgs;
 while (my $argFound = shift) {
@@ -25,9 +27,6 @@ while (my $argFound = shift) {
 # 		die `This program does not tolerate warnings like: @_`;
 # 	}
 # };
-
-use utf8;
-use 5.010;
 
 use lib qw(lib);
 #use HTML::Entities qw(encode_entities);
@@ -995,7 +994,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 							# link file path to file
 							my $HTMLDIR = GetDir('html'); #todo
 							WriteLog('attr: $HTMLDIR = ' . $HTMLDIR); #todo
-							#problem here is getdir returns full path, but here we already have relative path
+							#problem here is GetDir() returns full path, but here we already have relative path
 							#currently we assume html dir is 'html'
 
 							WriteLog('attr: $iaValue = ' . $iaValue); #todo
@@ -1854,7 +1853,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 	# PutConfig('list/menu_advanced', $menuList);
 
 	GetConfig('list/menu', 'unmemo');
-	# GetConfig('list/menu_advanced', 'uncache');
+	# GetConfig('list/menu_advanced', 'unmemo');
 } # WriteMenuList()
 
 sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; returns html menu based on referenced list
@@ -2356,7 +2355,7 @@ sub GetStatsTable {
 	my $adminUsername = '';#GetAlias($adminId);
 	my $adminLink = '';#GetAuthorLink($adminId);
 
-	my $serverId = GetServerKey();
+	my $serverId = '';#GetServerKey();
 	my $serverLink = GetAuthorLink($serverId);
 
 	my $versionFull = GetMyVersion();
@@ -4129,18 +4128,6 @@ sub GetEventAddPage { # get html for /event.html
 
 	my $eventAddForm = GetTemplate('form/event_add.template');
 	
-	if (GetConfig('brc/enable')) {;
-		# if brc mode is enabled, add fields for burning man location
-		my $brcLocationTemplate = GetTemplate('event/brc_location.template');
-		$eventAddForm =~ s/\$brcLocation/$brcLocationTemplate/g;
-
-		my $brcAddressForm = GetTemplate('form/brc_address.template');
-		$eventAddForm =~ s/\$brcAddressForm/$brcAddressForm/;
-	} else {
-		$eventAddForm =~ s/\$brcLocation//g;
-		$eventAddForm =~ s/\$brcAddressForm//;
-	}
-
 	#	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
 #		localtime(time);
 #
@@ -4787,7 +4774,6 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		if (!$alias) {
 			$alias = GetAlias($gpgKey, $noCache);
 			$alias = trim($alias);
-
 		}
 		if ($authorItemAttributes) {
 			foreach my $authorAttributeLine (split("\n", $authorItemAttributes)) {
