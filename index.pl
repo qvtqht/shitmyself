@@ -117,8 +117,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	if ($file eq 'flush') {
 		WriteLog("IndexTextFile(flush)");
-
-		DBAddAuthor('flush');
 		DBAddKeyAlias('flush');
 		DBAddItem('flush');
 		DBAddVoteRecord('flush');

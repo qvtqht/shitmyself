@@ -95,7 +95,17 @@ sub SqliteMakeTables { # creates sqlite schema
 	SqliteQuery2("PRAGMA journal_mode=WAL;");
 
 	# author
-	SqliteQuery2("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, key UNIQUE)");
+	SqliteQuery2("
+		CREATE VIEW
+			author
+		AS
+			SELECT DISTINCT
+				value AS key
+			FROM
+				item_attribute
+			WHERE
+				attribute IN ('cookie_id', 'pgp_id');
+	");
 
 	# author_alias
 	SqliteQuery2("CREATE TABLE author_alias(
@@ -111,7 +121,6 @@ sub SqliteMakeTables { # creates sqlite schema
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		file_path UNIQUE,
 		item_name,
-		author_key,
 		file_hash UNIQUE,
 		item_type,
 		verify_error
@@ -170,6 +179,16 @@ sub SqliteMakeTables { # creates sqlite schema
 			value AS title
 		FROM item_attribute_latest
 		WHERE attribute = 'title'
+	");
+
+	# item_title
+	SqliteQuery("
+		CREATE VIEW item_author AS
+		SELECT
+			file_hash,
+			MAX(value) AS author
+		FROM item_attribute_latest
+		WHERE attribute IN ('cookie_id', 'gpg_id');
 	");
 #
 # 	SqliteQuery2("
@@ -354,7 +373,7 @@ sub SqliteMakeTables { # creates sqlite schema
 				item.file_path AS file_path,
 				item.item_name AS item_name,
 				item.file_hash AS file_hash,
-				item.author_key AS author_key,
+				IFNULL(item_author.author, '') AS author_key,
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp,
@@ -368,6 +387,7 @@ sub SqliteMakeTables { # creates sqlite schema
 				LEFT JOIN parent_count ON ( item.file_hash = parent_count.item_hash)
 				LEFT JOIN added_time ON ( item.file_hash = added_time.file_hash)
 				LEFT JOIN item_title ON ( item.file_hash = item_title.file_hash)
+				LEFT JOIN item_author ON ( item.file_hash = item_author.file_hash)
 				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
 				LEFT JOIN item_tags_list ON ( item.file_hash = item_tags_list.file_hash )
 	");
@@ -418,10 +438,10 @@ sub SqliteMakeTables { # creates sqlite schema
 
 	SqliteQuery2("
 		CREATE VIEW 
-			author_flat 
+			author_flat
 		AS 
 		SELECT 
-			author.key AS author_key, 
+			author.key AS author_key,
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
@@ -951,7 +971,6 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	}
 
 	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
-		DBAddAuthor('flush');
 		$query = '';
 		@queryParams = ();
 	}
@@ -981,52 +1000,8 @@ sub DBAddConfigValue { # add value to the config table ($key, $value)
 	return;
 }
 
-sub DBAddAuthor { # adds author entry to index database ; $key (gpg fingerprint)
-	state $query;
-	state @queryParams;
-
-	my $key = shift;
-
-	if ($key eq 'flush') {
-		WriteLog("DBAddAuthor(flush)");
-
-		if ($query) {
-			$query .= ';';
-
-			SqliteQuery2($query, @queryParams);
-
-			$query = '';
-			@queryParams = ();
-		}
-
-		return;
-	}
-
-	if ($query && (length($query) > DBMaxQueryLength() || scalar(@queryParams) > DBMaxQueryParams())) {
-		DBAddAuthor('flush');
-		$query = '';
-		@queryParams = ();
-	}
-
-	#todo sanity checks
-
-	if (!$query) {
-		$query = "INSERT OR REPLACE INTO author(key) VALUES ";
-	} else {
-		$query .= ',';
-	}
-
-	$query .= '(?)';
-	push @queryParams, $key;
-
-	DBAddPageTouch('author', $key);
-	DBAddPageTouch('authors');
-	DBAddPageTouch('stats');
-}
-
 sub DBGetTouchedPages { # Returns items from task table, used for prioritizing which pages need rebuild
 # index, rss, authors, stats, tags, and top are returned first
-
 	my $touchedPageLimit = shift;
 
 	WriteLog("DBGetTouchedPages($touchedPageLimit)");
@@ -1584,13 +1559,13 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	WriteLog("DBAddItem($filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError);");
 
 	if (!$query) {
-		$query = "INSERT OR REPLACE INTO item(file_path, item_name, author_key, file_hash, item_type, verify_error) VALUES ";
+		$query = "INSERT OR REPLACE INTO item(file_path, item_name, file_hash, item_type, verify_error) VALUES ";
 	} else {
 		$query .= ",";
 	}
-	push @queryParams, $filePath, $itemName, $authorKey, $fileHash, $itemType, $verifyError;
+	push @queryParams, $filePath, $itemName, $fileHash, $itemType, $verifyError;
 
-	$query .= "(?, ?, ?, ?, ?, ?)";
+	$query .= "(?, ?, ?, ?, ?)";
 
 	my $filePathRelative = $filePath;
 	my $htmlDir = GetDir('html');
@@ -1598,9 +1573,6 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 
 	WriteLog('DBAddItem: $filePathRelative = ' . $filePathRelative . '; $htmlDir = ' . $htmlDir);
 
-	if ($authorKey) {
-		DBAddItemAttribute($fileHash, 'author_key', $authorKey);
-	}
 	DBAddItemAttribute($fileHash, 'sha1', $fileHash);
 	DBAddItemAttribute($fileHash, 'md5', md5_hex(GetFile($filePath)));
 	DBAddItemAttribute($fileHash, 'item_type', $itemType);
