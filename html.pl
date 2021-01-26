@@ -2,6 +2,7 @@
 
 use strict;
 use 5.010;
+use utf8;
 
 sub GetHtmlAvatar { # Returns HTML avatar from cache
 	state %avatarMemo;

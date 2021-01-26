@@ -1,5 +1,8 @@
 #!/usr/bin/perl
+
 use strict;
+use 5.010;
+use utf8;
 
 sub GetHtpasswdLine {
 	my $username = shift;

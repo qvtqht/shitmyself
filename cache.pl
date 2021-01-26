@@ -1,6 +1,7 @@
 #!/usr/bin/perl -T
 use strict;
 use 5.010;
+use utf8;
 
 sub GetMyCacheVersion { # returns "version" of cache
 # this is used to prevent cache conflicts between different software versions

@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 
 use strict;
-
+use 5.010;
+use utf8;
 #die 'Script is not yet finished. Please comment this line to test it';
 
 #############

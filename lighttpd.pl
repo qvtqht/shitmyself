@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 
 use strict;
-use warnings FATAL => 'all';
+use 5.010;
+use utf8;
+#use warnings FATAL => 'all';
 
 require './utils.pl';
 `killall lighttpd`;

@@ -2,6 +2,7 @@
 
 use strict;
 use 5.010;
+use utf8;
 
 sub OrganizeFile { # $file ; renames file based on hash of its contents
 	# returns new filename

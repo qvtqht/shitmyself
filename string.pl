@@ -2,6 +2,7 @@
 
 use strict;
 use 5.010;
+use utf8;
 
 sub GetString { # $stringKey, $language, $noSubstitutions ; Returns string from config/string/en/
 # $stringKey = 'menu/top'

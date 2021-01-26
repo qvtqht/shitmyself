@@ -7,6 +7,7 @@
 
 use strict;
 use 5.010;
+use utf8;
 
 sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons for item in html form
 	my $fileHash = shift; # item's file hash
