@@ -3197,8 +3197,8 @@ sub GetReadPage { # generates page with item listing based on parameters
 				$itemTemplate = GetItemTemplate($row); # GetReadPage()
 			}
 			else {
-				$itemTemplate = '<p>Problem decoding message ' . (defined($row->{'file_hash'}) ? $row->{'file_hash'} : 'x') . '</p>';
-				WriteLog('GetReadPage: warning: Something happened and there is no $message where I expected it... Oh well, moving on.');
+				$itemTemplate = GetItemTemplate($row); # GetReadPage()
+				WriteLog('GetReadPage: warning: missing $message');
 			}
 
 			if ($itemComma eq '') {
