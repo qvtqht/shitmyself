@@ -264,20 +264,20 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 	# * colspan= in non-column cells
 
 	# base template
-	my $windowTemplate = GetTemplate('window/standard.template');
+	my $windowTemplate = GetTemplate('html/window/standard.template');
 
 	# titlebar, if there is a title
 	my $showButtons = GetConfig('html/window_titlebar_buttons'); # titlebar hide and skip buttons; #todo GetConfig('titlebar_with_button');
 	if ($windowTitle) {
 		if ($showButtons) {
 			my $btnCloseCaption = '{}'; # needs to match one other place in utils.js #collapseButton
-			my $windowTitlebar = GetTemplate('window/titlebar_with_button.template');
+			my $windowTitlebar = GetTemplate('html/window/titlebar_with_button.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
 			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
 			$windowTemplate =~ s/\$btnCloseCaption/$btnCloseCaption/g;
 			#$contentColumnCount = 2;
 		} else {
-			my $windowTitlebar = GetTemplate('window/titlebar.template');
+			my $windowTitlebar = GetTemplate('html/window/titlebar.template');
 			$windowTitlebar =~ s/\$windowTitle/$windowTitle/g;
 			$windowTemplate =~ s/\$windowTitlebar/$windowTitlebar/g;
 		}
@@ -287,7 +287,7 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 
 	# menubar, if there is menubar content
 	if ($windowMenubarContent) {
-		my $windowMenubar = GetTemplate('window/menubar.template');
+		my $windowMenubar = GetTemplate('html/window/menubar.template');
 		$windowMenubar =~ s/\$windowMenubarContent/$windowMenubarContent/;
 
 		$windowTemplate =~ s/\$windowMenubar/$windowMenubar/g;
@@ -297,14 +297,14 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 
 	# column headings
 	if ($columnHeadings) {
-		my $windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
+		my $windowHeaderTemplate = GetTemplate('html/window/header_wrapper.template');
 		my $windowHeaderColumns = '';
 		my @columnsArray = split(',', $columnHeadings);
 
 		my $printedColumnsCount = 0;
 		foreach my $columnCaption (@columnsArray) {
 			$printedColumnsCount++;
-			my $columnHeaderTemplate = GetTemplate('window/header_column.template');
+			my $columnHeaderTemplate = GetTemplate('html/window/header_column.template');
 			if ($printedColumnsCount >= scalar(@columnsArray)) {
 				$columnCaption .= '<br>'; # for no-table browsers
 			}
@@ -338,7 +338,7 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 
 	# statusbar
 	if ($windowStatus) {
-		my $windowStatusTemplate = GetTemplate('window/status.template');
+		my $windowStatusTemplate = GetTemplate('html/window/status.template');
 		$windowBody = str_replace('$contentColumnCount', $contentColumnCount, $windowBody);
 		$windowStatusTemplate =~ s/\$windowStatus/$windowStatus/g;
 		$windowTemplate =~ s/\$windowStatus/$windowStatusTemplate/g;
@@ -1175,7 +1175,7 @@ sub GetWidgetExpand { # $parentCount, $url ; gets "More" button widget GetExpand
 		return '(More)';
 	}
 
-	my $widgetTemplate = GetTemplate('widget/more_button.template');
+	my $widgetTemplate = GetTemplate('html/widget/more_button.template');
 
 	if ($widgetTemplate) {
 		# <a href="/etc.html">More</a>
@@ -1920,12 +1920,12 @@ sub GetClockTemplate {
 			# ssi-enhanced clock
 			# currently not compatible with javascript clock
 			WriteLog('GetPageHeader: ssi is enabled');
-			$clock = GetTemplate('widget/clock_ssi.template');
+			$clock = GetTemplate('html/widget/clock_ssi.template');
 			$clock =~ s/\$currentTime/$currentTime/g;
 		}
 		else {
 			# default clock
-			$clock = GetTemplate('widget/clock.template');
+			$clock = GetTemplate('html/widget/clock.template');
 			$clock =~ s/\$currentTime/$currentTime/;
 
 			my $sizeConfig = GetConfig('html/clock_format');
@@ -2181,7 +2181,7 @@ sub GetTopItemsPage { # returns page with top items listing
 		$htmlOutput .= $itemListingWrapper;
 	} else {
 	# no items returned, use 'no items' template
-		$htmlOutput .= GetTemplate('item/no_items.template');
+		$htmlOutput .= GetTemplate('html/item/no_items.template');
 	}
 
 	$htmlOutput .= GetPageFooter(); # </body></html>
@@ -2319,7 +2319,7 @@ sub GetItemPrefixPage { # returns page with top items listing
 		$htmlOutput .= $itemListingWrapper;
 	} else {
 	# no items returned, use 'no items' template
-		$htmlOutput .= GetTemplate('item/no_items.template');
+		$htmlOutput .= GetTemplate('html/item/no_items.template');
 	}
 
 	$htmlOutput .= GetPageFooter(); # </body></html>
@@ -3687,7 +3687,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutHtmlFile("upload.html", $uploadPage);
 
 	# Upload page
-	my $uploadMultiPage = GetUploadPage('html/upload_multi.template');
+	my $uploadMultiPage = GetUploadPage('html/form/upload_multi.template');
 	PutHtmlFile("upload_multi.html", $uploadMultiPage);
 
 	# Search page
@@ -3712,7 +3712,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	PutStatsPages();
 	#
 	# { # clock test page
-	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('widget/clock.template') . '</form>';
+	# 	my $clockTest = '<form name=frmTopMenu>' . GetTemplate('html/widget/clock.template') . '</form>';
 	# 	my $clockTestPage = '<html><body>';
 	# 	$clockTestPage .= $clockTest;
 	# 	$clockTestPage .= '</body></html>';
@@ -4024,7 +4024,7 @@ sub GetUploadPage { # returns html for upload page
 	if (GetConfig('admin/php/enable')) {
 		my $template = shift;
 		if (!$template) {
-			$template = 'upload.template';
+			$template = 'html/upload.template';
 		}
 		$html .= GetPageHeader($title, $title, 'upload');
 		$html .= GetTemplate('html/maincontent.template');
@@ -4922,11 +4922,11 @@ sub GetTimestampWidget { # $time ; returns timestamp widget
 	my $widget = '';
 	if ($epoch) {
 		# epoch-formatted timestamp, simpler template
-		$widget = GetTemplate('widget/timestamp_epoch.template');
+		$widget = GetTemplate('html/widget/timestamp_epoch.template');
 		$widget =~ s/\$timestamp/$time/;
 	} else {
 		WriteLog('GetTimestampWidget: $epoch = false');
-		$widget = GetTemplate('widget/timestamp.template');
+		$widget = GetTemplate('html/widget/timestamp.template');
 
 		$widget = str_replace("\n", '', $widget);
 		# if we don't do this, the link has an extra space
