@@ -978,9 +978,9 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 							# timestamps
 							$iaValue = $iaValue . ' (' . GetFileSizeWidget($iaValue) . ')';
 						}
-						if ($iaName eq 'author_key') {
+						if ($iaName eq 'author_key' || $iaName eq 'cookie_id' || $iaName eq 'gpg_id') {
 							# turn author key into avatar
-							$iaValue = $iaValue . ' (' . trim(GetAvatar($iaValue)) . ')';
+							$iaValue = $iaValue . ' (' . trim(GetAuthorLink($iaValue)) . ')';
 						}
 						if ($iaName eq 'title') {
 							# title needs to be escaped
