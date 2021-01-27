@@ -1571,28 +1571,29 @@ sub GetItemTemplate { # returns HTML for outputting one item
 			} # $isAdmin
 		} # $itemType eq 'txt'
 
-		if (GetConfig('admin/image/enable') && $itemType eq 'image') {
-			my $imageContainer = GetTemplate('item/container/image.template');
+		if ($itemType eq 'image') {
+			if (GetConfig('admin/image/enable')) {
+				my $imageContainer = GetTemplate('item/container/image.template');
 
-			my $imageUrl = "/thumb/thumb_800_$fileHash.gif"; #todo hardcoding no
-			# my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
-			my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
-			my $imageAlt = $itemTitle;
+				my $imageUrl = "/thumb/thumb_800_$fileHash.gif"; #todo hardcoding no
+				# my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
+				my $imageSmallUrl = "/thumb/thumb_42_$fileHash.gif"; #todo hardcoding no
+				my $imageAlt = $itemTitle;
 
-			# $imageSmallUrl is a smaller image, used in the "lowsrc" attribute for img tag
+				# $imageSmallUrl is a smaller image, used in the "lowsrc" attribute for img tag
 
-			$imageContainer =~ s/\$imageUrl/$imageUrl/g;
-			$imageContainer =~ s/\$imageSmallUrl/$imageSmallUrl/g;
-			$imageContainer =~ s/\$imageAlt/$imageAlt/g;
+				$imageContainer =~ s/\$imageUrl/$imageUrl/g;
+				$imageContainer =~ s/\$imageSmallUrl/$imageSmallUrl/g;
+				$imageContainer =~ s/\$imageAlt/$imageAlt/g;
 
-			$itemText = $imageContainer;
+				$itemText = $imageContainer;
 
-			$itemClass = 'image';
+				$itemClass = 'image';
+			} else {
+				$itemText = 'itemType eq image, but images disabled';
+				WriteLog('$itemType eq image, but images disabled');
+			}
 		} # $itemType eq 'image'
-		elsif ($itemType eq 'image') {
-		    $itemText = 'itemType eq image, but images disabled';
-			WriteLog('$itemType eq image, but images disabled');
-		}
 
 		my $replyLink = $permalinkHtml . '#reply'; #todo this doesn't need the url before #reply if it is on the item's page
 
