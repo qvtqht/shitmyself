@@ -1,11 +1,21 @@
 <!-- access.template ; for letting user switch accessibility mode -->
-<h3><a href="/access.html?light=1">Turn On</a></h3>
-
-<h3><a href="/access.html?light=0">Turn Off</a></h3>
+<form action="/access.html">
+	<p>
+		<label for=lightOn>
+			<input name=light value=1 id=lightOn type=submit> <b>Turn On</b>
+		</label>
+	</p>
+	<p>
+		<label for=lightOff>
+			<input name=light value=0 id=lightOff type=submit> <b>Turn Off</b>
+		</label>
+	</p>
+</form>
 
 <hr>
 <p>
 	Light Mode is designed for accessibility.<br>
-	All non-essential and convenience features are turned off.
+	All non-essential and convenience features are turned off.<br>
+	Sets a cookie.
 </p>
 <!-- / access.template -->
