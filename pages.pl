@@ -3657,7 +3657,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutHtmlFile("cache.manifest", GetTemplate('js/cache.manifest.template') . "#" . time()); # config/admin/offline/enable
 	}
 
-	if (GetConfig('admin/dev_mode')) {
+	if (GetConfig('admin/dev/make_js_test_pages')) {
 		MakeJsTestPages();
 	}
 
