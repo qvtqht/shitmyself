@@ -338,12 +338,18 @@ sub GetTemplate { # $templateName ; returns specified template from template dir
 		#if already been looked up, return memo version
 		WriteLog('GetTemplate: returning from memo for ' . $filename);
 		if (trim($templateMemo{$filename}) eq '') {
-			WriteLog('GetTemplate: warning: returning empty string');
+			WriteLog('GetTemplate: warning: returning empty string for ' . $filename);
 		}
 		return $templateMemo{$filename};
 	}
 
 	if (!-e ('config/template/' . $filename) && !-e ('default/template/' . $filename)) {
+		#shim for rename
+		if (-e ('config/template/html/' . $filename) || -e ('default/template/html/' . $filename)) {
+			WriteLog('GetTemplate: warning: template reference needs to be prepended with html: ' . $filename);
+			return GetTemplate('html/' . $filename);
+		}
+
 		# if template doesn't exist
 		# and we are in debug mode
 		# report the issue
