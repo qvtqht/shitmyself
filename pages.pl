@@ -4949,6 +4949,12 @@ sub GetTimestampWidget { # $time ; returns timestamp widget
 sub FormatDate { # $epoch ; formats date depending on how long ago it was
 # FormatDateForDisplay()
 	my $epoch = shift;
+
+	if ($epoch =~ m/\D/) { # has non-digits
+		WriteLog('FormatDate: warning: $epoch failed sanity check');
+		return '???';
+	}
+
 	my $time = GetTime();
 	my $difference = $time - $epoch;
 	my $formattedDate = '';
@@ -4965,7 +4971,7 @@ sub FormatDate { # $epoch ; formats date depending on how long ago it was
 		# my $timeDate = strftime '%Y/%m/%d %H:%M:%S', localtime $time;
 	}
 	return $formattedDate;
-}
+} # FormatDate()
 
 sub SurveyForWeb { # replaces some spaces with &nbsp; to preserve text-based layout for html display; $text
 	my $text = shift;
