@@ -7,7 +7,7 @@
 		<span id=spanSignedInStatus></span>
 		<p>
 			Handle: <b><span id=lblHandle></span></b><br>
-			Pugmark: <span id=lblFingerprint></span>
+			<span id=lblFingerprint></span>
 			<span class=advanced>
 				<br>PGP: <span id=lblSigningIndicator>No</span>
 			</span>
