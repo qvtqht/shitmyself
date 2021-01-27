@@ -5184,6 +5184,10 @@ while (my $arg1 = shift @foundArgs) {
 			print ("recognized item identifier\n");
 			MakePage('item', $arg1, 1);
 		}
+		elsif (IsItemPrefix($arg1)) {
+			print ("recognized item prefix\n");
+			MakePage('prefix', $arg1, 1);
+		}
 		elsif (IsFingerprint($arg1)) {
 			print ("recognized author fingerprint\n");
 			MakePage('author', $arg1, 1);
