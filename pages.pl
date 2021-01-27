@@ -4712,10 +4712,10 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	if (!$avatarCacheDir || !$avatarTemplate) {
 		if (GetConfig('html/avatar_icons')) {
 			$avatarCacheDir = 'avatar.color';
-			$avatarTemplate = 'avatar.template';
+			$avatarTemplate = 'html/avatar.template';
 		} else {
 			$avatarCacheDir = 'avatar.plain';
-			$avatarTemplate = 'avatar-username.template';
+			$avatarTemplate = 'html/avatar-username.template';
 		}
 		my $themeName = GetConfig('html/theme');
 		$avatarCacheDir .= '/' . $themeName;
