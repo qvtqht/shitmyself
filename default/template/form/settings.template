@@ -77,19 +77,6 @@
 
 							<input type=submit name=btnFlush id=btnFlush value=Flush>
 						</p>
-						<p>
-							<span class=beginner>
-								Overthrow button removes current administrator.<br>
-								Remember, unsuccessful overthrow is insurrection.<br>
-							</span>
-
-							<label for=chkOverthrow>
-								<input type=checkbox id=chkOverthrow name=chkOverthrow>
-								Overthrow
-							</label>
-
-							<input type=submit name=btnOverthrow id=btnOverthrow value=Overthrow>
-						</p>
 					</fieldset>
 
 					<fieldset class=admin>
