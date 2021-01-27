@@ -1020,7 +1020,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 				}
 			}
 
-			{ # bolt on tags list as an attribute
+			if (defined($file{'tags_list'})) { # bolt on tags list as an attribute
 				$itemAttributesTable .= '<tr><td>';
 				$itemAttributesTable .= GetString('item_attribute/tags_list');
 				$itemAttributesTable .= '</td><td>';
@@ -1028,7 +1028,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 				$itemAttributesTable .= '</td></tr>';
 			}
 
-			{ # bolt on item score
+			if (defined($file{'item_score'})) { # bolt on item score
 				$itemAttributesTable .= '<tr><td>';
 				$itemAttributesTable .= GetString('item_attribute/item_score');
 				$itemAttributesTable .= '</td><td>';
