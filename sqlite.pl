@@ -1855,9 +1855,11 @@ sub DBAddItemAttribute { # $fileHash, $attribute, $value, $epoch, $source # add 
 
 	if (!$attribute) {
 		WriteLog('DBAddItemAttribute: warning: called without $attribute');
+		return '';
 	}
-	if (!$value) {
-		WriteLog('DBAddItemAttribute: warning: called without $value');
+	if (!$value && $value != 0) { #todo
+		WriteLog('DBAddItemAttribute: warning: called without $value, $attribute = ' . $attribute);
+		return '';
 	}
 
 	chomp $fileHash;
