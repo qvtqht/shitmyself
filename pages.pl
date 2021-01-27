@@ -1902,13 +1902,6 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 			# capitalize caption
 			my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
-			if (GetConfig('html/emoji_menu')) {
-				my $menuItemEmoji = GetString($menuItemName, 'emoji', 1);
-				if ($menuItemEmoji) {
-					$menuItemCaption = $menuItemEmoji;
-				}
-			}
-
 			# add menu item to output
 			$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
 		}
@@ -3395,12 +3388,19 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 
 	my $accessKey = GetAccessKey($caption);
 	if ($accessKey) {
+		$menuItem =~ s/\$address/$address/g;
 		$menuItem = AddAttributeToTag($menuItem, 'a', 'accesskey', $accessKey);
-		$caption =~ s/($accessKey)/<u>$1<\/u>/i;
-	}
 
-	$menuItem =~ s/\$address/$address/g;
-	$menuItem =~ s/\$caption/$caption/g;
+		if (GetConfig('html/emoji_menu')) {
+			my $menuItemEmoji = GetString(lc($caption), 'emoji', 1);#lc() is a hack, name should be passed instead of caption
+			$menuItem = AddAttributeToTag($menuItem, 'a', 'title', $caption);
+			$menuItem =~ s/\$caption/$caption/g;
+#			$menuItem =~ s/\$caption/$menuItemEmoji ($accessKey)/g;
+		} else {
+			$caption =~ s/($accessKey)/<u>$1<\/u>/i;
+			$menuItem =~ s/\$caption/$caption/g;
+		}
+	}
 
 	# $menuItem =~ s/\$color/$color/g;
 	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
