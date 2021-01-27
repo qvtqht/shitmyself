@@ -114,17 +114,17 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		my $tagsHorizontal = GetTagLinks();
 		PutHtmlFile('tags-horizontal.html', $tagsHorizontal);
 	}
+#	#
+#	# events page
+#	elsif ($pageType eq 'events') {
+#		my $eventsPage = GetEventsPage();
+#		PutHtmlFile("events.html", $eventsPage);
+#	}
 	#
-	# events page
-	elsif ($pageType eq 'events') {
-		my $eventsPage = GetEventsPage();
-		PutHtmlFile("events.html", $eventsPage);
-	}
-	#
-	# scores page
-	elsif ($pageType eq 'scores') {
-		my $scoresPage = GetScoreboardPage2();
-		PutHtmlFile("authors.html", $scoresPage);
+	# authors page
+	elsif ($pageType eq 'authors') {
+		my $authorsPage = GetAuthorsPage();
+		PutHtmlFile("authors.html", $authorsPage);
 	}
 	#
 	# topitems page
@@ -151,6 +151,13 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 			WriteIndexPages();
 			PutCache('touch/index_pages', time());
 		}
+	}
+	#
+	# item prefix page (queue)
+	elsif ($pageType eq 'prefix') {
+		my $itemPrefix = $pageParam;
+		my $itemsPage = GetItemPrefixPage($itemPrefix);
+		PutHtmlFile(substr($itemPrefix, 0, 2) . '/' . substr($itemPrefix, 2, 2) . '/index.html', $itemsPage);
 	}
 	#
 	# rss feed
