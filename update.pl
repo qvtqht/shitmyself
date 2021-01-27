@@ -18,10 +18,8 @@ system('./index.pl --all');
 
 system('./generate.pl');
 
+system('./pages.pl --index');
+
 UpdateUpdateTime();
-
-MakeSummaryPages();
-
-WriteIndexPages();
 
 1;
