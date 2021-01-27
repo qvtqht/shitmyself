@@ -104,7 +104,7 @@ sub SqliteMakeTables { # creates sqlite schema
 			FROM
 				item_attribute
 			WHERE
-				attribute IN ('cookie_id', 'pgp_id');
+				attribute IN ('cookie_id', 'gpg_id');
 	");
 
 	# author_alias
