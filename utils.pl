@@ -1560,38 +1560,51 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	my $easyFindString = join(' ', @easyFindArray);
 
 	return $easyFindString;
-}
+} # GetItemEasyFind()
 
 sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cache or file path
 	WriteLog('GetItemMessage()');
 
 	my $itemHash = shift;
 	if (!$itemHash) {
-		return;
+		WriteLog('GetItemMessage: warning: missing $itemHash');
+		return '';
 	}
 
 	chomp $itemHash;
 
 	if (!IsItem($itemHash)) {
-		return;
+		WriteLog('GetItemMessage: warning: $itemHash failed sanity check');
+		return '';
 	}
 
 	WriteLog("GetItemMessage($itemHash)");
 
-	my $message;
+	my $message = '';
 	my $messageCacheName = GetMessageCacheName($itemHash);
 
 	if (-e $messageCacheName) {
+		WriteLog('GetItemMessage: $message = GetFile(' . $messageCacheName . ');');
 		$message = GetFile($messageCacheName);
-	} else {
-		my $filePath = shift;
-		#todo sanitize/sanitycheck
-
-		$message = GetFile($filePath);
+		if (!$message) {
+			WriteLog('GetItemMessage: warning: cache exists, but $message was missing!');
+		}
 	}
 
-	return  $message;
-}
+	if (!$message) {
+		my $filePath = shift;
+		if ($filePath && -e $filePath) {
+			WriteLog('GetItemMessage: $message = GetFile(' . $filePath . ');');
+			$message = GetFile($filePath);
+		}
+	}
+
+	if (!$message) {
+		WriteLog('GetItemMessage: warning: $message is false');
+	}
+
+	return $message;
+} # GetItemMessage()
 
 sub GetItemMeta { # retrieves item's metadata
 	# $itemHash, $filePath
