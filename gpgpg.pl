@@ -179,7 +179,7 @@ sub GpgParse {
 		elsif ($encryptedFlag) {
 			#gpg_naive_regex_encrypted
 			DBAddItemAttribute($fileHash, 'gpg_encrypted', 1);
-			PutFileMessage($fileHash.txt, '(Encrypted message)');
+			PutFileMessage($fileHash, '(Encrypted message)');
 			WriteLog('GpgParse: $encryptedFlag was true, setting message accordingly');
 			return 1;
 		} else {
