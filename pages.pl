@@ -2435,6 +2435,10 @@ sub GetStatsTable {
 		$chainLogLength = `wc -l html/chain.log`;
 	}
 
+	if (abs($itemsIndexed - $filesTotal) > 3) {
+		$statsTable = str_replace('<p id=diagnostics></p>', '<p id=diagnostics><font color=orange><b>Check engine!</b></font></p>', $statsTable);
+	}
+
 	#todo optimize
 	#todo config/admin/upload/allow_files
 
