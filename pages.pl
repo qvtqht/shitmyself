@@ -190,6 +190,11 @@ sub GetPageLink { # returns one pagination link as html, used by GetPageLinks
 
 	my $pageLimit = GetConfig('html/page_limit');
 
+	if (!$pageLimit) {
+		WriteLog('GetPageLink: warning: $pageLimit was FALSE, setting to sane 25');
+		$pageLimit = 25;
+	}
+
 	my $pageStart = $pageNumber * $pageLimit;
 	my $pageEnd = $pageNumber * $pageLimit + $pageLimit;
 	if ($pageEnd > $itemCount) {
@@ -390,7 +395,18 @@ sub GetPageLinks { # $currentPageNumber ; returns html for pagination links with
 	state $pageLinks; # stores generated links html in case we need them again
 
 	my $pageLimit = GetConfig('html/page_limit'); # number of items per page
+
+	if (!$pageLimit) {
+		WriteLog('GetPageLink: warning: $pageLimit was FALSE, setting to sane 25');
+		$pageLimit = 25;
+	}
+
 	my $itemCount = DBGetItemCount(); # item count
+
+	if (!$itemCount) {
+		WriteLog('GetPageLink: warning: $itemCount was FALSE, sanity check failed');
+		return '';
+	}
 
 	WriteLog("GetPageLinks($currentPageNumber)");
 
@@ -3417,7 +3433,8 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 	my $pageLimit = GetConfig('html/page_limit');
 	if (!$pageLimit) {
-		$pageLimit = 250;
+		WriteLog('WriteIndexPages: warning: $pageLimit was FALSE, setting to sane 25');
+		$pageLimit = 25;
 	}
 	#my $pageThreshold = 5; #todo
 
