@@ -1232,7 +1232,7 @@ sub DBAddPageTouch { # $pageName, $pageParam; Adds or upgrades in priority an en
 				task_type = 'page' AND
 				task_name = 'item' AND
 				task_param IN (
-					SELECT file_hash FROM item WHERE author_key = ?
+					SELECT file_hash FROM item_flat WHERE author_key = ?
 				)
 		";
 		my @queryParamsAuthorItems;
