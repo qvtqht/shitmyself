@@ -1333,6 +1333,32 @@ sub DBGetVoteCounts { # Get total vote counts by tag value
 	return $ref;
 }
 
+sub DBGetTagCount { # Gets number of distinct tag/vote values
+	my $query = "
+		SELECT
+			COUNT(vote_value)
+		FROM (
+			SELECT
+				DISTINCT vote_value
+			FROM
+				vote
+			GROUP BY
+				vote_value
+		)
+	";
+
+	my $result = SqliteGetValue($query);
+
+	if ($result) {
+		WriteLog('DBGetTagCount: $result = ' . $result);
+	} else {
+		WriteLog('DBGetTagCount: warning: no $result, returning 0');
+		$result = 0;
+	}
+
+	return $result;
+} # DBGetTagCount()
+
 sub DBGetItemLatestAction { # returns highest timestamp in all of item's children
 # $itemHash is the item's identifier
 
