@@ -154,6 +154,12 @@ sub GpgParse {
 				DBAddItemAttribute($fileHash, 'gpg_alias', $aliasReturned);
 				$message =~ s/\$name/$aliasReturned/g;
 
+				if ($gpgKeyPub && $aliasReturned) {
+					# gpg author alias shim
+					DBAddKeyAlias($gpgKeyPub, $aliasReturned);
+					DBAddKeyAlias('flush');
+				}
+
 			} else {
 				DBAddItemAttribute($fileHash, 'gpg_alias', '???');
 				$message =~ s/\$name/???/g;
