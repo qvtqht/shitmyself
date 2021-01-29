@@ -578,7 +578,6 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		WriteLog('RedirectWithResponse: warning: Trying to redirect when headers have already been sent!');
 	}
 
-
 	$responseId = StoreServerResponse($message);
 
 	if (substr($url, 0, 1) == '/') {
@@ -588,11 +587,16 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 			$protocol = 'https';
 		}
 
-		if ($_SERVER['HTTP_HOST']) {
-			$url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $url;
+		$urlAuthPrefix = '';
+		/*if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+			$urlAuthPrefix = urlencode($_SERVER['PHP_AUTH_USER']) . ':' . urlencode($_SERVER['PHP_AUTH_PW']) . '@';
+		}*/
+
+		if (isset($_SERVER['HTTP_HOST'])) {
+			$url = $protocol . '://' . $urlAuthPrefix . $_SERVER['HTTP_HOST'] . $url;
 		}
 		elseif (GetConfig('admin/my_domain')) {
-			$url = 'http://' . GetConfig('admin/my_domain') . $url;
+			$url = 'http://' . $urlAuthPrefix . GetConfig('admin/my_domain') . $url;
 		}
 	}
 
