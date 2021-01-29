@@ -6,29 +6,19 @@ use utf8;
 
 require('./utils.pl');
 
-sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value based for $key
-	# $token eq 'uncache'
+sub GetConfig { # $configName || 'unmemo', $token, [$parameter] ;  gets configuration value based for $key
+	# $token eq 'unmemo'
 	#    removes it from %configLookup
 	# $token eq 'override'
 	# 	instead of regular lookup, overrides value
 	#		overridden value is stored in local sub memo
 	#			this means all subsequent lookups now return $parameter
 	#
-	state $devMode;
-	$devMode = 0;
 #	this is janky, and doesn't work as expected
 #	eventually, it will be nice for dev mode to not rewrite
 #	the entire config tree on every rebuild
 #	and also not require a rebuild after a default change
 #	#todo
-#	if (!defined($devMode)) {
-#		if (-e 'config/admin/dev_mode') {
-#			WriteLog('GetConfig: attention: setting $devMode = 1');
-#			$devMode = 1;
-#		} else {
-#			$devMode = 0;
-#		}
-#	}
 
 	my $configName = shift;
 	chomp $configName;
@@ -45,6 +35,7 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 
 	if ($configName && $configName eq 'unmemo') {
 		undef %configLookup;
+		return '';
 	}
 
 	my $token = shift;
@@ -131,14 +122,14 @@ sub GetConfig { # $configName, $token, [$parameter] ;  gets configuration value 
 			$configValue = trim($configValue);
 			$configLookup{$configName} = $configValue;
 
-			if (!$devMode) {
+			if (!GetConfig('admin/dev/skip_putconfig')) {
 				# this preserves default settings, so that even if defaults change in the future
 				# the same value will remain for current instance
 				# this also saves much time not having to run ./clean_dev when developing
 				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
 				PutConfig($configName, $configValue);
 			} else {
-				WriteLog('GetConfig: $devMode is TRUE, not calling PutConfig()');
+				WriteLog('GetConfig: skip_putconfig is TRUE, not calling PutConfig()');
 			}
 
 			return $configValue;
@@ -173,10 +164,10 @@ sub ConfigKeyValid { #checks whether a config key is valid
 	WriteLog('ConfigKeyValid: $configName sanity check passed:');
 
 	if (-e "default/$configName") {
-		WriteLog("ConfigKeyValid: default/$configName exists");
+		WriteLog("ConfigKeyValid: default/$configName exists, return 1");
 		return 1;
 	} else {
-		WriteLog("ConfigKeyValid: default/$configName NOT exist!");
+		WriteLog("ConfigKeyValid: default/$configName NOT exist, return 0");
 		return 0;
 	}
 } # ConfigKeyValid()
