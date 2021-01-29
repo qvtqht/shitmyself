@@ -29,8 +29,8 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 		return $file;
 	}
 
-	if (GetConfig('admin/dev_mode')) {
-		WriteLog('OrganizeFile: dev_mode is on, returning');
+	if (GetConfig('admin/dev/block_organize')) {
+		WriteLog('OrganizeFile: dev/block_organize is on, returning');
 		return $file;
 	}
 
@@ -48,6 +48,9 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	# }
 
 	if ($fileHashPath) {
+		use File::Spec;
+		$fileHashPath = File::Spec->rel2abs( $fileHashPath ) ;
+
 		if ($file eq $fileHashPath) {
 			# Does it match? No action needed
 			WriteLog('OrganizeFile: hash path matches, no action needed');
@@ -61,6 +64,14 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 			if (-e $fileHashPath) {
 				# new file already exists, rename only if not larger
 				WriteLog("OrganizeFile: warning: $fileHashPath already exists!");
+
+				#todo this should be sanity-checked way before here
+				if ($fileHashPath =~ m/^([0-9a-zA-Z\/\._\-]+)$/) {
+					$fileHashPath = $1;
+				} else {
+					WriteLog('OrganizeFile: warning: $fileHashPath failed sanity check');
+					return '';
+				}
 
 				if (-s $fileHashPath > -s $file) {
 					unlink ($file);
