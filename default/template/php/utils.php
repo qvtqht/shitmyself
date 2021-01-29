@@ -651,11 +651,11 @@ function GetWindowTemplate ( # body, title, headings, status, menu
 	$contentColumnCount = 0;
 
 	// base template
-	$windowTemplate = GetTemplate('window/standard.template');
+	$windowTemplate = GetTemplate('html/window/standard.template');
 
 	// titlebar, if there's a title
 	if ($windowTitle) {
-		$windowTitlebar = GetTemplate('window/titlebar.template');
+		$windowTitlebar = GetTemplate('html/window/titlebar.template');
 		$windowTitlebar = str_replace('$windowTitle', $windowTitle, $windowTitlebar);
 
 		$windowTemplate = str_replace('$windowTitlebar', $windowTitlebar, $windowTemplate);
@@ -665,7 +665,7 @@ function GetWindowTemplate ( # body, title, headings, status, menu
 
 	// menubar, if there is menubar content
 	if ($windowMenubarContent) {
-		$windowMenubar = GetTemplate('window/menubar.template');
+		$windowMenubar = GetTemplate('html/window/menubar.template');
 		$windowMenubar = str_replace('$windowMenubarContent', $windowMenubarContent, $windowMenubar);
 
 		$windowTemplate = str_replace('$windowMenubar', $windowMenubar, $windowTemplate);
@@ -676,7 +676,7 @@ function GetWindowTemplate ( # body, title, headings, status, menu
 
 	// column headings from the $columnHeadings variable
 	if ($columnHeadings) {
-		$windowHeaderTemplate = GetTemplate('window/header_wrapper.template');
+		$windowHeaderTemplate = GetTemplate('html/window/header_wrapper.template');
 		$windowHeaderColumns = '';
 		$columnsArray = explode(',', $columnHeadings);
 
@@ -684,7 +684,7 @@ function GetWindowTemplate ( # body, title, headings, status, menu
 		foreach ($columnsArray as $columnCaption) {
 			$printedColumnsCount++;
 
-			$columnHeaderTemplate = GetTemplate('window/header_column.template');
+			$columnHeaderTemplate = GetTemplate('html/window/header_column.template');
 			if ($printedColumnsCount >= count($columnsArray)) {
 				$columnCaption .= '<br>'; //# for no-table browsers
 			}
@@ -716,10 +716,8 @@ function GetWindowTemplate ( # body, title, headings, status, menu
 
 	// status bar
 	if ($windowStatus) {
-		$windowStatusTemplate = GetTemplate('window/status.template');
-
+		$windowStatusTemplate = GetTemplate('html/window/status.template');
 		$windowStatusTemplate = str_replace('$windowStatus', $windowStatus, $windowStatusTemplate);
-
 		$windowTemplate = str_replace('$windowStatus', $windowStatusTemplate, $windowTemplate);
 	} else {
 		$windowTemplate = str_replace('$windowStatus', '', $windowTemplate);
