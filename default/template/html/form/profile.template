@@ -1,9 +1,6 @@
 <!-- form/profile.template -->
 <form action="/profile.html" name=frmProfile>
 	<fieldset id=fldRegistration>
-		<p id=tos></p>
-
-		<hr>
 		<span id=spanSignedInStatus></span>
 		<p>
 			Handle: <b><span id=lblHandle></span></b><br>
@@ -37,6 +34,8 @@
 			</span>
 		</p>
 		<span id=spanProfileLink></span>
+		<hr>
+		<p id=tos></p>
 	</fieldset>
 </form>
 <!-- / form/profile.template -->
