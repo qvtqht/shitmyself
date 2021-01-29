@@ -1302,7 +1302,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 				#todo this may not be necessary anymore
 				$itemClass .= ' item-textart';
 
-				my $textartContainer = GetTemplate('item/container/textart.template');
+				my $textartContainer = GetTemplate('html/item/container/textart.template');
 				$textartContainer =~ s/\$message/$itemText/g;
 
 				$itemText = $textartContainer;
@@ -1312,7 +1312,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 				# if item is signed by an admin, add "admin" css class
 				$itemClass .= ' byadmin';
 
-				my $adminContainer = GetTemplate('item/container/admin.template');
+				my $adminContainer = GetTemplate('html/item/container/admin.template');
 
 				my $colorAdmin = GetThemeColor('admin') || '#c00000';
 				$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
@@ -1325,7 +1325,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 
 		if ($itemType eq 'image') {
 			if (GetConfig('admin/image/enable')) {
-				my $imageContainer = GetTemplate('item/container/image.template');
+				my $imageContainer = GetTemplate('html/item/container/image.template');
 
 				my $imageUrl = "/thumb/thumb_800_$fileHash.gif"; #todo hardcoding no
 				# my $imageUrl = "/thumb/thumb_420_$fileHash.gif"; #todo hardcoding no
@@ -2672,7 +2672,7 @@ sub GetAuthorInfoBox {
 		}
 
 		my $descText = '<b>Admin.</b>';
-		my $adminContainer = GetTemplate('item/container/admin.template');
+		my $adminContainer = GetTemplate('html/item/container/admin.template');
 		my $colorAdmin = GetThemeColor('admin') || '#c00000';
 		$adminContainer =~ s/\$colorAdmin/$colorAdmin/g;
 		$adminContainer =~ s/\$message/$descText/g;
