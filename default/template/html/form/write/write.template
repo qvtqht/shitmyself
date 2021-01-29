@@ -31,7 +31,7 @@
 							<span class=advanced>
 								<label for=recfing>
 									<input name=recfing id=recfing type=checkbox>
-									Record fingerprint (doesn't work yet)
+									Record anonymous identifier
 								</label>
 							</span>
 						</p>
