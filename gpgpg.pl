@@ -133,14 +133,16 @@ sub GpgParse {
 		WriteLog('GpgParse: ' . $fileHash . '; $pubKeyFlag = ' . $pubKeyFlag);
 
 		if ($pubKeyFlag) {
+			my $gpgKeyPub = '';
+
 			#gpg_naive_regex_pubkey
 			my $message;
 			$message = GetTemplate('message/user_reg.template');
 
 			if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
-				my $gpgKey = $1;
-				DBAddItemAttribute($fileHash, 'gpg_id', $gpgKey);
-				$message =~ s/\$fingerprint/$gpgKey/g;
+				$gpgKeyPub = $1;
+				DBAddItemAttribute($fileHash, 'gpg_id', $gpgKeyPub);
+				$message =~ s/\$fingerprint/$gpgKeyPub/g;
 			} else {
 				$message =~ s/\$fingerprint/???/g;
 			}
@@ -159,13 +161,14 @@ sub GpgParse {
 
 			PutFileMessage($fileHash, $message);
 
-			return 1;
+			return $gpgKeyPub;
 		} # $pubKeyFlag
 		elsif ($signedFlag) {
+			my $gpgKeySigned = '';
 			#gpg_naive_regex_signed
 			if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
-				my $gpgKey = $1;
-				DBAddItemAttribute($fileHash, 'gpg_id', $gpgKey);
+				$gpgKeySigned = $1;
+				DBAddItemAttribute($fileHash, 'gpg_id', $gpgKeySigned);
 			}
 
 			if ($gpgStderrOutput =~ /Signature made (.+)/) {
@@ -174,7 +177,7 @@ sub GpgParse {
 				my $signTimestamp = $1;
 				DBAddItemAttribute($fileHash, 'gpg_timestamp', $signTimestamp);
 			}
-			return 1;
+			return $gpgKeySigned;
 		}
 		elsif ($encryptedFlag) {
 			#gpg_naive_regex_encrypted

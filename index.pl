@@ -131,202 +131,38 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 	WriteLog("IndexTextFile($file)");
 
-	# admin/organize_files
-	# renames files to their hashes
-
 	if (GetConfig('admin/organize_files')) {
+		# renames files to their hashes
 		$file = OrganizeFile($file);
 	}
 
 	my $fileHash; # hash of file contents
-	$fileHash = GetFileHash($file);                # hash
+	$fileHash = GetFileHash($file);
 
-	if (GetCache('indexed/'.$fileHash)) {
-		return $fileHash;
+	if (!$file || !$fileHash) {
+		WriteLog('IndexTextFile: warning: $file or $fileHash missing; returning');
+		return 0;
 	}
 
-	# file's attributes
-	my $txt = "";           # original text inside file
-	my $message = "";       # outputted text after parsing
-	#my $fileMeta = "";
-	my $isSigned = 0;       # was this item signed?
-	my $hasCookie = 0;
+	WriteLog('IndexTextFile: $fileHash = ' . $fileHash);
+	if (GetConfig('admin/logging/write_chain_log')) {
+		AddToChainLog($fileHash);
+	}
 
-	my $addedTime;          # time added, epoch format
-	my $isAdmin = 0;        # was this posted by admin?
-
-	# author's attributes
-	my $gpgKey;             # author's gpg key, hexadecimal 16 chars, uppercase
-	my $gpgKeyLong;			# author's gpg key, hexadecimal 40 chars, uppercase
-	my $alias;              # author's alias, as reported by gpg's parsing of their public key
-
-	my $verifyError = 0;    # was there an error verifying the file with gpg?
-
-	my $hasParent = 0;		# has 1 or more parent items?
-
-	my $gpgTimestamp = 0;
-
-	my %hasToken; # tokens found in message for secondary parsing
-	my @tokensFound; # array of hashes, tokens found with arguments
-	my @itemParents;
+	my $authorKey = '';
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
-		my %gpgResults = GpgParse($file); #todo bug here somehow... maybe use hashref?
-
-		if (!!%gpgResults) {
-			WriteLog('GpgParse: %gpgResults is TRUE');
-			WriteLog('GpgParse: scalar(keys(%gpgResults)) = ' . scalar(keys(%gpgResults)));
-		} else {
-			WriteLog('GpgParse: %gpgResults is FALSE');
+		if (GetConfig('admin/gpg/enable')) {
+			$authorKey = GpgParse($file) || '';
 		}
-
-		# see what gpg says about the file.
-		# if there is no gpg content, the attributes are still populated as possible
-		$txt = $gpgResults{'text'};          # contents of the text file
-		$message = $gpgResults{'message'};   # message which will be displayed once tokens are processed
-		$isSigned = $gpgResults{'isSigned'}; # is it signed with pgp?
-		$gpgKey = $gpgResults{'key'};        # if it is signed, fingerprint of signer
-		$gpgTimestamp = $gpgResults{'signTimestamp'} || '';        # signature timestamp
-		$gpgKeyLong = $gpgResults{'keyLong'};
-
-		if (!$isSigned && !$message) {
-			$message = GetFile($file);
-		}
-
-		if ($gpgKey) {
-			chomp $gpgKey;
-		} else {
-			$gpgKey = '';
-		}
-
-		WriteLog('IndexTextFile: $gpgKey = ' . ($gpgKey ? $gpgKey : '--'));
-		WriteLog('IndexTextFile: $gpgTimestamp = ' . ($gpgTimestamp ? $gpgTimestamp : '--'));
-
-		$alias = $gpgResults{'alias'};                     # alias of signer (from public key)
-
-		$verifyError = $gpgResults{'verifyError'} ? 1 : 0; #
-
-		# $fileMeta = GetItemMeta($fileHash, $file);
-
-		# $message .= "\n-- \n" . $fileMeta;
-
-		if (!$alias) {
-			$alias = '';
-		}
-		WriteLog('IndexTextFile: $alias = ' . $alias);
-		if ($gpgKey) {
-			WriteLog('IndexTextFile: $gpgKey = ' . $gpgKey);
-		} else {
-			WriteLog('IndexTextFile: $gpgKey is false');
-		}
-
-		my %authorHasTag;
-
+		my $message = GetFileMessage($file);
 		my $detokenedMessage = $message;
-		# this is used to store $message minus any tokens found
-		# in the end, we will see if it is empty, and set flags accordingly
+		my %hasToken;
 
-		$addedTime = DBGetAddedTime($fileHash);
-		# get the file's added time.
+		my @tokenMessages;
 
-		if (!$file || !$fileHash) {
-			WriteLog('IndexTextFile: warning: $file or $fileHash missing; returning');
-			return 0;
-		}
-
-		# debug output
-		WriteLog('IndexTextFile: $file = ' . $file . ', $fileHash = ' . $fileHash);
-
-		# if the file is present in deleted.log, get rid of it and its page, return
-		if (IsFileDeleted($file, $fileHash)) {
-			WriteLog('IndexTextFile: IsFileDeleted() returned true, returning');
-			return 0;
-		}
-
-		# debug output
-		WriteLog('IndexTextFile: $fileHash = ' . $fileHash);
-		if ($addedTime) {
-			WriteLog('IndexTextFile: $addedTime = ' . $addedTime);
-		} else {
-			WriteLog('IndexTextFile: $addedTime is not set');
-
-			if (GetConfig('admin/logging/write_chain_log')) {
-				$addedTime = AddToChainLog($fileHash);
-			}
-		}
-
-		# admin_imprint
-		if (
-			$gpgKey &&
-			$alias &&
-#			!GetRootAdminKey() &&
-			0 &&
-			GetConfig('admin/admin_imprint') &&
-			$alias eq 'Operator'
-		) {
-			# if there is no admin set, and config/admin/admin_imprint is true
-			# and if this item is a public key
-			# go ahead and make this user admin
-			# and announce it via a new .txt file
-			PutFile('./admin.key', $txt);
-			my $newAdminMessage = $TXTDIR . '/' . GetTime() . '_newadmin.txt';
-			PutFile(
-				$newAdminMessage,
-				"Server Message:\n\n".
-				"There was no admin, and $gpgKey came passing through, so I made them admin.\n\n".
-				"(This happens when config/admin/admin_imprint is true and there is no admin set.)\n\n#meta #notice\n\n".
-				"Timestamp: " . GetTime()
-			);
-			ServerSign($newAdminMessage);
-
-			RemoveHtmlFile('stats.html');
-			RemoveHtmlFile('stats-footer.html');
-			ExpireAvatarCache('*'); # expire avatar cache
-
-		} # admin_imprint
-
-		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
-			# it was posted by admin
-			$isAdmin = 1;
-			$authorHasTag{'admin'} = 1;
-
-			if (
-				!GetConfig('admin/latest_admin_action') ||
-				GetConfig('admin/latest_admin_action') < $addedTime
-			) {
-				# reset counter for latest admin action
-				PutConfig('admin/latest_admin_action', $addedTime);
-			}
-
-			#DBAddVoteRecord($fileHash, $addedTime, 'admin');
-		} # $isSigned && $gpgKey && IsAdmin($gpgKey)
-
-		if ($isSigned && $gpgKey) {
-			# it was signed and there's a gpg key
-			DBAddAuthor($gpgKey);
-			DBAddPageTouch('author', $gpgKey);
-
-			DBAddItemAttribute($fileHash, 'normalized_hash', trim(sha1_hex($message)));
-
-			if ( ! ($gpgKey =~ m/\s/)) {
-				# no spaces in gpg key; \s is whitespace
-				ExpireAvatarCache($gpgKey); # expire avatar cache
-			} else {
-				WriteLog('IndexTextFile: warning: $gpgKey contains space(s)');
-			}
-		}
-
-		if ($alias) {
-			# pubkey
-			DBAddKeyAlias($gpgKey, $alias, $fileHash);
-			DBAddItemAttribute($fileHash, 'gpg_alias', $alias);
-			DBAddItemAttribute($fileHash, 'gpg_fingerprint', $gpgKey);
-			ExpireAvatarCache($gpgKey); # expire alias cache
-		}
-
-		my $itemName = TrimPath($file);
-
-		{
+		my @tokensFound;
+		{ #tokenize into @tokensFound
 			###################################################
 			# TOKEN FIRST PASS PARSING BEGINS HERE
 			# token: identifier
@@ -460,7 +296,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 
 				if (GetConfig("admin/token/$tokenName") && $detokenedMessage) {
 					# token is enabled, and there is still something left to parse
-					
+
 					my @tokenLines;
 
 					if ($tokenMaskParams eq 'mg') {
@@ -505,7 +341,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						if ($tokenName eq 'hashtag') {
 							$hasToken{$foundTokenParam} = 1;
 						}
-					}
+					} # @tokenLines
 				} # GetConfig("admin/token/$tokenName") && $detokenedMessage
 			} # @tokenDefs
 
@@ -513,185 +349,144 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# @tokensFound now has all the found tokens
 			WriteLog('IndexTextFile: scalar(@tokensFound) = ' . scalar(@tokensFound));
 			###################################################
-		}
+		} #tokenize into @tokensFound
 
-		if ($alias) { # if $alias is set, means this is a pubkey
-			DBAddVoteRecord($fileHash, $addedTime, 'pubkey'); # add the "pubkey" tag
-			DBAddPageTouch('tag', 'pubkey'); # add a touch to the pubkey tag page
-			DBAddPageTouch('author', $gpgKey);	# add a touch to the author page
+		my @itemParents;
 
-			ExpireAvatarCache($gpgKey);
-		} else { # not a pubkey
-			$detokenedMessage = trim($detokenedMessage);
-			# there may be whitespace remaining after all the tokens have been removed
+		{ # first pass, look for cookie, parent, auth
+			foreach my $tokenFoundRef (@tokensFound) {
 
+				my %tokenFound = %$tokenFoundRef;
+				if ($tokenFound{'token'} && $tokenFound{'param'}) {
 
-			if (GetConfig('admin/dev_mode')) {
-				# dev mode helps developer by automatically
-				# adding messages tagged #todo, #brainstorm, and #bug
-				# to their respective files under doc/*.txt
-
-				if ($hasToken{'meta'}) {
-					# only if already tagged #meta
-
-					#todo this can go under tagset/meta ?????
-					my @arrayOfMetaTokens = qw(todo brainstorm bug scratch known notes);
-
-					#todo instead of hard-coded list use tagset
-					#todo apply to parents if parents
-					foreach my $devTokenName (@arrayOfMetaTokens) {
-						if ($hasToken{$devTokenName}) {
-							if ($message) {
-								my $docContents = GetFile("doc/$devTokenName.txt");
-								if (!$docContents || index($docContents, $message) == -1) {
-									AppendFile("doc/$devTokenName.txt", "\n\n===\n\n" . $message);
-									last; # one is ennough
-								}
+					if ($tokenFound{'token'} eq 'cookie') {
+						if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+							DBAddItemAttribute($fileHash, 'cookie_id', $tokenFound{'param'}, 0, $fileHash);
+							$message = str_replace($tokenFound{'recon'}, $tokenFound{'message'}, $message);
+							$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+							if (!$authorKey) {
+								$authorKey = $tokenFound{'param'};
 							}
+						} else {
+							WriteLog('IndexTextFile: warning: cookie: sanity check failed');
 						}
-					}
-				}
-			} # admin/dev_mode
+					} # cookie
 
-			# first pass, look for cookie, parent, auth
-			{
-				foreach my $tokenFoundRef (@tokensFound) {
-					my %tokenFound = %$tokenFoundRef;
-					if ($tokenFound{'token'} && $tokenFound{'param'}) {
-						if ($tokenFound{'token'} eq 'cookie') {
-							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
-								WriteLog('IndexTextFile: DBAddAuthor(' . $tokenFound{'param'} . ')');
-								DBAddAuthor($tokenFound{'param'});
-								$hasCookie = $tokenFound{'param'};
+					if ($tokenFound{'token'} eq 'parent') {
+						if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+							WriteLog('IndexTextFile: DBAddItemParent(' . $fileHash . ',' . $tokenFound{'param'} . ')');
+							DBAddItemParent($fileHash, $tokenFound{'param'});
+							push(@itemParents, $tokenFound{'param'});
 
-								$message = str_replace($tokenFound{'recon'}, $tokenFound{'message'}, $message);
-								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+							# $message = str_replace($tokenFound{'recon'}, $tokenFound{'message'}, $message);
+							$message = str_replace($tokenFound{'recon'}, '>>' . $tokenFound{'param'}, $message); #hacky
+							$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+						} else {
+							WriteLog('IndexTextFile: warning: parent: sanity check failed');
+						}
+					} # parent
+				} #param
+			} # foreach
+		} # first pass, look for cookie, parent, auth
+
+		WriteLog('IndexTextFile: %hasToken: ' . join(',', keys(%hasToken)));
+
+		DBAddItem2($file, $fileHash, 'txt');
+
+		if ($hasToken{'example'}) {
+			push @tokenMessages, 'Token #example was found, other tokens will be ignored.';
+		} # #example
+		else { # not #example
+			foreach my $tokenFoundRef (@tokensFound) {
+				my %tokenFound = %$tokenFoundRef;
+				if ($tokenFound{'token'} && $tokenFound{'param'}) {
+					WriteLog('IndexTextFile: token, param: ' . $tokenFound{'token'} . ',' . $tokenFound{'param'});
+
+					if (
+						$tokenFound{'token'} eq 'title' ||
+						$tokenFound{'token'} eq 'alt' ||
+						$tokenFound{'token'} eq 'access_log_hash' ||
+						$tokenFound{'token'} eq 'url'
+					) {
+						# these tokens are applied to:
+						# 	if item has parent, then to the parent
+						# 		otherwise: to self
+						WriteLog('IndexTextFile: token_found: ' . $tokenFound{'recon'});
+
+						if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+							if (@itemParents) {
+								foreach my $itemParent (@itemParents) {
+									DBAddItemAttribute($itemParent, $tokenFound{'token'}, $tokenFound{'param'}, 0, $fileHash);
+								}
 							} else {
-								WriteLog('IndexTextFile: warning: cookie: sanity check failed');
+								DBAddItemAttribute($fileHash, $tokenFound{'token'}, $tokenFound{'param'}, 0, $fileHash);
 							}
-						} # cookie
+						} else {
+							WriteLog('IndexTextFile: warning: ' . $tokenFound{'token'} . ' (generic): sanity check failed');
+						}
+					} # title, access_log_hash, url, alt
 
-						if ($tokenFound{'token'} eq 'parent') {
-							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
-								WriteLog('IndexTextFile: DBAddItemParent(' . $fileHash . ',' . $tokenFound{'param'} . ')');
-								DBAddItemParent($fileHash, $tokenFound{'param'});
-								push(@itemParents, $tokenFound{'param'});
 
-								# $message = str_replace($tokenFound{'recon'}, $tokenFound{'message'}, $message);
-								$message = str_replace($tokenFound{'recon'}, '>>' . $tokenFound{'param'}, $message); #hacky
-								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-							} else {
-								WriteLog('IndexTextFile: warning: parent: sanity check failed');
-							}
-						} # parent
 
-						if (0 && $tokenFound{'token'} eq 'itemref') {
-							#todo this is broken currently, because
-							#item value is actually stored in whitespace placeholder
-
-							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
-								WriteLog('IndexTextFile: DBAddItemParent(' . $fileHash . ',' . $tokenFound{'param'} . ')');
-
-#								DBAddItemParent($fileHash, $tokenFound{'param'});
-#								push(@itemParents, $tokenFound{'param'});
-
-								$message = str_replace($tokenFound{'recon'}, '##' . $tokenFound{'param'}, $message); #hacky
-								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-							} else {
-								WriteLog('IndexTextFile: warning: parent: sanity check failed');
-							}
-						} # parent
-					} # parametrized token
-				}
-			}
-
-			if (!$hasToken{'example'} || !$hasToken{'notice'}) { #example token negates most other tokens.
-				# second pass, after parents and user established
-
-				foreach my $tokenFoundRef (@tokensFound) {
-					my %tokenFound = %$tokenFoundRef;
-					if ($tokenFound{'token'} && $tokenFound{'param'}) {
-						WriteLog('IndexTextFile: $tokenFound{token} = ' . $tokenFound{'token'});
+					if ($tokenFound{'token'} eq 'config') { #config
 						if (
-							$tokenFound{'token'} eq 'title' ||
-							$tokenFound{'token'} eq 'alt' ||
-							$tokenFound{'token'} eq 'access_log_hash' ||
-							$tokenFound{'token'} eq 'url'
+							IsAdmin($authorKey) || #admin can always config #todo
+							GetConfig('admin/anyone_can_config') || # anyone can config
+							(GetConfig('admin/signed_can_config') || 0) || # signed can config #todo
+							(GetConfig('admin/cookied_can_config') || 0) # cookied can config #todo
 						) {
-							# these tokens are applied to:
-							# 	if item has parent, then to the parent
-							# 		otherwise: to self
-							WriteLog('IndexTextFile: token_found: ' . $tokenFound{'recon'});
+							my ($configKey, $configSpacer, $configValue) = ($tokenFound{'param'} =~ m/(.+)(\W)(.+)/);
 
-							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
-								if (@itemParents) {
-									foreach my $itemParent (@itemParents) {
-										DBAddItemAttribute($itemParent, $tokenFound{'token'}, $tokenFound{'param'}, $addedTime, $fileHash);
-									}
-								} else {
-									DBAddItemAttribute($fileHash, $tokenFound{'token'}, $tokenFound{'param'}, $addedTime, $fileHash);
-								}
+							WriteLog('IndexTextFile: $configKey = ' . (defined($configKey) ? $configKey : '(undefined)'));
+							WriteLog('IndexTextFile: $configSpacer = ' . (defined($configSpacer) ? $configSpacer : '(undefined)'));
+							WriteLog('IndexTextFile: $configValue = ' . (defined($configValue) ? $configValue : '(undefined)'));
+
+							if (!defined($configKey) || !$configKey || !defined($configValue)) {
+								WriteLog('IndexTextFile: warning: $configKey or $configValue missing from $tokenFound token');
 							} else {
-								WriteLog('IndexTextFile: warning: ' . $tokenFound{'token'} . ' (generic): sanity check failed');
-							}
-						} # title, access_log_hash, url, alt
-
-						if ($tokenFound{'token'} eq 'config') {
-							if (
-								IsAdmin($gpgKey) || #admin can always config
-								GetConfig('admin/anyone_can_config') || # anyone can config
-								(GetConfig('admin/signed_can_config') && $isSigned) || # signed can config
-								(GetConfig('admin/cookied_can_config') && $hasCookie) # cookied can config
-							) {
-								my ($configKey, $configSpacer, $configValue) = ($tokenFound{'param'} =~ m/(.+)(\W)(.+)/);
-
-								WriteLog('IndexTextFile: $configKey = ' . (defined($configKey) ? $configKey : '(undefined)'));
-								WriteLog('IndexTextFile: $configSpacer = ' . (defined($configSpacer) ? $configSpacer : '(undefined)'));
-								WriteLog('IndexTextFile: $configValue = ' . (defined($configValue) ? $configValue : '(undefined)'));
-
-								if (!defined($configKey) || !$configKey || !defined($configValue)) {
-									WriteLog('IndexTextFile: warning: $configKey or $configValue missing from $tokenFound token');
-								} else {
-									my $configKeyActual = $configKey;
-									if ($configKey && defined($configValue) && $configValue ne '') {
-										# alias 'theme' to 'html/theme'
-										# $configKeyActual = $configKey;
-										if ($configKey eq 'theme') {
-											# alias theme to html/theme
-											$configKeyActual = 'html/theme';
-										}
-										#todo merge html/clock and html/clock_format
-										# if ($configKey eq 'clock') {
-										# 	# alias theme to html/theme
-										# 	$configKeyActual = 'clock_format';
-										# }
-										$configValue = trim($configValue);
+								my $configKeyActual = $configKey;
+								if ($configKey && defined($configValue) && $configValue ne '') {
+									# alias 'theme' to 'html/theme'
+									# $configKeyActual = $configKey;
+									if ($configKey eq 'theme') {
+										# alias theme to html/theme
+										$configKeyActual = 'html/theme';
 									}
-
-									if (IsAdmin($gpgKey) || ConfigKeyValid($configKeyActual)) {
-										# admins can write to any config
-										# non-admins can only write to existing config keys (and not under admin/)
-
-										# #todo create a whitelist of safe keys non-admins can change
-
-										DBAddConfigValue($configKeyActual, $configValue, $addedTime, 0, $fileHash);
-										$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
-										$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-									} else {
-										# token tried to pass unacceptable config key
-										$message = str_replace($tokenFound{'recon'}, "[Not Accepted: $configKeyActual]", $message);
-										$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-									}
+									#todo merge html/clock and html/clock_format
+									# if ($configKey eq 'clock') {
+									# 	# alias theme to html/theme
+									# 	$configKeyActual = 'clock_format';
+									# }
+									$configValue = trim($configValue);
 								}
-							}
-						}
 
-						if ($tokenFound{'token'} eq 'puzzle') { # puzzle
-							my ($authorKey, $mintedAt, $checksum) = split(' ', $tokenFound{'param'});
-							WriteLog("IndexTextFile: token: puzzle: $authorKey, $mintedAt, $checksum");
+								if (IsAdmin($authorKey) || ConfigKeyValid($configKeyActual)) { #todo
+									# admins can write to any config
+									# non-admins can only write to existing config keys (and not under admin/)
 
-							#todo must match message author key
+									# #todo create a whitelist of safe keys non-admins can change
 
+									DBAddConfigValue($configKeyActual, $configValue, 0, 0, $fileHash);
+									$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
+									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+								} else {
+									# token tried to pass unacceptable config key
+									$message = str_replace($tokenFound{'recon'}, "[Not Accepted: $configKeyActual]", $message);
+									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+								}
+							} # sanity check
+						} # has permission to config
+					} # #config
+
+
+					if ($tokenFound{'token'} eq 'puzzle') { # puzzle
+						my ($puzzleAuthorKey, $mintedAt, $checksum) = split(' ', $tokenFound{'param'});
+						WriteLog("IndexTextFile: token: puzzle: $puzzleAuthorKey, $mintedAt, $checksum");
+
+						#todo must match message author key
+						if ($puzzleAuthorKey ne $authorKey) {
+							WriteLog('IndexTextFile: puzzle: warning: $puzzleAuthorKey ne $authorKey');
+						} else {
 							my $hash = sha512_hex($tokenFound{'recon'});
 							my $configPuzzleAccept = GetConfig('puzzle/accept');
 							if (!$configPuzzleAccept) {
@@ -710,10 +505,10 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								my $puzzlePrefixLength = length($puzzlePrefix);
 								if (
 									(substr($hash, 0, $puzzlePrefixLength) eq $puzzlePrefix) && # hash matches
-									($authorKey eq $gpgKey || $authorKey eq $hasCookie) # key matches cookie or fingerprint
+									($authorKey eq $puzzleAuthorKey) # key matches cookie or fingerprint
 								) {
 									$message =~ s/$tokenFound{'recon'}/[$puzzlePrefix]/g;
-#									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
+	#									$message =~ s/$tokenFound{'recon'}/[Solved puzzle with this prefix: $puzzlePrefix]/g;
 									DBAddItemAttribute($fileHash, 'puzzle_timestamp', $mintedAt);
 									DBAddVoteRecord($fileHash, $mintedAt, 'puzzle');
 									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
@@ -724,251 +519,218 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									#$message .= 'puzzle valid!'; #$reconLine . "\n" . $hash;
 								}
 							}#foreach my $puzzlePrefix (@acceptPuzzlePrefix) {
-						} # puzzle
+						}
+					} # puzzle
 
-						if ($tokenFound{'token'} eq 'my_name_is') { # my_name_is
-							if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
-								if ($hasCookie) {
-									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-									my $nameGiven = $tokenFound{'param'};
-									$message =~ s/$tokenFound{'recon'}/[my name is: $nameGiven]/g;
 
-									DBAddKeyAlias($hasCookie, $tokenFound{'param'}, $fileHash);
-									DBAddKeyAlias('flush');
-								}
-							} else {
-								WriteLog('IndexTextFile: warning: my_name_is: sanity check failed');
+					if ($tokenFound{'token'} eq 'my_name_is') { # my_name_is
+						if ($tokenFound{'recon'} && $tokenFound{'message'} && $tokenFound{'param'}) {
+							WriteLog('IndexTextFile: my_name_is: sanity check PASSED');
+							if ($authorKey) {
+								$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+								my $nameGiven = $tokenFound{'param'};
+								$message =~ s/$tokenFound{'recon'}/[my name is: $nameGiven]/g;
+
+								DBAddKeyAlias($authorKey, $tokenFound{'param'}, $fileHash);
+								DBAddKeyAlias('flush');
 							}
-						} # my_name_is
-
-						if ($tokenFound{'token'} eq 'hashtag') { #hashtag
-							if ($tokenFound{'param'} eq 'remove') { #remove
-								if (scalar(@itemParents)) {
-									WriteLog('IndexTextFile: Found #remove token, and item has parents');
-									foreach my $itemParent (@itemParents) {
-										# find the author of the item in question.
-										# this will help us determine whether the request can be fulfilled
-										my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
-										#WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($gpgKey) . '; $gpgKey = ' . $gpgKey . '; $parentItemAuthor = ' . $parentItemAuthor);
-										WriteLog('IndexTextFile: #remove: $gpgKey = ' . $gpgKey);
-										#WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($gpgKey));
-										WriteLog('IndexTextFile: #remove: $parentItemAuthor = ' . $parentItemAuthor);
-
-										# at this time only signed requests to remove are honored
-										if (
-											$gpgKey # is signed
-												&&
-												(
-													IsAdmin($gpgKey)                   # signed by admin
-														||                             # OR
-													($gpgKey eq $parentItemAuthor) 	   # signed by same as author
-												)
-										) {
-											WriteLog('IndexTextFile: #remove: Found seemingly valid request to remove');
-
-											AppendFile('log/deleted.log', $itemParent);
-											DBDeleteItemReferences($itemParent);
-
-											my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
-											if (-e $htmlFilename) {
-												WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' exists, calling unlink()');
-												unlink($htmlFilename);
-											}
-											else {
-												WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' does NOT exist, very strange');
-											}
-
-											my $itemParentPath = GetPathFromHash($itemParent);
-											if (-e $itemParentPath) {
-												# this only works if organize_files is on and file was put into its path
-												# otherwise it will be removed at another time
-												WriteLog('IndexTextFile: removing $itemParentPath = ' . $itemParentPath);
-												unlink($itemParentPath);
-											}
-
-											if (-e $file) {
-												#todo unlink the file represented by $voteFileHash, not $file
-												if (!GetConfig('admin/logging/record_remove_action')) {
-													# this removes the remove call itself
-													if (!$detokenedMessage) {
-														WriteLog('IndexTextFile: ' . $file . ' exists, calling unlink()');
-														unlink($file);
-													}
-												}
-											}
-											else {
-												WriteLog('IndexTextFile: ' . $file . ' does NOT exist, very strange');
-											}
-
-											#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
-										} # has permission to remove
-										else {
-											WriteLog('IndexTextFile: Request to remove file was not found to be valid');
-										}
-									} # foreach my $itemParent (@itemParents)
-								} # has parents
-							} # #remove
-							elsif (
-								$tokenFound{'param'} eq 'admin' ||
-								$tokenFound{'param'} eq 'approve'
-							) { # #admin #approve tokens which need permissions
-								my $hashTag = $tokenFound{'param'};
-								if (scalar(@itemParents)) {
-									WriteLog('IndexTextFile: Found permissioned token ' . $tokenFound{'param'} . ', and item has parents');
-									foreach my $itemParent (@itemParents) {
-										# find the author of this item
-										# this will help us determine whether the request can be fulfilled
-
-										if (
-											$gpgKey # is signed
-											&&
-											IsAdmin($gpgKey)                   # signed by admin
-										) {
-											WriteLog('IndexTextFile: #admin: Found seemingly valid request');
-											DBAddVoteRecord($itemParent, $addedTime, $hashTag, $gpgKey, $fileHash);
-											my $authorGpgFingerprint = DBGetItemAttribute($itemParent, 'gpg_fingerprint');
-											if ($authorGpgFingerprint =~ m/([0-9A-F]{16})/) {
-												#todo this is dirty, dirty hack
-												$authorGpgFingerprint = $1;
-											} else {
-												$authorGpgFingerprint = '';
-											}
-
-											WriteLog('IndexTextFile: #admin: $authorGpgFingerprint = ' . $authorGpgFingerprint);
-
-											if ($authorGpgFingerprint) {
-												WriteLog('IndexTextFile: #admin: found $authorGpgFingerprint');
-												ExpireAvatarCache($authorGpgFingerprint);
-											} else {
-												WriteLog('IndexTextFile: #admin: did NOT find $authorGpgFingerprint');
-											}
-											DBAddVoteRecord('flush');
-										} # has permission to remove
-										else {
-											WriteLog('IndexTextFile: Request to admin file was not found to be valid');
-										}
-									} # foreach my $itemParent (@itemParents)
-								} # has parents
-							} # #admin #approve
-							else { # non-permissioned hashtags
-								if ($tokenFound{'param'} =~ /^[0-9a-zA-Z_]+$/) { #todo actual hashtag format
-									my $hashTag = $tokenFound{'param'};
-									if (scalar(@itemParents)) { # item has parents to apply tag to
-										foreach my $itemParentHash (@itemParents) { # apply to all parents
-											if ($isSigned) {
-												# include author's key if message is signed
-												DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $gpgKey, $fileHash);
-											}
-											else {
-												if ($hasCookie) {
-													# include author's key if message is cookied
-													DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, $hasCookie, $fileHash);
-												} else {
-													DBAddVoteRecord($itemParentHash, $addedTime, $hashTag, '', $fileHash);
-												}
-											}
-											DBAddPageTouch('item', $itemParentHash);
-										} # @itemParents
-									} # scalar(@itemParents)
-								} # valid hashtag
-							} # non-permissioned hashtags
-							$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-						} #hashtag
-
-					} #hashtag tokens
-				} # @tokensFound
-			} # not #example
-
-			$detokenedMessage = trim($detokenedMessage);
-			if ($detokenedMessage eq '') {
-				# add #notext label/tag
-				DBAddVoteRecord($fileHash, $addedTime, 'notext');
-			}
-			else { # has $detokenedMessage
-				{ #title:
-					my $firstEol = index($detokenedMessage, "\n");
-					my $titleLength = GetConfig('title_length'); #default = 255
-					if (!$titleLength) {
-						$titleLength = 255;
-						WriteLog('#todo: warning: $titleLength was false');
-					}
-					if ($firstEol == -1) {
-						if (length($detokenedMessage) > 1) {
-							$firstEol = length($detokenedMessage);
-						}
-					}
-					# if ($firstEol > $titleLength) {
-					# 	$firstEol = $titleLength;
-					# }
-					if ($firstEol > 0) {
-						my $title = '';
-						if ($firstEol <= $titleLength) {
-							$title = substr($detokenedMessage, 0, $firstEol);
 						} else {
-							$title = substr($detokenedMessage, 0, $titleLength) . '...';
+							WriteLog('IndexTextFile: warning: my_name_is: sanity check FAILED');
 						}
+					} # my_name_is
 
-						DBAddItemAttribute($fileHash, 'title', $title, $addedTime);
-						DBAddVoteRecord($fileHash, $addedTime, 'hastitle');
-					}
-				}
 
-				DBAddVoteRecord($fileHash, $addedTime, 'hastext');
-				DBAddPageTouch('tag', 'hastext');
-			} # has a $detokenedMessage
-		} # not pubkey
+					if ($tokenFound{'token'} eq 'hashtag') { #hashtag
+						if ($tokenFound{'param'} eq 'remove') { #remove
+							if (scalar(@itemParents)) {
+								WriteLog('IndexTextFile: Found #remove token, and item has parents');
+								foreach my $itemParent (@itemParents) {
+									# find the author of the item in question.
+									# this will help us determine whether the request can be fulfilled
+									my $parentItemAuthor = DBGetItemAuthor($itemParent) || '';
+									#WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($authorKey) . '; $authorKey = ' . $authorKey . '; $parentItemAuthor = ' . $parentItemAuthor);
+									WriteLog('IndexTextFile: #remove: $authorKey = ' . $authorKey);
+									#WriteLog('IndexTextFile: #remove: IsAdmin = ' . IsAdmin($authorKey));
+									WriteLog('IndexTextFile: #remove: $parentItemAuthor = ' . $parentItemAuthor);
+
+									# at this time only signed requests to remove are honored
+									if (
+										$authorKey # is signed
+											&&
+											(
+												IsAdmin($authorKey)                   # signed by admin
+													||                             # OR
+												($authorKey eq $parentItemAuthor) 	   # signed by same as author
+											)
+									) {
+										WriteLog('IndexTextFile: #remove: Found seemingly valid request to remove');
+
+										AppendFile('log/deleted.log', $itemParent);
+										DBDeleteItemReferences($itemParent);
+
+										my $htmlFilename = $HTMLDIR . '/' . GetHtmlFilename($itemParent);
+										if (-e $htmlFilename) {
+											WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' exists, calling unlink()');
+											unlink($htmlFilename);
+										}
+										else {
+											WriteLog('IndexTextFile: #remove: ' . $htmlFilename . ' does NOT exist, very strange');
+										}
+
+										my $itemParentPath = GetPathFromHash($itemParent);
+										if (-e $itemParentPath) {
+											# this only works if organize_files is on and file was put into its path
+											# otherwise it will be removed at another time
+											WriteLog('IndexTextFile: removing $itemParentPath = ' . $itemParentPath);
+											unlink($itemParentPath);
+										}
+
+										if (-e $file) {
+											#todo unlink the file represented by $voteFileHash, not $file
+											if (!GetConfig('admin/logging/record_remove_action')) {
+												# this removes the remove call itself
+												if (!$detokenedMessage) {
+													WriteLog('IndexTextFile: ' . $file . ' exists, calling unlink()');
+													unlink($file);
+												}
+											}
+										}
+										else {
+											WriteLog('IndexTextFile: ' . $file . ' does NOT exist, very strange');
+										}
+
+										#todo unlink and refresh, or at least tag as needing refresh, any pages which include deleted item
+									} # has permission to remove
+									else {
+										WriteLog('IndexTextFile: Request to remove file was not found to be valid');
+									}
+								} # foreach my $itemParent (@itemParents)
+							} # has parents
+						} # #remove
+						elsif (
+							$tokenFound{'param'} eq 'admin' || #admin token needs permission
+							$tokenFound{'param'} eq 'approve' #approve token needs permission
+						) { # #admin #approve tokens which need permissions
+							my $hashTag = $tokenFound{'param'};
+							if (scalar(@itemParents)) {
+								WriteLog('IndexTextFile: Found permissioned token ' . $tokenFound{'param'} . ', and item has parents');
+								foreach my $itemParent (@itemParents) {
+									# find the author of this item
+									# this will help us determine whether the request can be fulfilled
+
+									if (
+										$authorKey # is signed
+										&&
+										IsAdmin($authorKey) # signed by admin
+									) {
+										WriteLog('IndexTextFile: #admin: Found seemingly valid request');
+										DBAddVoteRecord($itemParent, 0, $hashTag, $authorKey, $fileHash);
+										my $authorGpgFingerprint = DBGetItemAttribute($itemParent, 'gpg_fingerprint');
+										if ($authorGpgFingerprint =~ m/([0-9A-F]{16})/) {
+											#todo this is dirty, dirty hack
+											$authorGpgFingerprint = $1;
+										} else {
+											$authorGpgFingerprint = '';
+										}
+
+										WriteLog('IndexTextFile: #admin: $authorGpgFingerprint = ' . $authorGpgFingerprint);
+
+										if ($authorGpgFingerprint) {
+											WriteLog('IndexTextFile: #admin: found $authorGpgFingerprint');
+											ExpireAvatarCache($authorGpgFingerprint);
+										} else {
+											WriteLog('IndexTextFile: #admin: did NOT find $authorGpgFingerprint');
+										}
+										DBAddVoteRecord('flush');
+									} # has permission to remove
+									else {
+										WriteLog('IndexTextFile: Request to admin file was not found to be valid');
+									}
+								} # foreach my $itemParent (@itemParents)
+							} # has parents
+						} # #admin #approve
+						else { # non-permissioned hashtags
+							if ($tokenFound{'param'} =~ /^[0-9a-zA-Z_]+$/) { #todo actual hashtag format
+								my $hashTag = $tokenFound{'param'};
+								if (scalar(@itemParents)) { # item has parents to apply tag to
+									foreach my $itemParentHash (@itemParents) { # apply to all parents
+										if ($authorKey) {
+											# include author's key if message is signed
+											DBAddVoteRecord($itemParentHash, 0, $hashTag, $authorKey, $fileHash);
+										}
+										else {
+											if ($authorKey) {
+												# include author's key if message is cookied
+												DBAddVoteRecord($itemParentHash, 0, $hashTag, $authorKey, $fileHash);
+											} else {
+												DBAddVoteRecord($itemParentHash, 0, $hashTag, '', $fileHash);
+											}
+										}
+										DBAddPageTouch('item', $itemParentHash);
+									} # @itemParents
+								} # scalar(@itemParents)
+							} # valid hashtag
+						} # non-permissioned hashtags
+
+						$detokenedMessage = trim($detokenedMessage);
+						if ($detokenedMessage eq '') {
+							# add #notext label/tag
+							DBAddVoteRecord($fileHash, 0, 'notext');
+						}
+						else { # has $detokenedMessage
+							{ #title:
+								my $firstEol = index($detokenedMessage, "\n");
+								my $titleLength = GetConfig('title_length'); #default = 255
+								if (!$titleLength) {
+									$titleLength = 255;
+									WriteLog('#todo: warning: $titleLength was false');
+								}
+								if ($firstEol == -1) {
+									if (length($detokenedMessage) > 1) {
+										$firstEol = length($detokenedMessage);
+									}
+								}
+								# if ($firstEol > $titleLength) {
+								# 	$firstEol = $titleLength;
+								# }
+								if ($firstEol > 0) {
+									my $title = '';
+									if ($firstEol <= $titleLength) {
+										$title = substr($detokenedMessage, 0, $firstEol);
+									} else {
+										$title = substr($detokenedMessage, 0, $titleLength) . '...';
+									}
+
+									DBAddItemAttribute($fileHash, 'title', $title, 0);
+									DBAddVoteRecord($fileHash, 0, 'hastitle');
+								}
+							}
+
+							DBAddVoteRecord($fileHash, 0, 'hastext');
+							DBAddPageTouch('tag', 'hastext');
+
+							$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
+						} # has a $detokenedMessage
+					} #hashtag
+				} # if ($tokenFound{'token'} && $tokenFound{'param'}) {
+			} # foreach @tokensFound
+		} # not #example
+
+
 
 		if ($message) {
 			# cache the processed message text
 			my $messageCacheName = GetMessageCacheName($fileHash);
-			WriteLog("IndexTextFile: \n====\n" . $messageCacheName . "\n====\n" . $message . "\n====\n" . $txt . "\n====\n"); #known issue may cause warning
+			WriteLog('IndexTextFile: Calling PutFile(), $fileHash = ' . $fileHash . '; $messageCacheName = ' . $messageCacheName);
 			PutFile($messageCacheName, $message);
 		} else {
 			WriteLog('IndexTextFile: I was going to save $messageCacheName, but $message is blank!');
 		}
 
-		# below we call DBAddItem, which accepts an author key
-		if ($isSigned) {
-			# If message is signed, use the signer's key
-			DBAddItem($file, $itemName, $gpgKey, $fileHash, 'txt', $verifyError);
 
-			if ($gpgTimestamp) {
-				my $gpgTimestampEpoch = `date -d "$gpgTimestamp" +%s`;
 
-				DBAddItemAttribute($fileHash, 'gpg_timestamp', $gpgTimestampEpoch);
-			}
-		} else {
-			if ($hasCookie) {
-				# Otherwise, if there is a cookie, use the cookie
-				DBAddItem($file, $itemName, $hasCookie, $fileHash, 'txt', $verifyError);
-			} else {
-				# Otherwise add with an empty author key
-				DBAddItem($file, $itemName, '', $fileHash, 'txt', $verifyError);
-			}
-		}
+	} # .txt
 
-		DBAddPageTouch('read');
-		DBAddPageTouch('item', $fileHash);
-		if ($isSigned && $gpgKey && IsAdmin($gpgKey)) {
-			$isAdmin = 1;
-			DBAddVoteRecord($fileHash, $addedTime, 'admin');
-			DBAddPageTouch('tag', 'admin');
-		}
-		if ($isSigned) {
-			DBAddPageTouch('author', $gpgKey);
-			DBAddPageTouch('authors');
-		} elsif ($hasCookie) {
-			DBAddPageTouch('author', $hasCookie);
-			DBAddPageTouch('authors');
-		}
-		DBAddPageTouch('stats');
-		DBAddPageTouch('events');
-		DBAddPageTouch('rss');
-		DBAddPageTouch('index');
-		DBAddPageTouch('flush'); #todo shouldn't be here
-	}
-
-	PutCache('indexed/'.$fileHash, 1);
 	return $fileHash;
 } # IndexTextFile()
 
@@ -985,15 +747,14 @@ sub AddToChainLog { # $fileHash ; add line to log/chain.log
 
 	if (!$fileHash) {
 		WriteLog('AddToChainLog: warning: sanity check failed');
-		return;
+		return '';
 	}
-
 
 	chomp $fileHash;
 
 	if (!IsItem($fileHash)) {
 		WriteLog('AddToChainLog: warning: sanity check failed');
-		return;
+		return '';
 	}
 
 	my $HTMLDIR = GetDir('html');
@@ -1072,6 +833,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		DBAddItem('flush');
 		DBAddVoteRecord('flush');
 		DBAddPageTouch('flush');
+
 		return 1;
 	}
 
@@ -1082,6 +844,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		my $fileHash = GetFileHash($file);
 
 		if (GetCache('indexed/'.$fileHash)) {
+			WriteLog('IndexImageFile: skipping because of flag: indexed/'.$fileHash);
 			return $fileHash;
 		}
 
@@ -1271,6 +1034,11 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 	if ($ext eq 'txt') {
 		WriteLog('IndexFile: calling IndexTextFile()');
 		$indexSuccess = IndexTextFile($file);
+
+		if (!$indexSuccess) {
+			WriteLog('IndexFile: warning: $indexSuccess was FALSE');
+			$indexSuccess = 0;
+		}
 	}
 
 	if (
@@ -1286,9 +1054,13 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 		$indexSuccess = IndexImageFile($file);
 	}
 
-	WriteLog('IndexFile: $indexSuccess = ' . $indexSuccess);
+	if ($indexSuccess) {
+		WriteLog('IndexFile: $indexSuccess = ' . $indexSuccess);
+	} else {
+		WriteLog('IndexFile: warning: $indexSuccess FALSE');
+	}
 
-	if (GetConfig('admin/index/stat_file') && $indexSuccess) {
+	if ($indexSuccess && GetConfig('admin/index/stat_file')) {
 		if (-e $file) {
 			my @fileStat = stat($file);
 			my $fileSize =    $fileStat[7];
@@ -1298,6 +1070,8 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 				if (IsItem($indexSuccess)) {
 					DBAddItemAttribute($indexSuccess, 'file_m_timestamp', $fileModTime);
 					DBAddItemAttribute($indexSuccess, 'file_size', $fileSize);
+				} else {
+					WriteLog('IndexFile: warning: IsItem($indexSuccess) was FALSE');
 				}
 			}
 		}
