@@ -237,21 +237,17 @@ function file_force_contents ($dir, $contents) { // ensures parent directories e
 
 function DoUpdate () { // #todo #untested
 	$pwd = getcwd();
-
 	WriteLog('$pwd = ' . $pwd);
-
 	$scriptDir = GetScriptDir();
-
 	WriteLog('$scriptDir = ' . $scriptDir);
 
 	if (file_exists($scriptDir . '/update.pl')) {
 		WriteLog('update.pl found, calling update.pl --all');
-		WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl --all');
 
-		WriteLog(`cd "$scriptDir" ; perl ./update.pl --all`);
+		WriteLog('cd "' . $scriptDir . '" ; perl ./update.pl');
+		WriteLog(`cd "$scriptDir" ; perl ./update.pl`);
 
 		WriteLog('cd "' . $pwd . '"');
-
 		WriteLog(`cd "$pwd"`);
 	}
 }
