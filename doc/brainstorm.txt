@@ -1,3 +1,11 @@
+if (function exists callfunc) {
+	callfunc('function', 'argg1', 'arg2');
+} else {
+	return '';
+}
+
+
+
 if user clicks thanks, what can happen?
 	acknowledgement of user's having seen their action was successful
 		"and here is your receipt for my receipt"
@@ -3681,3 +3689,23 @@ Host: sm.chg.pw
 -- 
 Host: www.shitmyself.com
 
+
+
+===
+
+#bug netscape 6, the loading indicator causes page jump after "ready" goes away
+
+perhaps it makes sense to not make it go away and just leave it there, unless it is clicked?
+
+#brainstorm
+
+#meta
+
+
+===
+
+#brainstorm
+
+the skip links look strange in links browser, and they do not collapse the dialog, so maybe they should say skip unless js?
+
+#meta

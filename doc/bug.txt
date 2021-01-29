@@ -153,3 +153,14 @@ child admin's avatar does not turn red.
 
 cookie auth doesn't work without php, but still pretends to work
 
+
+
+===
+
+#bug netscape 6, the loading indicator causes page jump after "ready" goes away
+
+perhaps it makes sense to not make it go away and just leave it there, unless it is clicked?
+
+#brainstorm
+
+#meta

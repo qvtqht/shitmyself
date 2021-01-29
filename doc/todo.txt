@@ -1,3 +1,5 @@
+#bug without default/admin/accept_404_url_text_reduce_spam much spam due to ?message=
+
 ensure all js functions
 	a) return a value
 	b) have a closing comment
