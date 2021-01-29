@@ -6,7 +6,47 @@ use utf8;
 #use warnings FATAL => 'all';
 
 require './utils.pl';
-`killall lighttpd`;
+
+sub GetYes { # $message, $defaultYes ; print $message, and get Y response from the user
+	# $message is printed to output
+	# $defaultYes true:  allows pressing enter
+	# $defaultYes false: user must type Y or y
+
+	my $message = shift;
+	chomp $message;
+
+	my $defaultYes = shift;
+	chomp $defaultYes;
+
+	print $message;
+	if ($defaultYes) {
+		print ' [Y] ';
+	} else {
+		print " Enter 'Y' to proceed: ";
+	}
+
+	my $input = <STDIN>;
+	chomp $input;
+
+	if ($input eq 'Y' || $input eq 'y' || ($defaultYes && $input eq '')) {
+		print "====================================================\n";
+		print "====== Thank you for your vote of confidence! ======\n";
+		print "====================================================\n";
+
+		return 1;
+	}
+	return 0;
+}
+
+if (!GetConfig('admin/lighttpd/enable')) {
+	if (GetConfig('admin/dev/dont_confirm') || GetYes('admin/lighttpd/enable is false, set to true?', 1)) {
+		PutConfig('admin/lighttpd/enable', 1);
+	}
+}
+
+if (!GetConfig('admin/dev/dont_confirm') || GetYes('kill existing lighttpd process?', 1)) {
+	`killall lighttpd`;
+}
 
 sub StartLighttpd {
 	if (!-e './log') {
@@ -117,3 +157,5 @@ if (GetConfig('admin/lighttpd/enable')) {
 } else {
 	WriteMessage("admin/lighttpd/enable was false");
 }
+
+1;
