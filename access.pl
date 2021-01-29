@@ -453,6 +453,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						}
 
 						elsif ($paramName eq 'recfing') {
+							WriteLog('ProcessAccessLog: found recfing');
 							if ($paramValue eq 'on') {
 								$recordFingerprint = 1;
 							}
