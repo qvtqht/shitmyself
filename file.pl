@@ -102,4 +102,41 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	return $file;
 } # OrganizeFile()
 
+
+sub GetFileMessage {
+	my $fileHash = shift;
+	if (!$fileHash) {
+		return ''; #todo
+	}
+	if (!IsItem($fileHash) && -e $fileHash) {
+		$fileHash = GetFileHash($fileHash);
+	}
+
+	my $messagePath = GetFileMessageCachePath($fileHash.txt);
+
+	if (-e $messagePath) {
+		return GetFile($messagePath);
+	} else {
+		my $filePath = GetPathFromHash($fileHash);
+		return GetFile($filePath);
+	}
+} # GetFileMessage()
+
+sub PutFileMessage {
+	my $fileHash = shift;
+	if (!$fileHash) {
+		return ''; #todo
+	}
+	if (!IsItem($fileHash) && -e $fileHash) {
+		$fileHash = GetFileHash($fileHash);
+	}
+
+	my $message = shift;
+	if (!$message) {
+		return ''; #todo
+	}
+
+	return PutFile(GetFileMessageCachePath($fileHash.txt), $message);
+} # PutFileMessage()
+
 1;
