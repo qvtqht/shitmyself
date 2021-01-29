@@ -186,9 +186,10 @@ sub SqliteMakeTables { # creates sqlite schema
 		CREATE VIEW item_author AS
 		SELECT
 			file_hash,
-			MAX(value) AS author
+			MAX(value) AS author_key
 		FROM item_attribute_latest
-		WHERE attribute IN ('cookie_id', 'gpg_id');
+		WHERE attribute IN ('cookie_id', 'gpg_id')
+		GROUP BY file_hash;
 	");
 #
 # 	SqliteQuery2("
@@ -361,7 +362,7 @@ sub SqliteMakeTables { # creates sqlite schema
 				item.file_path AS file_path,
 				item.item_name AS item_name,
 				item.file_hash AS file_hash,
-				IFNULL(item_author.author, '') AS author_key,
+				IFNULL(item_author.author_key, '') AS author_key,
 				IFNULL(child_count.child_count, 0) AS child_count,
 				IFNULL(parent_count.parent_count, 0) AS parent_count,
 				added_time.add_timestamp AS add_timestamp,
