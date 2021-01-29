@@ -2607,6 +2607,9 @@ sub GetTopAuthorsListAsHtml {
 		} else {
 			$authorLastSeen = '(unknown)';
 		}
+		if (!$authorLastSeen) {
+			$authorLastSeen = '*';
+		}
 		#$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
 
 		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
