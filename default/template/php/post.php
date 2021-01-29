@@ -47,7 +47,7 @@ function GetItemPlaceholderPage ($comment) { // generate temporary placeholder p
 
 	// template for temporary placeholder for html file
 	// overwritten later by update.pl
-	$commentHtmlTemplate = GetTemplate('item_processing.template');
+	$commentHtmlTemplate = GetTemplate('html/item_processing.template');
 
 	// get theme name from config and associated background and foreground colors
 	$themeName = trim(GetConfig('html/theme'));
