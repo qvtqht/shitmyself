@@ -126,8 +126,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		DBAddConfigValue('flush');
 		DBAddItemAttribute('flush');
 		DBAddLocationRecord('flush');
-		DBAddBrcRecord('flush');
-
 		return 1;
 	}
 
