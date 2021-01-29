@@ -1,8 +1,19 @@
 #!/usr/bin/perl -T
-$ENV{PATH}="/bin:/usr/bin";
+#
+# archive_dev.pl
+# archive current site state into .tar.gz file
+# remove site state to defaults (except config/)
+# rebuild basic frontend
+#
+#
 
 use strict;
+use 5.010;
 use warnings;
+use utf8;
+
+$ENV{PATH}="/bin:/usr/bin";
+
 use Cwd qw(cwd);
 use File::Copy qw(copy);
 
