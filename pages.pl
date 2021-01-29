@@ -2191,12 +2191,19 @@ sub GetStatsTable {
 		$statsTable = str_replace('<p id=diagnostics></p>', '<p id=diagnostics><font color=orange><b>Check engine!</b></font></p>', $statsTable);
 	}
 
+	my $tagsTotal = DBGetTagCount();
+	if (!$tagsTotal) {
+		WriteLog('GetStatsTable: warning: $tagsTotal was false');
+		$tagsTotal = 0;
+	}
+
 	#todo optimize
 	#todo config/admin/upload/allow_files
 
 	$lastBuildTime = GetTimestampWidget($lastBuildTime);
 	$statsTable =~ s/\$lastBuildTime/$lastBuildTime/;
 
+	$statsTable =~ s/\$tagsTotal/$tagsTotal/;
 	$statsTable =~ s/\$versionFull/$versionFull/;
 	$statsTable =~ s/\$versionShort/$versionShort/;
 	$statsTable =~ s/\$itemsIndexed/$itemsIndexed/;
