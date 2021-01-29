@@ -1,6 +1,7 @@
 <?php
 /* php/config.php */
 
+include_once('utils.php');
 
 function index ($string, $needle) { // emulates perl's index(), returning -1 instead of false
 	$strpos = strpos($string, $needle);
@@ -32,7 +33,7 @@ foreach ($config as $c) {
 }
 
 foreach ($default as $d) {
-	if (strpos($d, 'template') === false) {
+	if (index($d, 'secret') != -1) {
 		$d = str_replace('../default/', '', $d);
 
 //		print (isset($configLookup[$d]) ? $configLookup[$d] : '');
