@@ -1177,7 +1177,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 		{
 			#return GetWindowTemplate ($param{'body'}, $param{'title'}, $param{'headings'}, $param{'status'}, $param{'menu'});
 			my %windowParams;
-			$windowParams{'body'} = GetTemplate('item/item.template');
+			$windowParams{'body'} = GetTemplate('html/item/item.template'); # GetItemTemplate2()
 			$windowParams{'title'} = HtmlEscape($file{'item_title'});
 			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
 			# $windowParams{'headings'} = 'haedigns';
