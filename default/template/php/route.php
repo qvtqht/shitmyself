@@ -342,7 +342,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/authors.html'
 		) {
 			WriteLog('HandleNotFound: found authors page');
-			$pagesPlArgument = '-M scores';
+			$pagesPlArgument = '-M authors';
 		}
 
 		if (
@@ -493,6 +493,7 @@ if (GetConfig('admin/php/route_enable')) {
 						WriteLog("file_exists($pathRel) was true");
 
 						if (isset($_GET['txtClock'])) {
+							# this is part of easter egg
 							$_GET['message'] = 'test';
 							WriteLog('setting message = test');
 						}
@@ -797,7 +798,7 @@ if (GetConfig('admin/php/route_enable')) {
 			// inject server message into html
 
 			// base template for server message, not including js
-			$serverResponseTemplate = GetTemplate('server_response.template');
+			$serverResponseTemplate = GetTemplate('html/server_response.template');
 
 			if (GetConfig('admin/js/enable')) {
 				// add javascript call to close server response message
