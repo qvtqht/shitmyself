@@ -18,11 +18,11 @@ if (GetConfig('admin/read_chain_log')) {
 		WriteMessage('Chain validation success!');
 
 		WriteMessage('Chain Sequence Length: ' . $chainResult{'chain_sequence'});
-		WriteMessage('Next Item Stub: ' . $chainResult{'chain_next'});
+		WriteMessage('Next Item Stub: ' . $chainResult{'chain_previous'});
 		WriteMessage('Timestamp: ' . $chainResult{'chain_timestamp'});
 #
 #		$return{'chain_sequence'} = $sequenceNumber;
-#		$return{'chain_next'} = $previousLine;
+#		$return{'chain_previous'} = $previousLine;
 #		$return{'chain_timestamp'} = $addedTime;
 	} else {
 		WriteMessage('WARNING! Chain validation FAILURE!');

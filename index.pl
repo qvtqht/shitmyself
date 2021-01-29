@@ -74,12 +74,12 @@ sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into it
 
 				DBAddItemAttribute($fileHash, 'chain_timestamp', $addedTime);
 				DBAddItemAttribute($fileHash, 'chain_sequence', $sequenceNumber);
-				DBAddItemAttribute($fileHash, 'chain_next', $previousLine);
+				DBAddItemAttribute($fileHash, 'chain_previous', $previousLine);
 				WriteLog('MakeChainIndex: $sequenceNumber = ' . $sequenceNumber);
 				WriteLog('MakeChainIndex: (next item stub/aka checksum) $previousLine = ' . $previousLine);
 
 				$return{'chain_sequence'} = $sequenceNumber;
-				$return{'chain_next'} = $previousLine;
+				$return{'chain_previous'} = $previousLine;
 				$return{'chain_timestamp'} = $addedTime;
 
 				$sequenceNumber = $sequenceNumber + 1;
