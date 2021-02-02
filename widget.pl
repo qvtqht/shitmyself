@@ -68,7 +68,7 @@ sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons f
 		my $ballotTime = GetTime();
 
 		if ($fileHash && $ballotTime) {
-			my $tagButton = GetTemplate('vote/vote_button.template');
+			my $tagButton = GetTemplate('html/vote/vote_button.template');
 
 			if ($jsEnabled) {
 				$tagButton = AddAttributeToTag(
