@@ -502,11 +502,13 @@ sub GetFile { # Gets the contents of file $fileName
 		return '';
 	}
 
+	chomp $fileName;
+
 	if ($fileName =~ m/^([0-9a-zA-Z\/._-]+)$/) {
 		$fileName = $1;
 		WriteLog('GetFile: $fileName passed sanity check: ' . $fileName);
 	} else {
-		WriteLog('GetFile: warning: $fileName failed sanity check');
+		WriteLog('GetFile: warning: $fileName FAILED sanity check: ' . $fileName);
 		return '';
 	}
 
@@ -768,7 +770,7 @@ sub str_ireplace { # $replaceWhat, $replaceWith, $string ; emulates some of str_
 		return "";
 	}
 
-	WriteLog("str_ireplace($replace_this, $with_this, $string)");
+	WriteLog('str_ireplace(' . $replace_this . ', ' . $with_this . ', ($string)' . length($string));
 
 	if ($replace_this eq $with_this) {
 		WriteLog('str_ireplace: warning: $replace_this eq $with_this');
@@ -787,7 +789,7 @@ sub str_ireplace { # $replaceWhat, $replaceWith, $string ; emulates some of str_
 		}
 	}
 
-	WriteLog("str_ireplace: result: $string");
+	WriteLog('str_ireplace: length($result) = ' . length($string));
 
 	return $string;
 } # str_replace()
@@ -1593,9 +1595,7 @@ sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cac
 		WriteLog('GetItemMessage: $message = GetFile(' . $messageCacheName . ');');
 		$message = GetFile($messageCacheName);
 		if (!$message) {
-			WriteLog('GetItemMessage: warning: cache exists, but $message was missing!');
-		}
-	}
+			WriteLog('GetItemMessage: cache exists, but $message was missing');
 
 	if (!$message) {
 		my $filePath = shift;
@@ -1734,9 +1734,7 @@ sub GetPathFromHash { # gets path of text file based on hash
 
 	if ($fileHash) {
 		my $fileHashPath = $TXTDIR . '/' . $fileHashSubDir . '/' . $fileHash . '.txt';
-
-		WriteLog("\$fileHashPath = $fileHashPath");
-
+		WriteLog('GetPathFromHash: $fileHashPath = ' . $fileHashPath);
 		return $fileHashPath;
 	}
 }
