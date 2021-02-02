@@ -1,0 +1,6 @@
+<OpenSearchDescription xmlns="/spec/opensearch/1.1/">
+<ShortName></ShortName>
+<Description></Description>
+<Image height="16" width="16" type="image/x-icon">http://example.com/favicon.ico</Image>
+<Url type="text/html" method="get" template="http://example.com/search?q={searchTerms}"/>
+</OpenSearchDescription>
