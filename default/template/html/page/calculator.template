@@ -1,0 +1,169 @@
+<!-- props (c) https://codepen.io/programking/pen/jFtGK -->
+<form name="calc">
+    <table>
+        <tr>
+            <td>
+                <input type="text" name="input" size="16" id="answer">
+
+                <br>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" name="one" value="  1  " onclick="calc.input.value += '1'">
+                <input type="button" name="two" value="  2  " onclick="calc.input.value += '2'">
+                <input type="button" name="three" value="  3  " onclick="calc.input.value += '3'">
+                <input type="button" class="operator" name="plus" value="  +  " onclick="calc.input.value += ' + '">
+                <br>
+                <input type="button" name="four" value="  4  " onclick="calc.input.value += '4'">
+                <input type="button" name="five" value="  5  " onclick="calc.input.value += '5'">
+                <input type="button" name="six" value="  6  " onclick="calc.input.value += '6'">
+                <input type="button" class="operator" name="minus" value="  -  " onclick="calc.input.value += ' - '">
+                <br>
+                <input type="button" name="seven" value="  7  " onclick="calc.input.value += '7'">
+                <input type="button" name="eight" value="  8  " onclick="calc.input.value += '8'">
+                <input type="button" name="nine" value="  9  " onclick="calc.input.value += '9'">
+                <input type="button" class="operator" name="times" value="  x  " onclick="calc.input.value += ' * '">
+                <br>
+                <input type="button" id="clear" name="clear" value="  c  " onclick="calc.input.value = ''">
+                <input type="button" name="zero" value="  0  " onclick="calc.input.value += '0'">
+                <input type="button" name="doit" value="  =  " onclick="calc.input.value = eval(calc.input.value)">
+                <input type="button" class="operator" name="div" value="  /  " onclick="calc.input.value += ' / '">
+                <br>
+            </td>
+        </tr>
+    </table>
+</form>
+<style>
+<!-- todo separate template -->
+<!--
+body {
+  background-color: #FF9E0D;
+}
+
+table {
+  margin: auto;
+  background-color: #9dd2ea;
+  width: 295px;
+  height: 325px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+#calculator {
+  position: absolute;
+  max-width: 60%;
+  left: 58%;
+  top: 10%;
+}
+
+input {
+  outline: 0;
+  position: relative;
+  left: 5px;
+  top: 5px;
+  border: 0;
+  color: #495069;
+  background-color: #fff;
+  border-radius: 4px;
+  width: 60px;
+  height: 50px;
+  float: left;
+  margin: 5px;
+  font-size: 20px;
+  box-shadow: 0 4px rgba(0,0,0,0.2);
+}
+
+input:hover {
+  border: 0 solid #000;
+  color: #495069;
+  background-color: #8F5FD4;
+  border-radius: 4px;
+  width: 60px;
+  height: 50px;
+  float: left;
+  margin: 5px;
+  font-size: 20px;
+  box-shadow: 0 4px #644294;
+}
+
+input:active {
+  top: 4px;
+  border: 0 solid #000;
+  color: #495069;
+  background-color: #8F5FD4;
+  border-radius: 4px;
+  width: 60px;
+  height: 50px;
+  float: left;
+  margin: 5px;
+  font-size: 20px;
+  box-shadow: none;
+}
+
+#answer {
+  width: 270px;
+  font-size: 26px;
+  text-align: center;
+  background-color: #F1FAEB;
+  float: left;
+}
+
+#answer:hover {
+  width: 270px;
+  font-size: 26px;
+  text-align: center;
+  background-color: #F1FAEB;
+  box-shadow: 0 4px rgba(0,0,0,0.2);
+}
+
+#answer:active {
+  top: 5px;
+  width: 270px;
+  font-size: 26px;
+  text-align: center;
+  background-color: #F1FAEB;
+  box-shadow: 0 4px rgba(0,0,0,0.2);
+}
+
+.operator {
+  background-color: #f1ff92;
+  position: relative;
+}
+
+.operator:hover {
+  background-color: #E7F56B;
+  box-shadow: 0 4px #B7C259;
+}
+
+.operator:active {
+  top: 4px;
+  box-shadow: none;
+}
+
+#clear {
+  float: left;
+  position: relative;
+  display: block;
+  background-color: #ff9fa8;
+  margin-bottom: 15px;
+}
+
+#clear:hover {
+  float: left;
+  display: block;
+  background-color: #F297A0;
+  margin-bottom: 15px;
+  box-shadow: 0 4px #CC7F86;
+}
+
+#clear:active {
+  float: left;
+  top: 4px;
+  display: block;
+  background-color: #F297A0;
+  margin-bottom: 15px;
+  box-shadow: none;
+}
+// -->
+</style>
