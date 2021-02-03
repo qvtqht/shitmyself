@@ -649,41 +649,41 @@ sub DBGetVotesForItem { # Returns all votes (weighed) for item
 
 	return $result;
 }
-
-sub DBGetEvents { #gets events list
-	WriteLog('DBGetEvents()');
-
-	my $query;
-
-	$query = "
-		SELECT
-			item_flat.item_title AS event_title,
-			event.event_time AS event_time,
-			event.event_duration AS event_duration,
-			item_flat.file_hash AS file_hash,
-			item_flat.author_key AS author_key,
-			item_flat.file_path AS file_path
-		FROM
-			event
-			LEFT JOIN item_flat ON (event.item_hash = item_flat.file_hash)
-		ORDER BY
-			event_time
-	";
-
-	my @queryParams = ();
-#	push @queryParams, $time;
-
-	my $sth = $dbh->prepare($query);
-	$sth->execute(@queryParams);
-
-	my @resultsArray = ();
-
-	while (my $row = $sth->fetchrow_hashref()) {
-		push @resultsArray, $row;
-	}
-
-	return @resultsArray;
-}
+#
+#sub DBGetEvents { #gets events list
+#	WriteLog('DBGetEvents()');
+#
+#	my $query;
+#
+#	$query = "
+#		SELECT
+#			item_flat.item_title AS event_title,
+#			event.event_time AS event_time,
+#			event.event_duration AS event_duration,
+#			item_flat.file_hash AS file_hash,
+#			item_flat.author_key AS author_key,
+#			item_flat.file_path AS file_path
+#		FROM
+#			event
+#			LEFT JOIN item_flat ON (event.item_hash = item_flat.file_hash)
+#		ORDER BY
+#			event_time
+#	";
+#
+#	my @queryParams = ();
+##	push @queryParams, $time;
+#
+#	my $sth = $dbh->prepare($query);
+#	$sth->execute(@queryParams);
+#
+#	my @resultsArray = ();
+#
+#	while (my $row = $sth->fetchrow_hashref()) {
+#		push @resultsArray, $row;
+#	}
+#
+#	return @resultsArray;
+#}
 
 sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged as friend
 # Looks for vote_value = 'friend' and items that contain 'pubkey' tag

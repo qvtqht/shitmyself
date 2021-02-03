@@ -485,113 +485,113 @@ sub GetPageLinks { # $currentPageNumber ; returns html for pagination links with
 		return GetPageLinks($currentPageNumber);
 	}
 }
-
-sub GetEventsPage { # returns html for events page
-	WriteLog('GetEventsPage()');
-
-	my $txtPage = '';
-
-	my $title = 'Upcoming Events';
-	my $titleHtml = 'Upcoming Events';
-
-	$txtPage = GetPageHeader($title, $titleHtml, 'events');
-
-	$txtPage .= GetTemplate('html/maincontent.template');
-
-	my @eventsArray = DBGetEvents();
-
-	my $eventsItemsList = '';
-
-	my $rowBgColor = '';
-	my $colorRow0Bg = GetThemeColor('row_0');
-	my $colorRow1Bg = GetThemeColor('row_1');
-
-	while (@eventsArray) {
-		my $event = shift @eventsArray;
-
-		#alternating row colors hack
-		if ($rowBgColor eq $colorRow0Bg) {
-			$rowBgColor = $colorRow1Bg;
-		} else {
-			$rowBgColor = $colorRow0Bg;
-		}
-
-		my $eventItemHash = $event->{'file_hash'};
-		my $eventTitle =  $event->{'event_title'};
-		my $eventTime = $event->{'event_time'};
-		my $eventDuration = $event->{'event_duration'};
-		my $eventItemLink = GetItemHtmlLink($eventItemHash);
-		my $eventItemAuthor = $event->{'author_key'};
-
-		if (!$eventTitle) {
-			$eventTitle = 'Untitled';
-		}
-
-		if ($eventTitle) {
-			$eventTitle = HtmlEscape($eventTitle);
-			$eventTitle = '<a href="' . GetHtmlFilename($eventItemHash) . '">' . $eventTitle . '</a>'; #todo templatify
-		}
-
-		if (!$eventItemAuthor) {
-			$eventItemAuthor = '';
-		} else {
-			$eventItemAuthor = 'Author: ' . $eventItemAuthor . '<br>'; #todo templatify
-		}
-
-		my $eventTimeUntil = $eventTime + $eventDuration;
-#		my $eventTimeUntil = $eventTime - GetTime();
-#		if ($eventTimeUntil > 0) {
-#			$eventTimeUntil = 'in ' . GetSecondsHtml($eventTimeUntil);
+#
+#sub GetEventsPage { # returns html for events page
+#	WriteLog('GetEventsPage()');
+#
+#	my $txtPage = '';
+#
+#	my $title = 'Upcoming Events';
+#	my $titleHtml = 'Upcoming Events';
+#
+#	$txtPage = GetPageHeader($title, $titleHtml, 'events');
+#
+#	$txtPage .= GetTemplate('html/maincontent.template');
+#
+#	my @eventsArray = DBGetEvents();
+#
+#	my $eventsItemsList = '';
+#
+#	my $rowBgColor = '';
+#	my $colorRow0Bg = GetThemeColor('row_0');
+#	my $colorRow1Bg = GetThemeColor('row_1');
+#
+#	while (@eventsArray) {
+#		my $event = shift @eventsArray;
+#
+#		#alternating row colors hack
+#		if ($rowBgColor eq $colorRow0Bg) {
+#			$rowBgColor = $colorRow1Bg;
 #		} else {
-#			$eventTimeUntil = $eventTimeUntil * -1;
-#			$eventTimeUntil = GetSecondsHtml($eventTimeUntil) . ' ago';
+#			$rowBgColor = $colorRow0Bg;
 #		}
-
-		if ($eventTime) {
-#			$eventTime = EpochToHuman($eventTime);
-		} else {
-			$eventTime = '(no time)';
-		}
-
-		if ($eventDuration) {
-			$eventDuration = GetSecondsHtml($eventDuration);
-		} else {
-			$eventDuration = '(no duration)';
-		}
-
-		my $eventVoteButtons = GetItemTagButtons($eventItemHash, 'event');
-
-		my $eventItem = GetTemplate('event/event_item2.template');
-
-		$eventTime = GetTimestampWidget($eventTime);
-		$eventTimeUntil = GetTimestampWidget($eventTimeUntil);
-
-		$eventItem =~ s/\$eventTitle/$eventTitle/;
-		$eventItem =~ s/\$eventTime/$eventTime/;
-		$eventItem =~ s/\$eventTimeUntil/$eventTimeUntil/;
-		$eventItem =~ s/\$eventDuration/$eventDuration/;
-		$eventItem =~ s/\$eventItemLink/$eventItemLink/;
-		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
-		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
-		$eventItem =~ s/\$voteButtons/$eventVoteButtons/;
-		$eventItem =~ s/\$rowBgColor/$rowBgColor/;
-
-		$eventsItemsList .= $eventItem;
-	}
-
-	my $eventsList = GetTemplate('event/event_list2.template');
-
-	$eventsList =~ s/\$eventsList/$eventsItemsList/;
-
-	$txtPage .= $eventsList;
-
-	$txtPage .= GetPageFooter();
-
-	$txtPage = InjectJs($txtPage, qw(settings avatar timestamp voting profile));
-
-	return $txtPage;
-
-}
+#
+#		my $eventItemHash = $event->{'file_hash'};
+#		my $eventTitle =  $event->{'event_title'};
+#		my $eventTime = $event->{'event_time'};
+#		my $eventDuration = $event->{'event_duration'};
+#		my $eventItemLink = GetItemHtmlLink($eventItemHash);
+#		my $eventItemAuthor = $event->{'author_key'};
+#
+#		if (!$eventTitle) {
+#			$eventTitle = 'Untitled';
+#		}
+#
+#		if ($eventTitle) {
+#			$eventTitle = HtmlEscape($eventTitle);
+#			$eventTitle = '<a href="' . GetHtmlFilename($eventItemHash) . '">' . $eventTitle . '</a>'; #todo templatify
+#		}
+#
+#		if (!$eventItemAuthor) {
+#			$eventItemAuthor = '';
+#		} else {
+#			$eventItemAuthor = 'Author: ' . $eventItemAuthor . '<br>'; #todo templatify
+#		}
+#
+#		my $eventTimeUntil = $eventTime + $eventDuration;
+##		my $eventTimeUntil = $eventTime - GetTime();
+##		if ($eventTimeUntil > 0) {
+##			$eventTimeUntil = 'in ' . GetSecondsHtml($eventTimeUntil);
+##		} else {
+##			$eventTimeUntil = $eventTimeUntil * -1;
+##			$eventTimeUntil = GetSecondsHtml($eventTimeUntil) . ' ago';
+##		}
+#
+#		if ($eventTime) {
+##			$eventTime = EpochToHuman($eventTime);
+#		} else {
+#			$eventTime = '(no time)';
+#		}
+#
+#		if ($eventDuration) {
+#			$eventDuration = GetSecondsHtml($eventDuration);
+#		} else {
+#			$eventDuration = '(no duration)';
+#		}
+#
+#		my $eventVoteButtons = GetItemTagButtons($eventItemHash, 'event');
+#
+#		my $eventItem = GetTemplate('event/event_item2.template');
+#
+#		$eventTime = GetTimestampWidget($eventTime);
+#		$eventTimeUntil = GetTimestampWidget($eventTimeUntil);
+#
+#		$eventItem =~ s/\$eventTitle/$eventTitle/;
+#		$eventItem =~ s/\$eventTime/$eventTime/;
+#		$eventItem =~ s/\$eventTimeUntil/$eventTimeUntil/;
+#		$eventItem =~ s/\$eventDuration/$eventDuration/;
+#		$eventItem =~ s/\$eventItemLink/$eventItemLink/;
+#		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
+#		$eventItem =~ s/\$eventItemAuthor/$eventItemAuthor/;
+#		$eventItem =~ s/\$voteButtons/$eventVoteButtons/;
+#		$eventItem =~ s/\$rowBgColor/$rowBgColor/;
+#
+#		$eventsItemsList .= $eventItem;
+#	}
+#
+#	my $eventsList = GetTemplate('event/event_list2.template');
+#
+#	$eventsList =~ s/\$eventsList/$eventsItemsList/;
+#
+#	$txtPage .= $eventsList;
+#
+#	$txtPage .= GetPageFooter();
+#
+#	$txtPage = InjectJs($txtPage, qw(settings avatar timestamp voting profile));
+#
+#	return $txtPage;
+#
+#}
 
 sub GetTagLinks { # $tagSelected ; returns html-formatted tags list
 # tag_wrapper.template, tag.template
