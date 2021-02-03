@@ -108,19 +108,46 @@ sub GetFileMessage {
 	if (!$fileHash) {
 		return ''; #todo
 	}
+
 	if (!IsItem($fileHash) && -e $fileHash) {
 		$fileHash = GetFileHash($fileHash);
 	}
 
-	my $messagePath = GetFileMessageCachePath($fileHash.txt);
+	WriteLog('GetFileMessage(' . $fileHash . ')');
+
+	my $messagePath;
+
+	if (GetConfig('admin/gpg/enable')) {
+		$messagePath = GetFileMessageCachePath($fileHash) . '_gpg';
+		WriteLog('GetFileMessage: $messagePath1: ' . $messagePath);
+		if (-e $messagePath) {
+			WriteLog('GetFileMessage: (message_gpg) return GetFile(' . $fileHash . ')');
+			return GetFile($messagePath);
+		}
+	}
+
+	$messagePath = GetFileMessageCachePath($fileHash);
+	WriteLog('GetFileMessage: $messagePath2: ' . $messagePath);
 
 	if (-e $messagePath) {
+		WriteLog('GetFileMessage: (message) return GetFile(' . $fileHash . ')');
 		return GetFile($messagePath);
 	} else {
+		WriteLog('GetFileMessage: return GetPathFromHash(' . $fileHash . ')');
 		my $filePath = GetPathFromHash($fileHash);
 		return GetFile($filePath);
 	}
 } # GetFileMessage()
+
+
+#   R        W           R
+# txt --> gpgpg --> cache/message_gpg
+#                      | GetFileMessage()
+#       R              v   W       R
+# cache/message <-- index.pl <-- txt
+#      | GetItemDetokenedMessage()
+#      v W
+#    pages.pl
 
 sub PutFileMessage {
 	my $fileHash = shift;
@@ -136,7 +163,7 @@ sub PutFileMessage {
 		return ''; #todo
 	}
 
-	return PutFile(GetFileMessageCachePath($fileHash.txt), $message);
+	return PutFile(GetFileMessageCachePath($fileHash), $message);
 } # PutFileMessage()
 
 1;

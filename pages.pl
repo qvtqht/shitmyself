@@ -943,7 +943,7 @@ sub GetItemTemplate {
 	) {
 		WriteLog('GetItemTemplate: sanity check passed, defined($file{file_path}');
 
-		my $message = GetItemMessage($file{'file_hash'});
+		my $message = GetItemDetokenedMessage($file{'file_hash'});
 		$message = FormatMessage($message, \%file);
 
 		my $itemTemplate = '';
@@ -1035,7 +1035,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 		}
 
 		# get formatted/post-processed message for this item
-		my $message = GetItemMessage($file{'file_hash'}, $file{'file_path'});
+		my $message = GetItemDetokenedMessage($file{'file_hash'}, $file{'file_path'});
 
 		# WriteLog($message);
 
@@ -4124,7 +4124,7 @@ sub GetRssFile { # returns rss feed for current site
 		my $itemLink = 'http://' . $myHost . '/' . GetHtmlFilename($fileHash);
 		my $itemAbout = $itemLink;
 		my $itemGuid = $itemLink;
-		my $itemDescription = GetItemMessage($fileHash, $file->{'file_path'});
+		my $itemDescription = GetItemDetokenedMessage($fileHash, $file->{'file_path'});
 
 		if ($itemTitle eq '') {
 			if ($itemDescription) {

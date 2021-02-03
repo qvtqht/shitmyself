@@ -114,7 +114,7 @@ sub GpgParse {
 		}
 
 		#gpg_command_pipe
-		my $messageCachePath = GetFileMessageCachePath($filePath);
+		my $messageCachePath = GetFileMessageCachePath($filePath) . '_gpg';
 		$gpgCommand .= "$filePath "; # file we're parsing
 		$gpgCommand .= ">$messageCachePath "; # capture stdout
 		$gpgCommand .= "2>$cachePathStderr/$fileHash.txt "; # capture stdeerr

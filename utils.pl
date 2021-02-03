@@ -1570,47 +1570,69 @@ sub GetItemEasyFind { #returns Easyfind strings for item
 	return $easyFindString;
 } # GetItemEasyFind()
 
-sub GetItemMessage { # $itemHash, $filePath ; retrieves item's message using cache or file path
-	WriteLog('GetItemMessage()');
+sub GetItemDetokenedMessage { # $itemHash, $filePath ; retrieves item's message using cache or file path
+	WriteLog('GetItemDetokenedMessage()');
 
 	my $itemHash = shift;
 	if (!$itemHash) {
-		WriteLog('GetItemMessage: warning: missing $itemHash');
+		WriteLog('GetItemDetokenedMessage: warning: missing $itemHash');
 		return '';
 	}
 
 	chomp $itemHash;
 
 	if (!IsItem($itemHash)) {
-		WriteLog('GetItemMessage: warning: $itemHash failed sanity check');
+		WriteLog('GetItemDetokenedMessage: warning: $itemHash failed sanity check');
 		return '';
 	}
 
-	WriteLog("GetItemMessage($itemHash)");
+	WriteLog("GetItemDetokenedMessage($itemHash)");
 
 	my $message = '';
 	my $messageCacheName = GetMessageCacheName($itemHash);
 
 	if (-e $messageCacheName) {
-		WriteLog('GetItemMessage: $message = GetFile(' . $messageCacheName . ');');
+		WriteLog('GetItemDetokenedMessage: $message = GetFile(' . $messageCacheName . ');');
 		$message = GetFile($messageCacheName);
 		if (!$message) {
-			WriteLog('GetItemMessage: cache exists, but $message was missing');
+			WriteLog('GetItemDetokenedMessage: cache exists, but $message was missing');
 
-	if (!$message) {
-		my $filePath = shift;
-		if ($filePath && -e $filePath) {
-			WriteLog('GetItemMessage: $message = GetFile(' . $filePath . ');');
-			$message = GetFile($filePath);
+			my $filePath = shift;
+			if (!$filePath) {
+				$filePath = '';
+			}
+
+			WriteLog('GetItemDetokenedMessage: $filePath = ' . $filePath);
+
+			if (!$filePath) {
+				$filePath = GetPathFromHash($itemHash);
+				WriteLog('GetItemDetokenedMessage: missing $filePath, using GetPathFromHash(): ' . $filePath);
+			}
+
+			if (!$filePath || !-e $filePath) {
+				$filePath = DBGetItemAttributeValue($itemHash, 'file_path');
+				chomp $filePath;
+				WriteLog('GetItemDetokenedMessage: missing $filePath, using DBGetItemAttributeValue(): ' . $filePath);
+			}
+
+			WriteLog('GetItemDetokenedMessage: $filePath = ' . $filePath);
+
+			if ($filePath && -e $filePath) {
+				WriteLog('GetItemDetokenedMessage = GetFile(' . $filePath . ');');
+				$message = GetFile($filePath);
+			} else {
+				WriteLog('GetItemDetokenedMessage: warning: no $filePath or file is missing');
+				$message = '';
+			}
 		}
 	}
 
 	if (!$message) {
-		WriteLog('GetItemMessage: warning: $message is false');
+		WriteLog('GetItemDetokenedMessage: warning: $message is false');
 	}
 
 	return $message;
-} # GetItemMessage()
+} # GetItemDetokenedMessage()
 
 sub GetItemMeta { # retrieves item's metadata
 	# $itemHash, $filePath
