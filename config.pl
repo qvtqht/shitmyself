@@ -135,13 +135,18 @@ sub GetConfig { # $configName || 'unmemo', $token, [$parameter] ;  gets configur
 			return $configValue;
 		} # return default/
 		else {
-			WriteLog("GetConfig: warning: Tried to get undefined config with no default: $configName");
-			return;
+			if (substr($configName, 0, 6) eq 'theme/' || substr($configName, 0, 7) eq 'string/') {
+				WriteLog('GetConfig: no default; $configName = ' . $configName);
+				return '';
+			} else {
+				WriteLog('GetConfig: warning: Tried to get undefined config with no default; $configName = ' . $configName);
+				return '';
+			}
 		}
 	} # not found in config/
 
 	WriteLog('GetConfig: warning: reached end of function, which should not happen');
-	return;
+	return '';
 } # GetConfig()
 
 sub ConfigKeyValid { #checks whether a config key is valid
