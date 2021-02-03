@@ -426,10 +426,10 @@ sub SqliteMakeTables { # creates sqlite schema
 	");
 
 	SqliteQuery2("
-		CREATE VIEW 
+		CREATE VIEW
 			author_flat
-		AS 
-		SELECT 
+		AS
+		SELECT
 			author.key AS author_key,
 			author_alias.alias AS author_alias,
 			IFNULL(author_score.author_score, 0) AS author_score,
@@ -437,7 +437,7 @@ sub SqliteMakeTables { # creates sqlite schema
 			COUNT(item_flat.file_hash) AS item_count,
 			author_alias.file_hash AS file_hash
 		FROM
-			author 
+			author
 			LEFT JOIN author_alias
 				ON (author.key = author_alias.key)
 			LEFT JOIN author_score
@@ -998,10 +998,10 @@ sub DBGetTouchedPages { # Returns items from task table, used for prioritizing w
 	# sorted by most recent (touch_time DESC) so that most recently touched pages are updated first.
 	# this allows us to call a shallow update and still expect what we just did to be updated.
 	my $query = "
-		SELECT 
+		SELECT
 			task_name,
 			task_param,
-			touch_time, 
+			touch_time,
 			priority
 		FROM task
 		WHERE task_type = 'page' AND priority > 0
@@ -1091,12 +1091,12 @@ sub DBDeletePageTouch { # $pageName, $pageParam
 #todo optimize
 	#my $query = 'DELETE FROM task WHERE page_name = ? AND page_param = ?';
 	my $query = "UPDATE task SET priority = 0 WHERE task_type = 'page' AND task_name = ? AND task_param = ?";
-	
+
 	my $pageName = shift;
 	my $pageParam = shift;
-	
+
 	my @queryParams = ($pageName, $pageParam);
-	 
+
 	SqliteQuery2($query, @queryParams);
 }
 
@@ -1381,7 +1381,7 @@ sub DBGetItemLatestAction { # returns highest timestamp in all of item's childre
 		SELECT * FROM item_threads
 	)
 	';
-	
+
 	push @queryParams, $itemHash;
 
 	my $sth = $dbh->prepare($query);
@@ -1416,7 +1416,7 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 	# $key = gpg fingerprint
 	# $alias = author alias/name
 	# $pubkeyFileHash = hash of file in which pubkey resides
-	
+
 	state $query;
 	state @queryParams;
 
@@ -1995,7 +1995,7 @@ sub DBGetItemListByTagList { #get list of items by taglist (as array)
 	WriteLog("$whereClause");
 
 	$queryParams{'where_clause'} = $whereClause;
-	
+
 	#todo this is currently an "OR" select, but it should be an "AND" select.
 
 	return DBGetItemList(\%queryParams);
@@ -2035,7 +2035,7 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 	if (defined ($params{'limit_clause'})) {
 		$query .= " " . $params{'limit_clause'};
 	}
-	
+
 	#todo bind params and use hash of parameters
 
 	WriteLog('DBGetItemList: $query = ' . $query);
@@ -2073,7 +2073,7 @@ sub DBGetAllAppliedTags { # return all tags that have been used at least once
 	return @ary;
 }
 
-sub DBGetItemListForAuthor { # return all items attributed to author 
+sub DBGetItemListForAuthor { # return all items attributed to author
 	my $author = shift;
 	chomp($author);
 
@@ -2127,7 +2127,7 @@ sub DBGetAuthorAlias { # returns author's alias by gpg key
 
 sub DBGetAuthorScore { # returns author's total score
 # score is the sum of all the author's items' scores
-# $key = author's gpg key  
+# $key = author's gpg key
 	my $key = shift;
 	chomp ($key);
 
@@ -2153,7 +2153,7 @@ sub DBGetAuthorScore { # returns author's total score
 }
 
 sub DBGetAuthorItemCount { # returns number of items attributed to author identified by $key
-# $key = author's gpg key  
+# $key = author's gpg key
 	my $key = shift;
 	chomp ($key);
 
@@ -2360,7 +2360,7 @@ sub DBGetItemVoteTotals { # get tag counts for specified item, returned as hash 
 		WriteLog('DBGetItemVoteTotals: warning: sanity check failed, returned');
 		return;
 	}
-	
+
 	WriteLog("DBGetItemVoteTotals($fileHash)");
 
 	my $query = "
