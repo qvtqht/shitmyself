@@ -340,7 +340,7 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 				$windowBody = '<tr class=content><td>' . $windowBody . '</td></tr>';
 			}
 		} else {
-			$windowBody = str_replace('$contentColumnCount', $contentColumnCount, $windowBody);
+			$windowBody = '<tbody class=content>' . str_replace('$contentColumnCount', $contentColumnCount, $windowBody) . '</tbody>';
 		}
 
 		$windowTemplate =~ s/\$windowBody/$windowBody/g;
