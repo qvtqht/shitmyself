@@ -1,39 +1,19 @@
 <!-- stats.template -->
 
-<form action="/post.html">
-
-<font face=arial>
-	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor="$colorTitlebar" class=titlebar>
-			<td>
-				<font color="$colorTitlebarText"><b>Status</b></font>
-			</td>
-		</tr>
-
-		<tr class=body>
-			<td class=content>
-				<fieldset class=beginner>
-					<p>Updated: $lastUpdateTime
-					<p></p>
-					<p id=diagnostics></p>
-				</fieldset>
-				<fieldset class=advanced>
-					<p><input type=submit name=comment value="Update">
-					<input type=submit name=comment value="Flush">
-					<p>Built: $lastBuildTime
-					<p><a href="/tags.html">$tagsTotal tags</a>
-					<p><a href="/authors.html">$authorCount authors</a>
-					<p><a href="/chain.log">$chainLogLength</a>
-					<p><a href="/compost.html">$itemsIndexed items</a>
-					<p><a href="/data.html">$filesTotal files</a>
-					<p>Server: $server
-					<p>Version: $versionShort
-				</fieldset>
-			</td>
-		</tr>
-	</table>
-</font>
-
-</form>
+<fieldset class=beginner>
+	<p>Updated: $lastUpdateTime
+	<p></p>
+	<p id=diagnostics></p>
+</fieldset>
+<fieldset class=advanced>
+	<p>Built: $lastBuildTime
+	<p><a href="/tags.html">$tagsTotal tags</a>
+	<p><a href="/authors.html">$authorCount authors</a>
+	<p><a href="/chain.log">$chainLogLength</a>
+	<p><a href="/compost.html">$itemsIndexed items</a>
+	<p><a href="/data.html">$filesTotal files</a>
+	<p>Server: $server
+	<p>Version: $versionShort
+</fieldset>
 
 <!-- / stats.template -->

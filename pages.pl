@@ -2251,6 +2251,11 @@ sub GetStatsTable {
 	$statsTable =~ s/\$filesTotal/$filesTotal/;
 	$statsTable =~ s/\$chainLogLength/$chainLogLength/;
 
+	if ($templateName eq 'html/stats.template') {
+		$statsTable = GetWindowTemplate($statsTable, 'Stats');
+		#todo remove this once other template is fixed
+	}
+
 	return $statsTable;
 }
 
