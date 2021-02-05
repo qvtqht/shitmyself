@@ -96,6 +96,25 @@ function EventLoop () { // for calling things which need to happen on a regular 
 	var d = new Date();
 	var eventLoopBegin = d.getTime();
 
+	if (window.flagUnloaded) {
+		document.title = 'Loading...';
+		//document.body.style.opacity="0.8";
+
+		var ariaAlert;
+		ariaAlert = document.getElementById('ariaAlert');
+		if (!ariaAlert) {
+			ariaAlert = document.createElement('p');
+			ariaAlert.setAttribute('role', 'alert');
+			ariaAlert.setAttribute('id', 'ariaAlert');
+			ariaAlert.innerHTML = 'Loading next page...';
+			ariaAlert.style.opacity = '1';
+			ariaAlert.style.zIndex = '1';
+
+			//document.body.appendChild(ariaAlert);
+			document.body.insertBefore(ariaAlert, document.body.firstChild);
+		}
+	}
+
 	//return;
 	// uncomment to disable event loop
 	// makes js debugging easier

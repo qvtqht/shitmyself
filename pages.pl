@@ -2481,6 +2481,27 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 	}
 
+	my $needOnunload = 1;
+	if ($needOnunload) {
+		# remember, we need to add <body onunload event
+		if ($html =~ m/<body.*?onbeforeunload.*?>/i) {
+			# <body already has onunload, forget about it
+		} else {
+			if (index($html, '<body') != -1) {
+				# add onload attribute to body tag
+				$html = AddAttributeToTag(
+					$html,
+					'body',
+					'onbeforeunload',
+					'window.flagUnloaded=1'
+#					'if (window.OnUnloadEverything) { OnUnloadEverything(); }'
+				);
+			} else {
+				WriteLog('InjectJs(): warning: wanted to $html does not contain <body');
+			}
+		}
+	}
+
 	return $html;
 }
 
