@@ -1852,21 +1852,8 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	return $txtIndex;
 }
 
-sub GetItemListingHtml { # similar to GetItemListHtml(), just different version
-
-	#my $itemListingWrapper = GetTemplate('html/item_listing_wrapper2.template');
-}
-
-sub GetTopItemsPage { # returns page with top items listing
-	WriteLog("GetTopItemsPage()");
-
-	my $htmlOutput = ''; # stores the html
-
-	my $title = 'Topics';
-	my $titleHtml = 'Topics';
-
-	$htmlOutput = GetPageHeader($title, $titleHtml, 'read'); # <html><head>...</head><body>
-	$htmlOutput .= GetTemplate('html/maincontent.template'); # where "skip to main content" goes
+sub GetItemListing { # similar to GetItemListHtml(), just different version
+	my $htmlOutput = '';
 
 	my @topItems = DBGetTopItems(); # get top items from db
 
@@ -1953,22 +1940,37 @@ sub GetTopItemsPage { # returns page with top items listing
 			$statusText = $itemCount . ' threads';
 		}
 
-#		my $columnHeadings = 'Title,Score,Replied,Author';
 		my $columnHeadings = 'title,author,activity';
 
 		$itemListingWrapper = GetWindowTemplate(
 			$itemListings,
-			'Top Approved Threads',
+			'Welcome, Guest!',
 			$columnHeadings,
-			$statusText,
-			''
+			$statusText
 		);
 
 		$htmlOutput .= $itemListingWrapper;
 	} else {
 	# no items returned, use 'no items' template
-		$htmlOutput .= GetTemplate('html/item/no_items.template');
+		$htmlOutput .= GetWindowTemplate(GetTemplate('html/item/no_items.template'), 'Welcome, Guest!');
+		#todo add menu?
 	}
+
+	return $htmlOutput;
+} # GetItemListing()
+
+sub GetTopItemsPage { # returns page with top items listing
+	WriteLog("GetTopItemsPage()");
+
+	my $htmlOutput = ''; # stores the html
+
+	my $title = 'Topics';
+	my $titleHtml = 'Topics';
+
+	$htmlOutput = GetPageHeader($title, $titleHtml, 'read'); # <html><head>...</head><body>
+	$htmlOutput .= GetTemplate('html/maincontent.template'); # where "skip to main content" goes
+
+	$htmlOutput .= GetItemListing();
 
 	$htmlOutput .= GetPageFooter(); # </body></html>
 
