@@ -1982,7 +1982,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	return $htmlOutput;
 } #GetTopItemsPage
 
-sub GetItemPrefixPage { # returns page with top items listing
+sub GetItemPrefixPage { # $prefix ; returns page with items matching specified prefix
 	WriteLog("GetItemPrefixPage()");
 
 	my $prefix = shift;
@@ -2098,7 +2098,7 @@ sub GetItemPrefixPage { # returns page with top items listing
 
 		$itemListingWrapper = GetWindowTemplate(
 			$itemListings,
-			'Top Approved Threads',
+			'Items prefixed ' . $prefix,
 			$columnHeadings,
 			$statusText,
 			''
@@ -2118,7 +2118,7 @@ sub GetItemPrefixPage { # returns page with top items listing
 	}
 
 	return $htmlOutput;
-} #GetTopItemsPage
+} # GetItemPrefixPage()
 
 sub GetStatsTable {
 	my $templateName = shift;
