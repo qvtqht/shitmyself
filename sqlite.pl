@@ -388,6 +388,7 @@ sub SqliteMakeTables { # creates sqlite schema
 				LEFT JOIN item_score ON ( item.file_hash = item_score.file_hash)
 				LEFT JOIN item_tags_list ON ( item.file_hash = item_tags_list.file_hash )
 	");
+
 	SqliteQuery2("
 		CREATE VIEW event_future AS
 			SELECT
@@ -418,29 +419,27 @@ sub SqliteMakeTables { # creates sqlite schema
 			GROUP BY file_hash, vote_value
 			ORDER BY vote_count DESC
 	");
+#
+#	SqliteQuery2("
+#		CREATE VIEW
+#			author_score
+#		AS
+#			SELECT
+#				item_flat.author_key AS author_key,
+#				SUM(item_flat.item_score) AS author_score
+#			FROM
+#				item_flat
+#			GROUP BY
+#				item_flat.author_key
+#
+#	");
 
 	SqliteQuery2("
-		CREATE VIEW
-			author_score
-		AS
-			SELECT
-				item_flat.author_key AS author_key,
-				SUM(item_flat.item_score) AS author_score
-			FROM
-				item_flat
-			GROUP BY
-				item_flat.author_key
-
-	");
-
-	SqliteQuery2("
-		CREATE VIEW
-			author_flat
+		CREATE VIEW	author_flat
 		AS
 		SELECT
 			author.key AS author_key,
 			author_alias.alias AS author_alias,
-			IFNULL(author_score.author_score, 0) AS author_score,
 			MAX(item_flat.add_timestamp) AS last_seen,
 			COUNT(item_flat.file_hash) AS item_count,
 			author_alias.file_hash AS file_hash
@@ -448,8 +447,6 @@ sub SqliteMakeTables { # creates sqlite schema
 			author
 			LEFT JOIN author_alias
 				ON (author.key = author_alias.key)
-			LEFT JOIN author_score
-				ON (author.key = author_score.author_key)
 			LEFT JOIN item_flat
 				ON (author.key = item_flat.author_key)
 		GROUP BY
@@ -780,6 +777,9 @@ sub SqliteGetValue { # Returns the first column from the first row returned by s
 
 	WriteLog('SqliteGetValue: ' . $query);
 
+	my ($package, $filename, $line) = caller;
+	WriteLog('SqliteGetValue: caller: ' . $package . ',' . $filename . ', ' . $line);
+
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@_);
 
@@ -924,7 +924,7 @@ sub DBGetItemAuthor { # get author for item ($itemhash)
 
 	WriteLog('DBGetItemAuthor(' . $itemHash . ')');
 
-	my $query = 'SELECT author_key FROM item WHERE file_hash = ?';
+	my $query = 'SELECT author_key FROM item_flat WHERE file_hash = ?';
 	my @queryParams = ();
 	#
 	push @queryParams, $itemHash;
@@ -1779,7 +1779,8 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHa
 
 	if (!$ballotTime) {
 		WriteLog('DBAddVoteRecord: warning: missing $ballotTime');
-		return '';
+		#$ballotTime = time();
+		#return '';
 	}
 
 #	if (!$signedBy) {
@@ -1801,6 +1802,8 @@ sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHa
 	} else {
 		$ballotHash = '';
 	}
+
+	WriteLog('DBAddVoteRecord: ' . $fileHash . ', $ballotTime=' . $ballotTime . ', $voteValue=' . $voteValue . ', $signedBy = ' . $signedBy . ', $ballotHash = ' . $ballotHash);
 
 	if (!$query) {
 		$query = "INSERT OR REPLACE INTO vote(file_hash, ballot_time, vote_value, author_key, ballot_hash) VALUES ";
@@ -2020,6 +2023,7 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 
 	my $query;
 	my $itemFields = DBGetItemFields();
+
 	$query = "
 		SELECT
 			$itemFields
@@ -2047,6 +2051,9 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 	#todo bind params and use hash of parameters
 
 	WriteLog('DBGetItemList: $query = ' . $query);
+
+	my ($package, $filename, $line) = caller;
+	WriteLog('DBGetItemList: caller: ' . $package . ',' . $filename . ', ' . $line);
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute();
@@ -2132,33 +2139,33 @@ sub DBGetAuthorAlias { # returns author's alias by gpg key
 		return "";
 	}
 }
-
-sub DBGetAuthorScore { # returns author's total score
-# score is the sum of all the author's items' scores
-# $key = author's gpg key
-	my $key = shift;
-	chomp ($key);
-
-	if (!IsFingerprint($key)) {
-		WriteLog('Problem! DBGetAuthorScore called with invalid parameter! returning');
-		return;
-	}
-
-	state %scoreCache;
-	if (exists($scoreCache{$key})) {
-		return $scoreCache{$key};
-	}
-
-	$key = SqliteEscape($key);
-
-	if ($key) { #todo fix non-param sql
-		my $query = "SELECT author_score FROM author_score WHERE author_key = '$key'";
-		$scoreCache{$key} = SqliteGetValue($query);
-		return $scoreCache{$key};
-	} else {
-		return "";
-	}
-}
+#
+#sub DBGetAuthorScore { # returns author's total score
+## score is the sum of all the author's items' scores
+## $key = author's gpg key
+#	my $key = shift;
+#	chomp ($key);
+#
+#	if (!IsFingerprint($key)) {
+#		WriteLog('Problem! DBGetAuthorScore called with invalid parameter! returning');
+#		return;
+#	}
+#
+#	state %scoreCache;
+#	if (exists($scoreCache{$key})) {
+#		return $scoreCache{$key};
+#	}
+#
+#	$key = SqliteEscape($key);
+#
+#	if ($key) { #todo fix non-param sql
+#		my $query = "SELECT author_score FROM author_score WHERE author_key = '$key'";
+#		$scoreCache{$key} = SqliteGetValue($query);
+#		return $scoreCache{$key};
+#	} else {
+#		return "";
+#	}
+#} # DBGetAuthorScore()
 
 sub DBGetAuthorItemCount { # returns number of items attributed to author identified by $key
 # $key = author's gpg key
@@ -2279,11 +2286,10 @@ sub DBGetTopAuthors { # Returns top-scoring authors from the database
 		SELECT
 			author_key,
 			author_alias,
-			author_score,
 			last_seen,
 			item_count
 		FROM author_flat
-		ORDER BY author_score DESC
+		ORDER BY item_count DESC
 		LIMIT 1024;
 	";
 
