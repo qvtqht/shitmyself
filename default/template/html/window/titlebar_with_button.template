@@ -1,10 +1,10 @@
 <!-- titlebar_with_button.template -->
 <tr bgcolor="$colorTitlebar" class=titlebar>
 	<td colspan=$contentColumnCount>
-		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
-		<span class=advanced>
-			<a href="#$itemEndAnchor" class=btnSkip title=skip onclick="if (window.CollapseWin) { return CollapseWin(this); } return false;">$btnCloseCaption</a>
+		<span>
+			<a href="#$itemEndAnchor" style="color: $colorTitlebarText;" class=btnSkip title=skip onclick="if (window.CollapseWin) { return CollapseWin(this); } return false;">$btnCloseCaption</a>
 		</span>
+		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
 		<br>
 	</td>
 </tr>

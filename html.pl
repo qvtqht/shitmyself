@@ -102,7 +102,7 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 	my $attributeValue = shift; # value of attribute
 
 	WriteLog("AddAttributeToTag(\$html, $tag, $attributeName, $attributeValue)");
-	WriteLog('AddAttributeToTag: $html before: ' . $html);
+	WriteLog('AddAttributeToTag: length($html) before: ' . length($html));
 
 	my $tagAttribute = '';
 	if ($attributeValue =~ m/\w/) {
@@ -124,7 +124,7 @@ sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds att
 		WriteLog('AddAttributeToTag: warning: nothing was changed');
 	}
 
-	WriteLog('AddAttributeToTag: $html after: ' . $html);
+	WriteLog('AddAttributeToTag: length($html) after: ' . length($html));
 
 	return $html;
 } # AddAttributeToTag()

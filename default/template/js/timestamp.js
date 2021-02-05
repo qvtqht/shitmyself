@@ -97,7 +97,7 @@ function ShowTimestamps () { // finds any class=timestamp, updates its displayed
 		var showAdvancedMode = 0;
 
 		if (window.GetPrefs) {
-			if (GetPrefs('show_advanced') && !GetPrefs('beginner')) {
+			if (GetPrefs('expert_timestamps')) {
 				showAdvancedMode = 1;
 			}
 		}

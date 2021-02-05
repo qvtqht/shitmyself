@@ -1,46 +1,27 @@
 <!-- write.template -->
-
-<form action="/post.html" method=GET id=compose class=submit name=compose target=_top>
-	<font face=arial>
-		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor="$colorTitlebar" class=titlebar>
-				<td>
-					<font color="$colorTitlebarText"><b>Write Message</b></font><br>
-				</td>
-			</tr>
-
-			<tr class=body>
-				<td class=content>
-					<fieldset>
-						<span id=writeintro></span>
-						<span class=beginner><label for="comment" class=beginner>Share with Everyone:</label><br></span>
-						<textarea
-							class=txtarea
-							id=comment
-							title="Enter some text to share."
-							rows=9
-							cols=32
-							name=comment
-							autofocus
-							wrap=soft
-						>$initText</textarea><br>
-						<p>
-							<input type=submit value="Send Now" name=addtext id=addtext>
-							<span id=spanSignAs></span>
-							<p id=spanWriteAdvanced class=advanced></p>
-							<span class=advanced>
-								<label for=recfing>
-									<input name=recfing id=recfing type=checkbox>
-									Record anonymous identifier
-								</label>
-							</span>
-						</p>
-						<span id=write_js></span>
-					</fieldset>
-				</td>
-			</tr>
-		</table>
-	</font>
-</form>
-
+<fieldset>
+	<span id=writeintro></span>
+	<span class=beginner><label for="comment" class=beginner>Share with Everyone:</label><br></span>
+	<textarea
+		class=txtarea
+		id=comment
+		title="Enter some text to share."
+		rows=9
+		cols=32
+		name=comment
+		autofocus
+		wrap=soft
+	>$initText</textarea><br>
+	<p>
+		<input type=submit value="Send Now" name=addtext id=addtext>
+		<span id=spanSignAs></span>
+		<p id=spanWriteAdvanced class=advanced></p>
+		<span class=advanced>
+			<label for=recfing>
+				<input name=recfing id=recfing type=checkbox>
+				Record anonymous identifier
+			</label>
+		</span>
+	</p>
+</fieldset>
 <!--/ write.template -->

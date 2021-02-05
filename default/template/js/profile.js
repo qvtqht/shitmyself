@@ -545,16 +545,6 @@ function ProfileOnLoad () { // onload event for profile page
 		if (window.getPrivateKey) {
 			//alert('debug: ProfileOnLoad: window.getPrivateKey check passed');
 
-			if (getUserFp() == '$currentAdminId') {
-				// if user's fingerprint matches current admin, set show_admin true
-				// show_admin is when operator controls are displayed
-            	if (window.SetPrefs && window.GetPrefs) {
-            		if (!GetPrefs('show_admin')) {
-            			SetPrefs('show_admin', 1);
-					}
-            	}
-            }
-
 			if (window.localStorage) {
 				//alert('DEBUG: ProfileOnLoad: window.localStorage check passed, calling getPrivateKey()...');
 

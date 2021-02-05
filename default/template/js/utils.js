@@ -22,36 +22,49 @@ function unescapeHTML(html) {
 function OnLoadEverything () { // checks for each onLoad function and calls it
 // keywords: OnLoadAll BodyOnLoad body onload body.onload
 // typically called from body.onload
-	//alert('debug: OnLoadEverything() begins');
+	//alert('DEBUG: OnLoadEverything() begins');
 
 	if (window.setClock) {
+		//alert('DEBUG: OnLoadEverything: setClock()');
 		window.eventLoopSetClock = 1;
 		setClock();
 	}
 	if (window.ItsYou) {
+		//alert('DEBUG: OnLoadEverything: ItsYou()');
 		ItsYou();
 	}
 	if (window.ShowTimestamps) {
+		//alert('DEBUG: OnLoadEverything: ShowTimestamps()');
 		window.eventLoopShowTimestamps = 1;
 	}
 	if (window.SettingsOnload) {
+		//alert('DEBUG: OnLoadEverything: SettingsOnload()');
 		SettingsOnload();
 	}
 	if (window.ProfileOnLoad) {
+		//alert('DEBUG: OnLoadEverything: ProfileOnLoad()');
 		ProfileOnLoad();
 	}
 	if (window.WriteOnload) {
+		//alert('DEBUG: OnLoadEverything: WriteOnload()');
 		WriteOnload();
 	}
-	if (window.DraggingInit) {
-		DraggingInit();
-	}
 	if (window.ShowAdvanced) {
+		//alert('DEBUG: OnLoadEverything: ShowAdvanced()');
 		window.eventLoopShowAdvanced = 1;
 		ShowAdvanced(0);
 	}
+	if (window.SearchOnload) {
+		//alert('DEBUG: OnLoadEverything: SearchOnload()');
+		SearchOnload();
+	}
+	if (window.UploadAddImagePreviewElement) {
+		//alert('DEBUG: OnLoadEverything: UploadAddImagePreviewElement()');
+		UploadAddImagePreviewElement();
+	}
 	if (
 		(
+			window.location.href &&
 			window.location.href.indexOf('write') != -1 ||
 			window.location.hash.indexOf('reply') != -1
 		) &&
@@ -59,33 +72,32 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 		document.compose.comment &&
 		document.compose.comment.focus
 	) {
+		//alert('DEBUG: OnLoadEverything: document.compose.comment.focus()()');
 		document.compose.comment.focus();
 	}
-
-	if (window.searchOnload) {
-		searchOnload();
-	}
-	if (window.UploadAddImagePreviewElement) {
-		UploadAddImagePreviewElement();
-	}
-	if ((window.location.href.indexOf('search') != -1) && document.search.q) {
+	if (window.location.href && (window.location.href.indexOf('search') != -1) && document.search.q) {
+		//alert('DEBUG: OnLoadEverything: document.search.q.focus()');
 		document.search.q.focus();
 	}
-
-	if (window.HideLoadingIndicator) {
-		HideLoadingIndicator();
+	if (window.DraggingInit && GetPrefs('draggable')) {
+		//alert('DEBUG: OnLoadEverything: DraggingInit()');
+		DraggingInit(1);
 	}
-
-	// everything is set now, start event loop
-	//
-
 	if (window.EventLoop) {
+		//alert('DEBUG: OnLoadEverything: EventLoop()');
 		if (window.CheckIfFresh) {
 			window.eventLoopFresh = 1;
 		}
 		window.eventLoopEnabled = 1
 		EventLoop();
 	}
+	if (window.HideLoadingIndicator) {
+		//alert('DEBUG: OnLoadEverything: HideLoadingIndicator()');
+		HideLoadingIndicator();
+	}
+
+	// everything is set now, start event loop
+	//
 } // OnLoadEverything()
 
 function EventLoop () { // for calling things which need to happen on a regular basis
@@ -311,6 +323,46 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 	}
 	return true;
 } // CollapseWin()
+
+//function ChangeInputToTextarea (input) { // called by onpaste
+////#input_expand_into_textarea
+//	//#todo more sanity
+//	if (!input) {
+//		return '';
+//	}
+//
+//	if (document.createElement) {
+//		var parent = input.parentElement;
+//		var textarea = document.createElement('textarea');
+//		var cols = input.getAttribute('cols');
+//		var name = input.getAttribute('name');
+//		var id = input.getAttribute('id');
+//		var rows = 5;
+//		var width = cols + 'em';
+//
+//		textarea.setAttribute('name', name);
+//		textarea.setAttribute('id', id);
+//		textarea.setAttribute('cols', cols);
+//		textarea.setAttribute('rows', rows);
+//		//textarea.style.width = width;
+//		textarea.innerHTML = input.value;
+//
+//		//parent.appendChild(t);
+//		parent.insertBefore(textarea, input.nextSibling);
+//		input.style.display = 'none';
+//
+//		textarea.focus();
+//		textarea.selectionStart = textarea.innerHTML.length;
+//		textarea.selectionEnd = textarea.innerHTML.length;
+//
+//		if (window.inputToChange) {
+//			window.inputToChange = '';
+//		}
+//	}
+//
+//	return true;
+//}
+
 //
 //function ConvertSubmitsToButtonsWithAccessKey (parent) {
 //	if (!parent) {

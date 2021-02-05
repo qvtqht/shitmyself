@@ -4,6 +4,7 @@ var showAdvancedLastAction = '';
 var showBeginnerLastAction = '';
 var showMeaniesLastAction = '';
 var showAdminLastAction = '';
+var showTimestampsLastAction = '';
 
 var timerShowAdvanced;
 
@@ -15,7 +16,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 
     //alert ('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
 
-	if (bgColor) {
+	if (bgColor && element.style.float != 'right') {
 		// background color
 		if (bgColor == 'initial') {
 			bgColor = '$colorWindow';
@@ -128,6 +129,15 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 	if (window.localStorage && container.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
 		///////////
+
+		var displayTimestamps = '0';
+		if (GetPrefs('expert_timestamps')) {
+			displayTimestamps = 1;
+		}
+		if (force || window.showTimestampsLastAction != displayTimestamps) {
+			//ShowTimestamps();
+			window.showTimestampsLastAction = displayTimestamps;
+		}
 
 		var displayAdmin = 'none'; // not voting by default
 		if (GetPrefs('show_admin') == 1) { // check value of show_admin preference
@@ -251,7 +261,8 @@ function GetPrefs (prefKey) { // get prefs value from localstorage
 			}
 			if (
 				prefKey == 'show_advanced' ||
-				prefKey == 'show_admin'
+				prefKey == 'show_admin' ||
+				prefKey == 'draggable'
 			) {
 				prefValue = 0;
 			}
@@ -315,10 +326,19 @@ function SaveCheckbox (ths, prefKey) { // saves value of checkbox, toggles affec
 	// saves checkbox's value as 0/1 value to prefs(prefKey)
 	SetPrefs(prefKey, (ths.checked ? 1 : 0));
 
+
+	if (prefKey == 'draggable') {
+		if (ths.checked) {
+			DraggingInit(0);
+		} else {
+			//#todo
+		}
+	}
+
 	//alert('DEBUG: after SetPrefs, GetPrefs(' + prefKey + ') returns: ' + GetPrefs(prefKey));
 
 	// call ShowAdvanced(1) to update ui appearance
-	ShowAdvanced(1);
+	// ShowAdvanced(1);
 
 	return 1;
 }
@@ -334,7 +354,10 @@ function SetInterfaceMode (ab) { // updates several settings to change to "ui mo
 			SetPrefs('beginner_highlight', 1);
 			SetPrefs('notify_on_change', 1);
 			SetPrefs('show_admin', 0);
-			SetPrefs('enhance_write', 0);
+			SetPrefs('write_enhance', 0);
+			SetPrefs('write_autosave', 0);
+			SetPrefs('expert_timestamps', 0);
+			SetPrefs('draggable', 0);
 //			SetPrefs('sign_by_default', 1);
 		} else if (ab == 'intermediate') {
 			SetPrefs('show_advanced', 1);
@@ -399,8 +422,11 @@ function SettingsOnload () { // onload function for settings page
 		var pane;
 
 		//LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
+		LoadCheckbox(document.getElementById('chkDraggable'), 'draggable');
 		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
-		LoadCheckbox(document.getElementById('chkEnhanceWrite'), 'enhance_write');
+		LoadCheckbox(document.getElementById('chkWriteEnhance'), 'write_enhance');
+		LoadCheckbox(document.getElementById('chkWriteEnhance'), 'write_enhance');
+		LoadCheckbox(document.getElementById('chkExpertTimestamps'), 'expert_timestamps');
 
 		//if (GetPrefs('sign_by_default') == 1) {
 		//	var cbM = document.getElementById('chkSignByDefault');
@@ -409,12 +435,6 @@ function SettingsOnload () { // onload function for settings page
 		//	}
 		//}
 
-		if (GetPrefs('show_admin') == 1) {
-			var cbM = document.getElementById('chkShowAdmin');
-			if (cbM) {
-				cbM.checked = 1;
-			}
-		}
 	}
 
 	//alert('debug: SettingsOnload: returning false');

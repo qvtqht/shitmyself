@@ -34,8 +34,6 @@
 			</span>
 		</p>
 		<span id=spanProfileLink></span>
-		<hr>
-		<p id=tos></p>
 	</fieldset>
 </form>
 <!-- / form/profile.template -->

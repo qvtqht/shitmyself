@@ -1,0 +1,49 @@
+<!-- bookmark.template -->
+<fieldset>
+    <legend><p>Same Window</p></legend>
+
+    <p class=beginner>These bookmarks take you away from current page.</p>
+
+    <p>
+        <a href="javascript:window.location='http://localhost:2784/post.html?comment='+encodeURIComponent(document.location)">+URL</a>
+        <br>
+        <span class=beginner>Clip just the address of current page as a new item</span>
+    </p>
+
+    <p>
+        <a href="javascript:window.location='http://localhost:2784/post.html?comment='+encodeURIComponent(window.getSelection())+'&;s='+encodeURIComponent(document.location)">Clip</a>
+        <br>
+        <span class=beginner>Clip selected text and current page URL into new item.</span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend><p>New Window</p></legend>
+
+    <p class=beginner>These bookmarks open a new window.</p>
+
+    <p>
+        <a href="javascript:void(window.open('http://localhost:2784/post.html?comment='+encodeURIComponent(window.getSelection())+'&t='+encodeURIComponent(document.title)+'&s='+encodeURIComponent(document.location)))">Clip(c)</a>
+        <br>
+        <span class=beginner>Clip selected text into new item along with URL and Title for attribution</span>
+    </p>
+
+    <p>
+        <a href="javascript:void(window.open('http://localhost:2784/post.html?comment='+encodeURIComponent(window.getSelection())))">Clip</a>
+        <br>
+        <span class=beginner>Clip just the selected text into new item</span>
+    </p>
+
+    <p>Technical note: window.open() is used to open new window. It may be affected by popup blockers.</p>
+</fieldset>
+
+<fieldset class=admin>
+    <legend><p>Operator</p></legend>
+    <p class=beginner>These bookmarks help operate system.</p>
+    <p>
+        <a href="http://localhost:2784/post.html?comment=Update">UPDATE</a>
+        <br>
+        <span class=beginner>Update site to reflect new data.</span>
+    </p>
+</fieldset>
+<!-- / bookmark.template -->

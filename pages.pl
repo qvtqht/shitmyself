@@ -2503,7 +2503,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	}
 
 	return $html;
-}
+} # InjectJs()
 
 sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js template(s) before </body> ;
 #todo, once i figure out how to pass an array and/or need this in perl:
@@ -3762,7 +3762,7 @@ sub GetUploadWindow { # upload window for upload page
 		$title = 'Upload Multiple Files';
 	}
 
-	my $uploadForm = GetTemplate("form/$template");
+	my $uploadForm = GetTemplate($template);
 	if (GetConfig('admin/js/enable')) {
 		# $uploadForm = AddAttributeToTag($uploadForm, 'input name=uploaded_file', 'onchange', "if (document.upload && document.upload.submit && document.upload.submit.value == 'Upload') { document.upload.submit.click(); }");
 		# this caused back button breaking
@@ -3783,18 +3783,8 @@ sub GetSearchWindow { # search window for search page
 } # GetSearchWindow()
 
 sub GetWriteForm { # returns write form (for composing text message)
-	my $writeForm = GetTemplate('form/write/write.template');
+	my $writeForm = GetWindowTemplate(GetTemplate('html/form/write/write.template'), 'Write');
 	WriteLog('GetWriteForm()');
-
-	if (GetConfig('admin/js/enable')) {
-		WriteLog('GetWriteForm: js is on, adding write_js.template');
-		my $writeJs = GetTemplate('form/write/write_js.template');
-		$writeForm = str_replace('<span id=write_js></span>', $writeJs, $writeForm);
-	}
-	else {
-		WriteLog('GetWriteForm: js is off, removing $writeJs');
-		$writeForm = str_replace('<span id=write_js></span>', '', $writeForm);
-	}
 
 	if (GetConfig('admin/php/enable')) {
 		my $writeLongMessage = GetTemplate('form/write/long_message.template');
@@ -3907,7 +3897,13 @@ sub GetWritePage { # returns html for write page
 	$writePageHtml .= GetTemplate('html/maincontent.template');
 
 	my $writeForm = GetWriteForm();
+	WriteLog('GetWriteForm: js is on, adding write_js.template');
+    my $writeJs = GetWindowTemplate(GetTemplate('form/write/write_js.template'), 'Options');
+
+    $writePageHtml .= '<form action="/post.html" method=GET id=compose class=submit name=compose target=_top>'; #todo
 	$writePageHtml .= $writeForm;
+	$writePageHtml .= $writeJs;
+	$writePageHtml .= '</form>'; #todo
 
 #	if (defined($itemCount) && defined($itemLimit) && $itemCount) {
 #		my $itemCounts = GetTemplate('form/itemcount.template');
@@ -3946,6 +3942,24 @@ sub GetWritePage { # returns html for write page
 
 	return $writePageHtml;
 } # GetWritePage()
+
+sub GetProfileWindow {
+	my $profileWindowContents = GetTemplate('form/profile.template');
+
+	if (GetConfig('admin/gpg/use_gpg2')) {
+		my $gpg2Choices = GetTemplate('html/gpg2.choices.template');
+		$profileWindowContents =~ s/\$gpg2Algochoices/$gpg2Choices/;
+	} else {
+		$profileWindowContents =~ s/\$gpg2Algochoices//;
+	}
+
+	my $profileWindow = GetWindowTemplate(
+		$profileWindowContents,
+		'Profile',
+	);
+
+	return $profileWindow;
+}
 
 sub GetEventAddPage { # get html for /event.html
 	# $txtIndex stores html page output
@@ -3995,13 +4009,6 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 		$txtIndex .= GetTemplate('html/maincontent.template');
 
 		my $profileWindowContents = GetTemplate('form/profile.template');
-		my $tosText = GetString('tos');
-		$tosText = str_replace("\n", '<br>', $tosText);
-		$profileWindowContents = str_replace(
-			'<p id=tos></p>',
-			'<p id=tos>' . $tosText . '</p>',
-			$profileWindowContents
-		);
 
 		if (GetConfig('admin/gpg/use_gpg2')) {
 			my $gpg2Choices = GetTemplate('html/gpg2.choices.template');
@@ -4010,11 +4017,17 @@ sub GetProfilePage { # returns profile page (allows sign in/out)
 			$profileWindowContents =~ s/\$gpg2Algochoices//;
 		}
 
-		my $profileWindow = GetWindowTemplate(
-			$profileWindowContents,
-			'Profile',
+		my $profileWindow = GetProfileWindow();
+
+		my $tosText = GetString('tos');
+		$tosText = str_replace("\n", '<br>', $tosText);
+		my $tosWindow = GetWindowTemplate(
+			$tosText,
+			'Terms of Service',
 		);
+
 		$txtIndex .= $profileWindow;
+		$txtIndex .= $tosWindow;
 		$txtIndex .= GetPageFooter();
 
 		if (GetConfig('admin/js/enable')) {
@@ -4061,6 +4074,13 @@ sub GetAccessPage { # returns html for compatible mode page, /access.html
 	return $html;
 }
 
+sub GetSettingsWindow {
+	my $settingsTemplate = GetTemplate('form/settings.template');
+	my $settingsWindow = GetWindowTemplate($settingsTemplate, 'Settings');
+	$settingsWindow = '<form id=frmSettings name=frmSettings>' . $settingsWindow . '</form>';
+	return $settingsWindow;
+}
+
 sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $txtIndex = "";
 
@@ -4068,11 +4088,10 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $titleHtml = "Settings";
 
 	$txtIndex = GetPageHeader($title, $titleHtml, 'settings');
-
 	$txtIndex .= GetTemplate('html/maincontent.template');
 
-	my $settingsTemplate = GetTemplate('form/settings.template');
-	$txtIndex .= $settingsTemplate;
+	my $settingsWindow = GetSettingsWindow();
+	$txtIndex .= $settingsWindow;
 
 	$txtIndex .= GetPageFooter();
 
@@ -4366,8 +4385,8 @@ sub GetItemTemplateFromHash {
 	if (scalar(@files)) {
 		my $file = $files[0];
 
-		WriteLog('GetItemTemplateFromHash: my $itemPage = GetItemTemplate($file = "' . $file . '")');
-		my $itemPage = GetItemTemplate($file);
+		WriteLog('GetItemTemplateFromHash: my $itemPage = GetItemTemplate2($file = "' . $file . '")');
+		my $itemPage = GetItemTemplate2($file);
 
 		return $itemPage;
 	} # scalar(@files)

@@ -1,100 +1,110 @@
 <!-- settings.template -->
-<form id=frmSettings name=frmSettings>
-	<font face=arial>
-		<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-			<tr bgcolor="$colorTitlebar" class=titlebar>
-				<td>
-					<font color="$colorTitlebarText"><b>Settings</b></font><br>
-				</td>
-			</tr>
+<noscript>
+	<legend><b>JavaScript Information</b><br></legend>
+	<p>
+		Enhancements marked with star below (<b>*</b>) <br>
+		require modern <b>JavaScript</b>.
+	</p>
 
-			<tr class=body>
-				<td class=content>
-					<noscript>
-						<legend><b>JavaScript Information</b><br></legend>
-						<p>
-							Enhancements marked with star below (<b>*</b>) <br>
-							require modern <b>JavaScript</b>.
-						</p>
+	<p><hr></p>
+</noscript>
 
-						<p><hr></p>
-					</noscript>
+<fieldset>
+	<legend><b>Interface and Appearance</b><br></legend>
 
-					<fieldset>
-						<legend><b>Interface and Appearance</b><br></legend>
+	<p>
+		<input type=submit name=ui value="Beginner" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('beginner'); }">
+		<input type=submit name=ui value="Intermediate" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('intermediate'); }">
+		<input type=submit name=ui value="Expert" class=advanced onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('expert'); }">
+		<span class=beginner><br>Use these buttons to adjust interface<noscript><b>*</b></noscript></span>
+	</p>
 
-						<p>
-							<input type=submit name=ui value="Beginner" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('beginner'); }">
-							<input type=submit name=ui value="Intermediate" onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('intermediate'); }">
-							<input type=submit name=ui value="Expert" class=advanced onclick="if (window.SetInterfaceMode) { return SetInterfaceMode('expert'); }">
-							<span class=beginner><br>Use these buttons to adjust interface<noscript><b>*</b></noscript></span>
-						</p>
+	<p class=advanced>
+		<label for=chkExpertTimestamps>
+			<input type=checkbox id=chkExpertTimestamps name=chkExpertTimestamps onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'expert_timestamps'); }">
+			Display timestamps as seconds<noscript><b>*</b></noscript>
+		</label>
+	</p>
 
-						<p class=advanced>
-							<label for=chkEnhanceWrite>
-								<input type=checkbox id=chkEnhanceWrite name=chkEnhanceWrite onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'enhance_write'); }">
-								Make write box big and blue<noscript><b>*</b></noscript>
-							</label>
-						</p>
+	<p class=advanced>
+		<label for=chkShowAdmin>
+			<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
+			Show operator controls<noscript><b>*</b></noscript>
+		</label>
+	</p>
 
-						<p class=advanced>
-							<label for=chkShowAdmin>
-								<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
-								Show operator controls<noscript><b>*</b></noscript>
-							</label>
-						</p>
-					</fieldset>
+	<p class=advanced>
+		<label for=chkDraggable>
+			<input type=checkbox id=chkDraggable name=chkDraggable onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'draggable'); }">
+			Make Desktop draggable<noscript><b>*</b></noscript>
+		</label>
+	</p>
+</fieldset>
 
-					<fieldset class=admin>
-						<p><hr></p>
+<fieldset>
+<legend><b>Writing</b><br></legend>
 
-						<legend><b>Operator's Console</b></legend>
-						<p>
-							<span class=beginner>
-								To activate, check box, then press button.<br>
-								This helps prevent accidental activation.<br>
-							</span>
-						</p>
-						<p>
-							<span class=beginner>Upgrade software to latest version:<br></span>
-							<label for=chkUpgrade>
-								<input type=checkbox id=chkUpgrade name=chkUpgrade>
-								Upgrade
-							</label>
+<p class=advanced>
+	<label for=chkWriteEnhance>
+		<input type=checkbox id=chkWriteEnhance name=chkWriteEnhance onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'write_enhance'); }">
+		Make write box big and blue<noscript><b>*</b></noscript>
+	</label>
+</p>
 
-							<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
-						</p>
-						<p>
-							<span class=beginner>
-								Use Flush to make space for new content<br>
-								Existing content may become inaccessible.<br>
-							</span>
+<p>
+	<label for=chkWriteAutoSave>
+		<input type=checkbox id=chkWriteAutoSave name=chkWriteAutoSave onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'write_autosave'); }">
+		Automatically save drafts on device<noscript><b>*</b></noscript>
+	</label>
+</p>
 
-							<label for=chkFlush>
-								<input type=checkbox id=chkFlush name=chkFlush>
-								Flush
-							</label>
+</fieldset>
 
-							<input type=submit name=btnFlush id=btnFlush value=Flush>
-						</p>
-					</fieldset>
+<fieldset class=admin>
+	<p><hr></p>
 
-					<fieldset class=admin>
-						<p><hr></p>
+	<legend><b>Operator's Console</b></legend>
+	<p>
+		<span class=beginner>
+			To activate, check box, then press button.<br>
+			This helps prevent accidental activation.<br>
+		</span>
+	</p>
+	<p>
+		<span class=beginner>Upgrade software to latest version:<br></span>
+		<label for=chkUpgrade>
+			<input type=checkbox id=chkUpgrade name=chkUpgrade>
+			Upgrade
+		</label>
 
-						<legend><b>Content Filter</b><br></legend>
-						<span class=beginner>(This doesn't do anything at the moment.)<br></span>
-						<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
-						<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label><br>
-						<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label><br>
-						<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label><br>
-						<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label><br>
-						<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
-						<!-- As long as it's five nines, the decimal position doesn't matter -->
-					</fieldset>
-				</td>
-			</tr>
-		</table>
-	</font>
-</form>
+		<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
+	</p>
+	<p>
+		<span class=beginner>
+			Use Flush to make space for new content<br>
+			Existing content may become inaccessible.<br>
+		</span>
+
+		<label for=chkFlush>
+			<input type=checkbox id=chkFlush name=chkFlush>
+			Flush
+		</label>
+
+		<input type=submit name=btnFlush id=btnFlush value=Flush>
+	</p>
+</fieldset>
+
+<fieldset class=admin>
+	<p><hr></p>
+
+	<legend><b>Content Filter</b><br></legend>
+	<span class=beginner>(This doesn't do anything at the moment.)<br></span>
+	<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
+	<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label><br>
+	<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label><br>
+	<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label><br>
+	<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label><br>
+	<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
+	<!-- As long as it's five nines, the decimal position doesn't matter -->
+</fieldset>
 <!-- / settings.template -->

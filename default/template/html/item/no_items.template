@@ -1,31 +1,15 @@
 <!-- no_items.template -->
-<font face=arial>
-	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor="$colorTitlebar" class=titlebar>
-			<td>
-				<font color="$colorTitlebarText"><b>No Topics</b></font>
-			</td>
-		</tr>
-
-		<tr class=menubar>
-			<td>
-				<p><a href="/write.html">New Topic</a>
-			</td>
-		</tr>
-
-		<tr class=body>
-			<td class=content>
-				<p class=beginner>
-					There are no approved topics.<br><br>
-					This website may be having technical issues.<br><br>
-					Please post something or come back later.<br><br>
-					<span class=advanced>
-						<a href=/compost.html>Compost</a>
-					</span>
-				</p>
-				<p class=advanced>No matches.</p>
-			</td>
-		</tr>
-	</table>
-</font>
+<fieldset>
+	<legend>Hello, World!</legend>
+	<p class=beginner>
+		We're fresh out of content.<br><br>
+		Use this opportunity as you see fit.<br><br>
+		<span class=advanced>
+			<a href=/compost.html>Compost</a>
+		</span>
+	</p>
+	<p class=advanced>
+		No matches.
+	</p>
+</fieldset>
 <!-- / no_items.template -->

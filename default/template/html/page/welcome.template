@@ -4,16 +4,5 @@
 	Welcome to the welcome page.<br>
 	Make yourself at home.
 </p>
-
-<p>
-	Say hello:
-	<form action="/post.html" method=get>
-		<input name=comment type=text size=40>
-		<br>
-		<input type=submit value=Send>
-	</form>
-</p>
-
-<span id=itemList></span>
 <!-- / welcome.template -->
 

@@ -7,8 +7,8 @@ function WriteOnload () { // onload handler for write page
 	    //alert('DEBUG: WriteOnload: document.getElementById is true');
         if (window.GetPrefs) {
 			//alert('DEBUG: window.GetPrefs = TRUE');
-        	if (GetPrefs('enhance_write')) {
-				//alert('DEBUG: enhance_write = TRUE');
+        	if (GetPrefs('write_enhance')) {
+				//alert('DEBUG: write_enhance = TRUE');
 				var comment = document.getElementById('comment');
 				if (comment) {
 					if (window.location.href.indexOf('write') != -1) {
@@ -18,7 +18,7 @@ function WriteOnload () { // onload handler for write page
 					}
 				}
 			} else {
-				//alert('DEBUG: enhance_write = FALSE');
+				//alert('DEBUG: write_enhance = FALSE');
 			}
 		} else {
 			//alert('DEBUG: window.GetPrefs = FALSE');
@@ -108,8 +108,8 @@ function WriteOnload () { // onload handler for write page
     return true;
 } // WriteOnload()
 
-function CommentMakeWp(comment) { // makes editor textarea larger and gives it wp color scheme
-// called when enhance_write is on
+function CommentMakeWp (comment) { // makes editor textarea larger and gives it wp color scheme
+// called when write_enhance is on
 	if (comment) {
 		comment.style.backgroundColor = '#000080';
 		comment.style.color = 'ffffff';
@@ -149,7 +149,7 @@ function writeSubmit (t) { // called when user submits write form //signMessage 
 							signMessageResult = 0;
 						}
 						// once the message is signed, callback will submit the form
-						return true;
+						return false; // uncomment this for duplicate unsigned messages feature
 					}
 				} else {
 					// user choose not to sign
@@ -195,8 +195,8 @@ function DoAutoSave() {
 		if (window.GetPrefs) {
 			//alert('DEBUG: DoAutoSave: window.GetPrefs = TRUE');
 
-			if (GetPrefs('enhance_write')) {
-				//alert('DEBUG: DoAutoSave: enhance_write = TRUE');
+			if (GetPrefs('write_autosave')) { // #todo this can't be right
+				//alert('DEBUG: DoAutoSave: write_autosave = TRUE');
 
 				var comment = document.getElementById('comment');
 				if (comment) {
@@ -208,7 +208,7 @@ function DoAutoSave() {
 					}
 				}
 			} else {
-				//alert('DEBUG: enhance_write = FALSE');
+				//alert('DEBUG: write_autosave = FALSE');
 			}
 		} else {
 			//alert('DEBUG: window.GetPrefs = FALSE');

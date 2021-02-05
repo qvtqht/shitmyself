@@ -80,6 +80,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 								ariaAlert = document.createElement('p');
 								ariaAlert.setAttribute('role', 'alert');
 								ariaAlert.setAttribute('id', 'ariaAlert');
+								ariaAlert.style.zIndex = '1'; //#todo
 								ariaAlert.innerHTML = 'Page updated ';
 
 								//document.body.appendChild(ariaAlert);

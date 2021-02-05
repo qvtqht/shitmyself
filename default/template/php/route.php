@@ -326,6 +326,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/search.html' ||
 			$path == '/manual.html' ||
 			$path == '/manual_advanced.html' ||
+			$path == '/desktop.html' ||
 			$path == '/stats.html' ||
 			$path == '/frame.html' ||
 			$path == '/frame2.html' ||
@@ -496,6 +497,10 @@ if (GetConfig('admin/php/route_enable')) {
 							# this is part of easter egg
 							$_GET['message'] = 'test';
 							WriteLog('setting message = test');
+						}
+
+						if (($_GET['txtClock']) == 'Update') {
+							RedirectwithResponse('/post.html?comment=Update', 'Please wait while update is performed...');
 						}
 
 						if (
@@ -737,35 +742,30 @@ if (GetConfig('admin/php/route_enable')) {
 			}
 		}
 
+		$lightMode = 0;
 		if (isset($_GET['light'])) {
-			// user is requesting to change light mode state
+			$lightMode = $_GET['light'] ? 1 : 0;
+		}
+		if (isset($_GET['btnLightOn'])) {
+			$lightMode = 1;
+		}
+		if (isset($_GET['btnLightOff'])) {
+			$lightMode = 0;
+		}
 
-			$lightMode = $_GET['light'] ? 1 : 0; // normalize the request
+		if (isset($_COOKIE['light'])) {
+			// if there is a cookie, change its value if it's necessary
 
-			if (isset($_COOKIE['light'])) {
-				// if there is a cookie, change its value if it's necessary
-
-				if ($_COOKIE['light'] != $lightMode) {
-					setcookie2('light', $lightMode);
-
-					//$lightModeSetMessage = StoreServerResponse('Light mode has been set to ' . $lightMode);
-					//$redirectUrl = '';
-				}
-			} else {
-				// if there is no cookie set, set it
-
+			if ($_COOKIE['light'] != $lightMode) {
 				setcookie2('light', $lightMode);
+
+				//$lightModeSetMessage = StoreServerResponse('Light mode has been set to ' . $lightMode);
+				//$redirectUrl = '';
 			}
 		} else {
-			// no requests for light mode change, check if there is a cookie
+			// if there is no cookie set, set it
 
-			if (isset($_COOKIE['light'])) {
-				// cookie is set
-				$lightMode = $_COOKIE['light'] ? 1 : 0;
-			} else {
-				// use light mode default from config
-				$lightMode = GetConfig('admin/php/light_mode_default') ? 1 : 0;
-			}
+			setcookie2('light', $lightMode);
 		}
 
 		if (GetConfig('admin/php/light_mode_always_on')) {
@@ -940,6 +940,27 @@ if (GetConfig('admin/php/route_enable')) {
 					$html = str_replace('<span id=spanProfileLink></span>', '<span id=spanProfileLink><p><a href="/author/' . $cookie . '/index.html">Go to profile</a></p></span>', $html);
 				}
 			}
+		} # /profile.html
+
+		if ($path == '/bookmark.html') { #bookmarklets replace server name with host name
+			$hostName = 'localhost:2784';
+			if (isset($_SERVER['HTTP_HOST'])) {
+				if ($_SERVER['HTTP_HOST']) {
+					$hostName = $_SERVER['HTTP_HOST'];
+
+					//if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT']) {
+					//	$hostName .= ':' . $_SERVER['SERVER_PORT'];
+					//}
+
+					#todo sanity check here
+
+					$html = str_replace('localhost:2784', $hostName, $html);
+				} else {
+					WriteLog('route.php: warning: serving bookmarklets page without host'); #todo lookup in config
+				}
+			} else {
+				WriteLog('route.php: warning: serving bookmarklets page without host'); #todo lookup in config
+			}
 		}
 
 		if (function_exists('WriteLog') && GetConfig('admin/php/debug')) {
@@ -1018,34 +1039,31 @@ if (GetConfig('admin/php/route_enable')) {
 			);
 		} // light mode
 
-		if (
-			GetConfig('admin/php/assist_show_advanced') &&
-			(
-				isset($_COOKIE['show_advanced']) &&
-				$_COOKIE['show_advanced'] == '0'
-			)
-		) {
-			// insert additional style rule at </head>
-			// which sets class=advanced elements to display:none
-			// if user has respective cookie set
-			// to prevent jumpies when page loads
+		if (GetConfig('admin/php/assist_show_advanced')) {
+			WriteLog('admin/php/assist_show_advanced is true');
+			if (isset($_COOKIE['show_advanced']) &&	$_COOKIE['show_advanced'] == '0') {
+				// insert additional style rule at </head>
+				// which sets class=advanced elements to display:none
+				// if user has respective cookie set
+				// to prevent jumpies when page loads
 
-			WriteLog('route.php: ShowAdvanced() assist activated');
-			WriteLog('route.php: $_COOKIE[show_advanced] = ' . $_COOKIE['show_advanced']);
-			
-			$html = str_replace(
-				'</head>',
-				"<!-- php/assist_show_advanced -->\n".
-				 	"<style><!--" .
-					"\n" .
-					".advanced, .admin{ display:none }" .
-					"/* assist ShowAdvanced() in pre-hiding elements with class=advanced */" .
-					"\n" .
-					"--></style>" .
-					"</head>",
-				$html
-			);
-			// #todo templatify
+				WriteLog('route.php: ShowAdvanced() assist activated');
+				WriteLog('route.php: $_COOKIE[show_advanced] = ' . $_COOKIE['show_advanced']);
+
+				$html = str_replace(
+					'</head>',
+					"<!-- php/assist_show_advanced -->\n".
+						"<style><!--" .
+						"\n" .
+						".advanced, .admin{ display:none }" .
+						"/* assist ShowAdvanced() in pre-hiding elements with class=advanced */" .
+						"\n" .
+						"--></style>" .
+						"</head>",
+					$html
+				);
+				// #todo templatify
+			}
 		}
 
 

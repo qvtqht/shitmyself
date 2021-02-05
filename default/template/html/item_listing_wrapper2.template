@@ -1,17 +1,3 @@
 <!-- item_listing_wrapper2.template -->
-<font face=arial>
-	<table cellspacing=0 cellpadding=6 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor="$colorTitlebar" class=titlebar>
-			<td>
-				<font color="$colorTitlebarText"><b>Top Threads</b></font>
-			</td>
-		</tr>
-
-		$itemListings
-
-		<tr class=statusbar>
-			<td>12 threads</td>
-		</tr>
-	</table>
-</font>
+$itemListings
 <!-- / item_listing_wrapper2.template -->
