@@ -149,6 +149,11 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		AddToChainLog($fileHash);
 	}
 
+	if (GetCache("indexed/$fileHash")) {
+		WriteLog('IndexTextFile: aleady indexed, returning. $fileHash = ' . $fileHash);
+		return $fileHash;
+	}
+
 	my $authorKey = '';
 
 	if (substr(lc($file), length($file) -4, 4) eq ".txt") {
@@ -937,7 +942,7 @@ sub IndexImageFile { # $file ; indexes one image file into database
 		DBAddPageTouch('index');
 		DBAddPageTouch('flush');
 
-		PutCache('indexed/'.$fileHash, 1);
+		PutCache('indexed/' . $fileHash, 1);
 		return $fileHash;
 	}
 } # IndexImageFile()
@@ -1076,6 +1081,8 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 			}
 		}
 	}
+
+	PutCache("indexed/$indexSuccess", 1);
 
 	return $indexSuccess;
 } # IndexFile()
