@@ -3437,7 +3437,15 @@ sub MakeSimplePage { # given page name, makes page
 	$html .= $contentWindow;
 
 	if ($pageName eq 'desktop') {
-		$html .= GetItemListing();
+		my $tosText = GetString('tos');
+		$tosText = str_replace("\n", '<br>', $tosText);
+		my $tosWindow = GetWindowTemplate(
+			$tosText,
+			'Terms of Service',
+		);
+		$html .= $tosWindow;
+
+		$html .= GetTopAuthorsWindow();
 		$html .= GetSettingsWindow();
 		$html .= GetProfileWindow();
 		$html .= GetStatsTable();
@@ -3450,9 +3458,9 @@ sub MakeSimplePage { # given page name, makes page
 	$html .= GetPageFooter();
 
 	my @scripts = qw(avatar settings profile utils timestamp);
-	if ($pageName eq 'desktop') {
-		push @scripts, 'dragging';
-	}
+#	if (GetConfig('admin/js/dragging') && $pageName eq 'desktop') {
+#		push @scripts, 'dragging';
+#	}
 
 	$html = InjectJs($html, @scripts);
 
