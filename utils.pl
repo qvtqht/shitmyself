@@ -1545,6 +1545,7 @@ sub file_exists { # $file ; port of php file_exists()
 }
 
 sub GetItemEasyFind { #returns Easyfind strings for item
+# easyfind is just breaking up the item's hash into smaller searchable chunks
 	WriteLog('GetItemEasyFind()');
 
 	my $itemHash = shift;
