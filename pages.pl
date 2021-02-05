@@ -2894,9 +2894,10 @@ sub GetReadPage { # generates page with item listing based on parameters
 			$titleHtml = $title;
 
 			my %queryParams;
-			$queryParams{'join_clause'} = "JOIN vote ON (item_flat.file_hash = vote.file_hash)";
-			$queryParams{'group_by_clause'} = "GROUP BY vote.file_hash";
-			$queryParams{'where_clause'} = "WHERE vote.vote_value = '$tagName'";
+			#$queryParams{'join_clause'} = "JOIN vote ON (item_flat.file_hash = vote.file_hash)";
+			#$queryParams{'group_by_clause'} = "GROUP BY vote.file_hash";
+			#$queryParams{'where_clause'} = "WHERE vote.vote_value = '$tagName'";
+			$queryParams{'where_clause'} = "WHERE ','||tags_list||',' LIKE '%,$tagName,%' AND item_score > 0";
 			$queryParams{'order_clause'} = "ORDER BY item_flat.add_timestamp DESC";
 			$queryParams{'limit_clause'} = "LIMIT 100"; #todo fix hardcoded limit
 
@@ -3404,12 +3405,23 @@ sub MakeSimplePage { # given page name, makes page
 	$html .= GetTemplate('html/maincontent.template');
 
 	my $pageContent = GetTemplate("page/$pageName.template");
+
+	if ($pageName eq 'desktop') {
+		$pageContent = '';
+		$pageContent .= GetMenuFromList('menu', 'html/menuitem-p.template');
+		$pageContent .= GetMenuFromList('menu_advanced', 'html/menuitem-p.template')
+	}
+
 	my $contentWindow = GetWindowTemplate(
 		$pageContent,
 		ucfirst($pageName)
 	);
 	my $itemListPlaceholder = '<span id=itemList></span>';
 	if ($pageName eq 'welcome') {
+#		if (GetConfig('admin/js/enable')) {
+#			$html = AddAttributeToTag($html, 'input name=comment', onpaste, "window.inputToChange=this; setTimeout('ChangeInputToTextarea(window.inputToChange); return true;', 100);");
+#		} #input_expand_into_textarea
+
 		if (index($html, $itemListPlaceholder) != -1) {
 			my %queryParams;
 			$queryParams{'where_clause'} = "WHERE item_flat.tags_list LIKE '%welcome%' AND item_flat.tags_list NOT LIKE '%flag%'"; #loose match
@@ -3424,8 +3436,26 @@ sub MakeSimplePage { # given page name, makes page
 	}
 
 	$html .= $contentWindow;
+
+	if ($pageName eq 'desktop') {
+		$html .= GetItemListing();
+		$html .= GetSettingsWindow();
+		$html .= GetProfileWindow();
+		$html .= GetStatsTable();
+		#$html .= GetWriteForm();
+		$html .= GetUploadWindow('html/form/upload.template');
+
+		#$html .= GetTemplate('form/settings.template');
+	}
+
 	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(avatar settings profile utils));
+
+	my @scripts = qw(avatar settings profile utils timestamp);
+	if ($pageName eq 'desktop') {
+		push @scripts, 'dragging';
+	}
+
+	$html = InjectJs($html, @scripts);
 
 	PutHtmlFile("$pageName.html", $html);
 
@@ -3608,9 +3638,12 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	$okPage = InjectJs($okPage, qw(settings));
 	PutHtmlFile("action/event.html", $okPage);
 
+	#MakeSimplePage('calculator'); # calculator.html calculator.template
 	MakeSimplePage('manual'); # manual.html manual.template
 	MakeSimplePage('help'); # help.html help.template
 	MakeSimplePage('welcome'); # welcome.html welcome.template
+	MakeSimplePage('bookmark'); # welcome.html welcome.template
+	MakeSimplePage('desktop'); # welcome.html welcome.template
 	MakeSimplePage('manual_advanced'); # manual_advanced.html manual_advanced.template
 	MakeSimplePage('manual_tokens'); # manual_tokens.html manual_tokens.template
 

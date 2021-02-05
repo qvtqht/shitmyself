@@ -36,7 +36,7 @@
 	<p class=advanced>
 		<label for=chkDraggable>
 			<input type=checkbox id=chkDraggable name=chkDraggable onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'draggable'); }">
-			Make Desktop draggable<noscript><b>*</b></noscript>
+			Allow window repositioning<noscript><b>*</b></noscript>
 		</label>
 	</p>
 </fieldset>
