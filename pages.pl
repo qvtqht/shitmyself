@@ -1691,7 +1691,7 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 	return $menuItems;
 } # GetMenuFromList()
 
-sub GetClockTemplate {
+sub GetClockWidget {
 	my $clock = '';
 	if (GetConfig('html/clock')) {
 		WriteLog('GetPageHeader: html/clock is enabled');
@@ -1731,7 +1731,7 @@ sub GetClockTemplate {
 		$clock = '+';
 	}
 
-	WriteLog('GetClockTemplate: $clock = ' . $clock);
+	WriteLog('GetClockWidget: $clock = ' . $clock);
 
 	return $clock;
 }
@@ -1749,14 +1749,20 @@ sub GetMenuTemplate { # returns menubar
 	}
 
 	my $selfLink = '/access.html';
-	my $clock = GetClockTemplate();
 	my $menuItems = GetMenuFromList('menu');
+	my $menuItemsTag = GetMenuFromList('menu_tag');
 	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
 
 	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
+	$topMenuTemplate =~ s/\$menuItemsTag/$menuItemsTag/g;
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
-	$topMenuTemplate =~ s/\$clock/$clock/g;
+
+	if (GetConfig('html/clock')) {
+		my $clockTemplate = GetClockWidget();
+		$topMenuTemplate = '<form action="/stats.html" name=frmTopMenu>' . $topMenuTemplate . '</form>';
+		$topMenuTemplate =~ s/<span id=spnClock><\/span>/$clockTemplate/g;
+	}
 
 	return $topMenuTemplate;
 } # GetMenuTemplate()

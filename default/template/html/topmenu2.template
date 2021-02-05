@@ -1,23 +1,20 @@
 <!-- topmenu2.template -->
-<form action="/stats.html" name="frmTopMenu">
-	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog width="95%">
-		<tr bgcolor="$colorTopMenuTitlebar" class=titlebar>
-			<td colspan=2>
-				<small>
-				<b>
-					<a tabindex=2 href="#maincontent" name=top><font color="$colorTopMenuTitlebarText">Skip to main content</font></a>;
-					<a href="$selfLink?light=1" tabindex=3><font color="$colorTopMenuTitlebarText">Accessibility mode</font></a>;
-				</b><br>
-				</small>
-			</td>
-		</tr>
-		<tr bgcolor="$colorWindow" class=menubar>
-			<td>
-				<big><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big></big>
-				<a href="/etc.html" accesskey=o>M<u>o</u>re</a>
-			</td>
-			<td align=right>$clock</td>
-		</tr>
-	</table>
-</form>
+<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
+	<tr bgcolor="$colorTopMenuTitlebar" class=titlebar>
+		<td colspan=2>
+			<small>
+			<a tabindex=2 href="#maincontent" name=top><font color="$colorTopMenuTitlebarText">Skip to main content</font></a>;
+			<a href="$selfLink?light=1" tabindex=3><font color="$colorTopMenuTitlebarText">Accessibility mode</font></a>;
+			<br>
+			</small>
+		</td>
+	</tr>
+	<tr bgcolor="$colorWindow" class=menubar>
+		<td>
+			<big><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big> $menuItemsTag</big>
+			<a href="/etc.html" accesskey=o>M<u>o</u>re</a><!-- ShowAll() -->
+			<span id=spnClock></span>
+		</td>
+	</tr>
+</table>
 <!-- / topmenu2.template -->

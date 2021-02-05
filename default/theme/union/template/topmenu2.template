@@ -1,36 +1,36 @@
 <!-- topmenu2.template -->
-<form action="" name="frmTopMenu">
-	<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
-		<tr bgcolor="$colorTitlebar" class=titlebar>
-			<td><small>
-				<b>
-					<small>
-					<a tabindex=2 name=top href="#maincontent"><font color="$colorTitlebarText">Skip to main content</font></a>;
-					<a href="$selfLink?light=1" tabindex=3><font color="$colorTitlebarText">Accessibility mode</font></a>
-					</small>
-				</b>
-			</small><br></td>
-		</tr>
-		<tr class=clock>
-			<td align=center>
-				$clock
-			</td>
-		</tr>
-		<tr bgcolor="$colorWindow" class=menubar>
-			<td>
-				<big>
-					<big style="padding:5pt">
-						<big>
-							$menuItems
-							<span class=advanced>
-								$menuItemsAdvanced
-							</span>
-						</big>
+<table cellspacing=0 cellpadding=3 border=0 bgcolor="$colorWindow" class=dialog>
+	<tr bgcolor="$colorTitlebar" class=titlebar>
+		<td><small>
+			<b>
+				<small>
+				<a tabindex=2 name=top href="#maincontent"><font color="$colorTitlebarText">Skip to main content</font></a>;
+				<a href="$selfLink?light=1" tabindex=3><font color="$colorTitlebarText">Accessibility mode</font></a>
+				</small>
+			</b>
+		</small><br></td>
+	</tr>
+	<tr class=clock>
+		<td align=center>
+			<span id=spnClock></span>
+		</td>
+	</tr>
+	<tr bgcolor="$colorWindow" class=menubar>
+		<td>
+			<big>
+				<big style="padding:5pt">
+					<big>
+						$menuItems
+						<span class=advanced>
+							$menuItemsAdvanced
+						</span>
+						<br>
+						$menuItemsTag
 					</big>
-					<a href="/etc.html">More</a>
 				</big>
-			</td>
-		</tr>
-	</table>
-</form>
+				<a href="/etc.html">More</a>
+			</big>
+		</td>
+	</tr>
+</table>
 <!-- / topmenu2.template -->
