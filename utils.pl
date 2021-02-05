@@ -985,17 +985,26 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		#$content =~ s/\<\!--(.+)--\>/<p class=advanced>$1<\/p>/g;
 	#}
 
-	#########################
-	PutFile($file, $content);
-	#########################
 
-	if (index($content, '$') > -1) {
-		# test for $ character in html output, warn/crash if it is there
-		if (!($fileProvided eq 'openpgp.js')) {
-			# except for openpgp.js, most files should not have $ characters
-			WriteLog('PutHtmlFile: warning: $content contains $ symbol! $file = ' . ($file ? $file : '-'));
+	#############################################
+	my $putFileResult = PutFile($file, $content);
+	#############################################
+
+	{
+		if (index($content, '$') > -1) {
+			# test for $ character in html output, warn/crash if it is there
+			if (!($fileProvided eq 'openpgp.js')) {
+				# except for openpgp.js, most files should not have $ characters
+				WriteLog('PutHtmlFile: warning: $content contains $ symbol! $file = ' . ($file ? $file : '-'));
+			}
+		}
+		if ($content =~ m/<html.+<html/) {
+			# test for duplicate <html> tag
+			WriteLog('PutHtmlFile: warning: $content contains duplicate <html> tags');
 		}
 	}
+
+	return $putFileResult;
 } # PutHtmlFile()
 
 sub GetFileAsHashKeys { # returns file as hash of lines
