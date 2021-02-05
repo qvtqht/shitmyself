@@ -1852,10 +1852,14 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	return $txtIndex;
 }
 
-sub GetItemListing { # similar to GetItemListHtml(), just different version
+sub GetItemListing { # returns listing of items
 	my $htmlOutput = '';
 
 	my @topItems = DBGetTopItems(); # get top items from db
+	my $fileHash = shift;
+	if ($fileHash) {
+		@topItems = DBGetItemReplies($fileHash);
+	}
 
 	my $itemCount = scalar(@topItems);
 
@@ -1899,7 +1903,7 @@ sub GetItemListing { # similar to GetItemListHtml(), just different version
 			}
 			$itemTitle = HtmlEscape($itemTitle);
 
-			my $itemLink = GetHtmlFilename($itemKey);
+			my $itemLink = '/'.GetHtmlFilename($itemKey); #todo this is a bandaid
 
 			my $authorAvatar;
 			if ($authorKey) {
