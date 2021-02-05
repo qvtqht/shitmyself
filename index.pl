@@ -189,7 +189,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 				},
 				{ # parent of item (to which item is replying)
 					'token'   => 'parent',
-					'mask'    => '^(\>\>)(\W?)([0-9a-f]{40})',
+					'mask'    => '^(\>\>)(\W?)([0-9a-f]{40})', # >>
 					'mask_params' => 'mg',
 					'message' => '[Parent]'
 				},
@@ -250,6 +250,16 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 					'mask_params' => 'mgi',
 					'message' => '[Verify]',
 					'apply_to_parent' => 1
+				},
+				{ # #sql token, returns sql results (for privileged users)
+					# example: #sql select author_key, alias from author_alias
+					# must be a select statement, no update etc
+					# to begin with, limited to 1 line; #todo
+					'token' => 'sql',
+					'mask' => '^(sql)(\W).+$',
+					'mask_params' => 'mgi',
+					'message' => '[SQL]',
+					'apply_to_parent' => 0
 				},
 				{ # config token for setting configuration
 					# config/admin/anyone_can_config = allow anyone to config (for open-access boards)
@@ -989,7 +999,7 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	my $currentFile = 0;
 	foreach my $file (@filesToInclude) {
 		$currentFile++;
-		my $percent = $currentFile / $filesCount * 100;
+		my $percent = ($currentFile / $filesCount) * 100;
 		WriteMessage("*** MakeIndex: $currentFile/$filesCount ($percent %) $file");
 		IndexFile($file);
 	}
@@ -1014,7 +1024,7 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 
 		IndexImageFile('flush');
 	} # admin/image/enable
-}
+} # MakeIndex()
 
 sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on extension
 	my $file = shift;
@@ -1023,13 +1033,31 @@ sub IndexFile { # $file ; calls IndexTextFile() or IndexImageFile() based on ext
 		WriteLog('IndexFile: flush was requested');
 		IndexImageFile('flush');
 		IndexTextFile('flush');
-		return;
+		return '';
+	}
+
+	if (!$file) {
+		WriteLog('IndexFile: warning: $file is false');
+		return '';
 	}
 
 	chomp $file;
-	if (!$file || !-e $file || -d $file) {
-		WriteLog('IndexFile: warning: sanity check failed.');
-		return;
+
+	WriteLog('IndexFile: $file = ' . $file);
+	if (!-e $file) {
+		WriteLog('IndexFile: warning: -e $file is false (file does not exist)');
+		return '';
+	}
+
+	if (-d $file) {
+		WriteLog('IndexFile: warning: -d $file was true (file is a directory)');
+		return '';
+	}
+
+	my $fileHash = GetFileHash($file);
+	if (GetCache("indexed/$fileHash")) {
+		WriteLog('IndexFile: aleady indexed, returning. $fileHash = ' . $fileHash);
+		return $fileHash;
 	}
 
 	my $indexSuccess = 0;
