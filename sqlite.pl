@@ -2064,6 +2064,8 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 		push @resultsArray, $row;
 	}
 
+	WriteLog('DBGetItemList: scalar(@resultsArray) = ' . scalar(@resultsArray));
+
 	return @resultsArray;
 } # DBGetItemList()
 
