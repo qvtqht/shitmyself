@@ -1668,15 +1668,19 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 	foreach my $menuItem (@menuList) {
 		my $menuItemName = $menuItem;
 		if ($menuItemName) {
-			my $menuItemUrl	= '/' . $menuItemName . '.html';
+			my $menuItemUrl = '/' . $menuItemName . '.html';
+			# capitalize caption
+			my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
+
+			if ($listName eq 'menu_tag') {
+				$menuItemUrl = '/top/' . $menuItemName . '.html';
+				$menuItemCaption = '#' . $menuItemName;
+			}
 
 			# this avoids creating duplicate urls but currently breaks light mode
 			# if ($menuItemName eq 'index') {
 			# 	$menuItemUrl = '/';
 			# }
-
-			# capitalize caption
-			my $menuItemCaption = uc(substr($menuItemName, 0, 1)) . substr($menuItemName, 1);
 
 			# add menu item to output
 			$menuItems .= GetMenuItem($menuItemUrl, $menuItemCaption, $templateName);
