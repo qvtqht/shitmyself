@@ -2693,7 +2693,7 @@ sub GetAuthorInfoBox {
 	my $authorAliasHtml = GetAlias($authorKey);
 	my $authorAvatarHtml = GetAvatar($authorKey);
 	my $authorImportance = 1;
-	my $authorScore = DBGetAuthorScore($authorKey) || 0;
+	my $authorScore = '';#DBGetAuthorScore($authorKey) || 0;
 	my $itemCount = DBGetAuthorItemCount($authorKey);
 	my $authorDescription = '';
 	my $authorLastSeen = DBGetAuthorLastSeen($authorKey) || 0;
