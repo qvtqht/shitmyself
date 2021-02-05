@@ -731,6 +731,7 @@ sub str_replace { # $replaceWhat, $replaceWith, $string ; emulates some of str_r
 
 	if ($replace_this eq $with_this) {
 		WriteLog('str_replace: warning: $replace_this eq $with_this');
+		WriteLog('str_replace: caller: ' . join(', ', caller));
 		return $string;
 	}
 
@@ -774,6 +775,7 @@ sub str_ireplace { # $replaceWhat, $replaceWith, $string ; emulates some of str_
 
 	if ($replace_this eq $with_this) {
 		WriteLog('str_ireplace: warning: $replace_this eq $with_this');
+		WriteLog('str_ireplace: caller: ' . join(', ', caller));
 		return $string;
 	}
 
