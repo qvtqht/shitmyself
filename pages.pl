@@ -3338,7 +3338,7 @@ sub GetAccessKey { # $caption ; returns access key to use for menu item
 	# tries to find non-conflicting one
 	WriteLog('GetAccessKey()');
 
-	if (GetConfig('html/accesskey')) {
+	if (!GetConfig('html/accesskey')) {
 		return '';
 	}
 
