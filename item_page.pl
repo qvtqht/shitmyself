@@ -97,8 +97,7 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		$file{'item_title'} = 'Untitled';
 	}
 
-	my $itemTemplate = GetItemTemplate(\%file); # GetItemPage()
-
+	my $itemTemplate = GetItemTemplate2(\%file); # GetItemPage()
 	WriteLog('GetItemPage: child_count: ' . $file{'file_hash'} . ' = ' . $file{'child_count'});
 
 	$file{'show_easyfind'} = 0;

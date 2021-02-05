@@ -944,61 +944,75 @@ sub FormatMessage {
 	return $message;
 }
 
-sub GetItemTemplate {
-	my %file = %{shift @_}; #todo should be better formatted
-
-	if (
-		defined($file{'file_hash'}) &&
-		defined($file{'item_type'})
-	) {
-		WriteLog('GetItemTemplate: sanity check passed, defined($file{file_path}');
-
-		my $message = GetItemDetokenedMessage($file{'file_hash'});
-		$message = FormatMessage($message, \%file);
-
-		my $itemTemplate = '';
-		{
-			my %windowParams;
-			$windowParams{'body'} = GetTemplate('html/item/item.template'); # GetItemTemplate()
-			$windowParams{'title'} = HtmlEscape($file{'item_title'});
-			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
-
-			$windowParams{'body'} =~ s/\$itemText/$message/;
-
-			{
-				my $statusBar = '';
-
-				$statusBar .= GetItemHtmlLink($file{'file_hash'}, GetTimestampWidget($file{'add_timestamp'}));
-				$statusBar .= '; ';
-
-				$statusBar .= '<span class=advanced>';
-				$statusBar .= substr($file{'file_hash'}, 0, 8);
-				$statusBar .= '; ';
-				$statusBar .= '</span>';
-
-				if ($file{'author_key'}) {
-					$statusBar .= trim(GetAuthorLink($file{'author_key'}));
-					$statusBar .= '; ';
-				}
-
-				$statusBar .= GetItemTagButtons($file{'file_hash'}, 'all');
-
-				$windowParams{'status'} = $statusBar;
-			}
-			$windowParams{'content'} = $message;
-
-			$itemTemplate = GetWindowTemplate2(\%windowParams);
-		}
-		return $itemTemplate;
-
-	} else {
-		WriteLog('GetItemTemplate: sanity check FAILED, defined($file{file_path}');
-		return '';
-	}
-}
+#sub GetItemTemplate {
+#	my %file = %{shift @_}; #todo should be better formatted
+#
+#	if (
+#		defined($file{'file_hash'}) &&
+#		defined($file{'item_type'})
+#	) {
+#		WriteLog('GetItemTemplate: sanity check passed, defined($file{file_path}');
+#
+#		if ($file{'item_type'} eq 'txt') {
+#			my $message = GetItemDetokenedMessage($file{'file_hash'});
+#			$message = FormatMessage($message, \%file);
+#		}
+#
+#		my $itemTemplate = '';
+#		{
+#			my %windowParams;
+#			$windowParams{'body'} = GetTemplate('html/item/item.template'); # GetItemTemplate()
+#			$windowParams{'title'} = HtmlEscape($file{'item_title'});
+#			$windowParams{'guid'} = substr(sha1_hex($file{'file_hash'}), 0, 8);
+#
+#			$windowParams{'body'} =~ s/\$itemText/$message/;
+#
+#			{
+#				my $statusBar = '';
+#
+#				$statusBar .= GetItemHtmlLink($file{'file_hash'}, GetTimestampWidget($file{'add_timestamp'}));
+#				$statusBar .= '; ';
+#
+#				$statusBar .= '<span class=advanced>';
+#				$statusBar .= substr($file{'file_hash'}, 0, 8);
+#				$statusBar .= '; ';
+#				$statusBar .= '</span>';
+#
+#				if ($file{'author_key'}) {
+#					$statusBar .= trim(GetAuthorLink($file{'author_key'}));
+#					$statusBar .= '; ';
+#				}
+#
+#				WriteLog('GetItemTemplate: ' . $file{'file_hash'} . ': $file{child_count} = ' . $file{'child_count'});
+#
+#				if ($file{'child_count'}) {
+#					$statusBar .= '<a href="' . GetHtmlFilename($file{'file_hash'}) . '#reply">';
+#					if ($file{'child_count'}) {
+#						$statusBar .= 'reply(' . $file{'child_count'} . ')';
+#					} else {
+#						$statusBar .= 'reply';
+#					}
+#					$statusBar .= '</a>; ';
+#				}
+#
+#				$statusBar .= GetItemTagButtons($file{'file_hash'}, 'all');
+#				$windowParams{'status'} = $statusBar;
+#			}
+#
+#			$windowParams{'content'} = $message;
+#
+#			$itemTemplate = GetWindowTemplate2(\%windowParams);
+#		}
+#		return $itemTemplate;
+#
+#	} else {
+#		WriteLog('GetItemTemplate: sanity check FAILED, defined($file{file_path}');
+#		return '';
+#	}
+#} # GetItemTemplate()
 
 sub GetItemTemplate2 { # returns HTML for outputting one item
-	WriteLog("GetItemTemplate() begin");
+	WriteLog("GetItemTemplate2() begin");
 
 	# %file(hash for each file)
 	# file_path = file path including filename
@@ -1115,7 +1129,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 			$message = TextartForWeb($message);
 		} else {
 			# if not textart, just escape html characters
-			WriteLog('GetItemTemplate: calling FormatForWeb');
+			WriteLog('GetItemTemplate2: calling FormatForWeb');
 			$message = FormatForWeb($message);
 		}
 
@@ -1154,7 +1168,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 			# /e = eval
 		}
 
-		WriteLog('GetItemTemplate: $message is: ' . $message);
+		WriteLog('GetItemTemplate2: $message is: ' . $message);
 
 		#hint GetHtmlFilename()
 		#todo verify that the items exist before turning them into links,
@@ -2959,12 +2973,12 @@ sub GetReadPage { # generates page with item listing based on parameters
 #				$row->{'show_quick_vote'} = 1;
 				$row->{'trim_long_text'} = 1;
 
-				WriteLog('GetReadPage: GetItemTemplate($row)');
+				WriteLog('GetReadPage: GetItemTemplate2($row)');
 
-				$itemTemplate = GetItemTemplate($row); # GetReadPage()
+				$itemTemplate = GetItemTemplate2($row); # GetReadPage()
 			}
 			else {
-				$itemTemplate = GetItemTemplate($row); # GetReadPage()
+				$itemTemplate = GetItemTemplate2($row); # GetReadPage()
 				WriteLog('GetReadPage: warning: missing $message');
 			}
 
@@ -3044,7 +3058,7 @@ sub GetItemListHtml { # @files(array of hashes) ; takes @files, returns html lis
 			$row->{'trim_long_text'} = 0;
 
 			my $itemTemplate;
-			$itemTemplate = GetItemTemplate($row); # GetIndexPage()
+			$itemTemplate = GetItemTemplate2($row); # GetIndexPage()
 
 			$itemList = $itemList . $itemComma . $itemTemplate;
 
