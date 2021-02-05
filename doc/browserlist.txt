@@ -1,0 +1,34 @@
+qutebrowser
+opera 12
+ie6
+ie3
+ie4
+ie2
+offbyone
+opera4
+opera3
+netscape2
+netscape3
+netscape4
+netscape6
+links
+lynx
+w3m
+midori
+web
+palemoon
+links-gui
+chromium
+mosaic3
+emacs/eww
+android7 bromite
+android7 chrome
+android7 bromite
+android7 chrome
+ios9 safari
+ie5 mac
+safari mac
+firefox 2 mac
+safari win
+iphone safari
+

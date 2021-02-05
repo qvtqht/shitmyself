@@ -810,14 +810,10 @@ sub ReplaceStrings {
 
 	foreach my $string (@contentStrings) {
 		$string = trim($string);
-
 		if ($string && length($string) >= 5) {
 			my $stringHash = md5_hex($string);
-
 			WriteLog('ReplaceStrings, replacing ' . $string . ' (' . $stringHash . ')');
-
 			my $newString = GetConfig('string/' . $newLanguage . '/' . $stringHash);
-
 			if ($newString) {
 				$content = str_replace($string, $newString, $content);
 			} else {
