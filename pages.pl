@@ -3217,21 +3217,26 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 
 	#my $color = substr(md5_hex($caption), 0, 6);
 
-	my $accessKey = GetAccessKey($caption);
-	if ($accessKey) {
-		$menuItem =~ s/\$address/$address/g;
-		$menuItem = AddAttributeToTag($menuItem, 'a', 'accesskey', $accessKey);
-
+	if (!GetConfig('html/accesskey')) {
+		my $accessKey = GetAccessKey($caption);
+		if ($accessKey) {
+			$menuItem = AddAttributeToTag($menuItem, 'a', 'accesskey', $accessKey);
+			if (GetConfig('html/emoji_menu')) {
+				my $menuItemEmoji = GetString(lc($caption), 'emoji', 1); #lc() is a hack, name should be passed instead of caption
+				$menuItem = AddAttributeToTag($menuItem, 'a', 'title', $caption);
+			} else {
+				$caption =~ s/($accessKey)/<u>$1<\/u>/i;
+			}
+		}
+	} else {
 		if (GetConfig('html/emoji_menu')) {
-			my $menuItemEmoji = GetString(lc($caption), 'emoji', 1);#lc() is a hack, name should be passed instead of caption
-			$menuItem = AddAttributeToTag($menuItem, 'a', 'title', $caption);
-			$menuItem =~ s/\$caption/$caption/g;
-#			$menuItem =~ s/\$caption/$menuItemEmoji ($accessKey)/g;
-		} else {
-			$caption =~ s/($accessKey)/<u>$1<\/u>/i;
-			$menuItem =~ s/\$caption/$caption/g;
+			my $menuItemEmoji = GetString(lc($caption), 'emoji', 1); #lc() is a hack, name should be passed instead of caption
 		}
 	}
+
+	$menuItem =~ s/\$address/$address/g;
+	$menuItem =~ s/\$caption/$caption/g;
+
 
 	# $menuItem =~ s/\$color/$color/g;
 	# $menuItem =~ s/\$firstLetter/$firstLetter/g;
