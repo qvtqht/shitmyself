@@ -4927,7 +4927,7 @@ sub FormatForWeb { # $text ; replaces some spaces with &nbsp; to preserve text-b
 	#	$text =~ s/^ /&nbsp;/g;
 	#	$text =~ s/  / &nbsp;/g;
 
-	$text =~ s/\n\n/<p>/g;
+	#$text =~ s/\n\n/<p>/g; #todo reinstate this when the stylesheet problem is fixed
 	$text =~ s/\n/<br>/g;
 
 	# this is more flexible than \n but may cause problems with unicode
