@@ -225,6 +225,13 @@ sub GetWindowTemplate { # body title headings status menu ; returns html
 	$param{'status'} =  shift;
 	$param{'menu'} = shift;
 
+	if (!$param{'title'}) {
+		WriteLog('GetWindowTemplate: warning: untitled window');
+		my ($package, $filename, $line) = caller;
+		WriteLog('GetWindowTemplate: caller: ' . $package . ',' . $filename . ', ' . $line);
+		$param{'title'} = 'Untitled';
+	}
+
 	return GetWindowTemplate2(\%param);
 } # GetWindowTemplate()
 
