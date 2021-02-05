@@ -734,6 +734,9 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 		WriteLog('GetReplyForm: warning: sanity check failed');
 		return '';
 	}
+
+	WriteLog('GetReplyForm: $replyTo = ' . $replyTo);
+
 	my $replyTag = GetTemplate('html/replytag.template');
 	my $replyForm = GetTemplate('form/write/reply.template');
 
@@ -934,7 +937,7 @@ sub FormatMessage {
 		$message = TextartForWeb($message);
 	} else {
 		# if not textart, just escape html characters
-		WriteLog('GetItemTemplate: calling FormatForWeb');
+		WriteLog('FormatMessage: calling FormatForWeb');
 		$message = FormatForWeb($message);
 	}
 
@@ -1417,7 +1420,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 		WriteLog('GetItemTemplate: warning: return empty string');
 		return '';
 	}
-} # GetItemTemplate()
+} # GetItemTemplate2()
 
 sub GetPageFooter { # returns html for page footer
 	WriteLog('GetPageFooter()');
@@ -1588,7 +1591,7 @@ sub WriteMenuList { # writes config/list/menu based on site configuration
 	}
 
 	#upload
-	if (GetConfig('admin/php/enable') && GetConfig('admin/image/enable')) {
+	if (GetConfig('admin/php/enable') && GetConfig('admin/upload/enable')) {
 		# push @menu, 'art';
 		push @menu, 'upload';
 	}
@@ -1620,8 +1623,6 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 # $listName is reference to a list in config/list, e.g. config/list/menu
 # $separator is what is inserted between menu items
 
-	WriteLog('GetMenuFromList: begin');
-
 	state $wroteMenu;
 	if (!$wroteMenu) {
 		WriteMenuList();
@@ -1631,7 +1632,7 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 	my $listName = shift;
 	chomp $listName;
 	if (!$listName) {
-		WriteLog('GetMenuFromList: no $listName, returning');
+		WriteLog('GetMenuFromList: warning: $listName failed sanity check');
 		return;
 	}
 
@@ -1640,6 +1641,8 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 		$templateName = 'html/menuitem.template';
 	}
 	chomp $templateName;
+
+	WriteLog('GetMenuFromList: $listName = ' . $listName . ', $templateName = ' . $templateName);
 
 	my $listText = GetConfig('list/' . $listName); #list/menu
 	$listText = str_replace(' ', "\n", $listText);
@@ -1668,7 +1671,7 @@ sub GetMenuFromList { # $listName, $templateName = 'html/menuitem.template'; ret
 
 	# return template we've built
 	return $menuItems;
-}
+} # GetMenuFromList()
 
 sub GetClockTemplate {
 	my $clock = '';
@@ -2288,11 +2291,6 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		push @scriptNames, 'fresh';
 	}
 
-	if (GetConfig('admin/js/dragging')) {
-		# include dragging.js script if dragging is enabled
-		push @scriptNames, 'dragging'; 
-	}
-
 	#output list of all the scripts we're about to include
 	my $scriptNamesList = join(' ', @scriptNames);
 
@@ -2594,7 +2592,7 @@ sub GetTopAuthorsListAsHtml {
 
 		my $authorKey = $author{'author_key'};
 		my $authorAlias = $author{'author_alias'};
-		my $authorScore = $author{'author_score'};
+		my $authorScore = '';#$author{'author_score'};
 		my $authorLastSeen = $author{'last_seen'};
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey) || $authorKey;
@@ -3122,6 +3120,10 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	my $address = shift;
 	my $caption = shift;
 
+	#todo more sanity
+
+	WriteLog('GetMenuItem: $address = ' . $address . '; $caption = ' . $caption);
+
 	# if (!-e "$HTMLDIR/$address") {
 	#	#don't make a menu item if file doesn't exist
 	# 	return '';
@@ -3181,7 +3183,7 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 	return $menuItem;
 } # GetMenuItem()
 
-sub WriteIndexPages { # writes the queue pages (index0-n.html)
+sub WriteIndexPages { # writes the compost pages (index0-n.html)
 	# sub MakeIndexPages {
 
 	my $pageLimit = GetConfig('html/page_limit');
@@ -3212,7 +3214,7 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 	#todo does not work as expected, fix it
 
 	if (defined($itemCount) && $itemCount && $itemCount > 0) {
-		my $i;
+		my $i = 0;
 
 		WriteLog('WriteIndexPages: $itemCount = ' . $itemCount);
 
@@ -3243,10 +3245,6 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 			$queryParams{'limit_clause'} = "LIMIT $pageLimit OFFSET $offset";
 			$queryParams{'order_clause'} = 'ORDER BY child_count ASC, add_timestamp DESC';
-			#$queryParams{'order_clause'} = 'ORDER BY add_timestamp DESC';
-			# if ($whereClause) {
-			# 	$queryParams{'where_clause'} = $whereClause;
-			# }
 
 			my @ft = DBGetItemList(\%queryParams);
 
@@ -3261,21 +3259,15 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 			if ($i == 0) {
 				PutHtmlFile("compost.html", $indexPage);
 			}
-		}
+		} # for ($i)
 	} else {
 		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'), 'home_empty');
-
 #		$indexPage .= '<p>It looks like there is nothing to display here. Would you like to write something?</p>';
-
 		#todo this should be in template
 		my $infoMessage = '<p>It looks like there is nothing to display here.</p><p><a href="/write.html">Would you like to write something?</a></p>';
-
 		$indexPage .= GetWindowTemplate($infoMessage, 'No Items');
-
 		$indexPage .= GetPageFooter();
-
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar utils));
-
 		PutHtmlFile("index0.html", $indexPage); #empty/no items
 		PutHtmlFile("compost.html", $indexPage); #empty/no items
 	}
@@ -3283,6 +3275,11 @@ sub WriteIndexPages { # writes the queue pages (index0-n.html)
 
 sub GetAccessKey { # $caption ; returns access key to use for menu item
 	# tries to find non-conflicting one
+	WriteLog('GetAccessKey()');
+
+	if (GetConfig('html/accesskey')) {
+		return '';
+	}
 
 	my $caption = shift;
 	#todo sanity checks
@@ -3374,7 +3371,7 @@ sub MakeSimplePage { # given page name, makes page
 	if ($pageName eq 'welcome') {
 		PutHtmlFile("index.html", $html);
 	}
-}
+} # MakeSimplePage()
 
 sub MakePhpPages {
 	WriteLog('MakePhpPages() begin');
@@ -3695,6 +3692,11 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 } # MakeSummaryPages()
 
 sub GetUploadWindow { # upload window for upload page
+	if (!GetConfig('admin/upload/enable')) {
+		WriteLog('GetUploadWindow: warning: called while admin/upload/enable was false');
+		return '';
+	}
+
 	my $template = shift;
 	if (!$template) {
 		$template = 'upload.template';
@@ -3752,7 +3754,7 @@ sub GetWriteForm { # returns write form (for composing text message)
 			$writeForm =~ s/$postHtml/post.php/;
 		}
 
-		# this is how auto-save to server would work (with privacy implications)
+		# this is how auto-save to server would work (with privacy implications) #autosave
 		# $submitForm =~ s/\<textarea/<textarea onkeyup="if (this.length > 2) { document.forms['compose'].action='\/post2.php'; }" /;
 	}
 
@@ -3791,10 +3793,10 @@ sub GetUploadPage { # returns html for upload page
 	my $html = '';
 	my $title = 'Upload';
 
-	if (GetConfig('admin/php/enable')) {
+	if (GetConfig('admin/php/enable') && GetConfig('admin/upload/enable')) {
 		my $template = shift;
 		if (!$template) {
-			$template = 'html/upload.template';
+			$template = 'html/form/upload.template';
 		}
 		$html .= GetPageHeader($title, $title, 'upload');
 		$html .= GetTemplate('html/maincontent.template');
