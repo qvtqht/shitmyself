@@ -4610,29 +4610,29 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 
 	state %avatarCache;
 
-	my $gpgKey = shift;
-	if (!$gpgKey) {
-		WriteLog('GetAvatar: warning: $gpgKey is false, returning empty string');
+	my $authorKey = shift;
+	if (!$authorKey) {
+		WriteLog('GetAvatar: warning: $authorKey is false, returning empty string');
 		return '';
 	}
-	chomp $gpgKey;
+	chomp $authorKey;
 
-	WriteLog("GetAvatar($gpgKey)");
+	WriteLog("GetAvatar($authorKey)");
 
 	my $noCache = shift;
 	$noCache = ($noCache ? 1 : 0);
 
 	if (! $noCache) {
 		# $noCache is FALSE, so use cache!
-		if ($avatarCache{$gpgKey}) {
+		if ($avatarCache{$authorKey}) {
 			WriteLog('GetAvatar: found in %avatarCache');
-			return $avatarCache{$gpgKey};
+			return $avatarCache{$authorKey};
 		}
-		my $avCacheFile = GetCache("$avatarCacheDir/$gpgKey");
+		my $avCacheFile = GetCache("$avatarCacheDir/$authorKey");
 		if ($avCacheFile) {
-			$avatarCache{$gpgKey} = $avCacheFile;
-			WriteLog('GetAvatar: found cache, returning: $avatarCache{$gpgKey} = ' . $avatarCache{$gpgKey});
-			return $avatarCache{$gpgKey};
+			$avatarCache{$authorKey} = $avCacheFile;
+			WriteLog('GetAvatar: found cache, returning: $avatarCache{$authorKey} = ' . $avatarCache{$authorKey});
+			return $avatarCache{$authorKey};
 		}
 	} else {
 		WriteLog('GetAvatar: $noCache is true, ignoring cache');
@@ -4651,18 +4651,18 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	}
 
 	my $redditUsername = '';
-	if ($gpgKey) {
-		WriteLog('GetAvatar: $gpgKey = ' . $gpgKey);
+	if ($authorKey) {
+		WriteLog('GetAvatar: $authorKey = ' . $authorKey);
 
-		my $authorPubKeyHash = DBGetAuthorPublicKeyHash($gpgKey) || '';
+		my $authorPubKeyHash = DBGetAuthorPublicKeyHash($authorKey) || '';
 		WriteLog('GetAvatar: $authorPubKeyHash = ' . $authorPubKeyHash);
 		my $authorItemAttributes = $authorPubKeyHash ? DBGetItemAttribute($authorPubKeyHash) : '' || '';
 		WriteLog('GetAvatar: $authorItemAttributes = ' . $authorItemAttributes);
 
-		my $hasReddit = 0;
+		my $isVerified = 0;
 		my $alias = '';
 		if (!$alias) {
-			$alias = GetAlias($gpgKey, $noCache);
+			$alias = GetAlias($authorKey, $noCache);
 			$alias = trim($alias);
 		}
 		if ($authorItemAttributes) {
@@ -4670,7 +4670,8 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 				my ($authorAttribute, $authorAttributeValue) = split('\|', $authorAttributeLine);
 				WriteLog('GetAvatar: $authorAttribute = ' . $authorAttribute);
 
-				if ($authorAttribute eq 'reddit_username') { #todo add or admin
+				if ($authorAttribute eq 'gpg_id') { #todo add or admin
+#				if ($authorAttribute eq 'reddit_username') { #todo add or admin
 					WriteLog('GetAvatar: found reddit_username!');
 
 					$redditUsername = $authorAttributeValue;
@@ -4691,17 +4692,17 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		} # $authorItemAttributes
 
 		if (GetConfig('html/avatar_icons')) {
-			my $color1 = '#' . substr($gpgKey, 0, 6);
-			my $color2 = '#' . substr($gpgKey, 3, 6);
-			my $color3 = '#' . substr($gpgKey, 6, 6);
-			my $color4 = '#' . substr($gpgKey, 9, 6);
-			my $color5 = '#' . substr($gpgKey, 12, 4) . substr($gpgKey, 0, 2);
-			my $color6 = '#' . substr($gpgKey, 1, 6);
-			my $color7 = '#' . substr($gpgKey, 2, 6);
-			my $color8 = '#' . substr($gpgKey, 4, 6);
-			my $color9 = '#' . substr($gpgKey, 5, 6);
-			my $colorA = '#' . substr($gpgKey, 7, 6);
-			my $colorB = '#' . substr($gpgKey, 8, 6);
+			my $color1 = '#' . substr($authorKey, 0, 6);
+			my $color2 = '#' . substr($authorKey, 3, 6);
+			my $color3 = '#' . substr($authorKey, 6, 6);
+			my $color4 = '#' . substr($authorKey, 9, 6);
+			my $color5 = '#' . substr($authorKey, 12, 4) . substr($authorKey, 0, 2);
+			my $color6 = '#' . substr($authorKey, 1, 6);
+			my $color7 = '#' . substr($authorKey, 2, 6);
+			my $color8 = '#' . substr($authorKey, 4, 6);
+			my $color9 = '#' . substr($authorKey, 5, 6);
+			my $colorA = '#' . substr($authorKey, 7, 6);
+			my $colorB = '#' . substr($authorKey, 8, 6);
 
 			$alias = encode_entities2($alias);
 			#$alias = encode_entities($alias, '<>&"');
@@ -4711,9 +4712,9 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 				my $char2;
 				my $char3;
 
-				$char1 = substr($gpgKey, 12, 1);
-				$char2 = substr($gpgKey, 13, 1);
-				$char3 = substr($gpgKey, 14, 1);
+				$char1 = substr($authorKey, 12, 1);
+				$char2 = substr($authorKey, 13, 1);
+				$char3 = substr($authorKey, 14, 1);
 
 				# 
 				$char1 =~ tr/0123456789ABCDEF/)!]#$%^&*(;,.:['/;
@@ -4758,7 +4759,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		}
 		#$avatar =~ s/\$alias/$aliasHtmlEscaped/g;
 	} else {
-		WriteLog('GetAvatar: warning: sanity check failed, $gpgKey is false');
+		WriteLog('GetAvatar: warning: sanity check failed, $authorKey is false');
 		$avatar = "";
 	}
 
@@ -4769,16 +4770,16 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 	if ($redditUsername) {
 		$colorUsername = GetThemeColor('verified');
 	}
-	if (IsAdmin($gpgKey)) {
+	if (IsAdmin($authorKey)) {
 		$colorUsername = GetThemeColor('admin');
 	}
 	WriteLog('GetAvatar: $colorUsername = ' . $colorUsername);
 	$avatar =~ s/\$colorUsername/$colorUsername/g;
 
-	$avatarCache{$gpgKey} = $avatar;
+	$avatarCache{$authorKey} = $avatar;
 
 	if ($avatar) {
-		PutCache("$avatarCacheDir/$gpgKey", $avatar);
+		PutCache("$avatarCacheDir/$authorKey", $avatar);
 	}
 
 	return $avatar;
