@@ -2639,8 +2639,8 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	return $html;
 }
 
-sub GetTopAuthorsListAsHtml {
-	WriteLog('GetTopAuthorsListAsHtml() begin');
+sub GetTopAuthorsWindow {
+	WriteLog('GetTopAuthorsWindow() begin');
 
 	my @topAuthors = DBGetTopAuthors();
 	my $authorListings = '';
@@ -2688,28 +2688,23 @@ sub GetTopAuthorsListAsHtml {
 		$authorListings .= $authorItemTemplate;
 	}
 
-	return $authorListings;
-} # GetTopAuthorsListAsHtml()
+	my $window = GetWindowTemplate($authorListings, 'Authors', 'name,score,seen,action', '', '');
+
+	return $window;
+} # GetTopAuthorsWindow()
 
 sub GetAuthorsPage {
 	WriteLog('GetAuthorsPage() begin');
 
 	my $html = '';
 	my $title = 'Authors';
-
 	$html .= GetPageHeader($title, $title, 'scoreboard');
-	my $topAuthors = GetTopAuthorsListAsHtml();
-
 	$html .= GetTemplate('html/maincontent.template');
 
-	my $window = GetWindowTemplate($topAuthors, $title, 'name,score,seen,action', '', '');
-
-	$html .= $window;
+	$html .= GetTopAuthorsWindow();
 
 	$html .= GetPageFooter();
-
 	$html = InjectJs($html, qw(utils settings avatar timestamp profile voting));
-
 	return $html;
 }
 
