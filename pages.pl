@@ -2326,6 +2326,10 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		push @scriptNames, 'fresh';
 	}
 
+	if (GetConfig('admin/js/dragging')) {
+		push @scriptNames, 'dragging';
+	}
+
 	#output list of all the scripts we're about to include
 	my $scriptNamesList = join(' ', @scriptNames);
 
