@@ -309,6 +309,14 @@ sub SqliteMakeTables { # creates sqlite schema
 		");
 
 		SqliteQuery2("
+			insert into vote_value(vote, value) values('like', 1);
+		");
+
+		SqliteQuery2("
+			insert into vote_value(vote, value) values('pubkey', 1);
+		");
+
+		SqliteQuery2("
 			insert into vote_value(vote, value) values('textart', 1);
 		");
 
