@@ -482,6 +482,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 									# #todo create a whitelist of safe keys non-admins can change
 
 									DBAddConfigValue($configKeyActual, $configValue, 0, 0, $fileHash);
+									WriteIndexedConfig();
 									$message = str_replace($tokenFound{'recon'}, "[Config: $configKeyActual = $configValue]", $message);
 									$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
 								} else {
