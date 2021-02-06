@@ -666,21 +666,23 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							} # has parents
 						} # #admin #approve
 						else { # non-permissioned hashtags
+							WriteLog('IndexTextFile: non-permissioned hashtag');
 							if ($tokenFound{'param'} =~ /^[0-9a-zA-Z_]+$/) { #todo actual hashtag format
+								WriteLog('IndexTextFile: hashtag sanity check passed');
 								my $hashTag = $tokenFound{'param'};
 								if (scalar(@itemParents)) { # item has parents to apply tag to
+									WriteLog('IndexTextFile: parents found, applying hashtag to them');
+
 									foreach my $itemParentHash (@itemParents) { # apply to all parents
+										WriteLog('IndexTextFile: applying hashtag, $itemParentHash = ' . $itemParentHash);
 										if ($authorKey) {
+											WriteLog('IndexTextFile: $authorKey = ' . $authorKey);
 											# include author's key if message is signed
 											DBAddVoteRecord($itemParentHash, 0, $hashTag, $authorKey, $fileHash);
 										}
 										else {
-											if ($authorKey) {
-												# include author's key if message is cookied
-												DBAddVoteRecord($itemParentHash, 0, $hashTag, $authorKey, $fileHash);
-											} else {
-												DBAddVoteRecord($itemParentHash, 0, $hashTag, '', $fileHash);
-											}
+											WriteLog('IndexTextFile: $authorKey was FALSE');
+											DBAddVoteRecord($itemParentHash, 0, $hashTag, '', $fileHash);
 										}
 										DBAddPageTouch('item', $itemParentHash);
 									} # @itemParents
