@@ -3231,7 +3231,7 @@ sub GetMenuItem { # $address, $caption; returns html snippet for a menu item (us
 
 	#my $color = substr(md5_hex($caption), 0, 6);
 
-	if (!GetConfig('html/accesskey')) {
+	if (GetConfig('html/accesskey')) {
 		my $accessKey = GetAccessKey($caption);
 		if ($accessKey) {
 			$menuItem = AddAttributeToTag($menuItem, 'a', 'accesskey', $accessKey);
@@ -3353,6 +3353,7 @@ sub GetAccessKey { # $caption ; returns access key to use for menu item
 	WriteLog('GetAccessKey()');
 
 	if (!GetConfig('html/accesskey')) {
+		WriteLog('GetAccessKey: warning: sanity check failed');
 		return '';
 	}
 
