@@ -1,0 +1,14 @@
+/* dragging.css */
+
+table.dialog {
+	display: inline-block;
+	vertical-align: top;
+}
+form {
+	display: inline;
+}
+hr {
+	display: none;
+}
+
+/* / dragging.css */

@@ -139,6 +139,10 @@ sub GetStylesheet { # returns style template based on config
 		# add style for color avatars if that's the setting
 	}
 
+	if (GetConfig('admin/js/dragging')) {
+		$style .= "\n" . GetTemplate('css/dragging.css');
+	}
+
 	if (GetThemeAttribute('additional.css')) {
 		$style .= "\n" . GetThemeAttribute('additional.css');
 	}
