@@ -2520,7 +2520,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 					$html,
 					'body',
 					'onbeforeunload',
-					'window.flagUnloaded=1'
+					'window.flagUnloaded=1;window.eventLoopFresh=0;'
 #					'if (window.OnUnloadEverything) { OnUnloadEverything(); }'
 				);
 			} else {
