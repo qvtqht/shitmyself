@@ -1752,9 +1752,8 @@ sub GetMenuTemplate { # returns menubar
 			$topMenuTemplate,
 			'a href="/etc.html"',
 			'onclick',
-			"if (window.ShowAll) { return ShowAll(this); } else { return true; }"
-			#"if (window.SetPrefs) { SetPrefs('show_advanced', 1); SetPrefs('highlight_advanced', 1); }; if (window.ShowAll) { return ShowAll(this); } else { return true; }"
-		);
+			"if (window.ShowAll) { ShowAll(this); } if (window.DraggingInit) { DraggingInit(0); } return false;"
+		); # &pi;
 	}
 
 	my $selfLink = '/access.html';
