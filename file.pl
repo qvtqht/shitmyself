@@ -1,6 +1,7 @@
 #!/usr/bin/perl -T
 
 use strict;
+use strict;
 use 5.010;
 use utf8;
 
@@ -19,7 +20,7 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	}
 
 	if (!GetConfig('admin/organize_files')) {
-		WriteLog('OrganizeFile: warning: admin/organize_files was false, returning.');
+		WriteLog('OrganizeFile: warning: admin/organize_files was false! returning');
 		return $file;
 	}
 
@@ -30,7 +31,7 @@ sub OrganizeFile { # $file ; renames file based on hash of its contents
 	}
 
 	if (GetConfig('admin/dev/block_organize')) {
-		WriteLog('OrganizeFile: dev/block_organize is on, returning');
+		WriteLog('OrganizeFile: dev/block_organize is true, returning');
 		return $file;
 	}
 
