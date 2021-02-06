@@ -2695,16 +2695,14 @@ sub GetTopAuthorsWindow {
 
 		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
 		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
-		$authorItemTemplate =~ s/\$authorScore/$authorScore/g;
 		$authorItemTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
 		$authorItemTemplate =~ s/\$authorItemCount/$authorItemCount/g;
 		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
-		$authorItemTemplate =~ s/\$authorVoteButtons/$authorVoteButtons/g;
 
 		$authorListings .= $authorItemTemplate;
 	}
 
-	my $window = GetWindowTemplate($authorListings, 'Authors', 'name,score,seen,action', '', '');
+	my $window = GetWindowTemplate($authorListings, 'Authors', 'name,seen', '', '');
 
 	return $window;
 } # GetTopAuthorsWindow()
