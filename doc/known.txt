@@ -89,7 +89,7 @@ trying to set xhr.timeout causes error in chrome
 
 Hashtags are stripped out of default title
 
-config/replies
+config/reply
 default/html/reply_form_before_reply_list
 default/html/reply_form_after_reply_list
 	two reply forms on one page may cause issues with js.

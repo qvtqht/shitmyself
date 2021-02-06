@@ -1,3 +1,15 @@
+touching any of the operator buttons should redflag the clirtent
+
+maybe #remove and other power decisions can be decided by admin score?
+	eg can admin remove another admin's posts?
+
+very basic way of fitting windows into page:
+	shuffle them around
+	look for right-most and bottom-most window edge
+	optimize for these numbers being lowest
+
+#addtag turns anything into a hashtag
+
 if (function exists callfunc) {
 	callfunc('function', 'argg1', 'arg2');
 } else {
@@ -3709,3 +3721,6 @@ perhaps it makes sense to not make it go away and just leave it there, unless it
 the skip links look strange in links browser, and they do not collapse the dialog, so maybe they should say skip unless js?
 
 #meta
+
+WriteLog('begin_capture'); end_capture
+Then output what's in between to extended report on page or item

@@ -1,3 +1,31 @@
+Record what feature is accessed after pi button to decide what to show/hide
+	a la ms office 2000/win2000
+
+post -->
+<-- receipt (received=messageid = thanks button)
+--> receipt for receipt
+
+//#DBGetAuthorScore
+//#fallback timeout for keygen #todo
+
+
+no replies or reply form on item pages #bug
+
+add checkboxes to item template
+
+getitempage should try to index a file by hashpath
+
+frontend_dev_loop.pl
+	md5sum default/templates
+	if changed, clean_html, clean_template, generate
+
+split gpg from openpgp stuff
+	and add enable flags for both
+
+/top/... pages should be sorted by number of that tag applied
+
+#bug same js template gets injected more than once
+
 #bug without default/admin/accept_404_url_text_reduce_spam much spam due to ?message=
 
 ensure all js functions

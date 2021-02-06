@@ -30,7 +30,7 @@ item_threads(x) as (
 
 select distinct count(page_name) c, page_name from page_touch group by page_name order by c;
 
-SELECT task_name, task_param, touch_time, (task_name in ('index', 'rss', 'scores' , 'stats' , 'tags', 'top')) as priority_page
+SELECT task_name, task_param, touch_time, (task_name in ('index', 'rss', 'authors' , 'stats' , 'tags', 'top')) as priority_page
 		FROM page_touch
 		WHERE task_type = 'page' AND touch_time >= 1567032513
 		ORDER BY priority_page desc, touch_time
