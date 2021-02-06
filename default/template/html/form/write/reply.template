@@ -10,7 +10,7 @@
 		name=comment
 	></textarea>
 	<br>
-	<input type=submit value="Send Reply">
+	<input id=btnSendReply type=submit value="Send Reply">
 	<span id=spanSignAs></span>
 	<span class=advanced>
 		<hr>

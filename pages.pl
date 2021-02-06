@@ -754,12 +754,17 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 	if (GetConfig('admin/js/enable')) {
 		$replyForm = AddAttributeToTag(
 			$replyForm,
-			'input type=submit',
+			'input id=btnSendReply',
 			'onclick',
 #			"this.value='Meditate...';if(window.writeSubmit){return writeSubmit(this);}"
 			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); return true; } else { return true; }"
 		);
+
 		#todo the return value can be changed from false to true to issue two submissions, one signed and one not
+		#		Use this line instead for improved delivery, but duplicate messages
+		#			#todo merge the duplicates server-side
+		#			"this.value = 'Meditate...'; if (window.writeSubmit) { setTimeout('writeSubmit();', 1); return false; } else { return true; }"
+
 
 		if (GetConfig('admin/php/enable')) {
 			$replyForm = AddAttributeToTag($replyForm, 'textarea', 'onchange', "if (window.commentOnChange) { return commentOnChange(this, 'compose'); } else { return true; }");
@@ -776,7 +781,7 @@ sub GetReplyForm { # $replyTo ; returns reply form for specified item
 				'if (window.translitKey) { translitKey(event, this); } else { return true; }'
 			);
 		}
-	}
+	} # GetConfig('admin/js/enable')
 
 	$replyForm = GetWindowTemplate($replyForm, 'Reply');
 
