@@ -495,6 +495,7 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 
 		WriteLog('SqliteQuery2: $query = ' . $queryOneLine);
 		WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
+		WriteLog('SqliteQuery2: caller: ' . join(', ', caller));
 
 		if ($dbh) {
 			WriteLog('SqliteQuery2: $dbh was found, proceeding...');
@@ -1550,14 +1551,10 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 	if ($filePath eq 'flush') {
 		if ($query) {
 			WriteLog("DBAddItem(flush)");
-
 			$query .= ';';
-
 			SqliteQuery2($query, @queryParams);
-
 			$query = '';
 			@queryParams = ();
-
 			DBAddItemAttribute('flush');
 		}
 
@@ -1580,6 +1577,11 @@ sub DBAddItem { # $filePath, $itemName, $authorKey, $fileHash, $itemType, $verif
 
 	if (!$authorKey) {
 		$authorKey = '';
+	}
+
+	if (!$itemName) {
+		$itemName = 'untitled';
+		WriteLog('DBAddItem: warning: $itemName missing; $filePath = ' . $filePath);
 	}
 #
 #	if ($authorKey) {
