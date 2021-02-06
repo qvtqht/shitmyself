@@ -1860,13 +1860,28 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 	return $txtIndex;
 }
 
-sub GetItemListing { # returns listing of items
+sub GetItemListing { # returns listing of items based on topic
 	my $htmlOutput = '';
 
-	my @topItems = DBGetTopItems(); # get top items from db
+	my @topItems;
+
 	my $fileHash = shift;
-	if ($fileHash) {
+	my $title = 'Welcome, Guest!';
+
+	if (!$fileHash) {
+		$fileHash = 'top';
+	}
+
+	if ($fileHash eq 'top') {
+		@topItems = DBGetTopItems(); # get top items from db
+	} else {
 		@topItems = DBGetItemReplies($fileHash);
+		$title = 'Replies';
+	}
+
+	if (!@topItems) {
+		WriteLog('GetItemListing: warning @topItems missing, sanity check failed');
+		return '';
 	}
 
 	my $itemCount = scalar(@topItems);
@@ -1956,7 +1971,7 @@ sub GetItemListing { # returns listing of items
 
 		$itemListingWrapper = GetWindowTemplate(
 			$itemListings,
-			'Welcome, Guest!',
+			$title,
 			$columnHeadings,
 			$statusText
 		);
@@ -1982,7 +1997,7 @@ sub GetTopItemsPage { # returns page with top items listing
 	$htmlOutput = GetPageHeader($title, $titleHtml, 'read'); # <html><head>...</head><body>
 	$htmlOutput .= GetTemplate('html/maincontent.template'); # where "skip to main content" goes
 
-	$htmlOutput .= GetItemListing();
+	$htmlOutput .= GetItemListing('top');
 
 	$htmlOutput .= GetPageFooter(); # </body></html>
 
@@ -2660,16 +2675,9 @@ sub GetTopAuthorsWindow {
 
 		my $authorKey = $author{'author_key'};
 		my $authorAlias = $author{'author_alias'};
-		my $authorScore = '';#$author{'author_score'};
 		my $authorLastSeen = $author{'last_seen'};
 		my $authorItemCount = $author{'item_count'};
 		my $authorAvatar = GetHtmlAvatar($authorKey) || $authorKey;
-
-		my $authorVoteButtons = GetItemTagButtons($authorKey, 'author');
-
-		if (!$authorVoteButtons) {
-			$authorVoteButtons = '-';
-		}
 
 		my $authorLink = GetAuthorLink($authorKey) || '(blank)';
 #		my $authorFriendKey = $authorFriend->{'author_key'};
