@@ -2386,80 +2386,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			$scriptsText .= $scriptsComma;
 		}
 
-		my $scriptTemplate = GetTemplate("js/$script.js");
-
-		if (!$scriptTemplate) {
-			WriteLog("InjectJs: WARNING: Missing script contents for $script");
-		}
-
-		if ($script eq 'voting') {
-			# for voting.js we need to fill in some theme colors
-			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
-			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
-
-			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
-			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
-		}
-
-		if ($script eq 'puzzle') {
-			# for voting.js we need to fill in some theme colors
-			my $puzzlePrefix = GetConfig('puzzle/prefix');;
-			my $puzzleCycleLimit = GetConfig('puzzle/cycle_limit');
-
-			WriteLog('InjectJs: puzzle: $puzzlePrefix = ' . $puzzlePrefix);
-			WriteLog('InjectJs: puzzle: $puzzleCycleLimit = ' . $puzzleCycleLimit);
-
-			$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$puzzlePrefix';/g;
-			$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $puzzleCycleLimit;/g;
-		}
-
-		if ($script eq 'profile') {
-			#todo this should work for all admins, not just root
-			# for profile.js we need to fill in current admin id
-			my $currentAdminId = '';#GetRootAdminKey() || '-';
-			#todo this whole thing should change to include non-root admins
-			$scriptTemplate =~ s/\$currentAdminId/$currentAdminId/g;
-		}
-
-		#if ($script eq 'settings' || $script eq 'loading_begin') {
-		if (
-				$script eq 'settings' ||
-				$script eq 'timestamp'
-		) {
-			# for settings.js we also need to fill in some theme colors
-			my $colorHighlightAlert = GetThemeColor('highlight_alert');
-			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
-			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-
-			$scriptTemplate =~ s/\$colorHighlightAlert/$colorHighlightAlert/g;
-			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
-			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
-
-			my $colorRecentTimestamp = GetThemeColor('recent_timestamp');
-			if ($colorRecentTimestamp) {
-				$scriptTemplate =~ s/\$colorRecentTimestamp/$colorRecentTimestamp/g;
-			} else {
-				$colorRecentTimestamp = '#808000';
-				$scriptTemplate =~ s/\$colorRecentTimestamp/$colorRecentTimestamp/g;
-			}
-		}
-
-		if (index($scriptTemplate, '>') > -1) {
-			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-			WriteLog('InjectJs(): warning: Inject script "' . $script . '" contains > character');
-		}
-
-		if (GetConfig('admin/js/debug')) {
-			#uncomment all javascript debug alert statements
-			#and replace them with confirm()'s which stop on no/cancel
-			#
-			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
-			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-
-			#$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-			$scriptTemplate = EnableJsDebug($scriptTemplate);
-		}
-
+		my $scriptTemplate = GetScriptTemplate("$script");
 		# add to the snowball of javascript
 		$scriptsText .= $scriptTemplate;
 	}
@@ -2532,6 +2459,94 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	return $html;
 } # InjectJs()
 
+sub GetScriptTemplate { # $script ; returns script for name
+# default/template/js/$script.js
+# config/template/js/$script.js
+# fills in theme colors and server-side settings
+	my $script = shift;
+
+	#todo sanity
+
+	my $scriptTemplate = GetTemplate("js/$script.js");
+
+	if (!$scriptTemplate) {
+		WriteLog("InjectJs: WARNING: Missing script contents for $script");
+	}
+
+	if ($script eq 'fresh') {
+		#todo this should work for all admins, not just root
+		# for profile.js we need to fill in current admin id
+		if (GetConfig('admin/dev/fresh_reload')) {
+			$scriptTemplate =~ s/freshUserWantsReload/1/g;
+		}
+	}
+
+	if ($script eq 'voting') {
+		# for voting.js we need to fill in some theme colors
+		my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
+		my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
+
+		$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
+		$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
+	}
+
+	if ($script eq 'puzzle') {
+		# for voting.js we need to fill in some theme colors
+		my $puzzlePrefix = GetConfig('puzzle/prefix');;
+		my $puzzleCycleLimit = GetConfig('puzzle/cycle_limit');
+
+		WriteLog('InjectJs: puzzle: $puzzlePrefix = ' . $puzzlePrefix);
+		WriteLog('InjectJs: puzzle: $puzzleCycleLimit = ' . $puzzleCycleLimit);
+
+		$scriptTemplate =~ s/var lookingFor = '1337';/var lookingFor = '$puzzlePrefix';/g;
+		$scriptTemplate =~ s/var cycleLimit = 1000000;/var cycleLimit = $puzzleCycleLimit;/g;
+	}
+
+	if ($script eq 'profile') {
+		#todo this should work for all admins, not just root
+		# for profile.js we need to fill in current admin id
+		my $currentAdminId = '';#GetRootAdminKey() || '-';
+		#todo this whole thing should change to include non-root admins
+		$scriptTemplate =~ s/\$currentAdminId/$currentAdminId/g;
+	}
+
+	#if ($script eq 'settings' || $script eq 'loading_begin') {
+	if (
+			$script eq 'settings' ||
+			$script eq 'timestamp'
+	) {
+		# for settings.js we also need to fill in some theme colors
+		my $colorHighlightAlert = GetThemeColor('highlight_alert');
+		my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
+		my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
+
+		$scriptTemplate =~ s/\$colorHighlightAlert/$colorHighlightAlert/g;
+		$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
+		$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
+
+		my $colorRecentTimestamp = GetThemeColor('recent_timestamp');
+		if ($colorRecentTimestamp) {
+			$scriptTemplate =~ s/\$colorRecentTimestamp/$colorRecentTimestamp/g;
+		} else {
+			$colorRecentTimestamp = '#808000';
+			$scriptTemplate =~ s/\$colorRecentTimestamp/$colorRecentTimestamp/g;
+		}
+	}
+
+	if (index($scriptTemplate, '>') > -1) {
+		# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
+		WriteLog('GetScriptTemplate: warning: Inject script "' . $script . '" contains > character');
+	}
+
+	if (GetConfig('admin/js/debug')) {
+		#uncomment all javascript debug alert statements
+		#and replace them with confirm()'s which stop on no/cancel
+		$scriptTemplate = EnableJsDebug($scriptTemplate);
+	}
+
+	return $scriptTemplate;
+}
+
 sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js template(s) before </body> ;
 #todo, once i figure out how to pass an array and/or need this in perl:
 # to copy php version
@@ -2590,46 +2605,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 			$scriptsText .= $scriptsComma;
 		}
 
-		my $scriptTemplate = GetTemplate("js/$script.js");
-
-		if (!$scriptTemplate) {
-			WriteLog("InjectJs: WARNING: Missing script contents for $script");
-		}
-
-		if ($script eq 'voting') {
-			# for voting.js we need to fill in some theme colors
-			my $colorSuccessVoteUnsigned = GetThemeColor('success_vote_unsigned');
-			my $colorSuccessVoteSigned = GetThemeColor('success_vote_signed');
-
-			$scriptTemplate =~ s/\$colorSuccessVoteUnsigned/$colorSuccessVoteUnsigned/g;
-			$scriptTemplate =~ s/\$colorSuccessVoteSigned/$colorSuccessVoteSigned/g;
-		}
-
-		if ($script eq 'settings') {
-			# for settings.js we also need to fill in some theme colors
-			my $colorHighlightAdvanced = GetThemeColor('highlight_advanced');
-			my $colorHighlightBeginner = GetThemeColor('highlight_beginner');
-
-			$scriptTemplate =~ s/\$colorHighlightAdvanced/$colorHighlightAdvanced/g;
-			$scriptTemplate =~ s/\$colorHighlightBeginner/$colorHighlightBeginner/g;
-		}
-
-		if (index($scriptTemplate, '>') > -1) {
-			# warning here if script content contains > character, which is incompatible with mosaic's html comment syntax
-			WriteLog('InjectJs(): warning: Inject script "' . $script . '" contains > character');
-		}
-
-		if (GetConfig('admin/js/debug')) {
-			#uncomment all javascript debug alert statements
-			#and replace them with confirm()'s which stop on no/cancel
-			#
-			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/alert('DEBUG:/g;
-			# $scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=confirm('DEBUG:/g;
-
-			#$scriptTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-			$scriptTemplate = EnableJsDebug($scriptTemplate);
-
-		}
+		my $scriptTemplate = GetScriptTemplate($script);
 
 		# add to the snowball of javascript
 		$scriptsText .= $scriptTemplate;
