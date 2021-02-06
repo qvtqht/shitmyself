@@ -15,9 +15,9 @@ BuildMessage "Require ./utils.pl...";
 require './gpgpg.pl';
 require './utils.pl';
 
-EnsureDirsThatShouldExist();
+#EnsureDirsThatShouldExist();
 
-CheckForInstalledVersionChange();
+#CheckForInstalledVersionChange();
 
 #CheckForRootAdminChange();
 
