@@ -52,7 +52,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 	return 1;
 } // SetElementVisible()
 
-function ShowAll (t, container) { // shows all elements, overriding settings
+function ShowAll (t, container) { // t = clicked link ; container = document by default ; shows all elements, overriding settings
 // admin elements are excluded. only beginner, advanced class elements are shown
 	var gt = unescape('%3E');
 

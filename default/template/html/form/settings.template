@@ -36,7 +36,7 @@
 	<p class=advanced>
 		<label for=chkDraggable>
 			<input type=checkbox id=chkDraggable name=chkDraggable onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'draggable'); }">
-			Allow window repositioning<noscript><b>*</b></noscript>
+			Enable draggable automatically<noscript><b>*</b></noscript>
 		</label>
 	</p>
 </fieldset>
@@ -58,53 +58,5 @@
 	</label>
 </p>
 
-</fieldset>
-
-<fieldset class=admin>
-	<p><hr></p>
-
-	<legend><b>Operator's Console</b></legend>
-	<p>
-		<span class=beginner>
-			To activate, check box, then press button.<br>
-			This helps prevent accidental activation.<br>
-		</span>
-	</p>
-	<p>
-		<span class=beginner>Upgrade software to latest version:<br></span>
-		<label for=chkUpgrade>
-			<input type=checkbox id=chkUpgrade name=chkUpgrade>
-			Upgrade
-		</label>
-
-		<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
-	</p>
-	<p>
-		<span class=beginner>
-			Use Flush to make space for new content<br>
-			Existing content may become inaccessible.<br>
-		</span>
-
-		<label for=chkFlush>
-			<input type=checkbox id=chkFlush name=chkFlush>
-			Flush
-		</label>
-
-		<input type=submit name=btnFlush id=btnFlush value=Flush>
-	</p>
-</fieldset>
-
-<fieldset class=admin>
-	<p><hr></p>
-
-	<legend><b>Content Filter</b><br></legend>
-	<span class=beginner>(This doesn't do anything at the moment.)<br></span>
-	<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
-	<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label><br>
-	<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label><br>
-	<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label><br>
-	<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label><br>
-	<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
-	<!-- As long as it's five nines, the decimal position doesn't matter -->
 </fieldset>
 <!-- / settings.template -->

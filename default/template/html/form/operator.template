@@ -1,0 +1,60 @@
+<!-- operator.template -->
+
+<fieldset class=beginner>
+	<legend><b>Attention:</b><br></legend>
+	Use operator controls with care!<br>
+	Improper use may cause data loss and/or downtime.<br>
+</fieldset>
+
+<fieldset>
+	<legend><b>Operator Controls</b></legend>
+
+	<p>
+		<span class=beginner>
+			If something you expect does not appear, try this button:<br>
+		</span>
+		<label for=chkUpdate>
+			<input type=checkbox id=chkUpdate name=chkUpdate>
+			Update
+		</label>
+		<input type=submit name=btnUpdate id=btnUpdate value=Update>
+	</p>
+	<p>
+		<span class=beginner>
+			Upgrade software to latest version:<br>
+		</span>
+		<label for=chkUpgrade>
+			<input type=checkbox id=chkUpgrade name=chkUpgrade>
+			Upgrade
+		</label>
+		<input type=submit name=btnUpgrade id=btnUpgrade value=Upgrade>
+	</p>
+	<p>
+		<span class=beginner>
+			<b>Attention: This button removes unscored content!</b><br>
+			Use Flush to make space for new content:<br>
+		</span>
+		<label for=chkFlush>
+			<input type=checkbox id=chkFlush name=chkFlush>
+			Flush
+		</label>
+		<input type=submit name=btnFlush id=btnFlush value=Flush>
+	</p>
+	<p class=beginner>
+		To activate, check box, then press button.<br>
+		This helps prevent accidental activation.<br>
+	</p>
+</fieldset>
+
+<fieldset>
+	<legend><b>Content Filter</b><br></legend>
+	<span class=beginner>(This doesn't do anything at the moment.)<br></span>
+	<label for=filter_1><input type=radio name=filter value=0.99 id=filter_1> 99.999%</label><br>
+	<label for=filter_2><input type=radio name=filter value=0.999 id=filter_2> 9.9999%</label><br>
+	<label for=filter_3><input type=radio name=filter value=0.099 id=filter_3> 0.99999%</label><br>
+	<label for=filter_4 class=admin><input type=radio name=filter value=0.0099 id=filter_4> 0.099999%</label><br>
+	<label for=filter_5 class=admin><input type=radio name=filter value=0.00099 id=filter_5> 0.0099999%</label><br>
+	<input type=submit value="Save Filter Level" name=btnSaveFilterLevel>
+	<!-- As long as it's five nines, the decimal position doesn't matter -->
+</fieldset>
+<!-- / operator.template -->

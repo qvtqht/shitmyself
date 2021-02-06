@@ -4233,6 +4233,13 @@ sub GetSettingsWindow {
 	return $settingsWindow;
 }
 
+sub GetOperatorWindow {
+	my $operatorTemplate = GetTemplate('form/operator.template');
+	my $operatorWindow = GetWindowTemplate($operatorTemplate, 'operator');
+	$operatorWindow = '<form id=frmOperator name=frmOperator class=admin>' . $operatorWindow . '</form>';
+	return $operatorWindow;
+}
+
 sub GetSettingsPage { # returns html for settings page (/settings.html)
 	my $txtIndex = "";
 
@@ -4242,8 +4249,8 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	$txtIndex = GetPageHeader($title, $titleHtml, 'settings');
 	$txtIndex .= GetTemplate('html/maincontent.template');
 
-	my $settingsWindow = GetSettingsWindow();
-	$txtIndex .= $settingsWindow;
+	$txtIndex .= GetSettingsWindow();
+	$txtIndex .= GetOperatorWindow();
 
 	$txtIndex .= GetPageFooter();
 
