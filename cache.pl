@@ -144,6 +144,8 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 	WriteLog("ExpireAvatarCache($key)");
 	if (!IsFingerprint($key) && $key ne '*') {
 		WriteLog('ExpireAvatarCache: warning: sanity check failed');
+        my ($package, $filename, $line) = caller;
+		WriteLog('ExpireAvatarCache: caller information: ' . $package . ',' . $filename . ', ' . $line);
 		return 0;
 	}
 
