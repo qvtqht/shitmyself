@@ -31,7 +31,7 @@ while (my $argFound = shift) {
 require('./utils.pl');
 #require('./index.pl');
 
-sub GpgParse {
+sub GpgParse { # $filePath ; parses file and stores gpg response in cache
 	# PgpParse {
 	# $filePath = path to file containing the text
 	#
@@ -70,7 +70,7 @@ sub GpgParse {
 	my $encryptedFlag = 0;
 	my $signedFlag = 0;
 
-	if (!-e "$cachePathStderr/$fileHash.txt") {
+	if (!-e "$cachePathStderr/$fileHash.txt") { # no gpg stderr output saved
 		# we've not yet run gpg on this file
 		WriteLog('GpgParse: found stderr output: ' . "$cachePathStderr/$fileHash.txt");
 		my $fileContents = GetFile($filePath);
@@ -103,6 +103,9 @@ sub GpgParse {
 			WriteLog('GpgParse: found $gpgEncrypted');
 			$gpgCommand .= '-o - --decrypt ';
 			$encryptedFlag = 1;
+		} else {
+			WriteLog('GpgParse: did not find any relevant strings, returning');
+			return '';
 		}
 
 		if ($fileHash =~ m/^([0-9a-f]+)$/) {
@@ -135,39 +138,47 @@ sub GpgParse {
 		if ($pubKeyFlag) {
 			my $gpgKeyPub = '';
 
-			#gpg_naive_regex_pubkey
-			my $message;
-			$message = GetTemplate('message/user_reg.template');
-
-			if ($gpgStderrOutput =~ /([0-9A-F]{16})/) {
+			if ($gpgStderrOutput =~ /([0-9A-F]{16})/) { # username allowed characters chars filter is here
 				$gpgKeyPub = $1;
 				DBAddItemAttribute($fileHash, 'gpg_id', $gpgKeyPub);
-				$message =~ s/\$fingerprint/$gpgKeyPub/g;
-			} else {
-				$message =~ s/\$fingerprint/???/g;
-			}
 
-			if ($gpgStderrOutput =~ m/"([ a-zA-Z0-9<>&\@.()_]+)"/) { # username allowed characters chars filter is here
-				# we found something which looks like a name
-				my $aliasReturned = $1;
-				$aliasReturned =~ s/\<(.+\@.+?)\>//g; # if has something which looks like an email, remove it
-				DBAddItemAttribute($fileHash, 'gpg_alias', $aliasReturned);
-				$message =~ s/\$name/$aliasReturned/g;
+				if ($gpgStderrOutput =~ m/"([ a-zA-Z0-9<>&\@.()_]+)"/) {
+					# we found something which looks like a name
+					my $aliasReturned = $1;
+					$aliasReturned =~ s/\<(.+\@.+?)\>//g; # if has something which looks like an email, remove it
 
-				if ($gpgKeyPub && $aliasReturned) {
-					# gpg author alias shim
-					DBAddKeyAlias($gpgKeyPub, $aliasReturned);
-					DBAddKeyAlias('flush');
+					if ($gpgKeyPub && $aliasReturned) {
+						#gpg_naive_regex_pubkey
+						my $message;
+						$message = GetTemplate('message/user_reg.template');
+
+						$message =~ s/\$name/$aliasReturned/g;
+						$message =~ s/\$fingerprint/$gpgKeyPub/g;
+
+						DBAddVoteRecord($fileHash, GetTime(), 'pubkey', $gpgKeyPub, $fileHash);
+						# sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash ; Adds a new vote (tag) record to an item based on vote/ token
+
+
+						DBAddItemAttribute($fileHash, 'gpg_alias', $aliasReturned);
+
+						# gpg author alias shim
+						DBAddKeyAlias($gpgKeyPub, $aliasReturned);
+						DBAddKeyAlias('flush');
+
+						PutFileMessage($fileHash, $message);
+					} else {
+
+					}
+				} else {
+					WriteLog('GpgParse: warning: alias not found in pubkey mode');
+					#DBAddItemAttribute($fileHash, 'gpg_alias', '???');
+					#$message =~ s/\$name/???/g;
 				}
 
-			} else {
-				DBAddItemAttribute($fileHash, 'gpg_alias', '???');
-				$message =~ s/\$name/???/g;
+				return $gpgKeyPub;
 			}
 
-			PutFileMessage($fileHash, $message);
 
-			return $gpgKeyPub;
 		} # $pubKeyFlag
 		elsif ($signedFlag) {
 			my $gpgKeySigned = '';
@@ -181,7 +192,13 @@ sub GpgParse {
 				# my $gpgDateEpoch = #todo convert to epoch time
 				WriteLog('GpgParse: ' . $fileHash . '; found signature made token from gpg');
 				my $signTimestamp = $1;
-				DBAddItemAttribute($fileHash, 'gpg_timestamp', $signTimestamp);
+				chomp $signTimestamp;
+				my $signTimestampEpoch = `date --date='$signTimestamp' +%s`;
+				chomp $signTimestampEpoch;
+
+				WriteLog('GpgParse: $signTimestamp = ' . $signTimestamp . '; $signTimestampEpoch = ' . $signTimestampEpoch);
+
+				DBAddItemAttribute($fileHash, 'gpg_timestamp', $signTimestampEpoch);
 			}
 			return $gpgKeySigned;
 		}
