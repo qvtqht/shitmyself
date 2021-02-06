@@ -313,31 +313,6 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 			next;
 		}
 
-		if (GetConfig('admin/allow_deop') == 1) {
-			if ($file =~ m/chkOverthrow/) {
-				my $overthrowInterval = GetConfig('admin/overthrow_interval');
-				if (!$overthrowInterval) {
-					$overthrowInterval = 1;
-				}
-
-				if (time() - GetConfig('admin/latest_admin_action') > $overthrowInterval) {
-					WriteLog('ProcessAccessLog: Overthrow conditions met');
-
-					PutConfig('admin/latest_admin_action', 0);
-
-					if (file_exists('admin.key')) {
-						unlink('admin.key');
-						WriteLog('ProcessAccessLog: Overthrow successful');
-						next;
-					} else {
-						WriteLog('ProcessAccessLog: Overthrow already in effect: admin.key missing');
-					}
-				} else {
-					WriteLog('ProcessAccessLog: Overthrow conditions not met, overthrow unsuccessful');
-				}
-			}
-		} # admin/allow_deop
-
 		## TEXT SUBMISSION PROCESSING BEGINS HERE ##
 		############################################
 
@@ -429,7 +404,7 @@ sub ProcessAccessLog { # reads an access log and writes .txt files as needed
 						}
 
 						WriteLog('ProcessAccessLog: urlParam: $paramName = ' . $paramValue);
-
+#todo support t= and s=
 						if ($paramName eq 'replyto') {
 							if (IsItem($urlParam)) {
 								my $replyToId = $paramValue;
