@@ -1335,8 +1335,13 @@ sub CheckForInstalledVersionChange {
 		$lastVersion = 0;
 	}
 
+	if (!$currVersion) {
+		WriteLog('CheckForInstalledVersionChange: warning: sanity check failed, no $currVersion');
+		return '';
+	}
+
 	if ($lastVersion ne $currVersion) {
-		WriteLog("$lastVersion ne $currVersion, posting changelog");
+		WriteLog("CheckForInstalledVersionChange: $lastVersion ne $currVersion, posting changelog");
 
 		#my $serverKey = `gpg --list-keys hikeserver`;
 
@@ -1366,14 +1371,14 @@ sub CheckForInstalledVersionChange {
 		}
 
 		$changeLogMessage .= "\n\n#changelog";
-
 		my $TXTDIR = GetDir('txt');
-
 		PutFile("$TXTDIR/$changeLogFilename", $changeLogMessage);
-
 		ServerSign("$TXTDIR/$changeLogFilename");
-
 		PutConfig('current_version', $currVersion);
+
+		return $currVersion;
+	} else {
+		return 0;
 	}
 } # CheckForInstalledVersionChange()
 
