@@ -3402,6 +3402,120 @@ sub MakeJsTestPages {
 	PutHtmlFile("jstest2.html", $jsTest2);
 }
 
+sub GetDesktopPage { # returns html for desktop page (/desktop.html)
+	my $html = "";
+	my $title = "Desktop";
+
+	$html = GetPageHeader($title, $title, 'desktop');
+	$html .= GetTemplate('html/maincontent.template');
+
+	{
+		my $tosText = GetString('tos');
+		$tosText = str_replace("\n", '<br>', $tosText);
+		my $tosWindow = GetWindowTemplate(
+			$tosText,
+			'Terms of Service',
+		);
+		$html .= $tosWindow;
+
+		$html .= GetTopAuthorsWindow();
+		$html .= GetSettingsWindow();
+		$html .= GetProfileWindow();
+		$html .= GetStatsTable();
+		#$html .= GetWriteForm(); #commented because of the setFocus js, which should not happen on this page
+		$html .= GetUploadWindow('html/form/upload.template');
+		$html .= GetOperatorWindow();
+	}
+
+	$html .= GetPageFooter();
+
+	if (GetConfig('admin/js/enable')) {
+		my @scripts = qw(settings avatar profile timestamp pingback utils);
+		if (GetConfig('admin/js/dragging')) {
+			push @scripts, 'dragging';
+		}
+		$html = InjectJs($html, @scripts);
+	}
+
+	return $html;
+} # GetDesktopPage()
+
+sub MakeInputExpandable {
+#		if (GetConfig('admin/js/enable')) {
+#			$html = AddAttributeToTag($html, 'input name=comment', onpaste, "window.inputToChange=this; setTimeout('ChangeInputToTextarea(window.inputToChange); return true;', 100);");
+#		} #input_expand_into_textarea
+
+#todo
+}
+
+sub ListItemsByTag { #todo
+	my $pageName = shift;
+	if (!$pageName) {
+		$pageName = 'welcome';
+	}
+
+	my $contentWindow = '';
+
+	my %queryParams;
+	$queryParams{'where_clause'} = "WHERE item_flat.tags_list LIKE '%welcome%' AND item_flat.tags_list NOT LIKE '%flag%'"; #loose match
+	$queryParams{'order_clause'} = "ORDER BY item_flat.add_timestamp DESC"; #order by timestamp desc
+	$queryParams{'limit_clause'} = "LIMIT 100";
+	my @files = DBGetItemList(\%queryParams);
+	if (@files) {
+		my $itemListHtml = GetItemListHtml(\@files);
+		$contentWindow = $itemListHtml;
+	}
+
+	return $contentWindow;
+}
+
+sub GetSimpleWindow {
+	my $windowType = shift;
+	#todo sanity
+	my $html = '';
+	my $pageContent = GetTemplate("page/$windowType.template");
+	if (!$pageContent) {
+		WriteLog('GetSimpleWindow: warning: empty template, sanity check failed');
+		return '';
+	}
+	my $contentWindow = GetWindowTemplate(
+		$pageContent,
+		ucfirst($windowType)
+	);
+	return $contentWindow;
+} # GetSimpleWindow()
+
+sub GetSimplePage { # given page name, makes page
+	my $pageName = shift;
+	if (!$pageName) {
+		return;
+	}
+	chomp $pageName;
+	if (!$pageName =~ m/^[a-z]+$/) {
+		return;
+	}
+
+	my $html = '';
+
+	$html .= GetPageHeader(ucfirst($pageName), ucfirst($pageName), $pageName);
+	$html .= GetTemplate('html/maincontent.template');
+
+
+	$html .= GetSimpleWindow($pageName);
+
+	$html .= GetPageFooter();
+
+	if (GetConfig('admin/js/enable')) {
+		my @scripts = qw(avatar settings profile utils timestamp);
+		if (GetConfig('admin/js/dragging')) {
+			push @scripts, 'dragging';
+		}
+		$html = InjectJs($html, @scripts);
+	}
+
+	return $html;
+} # GetSimplePage()
+
 sub MakeSimplePage { # given page name, makes page
 	my $pageName = shift;
 	if (!$pageName) {
@@ -3419,16 +3533,11 @@ sub MakeSimplePage { # given page name, makes page
 
 	my $pageContent = GetTemplate("page/$pageName.template");
 
-	if ($pageName eq 'desktop') {
-		$pageContent = '';
-		$pageContent .= GetMenuFromList('menu', 'html/menuitem-p.template');
-		$pageContent .= GetMenuFromList('menu_advanced', 'html/menuitem-p.template')
-	}
-
 	my $contentWindow = GetWindowTemplate(
 		$pageContent,
 		ucfirst($pageName)
 	);
+
 	my $itemListPlaceholder = '<span id=itemList></span>';
 	if ($pageName eq 'welcome') {
 #		if (GetConfig('admin/js/enable')) {
@@ -3450,33 +3559,15 @@ sub MakeSimplePage { # given page name, makes page
 
 	$html .= $contentWindow;
 
-	if ($pageName eq 'desktop') {
-		my $tosText = GetString('tos');
-		$tosText = str_replace("\n", '<br>', $tosText);
-		my $tosWindow = GetWindowTemplate(
-			$tosText,
-			'Terms of Service',
-		);
-		$html .= $tosWindow;
-
-		$html .= GetTopAuthorsWindow();
-		$html .= GetSettingsWindow();
-		$html .= GetProfileWindow();
-		$html .= GetStatsTable();
-		#$html .= GetWriteForm();
-		$html .= GetUploadWindow('html/form/upload.template');
-
-		#$html .= GetTemplate('form/settings.template');
-	}
-
 	$html .= GetPageFooter();
 
-	my @scripts = qw(avatar settings profile utils timestamp);
-#	if (GetConfig('admin/js/dragging') && $pageName eq 'desktop') {
-#		push @scripts, 'dragging';
-#	}
-
-	$html = InjectJs($html, @scripts);
+	if (GetConfig('admin/js/enable')) {
+		my @scripts = qw(avatar settings profile utils timestamp);
+		if (GetConfig('admin/js/dragging')) {
+			push @scripts, 'dragging';
+		}
+		$html = InjectJs($html, @scripts);
+	}
 
 	PutHtmlFile("$pageName.html", $html);
 
@@ -3664,9 +3755,11 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	MakeSimplePage('help'); # help.html help.template
 	MakeSimplePage('welcome'); # welcome.html welcome.template
 	MakeSimplePage('bookmark'); # welcome.html welcome.template
-	MakeSimplePage('desktop'); # welcome.html welcome.template
+#	MakeSimplePage('desktop'); # welcome.html welcome.template
 	MakeSimplePage('manual_advanced'); # manual_advanced.html manual_advanced.template
 	MakeSimplePage('manual_tokens'); # manual_tokens.html manual_tokens.template
+
+	PutHtmlFile('desktop.html', GetDesktopPage());
 
 	# Blank page
 	PutHtmlFile("blank.html", "");
@@ -5147,6 +5240,10 @@ while (my $arg1 = shift @foundArgs) {
 		elsif ($arg1 eq '--data' || $arg1 eq '-i') {
 			print ("recognized --data\n");
 			WriteDataPage();
+		}
+		elsif ($arg1 eq '--desktop' || $arg1 eq '-i') {
+			print ("recognized --desktop\n");
+			PutHtmlFile('desktop.html', GetDesktopPage());
 		}
 		elsif ($arg1 eq '--queue' || $arg1 eq '-Q') {
 			print ("recognized --queue\n");
