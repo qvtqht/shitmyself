@@ -4050,7 +4050,7 @@ sub GetWritePage { # returns html for write page
 
 	my $writeForm = GetWriteForm();
 	WriteLog('GetWriteForm: js is on, adding write_js.template');
-    my $writeJs = GetWindowTemplate(GetTemplate('form/write/write_js.template'), 'Options');
+    my $writeJs = '<span class=advanced>' . GetWindowTemplate(GetTemplate('form/write/write_js.template'), 'Options') . '</span>'; #todo this is a hack
 
     $writePageHtml .= '<form action="/post.html" method=GET id=compose class=submit name=compose target=_top>'; #todo
 	$writePageHtml .= $writeForm;
