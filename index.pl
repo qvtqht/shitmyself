@@ -997,10 +997,14 @@ sub MakeIndex { # indexes all available text files, and outputs any config found
 	my $TXTDIR = GetDir('txt');
 	WriteLog('MakeIndex: $TXTDIR = ' . $TXTDIR);
 
+	#my @filesToInclude = split("\n", `grep txt\$ ~/index/home.txt`); #homedir #~
 	my @filesToInclude = split("\n", `find $TXTDIR -name \\\*.txt`);
+
 	my $filesCount = scalar(@filesToInclude);
 	my $currentFile = 0;
 	foreach my $file (@filesToInclude) {
+		#$file =~ s/^./../;
+
 		$currentFile++;
 		my $percent = ($currentFile / $filesCount) * 100;
 		WriteMessage("*** MakeIndex: $currentFile/$filesCount ($percent %) $file");
