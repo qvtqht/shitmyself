@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "rm -rf config/template/*"
-rm -rf config/template/*
+echo "rm -rfv config/template/*"
+rm -rfv config/template/*
