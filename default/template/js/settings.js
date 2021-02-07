@@ -62,19 +62,23 @@ function ShowAll (t, container) { // t = clicked link ; container = document by 
 
 	var isMore = 1;
 	if (t.innerHTML == 'Less') {
+		// when without accesskey
 		t.innerHTML = 'More';
 		isMore = 0;
 	}
 	if (t.innerHTML == 'Less (<u' + gt + 'O</u' + gt + ')') {
+		// when with accesskey
 		t.innerHTML = 'M<u' + gt + 'o</u' + gt + 're';
 		isMore = 0;
 	}
 
     if (isMore && container.getElementsByClassName) {
 		if (t.innerHTML == 'More') {
+			// without accesskey
 			t.innerHTML = 'Less';
 		}
 		if (t.innerHTML == 'M<u' + gt + 'o</u' + gt + 're') {
+			// with accesskey
 			t.innerHTML = 'Less (<u' + gt + 'O</u' + gt + ')';
 		}
 
