@@ -119,7 +119,11 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 	}
 
 	my $voteButtons = '';
-	$voteButtons .= '<p>Tags: ' . $file{'tags_list'} . '</p>';
+	if ($file{'tags_list'}) {
+		$voteButtons .= '<p>Tags: ' . $file{'tags_list'} . '</p>';
+	} else {
+		$voteButtons .= '<p>No tags applied.</p>';
+	}
 
 	if (GetConfig('reply/enable')) {
 		$voteButtons .= GetItemTagButtons($file{'file_hash'});
