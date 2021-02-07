@@ -508,14 +508,14 @@ if (GetConfig('admin/php/route_enable')) {
 			$pathSelfReal = realpath('.'.$pathSelf);
 			$pathValidRoot = substr($pathSelfReal, 0, strlen($pathSelfReal) - strlen($pathSelf));
 
-			WriteLog('$pathValidRoot = ' . $pathValidRoot . ';');
+			WriteLog('$pathValidRoot = ' . $pathValidRoot);
 			WriteLog('$pathFull = ' . $pathFull . ';');
 			WriteLog('substr($pathFull, 0, strlen($pathValidRoot)) = ' . substr($pathFull, 0, strlen($pathValidRoot)) . ';');
 
-			if ($path == '/404.html' || $pathFull && substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot) {
+			if ($path == '/404.html' || ($pathFull && substr($pathFull, 0, strlen($pathValidRoot)) == $pathValidRoot)) {
 				// mitigate directory traversal?
 
-				WriteLog('$path = "' . $path . '"');
+				WriteLog('route.php: root sanity check passed for $path = "' . $path . '"');
 				if ($path) {
 					$pathRel = '.' . $path; // relative path of $path (to current directory, which should be html/)
 					if ($path != '/404.html' && file_exists($pathRel)) {
@@ -527,14 +527,7 @@ if (GetConfig('admin/php/route_enable')) {
 							WriteLog('setting message = test');
 						}
 
-						if (($_GET['txtClock']) == 'Update') {
-							RedirectwithResponse('/post.html?comment=Update', 'Please wait while update is performed...');
-						}
-
-						if (
-							isset($_GET['message'])
-						)
-						{
+						if (isset($_GET['message'])) {
 							WriteLog('$_GET[message] exists');
 							$messageId = $_GET['message'];
 
@@ -567,36 +560,9 @@ if (GetConfig('admin/php/route_enable')) {
 							if (!$serverResponse && !$redirectUrl) {
 								$redirectUrl = $path;
 							}
-						} else {
+						} # isset($_GET['message'])
+						else {
 							WriteLog('$_GET[message] NOT set');
-						}
-
-						if (
-							isset($_GET['optTheme']) &&
-							isset($_GET['btnSetTheme'])
-						)
-						{
-							WriteLog('Theme change requested');
-
-							$newTheme = $_GET['optTheme'];
-							$themeUpdateFile = '#config html/theme ' . $newTheme;
-
-							// write file
-							// server sign
-							// call processor
-
-							//
-							// this quick hack doesn't work yet for lack of PutConfig() in php code
-							//
-							//PutConfig('html/theme', $newTheme);
-							//file_put_contents('../config/html/theme', $newTheme);
-							//
-
-							if (GetConfig('theme/' . $newTheme . '/additional.css')) {
-								//file_put_contents('../config/html/theme', $newTheme);
-							}
-
-							$responseThemeChanged = RedirectWithResponse('/settings.html', 'Requested theme change: ' . $newTheme);
 						}
 
 						//						if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -620,6 +586,19 @@ if (GetConfig('admin/php/route_enable')) {
 						}
 
 						if (
+							isset($_GET['chkUpdate']) &&
+							isset($_GET['btnUpdate'])
+						) {
+							$updateStartTime = time();
+							DoUpdate();
+							$fileUrlPath = '';
+							$updateFinishTime = time();
+							$updateDuration = $updateFinishTime - $updateStartTime;
+
+							RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
+						}
+
+						if (
 							isset($_GET['chkFlush']) &&
 							isset($_GET['btnFlush'])
 						) {
@@ -627,41 +606,6 @@ if (GetConfig('admin/php/route_enable')) {
 							DoFlush();
 							DoUpdate();
 							RedirectWithResponse('/settings.html', 'Previous content has been archived.');
-						}
-
-						if (
-							isset($_GET['chkOverthrow']) &&
-							isset($_GET['btnOverthrow'])
-						) {
-							WriteLog('Overthrow requested');
-							if (GetConfig('admin/allow_deop')) {
-								$overthrowInterval = GetConfig('admin/overthrow_interval');
-								if (!$overthrowInterval) {
-									$overthrowInterval = 1;
-								}
-								$currentTime = time();
-								$lastAction = intval(GetConfig('admin/latest_admin_action'));
-
-								if ($currentTime - $lastAction > $overthrowInterval) {
-									WriteLog('Overthrow conditions met');
-									PutConfig('admin/latest_admin_action', 0);
-									if (file_exists('../admin.key')) {
-										#todo this stuff should be somewhere else
-										unlink('../admin.key');
-										MakePage('--summary');
-										WriteLog('Overthrow successful');
-										RedirectWithResponse('/settings.html', 'Register to become operator.');
-									} else {
-										WriteLog('Overthrow already in effect: admin.key missing');
-										RedirectWithResponse('/settings.html', 'Register to become operator.');
-									}
-								} else {
-									WriteLog('Overthrow conditions not met, unsuccessful');
-									RedirectWithResponse('/settings.html', 'Conditions not met. This incident will be reported.');
-								}
-							} else {
-								WriteLog('Overthrow conditions not met');
-							}
 						}
 
 						// user asked for a particular file, and that's what we'll give them
@@ -694,11 +638,14 @@ if (GetConfig('admin/php/route_enable')) {
 								$html .= "<script><!-- window.myOwnETag = '$md5'; // --></script>";
 								// #todo this should probably be templated and added using InjectJs()
 							}
-						}
+						} # GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')
 
 						//if ($path == '/settings.html') {
-							$noCacheFormElement = '<input type=hidden name=timestamp value=' . time() . '>';
-							$html = str_ireplace('</form>', $noCacheFormElement . '</form>' , $html);
+							$timestampFormElement = '<input type=hidden name=timestamp value=' . time() . '>';
+							$html = str_ireplace('</form>', $timestampFormElement . '</form>' , $html);
+
+							$originPathFormElement = '<input type=hidden name=origin value="' . htmlspecialchars($path) . '">';
+							$html = str_ireplace('</form>', $originPathFormElement . '</form>' , $html);
 						//}
 
 						if ($path == '/write.html') {
@@ -728,11 +675,13 @@ if (GetConfig('admin/php/route_enable')) {
 								}
 							}
 						}
-					} else {
+					} # $path != '/404.html' && file_exists($pathRel)
+					else {
 						WriteLog('$path not found, using HandleNotFound(' . $path . ',' . $pathRel . ')');
 						$html = HandleNotFound($path, $pathRel);
 					}
-				} else {
+				} # $path
+				else {
 					// no $path
 					WriteLog('$path not specified, using HandleNotFound()');
 					$html = HandleNotFound($path, '');
