@@ -80,6 +80,9 @@ $replyTo = '';
 $replyToToken = '';
 $returnTo = '';
 
+$strSourceUrl = '';
+$strSourceTitle = '';
+
 if ($_POST) {
 	WriteLog('$_POST');
 
@@ -89,6 +92,18 @@ if ($_POST) {
 	
 	if (isset($_POST['replyto']) && $_POST['replyto']) {
 		$replyTo = $_POST['replyto']; 
+		$replyToToken = '>>' . $replyTo;
+	}
+
+	if (isset($_POST['s']) && $_POST['s']) {
+		$strSourceUrl = $_POST['s'];
+	}
+	if (isset($_POST['t']) && $_POST['t']) {
+		$strSourceTitle = $_POST['t'];
+	}
+	
+	if (isset($_POST['replyto']) && $_POST['replyto']) {
+		$replyTo = $_POST['replyto'];
 		$replyToToken = '>>' . $replyTo;
 	}
 
@@ -120,8 +135,15 @@ if ($_GET) {
 		}
 	}
 
+	if (isset($_GET['s']) && $_GET['s']) {
+		$strSourceUrl = $_GET['s'];
+	}
+	if (isset($_GET['t']) && $_GET['t']) {
+		$strSourceTitle = $_GET['t'];
+	}
+
 	if (isset($_GET['replyto']) && $_GET['replyto']) {
-		$replyTo = $_GET['replyto']; 
+		$replyTo = $_GET['replyto'];
 		$replyToToken = '>>' . $replyTo;
 	}
 
@@ -131,7 +153,7 @@ if ($_GET) {
 }
 
 if (isset($comment) && $comment) {
-	if ($comment == 'Update') {
+	if ($comment == 'Update') { #duplicated in route.php
 		$updateStartTime = time();
 		DoUpdate();
 		$fileUrlPath = '';
@@ -139,7 +161,6 @@ if (isset($comment) && $comment) {
 		$updateDuration = $updateFinishTime - $updateStartTime;
 
 		RedirectWithResponse('/stats.html', "Update finished! <small>in $updateDuration"."s</small>");
-
 	}
 	elseif (strtolower($comment) == 'stop' && GetConfig('admin/token/stop')) {
 		$stopTime = time();
@@ -256,6 +277,29 @@ if (isset($comment) && $comment) {
 		}
 	} # regular comment, not 'update' or 'stop'
 } # comment
+
+if ($strSourceUrl || $strSourceTitle) {
+	WriteLog('post.php: found $strSourceUrl or $strSourceTitle');
+
+	#todo sanity checks
+	$addendum = '';
+	if ($strSourceUrl) {
+		$addendum .= 'URL: ' . $strSourceUrl;
+		$addendum .= "\n";
+	}
+	if ($strSourceTitle) {
+		$addendum .= 'Title: ' . $strSourceTitle;
+		$addendum .= "\n";
+	}
+	if ($addendum) {
+		if ($newFileHash) {
+			$addendum = '>>' . $newFileHash . "\n" . $addendum;
+		}
+		ProcessNewComment($addendum, '');
+	}
+} else {
+	WriteLog('post.php: NOT found $strSourceUrl or $strSourceTitle');
+}
 
 #######################################
 $html = file_get_contents('post.html');
