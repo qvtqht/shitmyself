@@ -1,10 +1,7 @@
-/* begin theme/chicago/additional.css */
+/* theme/chicago/additional.css */
 body {
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
-	font-size: 14pt;
 	background-color: $colorBackground;
-	margin: 0;
-	padding: 0;
 }
 input {
 	border-color: blue;
@@ -23,16 +20,11 @@ input[type=text], input[type=password], select, option, textarea {
     background-color: #f0f0d0;
 }
 .dialog {
-	box-shadow: 3pt 3pt 0 #006767;
+	box-shadow: 3pt 3pt 0 rgba(0, 20, 20, 0.5);
 	border: $borderDialog;
 	background-color: $colorWindow;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 10pt;
-	margin: 10pt;
-}
-.dialog .dialog {
-	box-shadow: 3pt 3pt 0 #808080;
-	border: $borderDialog;
 }
 .statusbar td {
 	border: 1pt inset $colorWindow;
@@ -73,4 +65,4 @@ input:focus {
 	border: 1pt inset $colorWindow;
 	background-color: $colorWindow;
 }
-/* end theme/chicago/additional.css */
+/* / theme/chicago/additional.css */
