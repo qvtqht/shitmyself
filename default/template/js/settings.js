@@ -428,6 +428,7 @@ function SettingsOnload () { // onload function for settings page
 		//LoadCheckbox(document.getElementById('chkSignByDefault'), 'sign_by_default');
 		LoadCheckbox(document.getElementById('chkDraggable'), 'draggable');
 		LoadCheckbox(document.getElementById('chkShowAdmin'), 'show_admin');
+		LoadCheckbox(document.getElementById('chkShowAdvanced'), 'show_advanced');
 		LoadCheckbox(document.getElementById('chkWriteEnhance'), 'write_enhance');
 		LoadCheckbox(document.getElementById('chkWriteEnhance'), 'write_enhance');
 		LoadCheckbox(document.getElementById('chkExpertTimestamps'), 'expert_timestamps');

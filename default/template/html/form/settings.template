@@ -19,24 +19,31 @@
 		<span class=beginner><br>Use these buttons to adjust interface<noscript><b>*</b></noscript></span>
 	</p>
 
-	<p class=advanced>
-		<label for=chkExpertTimestamps>
+	<p>
+		<label for=chkExpertTimestamps class=advanced>
 			<input type=checkbox id=chkExpertTimestamps name=chkExpertTimestamps onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'expert_timestamps'); }">
 			Display timestamps as seconds<noscript><b>*</b></noscript>
 		</label>
 	</p>
 
-	<p class=advanced>
-		<label for=chkShowAdmin>
+	<p>
+		<label for=chkShowAdvanced class=advanced>
+			<input type=checkbox id=chkShowAdvanced name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_advanced'); }">
+			Show advanced controls<noscript><b>*</b></noscript>
+		</label>
+	</p>
+
+	<p>
+		<label for=chkShowAdmin class=advanced>
 			<input type=checkbox id=chkShowAdmin name=chkShowAdmin onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'show_admin'); }">
 			Show operator controls<noscript><b>*</b></noscript>
 		</label>
 	</p>
 
-	<p class=advanced>
-		<label for=chkDraggable>
+	<p>
+		<label for=chkDraggable class=advanced>
 			<input type=checkbox id=chkDraggable name=chkDraggable onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'draggable'); }">
-			Enable draggable automatically<noscript><b>*</b></noscript>
+			Enable dragging automatically<noscript><b>*</b></noscript>
 		</label>
 	</p>
 </fieldset>
@@ -44,8 +51,8 @@
 <fieldset>
 <legend><b>Writing</b><br></legend>
 
-<p class=advanced>
-	<label for=chkWriteEnhance>
+<p>
+	<label for=chkWriteEnhance class=advanced>
 		<input type=checkbox id=chkWriteEnhance name=chkWriteEnhance onchange="if (window.SaveCheckbox) { SaveCheckbox(this, 'write_enhance'); }">
 		Make write box big and blue<noscript><b>*</b></noscript>
 	</label>
