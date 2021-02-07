@@ -70,7 +70,7 @@ function WriteOnload () { // onload handler for write page
 							var lblSolvePuzzle = document.createElement('span');
 							lblSolvePuzzle.setAttribute('class', 'beginner');
 							var gt = unescape('%3E');
-							lblSolvePuzzle.innerHTML = 'Establish trust, takes time.';
+							lblSolvePuzzle.innerHTML = 'Establish trust, takes time, requires signature.';
 							spanWriteAdvanced.appendChild(lblSolvePuzzle);
 						}
 					} // window.solvePuzzle
