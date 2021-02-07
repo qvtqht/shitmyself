@@ -81,7 +81,11 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	}
 	if (window.DraggingInit && GetPrefs('draggable')) {
 		//alert('DEBUG: OnLoadEverything: DraggingInit()');
-		DraggingInit(1);
+		if (window.location.href.indexOf('desktop') != -1) {
+			DraggingInit(1);
+		} else {
+			DraggingInit(0);
+		}
 	}
 	if (window.EventLoop) {
 		//alert('DEBUG: OnLoadEverything: EventLoop()');
@@ -109,7 +113,7 @@ function EventLoop () { // for calling things which need to happen on a regular 
 	var eventLoopBegin = d.getTime();
 
 	if (window.flagUnloaded) {
-		document.title = 'Loading...';
+		document.title = 'Meditate...';
 		//document.body.style.opacity="0.8";
 
 		var ariaAlert;
@@ -118,7 +122,7 @@ function EventLoop () { // for calling things which need to happen on a regular 
 			ariaAlert = document.createElement('p');
 			ariaAlert.setAttribute('role', 'alert');
 			ariaAlert.setAttribute('id', 'ariaAlert');
-			ariaAlert.innerHTML = 'Loading next page...';
+			ariaAlert.innerHTML = 'Meditate...';
 			ariaAlert.style.opacity = '1';
 			ariaAlert.style.zIndex = '1';
 
