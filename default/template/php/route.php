@@ -326,17 +326,21 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/search.html' ||
 			$path == '/manual.html' ||
 			$path == '/manual_advanced.html' ||
-			$path == '/desktop.html' ||
 			$path == '/stats.html' ||
 			$path == '/frame.html' ||
 			$path == '/frame2.html' ||
 			$path == '/frame3.html' ||
+			$path == '/sha512.js' ||
 			$path == '/crypto.js' ||
 			$path == '/crypto2.js' ||
 			$path == '/openpgp.js'
 		) {
 			WriteLog('HandleNotFound: found a summary page');
 			$pagesPlArgument = '--summary';
+		}
+		if ($path == '/desktop.html') {
+			WriteLog('HandleNotFound: found desktop page');
+			$pagesPlArgument = '--desktop';
 		}
 
 		if (
@@ -351,7 +355,7 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/compost.html'
 		) {
 			WriteLog('HandleNotFound: found compost or index page');
-			$pagesPlArgument = '--summary';
+			$pagesPlArgument = '--index';
 		}
 
 		if (
