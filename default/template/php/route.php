@@ -453,6 +453,30 @@ if (GetConfig('admin/php/route_enable')) {
 
 			// get request includes path argument
 			$path = $_GET['path'];
+
+			if (index($path, '?') != -1) {
+				WriteLog('route.php: found qm in $path');
+
+				# weird php bug, i think... or is it my lighttpd config?
+				$pathWithoutArg = substr($path, 0, index($path, '?'));
+				$pathFirstArg = substr($path, index($path, '?') + 1);
+
+				{
+					WriteLog('route.php: $pathFirstArg = ' . $pathFirstArg);
+					#todo sanity check
+					if (index($pathFirstArg, '=') != -1) {
+						#todo sanity check
+						list($pathFirstArgKey, $pathFirstArgValue) = explode("=", $pathFirstArg, 2);
+						$_GET[$pathFirstArgKey] = $pathFirstArgValue;
+					}
+					$_GET['path'] = $pathWithoutArg;
+					$path = $pathWithoutArg;
+					WriteLog('route.php: $_GET = ' . print_r($_GET, 1));
+				}
+			} else {
+				WriteLog('route.php: did NOT find qm in $path');
+			}
+
 			WriteLog('$path = ' . $path);
 			$pathFull = realpath('.'.$path);
 
