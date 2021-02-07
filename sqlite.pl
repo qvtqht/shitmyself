@@ -494,8 +494,15 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 		$queryOneLine =~ s/\s+/ /g;
 
 		WriteLog('SqliteQuery2: $query = ' . $queryOneLine);
-		WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
 		WriteLog('SqliteQuery2: caller: ' . join(', ', caller));
+
+		foreach my $qpTest (@queryParams) {
+			if (!defined($qpTest)) {
+				WriteLog('SqliteQuery2: warning: uninitialized array item in @queryParams, returning');
+				return '';
+			}
+		}
+		WriteLog('SqliteQuery2: @queryParams: ' . join(', ', @queryParams));
 
 		if ($dbh) {
 			WriteLog('SqliteQuery2: $dbh was found, proceeding...');
