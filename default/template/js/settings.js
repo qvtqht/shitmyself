@@ -101,11 +101,14 @@ function ShowAll (t, container) { // t = clicked link ; container = document by 
         if (timerShowAdvanced) {
             clearTimeout(timerShowAdvanced);
         }
-//        timerShowAdvanced = setTimeout('ShowAdvanced(1);', 10000);
-//
-//		if (t && t.getAttribute('onclick')) {
-//			t.setAttribute('onclick', '');
-//		}
+		//timerShowAdvanced = setTimeout('ShowAdvanced(1);', 10000);
+		//
+		//if (t && t.getAttribute('onclick')) {
+		//t.setAttribute('onclick', '');
+		//}
+		//if (window.ArrangeAll) {
+		//	ArrangeAll();
+		//}
 
         return false;
     } else {
