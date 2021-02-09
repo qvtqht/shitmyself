@@ -12,7 +12,7 @@ function setAva () { // sets avatar widgets (and italicizes Profile link)
 		if (myidBox && signinBox && window.localStorage) { // check for elements and features
 			var myAvatar = localStorage.getItem('avatar');
 
-			if (myAvatar == null || myAvatar.length == 0) {
+			if (!myAvatar) { // less error prone than checking for ==n ull, i think
 				signinBox.innerHTML = '<a href="/profile.html"' + gt + 'Profile</a' + gt + '';
 			} else {
 				signinBox.innerHTML = '';
