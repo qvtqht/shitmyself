@@ -1,3 +1,7 @@
+set a cookie for javascript enabled, and don't serve it until then?
+	would also allow clipping js-dependent elements
+		(some elements cannot be createElement-ed for compat reasons)
+
 touching any of the operator buttons should redflag the clirtent
 
 maybe #remove and other power decisions can be decided by admin score?
