@@ -2477,7 +2477,7 @@ sub GetScriptTemplate { # $script ; returns script for name
 		#todo this should work for all admins, not just root
 		# for profile.js we need to fill in current admin id
 		if (GetConfig('admin/dev/fresh_reload')) {
-			$scriptTemplate =~ s/freshUserWantsReload/1/g;
+			$scriptTemplate =~ s/freshUserWantsReload = 0/freshUserWantsReload = 1/g;
 		}
 	}
 

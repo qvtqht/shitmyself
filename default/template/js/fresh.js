@@ -67,20 +67,24 @@ function freshCallback() { // callback for requesting HEAD for current page
 					if (eTag == window.lastEtag) { // if it's equal to the one we saved last time
 						// no new change change
 					} else {
-						if (window.freshUserWantsReload) {
+						var freshUserWantsReload = 0;  // templated
+						if (freshUserWantsReload) {
 							// user wants reload
+							//alert('DEBUG: user wants automatic page reload');
 							location.reload();
 						} else {
 							// user doesn't want reload, just show notification
+							//alert('DEBUG: user does not want automatic page reload, notify');
 							window.lastEtag = eTag;
 
 							var ariaAlert;
 							ariaAlert = document.getElementById('ariaAlert');
 							if (!ariaAlert) {
+								//alert('DEBUG: ariaAlert created successfully');
 								ariaAlert = document.createElement('p');
 								ariaAlert.setAttribute('role', 'alert');
 								ariaAlert.setAttribute('id', 'ariaAlert');
-								ariaAlert.style.zIndex = '1'; //#todo
+								ariaAlert.style.zIndex = '1337'; //#todo
 								ariaAlert.innerHTML = 'Page updated ';
 
 								//document.body.appendChild(ariaAlert);
@@ -109,7 +113,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 								newTs.setAttribute('id', 'freshTimestamp');
 								newTs.innerHTML = 'just now!';
 								a.appendChild(newTs);
-							} else {
+
 								if (1) { // fresh_reuse_timestamp
 									// reuse timestamp widget instead of adding new one
 									var d = new Date();
@@ -136,7 +140,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 									a.appendChild(newTs);
 									newTs.innerHTML = 'just now!';
 								}
-							}
+							} // ariaAlert
 
 							if (document.title.substring(0,2) != '! ') {
 								document.title = '! ' + document.title;
@@ -145,7 +149,8 @@ function freshCallback() { // callback for requesting HEAD for current page
 							if (window.freshTimeoutId) {
 								clearTimeout(window.freshTimeoutId);
 							}
-						} // NOT window.freshUserWantsReload
+							window.eventLoopFresh = 0;
+						} // NOT freshUserWantsReload
 					} // lastEtag also didn't match
 				} // eTag != window.myOwnETag
 				else {
