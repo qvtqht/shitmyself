@@ -1,3 +1,128 @@
+#
+#			DBAddItemPage($$replyItem{'file_hash'}, 'item', $file{'file_hash'});
+#
+#			# use item-small template to display the reply items
+#			#$$replyItem{'template_name'} = 'html/item/item.template';
+#
+#			# if the child item contains a reply token for our parent item
+#			# we want to remove it, to reduce redundant information on the page
+#			# to do this, we pass the remove_token parameter to GetItemTemplate() below
+#			$$replyItem{'remove_token'} = '>>' . $file{'file_hash'};
+#
+#			# after voting, return to the main thread page
+#			$$replyItem{'vote_return_to'} = $file{'file_hash'};
+#
+#			# trim long text items
+#			$$replyItem{'trim_long_text'} = 1;
+##
+##			if (index(','.$$replyItem{'tags_list'}.',', ','.'notext'.',') != -1) {
+##				$$replyItem{'template_name'} = 'html/item/item.template';
+##			} else {
+##				$$replyItem{'template_name'} = 'html/item/item.template';
+##			}
+#
+#			# Get the reply template
+#			my $replyTemplate = GetItemTemplate2($replyItem); # GetItemPage()
+#
+#			# output it to debug
+#			WriteLog('$replyTemplate for ' . $$replyItem{'template_name'} . ':');
+#			WriteLog($replyTemplate);
+#
+#			# if the reply item has children also, output the children
+#			# threads are currently limited to 2 steps
+#			# eventually, recurdsion can be used to output more levels
+#			if ($$replyItem{'child_count'}) {
+#				my $subRepliesTemplate = ''; # will store the sub-replies html output
+#
+#				my $subReplyComma = ''; # separator for sub-replies, set to <hr on first use
+#
+#				my @subReplies = DBGetItemReplies($$replyItem{'file_hash'});
+#				foreach my $subReplyItem (@subReplies) {
+#					DBAddItemPage($$subReplyItem{'file_hash'}, 'item', $file{'file_hash'});
+##
+##					if (index(','.$$subReplyItem{'tags_list'}.',', ','.'notext'.',') != -1) {
+##						$$subReplyItem{'template_name'} = 'html/item/item.template';
+##						# $$subReplyItem{'template_name'} = 'html/item/item-mini.template';
+##					} else {
+##						$$subReplyItem{'template_name'} = 'html/item/item.template';
+##						# $$subReplyItem{'template_name'} = 'html/item/item-small.template';
+##					}
+#					$$subReplyItem{'remove_token'} = '>>' . $$replyItem{'file_hash'};
+#					$$subReplyItem{'vote_return_to'} = $file{'file_hash'};
+#
+#					WriteLog('$$subReplyItem{\'remove_token\'} = ' . $$subReplyItem{'remove_token'});
+#					WriteLog('$$subReplyItem{\'template_name\'} = ' . $$subReplyItem{'template_name'});
+#					WriteLog('$$subReplyItem{\'vote_return_to\'} = ' . $$subReplyItem{'vote_return_to'});
+#
+#					$$subReplyItem{'trim_long_text'} = 1;
+#					my $subReplyTemplate = GetItemTemplate2($subReplyItem); # GetItemPage()
+#					if ($subReplyComma eq '') {
+#						$subReplyComma = '<hr size=4>';
+#					}
+#					else {
+#						$subReplyTemplate = $subReplyComma . $replyTemplate;
+#					}
+#					$subRepliesTemplate .= $subReplyTemplate;
+#				}
+#
+#				# replace replies placeholder with generated html
+#				$replyTemplate =~ s/<replies><\/replies>/$subRepliesTemplate/;
+#			}
+#			else {
+#				# there are no replies, so remove replies placeholder
+#				$replyTemplate =~ s/<replies><\/replies>//;
+#			}
+#
+#			if ($replyTemplate) {
+#				if ($replyComma eq '') {
+#					$replyComma = '<hr size=5>';
+#					# $replyComma = '<p>';
+#				}
+#				else {
+#					$replyTemplate = $replyComma . $replyTemplate;
+#				}
+#
+#				$allReplies .= $replyTemplate;
+#			}
+#			else {
+#				WriteLog('Warning: replyTemplate is missing for some reason!');
+#			}
+#		} # foreach my $replyItem (@itemReplies)
+#
+#		if (GetConfig('reply/enable') && GetConfig('html/reply_form_after_reply_list') && !GetConfig('html/reply_form_before_reply_list')) {
+#			# add reply form after replies
+#			my $replyForm = GetReplyForm($file{'file_hash'});
+#			# start with a horizontal rule to separate from above content
+#			$allReplies .= '<hr size=6>';
+#			$allReplies .= $replyForm;
+#		}
+#
+#		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
+#		$itemTemplate .= '<hr><br>';
+#	} # $file{'child_count'}
+#	else {
+#		my $allReplies = '';
+#		if (GetConfig('reply/enable')) {
+#			# add reply form if no existing replies
+#
+#			{
+#				my $voteButtons = GetItemTagButtons($file{'file_hash'});
+#				$allReplies .= '<hr>'.GetWindowTemplate($voteButtons, 'Add Tags').'<hr>';
+#			}
+#
+#
+#			my $replyForm = GetReplyForm($file{'file_hash'});
+#			$allReplies .= $replyForm;
+#		}
+#		$itemTemplate =~ s/<replies><\/replies>/$allReplies/;
+#		$itemTemplate .= '<hr><br>';
+#	} # replies and reply form
+
+
+
+
+
+
 		$writeForm = str_replace('<span id=write_js></span>', $writeJs, $writeForm);
 		$writeForm = str_replace('<span id=write_js></span>', $writeJs, $writeForm);
 

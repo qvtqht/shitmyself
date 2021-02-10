@@ -1,3 +1,6 @@
+add a clock js for starting the timeout if eventloop is missing
+	this is useful for the 404 page, which doesn't need to have utils.js on it
+
 Record what feature is accessed after pi button to decide what to show/hide
 	a la ms office 2000/win2000
 
@@ -13,7 +16,7 @@ no replies or reply form on item pages #bug
 
 add checkboxes to item template
 
-getitempage should try to index a file by hashpath
+getitempage() should try to index a file by hashpath
 
 frontend_dev_loop.pl
 	md5sum default/templates
