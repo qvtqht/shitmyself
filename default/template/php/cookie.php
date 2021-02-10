@@ -35,6 +35,16 @@ else {
 	if (isset($_COOKIE['test']) && $_COOKIE['test']) {
 		WriteLog('test cookie found');
 
+		$validCookies = array('cookie', 'checksum', 'test', 'light', 'show_advanced', 'beginner', 'show_admin');
+		foreach ($_COOKIE as $cookieKey => $cookieValue) {
+			if (in_array($cookieKey, $validCookies)) {
+				// is ok
+			} else {
+				WriteLog('cookie.php: warning: unauthorized cookie was found and unset: ' . $cookieKey . ' = ' . $cookieValue);
+				unsetcookie2($cookieKey);
+			}
+		}
+
 		if (preg_match('/^[0-9A-F]{16}$/', $_COOKIE['test'])) { // #todo actual auth #knownCookieAuth
 			WriteLog('test cookie override!');
 
