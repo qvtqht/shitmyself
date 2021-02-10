@@ -1830,7 +1830,7 @@ sub GetPageHeader { # $title, $titleHtml, $pageType ; returns html for page head
 					$logoText = '';
 				}
 			}
-			my $logoTemplate = GetWindowTemplate('<a href="/" class=logo>' . $logoText . '</a>', 'Welcome');
+			my $logoTemplate = GetWindowTemplate('<a href="/" class=logo>Home</a>', $logoText);
 			$htmlStart .= $logoTemplate;
 		}
 	}
