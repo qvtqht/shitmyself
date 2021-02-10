@@ -318,7 +318,6 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 			$path == '/read.html' ||
 			$path == '/upload.html' ||
 			$path == '/upload_multi.html' ||
-			$path == '/profile.html' ||
 			$path == '/etc.html' ||
 			$path == '/events.html' ||
 			$path == '/settings.html' ||
@@ -348,6 +347,13 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		) {
 			WriteLog('HandleNotFound: found authors page');
 			$pagesPlArgument = '-M authors';
+		}
+
+		if (
+			$path == '/profile.html'
+		) {
+			WriteLog('HandleNotFound: found profile page');
+			$pagesPlArgument = '-M profile';
 		}
 
 		if (

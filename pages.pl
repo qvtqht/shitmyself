@@ -3681,12 +3681,6 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		PutHtmlFile("error/error-401.html", $accessDeniedPage);
 	}
 
-
-
-	# Profile page
-	my $profilePage = GetProfilePage();
-	PutHtmlFile("profile.html", $profilePage);
-
 	# Settings page
 	my $settingsPage = GetSettingsPage();
 	PutHtmlFile("settings.html", $settingsPage);

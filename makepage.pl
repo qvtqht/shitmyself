@@ -13,6 +13,19 @@ while (my $argFound = shift) {
 #require('./pages.pl');
 
 sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it into $HTMLDIR directory; $pageType, $pageParam
+# supported page types so far:
+# tag, #hashtag
+# author, ABCDEF01234567890
+# item, 0123456789abcdef0123456789abcdef01234567
+# authors
+# read
+# prefix
+# summary (deprecated)
+# tags
+# stats
+# index
+
+
 	my $HTMLDIR = GetDir('html');
 
 	# $pageType = author, item, tags, etc.
@@ -153,11 +166,18 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		}
 	}
 	#
-	# item prefix page (queue)
+	# item prefix page
 	elsif ($pageType eq 'prefix') {
 		my $itemPrefix = $pageParam;
 		my $itemsPage = GetItemPrefixPage($itemPrefix);
 		PutHtmlFile(substr($itemPrefix, 0, 2) . '/' . substr($itemPrefix, 2, 2) . '/index.html', $itemsPage);
+	}
+	#
+	# profile
+	elsif ($pageType eq 'profile') {
+		# Profile page
+		my $profilePage = GetProfilePage();
+		PutHtmlFile("profile.html", $profilePage);
 	}
 	#
 	# rss feed
