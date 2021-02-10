@@ -4625,7 +4625,7 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 				if (GetConfig('admin/php/rewrite')) {
 					# rewrite is also required for this to work
 					if (GetConfig('admin/php/regrow_404_pages')) {
-						WriteLog('BuildTouchedPages: $isLazy conditions met, setting to 1');
+						WriteLog('BuildTouchedPages: $isLazy conditions met, setting $isLazy = 1');
 						$isLazy = 1;
 					}
 				}
@@ -4657,9 +4657,7 @@ sub BuildTouchedPages { # $timeLimit, $startTime ; builds pages returned by DBGe
 			my $touchTime = shift @pageArray;
 
 			# output to log
-			WriteLog("\$pageType = $pageType");
-			WriteLog("\$pageParam = $pageParam");
-			WriteLog("\$touchTime = $touchTime");
+			WriteLog('BuildTouchedPages: $pageType = ' . $pageType . '; $pageParam = ' . $pageParam . '; $touchTime = ' . $touchTime);
 
 			if ($isLazy) {
 				my $pagePath = GetPagePath($pageType, $pageParam);
