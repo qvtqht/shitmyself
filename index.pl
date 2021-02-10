@@ -104,6 +104,126 @@ sub MakeChainIndex { # $import = 1; reads from log/chain.log and puts it into it
 	return 0;
 } # MakeChainIndex()
 
+sub GetTokenDefs {
+	my @tokenDefs = (
+		{ # cookie of user who posted the message
+			'token'   => 'cookie',
+			'mask'    => '^(cookie)(\W+)([0-9A-F]{16})',
+			'mask_params'    => 'mgi',
+			'message' => '[Cookie]'
+		},
+		{ # allows cookied user to set own name
+			'token'   => 'my_name_is',
+			'mask'    => '^(my name is)(\W+)([A-Za-z0-9\'_\., ]+)\r?$',
+			'mask_params'    => 'mgi',
+			'message' => '[MyNameIs]'
+		},
+		{ # parent of item (to which item is replying)
+			'token'   => 'parent',
+			'mask'    => '^(\>\>)(\W?)([0-9a-f]{40})', # >>
+			'mask_params' => 'mg',
+			'message' => '[Parent]'
+		},
+	#				{ # reference to item
+	#					'token'   => 'itemref',
+	#					'mask'    => '(\W?)([0-9a-f]{8})(\W?)',
+	#					'mask_params' => 'mg',
+	#					'message' => '[Reference]'
+	#				}, #todo make it ensure item exists before parsing
+		{ # title of item, either self or parent. used for display when title is needed #title title:
+			'token'   => 'title',
+			'mask'    => '^(title)(\W)(.+)$',
+			'mask_params'    => 'mg',
+			'apply_to_parent' => 1,
+			'message' => '[Title]'
+		},
+		{ # used for image alt tags #todo
+			'token'   => 'alt',
+			'mask'    => '^(alt)(\W+)(.+)$',
+			'mask_params'    => 'mg',
+			'apply_to_parent' => 1,
+			'message' => '[Alt]'
+		},
+		{ # hash of line from access.log where item came from (for parent item)
+			'token'   => 'access_log_hash',
+			'mask'    => '^(AccessLogHash)(\W+)(.+)$',
+			'mask_params'    => 'mgi',
+			'apply_to_parent' => 1,
+			'message' => '[AccessLogHash]'
+		},
+		{ # solved puzzle (user id, timestamp, random number between 0 and 1
+			# together they must hash to the prefix specified in config/puzzle/accept
+			# the default prefix (also accepted) is specified in config/puzzle/prefix
+			'token' => 'puzzle',
+			'mask' => '^()()([0-9A-F]{16} [0-9]{10} 0\.[0-9]+)',
+			'mask_params' => 'mg',
+			'message' => '[Puzzle]'
+		},
+		{ # anything beginning with http and up to next space character (or eof)
+			'token' => 'url',
+			'mask' => '()()(http[\S]+)',
+			'mask_params' => 'mg',
+			'message' => '[URL]',
+			'apply_to_parent' => 0
+		},
+		{ # hashtags, currently restricted to latin alphanumeric and underscore
+			'token' => 'hashtag',
+			'mask'  => '(\#)()([a-zA-Z0-9_]{1,32})',
+			'mask_params' => 'mgi',
+			'message' => '[HashTag]',
+			'apply_to_parent' => 1
+		},
+		{ # verify token, for third-party identification
+			# example: verify http://www.example.com/user/JohnSmith/
+			# must be child of pubkey item
+			'token' => 'verify',
+			'mask'  => '^(verify)(\W)(.+)$',
+			'mask_params' => 'mgi',
+			'message' => '[Verify]',
+			'apply_to_parent' => 1
+		},
+		{ # #sql token, returns sql results (for privileged users)
+			# example: #sql select author_key, alias from author_alias
+			# must be a select statement, no update etc
+			# to begin with, limited to 1 line; #todo
+			'token' => 'sql',
+			'mask' => '^(sql)(\W).+$',
+			'mask_params' => 'mgi',
+			'message' => '[SQL]',
+			'apply_to_parent' => 0
+		},
+		{ # config token for setting configuration
+			# config/admin/anyone_can_config = allow anyone to config (for open-access boards)
+			# config/admin/signed_can_config = allow only signed users to config
+			# config/admin/cookied_can_config = allow any user (including cookies) to config
+			# otherwise, only admin user can config
+			# also, anything under config/admin/ is still restricted to admin user only
+			# admin user must have a pubkey
+			'token' => 'config',
+			'mask'  => '(config)(\W)(.+)$',
+			'mask_params' => 'mgi',
+			'message' => '[Config]',
+			'apply_to_parent' => 1
+		}
+	);
+
+		# REGEX cheatsheet
+		# ================
+		#
+		# \w word
+		# \W NOT word
+		# \s whitespace
+		# \S NOT whitespace
+		#
+		# /s = single-line (changes behavior of . metacharacter to match newlines)
+		# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
+		# /g = global (all instances)
+		# /i = case-insensitive
+		# /e = eval
+
+	return @tokenDefs;
+} # GetTokenDefs()
+
 sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 # Reads a given $file, parses it, and puts it into the index database
 # If ($file eq 'flush'), flushes any queued queries
@@ -129,7 +249,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		return 1;
 	}
 
-	WriteLog("IndexTextFile($file)");
+	WriteLog('IndexTextFile(' . $file . ')');
 
 	if (GetConfig('admin/organize_files')) {
 		# renames files to their hashes
@@ -165,7 +285,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		my %hasToken;
 
 		my @tokenMessages;
-
 		my @tokensFound;
 		{ #tokenize into @tokensFound
 			###################################################
@@ -174,121 +293,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			# mask: token string, separator, parameter
 			# params: parameters for regex matcher
 			# message: what's displayed in place of token for user
-			my @tokenDefs = (
-				{ # cookie of user who posted the message
-					'token'   => 'cookie',
-					'mask'    => '^(cookie)(\W+)([0-9A-F]{16})',
-					'mask_params'    => 'mgi',
-					'message' => '[Cookie]'
-				},
-				{ # allows cookied user to set own name
-					'token'   => 'my_name_is',
-					'mask'    => '^(my name is)(\W+)([A-Za-z0-9\'_\., ]+)\r?$',
-					'mask_params'    => 'mgi',
-					'message' => '[MyNameIs]'
-				},
-				{ # parent of item (to which item is replying)
-					'token'   => 'parent',
-					'mask'    => '^(\>\>)(\W?)([0-9a-f]{40})', # >>
-					'mask_params' => 'mg',
-					'message' => '[Parent]'
-				},
-#				{ # reference to item
-#					'token'   => 'itemref',
-#					'mask'    => '(\W?)([0-9a-f]{8})(\W?)',
-#					'mask_params' => 'mg',
-#					'message' => '[Reference]'
-#				}, #todo make it ensure item exists before parsing
-				{ # title of item, either self or parent. used for display when title is needed #title title:
-					'token'   => 'title',
-					'mask'    => '^(title)(\W)(.+)$',
-					'mask_params'    => 'mg',
-					'apply_to_parent' => 1,
-					'message' => '[Title]'
-				},
-				{ # used for image alt tags #todo
-					'token'   => 'alt',
-					'mask'    => '^(alt)(\W+)(.+)$',
-					'mask_params'    => 'mg',
-					'apply_to_parent' => 1,
-					'message' => '[Alt]'
-				},
-				{ # hash of line from access.log where item came from (for parent item)
-					'token'   => 'access_log_hash',
-					'mask'    => '^(AccessLogHash)(\W+)(.+)$',
-					'mask_params'    => 'mgi',
-					'apply_to_parent' => 1,
-					'message' => '[AccessLogHash]'
-				},
-				{ # solved puzzle (user id, timestamp, random number between 0 and 1
-					# together they must hash to the prefix specified in config/puzzle/accept
-					# the default prefix (also accepted) is specified in config/puzzle/prefix
-					'token' => 'puzzle',
-					'mask' => '^()()([0-9A-F]{16} [0-9]{10} 0\.[0-9]+)',
-					'mask_params' => 'mg',
-					'message' => '[Puzzle]'
-				},
-				{ # anything beginning with http and up to next space character (or eof)
-					'token' => 'url',
-					'mask' => '()()(http[\S]+)',
-					'mask_params' => 'mg',
-					'message' => '[URL]',
-					'apply_to_parent' => 0
-				},
-				{ # hashtags, currently restricted to latin alphanumeric and underscore
-					'token' => 'hashtag',
-					'mask'  => '(\#)()([a-zA-Z0-9_]{1,32})',
-					'mask_params' => 'mgi',
-					'message' => '[HashTag]',
-					'apply_to_parent' => 1
-				},
-				{ # verify token, for third-party identification
-					# example: verify http://www.example.com/user/JohnSmith/
-					# must be child of pubkey item
-					'token' => 'verify',
-					'mask'  => '^(verify)(\W)(.+)$',
-					'mask_params' => 'mgi',
-					'message' => '[Verify]',
-					'apply_to_parent' => 1
-				},
-				{ # #sql token, returns sql results (for privileged users)
-					# example: #sql select author_key, alias from author_alias
-					# must be a select statement, no update etc
-					# to begin with, limited to 1 line; #todo
-					'token' => 'sql',
-					'mask' => '^(sql)(\W).+$',
-					'mask_params' => 'mgi',
-					'message' => '[SQL]',
-					'apply_to_parent' => 0
-				},
-				{ # config token for setting configuration
-					# config/admin/anyone_can_config = allow anyone to config (for open-access boards)
-					# config/admin/signed_can_config = allow only signed users to config
-					# config/admin/cookied_can_config = allow any user (including cookies) to config
-					# otherwise, only admin user can config
-					# also, anything under config/admin/ is still restricted to admin user only
-					# admin user must have a pubkey
-					'token' => 'config',
-					'mask'  => '(config)(\W)(.+)$',
-					'mask_params' => 'mgi',
-					'message' => '[Config]',
-					'apply_to_parent' => 1
-				}
-			);
-
-			# REGEX cheatsheet
-			# ================
-			#
-			# \w word
-			# \W NOT word
-			# \s whitespace
-			# \S NOT whitespace
-			#
-			# /s = single-line (changes behavior of . metacharacter to match newlines)
-			# /m = multi-line (changes behavior of ^ and $ to work on lines instead of entire file)
-			# /g = global (all instances)
-			# /i = case-insensitive
-			# /e = eval
+			my @tokenDefs = GetTokenDefs();
 
 			# parses standard issue tokens, definitions above
 			# stores into @tokensFound
@@ -441,8 +446,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 						}
 					} # title, access_log_hash, url, alt
 
-
-
 					if ($tokenFound{'token'} eq 'config') { #config
 						if (
 							IsAdmin($authorKey) || #admin can always config #todo
@@ -554,7 +557,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							WriteLog('IndexTextFile: warning: my_name_is: sanity check FAILED');
 						}
 					} # my_name_is
-
 
 					if ($tokenFound{'token'} eq 'hashtag') { #hashtag
 						if ($tokenFound{'param'} eq 'remove') { #remove
@@ -690,51 +692,50 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 							} # valid hashtag
 						} # non-permissioned hashtags
 
-						$detokenedMessage = trim($detokenedMessage);
-						if ($detokenedMessage eq '') {
-							# add #notext label/tag
-							DBAddVoteRecord($fileHash, 0, 'notext');
-						}
-						else { # has $detokenedMessage
-							{ #title:
-								my $firstEol = index($detokenedMessage, "\n");
-								my $titleLength = GetConfig('title_length'); #default = 255
-								if (!$titleLength) {
-									$titleLength = 255;
-									WriteLog('#todo: warning: $titleLength was false');
-								}
-								if ($firstEol == -1) {
-									if (length($detokenedMessage) > 1) {
-										$firstEol = length($detokenedMessage);
-									}
-								}
-								# if ($firstEol > $titleLength) {
-								# 	$firstEol = $titleLength;
-								# }
-								if ($firstEol > 0) {
-									my $title = '';
-									if ($firstEol <= $titleLength) {
-										$title = substr($detokenedMessage, 0, $firstEol);
-									} else {
-										$title = substr($detokenedMessage, 0, $titleLength) . '...';
-									}
-
-									DBAddItemAttribute($fileHash, 'title', $title, 0);
-									DBAddVoteRecord($fileHash, 0, 'hastitle');
-								}
-							}
-
-							DBAddVoteRecord($fileHash, 0, 'hastext');
-							DBAddPageTouch('tag', 'hastext');
-
-							$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
-						} # has a $detokenedMessage
+						$detokenedMessage = str_replace($tokenFound{'recon'}, '', $detokenedMessage);
 					} #hashtag
 				} # if ($tokenFound{'token'} && $tokenFound{'param'}) {
 			} # foreach @tokensFound
 		} # not #example
 
+		$detokenedMessage = trim($detokenedMessage);
+		if ($detokenedMessage eq '') {
+			# add #notext label/tag
+			WriteLog('IndexTextFile: no $detokenedMessage, setting #notext; $fileHash = ' . $fileHash);
+			DBAddVoteRecord($fileHash, 0, 'notext');
+		}
+		else { # has $detokenedMessage
+			WriteLog('IndexTextFile: has $detokenedMessage $fileHash = ' . $fileHash);
+			{ #title:
+				my $firstEol = index($detokenedMessage, "\n");
+				my $titleLength = GetConfig('title_length'); #default = 255
+				if (!$titleLength) {
+					$titleLength = 255;
+					WriteLog('#todo: warning: $titleLength was false');
+				}
+				if ($firstEol == -1) {
+					if (length($detokenedMessage) > 1) {
+						$firstEol = length($detokenedMessage);
+					}
+				}
+				if ($firstEol > $titleLength) {
+					$firstEol = $titleLength;
+				}
+				if ($firstEol > 0) {
+					my $title = '';
+					if ($firstEol <= $titleLength) {
+						$title = substr($detokenedMessage, 0, $firstEol);
+					} else {
+						$title = substr($detokenedMessage, 0, $titleLength) . '...';
+					}
+					DBAddItemAttribute($fileHash, 'title', $title, 0);
+					DBAddVoteRecord($fileHash, 0, 'hastitle');
+				}
+			}
 
+			DBAddVoteRecord($fileHash, 0, 'hastext');
+			DBAddPageTouch('tag', 'hastext');
+		} # has a $detokenedMessage
 
 		if ($message) {
 			# cache the processed message text
@@ -744,9 +745,6 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 		} else {
 			WriteLog('IndexTextFile: I was going to save $messageCacheName, but $message is blank!');
 		}
-
-
-
 	} # .txt
 
 	return $fileHash;
