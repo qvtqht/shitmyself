@@ -476,6 +476,8 @@ function PutCache ($cacheName, $content) { // stores value in cache
 }
 
 function UnlinkCache ($cacheName) { // removes cache by unlinking file it's stored in
+	WriteLog('UnlinkCache(' . $cacheName . ')');
+
 	static $myVersion;
 	if (!$myVersion) {
 		$myVersion = GetMyCacheVersion();
@@ -531,6 +533,7 @@ function RetrieveServerResponse ($messageId) { // retrieves response message for
 			UnlinkCache('response/' . $messageId);
 		} else {
 			WriteLog("RetrieveServerResponse: Message found, not deleting because debug mode.");
+			$message .= '<font size="-2" title="This response message is sticky because admin/php/debug is true">*</font>';
 		}
 	} else {
 		WriteLog('RetrieveServerResponse: warning: message not found!');
@@ -618,10 +621,10 @@ function RedirectWithResponse ($url, $message) { // redirects to page with serve
 		if (!headers_sent()) {
 			// #warning, this is not a good pattern, don't copy this code. the html will be printed unescaped.
 			// doing it in this case because we want to make a clickable link
-			WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug is true)</font>', 1);
+			WriteLog('<a href="' . $redirectUrl . '">' . $redirectUrl . '</a> <font color=red>(redirect paused because admin/php/debug or admin/php/debug_server_response is true)</font>', 1);
 
 			// #todo template the html
-			print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a><br>Message: '.htmlspecialchars($message).'</div><hr>';
+			print '<div style="background-color: yellow"><a href="' . $redirectUrl . '"><b>Continue</b>: ' . $redirectUrl . '</a><br>Message: '.htmlspecialchars($message).'<br><font color=red size="-2">(redirect paused because of admin/php/debug admin/php/debug_server_response)</font></div><hr>';
 		}
 	} else {
 		// do the redirect
