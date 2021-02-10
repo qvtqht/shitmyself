@@ -35,7 +35,7 @@ function MakeKey (t) { //makes key using default settings
 
 	//alert('DEBUG: MakeKey: openpgp: ' + !!openpgp);
 
-	if (openpgp) {
+	if (window.localStorage && openpgp) {
 		// if openpgp is loaded, proceed with client-side key generation
 
 		//alert('DEBUG: SimpleBenchmark() returns ' + SimpleBenchmark());

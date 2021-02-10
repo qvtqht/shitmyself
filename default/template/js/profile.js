@@ -55,16 +55,21 @@ function btnRegister_Click (t) { // event for 'Register' button's click
 		}
 	}
 
+	//if (window.localStorage && window.Promise) { // this extra check is disabled for some reason, I think IE?
 	if (window.localStorage) {
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
 		if (window.MakeKey) {
 			//alert('DEBUG: btnRegister_Click: window.MakeKey exists, calling MakeKey()');
-			var intKeyGenResult = MakeKey(t);
-			//alert('DEBUG: btnRegister_Click: intKeyGenResult = ' + intKeyGenResult);
-			SetPrefs('last_pubkey_ping', 0);
 
-			//alert('DEBUG: returning intKeyGenResult = ' + intKeyGenResult);
-			return intKeyGenResult;
+			var chkEnablePGP = document.getElementById('chkEnablePGP');
+			if (chkEnablePGP && chkEnablePGP.checked) {
+				//alert('DEBUG: chkEnablePGP is present and checked');
+				var intKeyGenResult = MakeKey(t);
+				//alert('DEBUG: btnRegister_Click: intKeyGenResult = ' + intKeyGenResult);
+				SetPrefs('last_pubkey_ping', 1);
+				//alert('DEBUG: returning intKeyGenResult = ' + intKeyGenResult);
+				return intKeyGenResult;
+			}
 		}
 	} else {
 		return true;
@@ -538,12 +543,12 @@ function PubKeyPing () { // checks if user's public key is on server
 function ProfileOnLoad () { // onload event for profile page
 	//alert('DEBUG: ProfileOnLoad() begin');
 
-	var lblSigningIndicator;
+	var lblSigningIndicator = document.getElementById('lblSigningIndicator');
 	if (document.getElementById) {
-		//alert('debug: ProfileOnLoad: document.getElementById check passed');
+		//alert('DEBUG: ProfileOnLoad: document.getElementById check passed');
 
 		if (window.getPrivateKey) {
-			//alert('debug: ProfileOnLoad: window.getPrivateKey check passed');
+			//alert('DEBUG: ProfileOnLoad: window.getPrivateKey check passed');
 
 			if (window.localStorage) {
 				//alert('DEBUG: ProfileOnLoad: window.localStorage check passed, calling getPrivateKey()...');
@@ -553,7 +558,6 @@ function ProfileOnLoad () { // onload event for profile page
 				if (pk) {
 					//alert('DEBUG: ProfileOnLoad: pk = GetPrivateKey() = ' + !!pk);
 					// span used to indicate whether openpgp signing is available
-					lblSigningIndicator = document.getElementById('lblSigningIndicator');
 					if (lblSigningIndicator) {
 						//alert('DEBUG: lblSigningIndicator TRUE');
 						// display value of "algorithm" which openpgp gives us
@@ -604,12 +608,25 @@ function ProfileOnLoad () { // onload event for profile page
 							// #todo why is window.openpgp false here??
 							//alert('DEBUG: window.openpgp check passed, setting no (available)');
 
-							lblSigningIndicator.innerHTML = 'Available';
+							lblSigningIndicator.innerHTML = '';
+
+							var lblEnablePGP = document.createElement('label');
+							var chkEnablePGP = document.createElement('input');
+							var txtEnablePGP = document.createTextNode('Enable');
+
+							chkEnablePGP.setAttribute('type', 'checkbox');
+							chkEnablePGP.setAttribute('name', 'chkEnablePGP');
+							chkEnablePGP.setAttribute('id', 'chkEnablePGP');
+
+							lblEnablePGP.setAttribute('for', 'chkEnablePGP');
+
+							lblEnablePGP.appendChild(chkEnablePGP);
+							lblEnablePGP.appendChild(txtEnablePGP);
+							lblSigningIndicator.appendChild(lblEnablePGP);
 
 							AddPrivateKeyLinks();
 						} else {
-							//alert('DEBUG: warning: window.openpgp check FAILED');
-
+							alert('DEBUG: warning: window.openpgp check FAILED');
 							lblSigningIndicator.innerHTML = 'Nope';
 						}
 					} else {
