@@ -89,6 +89,11 @@ UpdateUpdateTime();
 
 PutStatsPages();
 
+if (GetConfig('admin/dev/launch_browser_after_build')) {
+	WriteLog('build.pl: xdg-open http://localhost:2784/ &');
+	WriteLog(`xdg-open http://localhost:2784/ &`);
+}
+
 BuildMessage("Done!");
 WriteLog( "Finished!");
 
