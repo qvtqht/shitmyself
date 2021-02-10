@@ -3670,7 +3670,7 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	{
 		my $fourOhFourPage = GetDialogPage('404'); #GetTemplate('html/404.template');
 		if (GetConfig('html/clock')) {
-			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock fresh)); #todo this causes duplicate clock script
+			$fourOhFourPage = InjectJs($fourOhFourPage, qw(clock fresh utils)); #todo this causes duplicate clock script
 		}
 		PutHtmlFile("404.html", $fourOhFourPage);
 		PutHtmlFile("error/error-404.html", $fourOhFourPage);
