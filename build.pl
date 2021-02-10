@@ -107,7 +107,7 @@ if (GetConfig('admin/lighttpd/enable')) {
 }
 
 if (GetConfig('admin/ssi/enable') && GetConfig('admin/php/enable')) {
-	BuildMessage('Warning: ssi/enable and php/enable are both true');
+	BuildMessage('build.pl: warning: ssi/enable and php/enable are both true');
 }
 
 1;
