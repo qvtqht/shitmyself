@@ -108,65 +108,79 @@ function EventLoop () { // for calling things which need to happen on a regular 
 // sets another timeout for itself when done
 // replaces several independent timeouts
 // #backlog add secondary EventLoopWatcher timer which ensures this one runs when needed
-	//alert('debug: EventLoop');
+
 	var d = new Date();
 	var eventLoopBegin = d.getTime();
 
-	if (window.flagUnloaded) {
-		document.title = 'Meditate...';
-		//document.body.style.opacity="0.8";
+	//alert('DEBUG: EventLoop: eventLoopBegin = ' + eventLoopBegin + ' - window.eventLoopPrevious = ' + window.eventLoopPrevious + ' = ' + (eventLoopBegin - window.eventLoopPrevious));
 
-		var ariaAlert;
-		ariaAlert = document.getElementById('ariaAlert');
-		if (!ariaAlert) {
-			ariaAlert = document.createElement('p');
-			ariaAlert.setAttribute('role', 'alert');
-			ariaAlert.setAttribute('id', 'ariaAlert');
-			ariaAlert.innerHTML = 'Meditate...';
-			ariaAlert.style.opacity = '1';
-			ariaAlert.style.zIndex = '1';
-
-			//document.body.appendChild(ariaAlert);
-			document.body.insertBefore(ariaAlert, document.body.firstChild);
-		}
-	}
-
-	//return;
-	// uncomment to disable event loop
-	// makes js debugging easier
-
-	if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
-		if (13000 < (eventLoopBegin - window.eventLoopShowTimestamps)) {
-			ShowTimestamps();
-			window.eventLoopShowTimestamps = eventLoopBegin;
-		} else {
-			// do nothing
-		}
-	}
-
-	if (window.eventLoopDoAutoSave && window.DoAutoSave) {
-		if (5000 < (eventLoopBegin - window.eventLoopDoAutoSave)) { // autosave interval
-			DoAutoSave();
-			window.eventLoopDoAutoSave = eventLoopBegin;
-		} else {
-			// do nothing
-		}
+	if (!window.eventLoopPrevious) {
+		window.eventLoopPrevious = 1;
 	}
 
 	if (window.eventLoopSetClock && window.setClock) {
 		setClock();
 	}
 
-	if (window.eventLoopShowAdvanced && window.ShowAdvanced) {
-		ShowAdvanced();
-	}
+	if (10000 < (eventLoopBegin - window.eventLoopPrevious)) {
+		window.eventLoopPrevious = eventLoopBegin;
 
-	if (window.eventLoopFresh && window.CheckIfFresh) {
-		//window.eventLoopFresh = eventLoopBegin;
-		if (GetPrefs('notify_on_change')) {
-			CheckIfFresh();
+		if (window.flagUnloaded) {
+			var loadingMessage = 'Loading next page...'
+			document.title = loadingMessage;
+			//document.body.style.opacity="0.8";
+
+			var ariaAlert;
+			ariaAlert = document.getElementById('ariaAlert');
+			if (!ariaAlert) {
+				ariaAlert = document.createElement('p');
+				ariaAlert.setAttribute('role', 'alert');
+				ariaAlert.setAttribute('id', 'ariaAlert');
+				ariaAlert.innerHTML = loadingMessage;
+				ariaAlert.style.opacity = '1';
+				ariaAlert.style.zIndex = '1';
+
+				//document.body.appendChild(ariaAlert);
+				document.body.insertBefore(ariaAlert, document.body.firstChild);
+			}
 		}
-	}
+
+		//return;
+		// uncomment to disable event loop
+		// makes js debugging easier
+
+		if (window.eventLoopShowTimestamps && window.ShowTimestamps) {
+			if (13000 < (eventLoopBegin - window.eventLoopShowTimestamps)) {
+				ShowTimestamps();
+				window.eventLoopShowTimestamps = eventLoopBegin;
+			} else {
+				// do nothing
+			}
+		}
+
+		if (window.eventLoopDoAutoSave && window.DoAutoSave) {
+			if (5000 < (eventLoopBegin - window.eventLoopDoAutoSave)) { // autosave interval
+				DoAutoSave();
+				window.eventLoopDoAutoSave = eventLoopBegin;
+			} else {
+				// do nothing
+			}
+		}
+
+		if (window.eventLoopShowAdvanced && window.ShowAdvanced) {
+			ShowAdvanced();
+		}
+
+		if (window.eventLoopFresh && window.CheckIfFresh) {
+			if (10000 < (eventLoopBegin - window.eventLoopFresh)) {
+				//window.eventLoopFresh = eventLoopBegin;
+				if (GetPrefs('notify_on_change')) {
+					CheckIfFresh();
+				}
+				window.eventLoopFresh = eventLoopBegin;
+			}
+		}
+	} // 10000 < (eventLoopBegin - window.eventLoopPrevious)
 
 	if (window.eventLoopEnabled) {
 		var d = new Date();
@@ -188,7 +202,8 @@ function EventLoop () { // for calling things which need to happen on a regular 
 		//document.title = eventLoopDuration; // for debugging performance
 
 		window.timeoutEventLoop = setTimeout('EventLoop()', eventLoopDuration);
-	}
+	} // window.eventLoopEnabled
+
 } // EventLoop()
 
 function UrlExists(url) { // checks if url exists
