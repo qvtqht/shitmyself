@@ -279,8 +279,32 @@ sub SqliteMakeTables { # creates sqlite schema
 	SqliteQuery2("CREATE TABLE config(key, value, timestamp, reset_flag, file_hash);");
 	SqliteQuery2("CREATE UNIQUE INDEX config_unique ON config(key, value, timestamp, reset_flag);");
 	SqliteQuery2("
-		CREATE VIEW config_latest AS
-		SELECT key, value, MAX(timestamp) config_timestamp, reset_flag, file_hash FROM config GROUP BY key ORDER BY timestamp DESC
+   		CREATE VIEW config_latest
+   		AS
+   			SELECT
+   				key,
+   				value,
+   				MAX(timestamp) config_timestamp,
+   				reset_flag,
+   				file_hash FROM config
+			GROUP BY key
+			ORDER BY timestamp DESC
+    	;");
+
+	SqliteQuery2("
+		CREATE VIEW config_bestest
+		AS
+			SELECT
+				config.key,
+				config.value,
+				MAX(config.timestamp) config_timestamp,
+				config.reset_flag,
+				config.file_hash,
+				item_score.item_score
+			FROM config
+				 LEFT JOIN item_score ON (config.file_hash = item_score.file_hash)
+			GROUP BY config.key
+			ORDER BY item_score.item_score DESC, timestamp DESC
 	;");
 
 
