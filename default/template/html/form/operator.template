@@ -3,7 +3,6 @@
 <fieldset class=beginner>
 	<legend><b>Attention:</b><br></legend>
 	Use operator controls with care!<br>
-	Improper use may cause data loss and/or downtime.<br>
 </fieldset>
 
 <fieldset>
@@ -31,7 +30,6 @@
 	</p>
 	<p>
 		<span class=beginner>
-			<b>Attention: This button removes unscored content!</b><br>
 			Use Flush to make space for new content:<br>
 		</span>
 		<label for=chkFlush>
