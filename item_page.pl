@@ -189,7 +189,9 @@ sub GetItemAttributesWindow {
 	my $itemInfoTemplate;
 	WriteLog('GetItemPage: my $itemInfoTemplate; ');
 
-	my $fileHash = shift;
+	my %file = %{shift @_};
+
+	my $fileHash = $file{'file_hash'};
 
 	#todo sanity checks
 
@@ -255,22 +257,24 @@ sub GetItemAttributesWindow {
 				$itemAttributesTable .= '</td></tr>';
 			}
 		}
-#
-#		if (defined($file{'tags_list'})) { # bolt on tags list as an attribute
-#			$itemAttributesTable .= '<tr><td>';
-#			$itemAttributesTable .= GetString('item_attribute/tags_list');
-#			$itemAttributesTable .= '</td><td>';
-#			$itemAttributesTable .= $file{'tags_list'};
-#			$itemAttributesTable .= '</td></tr>';
-#		}
-#
-#		if (defined($file{'item_score'})) { # bolt on item score
-#			$itemAttributesTable .= '<tr><td>';
-#			$itemAttributesTable .= GetString('item_attribute/item_score');
-#			$itemAttributesTable .= '</td><td>';
-#			$itemAttributesTable .= $file{'item_score'};
-#			$itemAttributesTable .= '</td></tr>';
-#		}
+
+
+
+		if (defined($file{'tags_list'})) { # bolt on tags list as an attribute
+			$itemAttributesTable .= '<tr><td>';
+			$itemAttributesTable .= GetString('item_attribute/tags_list');
+			$itemAttributesTable .= '</td><td>';
+			$itemAttributesTable .= $file{'tags_list'};
+			$itemAttributesTable .= '</td></tr>';
+		}
+
+		if (defined($file{'item_score'})) { # bolt on item score
+			$itemAttributesTable .= '<tr><td>';
+			$itemAttributesTable .= GetString('item_attribute/item_score');
+			$itemAttributesTable .= '</td><td>';
+			$itemAttributesTable .= $file{'item_score'};
+			$itemAttributesTable .= '</td></tr>';
+		}
 
 		$itemAttributesTable = '<tbody class=content>' . $itemAttributesTable . '</tbody>';
 
