@@ -14,12 +14,31 @@ use 5.010;
 
 require './utils.pl';
 
+# look for anything new in access log
+system('./access.pl --all');
+
+# index any files which haven't been indexed already
 system('./index.pl --all');
 
-system('./generate.pl');
+# rebuild static html files if necessary
+if (
+	GetConfig('admin/pages/lazy_page_generation') &&
+	GetConfig('admin/pages/rewrite') eq 'all' &&
+	GetConfig('admin/php/enable')
+) {
+	#todo html_clean without disturbing site
+} else {
+	# regenerate all pages (may take a while)
+	system('./pages.pl --all');
+}
 
+# build /compost and /index0.html pages
 system('./pages.pl --index');
 
+# update status of page queue
+system('./query/page_touch.sh');
+
+# update displayed timestamp
 UpdateUpdateTime();
 
 1;
