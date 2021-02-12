@@ -106,6 +106,18 @@ In js, there is inconsistent capitalization, some camel, some capitalized
 
 Quite a few #to\dos throughout the code
 
+I am aware that there are many "un-DRY" areas in the code #DRY
+	This is a case of avoiding premature opitmization and "YAGNI"
+	I do not consider it a huge problem if the same type of code is repeated 10 times in a row
+		Because it is all in one place, and fixing it is not difficult
+		Huge benefit of writing it this way first:
+			I'm rewriting the same code several times, making it better each time
+			Once I've written it enough times, I know exactly how to write the DRY version
+			Refactoring this code into DRY is much easier
+				Because I can see exactly what repeats and what doesn't
+				And I don't have to think about how to structure the repetition
+					at the same time as writing the functionality itself
+
 
 Browser Issues
 ==============
