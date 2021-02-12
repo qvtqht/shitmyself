@@ -2429,6 +2429,12 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 					'onload',
 					'if (window.OnLoadEverything) { OnLoadEverything(); }'
 				);
+				$html = AddAttributeToTag(
+					$html,
+					'body',
+					'onclick',
+					"if (event.target && (event.target.tagName == 'A') && !(event.target.onclick)) { ShowPreNavigateNotification(); }"
+				);
 			} else {
 				WriteLog('InjectJs(): warning: wanted to $html does not contain <body');
 			}
@@ -2447,7 +2453,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 					$html,
 					'body',
 					'onbeforeunload',
-					'window.flagUnloaded=1;window.eventLoopFresh=0;'
+					'if (window.ShowPreNavigateNotification){ ShowPreNavigateNotification();}'
 #					'if (window.OnUnloadEverything) { OnUnloadEverything(); }'
 				);
 			} else {

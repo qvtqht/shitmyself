@@ -104,6 +104,29 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 	//
 } // OnLoadEverything()
 
+function ShowPreNavigateNotification () {
+	document.title = 'Meditate...';
+	//document.body.style.opacity="0.8";
+
+	if (document.getElementById) {
+		var ariaAlert;
+		ariaAlert = document.getElementById('ariaAlert');
+
+		if (!ariaAlert) {
+			ariaAlert = document.createElement('p');
+			ariaAlert.setAttribute('role', 'alert');
+			ariaAlert.setAttribute('id', 'ariaAlert');
+			ariaAlert.innerHTML = 'Meditate...';
+			ariaAlert.style.opacity = '1';
+			ariaAlert.style.zIndex = '1337';
+			//document.body.appendChild(ariaAlert);
+			document.body.insertBefore(ariaAlert, document.body.firstChild);
+		}
+	}
+
+	return ''; // true would show a confirmation
+}
+
 function EventLoop () { // for calling things which need to happen on a regular basis
 // sets another timeout for itself when done
 // replaces several independent timeouts
@@ -126,22 +149,8 @@ function EventLoop () { // for calling things which need to happen on a regular 
 		window.eventLoopPrevious = eventLoopBegin;
 
 		if (window.flagUnloaded) {
-			var loadingMessage = 'Loading next page...'
-			document.title = loadingMessage;
-			//document.body.style.opacity="0.8";
-
-			var ariaAlert;
-			ariaAlert = document.getElementById('ariaAlert');
-			if (!ariaAlert) {
-				ariaAlert = document.createElement('p');
-				ariaAlert.setAttribute('role', 'alert');
-				ariaAlert.setAttribute('id', 'ariaAlert');
-				ariaAlert.innerHTML = loadingMessage;
-				ariaAlert.style.opacity = '1';
-				ariaAlert.style.zIndex = '1';
-
-				//document.body.appendChild(ariaAlert);
-				document.body.insertBefore(ariaAlert, document.body.firstChild);
+			if (window.ShowPreNavigateNotification) {
+				ShowPreNavigateNotification();
 			}
 		}
 
