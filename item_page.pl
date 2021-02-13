@@ -117,21 +117,16 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		$txtIndex .= $itemTemplate;
 	}
 
-	my $voteButtons = '';
-	if ($file{'tags_list'}) {
-		$voteButtons .= '<p>Tags: ' . $file{'tags_list'} . '</p>';
-	} else {
-		$voteButtons .= '<p>No tags applied.</p>';
-	}
-
 	if (GetConfig('reply/enable')) {
+		my $voteButtons = '';
 		$voteButtons .= GetItemTagButtons($file{'file_hash'});
-		$txtIndex .= '<p><span class=advanced>'.GetWindowTemplate($voteButtons, 'Tag').'</span></p>';
+
+		$txtIndex .= '<p><span class=advanced>'.GetWindowTemplate($voteButtons, 'Classify').'</span></p>';
 		$txtIndex .= GetReplyListing($file{'file_hash'});
 		$txtIndex .= GetReplyForm($file{'file_hash'});
 	}
 
-	$txtIndex .= GetItemAttributesWindow($file{'file_hash'});
+	$txtIndex .= GetItemAttributesWindow(\%file);
 
 	$txtIndex .= GetMenuTemplate();
 
