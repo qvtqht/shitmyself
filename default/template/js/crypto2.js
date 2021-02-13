@@ -313,7 +313,7 @@ function getUsername () { // returns pgp username
 	return '';
 }
 
-function signMessage() { // find the compose textbox and sign whatever is in it
+function signMessage () { // find the compose textbox and sign whatever is in it
 // if message is already signed or is a public key, exit
 // relies on getElementById and localStorage
 // submits the form when finished
@@ -321,7 +321,7 @@ function signMessage() { // find the compose textbox and sign whatever is in it
 	//alert('DEBUG: signMessage() begin');
 
 	var privkey = getPrivateKey();
-	if (privkey) {
+	if (document.getElementById && privkey) {
 	    // private key exists, can proceed
 		//alert('DEBUG: signMessage: privkey is true');
 

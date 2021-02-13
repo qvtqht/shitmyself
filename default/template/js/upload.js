@@ -2,16 +2,18 @@
 
 function FileReaderCallback (event) { // sets image to visible once ready
 	//alert('debug: FileReaderCallback()');
-	var imgImagePreview = document.getElementById('imgImagePreview');
-	if (imgImagePreview) {
-		imgImagePreview.style.display = 'inline';
-		imgImagePreview.setAttribute('src', event.target.result);
+	if (document.getElementById) {
+		var imgImagePreview = document.getElementById('imgImagePreview');
+		if (imgImagePreview) {
+			imgImagePreview.style.display = 'inline';
+			imgImagePreview.setAttribute('src', event.target.result);
+		}
 	}
 }
 
 function UploadedFileOnChange (t) { // t=this; called when file selector is changed
 	//alert('debug: UploadedFileOnChange()');
-	if (t && window.FileReader) {
+	if (t && window.FileReader && document.getElementById) {
 		var reader = new FileReader();
 		reader.onload = window.FileReaderCallback;
 

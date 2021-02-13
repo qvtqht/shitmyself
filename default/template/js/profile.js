@@ -56,7 +56,7 @@ function btnRegister_Click (t) { // event for 'Register' button's click
 	}
 
 	//if (window.localStorage && window.Promise) { // this extra check is disabled for some reason, I think IE?
-	if (window.localStorage) {
+	if (window.localStorage && document.getElementById) {
 		//alert('DEBUG: btnRegister_Click: localStorage and Promise feature check pass');
 		if (window.MakeKey) {
 			//alert('DEBUG: btnRegister_Click: window.MakeKey exists, calling MakeKey()');
@@ -543,9 +543,10 @@ function PubKeyPing () { // checks if user's public key is on server
 function ProfileOnLoad () { // onload event for profile page
 	//alert('DEBUG: ProfileOnLoad() begin');
 
-	var lblSigningIndicator = document.getElementById('lblSigningIndicator');
 	if (document.getElementById) {
 		//alert('DEBUG: ProfileOnLoad: document.getElementById check passed');
+
+		var lblSigningIndicator = document.getElementById('lblSigningIndicator');
 
 		if (window.getPrivateKey) {
 			//alert('DEBUG: ProfileOnLoad: window.getPrivateKey check passed');

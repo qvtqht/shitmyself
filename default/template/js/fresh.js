@@ -51,6 +51,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 
 //	if (1 || this.readyState == this.HEADERS_RECEIVED) { // headers received -- what we've been waiting for
 	if (
+		document.getElementById &&
 		this.readyState == this.HEADERS_RECEIVED ||
 		this.status == 200
 	) { // headers received -- what we've been waiting for
@@ -79,13 +80,16 @@ function freshCallback() { // callback for requesting HEAD for current page
 
 							var ariaAlert;
 							ariaAlert = document.getElementById('ariaAlert');
+
 							if (!ariaAlert) {
 								//alert('DEBUG: ariaAlert created successfully');
 								ariaAlert = document.createElement('p');
 								ariaAlert.setAttribute('role', 'alert');
 								ariaAlert.setAttribute('id', 'ariaAlert');
 								ariaAlert.style.zIndex = '1337'; //#todo
-								ariaAlert.innerHTML = 'Page updated ';
+
+								var txtUpdated = document.createTextNode('Page updated ');
+								ariaAlert.appendChild(txtUpdated);
 
 								//document.body.appendChild(ariaAlert);
 								document.body.insertBefore(ariaAlert, document.body.firstChild);

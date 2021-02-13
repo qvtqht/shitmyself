@@ -133,7 +133,7 @@ function ShowAdvanced (force, container) { // show or hide controls based on pre
 		container = document;
 	}
 
-	if (window.localStorage && container.getElementsByClassName) {
+	if (document.getElementById && window.localStorage && container.getElementsByClassName) {
 		//alert('DEBUG: ShowAdvanced: feature check passed!');
 		///////////
 
