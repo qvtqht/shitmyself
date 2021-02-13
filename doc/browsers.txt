@@ -19,6 +19,7 @@ Crashes sometimes experienced
 	Mosaic
 	IE4
 	Opera 3
+	Opera 4.0
 
 In IE 5.5. item pages return a JavaScript error
 	Seems to be related to either whitespace or comments
@@ -27,6 +28,9 @@ In IE 5.5. item pages return a JavaScript error
 		Press OK on the javascript error message, rest of the site works
 		Disable JS on browser
 		Use Light Mode to strip JS
+
+In Opera 4.0, the body onclick causes links to not work.
+	Workaround: set config/admin/js/enable to 0
 
 
 What "Basics" means
