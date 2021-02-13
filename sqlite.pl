@@ -17,8 +17,15 @@ sub GetSqliteDbName {
 my $dbh; # handle for sqlite interface
 
 sub SqliteConnect { # Establishes connection to sqlite db
+# tries up to 5 times, because sometimes the first try fails
+# reason for occasional failure is unknown to me
+# retry count is done by recursion and counted with state $retries
+
 	my $SqliteDbName = GetSqliteDbName();
 	EnsureSubdirs($SqliteDbName);
+
+	# if admin/debug is set, use RaiseError
+	# otherwise do not use RaiseError
 	if (!
 		(
 			(
@@ -62,7 +69,8 @@ sub SqliteConnect { # Establishes connection to sqlite db
 			return SqliteConnect();
 		}
 	}
-}
+} # SqliteConnect()
+
 SqliteConnect();
 
 sub DBMaxQueryLength { # Returns max number of characters to allow in sqlite query
@@ -158,8 +166,6 @@ sub SqliteMakeTables { # creates sqlite schema
 		GROUP BY file_hash, attribute
 		ORDER BY epoch DESC
 	;");
-
-
 
 	# added_time
 	SqliteQuery("
@@ -414,26 +420,6 @@ sub SqliteMakeTables { # creates sqlite schema
 	");
 
 	SqliteQuery2("
-		CREATE VIEW event_future AS
-			SELECT
-				*
-			FROM
-				event
-			WHERE
-				event.event_time > strftime('%s','now');
-	");
-#	SqliteQuery2("
-#		CREATE VIEW event_future AS
-#			SELECT
-#				event.item_hash AS item_hash,
-#				event.event_time AS event_time,
-#				event.event_duration AS event_duration
-#			FROM
-#				event
-#			WHERE
-#				event.event_time > strftime('%s','now');
-#	");
-	SqliteQuery2("
 		CREATE VIEW item_vote_count AS
 			SELECT
 				file_hash,
@@ -443,20 +429,6 @@ sub SqliteMakeTables { # creates sqlite schema
 			GROUP BY file_hash, vote_value
 			ORDER BY vote_count DESC
 	");
-#
-#	SqliteQuery2("
-#		CREATE VIEW
-#			author_score
-#		AS
-#			SELECT
-#				item_flat.author_key AS author_key,
-#				SUM(item_flat.item_score) AS author_score
-#			FROM
-#				item_flat
-#			GROUP BY
-#				item_flat.author_key
-#
-#	");
 
 	SqliteQuery2("
 		CREATE VIEW	author_flat
@@ -479,6 +451,7 @@ sub SqliteMakeTables { # creates sqlite schema
 
 
     	#todo deconfusify
+    	# uses sum of entries in vote table combined with vote weights in vote_value table
     	SqliteQuery2("
     		CREATE VIEW
     			item_score
@@ -500,9 +473,10 @@ sub SqliteMakeTables { # creates sqlite schema
 	my $SqliteDbName = GetSqliteDbName();
 
 	my $schemaHash = `sqlite3 "$SqliteDbName" ".schema" | sha1sum | awk '{print \$1}' > config/sqlite3_schema_hash`;
-	# this can be used as cache "version"
+	# this can be used as schema "version"
 	# only problem is first time it changes, now cache must be regenerated
 	# so need to keep track of the previous one and recursively call again or copy into new location
+
 } # SqliteMakeTables()
 
 sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns result as array reference
