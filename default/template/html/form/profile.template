@@ -4,10 +4,8 @@
 		<span id=spanSignedInStatus></span>
 		<p>
 			Handle: <b><span id=lblHandle></span></b><br>
-			<span id=lblFingerprint></span>
-			<span class=advanced>
-				<br>PGP: <span id=lblSigningIndicator>No</span>
-			</span>
+			<span id=lblFingerprint></span><br>
+			<span id=lblSigningIndicator class=advanced></span>
 		</p>
 		<p>
 			<input
