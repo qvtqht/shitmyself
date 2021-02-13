@@ -12,7 +12,7 @@
 	<tr bgcolor="$colorWindow" class=menubar>
 		<td>
 			<big><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big> $menuItemsTag</big>
-			<a href="/etc.html" accesskey=o>M<u>o</u>re</a><!-- ShowAll() -->
+			<a href="/etc.html" accesskey=o>M<u>o</u>re</a>
 			<span id=spnClock></span>
 		</td>
 	</tr>
