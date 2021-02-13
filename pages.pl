@@ -3592,10 +3592,65 @@ sub MakePhpPages {
 	}
 } # MakePhpPages()
 
+sub MakeJsPages {
+	my $HTMLDIR = GetDir('html');
+
+	# Zalgo javascript
+	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js'));
+
+	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
+		# OpenPGP javascript
+		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js'));
+		PutHtmlFile("openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js'));
+	}
+
+	PutHtmlFile("sha512.js", GetTemplate('js/sha512.js'));
+
+	if (GetConfig('admin/php/enable')) {
+	#if php/enabled, then use post.php instead of post.html
+	#todo add rewrites for this
+	#rewrites have been added for this, so it's commented out for now, but could still be an option in the future
+#		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
+	}
+	#PutHtmlFile("crypto.js", $cryptoJsTemplate);
+
+	my $crypto2JsTemplate = GetTemplate('js/crypto2.js');
+	if (GetConfig('admin/js/debug')) {
+		#$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		$crypto2JsTemplate = EnableJsDebug($crypto2JsTemplate);
+	}
+	my $algoSelectMode = GetConfig('admin/gpg/algo_select_mode');
+	if ($algoSelectMode) {
+		if ($algoSelectMode eq '512' || $algoSelectMode eq 'random' || $algoSelectMode eq 'max') {
+			my $oldValue = $crypto2JsTemplate;
+			$crypto2JsTemplate = str_replace('var algoSelectMode = 0;', "var algoSelectMode = '$algoSelectMode'", $crypto2JsTemplate);
+			if ($oldValue eq $crypto2JsTemplate) {
+				WriteLog('MakeJsPages: warning: crypto2.js algoSelectMode templating failed, value of $crypto2JsTemplate did not change as expected');
+			}
+		}
+	}
+	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
+
+	# Write avatar javascript
+	my $avatarJsTemplate = GetTemplate('js/avatar.js');
+	if (GetConfig('admin/js/debug')) {
+		# $avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
+		$avatarJsTemplate = EnableJsDebug($avatarJsTemplate);
+
+	}
+	PutHtmlFile("avatar.js", $avatarJsTemplate);
+
+	# Write settings javascript
+	#PutHtmlFile("settings.js", GetTemplate('js/settings.js'));
+	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
+} # MakeJsPages()
+
 sub MakeSummaryPages { # generates and writes all "summary" and "static" pages StaticPages
 # write, add event, stats, profile management, preferences, post ok, action/vote, action/event
 # js files, 
 	WriteLog('MakeSummaryPages() BEGIN');
+
+	my $HTMLDIR = GetDir('html');
 
 	PutHtmlFile("test.html", GetTemplate('html/test.template'));
 	PutHtmlFile("keyboard.html", GetTemplate('keyboard/keyboard.template'));
@@ -3741,55 +3796,9 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 	# Blank page
 	PutHtmlFile("blank.html", "");
 
-	# Zalgo javascript
-	PutHtmlFile("zalgo.js", GetTemplate('js/lib/zalgo.js'));
-
-	my $HTMLDIR = GetDir('html');
-	if (!-e "$HTMLDIR/openpgp.js" || !-e "$HTMLDIR/openpgp.worker.js") {
-		# OpenPGP javascript
-		PutHtmlFile("openpgp.js", GetTemplate('js/lib/openpgp.js'));
-		PutHtmlFile("openpgp.worker.js", GetTemplate('js/lib/openpgp.worker.js'));
+	if (GetConfig('admin/js/enable')) {
+		MakeJsPages();
 	}
-
-	PutHtmlFile("sha512.js", GetTemplate('js/sha512.js'));
-
-	if (GetConfig('admin/php/enable')) {
-	#if php/enabled, then use post.php instead of post.html
-	#todo add rewrites for this
-	#rewrites have been added for this, so it's commented out for now, but could still be an option in the future
-#		$cryptoJsTemplate =~ s/\/post\.html/\/post.php/;
-	}
-	#PutHtmlFile("crypto.js", $cryptoJsTemplate);
-
-	my $crypto2JsTemplate = GetTemplate('js/crypto2.js');
-	if (GetConfig('admin/js/debug')) {
-		#$crypto2JsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-		$crypto2JsTemplate = EnableJsDebug($crypto2JsTemplate);
-	}
-	my $algoSelectMode = GetConfig('admin/gpg/algo_select_mode');
-	if ($algoSelectMode) {
-		if ($algoSelectMode eq '512' || $algoSelectMode eq 'random' || $algoSelectMode eq 'max') {
-			my $oldValue = $crypto2JsTemplate;
-			$crypto2JsTemplate = str_replace('var algoSelectMode = 0;', "var algoSelectMode = '$algoSelectMode'", $crypto2JsTemplate);
-			if ($oldValue eq $crypto2JsTemplate) {
-				WriteLog('MakeSummaryPages: warning: crypto2.js algoSelectMode templating failed, value of $crypto2JsTemplate did not change as expected');
-			}
-		}
-	}
-	PutHtmlFile("crypto2.js", $crypto2JsTemplate);
-
-	# Write avatar javascript
-	my $avatarJsTemplate = GetTemplate('js/avatar.js');
-	if (GetConfig('admin/js/debug')) {
-		# $avatarJsTemplate =~ s/\/\/alert\('DEBUG:/if(!window.dbgoff)dbgoff=!confirm('DEBUG:/g;
-		$avatarJsTemplate = EnableJsDebug($avatarJsTemplate);
-
-	}
-	PutHtmlFile("avatar.js", $avatarJsTemplate);
-
-	# Write settings javascript
-	#PutHtmlFile("settings.js", GetTemplate('js/settings.js'));
-	PutHtmlFile("prefstest.html", GetTemplate('js/prefstest.template'));
 
 	if (GetConfig('admin/htaccess/enable')) { #.htaccess
 		# .htaccess file for Apache
@@ -5186,6 +5195,10 @@ while (my $arg1 = shift @foundArgs) {
 		elsif ($arg1 eq '--php') {
 			print ("recognized --php\n");
 			MakePhpPages();
+		}
+		elsif ($arg1 eq '--js') {
+			print ("recognized --js\n");
+			MakeJsPages();
 		}
 		elsif ($arg1 eq '--settings') {
 			print ("recognized --settings\n");
