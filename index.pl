@@ -281,6 +281,12 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 			$authorKey = GpgParse($file) || '';
 		}
 		my $message = GetFileMessage($file);
+
+		if (!defined($message)) {
+			WriteLog('IndexTextFile: warning: $message was not defined, setting to empty string');
+			$message = '';
+		}
+
 		my $detokenedMessage = $message;
 		my %hasToken;
 
