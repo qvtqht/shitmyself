@@ -105,6 +105,7 @@ function OnLoadEverything () { // checks for each onLoad function and calls it
 } // OnLoadEverything()
 
 function ShowPreNavigateNotification () {
+	//alert('DEBUG: ShowPreNavigateNotification() begin');
 	document.title = 'Meditate...';
 	//document.body.style.opacity="0.8";
 
@@ -322,7 +323,7 @@ function CollapseWin (t) { // collapses or expands window based on t's caption
 // and then hiding the first class=content element within
 // presumably a TR but doesn't matter really because SetElementVisible() is used
 // pretty basic, but it works.
-	if (t.innerHTML) {
+	if (t.innerHTML && t.firstChild) {
 		if (t.firstChild.nodeName == 'FONT') {
 			// small hack in case link has a font tag inside
 			// the font tag is typically used to style the link a different color for older browsers
