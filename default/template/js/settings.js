@@ -16,7 +16,7 @@ function SetElementVisible (element, displayValue, bgColor, borderStyle) { // se
 
     //alert ('DEBUG: \nelement:' + element + "\ndisplayValue:" + displayValue + "\nbgColor:" + bgColor + "\nborderStyle:" + borderStyle + "\n");
 
-	if (bgColor && element.style.float != 'right') {
+	if (bgColor) {
 		// background color
 		if (bgColor == 'initial') {
 			bgColor = '$colorWindow';
