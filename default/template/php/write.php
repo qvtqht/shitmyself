@@ -47,8 +47,5 @@ if (isset($_GET['report']) && $_GET['report'] == 'client') {
 //    $html = str_replace('<textarea', '<textarea onkeydown="if (window.translitKey) { translitKey(event, this); } else { return true; }"', $html);
 //}
 
-if (GetConfig('admin/php/debug')) {
-    $html = str_replace('</body>', WriteLog('') . '</body>', $html);
-}
 
 //print($html);
