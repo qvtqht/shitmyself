@@ -122,7 +122,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 							if (window.freshTimeoutId) {
 								clearTimeout(window.freshTimeoutId);
 							}
-							window.eventLoopFresh = 0;
+							window.eventLoopFresh = 0; // stop checking for updates
 
 							if (document.title.substring(0, 2) != '! ') {
 								document.title = '! ' + document.title;
@@ -143,6 +143,22 @@ function freshCallback() { // callback for requesting HEAD for current page
 			}
 		} // if (eTag) // ETag header has value
 	} // status == 200
+	if (this.status == 404 && document.getElementById) {
+		//alert('DEBUG: page has gone away on server (404)');
+		var ariaAlert;
+		ariaAlert = document.getElementById('ariaAlert');
+		if (!ariaAlert) {
+			ariaAlert = document.createElement('p');
+			ariaAlert.setAttribute('role', 'alert');
+			ariaAlert.setAttribute('id', 'ariaAlert');
+			ariaAlert.style.zIndex = '1337'; //#todo
+			ariaAlert.innerHTML = 'Page removed from server';
+
+			//document.body.appendChild(ariaAlert);
+			document.body.insertBefore(ariaAlert, document.body.firstChild);
+		}
+		window.eventLoopFresh = 0; // stop checking for updates
+	} // status == 404
 
 	return true;
 } //freshCallback()
