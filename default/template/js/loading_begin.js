@@ -5,9 +5,9 @@
 
 function addLoadingIndicator (strMessage) { // adds loading indicator bar (to top of page, depending on style)
 	//alert('DEBUG: addLoadingIndicator(' + strMessage + ')');
-	if (strMessage == undefined || !strMessage) {
+	if (!strMessage) {
 		//alert('DEBUG: strMessage = ' + strMessage);
-		strMessage = 'Loading...';
+		strMessage = 'Meditate...';
 	}
 	//alert('DEBUG: addLoadingIndicator: strMessage = ' + strMessage);
 
@@ -17,16 +17,16 @@ function addLoadingIndicator (strMessage) { // adds loading indicator bar (to to
 		// #todo improve compatibility here
 	}
 
+	//alert('DEBUG: addLoadingIndicator: sanity checks passed!');
 	var spanLoadingIndicator = document.createElement('span');
-	//alert('DEBUG: addLoadingIndicator 1');
-	spanLoadingIndicator.setAttribute('id', 'loadingIndicator');
-	//alert('DEBUG: addLoadingIndicator 2');
-	spanLoadingIndicator.innerHTML = strMessage;
-	//alert('DEBUG: addLoadingIndicator 3');
-	spanLoadingIndicator.zIndex = 1337;
-	//alert('DEBUG: addLoadingIndicator 4');
-	document.body.appendChild(spanLoadingIndicator);
-	//alert('DEBUG: addLoadingIndicator 5');
+	if (spanLoadingIndicator) {
+		spanLoadingIndicator.setAttribute('id', 'loadingIndicator');
+		spanLoadingIndicator.innerHTML = strMessage;
+		spanLoadingIndicator.zIndex = 1337;
+		document.body.appendChild(spanLoadingIndicator);
+	}
+
+	return '';
 
 } // addLoadingIndicator()
 
@@ -37,7 +37,7 @@ if (document.createElement) {
 	var gt = unescape('%3E');
 
 	//var loadingIndicatorloadCounter = 0;
-	addLoadingIndicator('Loading...');
+	addLoadingIndicator('Meditate...');
 } else {
 	//alert('DEBUG: loading_begin.js: createElement feature check FAILED!');
 }
