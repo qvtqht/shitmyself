@@ -613,7 +613,7 @@ function ProfileOnLoad () { // onload event for profile page
 
 							var lblEnablePGP = document.createElement('label');
 							var chkEnablePGP = document.createElement('input');
-							var txtEnablePGP = document.createTextNode('Enable');
+							var txtEnablePGP = document.createTextNode('PGP');
 
 							chkEnablePGP.setAttribute('type', 'checkbox');
 							chkEnablePGP.setAttribute('name', 'chkEnablePGP');
@@ -627,7 +627,7 @@ function ProfileOnLoad () { // onload event for profile page
 
 							AddPrivateKeyLinks();
 						} else {
-							alert('DEBUG: warning: window.openpgp check FAILED');
+							//alert('DEBUG: warning: window.openpgp check FAILED');
 							lblSigningIndicator.innerHTML = 'Nope';
 						}
 					} else {
