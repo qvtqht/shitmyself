@@ -117,49 +117,21 @@ function freshCallback() { // callback for requesting HEAD for current page
 								newTs.setAttribute('id', 'freshTimestamp');
 								newTs.innerHTML = 'just now!';
 								a.appendChild(newTs);
-
-								if (1) { // fresh_reuse_timestamp
-									// reuse timestamp widget instead of adding new one
-									var d = new Date();
-									var n = d.getTime();
-									n = Math.ceil(n / 1000);
-
-									var newTs = document.getElementById('freshTimestamp');
-									if (newTs) {
-										newTs.setAttribute('epoch', n);
-										newTs.innerHTML = 'just now!';
-									}
-								} else { // add new floatie
-									var d = new Date();
-									var n = d.getTime();
-									n = Math.ceil(n / 1000);
-
-									var a = document.getElementById('freshAria');
-									var space = document.createElement('span');
-									space.innerHTML = ' ';
-									a.appendChild(space);
-									var newTs = document.createElement('span');
-									newTs.setAttribute('class', 'timestamp');
-									newTs.setAttribute('epoch', n);
-									a.appendChild(newTs);
-									newTs.innerHTML = 'just now!';
-								}
-							} // ariaAlert
-
-							if (document.title.substring(0,2) != '! ') {
-								document.title = '! ' + document.title;
-							}
+							} // !ariaAlert
 
 							if (window.freshTimeoutId) {
 								clearTimeout(window.freshTimeoutId);
 							}
 							window.eventLoopFresh = 0;
+
+							if (document.title.substring(0, 2) != '! ') {
+								document.title = '! ' + document.title;
+							}
 						} // NOT freshUserWantsReload
 					} // lastEtag also didn't match
 				} // eTag != window.myOwnETag
 				else {
 					//document.title = 'freshCallback: x ' + window.myOwnETag + ';' + new Date().getTime();
-
 					if (window.freshTimeoutId) {
 						clearTimeout(window.freshTimeoutId);
 					}
