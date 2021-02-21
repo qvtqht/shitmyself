@@ -91,7 +91,7 @@ sub SqliteUnlinkDb { # Removes sqlite database by renaming it to ".prev"
 }
 
 sub SqliteMakeTables { # creates sqlite schema
-	my $existingTables = SqliteQuery3('.tables');
+	my $existingTables = SqliteQueryCachedShell('.tables');
 	if ($existingTables) {
 		WriteLog('SqliteMakeTables: warning: tables already exist');
 		return;
@@ -570,23 +570,24 @@ sub SqliteQuery { # performs sqlite query via sqlite3 command
 	return $results;
 } # SqliteQuery()
 
-sub SqliteQuery3 { # performs sqlite query via sqlite3 command
+sub SqliteQueryCachedShell { # $query ; performs sqlite query via sqlite3 command
+# uses hash-keyed cache 
 # CacheSqliteQuery { keyword
 # #todo add parsing into array?
 	my $query = shift;
 	if (!$query) {
-		WriteLog('SqliteQuery3: warning: called without $query');
+		WriteLog('SqliteQueryCachedShell: warning: called without $query');
 		return;
 	}
 	chomp $query;
 	$query = EscapeShellChars($query);
-	WriteLog('SqliteQuery3: $query = ' . $query);
+	WriteLog('SqliteQueryCachedShell: $query = ' . $query);
 
 	my $cachePath = md5_hex($query);
 	if ($cachePath =~ m/^([0-9a-f]{32})$/) {
 		$cachePath = $1;
 	} else {
-		WriteLog('SqliteQuery3: warning: $cachePath sanity check failed');
+		WriteLog('SqliteQueryCachedShell: warning: $cachePath sanity check failed');
 	}
 	my $cacheTime = GetTime();
 
@@ -594,19 +595,18 @@ sub SqliteQuery3 { # performs sqlite query via sqlite3 command
 	$cacheTime = substr($cacheTime, 0, length($cacheTime) - 2);
 	$cachePath = "$cacheTime/$cachePath";
 
-	WriteLog('SqliteQuery3: $cachePath = ' . $cachePath);
-	my $results = GetCache("sqlitequery3/$cachePath");
+	WriteLog('SqliteQueryCachedShell: $cachePath = ' . $cachePath);
+	my $results = GetCache("sqcs/$cachePath");
 
 	if ($results) {
 		return $results;
 	} else {
-
 		my $SqliteDbName = GetSqliteDbName();
 		$results = `sqlite3 "$SqliteDbName" "$query"`;
-		PutCache('sqlitequery3/'.$cachePath, $results);
+		PutCache('sqcs/'.$cachePath, $results);
 		return $results;
 	}
-} # SqliteQuery3()
+} # SqliteQueryCachedShell()
 
 #
 #sub DBGetVotesTable {
@@ -1856,7 +1856,7 @@ sub DBGetItemAttribute { # $fileHash, [$attribute] ; returns all if attribute no
 		$query .= " AND attribute = '$attribute'";
 	}
 
-	my $results = SqliteQuery3($query);
+	my $results = SqliteQueryCachedShell($query);
 	return $results;
 } # DBGetItemAttribute()
 
