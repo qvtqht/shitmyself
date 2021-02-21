@@ -11,7 +11,7 @@ function setClock() {
 				document.frmTopMenu.txtClock.value = n;
 
 				if (document.frmTopMenu.txtClock.style) {
-					document.frmTopMenu.txtClock.style.border = 0;
+					//document.frmTopMenu.txtClock.style.border = 0;
 					//document.frmTopMenu.txtClock.setAttribute('size', 10);
 				}
 			}
