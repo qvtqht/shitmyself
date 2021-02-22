@@ -156,14 +156,19 @@ sub GpgParse { # $filePath ; parses file and stores gpg response in cache
 						$message =~ s/\$fingerprint/$gpgKeyPub/g;
 
 						DBAddVoteRecord($fileHash, GetTime(), 'pubkey', $gpgKeyPub, $fileHash);
+
 						# sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash ; Adds a new vote (tag) record to an item based on vote/ token
 
-
 						DBAddItemAttribute($fileHash, 'gpg_alias', $aliasReturned);
+#
+#						DBAddKeyAlias($authorKey, $tokenFound{'param'}, $fileHash);
+#						DBAddKeyAlias('flush');
 
 						# gpg author alias shim
-						DBAddKeyAlias($gpgKeyPub, $aliasReturned);
+						DBAddKeyAlias($gpgKeyPub, $aliasReturned, $fileHash);
 						DBAddKeyAlias('flush');
+
+						ExpireAvatarCache($gpgKeyPub); # does fresh lookup, no cache
 
 						PutFileMessage($fileHash, $message);
 					} else {
