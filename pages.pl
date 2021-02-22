@@ -2343,14 +2343,16 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my $scriptsComma = ''; # separator between scripts, will be set to \n\n after first script
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
-	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
-		# if fresh_js is enabled, automatically add it
-		#todo move this upwards, shouldn't be decided here
-		push @scriptNames, 'fresh';
-	}
+	if (in_array('settings', @scriptNames)) {
+		if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
+			# if fresh_js is enabled, automatically add it
+			#todo move this upwards, shouldn't be decided here
+			push @scriptNames, 'fresh';
+		}
 
-	if (GetConfig('admin/js/dragging')) {
-		push @scriptNames, 'dragging';
+		if (GetConfig('admin/js/dragging')) {
+			push @scriptNames, 'dragging';
+		}
 	}
 
 	#output list of all the scripts we're about to include
@@ -2405,7 +2407,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 
-	$scriptInject = '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
+	$scriptInject = "\n" . '<!-- InjectJs: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
 	if (index($html, '</body>') > -1) {
 		# replace it into html, right before the closing </body> tag
@@ -2441,8 +2443,8 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 	}
 
-	my $needOnunload = 1;
-	if ($needOnunload) {
+	my $needOnUnload = 1;
+	if ($needOnUnload) {
 		# remember, we need to add <body onunload event
 		if ($html =~ m/<body.*?onbeforeunload.*?>/i) {
 			# <body already has onunload, forget about it
@@ -2575,14 +2577,15 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
-	if (GetConfig('html/clock')) {
-		# if clock is enabled, automatically add its js
-		push @scriptNames, 'clock';
-	}
-
-	if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
-		# if clock is enabled, automatically add it
-		push @scriptNames, 'fresh';
+	if (in_array('settings', @scriptNames)) {
+		if (GetConfig('html/clock')) {
+			# if clock is enabled, automatically add its js
+			push @scriptNames, 'clock';
+		}
+		if (GetConfig('admin/js/fresh')) {
+			# if clock is enabled, automatically add it
+			push @scriptNames, 'fresh';
+		}
 	}
 
 	#output list of all the scripts we're about to include
@@ -2622,7 +2625,7 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	# fill in the wrapper with our scripts from above
 	$scriptInject =~ s/\$javascript/$scriptsText/g; #todo why is this /g ??
 
-	$scriptInject = '<!-- InjectJs2: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
+	$scriptInject = "\n" . '<!-- InjectJs2: ' . $scriptNamesList . ' -->' . "\n\n" . $scriptInject;
 
 	if ($injectMode ne 'append' && index($html, $htmlTag) > -1) {
 		# replace it into html, right before the closing </body> tag
