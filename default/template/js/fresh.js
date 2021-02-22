@@ -152,7 +152,7 @@ function freshCallback() { // callback for requesting HEAD for current page
 			ariaAlert.setAttribute('role', 'alert');
 			ariaAlert.setAttribute('id', 'ariaAlert');
 			ariaAlert.style.zIndex = '1337'; //#todo
-			ariaAlert.innerHTML = 'Page removed from server';
+			ariaAlert.innerHTML = 'Page deleted';
 
 			//document.body.appendChild(ariaAlert);
 			document.body.insertBefore(ariaAlert, document.body.firstChild);
