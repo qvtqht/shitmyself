@@ -185,8 +185,6 @@ if (!empty($_FILES['uploaded_file'])) {
 		exit;
 	}
 
-	#print WriteLog(''); // dump log to page if in debug mode
-
 	if (GetConfig('admin/php/debug')) {
 		$html = str_replace('</body>', WriteLog('') . '</body>', $html);
 	}
