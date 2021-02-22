@@ -23,12 +23,7 @@ sub GetMyCacheVersion { # returns "version" of cache
 	return $cacheVersion;
 }
 
-#my $CACHEDIR = $SCRIPTDIR . '/cache/' . GetMyCacheVersion();
-my $CACHEDIR = './cache/' . GetMyCacheVersion(); #todo
-
 sub GetCache { # get cache by cache key
-	# comes from cache/ directory
-
 	my $cacheName = shift;
 	chomp $cacheName;
 
@@ -46,8 +41,8 @@ sub GetCache { # get cache by cache key
 		$myVersion = GetMyCacheVersion();
 	}
 
-	# cache name prefixed by current version
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName; #todo
+	my $cacheDir = GetDir('cache');
+	$cacheName = $cacheDir . '/' . $cacheName; #todo
 
 	if (-e $cacheName) {
 		# return contents of file at that path
@@ -78,7 +73,8 @@ sub PutCache { # $cacheName, $content; stores value in cache
 		$myVersion = GetMyCacheVersion();
 	}
 
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName; #todo
+	my $cacheDir = GetDir('cache');
+	$cacheName = $cacheDir . '/' . $cacheName; #todo
 
 	return PutFile($cacheName, $content);
 } # PutCache()
@@ -94,13 +90,15 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 		$myVersion = GetMyCacheVersion();
 	}
 
-	my $cacheFile = './cache/' . $myVersion . '/' . $cacheName; #todo
-
+	my $cacheDir = GetDir('cache');
+	my $cacheFile = $cacheDir . '/' . $cacheName; #todo
 	my @cacheFiles = glob($cacheFile);
 
 	if (scalar(@cacheFiles)) {
 		WriteLog('UnlinkCache: scalar(@cacheFiles) = ' . scalar(@cacheFiles));
 		#unlink(@cacheFiles); #todo #temporary
+	} else {
+		WriteLog('UnlinkCache: scalar(@cacheFiles) is false for $cacheFile = ' . $cacheFile);
 	}
 } # UnlinkCache()
 
@@ -113,7 +111,8 @@ sub CacheExists { # Check whether specified cache entry exists, return 1 (exists
 		$myVersion = GetMyCacheVersion();
 	}
 
-	$cacheName = './cache/' . $myVersion . '/' . $cacheName; #todo
+	my $cacheDir = GetDir('cache');
+	$cacheName = $cacheDir . '/' . $cacheName; #todo
 
 	if (-e $cacheName) {
 		return 1;
@@ -132,7 +131,8 @@ sub GetMessageCacheName {
 		return '';
 	}
 
-	my $messageCacheName = "./cache/" . GetMyCacheVersion() . "/message/$itemHash"; #todo
+	my $cacheDir = GetDir('cache');
+	my $messageCacheName = $cacheDir . "/message/$itemHash"; #todo
 	return $messageCacheName;
 }
 
@@ -150,9 +150,12 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 	}
 
 	my $themeName = GetConfig('html/theme');
-	UnlinkCache('avatar/' . $themeName . '/' . $key);
-	UnlinkCache('avatar.color/' . $themeName . '/' . $key);
-	UnlinkCache('avatar.plain/' . $themeName . '/' . $key);
+	UnlinkCache('avatar*/*/' . $key); #todo dangerous
+
+#	my $themeName = GetConfig('html/theme');
+#	UnlinkCache('avatar/' . $themeName . '/' . $key);
+#	UnlinkCache('avatar.color/' . $themeName . '/' . $key);
+#	UnlinkCache('avatar.plain/' . $themeName . '/' . $key);
 } # ExpireAvatarCache()
 
 sub GetFileMessageCachePath {
