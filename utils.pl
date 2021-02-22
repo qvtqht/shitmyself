@@ -1774,6 +1774,25 @@ sub GetPathFromHash { # gets path of text file based on hash
 	}
 }
 
+sub in_array { # $needle, @haystack ; emulates php's in_array()
+	my $needle = shift;
+	my @haystack = shift;
+
+	WriteLog('in_array: $needle = ' . $needle);
+
+#	if($needle ~~ @haystack) {
+#		return 1;
+#	} else {
+#		return 0;
+#	}
+	my %params = map { $_ => 1 } @haystack;
+	if(exists($params{$needle})) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 sub Sha1Test {
 	print "\n";
 	print GetFileHash('utils.pl');
