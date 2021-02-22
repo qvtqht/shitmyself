@@ -733,7 +733,7 @@ sub DBGetAuthorFriends { # Returns list of authors which $authorKey has tagged a
 	}
 
 	return @resultsArray;
-}
+} # DBGetAuthorFriends()
 
 sub DBGetLatestConfig { # Returns everything from config_latest view
 # config_latest contains the latest set value for each key stored
@@ -752,7 +752,7 @@ sub DBGetLatestConfig { # Returns everything from config_latest view
 		WriteLog('DBGetLatestConfig: warning: $dbh was false');
 		return 0;
 	}
-}
+} # DBGetLatestConfig()
 
 
 #sub SqliteGetHash {
@@ -1427,9 +1427,9 @@ sub DBGetItemLatestAction { # returns highest timestamp in all of item's childre
 #}
 
 sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
-	# $key = gpg fingerprint
-	# $alias = author alias/name
-	# $pubkeyFileHash = hash of file in which pubkey resides
+	# $key = user key
+	# $alias = alias/name
+	# $pubkeyFileHash = hash of file in which alias was established
 
 	state $query;
 	state @queryParams;
@@ -1476,7 +1476,7 @@ sub DBAddKeyAlias { # adds new author-alias record $key, $alias, $pubkeyFileHash
 
 	ExpireAvatarCache($key); # does fresh lookup, no cache
 	DBAddPageTouch('author', $key);
-}
+} # DBAddKeyAlias()
 
 sub DBAddItemParent { # Add item parent record. $itemHash, $parentItemHash ;
 # Usually this is when item references parent item, by being a reply or a vote, etc.
@@ -2024,8 +2024,10 @@ sub DBGetItemList { # get list of items from database. takes reference to hash o
 	my %params = %$paramHashRef;
 
 	#supported params:
-	#where_clause = where clause for sql query
+	#where_clause
+	#join_clause
 	#order_clause
+	#group_by_clause
 	#limit_clause
 
 	my $query;
