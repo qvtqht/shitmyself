@@ -1112,8 +1112,12 @@ function ProcessNewComment ($comment, $replyTo) { // saves new comment to .txt f
 		}
 
 		if (GetConfig('admin/php/post/index_file_on_post') && isset($filePath)) {
-			IndexTextFile($filePath);
-			MakePage($newFileHash);
+			$newFileHash = IndexTextFile($filePath);
+			if ($newFileHash) {
+				MakePage($newFileHash);
+			} else {
+				WriteLog('ProcessNewComment: warning: $newFileHash is false after IndexTextFile()');
+			}
 		} # index_file_on_post
 
 		if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
