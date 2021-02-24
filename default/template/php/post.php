@@ -278,27 +278,10 @@ if (isset($comment) && $comment) {
 	} # regular comment, not 'update' or 'stop'
 } # comment
 
-if ($strSourceUrl || $strSourceTitle) {
-	WriteLog('post.php: found $strSourceUrl or $strSourceTitle');
-
-	#todo sanity checks
-	$addendum = '';
-	if ($strSourceUrl) {
-		$addendum .= 'URL: ' . $strSourceUrl;
-		$addendum .= "\n";
-	}
-	if ($strSourceTitle) {
-		$addendum .= 'Title: ' . $strSourceTitle;
-		$addendum .= "\n";
-	}
-	if ($addendum) {
-		if ($newFileHash) {
-			$addendum = '>>' . $newFileHash . "\n" . $addendum;
-		}
-		ProcessNewComment($addendum, '');
-	}
+if (isset($filePath) && $filePath) {
+	WriteLog('post.php: $filePath = ' . ($filePath ? $filePath : 'FALSE') . '; index_file_on_post = ' . GetConfig('admin/php/post/index_file_on_post'));
 } else {
-	WriteLog('post.php: NOT found $strSourceUrl or $strSourceTitle');
+	WriteLog('post.php: warning: $filePath is FALSE');
 }
 
 #######################################
