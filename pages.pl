@@ -123,7 +123,50 @@ sub GetDialogPage { # returns html page with dialog
 		if ($pageName eq 'ok') {
 		}
 	}
-}
+} # GetDialogPage()
+
+sub GetQueryAsDialog { # $query, $columns, $title
+	my $query = shift;
+	my $columns = shift;
+	my $title = shift;
+
+	print $query;
+
+	my $colorRow0Bg = GetThemeColor('row_0');
+	my $colorRow1Bg = GetThemeColor('row_1');
+
+	my $rowBgColor = $colorRow0Bg;
+
+	#todo sanity;
+
+	my @result = SqliteQueryHashRef($query);
+
+	if (@result) {
+		my $content = '';
+
+		foreach my $row (@result) {
+			$content .= '<tr bgcolor="' . $rowBgColor . '">';
+			foreach my $column (split(',', $columns)) {
+				$content .= '<td>';
+				$content .= $row->{$column};
+				$content .= '</td>';
+			}
+			$content .= '</tr>';
+
+			if ($rowBgColor eq $colorRow0Bg) {
+				$rowBgColor = $colorRow1Bg;
+			} else {
+				$rowBgColor = $colorRow0Bg;
+			}
+		}
+
+		return GetWindowTemplate($content, $title, $columns);
+	} else {
+		return GetWindowTemplate('No results.');
+	}
+} # GetQueryAsDialog()
+
+#PutHtmlFile('thankyou.html', GetQueryAsDialog('SELECT * FROM item_flat', 'item_name,item_title,tags_list', 'gracias'));
 
 sub GetStylesheet { # returns style template based on config
 	state $styleSheet;
@@ -4239,6 +4282,7 @@ sub GetSettingsPage { # returns html for settings page (/settings.html)
 	$txtIndex .= GetTemplate('html/maincontent.template');
 
 	$txtIndex .= GetSettingsWindow();
+	$txtIndex .= GetStatsTable();
 	$txtIndex .= GetOperatorWindow();
 
 	$txtIndex .= GetPageFooter();
@@ -4780,22 +4824,30 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 
 				if ($authorAttribute eq 'gpg_id') { #todo add or admin
 #				if ($authorAttribute eq 'reddit_username') { #todo add or admin
-					WriteLog('GetAvatar: found reddit_username!');
+					WriteLog('GetAvatar: found gpg_id!');
 
-					$redditUsername = $authorAttributeValue;
-
-					if ($redditUsername eq $alias) {
-						# if alias is the same as reddit username,
-						# don't print it twice
-						if (!GetConfig('admin/html/ascii_only')) {
-							$alias .= '✔';
-						} else {
-							$alias .= '(verified)';
-						}
+					if (!GetConfig('admin/html/ascii_only')) {
+						#$alias .= '✔';
+						$alias .= '&check;';
+						#$alias .= 'V';
 					} else {
-						$alias .= '(' . $redditUsername . ')';
+						$alias .= '(verified)';
 					}
-				} # reddit_username
+
+					#$redditUsername = $authorAttributeValue . 'xx';
+#
+#					if ($redditUsername eq $alias) {
+#						# if alias is the same as reddit username,
+#						# don't print it twice
+#						if (!GetConfig('admin/html/ascii_only')) {
+#							$alias .= '✔';
+#						} else {
+#							$alias .= '(verified)';
+#						}
+#					} else {
+#						$alias .= '(' . $redditUsername . ')';
+#					}
+				} # gpg_id
 			} # $authorAttributeLine
 		} # $authorItemAttributes
 
