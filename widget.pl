@@ -120,10 +120,9 @@ sub GetItemTagButtons { # $fileHash, [$tagSet], [$returnTo] ; get vote buttons f
 		} # if ($fileHash && $ballotTime)
 	} # foreach my $quickTagValue (@quickVotesList)
 
-	WriteLog('GetItemTagButtons returning: ' . $tagButtons);
+	WriteLog('GetItemTagButtons returning: $tagButtons = (' . length($tagButtons) . 'b)');
 
 	return $tagButtons;
 } # GetItemTagButtons()
-
 
 1;
