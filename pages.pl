@@ -130,8 +130,6 @@ sub GetQueryAsDialog { # $query, $columns, $title
 	my $columns = shift;
 	my $title = shift;
 
-	print $query;
-
 	my $colorRow0Bg = GetThemeColor('row_0');
 	my $colorRow1Bg = GetThemeColor('row_1');
 
@@ -140,6 +138,13 @@ sub GetQueryAsDialog { # $query, $columns, $title
 	#todo sanity;
 
 	my @result = SqliteQueryHashRef($query);
+
+	my $columnsRef = shift @result;
+	my @columnsArray = @{$columnsRef};
+
+	if (!$columns) {
+		$columns = join(',', @columnsArray);
+	}
 
 	if (@result) {
 		my $content = '';

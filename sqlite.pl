@@ -537,7 +537,61 @@ sub SqliteQuery2 { # $query, @queryParams; calls sqlite with query, and returns 
 		WriteLog('SqliteQuery2: warning: $query is missing!');
 		return '';
 	}
-}
+} # SqliteQuery2()
+
+sub SqliteQueryHashRef { # $query, @queryParams; calls sqlite with query, and returns result as array of hashrefs
+# ATTENTION: first array element returned is an array of column names!
+
+	WriteLog('SqliteQueryHashRef: begin');
+
+	my $query = shift;
+	chomp $query;
+
+	my @queryParams = @_;
+
+	if ($query) {
+		my $queryOneLine = $query;
+		$queryOneLine =~ s/\s+/ /g;
+
+		WriteLog('SqliteQueryHashRef: $query = ' . $queryOneLine);
+		WriteLog('SqliteQueryHashRef: caller: ' . join(', ', caller));
+
+		foreach my $qpTest (@queryParams) {
+			if (!defined($qpTest)) {
+				WriteLog('SqliteQueryHashRef: warning: uninitialized array item in @queryParams, returning');
+				return '';
+			}
+		}
+		WriteLog('SqliteQueryHashRef: @queryParams: ' . join(', ', @queryParams));
+
+		if ($dbh) {
+			WriteLog('SqliteQueryHashRef: $dbh was found, proceeding...');
+
+			my $aref;
+			my $sth;
+
+			$sth = $dbh->prepare($query);
+			my $execResult = $sth->execute(@queryParams);
+
+			WriteLog('SqliteQueryHashRef: $execResult = ' . $execResult);
+
+			my @resultsArray = ();
+			push @resultsArray, $sth->{'NAME'};
+
+			while (my $row = $sth->fetchrow_hashref()) {
+				push @resultsArray, $row;
+			}
+
+			return @resultsArray;
+		} else {
+			WriteLog('SqliteQueryHashRef: warning: $dbh is missing');
+		}
+	}
+	else {
+		WriteLog('SqliteQueryHashRef: warning: $query is missing!');
+		return '';
+	}
+} # SqliteQueryHashRef()
 
 sub EscapeShellChars { # $string ; escapes string for including as parameter in shell command
 	#todo this is still probably not safe and should be improved upon #security
