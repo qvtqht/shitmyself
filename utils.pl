@@ -675,7 +675,7 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 		WriteLog('PutFile: $binMode: 1');
 	}
 
-	WriteLog("PutFile: $file, (\$content), $binMode");
+	WriteLog('PutFile: $file = ' . $file . ', $content = (' . length($content) . 'b), $binMode = ' . $binMode);
 	#WriteLog("==== \$content ====");
 	#WriteLog($content);
 	#WriteLog("====");
@@ -683,15 +683,15 @@ sub PutFile { # Writes content to a file; $file, $content, $binMode
 	if ($file =~ m/^([^\s]+)$/) { #todo this is overly permissive #security #taint
 		$file = $1;
 		if (open (my $fileHandle, ">", $file)) {
-			WriteLog("PutFile: file handle opened for $file");
+			WriteLog('PutFile: file handle opened, $file = ' . $file);
 			if ($binMode) {
-				WriteLog("PutFile: binmode $fileHandle, ':utf8';");
+				WriteLog('PutFile: binmode $fileHandle = ' . $fileHandle . ', :utf8;');
 				binmode $fileHandle, ':utf8';
 			}
-			WriteLog("PutFile: print $fileHandle $content;");
+			WriteLog('PutFile: print $fileHandle $content;');
 			print $fileHandle $content; #todo wide character error here
 
-			WriteLog("PutFile: close $fileHandle;");
+			WriteLog('PutFile: close $fileHandle;');
 			close $fileHandle;
 
 			return 1;
@@ -892,7 +892,7 @@ sub PutHtmlFile { # $file, $content, $itemHash ; writes content to html file, wi
 		$relativizeUrls = 0;
 	}
 
-	WriteLog("PutHtmlFile($file), \$content)");
+	WriteLog('PutHtmlFile: $file = ' . $file . ', $content = (' . length($content) . 'b)');
 
 	# $stripNonAscii remembers value of admin/html/ascii_only
 	# this might be duplicate work
