@@ -125,8 +125,53 @@ sub GetDialogPage { # returns html page with dialog
 	}
 } # GetDialogPage()
 
+sub RenderLink {
+	my $url = shift;
+	my $title = shift;
+
+	#todo sanity, template, etc.
+
+	return '<a href="' . $url . '">' . $title . '</a>';
+} # RenderLink()
+
+sub RenderField {
+	my $fieldName = shift;
+	my $fieldValue = shift;
+
+	if ($fieldName eq 'last_seen') {
+		$fieldValue = GetTimestampWidget($fieldValue);
+	}
+
+	if ($fieldName eq 'author_key') {
+		$fieldValue = GetAuthorLink($fieldValue);
+	}
+
+	if ($fieldName eq 'vote_value') {
+		my $link = "/top/" . $fieldValue . ".html";
+		$fieldValue = RenderLink($link, $fieldValue);
+	}
+	
+	return $fieldValue;
+} # RenderField()
+
 sub GetQueryAsDialog { # $query, $title, $columns
 	my $query = shift;
+	my $title = shift;
+	my $columns = shift;
+
+	my @result = SqliteQueryHashRef($query);
+
+	return GetResultSetAsDialog(\@result, $title, $columns);
+}
+
+sub GetResultSetAsDialog { # \@result, $title, $columns
+# \@result is an array of hash references
+# ATTENTION: the first member of the array is the list of columns in correct order
+# this list of columns is used if $columns is not specified
+
+	my $resultRef = shift;
+	my @result = @{$resultRef};
+
 	my $title = shift;
 	my $columns = shift;
 
@@ -136,8 +181,6 @@ sub GetQueryAsDialog { # $query, $title, $columns
 	my $rowBgColor = $colorRow0Bg;
 
 	#todo sanity;
-
-	my @result = SqliteQueryHashRef($query);
 
 	my $columnsRef = shift @result;
 	my @columnsArray = @{$columnsRef};
@@ -153,7 +196,7 @@ sub GetQueryAsDialog { # $query, $title, $columns
 			$content .= '<tr bgcolor="' . $rowBgColor . '">';
 			foreach my $column (split(',', $columns)) {
 				$content .= '<td>';
-				$content .= $row->{$column};
+				$content .= RenderField($column, $row->{$column});
 				$content .= '</td>';
 			}
 			$content .= '</tr>';
@@ -704,6 +747,25 @@ sub GetTagLinks { # $tagSelected ; returns html-formatted tags list
 
 	return $voteItemsWrapper;
 } # GetTagLinks()
+
+sub GetQueryPage {
+	my $pageName = shift;
+	#todo sanity
+
+	my $html = '';
+
+	my $query = GetConfig('query/' . $pageName);
+
+	if ($query) {
+		$html .= GetPageHeader($pageName, $pageName, $pageName);
+		$html .= GetTemplate('html/maincontent.template');
+		$html .= GetQueryAsDialog($query, $pageName);
+		$html .= GetPageFooter();
+		return $html;
+	} else {
+		#todo
+	}
+}
 
 sub GetTagsPage { # returns html for tags listing page (sorted by number of uses)
 # $title = title of page
