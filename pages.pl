@@ -125,10 +125,10 @@ sub GetDialogPage { # returns html page with dialog
 	}
 } # GetDialogPage()
 
-sub GetQueryAsDialog { # $query, $columns, $title
+sub GetQueryAsDialog { # $query, $title, $columns
 	my $query = shift;
-	my $columns = shift;
 	my $title = shift;
+	my $columns = shift;
 
 	my $colorRow0Bg = GetThemeColor('row_0');
 	my $colorRow1Bg = GetThemeColor('row_1');
