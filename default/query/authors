@@ -1,0 +1,8 @@
+SELECT
+	author_key,
+	last_seen,
+	item_count
+FROM author_flat
+ORDER BY item_count DESC
+LIMIT 1024;
+

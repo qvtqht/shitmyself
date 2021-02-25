@@ -1,0 +1,18 @@
+SELECT
+	vote_value,
+	vote_count
+FROM (
+	SELECT
+		vote_value,
+		COUNT(vote_value) AS vote_count
+	FROM
+		vote
+	WHERE
+		file_hash IN (SELECT file_hash FROM item)
+	GROUP BY
+		vote_value
+	)
+WHERE
+	vote_count >= 1
+ORDER BY
+	vote_value
