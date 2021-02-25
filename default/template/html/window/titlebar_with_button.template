@@ -1,9 +1,11 @@
 <!-- titlebar_with_button.template -->
 <tr bgcolor="$colorTitlebar" class=titlebar>
 	<td colspan=$contentColumnCount>
-		<span>
-			<a href="#$itemEndAnchor" style="color: $colorTitlebarText;" class=btnSkip title=skip onclick="if (window.CollapseWin) { return CollapseWin(this); } return false;">$btnCloseCaption</a>
-		</span>
+		<script>
+		<!--
+			document.write('<span><a href="#$itemEndAnchor" style="color: $colorTitlebarText;" class=btnSkip title=skip onclick="if (window.CollapseWin) { return CollapseWin(this); } return false;">$btnCloseCaption</a></span>');
+		// -->
+		</script>
 		<font color="$colorTitlebarText"><b>$windowTitle</b></font>
 		<br>
 	</td>
