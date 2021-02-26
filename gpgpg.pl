@@ -160,6 +160,7 @@ sub GpgParse { # $filePath ; parses file and stores gpg response in cache
 						# sub DBAddVoteRecord { # $fileHash, $ballotTime, $voteValue, $signedBy, $ballotHash ; Adds a new vote (tag) record to an item based on vote/ token
 
 						DBAddItemAttribute($fileHash, 'gpg_alias', $aliasReturned);
+						DBAddItemAttribute($fileHash, 'title', "$aliasReturned has registered"); #todo templatize
 #
 #						DBAddKeyAlias($authorKey, $tokenFound{'param'}, $fileHash);
 #						DBAddKeyAlias('flush');
