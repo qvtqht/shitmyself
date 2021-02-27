@@ -4866,6 +4866,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		#WriteLog('avdesp after:'.$avatar);
 	}
 
+	my $isVerified = 0;
 	my $redditUsername = '';
 	if ($authorKey) {
 		WriteLog('GetAvatar: $authorKey = ' . $authorKey);
@@ -4875,8 +4876,8 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		my $authorItemAttributes = $authorPubKeyHash ? DBGetItemAttribute($authorPubKeyHash) : '' || '';
 		WriteLog('GetAvatar: $authorItemAttributes = ' . $authorItemAttributes);
 
-		my $isVerified = 0;
 		my $alias = '';
+		
 		if (!$alias) {
 			$alias = GetAlias($authorKey, $noCache);
 			$alias = trim($alias);
@@ -4890,9 +4891,11 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 #				if ($authorAttribute eq 'reddit_username') { #todo add or admin
 					WriteLog('GetAvatar: found gpg_id!');
 
+					$isVerified = 1;
+
 					if (!GetConfig('admin/html/ascii_only')) {
 						#$alias .= '✔';
-						$alias .= '&check;';
+						#$alias .= '&check;';
 						#$alias .= 'V';
 					} else {
 						$alias .= '(verified)';
@@ -4977,7 +4980,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 		else {
 			# no icons
 			$aliasHtmlEscaped = encode_entities2($alias);
-			if ($redditUsername) {
+			if ($isVerified) {
 				$aliasHtmlEscaped = '<b><i>'.$aliasHtmlEscaped.'</i></b>';
 			}
 		}
@@ -4991,7 +4994,7 @@ sub GetAvatar { # $key, $noCache ; returns HTML avatar based on author key, usin
 
 	#my $colorUsername = GetThemeColor('username');
 	my $colorUsername = GetThemeColor('author');
-	if ($redditUsername) {
+	if ($isVerified) {
 		$colorUsername = GetThemeColor('verified');
 	}
 	if (IsAdmin($authorKey)) {
