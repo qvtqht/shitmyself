@@ -245,8 +245,6 @@ sub GetResultSetAsDialog { # \@result, $title, $columns
 	}
 } # GetQueryAsDialog()
 
-#PutHtmlFile('thankyou.html', GetQueryAsDialog('SELECT * FROM item_flat', 'item_name,item_title,tags_list', 'gracias'));
-
 sub GetStylesheet { # returns style template based on config
 	state $styleSheet;
 	if ($styleSheet) {
