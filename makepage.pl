@@ -24,7 +24,7 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 # tags
 # stats
 # index
-
+# compost
 
 	my $HTMLDIR = GetDir('html');
 
@@ -118,7 +118,8 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	} #item page
 
 	elsif ($pageType eq 'tags') { #tags page
-		my $tagsPage = GetTagsPage('Tags', 'Tags', '');
+#		my $tagsPage = GetTagsPage('Tags', 'Tags', '');
+		my $tagsPage = GetQueryPage('tags');
 		PutHtmlFile("tags.html", $tagsPage);
 
 		my $votesPage = GetTagsPage('Votes', 'Votes', 'ORDER BY vote_value');
@@ -136,15 +137,21 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 	#
 	# authors page
 	elsif ($pageType eq 'authors') {
-		my $authorsPage = GetAuthorsPage();
+		#my $authorsPage = GetAuthorsPage();
+		my $authorsPage = GetQueryPage('authors');
 		PutHtmlFile("authors.html", $authorsPage);
 	}
 	#
 	# topitems page
 	elsif ($pageType eq 'read') {
-	#todo this is never called, apparently
-		my $topItemsPage = GetTopItemsPage();
+		my $topItemsPage = GetQueryPage('read', 'Top Threads', 'item_title,author_key,add_timestamp');
+#		my $topItemsPage = GetTopItemsPage();
 		PutHtmlFile("read.html", $topItemsPage);
+	}
+	elsif ($pageType eq 'compost') {
+		my $compostPage = GetQueryPage('compost', 'Compost', 'item_title,author_key,add_timestamp');
+#		my $topItemsPage = GetTopItemsPage();
+		PutHtmlFile("compost.html", $compostPage);
 	}
 	#
 	# stats page
