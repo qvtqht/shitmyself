@@ -1106,6 +1106,13 @@ sub FormatMessage {
 	return $message;
 }
 
+sub GetItemTemplate {
+	my $fileRef = shift;
+	my %file = %{$fileRef};
+
+	return Dumper(%file);
+}
+
 #sub GetItemTemplate {
 #	my %file = %{shift @_}; #todo should be better formatted
 #
