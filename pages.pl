@@ -134,9 +134,24 @@ sub RenderLink {
 	return '<a href="' . $url . '">' . $title . '</a>';
 } # RenderLink()
 
-sub RenderField {
+sub RenderField { # $fieldName, $fieldValue, [%rowData] ; outputs formatted data cell
+# outputs $fieldValue after formatting it as needed
+# formatting is based on value of $fieldName
+# if additional datapoint is needed for output, it's read from %rowData
 	my $fieldName = shift;
 	my $fieldValue = shift;
+
+	if (!defined($fieldName) || defined(!$fieldValue)) {
+		WriteLog('RenderField: warning: missing $fieldName or $fieldValue');
+	}
+
+	#todo more sanity
+
+	my $itemHashRef = shift;
+	my %itemHash;
+	if ($itemHashRef) {
+		%itemHash = %{$itemHashRef};
+	}
 
 	if ($fieldName eq 'last_seen') {
 		$fieldValue = GetTimestampWidget($fieldValue);
@@ -149,6 +164,21 @@ sub RenderField {
 	if ($fieldName eq 'vote_value') {
 		my $link = "/top/" . $fieldValue . ".html";
 		$fieldValue = RenderLink($link, $fieldValue);
+	}
+
+	if ($fieldName =~ /.+timestamp/) {
+		$fieldValue = GetTimestampWidget($fieldValue);
+	}
+
+	if ($fieldName eq 'item_title') {
+		if (%itemHash && $itemHash{'file_hash'}) {
+			$fieldValue = '<b>' . GetItemHtmlLink($itemHash{'file_hash'}, $fieldValue) . '</b>';
+		}
+	}
+
+	if (!$fieldValue || trim($fieldValue) eq '') {
+		WriteLog('RenderField: warning: return is FALSE; $fieldName = ' . $fieldName . '; $fieldValue = ' . $fieldValue);
+		$fieldValue = '-';
 	}
 	
 	return $fieldValue;
