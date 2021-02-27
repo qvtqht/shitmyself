@@ -1369,7 +1369,7 @@ sub GetItemTemplate2 { # returns HTML for outputting one item
 			# $windowParams{'headings'} = 'haedigns';
 
 			{
-				my $statusBar = GetTemplate("item/status_bar.template");
+				my $statusBar = GetTemplate('html/item/status_bar.template');
 
 				my $fileHashShort = substr($fileHash, 0, 8);
 				$statusBar =~ s/\$fileHashShort/$fileHashShort/g;
@@ -2497,9 +2497,11 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
 	if (in_array('settings', @scriptNames)) {
-		if (GetConfig('admin/js/enable') && GetConfig('admin/js/fresh')) {
-			# if fresh_js is enabled, automatically add it
-			#todo move this upwards, shouldn't be decided here
+		if (GetConfig('html/clock')) {
+			push @scriptNames, 'clock';
+		}
+
+		if (GetConfig('admin/js/fresh')) {
 			push @scriptNames, 'fresh';
 		}
 
@@ -2517,6 +2519,8 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 			my $clockFormat = GetConfig('html/clock_format');
 			if ($clockFormat eq 'epoch' || $clockFormat eq 'union' || $clockFormat eq '24hour') {
 				$script = 'clock/' . $clockFormat;
+			} else {
+				next;
 			}
 		}
 
