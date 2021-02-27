@@ -3799,6 +3799,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 		if (index(lc($submitPage), 'method=post') == -1) {
 			$submitPage =~ s/\<form/<form method=post /g;
 		}
+		$submitPage =~ s/cols=32/cols=50/g;
+		$submitPage =~ s/rows=9/rows=15/g;
 		$submitPage =~ s/please click here/you're in the right place/g;
 		PutHtmlFile("write_post.html", $submitPage);
 	}
@@ -5345,6 +5347,8 @@ while (my $arg1 = shift @foundArgs) {
 				if (index(lc($submitPage), 'method=post') == -1) {
 					$submitPage =~ s/\<form/<form method=post /g;
 				}
+				$submitPage =~ s/cols=32/cols=50/g;
+				$submitPage =~ s/rows=9/rows=15/g;
 				$submitPage =~ s/please click here/you're in the right place/g;
 				PutHtmlFile("write_post.html", $submitPage);
 			}
