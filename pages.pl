@@ -3509,7 +3509,7 @@ sub GetDesktopPage { # returns html for desktop page (/desktop.html)
 		);
 		$html .= $tosWindow;
 
-		$html .= GetTopAuthorsWindow();
+		$html .= GetQueryAsDialog('authors');
 		$html .= GetSettingsWindow();
 		$html .= GetProfileWindow();
 		$html .= GetStatsTable();
