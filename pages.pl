@@ -2539,6 +2539,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 
 		# only inject each script once, otherwise move on
+		#todo may want to make this dependent on 'settings' too
 		if (defined($scriptsDone{$script})) {
 			next;
 		} else {
