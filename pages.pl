@@ -779,6 +779,16 @@ sub GetTagLinks { # $tagSelected ; returns html-formatted tags list
 
 sub GetQueryPage {
 	my $pageName = shift;
+	my $title = shift;
+	my $columns = shift;
+
+	if (!$title) {
+		$title = ucfirst($pageName);
+	}
+	if (!$columns) {
+		$columns = '';
+	}
+
 	#todo sanity
 
 	my $html = '';
@@ -786,15 +796,19 @@ sub GetQueryPage {
 	my $query = GetConfig('query/' . $pageName);
 
 	if ($query) {
-		$html .= GetPageHeader($pageName, $pageName, $pageName);
+		$html .= GetPageHeader($title, $title, $pageName);
 		$html .= GetTemplate('html/maincontent.template');
-		$html .= GetQueryAsDialog($query, $pageName);
+		$html .= GetQueryAsDialog($query, $title, $columns);
+		$html .= '<pre class=advanced><br><hr>'.HtmlEscape($query).'</pre>';
 		$html .= GetPageFooter();
+		if (GetConfig('admin/js/enable')) {
+			$html = InjectJs($html, qw(settings utils));
+		}
 		return $html;
 	} else {
 		#todo
 	}
-}
+} # GetQueryPage()
 
 sub GetTagsPage { # returns html for tags listing page (sorted by number of uses)
 # $title = title of page
