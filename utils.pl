@@ -130,7 +130,7 @@ sub WriteLog { # $text; Writes timestamped message to console (stdout) AND log/l
 		#print($firstWord."\n");
 		my $firstWordHash = md5_hex($firstWord);
 		my $firstWordHashFirstChar = substr($firstWordHash, 0, 1);
-		$firstWordHashFirstChar =~ tr/0123456789abcdef/..\-\-,,""''++``++/;
+		$firstWordHashFirstChar =~ tr/0123456789abcdef/.;*\-,<">'+o:`_|+/;
 		WriteMessage($firstWordHashFirstChar);
 	}
 
