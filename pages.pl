@@ -225,8 +225,9 @@ sub GetResultSetAsDialog { # \@result, $title, $columns
 		foreach my $row (@result) {
 			$content .= '<tr bgcolor="' . $rowBgColor . '">';
 			foreach my $column (split(',', $columns)) {
+				#print $column . ',' . $row->{$column} . "\n";
 				$content .= '<td>';
-				$content .= RenderField($column, $row->{$column});
+				$content .= RenderField($column, $row->{$column}, $row);
 				$content .= '</td>';
 			}
 			$content .= '</tr>';
