@@ -2804,66 +2804,6 @@ sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js templa
 	return $html;
 }
 
-sub GetTopAuthorsWindow {
-	WriteLog('GetTopAuthorsWindow() begin');
-
-	my @topAuthors = DBGetTopAuthors();
-	my $authorListings = '';
-
-	while (@topAuthors) {
-		# get the friend's key
-		my $authorRef = shift @topAuthors;
-		my %author = %{$authorRef};
-
-		my $authorKey = $author{'author_key'};
-		my $authorAlias = $author{'author_alias'};
-		my $authorLastSeen = $author{'last_seen'};
-		my $authorItemCount = $author{'item_count'};
-		my $authorAvatar = GetHtmlAvatar($authorKey) || $authorKey;
-
-		my $authorLink = GetAuthorLink($authorKey) || '(blank)';
-#		my $authorFriendKey = $authorFriend->{'author_key'};
-		my $authorItemTemplate = GetTemplate('html/author_listing.template');
-#
-		if ($authorLastSeen) {
-			$authorLastSeen = GetTimestampWidget($authorLastSeen);
-		} else {
-			$authorLastSeen = '(unknown)';
-		}
-		if (!$authorLastSeen) {
-			$authorLastSeen = '*';
-		}
-		#$authorLastSeen = GetSecondsHtml(GetTime() - $authorLastSeen) . ' ago';
-
-		$authorItemTemplate =~ s/\$authorLink/$authorLink/g; #todo $authorLink can sometimes be uninitialized here, #bug
-		$authorItemTemplate =~ s/\$authorAvatar/$authorAvatar/g;
-		$authorItemTemplate =~ s/\$authorLastSeen/$authorLastSeen/g;
-		$authorItemTemplate =~ s/\$authorItemCount/$authorItemCount/g;
-		$authorItemTemplate =~ s/\$authorKey/$authorKey/g;
-
-		$authorListings .= $authorItemTemplate;
-	}
-
-	my $window = GetWindowTemplate($authorListings, 'Authors', 'name,seen', '', '');
-
-	return $window;
-} # GetTopAuthorsWindow()
-
-sub GetAuthorsPage {
-	WriteLog('GetAuthorsPage() begin');
-
-	my $html = '';
-	my $title = 'Authors';
-	$html .= GetPageHeader($title, $title, 'scoreboard');
-	$html .= GetTemplate('html/maincontent.template');
-
-	$html .= GetTopAuthorsWindow();
-
-	$html .= GetPageFooter();
-	$html = InjectJs($html, qw(utils settings avatar timestamp profile voting));
-	return $html;
-}
-
 sub GetAuthorInfoBox {
 	my $authorKey = shift;
 	chomp $authorKey;
