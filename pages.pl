@@ -5388,6 +5388,7 @@ while (my $arg1 = shift @foundArgs) {
 			print ("--php for all php pages\n");
 			print ("--queue or -Q for all pages in queue\n");
 			print ("--index or -i for all index pages\n");
+			print ("-M [page] to call MakePage\n");
 			print ("item id for one item's page\n");
 			print ("author fingerprint for one item's page\n");
 			print ("#tag for one tag's page\n");
