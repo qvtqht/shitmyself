@@ -16,7 +16,7 @@
 <hr>
 
 <form action="/post.html">
-    <p>Send a message:<br>
+    <p>Message site operator:<br>
     <input type=text size=38 name=comment>
     <input name=tag value=help type=hidden>
     <br>
