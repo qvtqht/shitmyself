@@ -3,10 +3,7 @@
 $authorLink;
 <span class=advanced>
 	$fileHashShort;
-	<a
-		href="$permalinkHtml#reply"
-		onclick="if (document.compose.comment) { document.compose.comment.focus(); return false; }"
-	>reply($replyCount)</a>;
+	<a href="$permalinkHtml#reply">reply($replyCount)</a>;
 </span>
 $itemFlagButton
 <!-- status_bar.template -->
