@@ -34,6 +34,9 @@ rm -rf html/rss.xml html/rss.txt
 echo "rm -rf config/template/*"
 rm -rf config/template/*
 
+echo "rm -rf config/query/*"
+rm -rf config/query/*
+
 echo "rm -rf config/string/*"
 rm -rf config/string/*
 
