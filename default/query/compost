@@ -1,11 +1,17 @@
 SELECT
-	item_flat.item_title item_title,
-	item_flat.author_key author_key,
-	item_flat.add_timestamp add_timestamp,
-	item_flat.file_hash, file_hash
-FROM item_flat
-WHERE child_count = 0
-ORDER BY child_count ASC, add_timestamp DESC
+	item_title,
+	author_key,
+	add_timestamp,
+	item_score,
+	child_count,
+	file_hash
+FROM
+	item_flat
+WHERE
+	',' || tags_list || ',' LIKE '%,hastext,%'
+ORDER BY
+	child_count ASC,
+	add_timestamp DESC
 LIMIT 250
 
 
