@@ -96,6 +96,7 @@ sub GetHtmlFilename { # get the HTML filename for specified item hash
 }
 
 sub AddAttributeToTag { # $html, $tag, $attributeName, $attributeValue; adds attr=value to html tag;
+# sub AddTagAttribute {
 	my $html = shift; # chunk of html to work with
 	my $tag = shift; # tag we'll be modifying
 	my $attributeName = shift; # name of attribute
