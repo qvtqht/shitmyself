@@ -226,8 +226,14 @@ sub GetResultSetAsDialog { # \@result, $title, $columns
 			$content .= '<tr bgcolor="' . $rowBgColor . '">';
 			foreach my $column (split(',', $columns)) {
 				#print $column . ',' . $row->{$column} . "\n";
-				$content .= '<td>';
+				if ($column eq 'file_hash') { #todo config/list/field_advanced
+					$content .= '<td class=advanced>';
+				} else {
+					$content .= '<td>';
+				}
+
 				$content .= RenderField($column, $row->{$column}, $row);
+				
 				$content .= '</td>';
 			}
 			$content .= '</tr>';
@@ -440,11 +446,21 @@ sub GetWindowTemplate2 { # \%paramHash ; returns window template
 		my $printedColumnsCount = 0;
 		foreach my $columnCaption (@columnsArray) {
 			$printedColumnsCount++;
-			my $columnHeaderTemplate = GetTemplate('html/window/header_column.template');
+			my $columnHeaderTemplate = GetTemplate('html/window/header_column.template'); # <td></td>
 			if ($printedColumnsCount >= scalar(@columnsArray)) {
+				# only printed after the last column
+				# adds a <br> for browsers without table support
 				$columnCaption .= '<br>'; # for no-table browsers
 			}
 			$columnHeaderTemplate =~ s/\$headerCaption/$columnCaption/;
+			if ($columnCaption eq 'file_hash') { #todo config/list/field_advanced
+				$columnHeaderTemplate = AddAttributeToTag(
+					$columnHeaderTemplate,
+					'th',
+					'class',
+					'advanced'
+				);
+			}
 			$windowHeaderColumns .= $columnHeaderTemplate;
 		}
 		$windowHeaderTemplate =~ s/\$windowHeadings/$windowHeaderColumns/;
