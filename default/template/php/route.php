@@ -357,11 +357,17 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 
 		if (
-			$path == '/index0.html' ||
+			$path == '/index0.html'
+		) {
+			WriteLog('HandleNotFound: found index page');
+			$pagesPlArgument = '--index';
+		}
+
+		if (
 			$path == '/compost.html'
 		) {
-			WriteLog('HandleNotFound: found compost or index page');
-			$pagesPlArgument = '--index';
+			WriteLog('HandleNotFound: found compost page');
+			$pagesPlArgument = '--compost';
 		}
 
 		if (
@@ -1054,7 +1060,8 @@ if (GetConfig('admin/php/route_enable')) {
 		print $html; // final output
 		////////////////////////////
 	}
-} else {
+}
+else {
 	WriteLog('config/admin/php/route_enable = false');
 
 	// this is a fallback, and shouldn't really be here
