@@ -818,7 +818,8 @@ sub GetQueryPage {
 		$html .= '<pre class=advanced><br><hr>'.HtmlEscape($query).'</pre>';
 		$html .= GetPageFooter();
 		if (GetConfig('admin/js/enable')) {
-			$html = InjectJs($html, qw(settings utils));
+			$html = InjectJs($html, qw(settings utils timestamp));
+			#todo only add timestamp if necessary?
 		}
 		return $html;
 	} else {
