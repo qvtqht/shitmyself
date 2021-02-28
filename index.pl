@@ -557,6 +557,7 @@ sub IndexTextFile { # $file | 'flush' ; indexes one text file into database
 								$message =~ s/$tokenFound{'recon'}/[my name is: $nameGiven]/g;
 
 								DBAddKeyAlias($authorKey, $tokenFound{'param'}, $fileHash);
+								DBAddItemAttribute($fileHash, 'title', $tokenFound{'param'} . ' has self-identified'); #todo templatize
 								DBAddKeyAlias('flush');
 							}
 						} else {
