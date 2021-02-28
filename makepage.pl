@@ -149,7 +149,8 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 		PutHtmlFile("read.html", $topItemsPage);
 	}
 	elsif ($pageType eq 'compost') {
-		my $compostPage = GetQueryPage('compost', 'Compost', 'item_title,author_key,add_timestamp');
+		my $compostPage = GetQueryPage('compost');
+#		my $compostPage = GetQueryPage('compost', 'Compost', 'item_title,author_key,add_timestamp');
 #		my $topItemsPage = GetTopItemsPage();
 		PutHtmlFile("compost.html", $compostPage);
 	}
