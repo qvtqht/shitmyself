@@ -126,10 +126,10 @@ sub GetConfig { # $configName || 'unmemo', $token, [$parameter] ;  gets configur
 				# this preserves default settings, so that even if defaults change in the future
 				# the same value will remain for current instance
 				# this also saves much time not having to run ./clean_dev when developing
-				WriteLog('GetConfig: calling PutConfig(' . $configName . ', ' . $configValue .');');
+				WriteLog('GetConfig: calling PutConfig($configName = ' . $configName . ', $configValue = ' . length($configValue) .'b);');
 				PutConfig($configName, $configValue);
 			} else {
-				WriteLog('GetConfig: skip_putconfig is TRUE, not calling PutConfig()');
+				WriteLog('GetConfig: skip_putconfig=TRUE, not calling PutConfig()');
 			}
 
 			return $configValue;
@@ -195,8 +195,6 @@ sub PutConfig { # $configName, $configValue ; writes config value to config stor
 	my $configName = shift;
 	my $configValue = shift;
 
-	WriteLog("PutConfig($configName, $configValue)");
-
 	if (index($configName, '..') != -1) {
 		WriteLog('PutConfig: warning: sanity check failed: $configName contains ".."');
 		WriteLog('PutConfig: warning: sanity check failed: $configName contains ".."');
@@ -204,6 +202,8 @@ sub PutConfig { # $configName, $configValue ; writes config value to config stor
 	}
 
 	chomp $configValue;
+
+	WriteLog('PutConfig: $configName = ' . $configName . ', $configValue = ' . length($configValue) . 'b)');
 
 	my $putFileResult = PutFile("config/$configName", $configValue);
 
