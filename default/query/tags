@@ -9,7 +9,7 @@ FROM (
 		vote
 		LEFT JOIN vote_value ON (vote.vote_value = vote_value.vote)
 	WHERE
-		vote_value.vote_value > 0
+		vote_value.value > 0
 			AND
 		file_hash IN (SELECT file_hash FROM item)
 	GROUP BY
