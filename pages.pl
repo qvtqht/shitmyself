@@ -3438,9 +3438,6 @@ sub WriteIndexPages { # writes the compost pages (index0-n.html)
 			}
 
 			PutHtmlFile("index$i.html", $indexPage);
-			if ($i == 0) {
-				PutHtmlFile("compost.html", $indexPage);
-			}
 		} # for ($i)
 	} else {
 		my $indexPage = GetPageHeader(GetConfig('home_title'), GetConfig('home_title'), 'home_empty');
@@ -3451,7 +3448,7 @@ sub WriteIndexPages { # writes the compost pages (index0-n.html)
 		$indexPage .= GetPageFooter();
 		$indexPage = InjectJs($indexPage, qw(profile settings avatar utils));
 		PutHtmlFile("index0.html", $indexPage); #empty/no items
-		PutHtmlFile("compost.html", $indexPage); #empty/no items
+		#PutHtmlFile("compost.html", $indexPage); #empty/no items
 	}
 } # WriteIndexPages()
 
