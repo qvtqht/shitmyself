@@ -1695,27 +1695,39 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 
 	#WriteLog('GetThemeAttribute(' . $attributeName . ')');
 
-	my $themeName = GetConfig('html/theme');
-	if (substr($themeName, 0, 6) eq 'theme.') {
-		# compatibility
-		if (length($themeName) > 6) {
-			$themeName = substr($themeName, 6);
+	my @activeThemes = split("\n", GetConfig('html/theme'));
+	foreach my $themeName (@activeThemes) {
+	#	my $themeName = GetConfig('html/theme');
+		if (substr($themeName, 0, 6) eq 'theme.') {
+			# compatibility
+			if (length($themeName) > 6) {
+				$themeName = substr($themeName, 6);
+			}
+		}
+
+		my $attributePath = 'theme/' . $themeName . '/' . $attributeName;
+
+		#todo sanity checks
+
+		my $attributeValue = GetConfig($attributePath) || '';
+
+		if ($attributeValue) {
+			WriteLog('GetThemeAttribute: ' . $attributeName . ' + ' . $themeName . ' -> ' . $attributePath . ' -> ' . $attributeValue);
+			return trim($attributeValue);
 		}
 	}
 
-	if (!ConfigKeyValid("theme/$themeName")) {
-		WriteLog('GetThemeAttribute: warning: ConfigKeyValid("theme/$themeName") was false');
-		$themeName = 'chicago';
-	}
+	WriteLog('GetThemeAttribute: warning: fall-through on: ' . $attributeName);
 
-	my $attributePath = 'theme/' . $themeName . '/' . $attributeName;
+	return '';
 
-	#todo sanity checks
-
-	my $attributeValue = GetConfig($attributePath) || '';
-	WriteLog('GetThemeAttribute: ' . $attributeName . ' -> ' . $attributePath . ' -> ' . $attributeValue);
-
-	return trim($attributeValue);
+#
+#	if (!ConfigKeyValid("theme/$themeName")) {
+#		WriteLog('GetThemeAttribute: warning: ConfigKeyValid("theme/$themeName") was false');
+#		$themeName = 'chicago';
+#	}
+#
+#	return trim($attributeValue);
 } # GetThemeAttribute()
 
 sub FillThemeColors { # $html ; fills in templated theme colors in provided html
