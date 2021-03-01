@@ -6,22 +6,57 @@
 
 //error_reporting(E_ALL);
 
-$postPhpStartTime = time();
-
 include_once('utils.php');
 
-$stopTimeConfig = GetConfig('admin/stop');
-if ($stopTimeConfig) {
-	if ($stopTimeConfig > time()) {
-		if (isset($_COOKIE['test'])) {
-		} else {
-			print 'Emergency brake has been pulled. Posting is temporarily offline to unregistered visitors.';
-			exit;
-		}
+$AllVars = array();
+function setvar($name, $value) {
+	global $AllVars;
+	WriteLog('setvar: ' . $name);
+	if (array_key_exists($name, $AllVars)) {
+		$AllVars[$name] = $value;
+	} else {
+		WriteLog('setvar: warning: tried to set variable which not initialized: ' . $name);
+	}
+}
+function getvar($name) {
+	global $AllVars;
+	WriteLog('getvar: ' . $name);
+	if (array_key_exists($name, $AllVars)) {
+		return $AllVars[$name];
+	} else {
+		WriteLog('getvar: warning: tried to get variable which not initialied: ' . $name);
+	}
+}
+function makevar($name) {
+	global $AllVars;
+	WriteLog('makevar: ' . $name);
+	if (array_key_exists($name, $AllVars)) {
+		WriteLog('makevar: warning: tried to make variable which already initialized: ' . $name);
+	} else {
+		$AllVars[$name] = '';
+	}
+	if (!array_key_exists($name, $AllVars)) {
+		WriteLog('makevar: warning: just made variable, but it is not initialized: ' . $name);
 	}
 }
 
-$redirectUrl = ''; // where we're going after this is all over
+makevar('postPhpStartTime');
+setvar('postPhpStartTime', time()); // remember begin time so that we know how long it takes
+
+{ # if the emergency brake has been pulled, posting is not allowed
+	$stopTimeConfig = GetConfig('admin/stop');
+	if ($stopTimeConfig) {
+		if ($stopTimeConfig > time()) {
+			if (isset($_COOKIE['test'])) {
+			} else {
+				print 'Emergency brake has been pulled. Posting is temporarily offline to unregistered visitors.';
+				exit;
+			}
+		}
+	}
+} # emergency brake
+
+$redirectUrl = ''; // stores location to redirect to when done
 
 function GetItemPlaceholderPage ($comment) { # generate temporary placeholder page for comment
 # this page is typically overwritten later by the proper page generator
@@ -75,16 +110,16 @@ function GetItemPlaceholderPage ($comment) { # generate temporary placeholder pa
 	return $commentHtmlTemplate;
 } # GetItemPlaceholderPage()
 
-$fileUrlPath = '';
-$replyTo = '';
-$replyToToken = '';
-$returnTo = '';
+$fileUrlPath = '';     // path to new item's html page
+$replyTo = '';         // id of item replied to (parent)
+$replyToToken = '';    // token for specifying replied to item, item id with >> prefix
+$returnTo = '';        // page to return to, can be different from new item's page
 
-$strSourceUrl = '';
-$strSourceTitle = '';
+$strSourceUrl = '';    // source document's url, specified as s= parameter in GET
+$strSourceTitle = '';  // source document's title, specified as t= parameter in GET
 
-if ($_POST) {
-	WriteLog('$_POST');
+if ($_POST) { // if POST request, populate variables from $_POST
+	WriteLog('post.php: $_POST');
 
 	if (isset($_POST['comment'])) {
 		$comment = $_POST['comment'];
@@ -95,10 +130,10 @@ if ($_POST) {
 		$replyToToken = '>>' . $replyTo;
 	}
 
-	if (isset($_POST['s']) && $_POST['s']) {
+	if (isset($_POST['s']) && $_POST['s']) { // s=
 		$strSourceUrl = $_POST['s'];
 	}
-	if (isset($_POST['t']) && $_POST['t']) {
+	if (isset($_POST['t']) && $_POST['t']) { // t=
 		$strSourceTitle = $_POST['t'];
 	}
 	
@@ -110,10 +145,9 @@ if ($_POST) {
 	if (isset($_POST['returnto']) && $_POST['returnto']) {
 		$returnTo = $_POST['returnto'];
 	}
-}
-
-if ($_GET) {
-	WriteLog('$_GET');
+} // $_POST
+elseif ($_GET) { // if GET request, populate variables from $_GET
+	WriteLog('post.php: $_GET found');
 
 	WriteLog(print_r($_GET, 1));
 
@@ -135,10 +169,10 @@ if ($_GET) {
 		}
 	}
 
-	if (isset($_GET['s']) && $_GET['s']) {
+	if (isset($_GET['s']) && $_GET['s']) { // s=
 		$strSourceUrl = $_GET['s'];
 	}
-	if (isset($_GET['t']) && $_GET['t']) {
+	if (isset($_GET['t']) && $_GET['t']) { // t=
 		$strSourceTitle = $_GET['t'];
 	}
 
@@ -150,7 +184,44 @@ if ($_GET) {
 	if (isset($_GET['returnto']) && $_GET['returnto']) {
 		$returnTo = $_GET['returnto'];
 	}
-}
+} # $_GET
+elseif ($_REQUEST) { // if HEAD request, populate variables from $_REQUEST
+	WriteLog('post.php: $_REQUEST found: ' . print_r($_REQUEST, 1));
+
+	if (isset($_REQUEST['comment'])) {
+		$comment = $_REQUEST['comment'];
+	} else {
+		if (isset($_REQUEST['txtClock'])) {
+			$comment = $_REQUEST['txtClock'];
+		} else {
+			if (isset($_REQUEST['?comment'])) {
+				$comment = $_REQUEST['?comment'];
+			} else {
+				if (isset($_REQUEST['?txtClock'])) {
+					$comment = $_REQUEST['?txtClock'];
+				} else {
+					$comment = '';
+				}
+			}
+		}
+	}
+
+	if (isset($_REQUEST['s']) && $_REQUEST['s']) { // s=
+		$strSourceUrl = $_REQUEST['s'];
+	}
+	if (isset($_REQUEST['t']) && $_REQUEST['t']) { // t=
+		$strSourceTitle = $_REQUEST['t'];
+	}
+
+	if (isset($_REQUEST['replyto']) && $_REQUEST['replyto']) {
+		$replyTo = $_REQUEST['replyto'];
+		$replyToToken = '>>' . $replyTo;
+	}
+
+	if (isset($_REQUEST['returnto']) && $_REQUEST['returnto']) {
+		$returnTo = $_REQUEST['returnto'];
+	}
+} # $_REQUEST
 
 if (isset($comment) && $comment) {
 	if ($comment == 'Update') { #duplicated in route.php
@@ -176,32 +247,66 @@ if (isset($comment) && $comment) {
 	}
 	else {
 		if ($replyTo && !preg_match('/\>\>' . $replyTo . '/', $comment)) {
+			// add >> token to comment if $replyTo is provided, but comment does not have token
 			// note that the regex does have a / at the end, it's after $replyTo
 			$comment .= "\n\n" . $replyToToken;
 		}
 
-		$newFileHash = ProcessNewComment($comment, $replyTo);
-		// path for client's (browser's) path to html file
-		$fileUrlPath = '/' . GetHtmlFilename($newFileHash);
+		if ($strSourceUrl || $strSourceTitle) {
+			WriteLog('post.php: found $strSourceUrl or $strSourceTitle');
+
+			#todo sanity checks
+			$addendum = '';
+			$addendumHash = '';
+
+			if ($strSourceUrl) {
+				$addendum .= $strSourceUrl;
+				$addendum .= "\n";
+			}
+			if ($strSourceTitle) {
+				$addendum .= $strSourceTitle;
+				$addendum .= "\n";
+			}
+			if ($addendum) {
+				//if ($newFileHash) {
+				//	$addendum = '>>' . $newFileHash . "\n" . $addendum;
+				//}
+				//$addendumHash = ProcessNewComment($addendum, '');
+				$comment .= "\n\n";
+				$comment .= $addendum;
+			}
+		} else {
+			WriteLog('post.php: NOT found $strSourceUrl or $strSourceTitle');
+		}
+
+		$newFileHash = ProcessNewComment($comment, $replyTo); // process comment, get new file hash
+		$fileUrlPath = '/' . GetHtmlFilename($newFileHash); // path for client's (browser's) path to html file
+
+		if (isset($replyTo) && $replyTo) {
+			WriteLog('post.php: $replyTo = ' . $replyTo);
+			MakePage($replyTo);
+		} else {
+			WriteLog('post.php: $replyTo not found');
+		}
 
 		if (!$redirectUrl && strpos($comment, 'PUBLIC KEY BLOCK')) {
 			WriteLog('post.php: strpos($comment, PUBLIC KEY BLOCK)');
+
 			// if user is submitting a public key, chances are
-			// they just registered, so lazily redirect them
-			// to the profile page instead.
+			// they just registered, so lazily redirect them to the profile page instead.
 			// #todo relative url support
 			// #todo better flow for registration -> profile page
-			// #todo sometimes $newFileHash doesn't exist
+			// #todo sometimes $newFileHash doesn't exist (why?)
 			// #todo improve on this very naive way to figure out user id
 
-			$finishTime = time() - $postPhpStartTime;
+			$finishTime = time() - getvar('postPhpStartTime');
 			WriteLog('post.php: $newFileHash = ' . $newFileHash);
 			$newFileHtmlPath = GetHtmlFilename($newFileHash);
 
 			if (file_exists($newFileHtmlPath)) {
-				WriteLog('file_exists($newFileHtmlPath)');
+				WriteLog('post.php: file_exists($newFileHtmlPath)');
 
-                // naive
+                // naive user identifier finder
 				$profileId = preg_match(
 					'/[0-9A-F]{16}/',
 					file_get_contents(
@@ -243,6 +348,7 @@ if (isset($comment) && $comment) {
 		} # strpos($comment, 'PUBLIC KEY BLOCK')
 
 		if ($replyTo && !$returnTo) {
+			// return to parent item's page if no other place to return to is specified
 			$returnTo = $replyTo;
 		}
 
@@ -253,9 +359,9 @@ if (isset($comment) && $comment) {
 
 			if (file_exists($returnToHtmlPath)) {
 				// path for client's (browser's) path to html file
-				$returnToUrlPath = '/' . GetHtmlFilename($returnTo);
+				$returnToUrlPath = '/' . GetHtmlFilename($returnTo); // #todo relativize option
 				$newItemAnchor = substr($newFileHash, 0, 8);
-				$finishTime = time() - $postPhpStartTime;
+				$finishTime = time() - getvar('postPhpStartTime');
 
 				if (GetConfig('admin/php/lazy_page_generation')) {
 					WriteLog('post.php: $returnTo and lazy_page_generation leads to unlink($returnToHtmlPath = ' . $returnToHtmlPath . ')');
@@ -263,26 +369,24 @@ if (isset($comment) && $comment) {
 				}
 
 				//$responseReplyPosted = StoreServerResponse("Success! Reply posted. <small>in $finishTime"."s</small>");
-
 				//$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor;
+
 				RedirectWithResponse($returnToUrlPath, "Success! Reply posted. <small>in $finishTime"."s</small>");
 				// #todo add anchorto support ?
 
-				// issue #1: not using RedirectWithResponse()
 				// issue #2: ie does not like redirecting to a url with an anchor tag, because it tries to include that in the request
 				// issue #3: mosaic doesn't like relative redirects, need to include own domain in return url
-
-				//$redirectUrl = $returnToUrlPath . '?message=' . $responseReplyPosted . '&anchorto=' . $newItemAnchor . '#' . $newItemAnchor;
-			}
-		}
+			} # if (file_exists($returnToHtmlPath))
+		} # $returnTo
 	} # regular comment, not 'update' or 'stop'
-} # comment
+} # $comment
 
 if (isset($filePath) && $filePath) {
 	WriteLog('post.php: $filePath = ' . ($filePath ? $filePath : 'FALSE') . '; index_file_on_post = ' . GetConfig('admin/php/post/index_file_on_post'));
 } else {
 	WriteLog('post.php: warning: $filePath is FALSE');
 }
+
 
 #######################################
 $html = file_get_contents('post.html');
@@ -306,7 +410,7 @@ if (isset($fileUrlPath) && $fileUrlPath) {
 }
 
 if (!$redirectUrl && $fileUrlPath) {
-	$finishTime = time() - $postPhpStartTime;
+	$finishTime = time() - getvar('postPhpStartTime');
 
 	if (!isset($redirectMessage)) {
 		$redirectMessage = "Success! Item posted. <small class=advanced> in $finishTime"."s</small>";
