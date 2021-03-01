@@ -61,7 +61,7 @@ def GpgParse(filePath): # { # $filePath ; parses file and stores gpg response in
 		return ''
 	# } else
 
-	WriteLog(f"GpgParse({filePath})")
+	WriteLog('GpgParse(' + filePath + ')')
 	fileHash = GetFileHash(filePath)
 
 	if not fileHash or not IsItem(fileHash): # {
