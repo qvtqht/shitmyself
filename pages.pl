@@ -189,6 +189,12 @@ sub GetQueryAsDialog { # $query, $title, $columns
 	my $title = shift;
 	my $columns = shift;
 
+	#todo sanity
+
+	if (ConfigKeyValid("query/$query")) {
+		$query = GetConfig("query/$query");
+	}
+
 	my @result = SqliteQueryHashRef($query);
 
 	return GetResultSetAsDialog(\@result, $title, $columns);
