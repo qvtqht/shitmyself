@@ -3847,6 +3847,8 @@ sub MakeSummaryPages { # generates and writes all "summary" and "static" pages S
 
 	MakePage('tags', 0);
 
+	MakePage('compost', 0);
+
 	PutStatsPages();
 	#
 	# { # clock test page
