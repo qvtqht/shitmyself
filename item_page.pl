@@ -191,7 +191,9 @@ sub GetItemAttributesWindow {
 	my $itemInfoTemplate;
 	WriteLog('GetItemPage: my $itemInfoTemplate; ');
 
-	my %file = %{shift @_};
+	my $fileRef = shift;
+	my %file = %{$fileRef};
+#	my %file = %{shift @_};
 
 	my $fileHash = $file{'file_hash'};
 
