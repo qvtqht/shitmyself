@@ -23,15 +23,19 @@ if ($stopTimeConfig) {
 
 $redirectUrl = ''; // where we're going after this is all over
 
-function GetItemPlaceholderPage ($comment) { // generate temporary placeholder page for comment
+function GetItemPlaceholderPage ($comment) { # generate temporary placeholder page for comment
+# this page is typically overwritten later by the proper page generator
+# but this gives us somewhere to go if the generator fails for any reason
+# and allows us to acknowledge message receipt to the user
+
 	// escape comment for output as html
-	$commentHtml =
-		nl2br(
-			str_replace(
+	$commentHtml =                             #todo make this more readable
+		nl2br(                                 # replace \n with <br>
+			str_replace(                       # preserve indentation
 				'  ',
 				' &nbsp;',
-				htmlspecialchars(
-					wordwrap(
+				htmlspecialchars(              # escape <>&"
+					wordwrap(                  # wrap to 80 columns
 						trim($comment),
 						80,
 						' ',
@@ -52,27 +56,23 @@ function GetItemPlaceholderPage ($comment) { // generate temporary placeholder p
 	// get theme name from config and associated background and foreground colors
 	$themeName = trim(GetConfig('html/theme'));
 	WriteLog('$themeName = ' . $themeName);
-	// color values
-	$colorWindow = GetConfig('theme/' . $themeName . '/color/window');
-	$colorText = GetConfig('theme/' . $themeName . '/color/text');
-	WriteLog('$colorWindow = ' . $colorWindow);
-	WriteLog('$colorText = ' . $colorText);
 
-	// replace placeholders with colors in template
-	$commentHtmlTemplate = str_replace('$colorWindow', $colorWindow, $commentHtmlTemplate);
-	$commentHtmlTemplate = str_replace('$colorText', $colorText, $commentHtmlTemplate);
+	{ // color values
+		$colorWindow = GetConfig('theme/' . $themeName . '/color/window');
+		$colorText = GetConfig('theme/' . $themeName . '/color/text');
+
+		WriteLog('GetItemPlaceholderPage: $colorWindow = ' . $colorWindow);
+		WriteLog('GetItemPlaceholderPage: $colorText = ' . $colorText);
+
+		// replace placeholders with colors in template
+		$commentHtmlTemplate = str_replace('$colorWindow', $colorWindow, $commentHtmlTemplate);
+		$commentHtmlTemplate = str_replace('$colorText', $colorText, $commentHtmlTemplate);
+	}
 
 	// insert html-ized comment into template
 	$commentHtmlTemplate = str_replace('$commentHtml', $commentHtml, $commentHtmlTemplate);
 
-	// here we do gpg stuff, it's nothing for now
-	// $gpgStuff = GpgParse($filePath);##
-	// WriteLog('$gpgStuff: ' . print_r($gpgStuff, 1));##
-	// $commentHtmlTemplate .= print_r(GpgParse($filePath), 1);
-
-	$pageTemplate = $commentHtmlTemplate;
-
-	return $pageTemplate;
+	return $commentHtmlTemplate;
 } # GetItemPlaceholderPage()
 
 $fileUrlPath = '';
