@@ -124,6 +124,13 @@ sub GetItemPage { # %file ; returns html for individual item page. %file as para
 		$txtIndex .= '<p><span class=advanced>'.GetWindowTemplate($voteButtons, 'Classify').'</span></p>';
 		$txtIndex .= GetReplyListing($file{'file_hash'});
 		$txtIndex .= GetReplyForm($file{'file_hash'});
+
+		my @itemReplies = DBGetItemReplies($fileHash);
+		WriteLog('GetItemPage: scalar(@itemReplies) = ' . scalar(@itemReplies));
+		foreach my $itemReply (@itemReplies) {
+			my $itemReplyTemplate = GetItemTemplate2($itemReply);
+			$txtIndex .= $itemReplyTemplate;
+		}
 	}
 
 	$txtIndex .= GetItemAttributesWindow(\%file);
