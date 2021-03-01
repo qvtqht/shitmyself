@@ -1074,22 +1074,12 @@ else {
 		}
 		else if (file_exists($path . '.html')) {
 			$html = get_file_contents($path . '.html');
-			if (GetConfig('admin/php/debug')) {
-				$html = str_replace('</body>', WriteLog('') . '</body>', $html);
-			}
 		}
 
 		if ($html) {
-			if (GetConfig('admin/php/debug')) {
-				$html = str_replace('</body>', WriteLog('') . '</body>', $html);
-			}
 			print($html);
 		} else {
 			print('Technical issue encountered. Please contact maintainer.');
 		}
 	}
-}
-
-if (GetConfig('admin/php/debug')) {
-	print WriteLog('');
 }
