@@ -2545,6 +2545,7 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 	my %scriptsDone = ();  # hash to keep track of scripts we've already injected, to avoid duplicates
 
 	if (in_array('settings', @scriptNames)) {
+	#if (@scriptNames ~~ 'settings') {
 		if (GetConfig('html/clock')) {
 			push @scriptNames, 'clock';
 		}
@@ -2595,8 +2596,13 @@ sub InjectJs { # $html, @scriptNames ; inject js template(s) before </body> ;
 		}
 
 		my $scriptTemplate = GetScriptTemplate("$script");
-		# add to the snowball of javascript
-		$scriptsText .= $scriptTemplate;
+
+		if (trim($scriptTemplate) eq '') {
+			WriteLog('InjectJs: warning: $scriptTemplate is empty');
+		} else {
+			# add to the snowball of javascript
+			$scriptsText .= $scriptTemplate;
+		}
 	}
 
 	my $needOnload = 0; # remember if we need to add <body onload attribute later
@@ -2758,8 +2764,13 @@ sub GetScriptTemplate { # $script ; returns script for name
 		$scriptTemplate = EnableJsDebug($scriptTemplate);
 	}
 
+	if (trim($scriptTemplate) eq '') {
+		WriteLog('GetScriptTemplate: warning: $scriptTemplate is empty!');
+		return '';
+	}
+
 	return $scriptTemplate;
-}
+} # GetScriptTemplate()
 
 sub InjectJs2 { # $html, $injectMode, $htmlTag, @scriptNames, ; inject js template(s) before </body> ;
 #todo, once i figure out how to pass an array and/or need this in perl:
