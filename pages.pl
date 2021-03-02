@@ -814,13 +814,17 @@ sub GetQueryPage {
 	#todo sanity
 
 	my $html = '';
+	my $query = '';
 
-	my $query = GetConfig('query/' . $pageName);
+	if (ConfigKeyValid('query/' . $pageName)) {
+		$query = GetConfig('query/' . $pageName);
+	}
+	my @result = SqliteQueryHashRef($query);
 
-	if ($query) {
+	if (@result) {
 		$html .= GetPageHeader($title, $title, $pageName);
 		$html .= GetTemplate('html/maincontent.template');
-		$html .= GetQueryAsDialog($query, $title, $columns);
+		$html .= GetResultSetAsDialog(\@result, $title, $columns);
 		$html .= '<pre class=advanced><br><hr>'.HtmlEscape($query).'</pre>';
 		$html .= GetPageFooter();
 		if (GetConfig('admin/js/enable')) {
