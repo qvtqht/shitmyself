@@ -154,6 +154,11 @@ sub MakePage { # $pageType, $pageParam, $priority ; make a page and write it int
 #		my $topItemsPage = GetTopItemsPage();
 		PutHtmlFile("compost.html", $compostPage);
 	}
+	elsif ($pageType eq 'settings') {
+		# Settings page
+		my $settingsPage = GetSettingsPage();
+		PutHtmlFile("settings.html", $settingsPage);
+	}
 	#
 	# stats page
 	elsif ($pageType eq 'stats') {
