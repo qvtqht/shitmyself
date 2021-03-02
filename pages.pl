@@ -1959,8 +1959,10 @@ sub GetMenuTemplate { # returns menubar
 	my $menuItems = GetMenuFromList('menu');
 	my $menuItemsTag = GetMenuFromList('menu_tag');
 	my $menuItemsAdvanced = GetMenuFromList('menu_advanced');
+	my $menuItemsAdmin = GetMenuFromList('menu_admin');
 
 	$topMenuTemplate =~ s/\$menuItemsAdvanced/$menuItemsAdvanced/g;
+	$topMenuTemplate =~ s/\$menuItemsAdmin/$menuItemsAdmin/g;
 	$topMenuTemplate =~ s/\$menuItemsTag/$menuItemsTag/g;
 	$topMenuTemplate =~ s/\$menuItems/$menuItems/g;
 	$topMenuTemplate =~ s/\$selfLink/$selfLink/g;
@@ -4408,6 +4410,7 @@ sub GetEtcPage { # returns html for etc page (/etc.html)
 
 	my $menuItems = GetMenuFromList('menu', 'html/menuitem-p.template');
 	$menuItems .= GetMenuFromList('menu_advanced', 'html/menuitem-p.template');
+	$menuItems .= GetMenuFromList('menu_admin', 'html/menuitem-p.template');
 
 	my $etcPageContent = GetTemplate('html/etc.template');
 
