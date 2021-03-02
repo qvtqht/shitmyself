@@ -11,7 +11,11 @@
 	</tr>
 	<tr bgcolor="$colorWindow" class=menubar>
 		<td>
-			<big><big>$menuItems<span class=advanced> $menuItemsAdvanced</span></big> $menuItemsTag</big>
+			<big>
+				<big>$menuItems</big>
+				<span class=advanced>$menuItemsAdvanced</span>
+				<span class=admin> $menuItemsAdmin</span>
+			</big>
 			<a href="/etc.html" accesskey=o>M<u>o</u>re</a>
 			<span id=spnClock></span>
 		</td>
