@@ -3563,7 +3563,11 @@ sub GetDesktopPage { # returns html for desktop page (/desktop.html)
 		$html .= GetProfileWindow();
 		$html .= GetStatsTable();
 		#$html .= GetWriteForm(); #commented because of the setFocus js, which should not happen on this page
-		$html .= GetUploadWindow('html/form/upload.template');
+		if (GetConfig('admin/php/enable')) {
+			if (GetConfig('admin/upload/enable')) {
+				$html .= GetUploadWindow('html/form/upload.template');
+			}
+		}
 		$html .= GetOperatorWindow();
 	}
 
@@ -3573,6 +3577,11 @@ sub GetDesktopPage { # returns html for desktop page (/desktop.html)
 		my @scripts = qw(settings avatar profile timestamp pingback utils);
 		if (GetConfig('admin/js/dragging')) {
 			push @scripts, 'dragging';
+		}
+		if (GetConfig('admin/php/enable')) {
+			if (GetConfig('admin/upload/enable')) {
+				push @scripts, 'upload';
+			}
 		}
 		$html = InjectJs($html, @scripts);
 	}
