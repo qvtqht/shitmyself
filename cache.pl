@@ -96,7 +96,7 @@ sub UnlinkCache { # removes cache by unlinking file it's stored in
 
 	if (scalar(@cacheFiles)) {
 		WriteLog('UnlinkCache: scalar(@cacheFiles) = ' . scalar(@cacheFiles));
-		#unlink(@cacheFiles); #todo #temporary
+		unlink(@cacheFiles);
 	} else {
 		WriteLog('UnlinkCache: scalar(@cacheFiles) is false for $cacheFile = ' . $cacheFile);
 	}
@@ -150,7 +150,7 @@ sub ExpireAvatarCache { # $fingerprint ; removes all caches for alias
 	}
 
 	my $themeName = GetConfig('html/theme');
-	UnlinkCache('avatar*/*/' . $key); #todo dangerous
+	UnlinkCache('avatar*/*/' . $key); #todo reduce danger
 
 #	my $themeName = GetConfig('html/theme');
 #	UnlinkCache('avatar/' . $themeName . '/' . $key);
