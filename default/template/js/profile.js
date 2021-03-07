@@ -273,43 +273,46 @@ function AddPrivateKeyLinks () { // adds save/load links to profile page if feat
 
 				//alert('DEBUG: AddPrivateKeyLinks: creating file input...');
 
-				// label for "load from file" button
-				var labelLoadFromFile = document.createElement('label');
-				labelLoadFromFile.setAttribute('for', 'fileLoadKeyFromText');
-				labelLoadFromFile.innerHTML = 'Load from file:';
+				var labelLoadFromFile = document.getElementById('fileLoadKeyFromText');
+				if (!labelLoadFromFile) {
+					// label for "load from file" button
+					var labelLoadFromFile = document.createElement('label');
+					labelLoadFromFile.setAttribute('for', 'fileLoadKeyFromText');
+					labelLoadFromFile.innerHTML = 'Load from file:';
 
-				// br after label
-				var brLoadFromFile = document.createElement('br');
-				labelLoadFromFile.appendChild(brLoadFromFile);
+					// br after label
+					var brLoadFromFile = document.createElement('br');
+					labelLoadFromFile.appendChild(brLoadFromFile);
 
-				// [load from file] file selector
-				var fileLoadKeyFromText = document.createElement('input');
-				fileLoadKeyFromText.setAttribute('type', 'file');
-				fileLoadKeyFromText.setAttribute('accept', 'text/plain');
-				fileLoadKeyFromText.setAttribute(
-					'onchange',
-					 'if (window.openFile) { openFile(event) } else { alert("i am so sorry, openFile() function was missing!"); }'
-				);
-				fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
-				// fileLoadKeyFromText.setAttribute('style', 'display: none');
-				// i tried hiding file selector and using a button instead.
-				// it looked nicer, but sometimes didn't work as expected
+					// [load from file] file selector
+					var fileLoadKeyFromText = document.createElement('input');
+					fileLoadKeyFromText.setAttribute('type', 'file');
+					fileLoadKeyFromText.setAttribute('accept', 'text/plain');
+					fileLoadKeyFromText.setAttribute(
+						'onchange',
+						 'if (window.openFile) { openFile(event) } else { alert("i am so sorry, openFile() function was missing!"); }'
+					);
+					fileLoadKeyFromText.setAttribute('id', 'fileLoadKeyFromText');
+					// fileLoadKeyFromText.setAttribute('style', 'display: none');
+					// i tried hiding file selector and using a button instead.
+					// it looked nicer, but sometimes didn't work as expected
 
-				// hint for [load from file]
-				var hintLoadFromFile = document.createElement('span');
-				hintLoadFromFile.setAttribute('class', 'beginner');
-				hintLoadFromFile.innerHTML = 'Use this if you have a saved key';
-
-
-				// pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
-				labelLoadFromFile.appendChild(fileLoadKeyFromText);
-				var brLoadFromFile2 = document.createElement('br');
-				pLoadKeyFromTxt.appendChild(labelLoadFromFile);
-				pLoadKeyFromTxt.appendChild(brLoadFromFile2);
-				pLoadKeyFromTxt.appendChild(hintLoadFromFile);
+					// hint for [load from file]
+					var hintLoadFromFile = document.createElement('span');
+					hintLoadFromFile.setAttribute('class', 'beginner');
+					hintLoadFromFile.innerHTML = 'Use this if you have a saved key';
 
 
-				fieldset.appendChild(pLoadKeyFromTxt);
+					// pLoadKeyFromTxt.appendChild(aLoadKeyFromText);
+					labelLoadFromFile.appendChild(fileLoadKeyFromText);
+					var brLoadFromFile2 = document.createElement('br');
+					pLoadKeyFromTxt.appendChild(labelLoadFromFile);
+					pLoadKeyFromTxt.appendChild(brLoadFromFile2);
+					pLoadKeyFromTxt.appendChild(hintLoadFromFile);
+
+
+					fieldset.appendChild(pLoadKeyFromTxt);
+				}
 			} // privateKey is FALSE
 
 			if (window.ShowAdvanced) {
