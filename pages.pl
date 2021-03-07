@@ -4391,7 +4391,7 @@ sub GetSettingsWindow {
 
 sub GetOperatorWindow {
 	my $operatorTemplate = GetTemplate('form/operator.template');
-	my $operatorWindow = GetWindowTemplate($operatorTemplate, 'operator');
+	my $operatorWindow = GetWindowTemplate($operatorTemplate, 'Operator');
 	$operatorWindow = '<form id=frmOperator name=frmOperator class=admin>' . $operatorWindow . '</form>';
 	return $operatorWindow;
 }
