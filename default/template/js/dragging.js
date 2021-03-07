@@ -112,7 +112,52 @@ function dragElement (elmnt, header) {
 	}
 }
 
+function DraggingCascade () {
+	//alert('DEBUG: DraggingCascade()');
+	
+	var titlebarHeight = 0;
+
+	var curTop = 55;
+	var curLeft = 5;
+	var curZ = 0;
+
+	var elements = document.getElementsByClassName('dialog');
+	for (var i = 0; i < elements.length; i++) {
+	// for (var i = elements.length - 1; 0 <= i; i--) { // walk backwards for positioning reasons
+		// walking backwards is necessary to preserve the element positioning on the page
+		// once we remove the element from the page flow, all the other elements reflow to account it
+		// if we walk forwards here, all the elements will end up in the top left corner
+
+		var allTitlebar = elements[i].getElementsByClassName('titlebar');
+		var firstTitlebar = allTitlebar[0];
+
+		var allMenubar = elements[i].getElementsByClassName('menubar');
+		var firstMenubar = allMenubar[0];
+
+		titlebarHeight = 30;
+
+		if (firstMenubar) {
+			elements[i].style.zIndex = 1337;
+		} else {
+			if (firstTitlebar && firstTitlebar.getElementsByTagName) {
+				// dragElement(elements[i], firstTitlebar);
+				var elId = firstTitlebar.getElementsByTagName('b');
+				elId = elId[0];
+
+				elements[i].style.top = curTop + 'px';
+				elements[i].style.left = curLeft +'px';
+				elements[i].style.zIndex = curZ;
+
+				curZ++;
+				curTop += titlebarHeight;
+				curLeft += titlebarHeight;
+			}
+		}
+	}
+} // DraggingCascade()
+
 function DraggingInit (doPosition) {
+// InitDrag { DragInit {
 // initialize all class=dialog elements on the page to be draggable
 
 	//alert('DEBUG: DraggingInit');
