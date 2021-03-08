@@ -1,4 +1,4 @@
-/* begin theme/union/additional.css */
+/* theme/union/additional.css */
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -50,4 +50,4 @@ a:focus, a:active {
 input:focus, textarea:focus, button:focus, *:focus {
     background-color: orange !important;
 }
-/* end theme/union/additional.css */
+/* / theme/union/additional.css */

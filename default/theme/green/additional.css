@@ -1,4 +1,4 @@
-/* begin theme/green/additional.css */
+/* theme/green/additional.css */
 body, table, .item, #txtClock, input {
 	font-family: courier;
 	font-size: 14pt;
@@ -38,4 +38,4 @@ input:focus, textarea:focus {
     background-color: #004000;
     color: #40ff40;
 }
-/* end theme/green/additional.css */
+/* / theme/green/additional.css */

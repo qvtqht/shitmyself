@@ -1,4 +1,4 @@
-/* begin theme/memphis.dev/additional.css */
+/* theme/memphis.dev/additional.css */
 /**
  * 98.css
  * Copyright (c) 2020 Jordan Scales <thatjdanisso.cool>
@@ -544,4 +544,4 @@ summary:focus {
   width: 16px;
   background-image: svg-load("./icon/button-right.svg");
 }
-/* end theme/memphis.dev/additional.css */
+/* / theme/memphis.dev/additional.css */

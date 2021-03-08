@@ -1,4 +1,4 @@
-/* begin theme/friday29/additional.css */
+/* theme/friday29/additional.css */
 body {
 	font-family: helvetica;
 	font-size: 14pt;
@@ -35,5 +35,4 @@ textarea:focus {
 #aBackToTop {
 	background-color: $colorHighlightBeginner;
 }
-/* end theme/friday29/additional.css */
-
+/* theme/friday29/additional.css */

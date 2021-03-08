@@ -1,4 +1,4 @@
-/* begin theme/news/additional.css */
+/* theme/news/additional.css */
 body  { font-family:Verdana, Geneva, sans-serif; font-size:10pt; color:#828282; }
 td    { font-family:Verdana, Geneva, sans-serif; font-size:10pt; color:#828282; }
 input    { font-family:monospace; font-size:10pt; }
@@ -39,4 +39,4 @@ a:visited { color:$colorVlink; text-decoration:none; }
   .txt { max-width: 1130px; overflow: hidden }
 }
 
-/* end theme/news/additional.css */
+/* theme/news/additional.css */
