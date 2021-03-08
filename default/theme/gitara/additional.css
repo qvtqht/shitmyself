@@ -1,0 +1,9 @@
+/* theme/gitara/additional.css */
+.titlebar {
+	background-image: url(/amber.png);
+}
+.content, .menubar, .statusbar, .heading {
+	background-image: url(/vintage.jpg);
+}
+/* / theme/gitara/additional.css */
+
