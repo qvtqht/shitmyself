@@ -1694,10 +1694,13 @@ sub GetThemeColor { # returns theme color based on html/theme
 }
 
 sub GetThemeAttribute { # returns theme color from config/theme/
+#additional.css special case: values will be concatenated instead of returning first one
 	my $attributeName = shift;
 	chomp $attributeName;
 
 	#WriteLog('GetThemeAttribute(' . $attributeName . ')');
+
+	my $attributeValue = '';
 
 	my @activeThemes = split("\n", GetConfig('html/theme'));
 	foreach my $themeName (@activeThemes) {
@@ -1713,17 +1716,24 @@ sub GetThemeAttribute { # returns theme color from config/theme/
 
 		#todo sanity checks
 
-		my $attributeValue = GetConfig($attributePath) || '';
+		$attributeValue .= GetConfig($attributePath) || '';
 
 		if ($attributeValue) {
 			WriteLog('GetThemeAttribute: ' . $attributeName . ' + ' . $themeName . ' -> ' . $attributePath . ' -> ' . $attributeValue);
-			return trim($attributeValue);
+			if ($attributeName ne 'additional.css') {
+				return trim($attributeValue);
+			} else {
+				$attributeValue .= "\n";
+			}
 		}
 	}
 
-	WriteLog('GetThemeAttribute: warning: fall-through on: ' . $attributeName);
-
-	return '';
+	if ($attributeName ne 'additional.css') {
+		WriteLog('GetThemeAttribute: warning: fall-through on: ' . $attributeName);
+		return '';
+	} else {
+		return trim($attributeValue);
+	}
 
 #
 #	if (!ConfigKeyValid("theme/$themeName")) {
