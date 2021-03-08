@@ -350,6 +350,13 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		}
 
 		if (
+			$path == '/read.html'
+		) {
+			WriteLog('HandleNotFound: found read page');
+			$pagesPlArgument = '-M read';
+		}
+
+		if (
 			$path == '/profile.html'
 		) {
 			WriteLog('HandleNotFound: found profile page');
@@ -368,6 +375,13 @@ function HandleNotFound ($path, $pathRel) { // handles 404 error by regrowing th
 		) {
 			WriteLog('HandleNotFound: found compost page');
 			$pagesPlArgument = '--compost';
+		}
+
+		if (
+			$path == '/settings.html'
+		) {
+			WriteLog('HandleNotFound: found settings page');
+			$pagesPlArgument = '--settings';
 		}
 
 		if (
