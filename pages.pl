@@ -987,6 +987,8 @@ sub GetItemHtmlLink { # $hash, [link caption], [#anchor] ; returns <a href=...
 			$hashAnchor = '';
 		}
 
+		$linkCaption = HtmlEscape($linkCaption);
+
 		return '<a href="/' . GetHtmlFilename($hash) . $hashAnchor . '">' . $linkCaption . '</a>';
 	} else {
 	}
